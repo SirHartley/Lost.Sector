@@ -1,0 +1,52 @@
+{
+  "id": "nskr_collector",
+  "specClass": "projectile",
+  "projectileSpecId": "nskr_collector_shot",
+  "type": "ENERGY",
+  "size": "LARGE",
+  "everyFrameEffect": "scripts.kissa.LOST_SECTOR.weapons.nskr_collectorEffect",
+  "turretSprite": "graphics/weapons/nskr_collector_turret.png",
+  "turretGlowSprite": "graphics/weapons/nskr_collector_turret_glow.png",
+  "hardpointSprite": "graphics/weapons/nskr_collector_hardpoint.png",
+  "hardpointGlowSprite": "graphics/weapons/nskr_collector_turret_glow.png",
+  "renderAboveAllWeapons": 0,
+  "glowColor": [
+    255,
+    100,
+    147,
+    225
+  ],
+  "turretOffsets": [
+    27,
+    0
+  ],
+  "turretAngleOffsets": [
+    0
+  ],
+  "hardpointOffsets": [
+    35,
+    0
+  ],
+  "hardpointAngleOffsets": [
+    0
+  ],
+  "barrelMode": "ALTERNATING",
+  "animationType": "GLOW_AND_FLASH",
+  "autocharge": true,
+  "muzzleFlashSpec": {
+    "length": 35,
+    "spread": 0,
+    "particleSizeMin": 12,
+    "particleSizeRange": 12,
+    "particleDuration": 0.12,
+    "particleCount": 12,
+    "particleColor": [
+      255,
+      100,
+      147,
+      255
+    ]
+  },
+  "textureType": ROUGH,
+  "fireSoundTwo": "nskr_collector_fire"
+}

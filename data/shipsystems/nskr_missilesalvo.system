@@ -1,0 +1,24 @@
+{
+	"id":"nskr_missilesalvo",
+	"type":"STAT_MOD",
+	"aiType":"CUSTOM",
+	"aiScript":"scripts.kissa.LOST_SECTOR.shipsystems.ai.nskr_missileSalvoAI",
+	
+	"statsScript":"scripts.kissa.LOST_SECTOR.shipsystems.nskr_missileSalvoStats",
+	"canUseWhileRightClickSystemOn":true,
+
+	"fadeActivationSoundOnChargedown":true,
+	"useSound":"system_interdictor",
+	"outOfUsesSound":"gun_out_of_ammo",
+	
+	"aiHints":{
+		"threatRange":1500,
+		"threatAmount":5,
+		"threatAngle":0,
+		"threatArc":360,
+	}
+}
+
+
+
+

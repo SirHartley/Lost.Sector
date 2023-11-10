@@ -1,0 +1,23 @@
+{
+	"id":"nskr_plasmal_shot",
+	"specClass":"projectile",
+	"spawnType":"BALLISTIC_AS_BEAM",
+	"onHitEffect":"scripts.kissa.LOST_SECTOR.weapons.nskr_plasmalOH",
+	"collisionClass":"RAY",
+	"collisionClassByFighter":"RAY_FIGHTER",
+	"length":120.0,
+	"width":28,
+	"fadeTime":0.5,
+	"coreColor":[255,255,255,255],
+	"fringeColor": [215,235,255,225],
+	"glowColor": [110,207,255,40],
+	"glowRadius":90,
+	"hitGlowRadius":70,	
+	"passThroughMissiles":true,
+	"passThroughFighters":true,
+	"textureType": [
+    "graphics/fx/beam_chunky_fringe.png",
+    "graphics/fx/beam_chunky_core.png"],
+	"textureScrollSpeed":32,
+	"pixelsPerTexel":1.0,
+}

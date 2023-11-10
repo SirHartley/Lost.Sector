@@ -1,0 +1,38 @@
+{
+    "displayName": "Sundering",
+    "fluxCapacitors": 20,
+    "fluxVents": 12,
+    "goalVariant": false,
+    "hullId": "nskr_harbinger_boss",
+    "hullMods": [
+        "fluxbreakers",
+        "armoredweapons",
+        "magazines",
+        "unstable_injector"
+    ],
+    "permaMods": [],
+    "sMods": [
+        "hardened_subsystems",
+        "heavyarmor"
+    ],
+    "variantId": "nskr_harbinger_boss_std",
+    "weaponGroups": [
+        {
+            "autofire": false,
+            "mode": "LINKED",
+            "weapons": {
+                "WS 001": "cryoflux",
+                "WS 002": "ionpulser",
+                "WS 003": "ionpulser"
+            }
+        },
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {
+                "WS 004": "shockrepeater",
+                "WS 005": "shockrepeater"
+            }
+        }
+    ]
+}

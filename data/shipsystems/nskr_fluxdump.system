@@ -1,0 +1,22 @@
+{
+	"id":"nskr_fluxdump",
+	"type":"STAT_MOD",
+	"aiType":"CUSTOM",
+	"aiScript":"scripts.kissa.LOST_SECTOR.shipsystems.ai.nskr_fluxdumpAI",
+	"statsScript":"scripts.kissa.LOST_SECTOR.shipsystems.nskr_fluxDumpStats",
+
+	"weaponGlowColor":[255, 0, 38,100],
+	"weaponTypes":[BALLISTIC, MISSILE, ENERGY],
+	"engineGlowLengthMult":1.25,
+	"engineGlowWidthMult":1,
+	"engineGlowGlowMult":1.5,
+	
+	"flameoutOnImpactChance":0,
+
+	"clampTurnRateAfter":true,
+	"clampMaxSpeedAfter":false,
+
+	"outOfUsesSound":"gun_out_of_ammo",	
+	"loopSound":"system_damper_loop",
+	"deactivateSound":"system_damper_off",
+}

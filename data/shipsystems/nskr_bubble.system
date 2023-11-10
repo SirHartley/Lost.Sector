@@ -1,0 +1,16 @@
+{
+	"id":"nskr_bubble",
+	"type":"STAT_MOD",
+    "aiType":"CUSTOM",
+    "aiScript":"scripts.kissa.LOST_SECTOR.shipsystems.ai.nskr_bubbleAI",
+	"statsScript":"scripts.kissa.LOST_SECTOR.shipsystems.nskr_bubbleStats",
+
+	"fadeActivationSoundOnChargedown":true,
+	"outOfUsesSound":"gun_out_of_ammo",
+	
+	"aiHints":{
+	}
+}
+
+
+

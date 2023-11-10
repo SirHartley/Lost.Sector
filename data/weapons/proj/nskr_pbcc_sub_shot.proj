@@ -1,0 +1,18 @@
+{
+    "id":"nskr_pbcc_sub_shot",
+    "specClass":"projectile",
+    "spawnType":"BALLISTIC",
+    "collisionClass":"PROJECTILE_FF",
+    "collisionClassByFighter":"PROJECTILE_FIGHTER",
+    "length":40.0,
+	"width":1.5,
+	"hitGlowRadius":80,
+	"fadeTime":0.3,
+	"fringeColor":[150,100,255,255],
+	"coreColor":[255,255,255,255],
+	"glowColor":[150,100,255,75],
+	"glowRadius":20,
+	"textureScrollSpeed":64.0,
+	"pixelsPerTexel":5.0,
+	"bulletSprite":"graphics/missiles/shell_gauss_cannon.png"	
+}

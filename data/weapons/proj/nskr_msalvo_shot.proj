@@ -1,0 +1,36 @@
+{
+	"id":"nskr_msalvo_shot",
+	"specClass":"missile",	
+	"missileType":"MISSILE",
+	"onHitEffect":"scripts.kissa.LOST_SECTOR.weapons.nskr_msalvoOH",
+	"sprite":"graphics/missiles/resonator_mrm.png",
+	"size":[6,16],	
+	"center":[3,8],
+	"collisionRadius":12,
+	"collisionClass":"MISSILE_NO_FF",
+	"explosionColor":[237, 100, 255,255],  # purely visual, will get a white additively blended core on top of this color
+	"explosionRadius":100, # purely visual
+	"engineSpec":{"turnAcc":400,
+				  "turnRate":200,
+				  "acc":1000,
+				  "dec":500},
+	"engineSlots":[{"id":"ES2",
+					"loc":[-1, 0],
+				    "style":"CUSTOM",
+					"styleSpec":{
+						"mode":"QUAD_STRIP", # PARTICLES or QUAD_STRIP, determines which params are used
+						"engineColor":[100, 255, 198,255],
+						"contrailDuration":3,
+						"contrailWidthMult":0.5,
+						"contrailWidthAddedFractionAtEnd":2.5,  # can be negative. makes trail spread out/narrow at the end
+						"contrailMinSeg":5, # min segment length, in pixels
+						"contrailMaxSpeedMult":0.5f,
+						"contrailAngularVelocityMult":0.5f,
+						"contrailColor":[144, 100, 255,75],
+						"type":"SMOKE" # GLOW or SMOKE; additive or regular blend mode
+					},
+				    "width":7.0,
+				    "length":40.0,
+				    "angle":180.0},
+				    ]
+}

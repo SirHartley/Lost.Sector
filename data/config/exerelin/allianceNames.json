@@ -1,0 +1,18 @@
+{
+	"staticNames":{
+		"kesteven":{
+			"hegemony":["South-Persean Treaty"],
+			#"luddic_church":[""],
+			#"luddic_path":[""],
+			"persean":["Free Persean League"],
+			"sindrian_diktat":["Core Defense Pact"],
+			#"tritachyon":[""],
+			"independent":["Free Persean Markets"],
+			#"pirates":[""],
+			"player":["Free Persean Markets"],
+		},
+		"hegemony":{
+			"kesteven":["South-Persean Treaty"],
+		},
+	},
+}

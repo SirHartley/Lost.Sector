@@ -1,0 +1,14 @@
+{
+	"id":"nskr_kaboom",
+	"type":"STAT_MOD",
+	"aiType":"CUSTOM",
+	"aiScript":"scripts.kissa.LOST_SECTOR.shipsystems.ai.nskr_kaboomAI",
+	"statsScript":"scripts.kissa.LOST_SECTOR.shipsystems.nskr_kaboomStats",
+	
+	"alwaysAccelerate":true,
+	"clampMaxSpeedAfter":true,
+	
+	"aiHints":{
+
+	}
+}

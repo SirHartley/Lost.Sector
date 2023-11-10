@@ -1,0 +1,53 @@
+{
+    "displayName": "Cleaving",
+    "fluxCapacitors": 25,
+    "fluxVents": 15,
+    "goalVariant": true,
+    "hullId": "nskr_reverie_boss",
+    "hullMods": [
+        "hardened_subsystems",
+        "missleracks"
+    ],
+    "permaMods": [],
+    "variantId": "nskr_reverie_boss_nor",
+    "weaponGroups": [
+        {
+            "autofire": false,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0002": "cyclone",
+                "WS0005": "reaper",
+                "WS0006": "reaper"
+            }
+        },
+        {
+            "autofire": false,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0003": "sabotpod",
+                "WS0004": "sabotpod"
+            }
+        },
+        {
+            "autofire": false,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0009": "amblaster",
+                "WS0010": "amblaster"
+            }
+        },
+        {
+            "autofire": true,
+            "mode": "ALTERNATING",
+            "weapons": {"WS0001": "autopulse"}
+        },
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0007": "pdburst",
+                "WS0008": "pdburst"
+            }
+        }
+    ]
+}

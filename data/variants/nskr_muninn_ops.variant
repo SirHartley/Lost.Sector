@@ -1,0 +1,51 @@
+{
+    "displayName": "Black Ops",
+    "fluxCapacitors": 8,
+    "fluxVents": 7,
+    "hullId": "nskr_muninn",
+    "hullMods": [
+        "magazines",
+        "fluxbreakers",
+        "stabilizedshieldemitter",
+        "hardenedshieldemitter",
+        "targetingunit"
+    ],
+    "permaMods": [],
+    "sMods": [],
+    "variantId": "nskr_muninn_ops",
+    "weaponGroups": [
+        {
+            "autofire": false,
+            "mode": "ALTERNATING",
+            "weapons": {
+                "WS0005": "amblaster",
+                "WS0006": "amblaster"
+            }
+        },
+        {
+            "autofire": false,
+            "mode": "ALTERNATING",
+            "weapons": {
+                "WS0003": "reaper",
+                "WS0004": "reaper"
+            }
+        },
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0001": "nskr_scannonm",
+                "WS0002": "nskr_scannonm"
+            }
+        },
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0007": "vulcan",
+                "WS0008": "vulcan"
+            }
+        }
+    ],
+    "wings": []
+}

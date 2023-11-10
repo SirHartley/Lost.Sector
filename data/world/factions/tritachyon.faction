@@ -1,0 +1,47 @@
+{
+    "hullFrequency":{
+        "hulls":{
+            "nskr_reverie":1.00,
+			"nskr_malediction":0.75,
+        },
+    },
+    "shipsWhenImporting":{
+        "hulls":[
+        ],
+    },
+    "knownShips":{
+        "hulls":[
+            "nskr_reverie",
+			"nskr_malediction",
+        ],
+    },
+    "priorityShips":{
+        "hulls":[
+          
+        ],
+    },
+    "knownFighters":{
+        "fighters":[
+            
+        ],
+    },
+    "knownWeapons":{
+        "weapons":[
+            
+        ],
+    },
+    "knownHullMods":{
+        "hullMods":[
+            
+        ],
+    },
+	
+	"ranks":{
+		"ranks":{
+			"kTechEngineer":{"name":"Tech Engineer"},
+		},
+		"posts":{
+			"kTechEngineer":{"name":"Tech Engineer"},
+		},
+	},
+},

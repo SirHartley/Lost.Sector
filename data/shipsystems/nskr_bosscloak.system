@@ -1,0 +1,29 @@
+{
+	"id":"nskr_bosscloak",
+	"type":"PHASE_CLOAK",
+	"aiType":"PHASE_CLOAK",
+	
+	"statsScript":"scripts.kissa.LOST_SECTOR.shipsystems.nskr_bossPhaseStats",
+	"runScriptWhilePaused":true, # only for the player's ship
+	"runScriptWhileIdle":true,  # this means unapply() never gets called
+	"blockActionsWhileChargingDown":false,
+	
+	"phaseHighlight":"_glow1",
+	"phaseDiffuse":"_glow2",
+	
+	"effectColor1":[255, 175, 176,255],
+	"effectColor2":[255, 42, 0,150],
+	
+	"clampTurnRateAfter":true,
+	"clampMaxSpeedAfter":true,
+	
+	"soundFilterType":"LOWPASS",
+	"soundFilterGain":0.8,
+	"soundFilterGainHF":0.25,
+	
+	"shipAlpha":1, # handled in stats script
+	
+	"useSound":"nskr_phase_cloak_activate",
+	"deactivateSound":"nskr_phase_cloak_deactivate",
+	"outOfUsesSound":"system_phase_cloak_collision",
+}

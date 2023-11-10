@@ -1,0 +1,12 @@
+This work is licensed under a Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License. (https://creativecommons.org/licenses/by-nc-sa/4.0/)
+
+BiasFunction() Licensed under the MIT-License
+
+this work distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+
+This software is a work of fiction. Any similarity to real life figures, events, groups, governments, or organisations is purely coincidental.
+
+Any derivative work must also comply with Starsector's EULA
+
+Anything not created by the author (Kissa Mies) belongs to their original creators and maintains its original license.

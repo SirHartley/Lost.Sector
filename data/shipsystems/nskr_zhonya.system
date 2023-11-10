@@ -1,0 +1,23 @@
+{
+	"id":"nskr_zhonya",
+	"type":"STAT_MOD",
+    "aiType":"CUSTOM",
+    "aiScript":"scripts.kissa.LOST_SECTOR.shipsystems.ai.nskr_zhonyaAI",
+	"statsScript":"scripts.kissa.LOST_SECTOR.shipsystems.nskr_zhonyaStats",
+	
+	"soundFilterType":"LOWPASS",
+	"soundFilterGain":0.85,
+	"soundFilterGainHF":0.50,
+
+	"fadeActivationSoundOnChargedown":true,
+	"useSound":"nskr_zhonya_activate",
+	"loopSound":"nskr_zhonya_loop",
+	"deactivateSound":"nskr_zhonya_deactivate",
+	"outOfUsesSound":"gun_out_of_ammo",
+	
+	"aiHints":{
+	}
+}
+
+
+

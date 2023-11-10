@@ -1,0 +1,36 @@
+{
+    "displayName": "Tactical",
+    "fluxCapacitors": 1,
+    "fluxVents": 0,
+    "hullId": "nskr_torpor",
+    "hullMods": [
+        "missleracks",
+        "hardenedshieldemitter",
+        "fluxcoil",
+        "stabilizedshieldemitter"
+    ],
+    "permaMods": [],
+    "sMods": [],
+    "variantId": "nskr_torpor_tac",
+    "weaponGroups": [
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {"WS0002": "railgun"}
+        },
+        {
+            "autofire": false,
+            "mode": "ALTERNATING",
+            "weapons": {
+                "WS0003": "nskr_spikes",
+                "WS0004": "nskr_spikes",
+                "WS0005": "nskr_spikes"
+            }
+        },
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {"WS0001": "pdburst"}
+        }
+    ]
+}

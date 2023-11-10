@@ -1,0 +1,57 @@
+{
+  "id": "nskr_emgl",
+  "specClass": "projectile",
+  "projectileSpecId": "nskr_emglShot",
+  "type": "BALLISTIC",
+  "mountTypeOverride":"HYBRID",
+  "size": "MEDIUM",
+  "everyFrameEffect": "scripts.kissa.LOST_SECTOR.weapons.nskr_emglScript",
+  "displayArcRadius": 450,
+  "turretSprite": "graphics/weapons/nskr_emgl_turret_base.png",
+  "turretGunSprite": "graphics/weapons/nskr_emgl_turret_recoil.png",
+  "hardpointSprite": "graphics/weapons/nskr_emgl_hardpoint_base.png",
+  "hardpointGunSprite": "graphics/weapons/nskr_emgl_hardpoint_recoil.png",
+  "renderAboveAllWeapons": 0,
+  "glowColor": [
+    178,
+    95,
+    229,
+    191
+  ],
+  "visualRecoil": 10,
+  "renderHints": [
+    RENDER_BARREL_BELOW
+  ],
+  "turretOffsets": [
+    22,
+    0
+  ],
+  "turretAngleOffsets": [
+    0
+  ],
+  "hardpointOffsets": [
+    24,
+    0
+  ],
+  "hardpointAngleOffsets": [
+    0
+  ],
+  "barrelMode": "ALTERNATING",
+  "animationType": "GLOW_AND_FLASH",
+  "muzzleFlashSpec": {
+    "length": 40,
+    "spread": 40,
+    "particleSizeMin": 10,
+    "particleSizeRange": 10,
+    "particleDuration": 0.35,
+    "particleCount": 40,
+    "particleColor": [
+      255,
+      188,
+      79,
+      255
+    ]
+  },
+  "textureType": ROUGH,
+  "fireSoundTwo": "nskr_emgl_fire"
+}

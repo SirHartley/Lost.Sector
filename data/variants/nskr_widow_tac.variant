@@ -1,0 +1,30 @@
+{
+    "displayName": "Tactical",
+    "fluxCapacitors": 9,
+    "fluxVents": 10,
+    "hullId": "nskr_widow",
+    "hullMods": [],
+    "permaMods": [],
+    "sMods": [],
+    "variantId": "nskr_widow_tac",
+    "weaponGroups": [
+        {
+            "autofire": false,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0002": "ionpulser",
+                "WS0003": "ionpulser"
+            }
+        },
+        {
+            "autofire": false,
+            "mode": "LINKED",
+            "weapons": {"WS0004": "sabotpod"}
+        },
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {"WS0001": "vulcan"}
+        }
+    ]
+}

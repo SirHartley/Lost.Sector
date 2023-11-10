@@ -1,0 +1,17 @@
+{
+	"baseHullId":"buffalo",
+	"skinHullId":"buffalo_kesteven",
+	"hullName":"Buffalo (KC)",
+	"descriptionId":"buffalo",  # optional
+	"descriptionPrefix":"This ship has been given Kesteven markings. Systems modifications are otherwise superficial.",
+	"tags":[""],
+	"tech":"Kesteven",
+	"spriteName":"graphics/ships/buffalo_kesteven.png",
+	"removeWeaponSlots":[], 		# ids
+	"removeEngineSlots":[], 		# indices, as engine slots have no id in the .ship file
+	"removeBuiltInMods":[], 		# hullmod ids
+	"removeBuiltInWeapons":[], 		# weapon slot ids
+	"builtInMods":[],
+	"builtInWeapons":{
+    },
+}

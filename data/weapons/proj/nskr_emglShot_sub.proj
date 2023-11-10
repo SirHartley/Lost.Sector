@@ -1,0 +1,16 @@
+{
+	"id":"nskr_emglShot_sub",
+	"specClass":"missile",	
+	"missileType":"MISSILE",
+	"size":[15,30],	
+	"center":[7.5,15],
+	"collisionRadius":9,
+	"collisionClass":"NONE",
+	"explosionColor":[100, 178, 255,125],
+	"explosionRadius":100,
+	"engineSpec":{"turnAcc":0,
+                      "turnRate":0,
+                      "acc":0,
+                      "dec":0},
+	"sprite":"graphics/missiles/shell_large_blue.png",
+}

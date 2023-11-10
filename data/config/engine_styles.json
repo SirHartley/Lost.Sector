@@ -1,0 +1,151 @@
+{
+	# Reserved engine style ids (can not be used):
+	# "CUSTOM"
+
+
+	"NSKR_TECHAUG":{
+		"engineColor":[15, 31, 255, 255],
+		"engineCampaignColor":[255,174,25, 105],
+		"contrailParticleSizeMult":4,
+		"contrailParticleDuration":1,
+		"contrailParticleFinalSizeMult":2.5,
+		"contrailMaxSpeedMult":0.5,
+		"contrailAngularVelocityMult":0f,
+		"contrailColor":[156, 197, 255,25],
+		"contrailCampaignColor":[255,190,26,125],
+		"glowAlternateColor":[15, 31, 255, 205],
+		"type":"GLOW" # GLOW or SMOKE
+	},
+	"NSKR_TECHAUG2":{
+		"engineColor":[255, 189, 89, 255],
+		"engineCampaignColor":[255,174,25,255],
+		"contrailParticleSizeMult":2,
+		"contrailParticleDuration":3,
+		"contrailParticleFinalSizeMult":2.5,
+		"contrailMaxSpeedMult":0.5,
+		"contrailAngularVelocityMult":0.5,
+		"contrailColor":[50,50,50,50],
+		"contrailCampaignColor":[255,190,26,125],
+		"glowAlternateColor":[255, 189, 89, 105],
+		"type":"SMOKE" # GLOW or SMOKE
+	},
+	"NSKR_TECHP":{
+		"engineColor":[156, 205, 255,255],
+		"engineCampaignColor":[255, 89, 74,255],
+		"contrailParticleSizeMult":4,
+		"contrailParticleDuration":2,
+		"contrailParticleFinalSizeMult":2.5,
+		"contrailMaxSpeedMult":0.5,
+		"contrailAngularVelocityMult":0.5,
+		"contrailColor":[50, 50, 50,50],
+		"contrailCampaignColor":[156, 205, 255,75],
+		"glowAlternateColor":[156, 205, 255,100],
+		"glowSprite":"graphics/fx/nskr_prot_engine_scroll.png",
+		"glowOutline":"graphics/fx/nskr_prot_engine_outline.png",
+		"type":"SMOKE" # GLOW or SMOKE
+	},	
+	"NSKR_TECHP2":{
+		"engineColor":[255, 89, 74,255],
+		"engineCampaignColor":[255, 89, 74,255],
+		"contrailParticleSizeMult":6,
+		"contrailParticleDuration":0.80,
+		"contrailParticleFinalSizeMult":2.5,
+		"contrailMaxSpeedMult":0.5,
+		"contrailAngularVelocityMult":0.5,
+		"contrailColor":[96, 125, 196, 60],
+		"contrailCampaignColor":[156, 205, 255,75],
+		"glowAlternateColor":[255, 89, 74, 200],
+		"glowSprite":"graphics/fx/nskr_prot_engine_scroll.png",
+		"glowOutline":"graphics/fx/nskr_prot_engine_outline.png",
+		"type":"GLOW" # GLOW or SMOKE
+	},
+	"NSKR_TECHR":{
+		"engineColor":[255, 185, 94,255],
+		"engineCampaignColor":[255, 185, 94,255],
+		"contrailParticleSizeMult":3,
+		"contrailParticleDuration":9,
+		"contrailParticleFinalSizeMult":2.5,
+		"contrailMaxSpeedMult":0.5,
+		"contrailAngularVelocityMult":0.5,
+		"contrailColor":[22, 22, 22,50],
+		"contrailCampaignColor":[200,90,70,75],
+		"glowAlternateColor":[255, 185, 94, 100],
+		"type":"SMOKE" # GLOW or SMOKE
+	},
+	"NSKR_TECHR2":{
+		"engineColor":[212, 235, 255,255],
+		"engineCampaignColor":[212, 235, 255,255],
+		"contrailParticleSizeMult":3,
+		"contrailParticleDuration":9,
+		"contrailParticleFinalSizeMult":2.5,
+		"contrailMaxSpeedMult":0.5,
+		"contrailAngularVelocityMult":0.5,
+		"contrailColor":[22, 22, 22,50],
+		"contrailCampaignColor":[200,90,70,75],
+		"glowAlternateColor":[212, 235, 255, 200],
+		"type":"SMOKE" # GLOW or SMOKE
+	},
+	"NSKR_TECHD":{
+		"engineColor":[255, 94, 105,255],
+		"engineCampaignColor":[255, 94, 105,255],
+		"contrailParticleSizeMult":10,
+		"contrailParticleDuration":0.7,
+		"contrailParticleFinalSizeMult":2.5,
+		"contrailMaxSpeedMult":0.5,
+		"contrailAngularVelocityMult":0.5,
+		"contrailColor":[255, 94, 105,30],
+		"contrailCampaignColor":[200,90,70,75],
+		"type":"GLOW" # GLOW or SMOKE
+	},
+	"NSKR_TECHD2":{
+		"engineColor":[231, 212, 255,255],
+		"engineCampaignColor":[231, 212, 255,255],
+		"contrailParticleSizeMult":10,
+		"contrailParticleDuration":0.7,
+		"contrailParticleFinalSizeMult":2.5,
+		"contrailMaxSpeedMult":0.5,
+		"contrailAngularVelocityMult":0.5,
+		"contrailColor":[231, 212, 255,30],
+		"contrailCampaignColor":[200,90,70,75],
+		"type":"GLOW" # GLOW or SMOKE
+	},
+	"NSKR_TECHSP":{
+		"engineColor":[231, 212, 255,255],
+		"engineCampaignColor":[231, 212, 255,255],
+		"contrailParticleSizeMult":7,
+		"contrailParticleDuration":0.5,
+		"contrailParticleFinalSizeMult":2.5,
+		"contrailMaxSpeedMult":0.5,
+		"contrailAngularVelocityMult":0.5,
+		"contrailColor":[231, 212, 255,30],
+		"contrailCampaignColor":[200,90,70,75],
+		"type":"GLOW" # GLOW or SMOKE
+	},
+	"NSKR_KS":{
+		"engineColor":[255, 207, 75,255],
+		"glowSizeMult":0.4,
+		"contrailParticleSizeMult":4,
+		"contrailParticleDuration":2,
+		"contrailParticleFinalSizeMult":2.5,
+		"contrailMaxSpeedMult":0.5,
+		"contrailAngularVelocityMult":0,
+		"contrailColor":[85, 115, 161,40],
+		"contrailCampaignColor":[100, 120, 150,75],
+		"type":"GLOW" # GLOW or SMOKE
+	},	
+	"NSKR_EXEC":{
+		"engineColor":[149,100,255,255],
+		"contrailParticleSizeMult":8,
+		"contrailParticleDuration":5,
+		"contrailParticleFinalSizeMult":1,
+		"contrailMaxSpeedMult":0.5f,
+		"contrailAngularVelocityMult":0f,
+		"contrailColor":[94,143,255,25],
+		"glowSizeMult":3.5,
+		"glowAlternateColor":[0,166,255,255],
+		"type":"GLOW" # GLOW or SMOKE
+	},
+
+
+}
+

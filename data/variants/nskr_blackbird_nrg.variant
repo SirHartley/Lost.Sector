@@ -1,0 +1,45 @@
+{
+    "displayName": "Blaster",
+    "fluxCapacitors": 10,
+    "fluxVents": 11,
+    "goalVariant": true,
+    "hullId": "nskr_blackbird",
+    "hullMods": [
+        "unstable_injector",
+        "hardenedshieldemitter",
+        "missleracks"
+    ],
+    "permaMods": [],
+    "sMods": [],
+    "variantId": "nskr_blackbird_nrg",
+    "weaponGroups": [
+        {
+            "autofire": false,
+            "mode": "LINKED",
+            "weapons": {"WS0008": "heavyblaster"}
+        },
+        {
+            "autofire": false,
+            "mode": "ALTERNATING",
+            "weapons": {
+                "WS0003": "sabot",
+                "WS0004": "sabot",
+                "WS0006": "sabot",
+                "WS0007": "sabot"
+            }
+        },
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0001": "pulselaser",
+                "WS0002": "pulselaser"
+            }
+        },
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {"WS0005": "pdlaser"}
+        }
+    ]
+}

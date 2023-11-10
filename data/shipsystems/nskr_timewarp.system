@@ -1,0 +1,26 @@
+{
+	"id":"nskr_timewarp",
+	"type":"ENGINE_MOD",
+	"aiType":"CUSTOM",
+	"aiScript":"scripts.kissa.LOST_SECTOR.shipsystems.ai.nskr_timewarpAI",
+	
+	"statsScript":"scripts.kissa.LOST_SECTOR.shipsystems.nskr_timewarpStats",
+	
+	"clampMaxSpeedAfter":true,
+	
+	"soundFilterType":"LOWPASS",
+	"soundFilterGain":0.75,
+	"soundFilterGainHF":0.5,
+
+	"fadeActivationSoundOnChargedown":true,
+	"useSound":"nskr_timewarp_activate",
+	"loopSound":"nskr_timewarp_loop",
+	"deactivateSound":"nskr_timewarp_out",
+	"outOfUsesSound":"gun_out_of_ammo",
+	
+	"aiHints":{
+		"activeSpeedIncrease":300,
+		"burstMovementPotential":500,
+		"averageSpeedIncrease":50,
+	}
+}

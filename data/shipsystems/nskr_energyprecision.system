@@ -1,0 +1,16 @@
+{
+	"id":"nskr_energyprecision",
+	"type":"STAT_MOD",
+	"aiType":"CUSTOM",
+	"aiScript":"scripts.kissa.LOST_SECTOR.shipsystems.ai.nskr_energyPrecisionAI",
+	"statsScript":"scripts.kissa.LOST_SECTOR.shipsystems.nskr_energyPrecisionStats",
+
+	"weaponGlowColor":[91, 136, 255,100],
+	"weaponTypes":[ENERGY],
+	
+	"flameoutOnImpactChance":0,
+
+	"useSound":"nskr_unchained_activate",
+	"loopSound":"system_high_energy_focus_loop",	
+	"outOfUsesSound":"gun_out_of_ammo",	
+}

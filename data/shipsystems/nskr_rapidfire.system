@@ -1,0 +1,13 @@
+{
+	"id":"nskr_rapidfire",
+	"type":"STAT_MOD",
+	"aiType":"CUSTOM",
+	"aiScript":"scripts.kissa.LOST_SECTOR.shipsystems.ai.nskr_rapidFireAI",
+	"statsScript":"scripts.kissa.LOST_SECTOR.shipsystems.nskr_rapidfireStats",
+	
+	"weaponGlowColor":[255,30,0,155],
+	"weaponTypes":[BALLISTIC],
+	
+	"useSound":"system_ammo_feeder",
+	"outOfUsesSound":"gun_out_of_ammo",
+}

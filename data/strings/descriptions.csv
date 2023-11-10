@@ -1,0 +1,295 @@
+id,type,text1,text2,text3,text4,notes
+
+nskr_prosperity,SHIP,"Revealing the true scale of the Kesteven military industrial complex. The Prosperity project took a multi billion credit budget and centuries long development cycle, but now that it's here it creates a true fleet in being for the corporation. Best in class forward firepower and speed allow this battleship to annihilate the heavier vessels of an opposing force in mere moments. 
+
+The Prosperity project started long before the collapse as plans to create a replacement battleship for the Onslaught-class, but over the many years of development the project spiraled into delays and budgeting issues eventually being put on hold indefinitely. Post-collapse the corporation was desperate to get their hands on capital class blueprints, so a questionable amount of funds from the DRA were diverted to finish the Prosperity project. Despite nearly crashing the economy, another decade in the making and only partially completing the original plans. The unveiling of the first functional Prosperity-class advanced battleship, was in the end considered a huge propaganda victory for the corporation.",,,,
+
+nskr_nighthawk,SHIP,"Workhorse of Kesteven fleets, the Kesteven Konstruktion defense products line ""Nighthawk"" is a very recent design, making use of the latest advancements in spaceship production. While it failed to gain any significant market share pre-collapse, the rather complex design and expensive maintenance severely limited its popularity. Its blueprints are now put to good use by the Kesteven corporation. It serves a relatively simple role in fleets, acting as line ship with excellent firepower and respectable durability.",,,,
+
+nskr_devilcatcher,SHIP,"Fast paced aggression at a premium, the defense products line ""Devilcatcher"" is a top end fast cruiser with uncompromising design. The unorthodox engine system allows for unmatched speed and agility, at the cost of a rigorous and precise maintenance procedure. Since even a small error could lead to a catastrophic P-space cascade during system activation.",,,,
+
+nskr_mercenary,SHIP,"The ""Mercenary"" class, a slick top of the line vessel for the wealthy independent captains of the sector. Kesteven defense products assures that the ample armor, wide turret arcs and the projectile deterrence field provide best in class performance for escort duties.",,,,
+
+nskr_blackbird,SHIP,"Kesteven Konstruktion defense products line ""Blackbird"", was a barely finished design in its late prototype stage pre-collapse. It was quickly rushed to production and put to good use during the events of the collapse. Now in Kesteven fleets it serves as a highly aggressive attack platform built for swift assassination of critical enemy vessels, a role in which the Blackbird-class excels in.",,,,
+
+nskr_dragontail,SHIP,"The fastest serial production frigate ever built and with incredible agility to match, well at least according to Kesteven marketing material. The Dragontail-class moves with implausible speed and defies time with its pullback system, allowing for daring daring maneuvers against slower enemy vessels.",,,,
+
+nskr_kingstork,SHIP,"The first design unveiled by the at the time newly formed Kesteven Konstruktion defense products branch. The Kingstork-class is a well liked and much more popular design than other Kesteven hulls, thanks to its well proven and simple design. It performs well in escort roles and as a close range brawler as a result of its excellent shield, although the low top speed can leave it very vulnerable when pitted against larger vessels.",,,,
+
+nskr_kingslayer,SHIP,"A symbol of anarchy to come, the Kingslayer-class is a ruthless combination of speed and firepower. Said to be the brainchild and the life's work of a severely disgruntled engineer, built at some covert dockyard from salvaged and retrofitted ship parts with uncharacteristic care. The Kingslayer only brings rampant destruction in its wake, it is the antithesis to the order of the Domain and their successors. It has reached mythical status among spacers that have seen it in action and lived, more legend than reality and only spoken of with dread. It is far more capable than a post-collapse design has any right to be.",,,,
+
+nskr_stalwart,SHIP,"A modern experimental design, made to excel at fleet support roles with non-standard missile systems. The Stalwart-class was designed at the same time as the more common Champion-class as a sister ship, to be an economic support oriented alternative. It faced the same list of lengthy issues as the Champion that prevented pre-collapse adoption. Now in the post-collapse sector, and after some blueprints were recovered, it's an uncommon but reliable cruiser that can shine when put in the right situation.",,,,
+
+nskr_verity,SHIP,"The apex of Domain-era electronics and energy weapons system. The Verity-class was the latest in spaceship engineering that appeared in market just before the collapse. Demanding skill and precision the Verity can be tough to pilot, but rewards with rapid and flexible damage output where needed with its high mobility and range.",,,,
+
+nskr_rhea,SHIP,"A shockingly advanced Pirate made design with incredible firepower, that can quickly catch a careless commander off guard. The Rhea creates chaos on the battlefield like no other, its glass cannon design favors the brave and mad captain alike. Although feared in combat it thankfully remains an uncommon sight in the sector, due to its design requiring more advanced production methods and skilled engineers to manufacture than your average Pirate hack-job.",,,,
+
+nskr_borealis,SHIP,"The Borealis-class vessel is an effective mix of advanced scientific and military technologies, perfect for long-range exploration of hostile space. Fitted with multiple military grade fighter bays, top of the line high-power sensors, and advanced electronics that can boost the combat capabilities of an entire fleet of ships. The Borealis is an excellent support vessel, but is rarely seen due to the very high cost of construction for a more civilian ship.",,,,
+
+nskr_reverie,SHIP,"One of the most agile cruisers ever built. The Reverie-class is almost impossible to pin down without overwhelming numerical superiority. The flexible weapons load-out allows for excellent strike capabilities making the Reverie one of the most deadly hit and run vessels in the sector. Armed with the missile salvo which is an early variant of the more infamous and feared mine strike, while not quite as lethal it still can deliver serious damage to hostile targets.",,,,
+
+nskr_malediction,SHIP,"The Malediction is an extremely advanced fast attack platform rivaling the combat prowess of the Tempest. An absolute menace to other frigates and slower ships that it can easily outmaneuver. Comes built-in with Pursuer attack drones, an experimental weapons drone with the latest technological advancements in it that the Tri-Tachyon Corporation has to offer built-in.",,,,
+
+nskr_pursuer,SHIP,"The Pursuer is an experimental weapons drone with the latest advancements delta-core AI technology built-in. It excels at harassing undefended or distracted ships, while The Malediction can do the heavy lifting. The volatile EM core offers an explosive surprise to unsuspecting targets, allowing it to deliver damage far above its weight class.",,,,
+
+nskr_rorqual,SHIP,"The Rorqual-class was the pinnacle of Rogue Co. engineering, pushing the limits of what was thought to be possible. With unique over-charger engine systems and the trademark flux anomaly discharger tech. These vessels were known to be absolute beasts in combat with such well rounded stats that there is almost no weakness. The Rogue Company was a group of the best engineers, privateers and smugglers pushing the boundaries of ship performance and engineering with every ship custom built and hand tuned for maximum performance. Since the collapse almost all of their tech has been lost to time, so only a handful of ships survive to this day.",,,,
+
+nskr_reverie_boss,SHIP,"The flagship of a rogue AI-core that somehow got its hands on a custom Reverie with systems pushed far beyond what is reasonable. With its unique ""Void"" power core pulling impossible levels of power power tearing reality itself apart. This ship will make a swift end to those who dare to oppose it.",Unidentified Vessel,"UNKNOWN ENTRY
+
+Please register your Tri-Tachyon datapad to receive the latest news and updates.",,
+
+nskr_harbinger_boss,SHIP,"A heavily customized Harbinger-class vessel with a new power core and a modified entropy amplifier, it is far more lethal than its predecessor.",Unidentified Vessel,"UNKNOWN ENTRY
+
+Please register your Tri-Tachyon datapad to receive the latest news and updates.",,
+
+nskr_afflictor_boss,SHIP,"This custom built Afflictor has been installed with heavily upgraded systems making for and absolute nuisance on the battlefield and it's bite is not to be underestimated either.",Unidentified Vessel,"UNKNOWN ENTRY
+
+Please register your Tri-Tachyon datapad to receive the latest news and updates.",,
+
+nskr_minokawa,SHIP,"A seemingly alien design not built to any known spec. This ""Prototype"" hull is most likely part of a secret Domain-era research program operating far from prying eyes. 
+
+""There will be no ifs about this, what is necessary will be done and what is required will be provided. Bring in the top clearance teams, this is now our top priority."" - Dr. Vaughn - Project Lead",Unidentified Vessel,"UNKNOWN ENTRY
+
+Please register your Tri-Tachyon datapad to receive the latest news and updates.",,
+
+nskr_sovereign,SHIP,"A seemingly alien design not built to any known spec. This ""Prototype"" hull is most likely part of a secret Domain-era research program operating far from prying eyes. 
+
+""It is absolutely necessary to maintain our research into the temporal fields. The need to combat causality disturbing technology is rising rapidly."" - Dr. Vaughn - Project Lead",Unidentified Vessel,"UNKNOWN ENTRY
+
+Please register your Tri-Tachyon datapad to receive the latest news and updates.",,
+
+nskr_nemesis,SHIP,"A seemingly alien design not built to any known spec. This ""Prototype"" hull is most likely part of a secret Domain-era research program operating far from prying eyes. 
+
+""The use of higher level AI would make many uncomfortable, but as you know - It is very necessary. Now it's our top priority that this information does not leave this complex."" - Virtanen - Head of Information Security",Unidentified Vessel,"UNKNOWN ENTRY
+
+Please register your Tri-Tachyon datapad to receive the latest news and updates.",,
+
+nskr_muninn,SHIP,"A seemingly alien design not built to any known spec. This ""Prototype"" hull is most likely part of a secret Domain-era research program operating far from prying eyes. 
+
+""Feelings of nausea, temporary loss of vision, paranoia, and mild hallucinations, are to be ignored. We'll iron those out."" Sr. Engineer Taktre - Project log #2365",Unidentified Vessel,"UNKNOWN ENTRY
+
+Please register your Tri-Tachyon datapad to receive the latest news and updates.",,
+
+nskr_warfare,SHIP,"A seemingly alien design not built to any known spec. This ""Prototype"" hull is most likely part of a secret Domain-era research program operating far from prying eyes. 
+
+""The AI assisted computation has been a huge boon to our development speed. We can expect the platform to be delivered - Right on time."" - Dr. Aslov - Material science, department #24",Unidentified Vessel,"UNKNOWN ENTRY
+
+Please register your Tri-Tachyon datapad to receive the latest news and updates.",,
+
+nskr_epochx,SHIP,"A seemingly alien design not built to any known spec. This ""Prototype"" hull is most likely part of a secret Domain-era research program operating far from prying eyes. 
+
+""Everything is inevitable in the end, some things just take a lot longer than others."" - Dr. Vaughn - Project Lead",Unidentified Vessel,"UNKNOWN ENTRY
+
+Please register your Tri-Tachyon datapad to receive the latest news and updates.",,
+
+nskr_epoch,SHIP,"A seemingly alien design not built to any known spec. This ""Prototype"" hull is most likely part of a secret Domain-era research program operating far from prying eyes. 
+
+""Now that the move to clearance level-2 is complete, we can finally begin integrating the Gamma-core assisted temporal reposition matrix. We should now have more than enough computational power to avoid the unfortunate P-space cascades of past experiments."" - Dr. Tallaha - Applied engineering, wing #97",Unidentified Vessel,"UNKNOWN ENTRY
+
+Please register your Tri-Tachyon datapad to receive the latest news and updates.",,
+
+nskr_widow,SHIP,"A seemingly alien design not built to any known spec. This ""Prototype"" hull is most likely part of a secret Domain-era research program operating far from prying eyes.
+
+""Sometimes I think about the about the weight of responsibility for designing such weapons, but I have to remember, in the end - It's on the person pulling the trigger."" - Dr. Katame - Journal #5811",Unidentified Vessel,"UNKNOWN ENTRY
+
+Please register your Tri-Tachyon datapad to receive the latest news and updates.",,
+
+nskr_torpor,SHIP,"A seemingly alien design not built to any known spec. This ""Prototype"" hull is most likely part of a secret Domain-era research program operating far from prying eyes.
+
+""Faster - Slower, it's all about perspective. To a photon we seem real damn slow."" - Dr. Allegre - Temporal physics, wing #17",Unidentified Vessel,"UNKNOWN ENTRY
+
+Please register your Tri-Tachyon datapad to receive the latest news and updates.",,
+
+nskr_eternity,SHIP,"A seemingly alien design not built to any known spec. This ""Prototype"" hull is most likely part of a secret Domain-era research program operating far from prying eyes.
+
+""Forever is a mighty long time."" - Test Pilot ""Umbra"" - Project log #6663",Unidentified Vessel,"UNKNOWN ENTRY
+
+Please register your Tri-Tachyon datapad to receive the latest news and updates.",,
+
+nskr_huginn,SHIP,"A special heavy duty attack drone. Has a unique blaster with some serious firepower.",,,,
+
+nskr_minokawa_e,SHIP,"[DATABASE ERROR:451]OOOOOOoooooooooooooooo E ee 					If the problem persists please contact your local TriPad(tm) repair & maintenance service ... ... ... 
+
+Although automated machines of war were forbidden in core Domain space, advanced AI were quietly developed outside of officially incorporated volume. There are persistent rumours of old experimental vessels that have been overtaken by rogue AI that manifest in the deep reaches of the outer sector, with none of these tales ending in triumph.",,,,
+
+nskr_sovereign_e,SHIP,"[DATABASE ERROR:451]OOOOOOoooooooooooooooo E ee 					If the problem persists please contact your local TriPad(tm) repair & maintenance service ... ... ... 
+
+Although automated machines of war were forbidden in core Domain space, advanced AI were quietly developed outside of officially incorporated volume. There are persistent rumours of old experimental vessels that have been overtaken by rogue AI that manifest in the deep reaches of the outer sector, with none of these tales ending in triumph.",,,,
+
+nskr_nemesis_e,SHIP,"[DATABASE ERROR:451]OOOOOOoooooooooooooooo E ee 					If the problem persists please contact your local TriPad(tm) repair & maintenance service ... ... ... 
+
+Although automated machines of war were forbidden in core Domain space, advanced AI were quietly developed outside of officially incorporated volume. There are persistent rumours of old experimental vessels that have been overtaken by rogue AI that manifest in the deep reaches of the outer sector, with none of these tales ending in triumph.",,,,
+
+nskr_muninn_e,SHIP,"[DATABASE ERROR:451]OOOOOOoooooooooooooooo E ee 					If the problem persists please contact your local TriPad(tm) repair & maintenance service ... ... ... 
+
+Although automated machines of war were forbidden in core Domain space, advanced AI were quietly developed outside of officially incorporated volume. There are persistent rumours of old experimental vessels that have been overtaken by rogue AI that manifest in the deep reaches of the outer sector, with none of these tales ending in triumph.",,,,
+
+nskr_warfare_e,SHIP,"[DATABASE ERROR:451]OOOOOOoooooooooooooooo E ee 					If the problem persists please contact your local TriPad(tm) repair & maintenance service ... ... ... 
+
+Although automated machines of war were forbidden in core Domain space, advanced AI were quietly developed outside of officially incorporated volume. There are persistent rumours of old experimental vessels that have been overtaken by rogue AI that manifest in the deep reaches of the outer sector, with none of these tales ending in triumph.",,,,
+
+nskr_eternity_e,SHIP,"[DATABASE ERROR:451]OOOOOOoooooooooooooooo E ee 					If the problem persists please contact your local TriPad(tm) repair & maintenance service ... ... ... 
+
+Although automated machines of war were forbidden in core Domain space, advanced AI were quietly developed outside of officially incorporated volume. There are persistent rumours of old experimental vessels that have been overtaken by rogue AI that manifest in the deep reaches of the outer sector, with none of these tales ending in triumph.",Unidentified Vessel,"UNKNOWN ENTRY
+
+Please register your Tri-Tachyon datapad to receive the latest news and updates.",,
+
+nskr_epochx_e,SHIP,"[DATABASE ERROR:451]OOOOOOoooooooooooooooo E ee 					If the problem persists please contact your local TriPad(tm) repair & maintenance service ... ... ... 
+
+Although automated machines of war were forbidden in core Domain space, advanced AI were quietly developed outside of officially incorporated volume. There are persistent rumours of old experimental vessels that have been overtaken by rogue AI that manifest in the deep reaches of the outer sector, with none of these tales ending in triumph.",,,,
+
+nskr_epoch_e,SHIP,"[DATABASE ERROR:451]OOOOOOoooooooooooooooo E ee 					If the problem persists please contact your local TriPad(tm) repair & maintenance service ... ... ... 
+
+Although automated machines of war were forbidden in core Domain space, advanced AI were quietly developed outside of officially incorporated volume. There are persistent rumours of old experimental vessels that have been overtaken by rogue AI that manifest in the deep reaches of the outer sector, with none of these tales ending in triumph.",,,,
+
+nskr_widow_e,SHIP,"[DATABASE ERROR:451]OOOOOOoooooooooooooooo E ee 					If the problem persists please contact your local TriPad(tm) repair & maintenance service ... ... ... 
+
+Although automated machines of war were forbidden in core Domain space, advanced AI were quietly developed outside of officially incorporated volume. There are persistent rumours of old experimental vessels that have been overtaken by rogue AI that manifest in the deep reaches of the outer sector, with none of these tales ending in triumph.",,,,
+
+nskr_torpor_e,SHIP,"[DATABASE ERROR:451]OOOOOOoooooooooooooooo E ee 					If the problem persists please contact your local TriPad(tm) repair & maintenance service ... ... ... 
+
+Although automated machines of war were forbidden in core Domain space, advanced AI were quietly developed outside of officially incorporated volume. There are persistent rumours of old experimental vessels that have been overtaken by rogue AI that manifest in the deep reaches of the outer sector, with none of these tales ending in triumph.",,,,
+
+nskr_huginn_e,SHIP,"[DATABASE ERROR:451]OOOOOOoooooooooooooooo E ee 					If the problem persists please contact your local TriPad(tm) repair & maintenance service ... ... ...",,,,
+
+nskr_aed,SHIP,"[DATABASE ERROR:451]OOOOOOoooooooooooooooo E ee 					If the problem persists please contact your local TriPad(tm) repair & maintenance service ... ... ... 
+
+Although automated machines of war were forbidden in core Domain space, advanced AI were quietly developed outside of officially incorporated volume. There are persistent rumours of old experimental vessels that have been overtaken by rogue AI that manifest in the deep reaches of the outer sector, with none of these tales ending in triumph.",,,,
+
+nskr_sunburst,SHIP,"[DATABASE ERROR:451]OOOOOOoooooooooooooooo E ee 					If the problem persists please contact your local TriPad(tm) repair & maintenance service ... ... ... 
+
+A remnant of the autonomous AI fleets developed by the Tri-Tachyon Corporation. Illegal under Domain (and Hegemony) law, and an abomination to the Church of Galactic Redemption, the First AI War saw these creations purged from the Sector. So the official histories say.",Unidentified Vessel,"UNKNOWN ENTRY
+
+Please register your Tri-Tachyon datapad to receive the latest news and updates.",,
+
+nskr_pbcc,WEAPON,"""You ever think about umm-... What happens if the containment field fails?"" ""They've calculated that to be impossible."" ""...And what if they're wrong?"" ""Well... It wont be our problem anymore.""", "- Jr.engineer Braams and Sr.engineer Nicholson - Transcript of recording #783",,,
+
+nskr_mfrocketpod,WEAPON,"""Test firing broke every single breaker on board, further refinement requested.""","- Test Pilot ""V"" - Project log #0651",,,
+
+nskr_spikem,WEAPON,"""Direct hit on the front bulkheads, some shrapnel made it all the to the back of the ship. Ending with some poor fellow attached to the roof of the engine deck.""", "- Damage report on the now recovered ISS Old Forgoyle",,,
+
+nskr_spikes,WEAPON,"""I will not grant anymore time, no more delays. Let's hope for everyone's sake it works at all.""", "- Department Lead Lionis - Project log #4494",,,
+
+nskr_tremorm,WEAPON,"""I hate it here... So some genius messed with the lounge coffeemaker and broke it. Now I have to leave a request to the requisitions department. So they can send someone over in like a week. Then they make a request which takes another week, so they can finally schedule the maintenance crew to install a new one in 2 - 4 weeks.""","- Project engineer Waller - Journal #4605",,,
+
+nskr_tremors,WEAPON,"""The Delta-core assisted swarm targeting could be interpreted as higher level AI in function. Requested review from the AI-Ethics board.""","- Guidance technician Greene - Project log #1251",,,
+
+nskr_emgl,WEAPON,"""Some view the low clearance wings with a particular stigma, like we're making damn toaster parts. Hey, at least we don't have to submit to a bioscan every 50 steps.""", "- Dr. Sheffield - Journal #9022",,,
+
+nskr_scannonm,WEAPON,"""Head of engineering reported massive damage to all onboard electronics. It was like we were hit by a damn solar flare right at that moment.""","- AAR of encounter at the fringes, opfor unknown.",,,
+
+nskr_arcgen,WEAPON,"""The static surge caused the projector to be destroyed, and the target, and the wall behind it.""","- Project engineer Hrag - Electro magnetics, wing #102",,,
+
+nskr_scatterm,WEAPON,"""Receiving accurate readings of the event has become increasingly difficult. Now that we are past the Hagedorn temperature, it simply can't resist the spontaneous anti-matter chains the particle creates. Iterating on our experimental setup is now top priority for the project, I sense that this phenomena has many novel applications.""", "- Department Lead Dr. Leal-Francis - Project log #3401",,,
+
+nskr_plasmal,WEAPON,"""With the application of new magnetic stabilization techniques, the radiant impact magnitude has increased exponentially. It's now clear that a new era of energy weapons is approaching. Under no circumstance can this technology fall into the wrong hands.""", "- Dr. Vaughn - Project Lead",,,
+
+nskr_hshotgun,WEAPON,"""What do they even need a gun this big for?"" ""You need to stop worrying about the ""what for?"" doctor, it's good for you.""", "- Transcript of surveillance log #353",,,
+
+nskr_inverter,WEAPON,"""The recursive nature of the particular anomalies has brought the attention of the temporal dynamics board. Unfortunately the current project is on hold until we can get a conclusive report on whether the clearance level of the project needs to be raised. ETA, 3 - 6 business months.""", "- Dr. Chen - High energy physics, department #178",,,
+
+nskr_collector,WEAPON,"""I've never seen anything quite like it. A large - yet perfect sphere of material, dwarfing a single person, cleanly missing off the impact point with millimeter precision in every direction. I don't think they can just buff this one out.""", "- Inspection of the now wrecked K-CORP Nightrunner",,,
+
+nskr_huginn_arm_right,WEAPON,"A heavy blaster built into the Huginn-type attack drone. The Garde has the capability to provide excellent results against most targets thanks to the massive blast radius and high damage.",,,,
+
+nskr_huginn_e_arm_right,WEAPON,"[DATABASE ERROR:451]OOOOOOoooooooooooooooo E ee 					If the problem persists please contact your local TriPad(tm) repair & maintenance service ... ... ... ",,,,
+
+nskr_huginn_arm_left,WEAPON,"A relatively standard light rocket launcher with a rudimentary auto-loader that ensures sustained rocket output even in extended battles.",,,,
+
+nskr_huginn_e_arm_left,WEAPON,"[DATABASE ERROR:451]OOOOOOoooooooooooooooo E ee 					If the problem persists please contact your local TriPad(tm) repair & maintenance service ... ... ... ",,,,
+
+nskr_vulcanFi,WEAPON,"A simple modification of the venerable Vulcan cannon fit for fighters.",,,,
+
+nskr_bc_single,WEAPON,"A simple dumb-fire torpedo, with a shaped charge warhead that can deal massive damage against larger vessels.",,,,
+
+nskr_bc_tube,WEAPON,"A simple magazine based weapons system carrying multiple torpedoes. A shaped charge warhead ensure massive damage potential against larger vessels.",,,,
+
+nskr_zhonya,SHIP_SYSTEM,"Makes the ship invulnerable and boosts flux dissipation, but prevents it from moving.",Defensive,,,
+
+nskr_temporal,SHIP_SYSTEM,"Phase and rapidly charge in the direction the ship is facing and then release an enormous blast of energy.",Movement,,,
+
+nskr_timewarp,SHIP_SYSTEM,"Slow time to a crawl and boost top speed, prevents weapons from firing.",Movement,,,
+
+nskr_boostdrive,SHIP_SYSTEM,"Feeds a huge amount of power to the engines for a short time. Greatly increasing top speed, but the ship is unable to slow down.",Movement,,,
+
+nskr_masstargeting,SHIP_SYSTEM,"",Offensive,"Provides precise targeting data on all nearby hostile targets to allies within 1800 units, including fighters. Boosts allied weapon damage to fighters & missiles by 50% and increases non-missile weapons range by 20%.",1800su | 50% | 20%,
+
+nskr_animebad,SHIP_SYSTEM,"Marks a target for destruction disabling their engines and greatly increasing damage taken from all sources.",Offensive,,,
+
+nskr_bfpulse,SHIP_SYSTEM,"Release an immense blast of energy in an area around the ship. Destroys all projectiles, missiles and fighters, then channelling the absorbed energy into a massive shock bolt chaining to forward targets.",Special,,,
+
+nskr_causality,SHIP_SYSTEM,"Blasts projectiles back absorbing energy and giving increasing buffs and time dilation for the ship.",Special,,,
+
+nskr_warp,SHIP_SYSTEM,"Warps to a location in the direction of the velocity vector. Range increases with movement speed, more effective laterally.",Movement,,,
+
+nskr_emflak,SHIP_SYSTEM,"Launches advanced EM charged mines that destroy projectiles and missiles alike.",Defensive,,,
+
+nskr_unchained,SHIP_SYSTEM,,Special,Unlocks the full power of the Kingslayer. Boost all weapon rate of fire by 75% with a corresponding reduction in flux cost. Increases top speed and boosts manoeuvrability. But disables shields. Toggle.,75%,
+
+nskr_stasisp,SHIP_SYSTEM,"Recharges the stasis generator weapon on use, and generates significant flux. Fires the weapon instead if a charge is available, this doesn't generate flux.",Special,,,
+
+nskr_stasis,WEAPON,"Launches a stasis sphere which slows down any ships caught in the blast. Effect gets reduced against lighter vessels.",Special,,,
+
+nskr_kaboom,SHIP_SYSTEM,"Arms the anti-matter payload aboard the ship, which causes a massive explosion after some delay.",Offensive,,,
+
+nskr_protocolsystem,SHIP_SYSTEM,"Allows the ship to swap between different protocols that boost their particular systems.",Special,,,
+
+nskr_missilesalvo,SHIP_SYSTEM,,Offensive,"Phases in a salvo of 6 missiles each dealing 400 Energy and 400 EMP damage. Missiles have 1000 units range by default, this is increased to 1600 units with ECCM.",6 | 400 Energy | 400 EMP,
+
+nskr_mercurial,SHIP_SYSTEM,"Provides a huge amount of speed and maneuverability, but only for a short moment. Has multiple charges.",Movement,,,
+
+nskr_emBlast,SHIP_SYSTEM,"Upon taking severe damage the drone begins a self destruct sequence. After charging for 2.5 second releases a large blast of EMP damage, causing EMP arcs on all nearby targets. Drone slows down and gains considerable damage resistance while charging the system.",Offensive,,,
+
+nskr_energyprecision,SHIP_SYSTEM,,Offensive,"Increases energy weapon range by 300 units and projectile velocity by 50%.",300 | 50%,
+
+nskr_rapidfire,SHIP_SYSTEM,"Dramatically increases ballistic weapon rate of fire for a short moment with a matching reduction in flux use. The ill advised nature of this system has a chance to cause malfunctions to weapons. Has multiple charges.",Offensive,,
+
+nskr_pullback,SHIP_SYSTEM,"Pulls the ship back to a previous position. Has multiple charges.",Movement,,,
+
+nskr_powersurge,SHIP_SYSTEM,"Grants a massive burst of forward speed for a short duration. Increases weapon rate of fire for a short duration after.",Movement,,,
+
+nskr_fluxdump,SHIP_SYSTEM,"Grants a short burst of flux dissipation and movement speed, allows the ship to also dissipate hard flux. Only gains charges through the destruction of enemy ships.",Offensive,,,
+
+nskr_advance,SHIP_SYSTEM,"Gain increasing bonuses in stages when damaging enemy ships. Initial bonus to top speed and agility, then rate of fire and flux efficiency, lastly to weapon damage and projectile velocity. These bonuses also increase in strength for each stage.",Offensive,,,
+
+nskr_bubble,SHIP_SYSTEM,"Greatly increases shield performance for a short period.",Defensive,,,
+
+nskr_distortionburn,SHIP_SYSTEM,"Grants a large increase to top speed and maneuverability for a short period, but forces the ship to accelerate. Interference anomalies damage any target caught behind the ship including allies. Has multiple charges.",Movement,,,
+
+nskr_projfield,SHIP_SYSTEM,"Projects a defensive field that slows down incoming missiles & fighters, and repels projectiles. Has a greater effect on higher damage targets.",Defensive,,,
+
+nskr_omniload,SHIP_SYSTEM,"Immediately reloads non-missile  weapons, if the non-missile weapon has ammo gain 25% of max ammo capacity back. Has multiple charges.",Offensive,,
+
+nskr_bigflak,SHIP_SYSTEM,"Fires one heavy proximity charge, takes time to arm.",Offensive,,
+
+nskr_harmonics,SHIP_SYSTEM,"",Utility,"Boosts the timeflow of any target ally ship within 1500su by 3x decaying over 10 seconds. And the ship inherits the movement stats of the target ship decaying over the same duration.",1500su | 3x,
+
+nskr_electronics,RESOURCE,"High value parts salvaged from from relics found across the distant parts of the sector. Although largely dysfunctional they still fetch a fair price from the right buyer.",,,,
+
+nskr_station_heart,CUSTOM,"A seemingly endless maze of ancient dockyards, research facilities and hangars. A pre-collapse Domain military research megastructure now overtaken by a rogue AI-core, with unnerving motivations.",,,,
+
+nskr_station_heart_d,CUSTOM,"The scattered remains of Frozen Heart. A massive cloud of debris and junk, cold and dead. And now it is all that remains of Enigma or any poor soul caught in the crossfire.",,,,
+
+kesteven,FACTION,"Kesteven Konstruktion Company - a pre-collapse megacorporation specializing in manufacturing of prefab structures, and more recently - spaceships. Though their influence in the sector was always limited to a single mega-factory planet Asteria. During the initial post-collapse period a puppet government wast set up on Asteria, now in the absence of the Domain giving the corporation total control of the planet and its population. The early years of the post-collapse chaos were make or break for the fledgling corporation, many sacrifices and concessions had to be made to keep the economy afloat. High military spending has kept the enemies of Kesteven at bay throughout the years of the post-collapse, but often a more diplomatic solution is required. And Kesteven officials are more than happy to use their economic prowess to extort, manipulate and sponsor the rest of the sector to keep possible threats at an arms length. The most important client the Hegemony maintains a heavy influence over Kesteven business. Asteria is a major source of economic power and growth so an uneasy alliance is maintained.
+
+The Democratic Republic of Asteria controls everyday life on the planet. Although democratic in name, politicians and officials with more business friendly policies towards Kesteven and its subsidiaries are suspiciously likely to get elected. There is much speculation outside the DRA about the rumored and very undemocratic activities of certain intelligence and special agencies, but of course such harmful lies and conspiracy theories get swept up inside Asteria itself.",,,,
+
+nskr_asteria,CUSTOM,"A cold and dusty planet, now rich in metals thanks to the cataclysmic event that turned the local star into a white dwarf. Before the collapse it hosted the main production facilities for the Kesteven Konstruktion Company, now known as the Kesteven Corporation. While Asteria is officially controlled by the Democratic Republic of Asteria, foreign politics (and most internal politics) are controlled by Kesteven by proxy, thanks to corporate friendly representatives being a vast majority.",,,,
+
+nskr_asteria_station,CUSTOM,"A large space station and fortification. Heavy traffic of traders, customs patrols and other military craft surround this massive station at all times.",,,,
+
+nskr_outpost,CUSTOM,"Established by the Kesteven Corporation in recent years. This ever-growing station helps handle the many expeditions sent by the corporation to explore the fringes of the sector.",,,,
+
+nskr_enigmabase,CUSTOM,"An abandoned R&D facility, built either to test equipment in interesting local phenomena or to experiment with that which is best kept far, far away from inhabited worlds. A cursory scan indicates that most of it has been cold and dead for tens of cycles at the very least, but closer inspection reveals that some parts of the station have seen much more recent activity. A closer inspection will yield more answers.",,,,
+
+nskr_blacksite,CUSTOM,"A sizeable makeshift space station used for storage of different goods and equipment. Considering it's location on the fringes, it's most likely used to store illegal ones.",,,,
+
+nskr_blacksite_cleared,CUSTOM,"A sizeable makeshift space station used for storage of different goods and equipment. Considering it's location on the fringes, it's used most likely to store illegal ones. Now cleared of any alarms or possible defenders.",,,,
+
+nskr_ice_desert,PLANET,"A cold and dusty planet that manages to maintain some amount of terrestrial water ice in the form of snow, either through asteroid bombardment or the dried up remains of ancient seas. Usually mixed in with frozen carbon dioxide thanks to the very low temperatures.",,,,
+
+nskr_artifact,CUSTOM,"An ancient comms satellite, relic of a bygone communications network. Still emits a weak signal, that makes it barely detectable to your sensors.",,,,
+
+nskr_core,CUSTOM,"A small cluster of computer cores, left over from the wrecked fleet.",,,,
+
+,,"",,,,

@@ -1,0 +1,9 @@
+{
+	"id":"nskr_bigflak",
+	"type":"STAT_MOD",
+	"aiType":"CUSTOM",
+	"aiScript":"scripts.kissa.LOST_SECTOR.shipsystems.ai.nskr_bigFlakAI",
+	"statsScript":"scripts.kissa.LOST_SECTOR.shipsystems.nskr_bigFlakStats",
+
+	"outOfUsesSound":"gun_out_of_ammo",
+}

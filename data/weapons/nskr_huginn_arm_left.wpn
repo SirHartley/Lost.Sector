@@ -1,0 +1,51 @@
+{
+  "id": "nskr_huginn_arm_left",
+  "specClass": "projectile",
+  "projectileSpecId": "nskr_rocketFi_shot",
+  "type": "MISSILE",
+  "size": "MEDIUM",
+  "turretSprite": "graphics/weapons/nskr_huginn_arm_left.png",
+  "hardpointSprite": "graphics/weapons/nskr_huginn_arm_left.png",
+  "renderAboveAllWeapons": 0,
+  "turretOffsets": [
+    11.5,
+    1.5,
+    11.5,
+    -1.5
+  ],
+  "turretAngleOffsets": [
+    3,
+    -1.5
+  ],
+  "hardpointOffsets": [
+    8,
+    -1.5,
+    8,
+    1.5
+  ],
+  "hardpointAngleOffsets": [
+    -1.5,
+    3.5
+  ],
+  "barrelMode": "ALTERNATING",
+  "animationType": "SMOKE",
+  "smokeSpec": {
+    "particleSizeMin": 10,
+    "particleSizeRange": 10,
+    "cloudParticleCount": 2,
+    "cloudDuration": 1,
+    "cloudRadius": 8,
+    "blowbackParticleCount": 3,
+    "blowbackDuration": 0.45,
+    "blowbackLength": 20,
+    "blowbackSpread": 6,
+    "particleColor": [
+      190,
+      180,
+      160,
+      95
+    ]
+  },
+  "textureType": ROUGH,
+  "fireSoundTwo": "annihilator_fire"
+}

@@ -1,0 +1,70 @@
+{
+    "displayName": "Blaster",
+    "fluxCapacitors": 0,
+    "fluxVents": 29,
+    "goalVariant": true,
+    "hullId": "nskr_prosperity",
+    "hullMods": [
+        "targetingunit",
+        "fluxcoil",
+        "hardenedshieldemitter",
+        "stabilizedshieldemitter"
+    ],
+    "permaMods": [],
+    "sMods": [],
+    "variantId": "nskr_prosperity_nrg",
+    "weaponGroups": [
+        {
+            "autofire": false,
+            "mode": "ALTERNATING",
+            "weapons": {
+                "WS0019": "sabotpod",
+                "WS0020": "sabotpod",
+                "WS0027": "sabotpod",
+                "WS0028": "sabotpod"
+            }
+        },
+        {
+            "autofire": false,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0005": "phasecl",
+                "WS0006": "phasecl",
+                "WS0007": "phasecl",
+                "WS0008": "phasecl"
+            }
+        },
+        {
+            "autofire": false,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0001": "plasma",
+                "WS0002": "plasma",
+                "WS0003": "plasma",
+                "WS0004": "plasma"
+            }
+        },
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0011": "pdlaser",
+                "WS0012": "pdlaser",
+                "WS0013": "pdlaser",
+                "WS0014": "pdlaser",
+                "WS0015": "pdburst",
+                "WS0016": "pdburst",
+                "WS0017": "pdburst",
+                "WS0018": "pdburst"
+            }
+        },
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0009": "heavyburst",
+                "WS0010": "heavyburst"
+            }
+        }
+    ]
+}

@@ -1,0 +1,2 @@
+"name","id","demand class","base price","export value","price variability","utility","origin","tags","stack size","cargo space","icon","sound id","sound id drop","order","economyTier","econUnitOrigUnused","econUnit","baseRaidDanger","eU * base value","iconWidthMult","plugin","desc"
+"Artifact Electronics","nskr_electronics","nskr_electronics",1000,,0,1,,"nonecon",1000,1,"graphics/icons/cargo/nskr_electronics.png","ui_cargo_raremetals","ui_cargo_raremetals_drop","51.420",,,,,,1,,

@@ -1,0 +1,29 @@
+{
+    "displayName": "Annihilator",
+    "fluxCapacitors": 0,
+    "fluxVents": 8,
+    "goalVariant": true,
+    "hullId": "nskr_epochx_e",
+    "hullMods": [
+        "magazines",
+        "heavyarmor"
+    ],
+    "permaMods": [],
+    "sMods": [],
+    "variantId": "nskr_epochx_e_std",
+    "weaponGroups": [
+        {
+            "autofire": false,
+            "mode": "LINKED",
+            "weapons": {"WS0001": "nskr_collector"}
+        },
+        {
+            "autofire": false,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0002": "nskr_spikes",
+                "WS0003": "nskr_spikes"
+            }
+        }
+    ]
+}

@@ -1,0 +1,206 @@
+{
+  "hullName": "Kingstork",
+  "hullId": "nskr_kingstork",
+  "hullSize": "FRIGATE",
+  "spriteName": "graphics/ships/nskr_kingstork.png",
+  "style": "NSKR_AUG",
+  "height": 112,
+  "width": 106,
+  "center": [53, 56],
+  "collisionRadius": 84,
+  "shieldCenter": [0, 0],
+  "shieldRadius": 80.5,
+  "viewOffset": 0,
+  "builtInMods": [
+    "nskr_absorption",
+    "nskr_augmented",
+	"nskr_augmented_weapons"
+  ],
+  "builtInWeapons": {
+    "WS0007": "nskr_blinker",
+    "WS0008": "nskr_blinker",
+    "WS0009": "nskr_blinker",
+    "WS0010": "nskr_blinker",
+    "WS0011": "nskr_blinker",
+    "WS0012": "nskr_blinker"
+  },
+  "weaponSlots": [
+    {
+      "id": "WS0001",
+      "size": "SMALL",
+      "type": "SYNERGY",
+      "mount": "TURRET",
+      "arc": 220,
+      "angle": 40,
+      "locations": [20, 24]
+    },
+    {
+      "id": "WS0002",
+      "size": "SMALL",
+      "type": "SYNERGY",
+      "mount": "TURRET",
+      "arc": 220,
+      "angle": -40,
+      "locations": [20, -24]
+    },
+    {
+      "id": "WS0003",
+      "size": "SMALL",
+      "type": "UNIVERSAL",
+      "mount": "TURRET",
+      "arc": 160,
+      "angle": 180,
+      "locations": [-20, -0]
+    },
+    {
+      "id": "WS0004",
+      "size": "SMALL",
+      "type": "COMPOSITE",
+      "mount": "HARDPOINT",
+      "arc": 5,
+      "angle": 0,
+      "locations": [45, -17]
+    },
+    {
+      "id": "WS0005",
+      "size": "SMALL",
+      "type": "COMPOSITE",
+      "mount": "HARDPOINT",
+      "arc": 5,
+      "angle": -0,
+      "locations": [45, 17]
+    },
+    {
+      "id": "WS0006",
+      "size": "SMALL",
+      "type": "HYBRID",
+      "mount": "HARDPOINT",
+      "arc": 5,
+      "angle": 0,
+      "locations": [47, -0]
+    },
+    {
+      "id": "WS0007",
+      "size": "SMALL",
+      "type": "DECORATIVE",
+      "mount": "TURRET",
+      "arc": 0,
+      "angle": 0,
+      "locations": [14.5, 4.5]
+    },
+    {
+      "id": "WS0008",
+      "size": "SMALL",
+      "type": "DECORATIVE",
+      "mount": "TURRET",
+      "arc": 0,
+      "angle": -0,
+      "locations": [14.5, -4.5]
+    },
+    {
+      "id": "WS0009",
+      "size": "SMALL",
+      "type": "DECORATIVE",
+      "mount": "TURRET",
+      "arc": 0,
+      "angle": -0,
+      "locations": [12.5, -4.5]
+    },
+    {
+      "id": "WS0010",
+      "size": "SMALL",
+      "type": "DECORATIVE",
+      "mount": "TURRET",
+      "arc": 0,
+      "angle": 0,
+      "locations": [12.5, 4.5]
+    },
+    {
+      "id": "WS0011",
+      "size": "SMALL",
+      "type": "DECORATIVE",
+      "mount": "TURRET",
+      "arc": 0,
+      "angle": -0,
+      "locations": [10.5, -4.5]
+    },
+    {
+      "id": "WS0012",
+      "size": "SMALL",
+      "type": "DECORATIVE",
+      "mount": "TURRET",
+      "arc": 0,
+      "angle": 0,
+      "locations": [10.5, 4.5]
+    }
+  ],
+  "engineSlots": [
+    {
+      "location": [-57, 3.5],
+      "length": 66,
+      "width": 16,
+      "angle": 180,
+      "contrailSize": 16,
+      "style": "CUSTOM",
+      "styleId": "NSKR_TECHAUG2"
+    },
+    {
+      "location": [-57, -3.5],
+      "length": 66,
+      "width": 16,
+      "angle": -180,
+      "contrailSize": 16,
+      "style": "CUSTOM",
+      "styleId": "NSKR_TECHAUG2"
+    },
+    {
+      "location": [-55.5, -3.5],
+      "length": 11.5,
+      "width": 14,
+      "angle": -180,
+      "contrailSize": 14,
+      "style": "CUSTOM",
+      "styleId": "NSKR_TECHAUG"
+    },
+    {
+      "location": [-55.5, 3.5],
+      "length": 11.5,
+      "width": 14,
+      "angle": 180,
+      "contrailSize": 14,
+      "style": "CUSTOM",
+      "styleId": "NSKR_TECHAUG"
+    }
+  ],
+  "bounds": [
+    44, 5.5,
+    41, 11.5,
+    45, 12,
+    44, 25,
+    52, 26.5,
+    49, 37,
+    25, 37.5,
+    24.5, 49,
+    16, 38,
+    2.5, 34.5,
+    -0.5, 47,
+    -25, 48,
+    -25, 23,
+    -53, 11,
+    -53, -11,
+    -25, -23,
+    -25, -48,
+    -0.5, -47,
+    2.5, -34.5,
+    16, -38,
+    24.5, -49,
+    25, -37.5,
+    49, -37,
+    52, -26.5,
+    44, -25,
+    45, -12,
+    41, -11.5,
+    44, -5.5,
+    49.5, -0
+  ]
+}

@@ -1,0 +1,174 @@
+{
+  "hullName": "Harbinger",
+  "hullId": "nskr_harbinger_boss",
+  "hullSize": "DESTROYER",
+  "spriteName": "graphics/ships/nskr_harbinger_boss.png",
+  "style": "DEMON_TECH",
+  "height": 152,
+  "width": 134,
+  "center": [67, 81],
+  "collisionRadius": 120,
+  "shieldCenter": [1, 0],
+  "shieldRadius": 107,
+  "viewOffset": 0,
+  "builtInMods": [
+	"nskr_demonic_core",
+    "phasefield",
+	"adaptive_coils",
+    "delicate"
+  ],
+  "weaponSlots": [
+    {
+      "id": "WS 001",
+      "size": "MEDIUM",
+      "type": "UNIVERSAL",
+      "mount": "HARDPOINT",
+      "arc": 6,
+      "angle": 0,
+      "locations": [50, 0]
+    },
+    {
+      "id": "WS 002",
+      "size": "MEDIUM",
+      "type": "SYNERGY",
+      "mount": "HARDPOINT",
+      "arc": 6,
+      "angle": 0,
+      "locations": [60, 24]
+    },
+    {
+      "id": "WS 003",
+      "size": "MEDIUM",
+      "type": "SYNERGY",
+      "mount": "HARDPOINT",
+      "arc": 6,
+      "angle": 0,
+      "locations": [60, -23]
+    },
+    {
+      "id": "WS 004",
+      "size": "SMALL",
+      "type": "ENERGY",
+      "mount": "TURRET",
+      "arc": 200,
+      "angle": 120,
+      "locations": [-41, 36]
+    },
+    {
+      "id": "WS 005",
+      "size": "SMALL",
+      "type": "ENERGY",
+      "mount": "TURRET",
+      "arc": 200,
+      "angle": 240,
+      "locations": [-41, -36]
+    }
+  ],
+  "engineSlots": [
+    {
+      "location": [-79.5, 36],
+      "length": 32,
+      "width": 12,
+      "angle": 180,
+      "contrailSize": 32,
+      "style": "CUSTOM",
+      "styleId": "NSKR_TECHD"
+    },
+    {
+      "location": [-81.5, 28],
+      "length": 44,
+      "width": 14,
+      "angle": 180,
+      "contrailSize": 44,
+      "style": "CUSTOM",
+      "styleId": "NSKR_TECHD"
+    },
+    {
+      "location": [-81.5, 20],
+      "length": 46,
+      "width": 16,
+      "angle": 180,
+      "contrailSize": 46,
+      "style": "CUSTOM",
+      "styleId": "NSKR_TECHD"
+    },
+    {
+      "location": [-79, -36],
+      "length": 32,
+      "width": 12,
+      "angle": 180,
+      "contrailSize": 32,
+      "style": "CUSTOM",
+      "styleId": "NSKR_TECHD"
+    },
+    {
+      "location": [-82, -28],
+      "length": 44,
+      "width": 14,
+      "angle": 180,
+      "contrailSize": 44,
+      "style": "CUSTOM",
+      "styleId": "NSKR_TECHD"
+    },
+    {
+      "location": [-82, -20],
+      "length": 46,
+      "width": 16,
+      "angle": 180,
+      "contrailSize": 46,
+      "style": "CUSTOM",
+      "styleId": "NSKR_TECHD"
+    },
+    {
+      "location": [-79.5, -20],
+      "length": 5.5,
+      "width": 7,
+      "angle": 180,
+      "contrailSize": 7,
+      "style": "CUSTOM",
+      "styleId": "NSKR_TECHD2"
+    },
+    {
+      "location": [-79.5, 20],
+      "length": 5.5,
+      "width": 7,
+      "angle": -180,
+      "contrailSize": 7,
+      "style": "CUSTOM",
+      "styleId": "NSKR_TECHD2"
+    },
+    {
+      "location": [-79.5, -28],
+      "length": 5.5,
+      "width": 7,
+      "angle": 180,
+      "contrailSize": 7,
+      "style": "CUSTOM",
+      "styleId": "NSKR_TECHD2"
+    },
+    {
+      "location": [-79.5, 28],
+      "length": 5.5,
+      "width": 7,
+      "angle": -180,
+      "contrailSize": 7,
+      "style": "CUSTOM",
+      "styleId": "NSKR_TECHD2"
+    }
+  ],
+  "bounds": [
+    61, 40,
+    61, -39,
+    23, -57,
+    -17, -34,
+    -40, -44,
+    -74, -41,
+    -76, -17,
+    -64, 0,
+    -76, 18,
+    -74, 41,
+    -39, 45,
+    -17, 34,
+    21, 56
+  ]
+}

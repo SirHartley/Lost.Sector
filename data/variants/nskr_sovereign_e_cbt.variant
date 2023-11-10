@@ -1,0 +1,57 @@
+{
+    "displayName": "Curse",
+    "fluxCapacitors": 14,
+    "fluxVents": 30,
+    "goalVariant": true,
+    "hullId": "nskr_sovereign_e",
+    "hullMods": [
+        "unstable_injector",
+        "stabilizedshieldemitter",
+        "hardenedshieldemitter",
+        "targetingunit"
+    ],
+    "permaMods": [],
+    "sMods": [],
+    "variantId": "nskr_sovereign_e_cbt",
+    "weaponGroups": [
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {"WS0003": "nskr_hshotgun"}
+        },
+        {
+            "autofire": false,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0012": "nskr_spikem",
+                "WS0013": "nskr_spikem"
+            }
+        },
+        {
+            "autofire": false,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0001": "reaper",
+                "WS0002": "reaper",
+                "WS0004": "reaper",
+                "WS0005": "reaper"
+            }
+        },
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0006": "nskr_scannonm",
+                "WS0007": "nskr_scannonm"
+            }
+        },
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0008": "vulcan",
+                "WS0009": "vulcan"
+            }
+        }
+    ]
+}

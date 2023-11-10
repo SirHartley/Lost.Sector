@@ -1,0 +1,50 @@
+{
+    "displayName": "Aggressor",
+    "fluxCapacitors": 7,
+    "fluxVents": 0,
+    "goalVariant": true,
+    "hullId": "nskr_devilcatcher",
+    "hullMods": [
+        "nskr_volatile",
+        "nskr_inertial",
+        "hardenedshieldemitter",
+        "magazines",
+        "fluxcoil"
+    ],
+    "permaMods": [],
+    "sMods": [],
+    "variantId": "nskr_devilcatcher_agr",
+    "weaponGroups": [
+        {
+            "autofire": false,
+            "mode": "ALTERNATING",
+            "weapons": {
+                "WS0006": "amblaster",
+                "WS0007": "amblaster"
+            }
+        },
+        {
+            "autofire": false,
+            "mode": "ALTERNATING",
+            "weapons": {
+                "WS0002": "sabot",
+                "WS0003": "sabot",
+                "WS0004": "sabot",
+                "WS0005": "sabot"
+            }
+        },
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {"WS0001": "autopulse"}
+        },
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0008": "pdlaser",
+                "WS0009": "pdlaser"
+            }
+        }
+    ]
+}

@@ -1,0 +1,40 @@
+{
+    "displayName": "SERIAL 002",
+    "fluxCapacitors": 8,
+    "fluxVents": 10,
+    "goalVariant": false,
+    "hullId": "nskr_epochx",
+    "hullMods": [
+        "armoredweapons",
+        "reinforcedhull",
+        "magazines",
+        "heavyarmor",
+        "fluxdistributor"
+    ],
+    "permaMods": [
+        "heavyarmor",
+        "fluxdistributor"
+    ],
+    "sMods": [
+        "heavyarmor",
+        "fluxdistributor"
+    ],
+    "variantId": "nskr_epochx_boss",
+    "weaponGroups": [
+        {
+            "autofire": false,
+            "mode": "LINKED",
+            "weapons": {"WS0001": "autopulse"}
+        },
+        {
+            "autofire": false,
+            "mode": "LINKED",
+            "weapons": {"WS0002": "nskr_spikes"}
+        },
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {"WS0003": "vulcan"}
+        }
+    ]
+}

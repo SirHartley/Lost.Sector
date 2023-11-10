@@ -1,0 +1,18 @@
+{
+	"id":"nskr_scatterm_shot",
+	"specClass":"projectile",
+	"spawnType":"BALLISTIC_AS_BEAM",
+	"collisionClass":"RAY",
+	"collisionClassByFighter":"RAY_FIGHTER",
+	"length":60.0,
+	"width":12.0,
+	"fadeTime":0.2,
+	"fringeColor":[155,65,126,255],
+	"coreColor":[195,155,255,255],
+	"glowColor":[165,89,217,75],
+	"glowRadius":45,
+	"hitGlowRadius":60,
+	"textureType":"SMOOTH",  # only needed for BEAM spawnType
+	"textureScrollSpeed":-256.0,
+	"pixelsPerTexel":1.0	
+}

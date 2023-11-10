@@ -1,0 +1,20 @@
+{
+	"id":"nskr_hshotgun_shot",
+	"onHitEffect": "scripts.kissa.LOST_SECTOR.weapons.nskr_hshotgunOH",
+	"specClass":"projectile",
+	"spawnType":"BALLISTIC",
+	"collisionClass":"PROJECTILE_FF",
+	"collisionClassByFighter":"PROJECTILE_FIGHTER",
+	"length":40.0,
+	"hitGlowRadius":100,
+	"width":10.0,
+	"fadeTime":0.5,
+	"fringeColor":[255, 207, 15,205],
+	"coreColor":[255, 212, 212, 240],
+	"glowColor":[255, 64,30,105],
+	"glowRadius":40,
+	"textureScrollSpeed":64.0,
+	"pixelsPerTexel":5.0,
+	"passThroughMissiles":true,
+	"bulletSprite":"graphics/missiles/shell_hellbore.png"
+}

@@ -1,0 +1,32 @@
+{
+    "displayName": "Coercer",
+    "fluxCapacitors": 8,
+    "fluxVents": 10,
+    "goalVariant": true,
+    "hullId": "nskr_epochx_e",
+    "hullMods": [
+        "fluxdistributor",
+        "heavyarmor",
+        "armoredweapons",
+        "stabilizedshieldemitter",
+        "fluxbreakers"
+    ],
+    "permaMods": [],
+    "sMods": [],
+    "variantId": "nskr_epochx_e_hev",
+    "weaponGroups": [
+        {
+            "autofire": false,
+            "mode": "LINKED",
+            "weapons": {"WS0001": "mark9"}
+        },
+        {
+            "autofire": false,
+            "mode": "ALTERNATING",
+            "weapons": {
+                "WS0002": "reaper",
+                "WS0003": "reaper"
+            }
+        }
+    ]
+}

@@ -1,0 +1,27 @@
+{
+	"portraits":{
+		"standard_male":[
+			"graphics/portraits/nskr_cat1.png",
+			"graphics/portraits/nskr_cat3.png",
+			"graphics/portraits/nskr_cat6.png",
+			"graphics/portraits/nskr_kesteven_portrait_person_2.png",
+			"graphics/portraits/nskr_kesteven_portrait_person_3.png",
+			"graphics/portraits/nskr_kesteven_portrait_male_4.png",	
+			"graphics/portraits/nskr_kesteven_portrait_male_3.png",
+			"graphics/portraits/nskr_kesteven_portrait_male_2.png",	
+			"graphics/portraits/nskr_kesteven_portrait_male_1.png",
+						],
+		"standard_female":[
+			"graphics/portraits/nskr_cat2.png",
+			"graphics/portraits/nskr_cat4.png",
+			"graphics/portraits/nskr_cat5.png",
+			"graphics/portraits/nskr_kesteven_portrait_person_1.png",
+			"graphics/portraits/nskr_kesteven_portrait_female_1.png",
+			"graphics/portraits/nskr_kesteven_portrait_female_2.png",
+			"graphics/portraits/nskr_kesteven_portrait_female_3.png",		
+			"graphics/portraits/nskr_kesteven_portrait_female_4.png",	
+			"graphics/portraits/nskr_kesteven_portrait_female_5.png",	
+			"graphics/portraits/nskr_kesteven_portrait_female_6.png",	
+						],
+	},
+},			

@@ -1,0 +1,39 @@
+{
+    "displayName": "Blaster",
+    "fluxCapacitors": 10,
+    "fluxVents": 2,
+    "goalVariant": true,
+    "hullId": "nskr_dragontail",
+    "hullMods": [
+        "fluxcoil",
+        "hardenedshieldemitter",
+        "extendedshieldemitter",
+        "nskr_inertial"
+    ],
+    "permaMods": [],
+    "sMods": [],
+    "variantId": "nskr_dragontail_nrg",
+    "weaponGroups": [
+        {
+            "autofire": false,
+            "mode": "LINKED",
+            "weapons": {"WS0001": "heavyblaster"}
+        },
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0002": "pdlaser",
+                "WS0003": "pdlaser"
+            }
+        },
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0004": "mininglaser",
+                "WS0005": "mininglaser"
+            }
+        }
+    ]
+}

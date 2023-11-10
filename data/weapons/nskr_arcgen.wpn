@@ -1,0 +1,29 @@
+{
+  "id": "nskr_arcgen",
+  "specClass": "projectile",
+  "projectileSpecId": "nskr_arcgen_dummy",
+  "type": "ENERGY",
+  "size": "SMALL",
+  "everyFrameEffect": "scripts.kissa.LOST_SECTOR.weapons.nskr_arcgenScript",
+  "turretSprite": "graphics/weapons/nskr_arcgen_turret.png",
+  "hardpointSprite": "graphics/weapons/nskr_arcgen_hardpoint.png",
+  "renderAboveAllWeapons": 0,
+  "turretOffsets": [
+    11,
+    1.5
+  ],
+  "turretAngleOffsets": [
+    0
+  ],
+  "hardpointOffsets": [
+    13.5,
+    1.5
+  ],
+  "hardpointAngleOffsets": [
+    0
+  ],
+  "barrelMode": "ALTERNATING",
+  "animationType": "NONE",
+  "textureType": ROUGH,
+  "fireSoundTwo": "nskr_mfr_impact"
+}

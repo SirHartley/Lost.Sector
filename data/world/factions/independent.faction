@@ -1,0 +1,58 @@
+{
+    "hullFrequency":{
+        "hulls":{
+            "nskr_borealis":1.0,
+			"nskr_reverie":0.5,
+			"nskr_malediction":0.25,
+			"nskr_stalwart":0.5,
+			"nskr_verity":0.5,
+        },
+    },
+    "shipsWhenImporting":{
+        "hulls":[
+        ],
+    },
+    "knownShips":{
+        "hulls":[
+            "nskr_borealis",
+			"nskr_reverie",         	
+			"nskr_malediction",
+			"nskr_stalwart",
+			"nskr_verity",
+        ],
+    },
+	"variantOverrides":{
+		"nskr_stalwart_cb":5,
+		"nskr_stalwart_merc":5,
+	},
+    "priorityShips":{
+        "hulls":[
+
+           
+        ],
+    },
+    "knownFighters":{
+        "fighters":[
+            
+        ],
+    },
+    "knownWeapons":{
+        "weapons":[
+            
+        ],
+    },
+    "knownHullMods":{
+        "hullMods":[
+            
+        ],
+    },
+		
+	"ranks":{
+		"ranks":{
+
+		},
+		"posts":{
+
+		},
+	},
+},

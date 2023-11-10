@@ -1,0 +1,43 @@
+{
+	"id":"nskr_spike2",
+	"specClass":"missile",
+	"missileType":"ROCKET",
+	"sprite":"graphics/missiles/nskr_spike_shot.png",
+	"onHitEffect":"scripts.kissa.LOST_SECTOR.weapons.nskr_spikeOH",
+	"size":[8,20],	
+	"center":[4,10],
+	"collisionRadius":30,
+	"collisionClass":"MISSILE_NO_FF",
+	"explosionColor":[163, 103, 103,255],  # purely visual, will get a white additively blended core on top of this color
+	"explosionRadius":200, # purely visual
+	"flameoutTime":1, # total time from flameout to full fadeout
+	"noEngineGlowTime":0.5, # time spent without the engine glow being rendered
+	"fadeTime":0.5, # fadeout duration	
+	"maxFlightTime":2.5,
+	"engineSpec":{"turnAcc":0,
+				  "turnRate":0,
+				  "acc":1500,
+				  "maxSpeed":400,
+				  "dec":0},
+	"engineSlots":[{"id":"ES1",
+					"loc":[-10, 0],
+				    "style":"CUSTOM",
+				    "styleSpec":{
+						"mode":"QUAD_STRIP", # PARTICLES or QUAD_STRIP, determines which params are used
+						"engineColor":[255, 75, 102,255],
+						"contrailDuration":2.5,
+						"contrailWidthMult":1.5,
+						"contrailWidthAddedFractionAtEnd":2,  # can be negative. makes trail spread out/narrow at the end
+						"contrailMinSeg":5, # min segment length, in pixels
+						"contrailMaxSpeedMult":.0f,
+						"contrailAngularVelocityMult":0.5f,
+						"contrailSpawnDistMult":1, # how far away from engine it starts
+						"contrailColor":[115, 25, 25,150],
+						"glowSizeMult":2,
+						"type":"SMOKE" # GLOW or SMOKE; additive or regular blend mode
+					},
+				    "width":11.0,
+				    "length":70.0,
+				    "angle":180.0}],
+}
+			

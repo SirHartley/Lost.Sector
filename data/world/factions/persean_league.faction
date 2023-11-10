@@ -1,0 +1,43 @@
+{
+    "hullFrequency":{
+        "hulls":{
+			"nskr_stalwart":0.75,
+			"nskr_verity":0.25,
+        },
+    },
+    "shipsWhenImporting":{
+        "hulls":[
+        ],
+    },
+    "knownShips":{
+        "hulls":[
+			"nskr_stalwart",
+			"nskr_verity",
+        ],
+    },
+	"variantOverrides":{
+		"nskr_stalwart_std":3,
+		"nskr_stalwart_sup":3,
+		"nskr_stalwart_ast":2,
+		"nskr_stalwart_elite":2,
+	},
+    "priorityShips":{
+        "hulls":[
+        ],
+    },
+    "knownFighters":{
+        "fighters":[
+            
+        ],
+    },
+    "knownWeapons":{
+        "weapons":[
+            
+        ],
+    },
+    "knownHullMods":{
+        "hullMods":[
+            
+        ],
+    },
+},

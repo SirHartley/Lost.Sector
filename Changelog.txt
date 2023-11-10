@@ -1,0 +1,186 @@
+
+Version 0.6.0d
+-ONLY save compatible with 0.6.0x versions-
+
+- Fixed the Peacekeepers bounty not despawning in some edge cases
+- Mysterious signals intel is now removed when you find the source
+- Compressed some BG music, saving like 30mb of your precious RAM
+
+Version 0.6.0c
+-ONLY save compatible with 0.6.0x versions-
+
+- Fixed a possible crash when blacksite fleets couldn't find a random market
+
+CHANGELOG 0.6.0b:
+-ONLY save compatible with 0.6.0x versions-
+
+- Some visual changes and updates
+
+- Reduced Mega Flux Rocket Rate Of Fire to 14s->17.5s
+
+- Fixed a crash when hitting ESC on certain parts of the mothership fleet dialog
+
+CHANGELOG 0.6.0a:
+-BREAKS SAVES-
+
+- 2 new Enigma / (Pt) ships 
+   - Warfare-Class Destroyer - Heavy Gunship
+   - Widow-Class Frigate - Gunship
+- New custom bounty
+   - Sunburst-Class Mothership
+- Added "contract" contact missions for Kesteven, complete tasks for credits
+   - Recovery - recover items from enemy fleets to complete
+   - Elimination - destroy specific enemy ships or factions ships to complete
+- Proc-gen objective defense "event" 
+   - Defend a station from enemy fleets to get big loot
+- Added 2 "hidden" role-play endings for the questline   
+- Updated Exotica support
+   - Enigma ships can now spawn with two different unique upgrades - Temporal Conduits, Space Time Anchor
+
+- Reduced Kingslayer armor 1,600->1,500, and flux cap 16,000->15,000
+- Reduced Nighthawk flux cap 11,000->10,000
+- Reduced Prosperity armor 1,600->1,500
+- Increased Mercenary shipsystem cooldown between charge uses 2s->5s 
+- Reduced Sovereign DP & supplies/mo to 35->32
+- Reduced Keres Storm Cannon sustained dps 112,5->100
+- Increased Tremor missile damage 350->375
+- Increased Bite ALG base range 350->400, Increased charge regen from 6s->5s
+- Increased Zhonya cooldown 15s->17.5s
+- Increased Volatile Flux Injector s-mod penalty 15%->25%
+- Abyssal tech type renamed to Void
+   - Void ship Cruiser and Destroyer phase upkeep reduced, frigate is unchanged
+- Reduced shipsystem base range of Causality and BF Pulse 
+   - Now scales with shipsystem range modifiers (like Sys-Ex)
+- Installing SO on Enigma ships now has a CR malus
+
+- Fixed game freeze when joining battles against Kesteven/Enigma (Finally, this one was FUCKED)
+   - Also fixes disappearing ships / impossible to end battles
+- Fixed a possible crash when raiding a certain market
+- Fixed a possible crash with the Inertial Supercharger hullmod
+- Fixed a rare crash when using the artifact exchange
+- Fixed a rare crash when starting the main questline
+- Fixed Enigma not being hostile to some factions
+- Fixed jank with fleets not supporting the player against Enigma
+- Fixed r&d facilities and other entities sometimes having ridiculous orbit speeds
+- Rewrote all Prototype weapon and hull descriptions
+- Small additions and changes to questline dialog
+- Added the ability to skip fleet size requirements with story points during the questline
+- Made some fleet Intercept AI more fair
+- Improved wandering Enigma fleet behaviour
+- Stalker Enigma fleets are now more aggressive against NPC factions
+- Enigma ships will now reveal their hidden stats if you use them in combat
+- Made some edge case quest failure states more clear
+- Made questline ending intel clearer
+- Enigma AI captains now correctly have all elite skills, like other AI captains
+
+Version 0.5.1a
+
+- Reworked Stasis system 
+   - Now fires an interceptable projectile that explodes in an area effecting all ships, Reloaded with system use
+
+- Prosperity, reduced max flux 32,000->30,000
+- Nighthawk, reduced armor 1,050->950
+- Devilcatcher, reduced armor 850->800
+- Kingstork, reduced armor 500->450, reduced top speed 125->120
+- Dragontail, reduced armor 450->400, reduced max flux 3,400->3,200
+
+- Fixed a crash with prototype/enigma hulls
+- Fixed a rare crash with the Freya EMGL
+- Fixed a rare crash with cache core quest dialogue
+- Fixed a possible major crash with Kesteven exile event
+- Fixed a nullPointer with Nicholas quest dialogue
+- Fixed Outpost spawning in Sentinel system and made random bounties not spawn there
+- Fixed Enigma AI portraits to match the correct level of AI core
+- Fixed being able to do unintended interactions with Frozen Heart market
+- Fixed Frozen Heart comm directory having random entries
+- Fixed being able to use Kesteven services after getting the *other* questline ending
+   - Other ending now also caps your max relationship with Hegemony and Kesteven
+- Fixed S-Mod removal giving 100x the bonus XP (oops)   
+- Fixed Bite ALG and BF Pulse lightning chaining to phased targets
+- Kesteven bar intel event fixed, it will now work consistently giving either warning beacon systems or survey ship/mothership systems
+- Kesteven hullmods no longer can be received as drops. Instead received as quest rewards / bought directly.
+- Derelict proc-gen Enigma cruisers spawn considerably less often
+- Adjusted Nex dispositions for Kesteven
+- Adjusted Enigma fleet spawning
+
+Version 0.5.0g
+
+- Fixed ship-systems not working correctly when using high levels of speedUp (4x+)
+
+Version 0.5.0f
+
+- Fixed a rare crash with prototype glows
+- Fixed a rare crash with null markets in the sector
+- Plasma Burst canister Cannon, added EMP damage
+- Prot ships base shield reduced to 60* degrees
+- Final Overdrive changes
+   - Reduced charge-up to 2s, does not activate if ship is overloaded or venting
+- Updated Zhonya visuals and sfx
+- Fixed rare miscalculations with player and ship stats in augmented weapons	
+
+Version 0.5.0e
+
+- Fixed a crash that could happen if a market has null factionID
+- Fixed a crash with the EMflak system and OnHits
+   - Fixed flask mines not working properly (it was always doing max damage)
+- Fixed some dormant Enigma fleet captains not actually being AI cores
+- Weapon changes:
+   - Giga Pulse Cannon
+      - very slightly reduced rof, becomes somewhat inaccurate after the first shot
+   - Plasma Burst Canister Cannon
+      - reduced op cost to 28, reduced rof
+   - Surge Plasma Scatterer
+      - reduced op cost to 12, buffed flux/dmg to 0.6, reduced rof slightly
+   - Mega Flux Rocket Pod
+      - reduced op cost to 12
+- New and improved trail fx by Nia
+- Improved blast wave effects, new fx sprite also by Nia
+- Prot ships have new and improved shield fx
+- Mass Targeting Array and Projectile Deterrence Field system range is now effected by Systems Expertise
+- Mercenary buffed shield efficiency to 0.8, increased top speed to 75
+   - Dramatically increased system effectiveness
+- Reduced the amount of proc-gen stuff spawned slightly (around 20%)
+- Added Megaport and Spool to Asteria
+- Fixed Kesteven markets not having any officials if added mid-save
+
+Version 0.5.0d
+
+- Fixed a severe crash with a quest fleet
+- Inertial Supercharger now has a S-mod penalty/bonus
+   - Frigate, Increases the damage taken by weapons by 50%
+   - Destroyer, no effect
+   - Cruiser/Cap, Increases projectile velocity by 10%
+- Volatile Flux Injector now has a S-mod penalty
+   - Increases EMP damage taken by 15%
+- Added support for Exiled Space
+- Outpost spawning logic improved in cluttered sectors
+- Outpost system is now correctly surveyed when spawning mid save
+- Changed around how often and when Enigma fleets spawn
+- Reduced r&d facility loot slightly (around 20%)
+- Fixed r&d facilities rarely spawning in core systems
+- Made some custom bounty intels clearer
+
+Version 0.5.0c
+
+- Fixed a crash with a quest fleet
+- Fixed a crash with AOE damage
+- Fixed bugged dmg with some AOE dmg onHits
+- Fixed some [REDACTED] officers not actually being AI cores
+- Made some hullmod descriptions cleaner and clearer
+- Changed Bastion-Cracker dmg calculation against modular station and ships
+   - Deals more dmg now against stations and modular ships
+
+Version 0.5.0b
+
+- Fixed a crash with a fleet spawner
+- Fixed a crash with outpost gen
+- Disengaging with special maneuvers now works properly against some fleets
+- Kesteven intel bar event now correctly gives a warning beacon system
+- Fixed various minor issues in fleet logic
+
+Version 0.5.0a
+
+- Released
+- Updated localization files
+- Removed Eternity-class
+- Removed amogus

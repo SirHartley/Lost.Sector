@@ -1,0 +1,9 @@
+mining fighter wing: 0.5 strength (*per fighter)
+mining frigate: maybe 10ish strength tops
+mining destroyer: 20-30ish strength
+mining cruiser: 50-60ish strngth
+mining capital: 150ish strength
+
+small mining weapon: 1.5 strength
+medium mining weapon: 10 strength
+large mining weapon: 20 strength

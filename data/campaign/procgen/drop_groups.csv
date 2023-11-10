@@ -1,0 +1,33 @@
+"commodity","group","freq"
+,,
+"nothing","enigma_weapons1",355
+"wpn_:{tags:[enigma, !no_drop], weaponSize:SMALL, weaponType:BALLISTIC}","enigma_weapons1",100
+"wpn_:{weaponSize:SMALL, weaponType:MISSILE, tags:[enigma, !no_drop]}","enigma_weapons1",100
+"wpn_:{weaponSize:SMALL, weaponType:ENERGY, tags:[enigma, !no_drop]}","enigma_weapons1",100
+"ftr_:{tags:[enigma, !no_drop]}","enigma_weapons1",20
+,,
+"nothing","enigma_weapons2",355
+"wpn_:{tags:[enigma, !no_drop], weaponSize:MEDIUM, weaponType:BALLISTIC}","enigma_weapons2",100
+"wpn_:{weaponSize:MEDIUM, weaponType:MISSILE, tags:[enigma, !no_drop]}","enigma_weapons2",100
+"wpn_:{weaponSize:MEDIUM, weaponType:ENERGY, tags:[enigma, !no_drop]}","enigma_weapons2",100
+"ftr_:{tags:[enigma, !no_drop]}","enigma_weapons2",20
+,,
+"nothing","enigma_weapons3",355
+"wpn_:{tags:[enigma, !no_drop], weaponSize:LARGE, weaponType:BALLISTIC}","enigma_weapons3",100
+"wpn_:{weaponSize:LARGE, weaponType:MISSILE, tags:[enigma, !no_drop]}","enigma_weapons3",100
+"wpn_:{weaponSize:LARGE, weaponType:ENERGY, tags:[enigma, !no_drop]}","enigma_weapons3",100
+"ftr_:{tags:[enigma, !no_drop]}","enigma_weapons3",20
+,,
+"nothing","nskr_electronics",5
+"nskr_electronics","nskr_electronics",25
+,,
+"nothing","nskr_illegal",20
+"organs","nskr_illegal",20
+"drugs","nskr_illegal",20
+"lobster","nskr_illegal",10
+"luxury_goods","nskr_illegal",10
+,,
+"nothing","nskr_weapons",10
+"hand_weapons","nskr_weapons",20
+"supplies","nskr_weapons",10
+"fuel","nskr_weapons",30

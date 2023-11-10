@@ -1,0 +1,12 @@
+{
+	"id":"nskr_protocolsystem",
+	"type":"STAT_MOD",
+	"aiType":"CUSTOM",
+	"aiScript":"scripts.kissa.LOST_SECTOR.shipsystems.ai.nskr_protocolAI",
+	
+	"statsScript":"scripts.kissa.LOST_SECTOR.shipsystems.nskr_protocolStats",
+	
+	"useSound":"gun_out_of_ammo",
+	
+	"outOfUsesSound":"gun_out_of_ammo",	
+}

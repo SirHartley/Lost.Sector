@@ -1,0 +1,33 @@
+{
+    "displayName": "Sundering",
+    "fluxCapacitors": 19,
+    "fluxVents": 20,
+    "goalVariant": true,
+    "hullId": "nskr_harbinger_boss",
+    "hullMods": [
+        "hardened_subsystems",
+        "heavyarmor",
+        "fluxbreakers"
+    ],
+    "permaMods": [],
+    "variantId": "nskr_harbinger_boss_nor",
+    "weaponGroups": [
+        {
+            "autofire": false,
+            "mode": "LINKED",
+            "weapons": {
+                "WS 001": "chaingun",
+                "WS 002": "ionpulser",
+                "WS 003": "ionpulser"
+            }
+        },
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {
+                "WS 004": "pdlaser",
+                "WS 005": "pdlaser"
+            }
+        }
+    ]
+}

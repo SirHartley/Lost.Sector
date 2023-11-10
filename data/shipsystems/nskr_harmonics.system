@@ -1,0 +1,9 @@
+{
+	"id":"nskr_harmonics",
+	"type":"STAT_MOD",
+	"aiType":"CUSTOM",
+	"aiScript":"scripts.kissa.LOST_SECTOR.shipsystems.ai.nskr_harmonicsAI",
+	"statsScript":"scripts.kissa.LOST_SECTOR.shipsystems.nskr_harmonicsStats",
+
+	"outOfUsesSound":"gun_out_of_ammo",
+}

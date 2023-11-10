@@ -1,0 +1,35 @@
+{
+    "displayName": "Shadow",
+    "fluxCapacitors": 10,
+    "fluxVents": 7,
+    "hullId": "nskr_eternity_e",
+    "hullMods": [
+		"magazines",
+        "stabilizedshieldemitter"
+    ],
+    "permaMods": [],
+    "sMods": [
+        "hardened_subsystems",
+        "hardenedshieldemitter",
+        "fluxcoil"
+    ],
+    "variantId": "nskr_eternity_e_boss",
+    "weaponGroups": [
+        {
+            "autofire": false,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0001": "cryoflux",
+                "WS0002": "nskr_inverter"
+            }
+        },
+        {
+            "autofire": false,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0003": "amsrm",
+                "WS0004": "amsrm"
+            }
+        }
+    ]
+}

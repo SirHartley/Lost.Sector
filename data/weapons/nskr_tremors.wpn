@@ -1,0 +1,56 @@
+{
+  "animationType": "SMOKE",
+  "barrelMode": "ALTERNATING",
+  "fireSoundTwo": "nskr_tremor_fire",
+  #"everyFrameEffect": "scripts.kissa.LOST_SECTOR.weapons.nskr_tremorEffect",
+  "hardpointAngleOffsets": [
+    0,
+    0
+  ],
+  "hardpointOffsets": [
+    5.5,
+    -5,
+    5.5,
+    5
+  ],
+  "hardpointSprite": "graphics/weapons/nskr_tremorrack_hardpoint.png",
+  "id": "nskr_tremors",
+  "noImpactSounds": false,
+  "noNonShieldImpactSounds": false,
+  "noShieldImpactSounds": false,
+  "projectileSpecId": "nskr_tremor1",
+  "renderAboveAllWeapons": 0,
+  "renderHints": [
+    RENDER_LOADED_MISSILES
+  ],
+  "size": "SMALL",
+  "smokeSpec": {
+    "blowbackDuration": 2,
+    "blowbackLength": 22,
+    "blowbackParticleCount": 4,
+    "blowbackSpread": 15,
+    "cloudDuration": 1.5,
+    "cloudParticleCount": 6,
+    "cloudRadius": 10,
+    "particleColor": [
+      58, 74, 112,
+      105
+    ],
+    "particleSizeMin": 12,
+    "particleSizeRange": 12
+  },
+  "specClass": "projectile",
+  "textureType": ROUGH,
+  "turretAngleOffsets": [
+    0,
+    0
+  ],
+  "turretOffsets": [
+    3,
+    -5,
+    3,
+    5
+  ],
+  "turretSprite": "graphics/weapons/nskr_tremorrack_turret.png",
+  "type": "MISSILE"
+}

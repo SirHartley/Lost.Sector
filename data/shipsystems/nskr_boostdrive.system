@@ -1,0 +1,28 @@
+{
+	"id":"nskr_boostdrive",
+	"type":"ENGINE_MOD",
+	"aiType":"CUSTOM",
+	"aiScript":"scripts.kissa.LOST_SECTOR.shipsystems.ai.nskr_engineAI",
+	"statsScript":"scripts.kissa.LOST_SECTOR.shipsystems.nskr_boostDriveStats",
+	
+	"engineGlowColor":[250, 255, 100,255],
+	"engineGlowLengthMult":2.0,
+	"engineGlowWidthMult":1.2,
+	"engineGlowGlowMult":1.2,
+	
+	"flameoutOnImpactChance":0.1,
+
+	"clampTurnRateAfter":true,
+	"clampMaxSpeedAfter":true,
+	"alwaysAccelerate":true,
+
+	"useSound":"nskr_system_plasma_burn",
+	"loopSound":"nskr_system_plasma_burn_loop",
+	"outOfUsesSound":"engine_disabled",
+	
+	"aiHints":{
+		"activeSpeedIncrease":0,
+		"burstMovementPotential":400,
+		"averageSpeedIncrease":50,
+	}
+}

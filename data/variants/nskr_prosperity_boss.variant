@@ -1,0 +1,81 @@
+{
+    "displayName": "Hammer",
+    "fluxCapacitors": 0,
+    "fluxVents": 46,
+    "goalVariant": false,
+    "hullId": "nskr_prosperity",
+    "hullMods": [
+        "turretgyros",
+        "fluxbreakers",
+        "stabilizedshieldemitter",
+        "targetingunit",
+        "missleracks",
+        "auxiliarythrusters",
+        "fluxcoil"
+    ],
+    "permaMods": [
+        "targetingunit",
+        "missleracks",
+        "auxiliarythrusters"
+    ],
+    "sMods": [
+        "targetingunit",
+        "missleracks",
+        "auxiliarythrusters"
+    ],
+    "variantId": "nskr_prosperity_boss",
+    "weaponGroups": [
+        {
+            "autofire": false,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0019": "gorgonpod",
+                "WS0020": "gorgonpod",
+                "WS0027": "gorgonpod",
+                "WS0028": "gorgonpod"
+            }
+        },
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0005": "phasecl",
+                "WS0006": "phasecl",
+                "WS0007": "phasecl",
+                "WS0008": "phasecl"
+            }
+        },
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0001": "plasma",
+                "WS0002": "plasma",
+                "WS0003": "plasma",
+                "WS0004": "plasma"
+            }
+        },
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0011": "pdburst",
+                "WS0012": "pdburst",
+                "WS0013": "pdburst",
+                "WS0014": "pdburst",
+                "WS0015": "pdburst",
+                "WS0016": "pdburst",
+                "WS0017": "pdburst",
+                "WS0018": "pdburst"
+            }
+        },
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0009": "heavyburst",
+                "WS0010": "heavyburst"
+            }
+        }
+    ]
+}

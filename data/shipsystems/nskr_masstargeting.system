@@ -1,0 +1,21 @@
+{
+	"id":"nskr_masstargeting",
+	"type":"STAT_MOD",
+	"aiType":"CUSTOM",
+	"aiScript":"scripts.kissa.LOST_SECTOR.shipsystems.ai.nskr_massTargetingAI",
+	
+	"statsScript":"scripts.kissa.LOST_SECTOR.shipsystems.nskr_massTargetingStats",
+		
+	"fadeActivationSoundOnChargedown":true,
+	"useSound":"nskr_system_entropy",
+	"loopSound":"nskr_system_entropy_loop",
+	"deactivateSound":"nskr_system_entropy_off",
+	"outOfUsesSound":"gun_out_of_ammo",
+	
+	"aiHints":{
+	}
+}
+
+
+
+

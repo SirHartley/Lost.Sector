@@ -1,0 +1,146 @@
+{
+  "hullName": "Huginn",
+  "hullId": "nskr_huginn",
+  "hullSize": "FIGHTER",
+  "spriteName": "graphics/ships/drones/nskr_huginn.png",
+  "style": "NSKR_PROT",
+  "height": 42,
+  "width": 54,
+  "center": [27, 21],
+  "collisionRadius": 36.5,
+  "shieldCenter": [0, -0],
+  "shieldRadius": 36,
+  "viewOffset": 0,
+  "builtInMods": [
+    "no_weapon_flux",
+    "nskr_focused_shield",
+    "pointdefenseai",
+	"armoredweapons",
+	"autorepair"
+  ],
+  "weaponSlots": [
+    {
+      "id": "WS0002",
+      "size": "SMALL",
+      "type": "UNIVERSAL",
+      "mount": "HIDDEN",
+      "arc": 190,
+      "angle": 90,
+      "locations": [2.5, 8.5]
+    },
+    {
+      "id": "WS0003",
+      "size": "SMALL",
+      "type": "UNIVERSAL",
+      "mount": "HIDDEN",
+      "arc": 190,
+      "angle": -90,
+      "locations": [2.5, -7.5]
+    },
+    {
+      "id": "WS0001",
+      "size": "MEDIUM",
+      "type": "UNIVERSAL",
+      "mount": "TURRET",
+      "arc": 70,
+      "angle": 0,
+      "locations": [1, 14]
+    },
+    {
+      "id": "WS0004",
+      "size": "MEDIUM",
+      "type": "UNIVERSAL",
+      "mount": "TURRET",
+      "arc": 70,
+      "angle": -0,
+      "locations": [1, -14]
+    }
+  ],
+  "engineSlots": [
+    {
+      "location": [-17.5, -4.5],
+      "length": 27.5,
+      "width": 4,
+      "angle": 180,
+      "contrailSize": 4,
+      "style": "CUSTOM",
+      "styleId": "NSKR_TECHP"
+    },
+    {
+      "location": [-17.5, 4.5],
+      "length": 27.5,
+      "width": 4,
+      "angle": -180,
+      "contrailSize": 4,
+      "style": "CUSTOM",
+      "styleId": "NSKR_TECHP"
+    },
+    {
+      "location": [-17, -4.5],
+      "length": 5,
+      "width": 4,
+      "angle": 180,
+      "contrailSize": 4,
+      "style": "CUSTOM",
+      "styleId": "NSKR_TECHP2"
+    },
+    {
+      "location": [-17, 4.5],
+      "length": 5,
+      "width": 4,
+      "angle": -180,
+      "contrailSize": 4,
+      "style": "CUSTOM",
+      "styleId": "NSKR_TECHP2"
+    },
+    {
+      "location": [-17, 9],
+      "length": 5,
+      "width": 4,
+      "angle": -180,
+      "contrailSize": 4,
+      "style": "CUSTOM",
+      "styleId": "NSKR_TECHP2"
+    },
+    {
+      "location": [-17, -9],
+      "length": 5,
+      "width": 4,
+      "angle": 180,
+      "contrailSize": 4,
+      "style": "CUSTOM",
+      "styleId": "NSKR_TECHP2"
+    },
+    {
+      "location": [-17.5, 9],
+      "length": 27.5,
+      "width": 4,
+      "angle": -180,
+      "contrailSize": 4,
+      "style": "CUSTOM",
+      "styleId": "NSKR_TECHP"
+    },
+    {
+      "location": [-17.5, -9],
+      "length": 27.5,
+      "width": 4,
+      "angle": 180,
+      "contrailSize": 4,
+      "style": "CUSTOM",
+      "styleId": "NSKR_TECHP"
+    }
+  ],
+  "bounds": [
+    -15, 10.5,
+    -5.5, 16,
+    -9.5, 26.5,
+    12.5, 15,
+    6.5, 11,
+    17.5, 0,
+    6.5, -11,
+    12.5, -15,
+    -9.5, -26.5,
+    -5.5, -16,
+    -15, -10.5
+  ]
+}

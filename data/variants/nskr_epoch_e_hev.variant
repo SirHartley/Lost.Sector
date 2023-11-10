@@ -1,0 +1,32 @@
+{
+    "displayName": "Atomizer",
+    "fluxCapacitors": 0,
+    "fluxVents": 10,
+    "goalVariant": true,
+    "hullId": "nskr_epoch_e",
+    "hullMods": [
+        "stabilizedshieldemitter",
+        "hardenedshieldemitter"
+    ],
+    "permaMods": [],
+    "sMods": [],
+    "variantId": "nskr_epoch_e_hev",
+    "weaponGroups": [
+        {
+            "autofire": false,
+            "mode": "ALTERNATING",
+            "weapons": {
+                "WS0002": "amblaster",
+                "WS0003": "amblaster"
+            }
+        },
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0019": "heavyac",
+                "WS0020": "heavyac"
+            }
+        }
+    ]
+}

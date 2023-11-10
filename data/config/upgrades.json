@@ -1,0 +1,36 @@
+{
+  "temporalConduits": {
+    "name": "Temporal Conduits",
+    "color": [232, 45, 73],
+    "bandwidthPerLevel": 15,
+	"salvageChance": 0.1,
+    "upgradeClass": "scripts.kissa.LOST_SECTOR.hullmods.exotica.temporalConduits",
+    "showInStoreIfNotInstalled": false,
+	"chipFirstInstall": true,
+	"hints": ["flux","speed"],
+    "resourceRatios": {
+      "heavy_machinery": 2.0,
+      "metals": 2.0,
+      "supplies": 1.25,
+	  "organics": 0.5,
+	  "volatiles": 3.0
+    }
+  },
+  "spaceTimeAnchor": {
+    "name": "Space Time Anchor",
+    "color": [53, 19, 175],
+    "bandwidthPerLevel": 20,
+	"salvageChance": 0.1,
+    "upgradeClass": "scripts.kissa.LOST_SECTOR.hullmods.exotica.spaceTimeAnchor",
+    "showInStoreIfNotInstalled": false,
+	"chipFirstInstall": true,
+	"hints": ["durability"],
+    "resourceRatios": {
+      "heavy_machinery": 2.5,
+      "metals": 4.0,
+      "supplies": 1.5,
+	  "organics": 0.25,
+	  "volatiles": 1.5
+    }
+  }
+}

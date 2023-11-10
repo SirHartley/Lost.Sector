@@ -1,0 +1,18 @@
+{
+	"id":"nskr_causality2_dummy_shot",
+	"onHitEffect":"scripts.kissa.LOST_SECTOR.weapons.nskr_cdummy2OH",
+	"specClass":"projectile",
+	"spawnType":"BALLISTIC_AS_BEAM",
+	"collisionClass":"RAY",
+	"collisionClassByFighter":"RAY_FIGHTER",
+	"length":110.0,
+	"width":20.0,
+	"fadeTime":0.25,
+	"hitGlowRadius":20,	
+	"fringeColor":[147, 64, 255,255],
+	"coreColor":[255,255,255,200],
+	
+	"textureType":"SMOOTH",  # only needed for BEAM spawnType
+	"textureScrollSpeed":-256.0,
+	"pixelsPerTexel":1.0	
+}

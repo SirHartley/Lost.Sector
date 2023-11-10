@@ -1,0 +1,16 @@
+{
+	"id":"nskr_inverter_shot",
+	"onHitEffect":"scripts.kissa.LOST_SECTOR.weapons.nskr_inverterOH",
+	"specClass":"projectile",
+	"spawnType":"BALLISTIC_AS_BEAM",
+	"collisionClass":"RAY",
+	"collisionClassByFighter":"RAY_FIGHTER",
+	"length":60.0,
+	"width":30.0,
+	"fadeTime":0.25,
+	"fringeColor":[90,0,200,255],
+	"coreColor":[255,255,255,220],
+	"textureType":"SMOOTH",  # only needed for BEAM spawnType
+	"textureScrollSpeed":-256.0,
+	"pixelsPerTexel":1.0	
+}

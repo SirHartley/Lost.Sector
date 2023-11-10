@@ -1,0 +1,16 @@
+{
+	"id":"nskr_emglShot",
+	"specClass":"projectile",
+	"spawnType":"BALLISTIC",
+	"collisionClass":"PROJECTILE_FF",
+	"collisionClassByFighter":"PROJECTILE_FIGHTER",
+	"length":30,
+	"hitGlowRadius":15,
+	"width":15,
+	"fadeTime":0.20,
+	"fringeColor":[255,255,100,0],
+	"textureScrollSpeed":64.0,
+	"pixelsPerTexel":0.0,
+	"bulletSprite":"graphics/missiles/shell_large_blue.png",
+	"onHitEffect":"scripts.kissa.LOST_SECTOR.weapons.nskr_emglOH",
+}

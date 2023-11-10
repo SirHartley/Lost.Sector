@@ -1,0 +1,6 @@
+{
+    "playableFaction":false,
+    "pirateFaction":false,
+    "corvusCompatible":true,
+    "hostileToAll":true,    
+}

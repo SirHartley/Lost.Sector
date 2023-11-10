@@ -1,0 +1,81 @@
+{
+  "hullName": "pursuer",
+  "hullId": "nskr_pursuer",
+  "hullSize": "FIGHTER",
+  "spriteName": "graphics/ships/drones/nskr_pursuer.png",
+  "style": "HIGH_TECH",
+  "height": 34,
+  "width": 34,
+  "center": [17, 15],
+  "collisionRadius": 20,
+  "shieldCenter": [0, 0],
+  "shieldRadius": 20,
+  "viewOffset": 0,
+  "builtInMods": [
+    "nskr_emCore"
+  ],
+  "weaponSlots": [
+    {
+      "id": "WS0001",
+      "size": "SMALL",
+      "type": "UNIVERSAL",
+      "mount": "HIDDEN",
+      "arc": 23,
+      "angle": 0,
+      "locations": [0, -9.5]
+    },
+    {
+      "id": "WS0002",
+      "size": "SMALL",
+      "type": "UNIVERSAL",
+      "mount": "HIDDEN",
+      "arc": 23,
+      "angle": -0,
+      "locations": [0, 9.5]
+    },
+    {
+      "id": "WS0003",
+      "size": "SMALL",
+      "type": "UNIVERSAL",
+      "mount": "HIDDEN",
+      "arc": 37,
+      "angle": 0,
+      "locations": [11, -0]
+    },
+    {
+      "id": "WS0004",
+      "size": "SMALL",
+      "type": "UNIVERSAL",
+      "mount": "HIDDEN",
+      "arc": 360,
+      "angle": 180,
+      "locations": [1, -0]
+    }
+  ],
+  "engineSlots": [
+    {
+      "location": [-14.5, -4],
+      "length": 27,
+      "width": 13,
+      "angle": 180,
+      "contrailSize": 13,
+      "style": "CUSTOM",
+      "styleId": "NSKR_EXEC"
+    },
+    {
+      "location": [-14.5, 4],
+      "length": 27,
+      "width": 13,
+      "angle": -180,
+      "contrailSize": 13,
+      "style": "CUSTOM",
+      "styleId": "NSKR_EXEC"
+    }
+  ],
+  "bounds": [
+    -4.5, 16,
+    -13.5, 0,
+    -4.5, -16,
+    12, 0
+  ]
+}

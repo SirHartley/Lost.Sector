@@ -1,0 +1,39 @@
+{
+    "displayName": "Elite",
+    "fluxCapacitors": 10,
+    "fluxVents": 5,
+    "goalVariant": true,
+    "hullId": "nskr_malediction",
+    "hullMods": [
+        "fluxcoil",
+        "hardened_subsystems",
+        "magazines"
+    ],
+    "permaMods": [],
+    "sMods": [],
+    "variantId": "nskr_malediction_elite",
+    "weaponGroups": [
+        {
+            "autofire": false,
+            "mode": "LINKED",
+            "weapons": {"WS0005": "ionpulser"}
+        },
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0001": "irpulse",
+                "WS0002": "irpulse"
+            }
+        },
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0003": "mininglaser",
+                "WS0004": "mininglaser"
+            }
+        }
+    ],
+    "wings": []
+}

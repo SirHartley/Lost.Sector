@@ -1,0 +1,48 @@
+{
+    "displayName": "Hybrid",
+    "fluxCapacitors": 5,
+    "fluxVents": 8,
+    "goalVariant": true,
+    "hullId": "nskr_blackbird",
+    "hullMods": [
+        "fluxdistributor",
+        "fluxcoil",
+        "hardenedshieldemitter",
+        "nskr_inertial"
+    ],
+    "permaMods": [],
+    "sMods": [],
+    "variantId": "nskr_blackbird_hbd",
+    "weaponGroups": [
+        {
+            "autofire": false,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0006": "railgun",
+                "WS0007": "railgun",
+                "WS0008": "heavyac"
+            }
+        },
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0001": "phasebeam",
+                "WS0002": "phasebeam"
+            }
+        },
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0003": "pdlaser",
+                "WS0004": "pdlaser"
+            }
+        },
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {"WS0005": "vulcan"}
+        }
+    ]
+}

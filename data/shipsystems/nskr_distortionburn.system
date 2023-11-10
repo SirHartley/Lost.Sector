@@ -1,0 +1,27 @@
+{
+	"id":"nskr_distortionburn",
+	"type":"ENGINE_MOD",
+	"aiType":"CUSTOM",
+	"aiScript":"scripts.kissa.LOST_SECTOR.shipsystems.ai.nskr_burnAI",
+	"statsScript":"scripts.kissa.LOST_SECTOR.shipsystems.nskr_distortionBurnStats",
+	
+	#"engineGlowColor":[100, 178, 255,255],
+	"engineGlowLengthMult":3.0,
+	"engineGlowWidthMult":2.0,
+	"engineGlowGlowMult":2.0,
+	
+	"flameoutOnImpactChance":0.1,
+
+	"clampMaxSpeedAfter":true,
+	"alwaysAccelerate":true,
+
+	"useSound":"nskr_system_plasma_burn",
+	"loopSound":"nskr_system_plasma_burn_loop",
+	"outOfUsesSound":"engine_disabled",
+	
+	"aiHints":{
+		"activeSpeedIncrease":0,
+		"burstMovementPotential":400,
+		"averageSpeedIncrease":50,
+	}
+}

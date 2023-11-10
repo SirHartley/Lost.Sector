@@ -1,0 +1,48 @@
+{
+    "hullFrequency":{
+        "hulls":{
+		"nskr_kingslayer":0.50,
+		"nskr_rhea":0.40,
+        },
+    },
+    "shipsWhenImporting":{
+        "hulls":[
+        ],
+    },
+    "knownShips":{
+        "hulls":[
+		"nskr_kingslayer",
+		"nskr_rhea",
+        ],
+    },
+    "priorityShips":{
+        "hulls":[
+
+           
+        ],
+    },
+    "knownFighters":{
+        "fighters":[
+            
+        ],
+    },
+    "knownWeapons":{
+        "weapons":[
+            
+        ],
+    },
+    "knownHullMods":{
+        "hullMods":[
+            
+        ],
+    },
+	
+	"ranks":{
+		"ranks":{
+			"pAnarchist":{"name":"Anarchist Leader"},
+		},
+		"posts":{
+			"pAnarchist":{"name":"Anarchist Leader"},
+		},
+	},
+},
