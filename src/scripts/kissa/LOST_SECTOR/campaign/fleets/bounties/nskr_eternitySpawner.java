@@ -192,6 +192,9 @@ public class nskr_eternitySpawner extends BaseCampaignEventListener implements E
         simpleFleet.flagshipInfo = flagship;
         simpleFleet.assignment = FleetAssignment.ORBIT_PASSIVE;
         simpleFleet.assignmentText = "error #506, try again?";
+
+        simpleFleet.aiFleetProperties = true;
+
         CampaignFleetAPI fleet = simpleFleet.create();
 
         //makes sure we are not in a star
@@ -257,7 +260,7 @@ public class nskr_eternitySpawner extends BaseCampaignEventListener implements E
         simpleSystem.pickSystemTypes = pickTypes;
         simpleSystem.blacklistTags = banTags;
         simpleSystem.enforceSystemStarType = true;
-        simpleSystem.pickOnlyInConstellation = true;
+        simpleSystem.pickOnlyInProcgen = true;
 
         if (!simpleSystem.get().isEmpty()) {
             StarSystemAPI pick = simpleSystem.pick();

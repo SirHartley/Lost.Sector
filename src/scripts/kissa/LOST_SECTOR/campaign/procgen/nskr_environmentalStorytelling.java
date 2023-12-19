@@ -188,7 +188,7 @@ public class nskr_environmentalStorytelling {
 
         simpleSystem simpleSystem = new simpleSystem(new Random(), 1);
         simpleSystem.blacklistTags = banTags;
-        simpleSystem.pickOnlyInConstellation = true;
+        simpleSystem.pickOnlyInProcgen = true;
 
         if (!simpleSystem.get().isEmpty()) {
             StarSystemAPI pick = simpleSystem.pick();

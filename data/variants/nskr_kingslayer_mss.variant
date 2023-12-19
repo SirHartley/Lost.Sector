@@ -1,14 +1,13 @@
 {
     "displayName": "Guillotine",
     "fluxCapacitors": 0,
-    "fluxVents": 24,
+    "fluxVents": 41,
     "goalVariant": true,
     "hullId": "nskr_kingslayer",
     "hullMods": [
         "missleracks",
         "missile_autoloader",
         "eccm",
-        "auxiliarythrusters",
         "converted_hangar",
         "heavyarmor"
     ],
@@ -17,11 +16,11 @@
     "variantId": "nskr_kingslayer_mss",
     "weaponGroups": [
         {
-            "autofire": false,
-            "mode": "ALTERNATING",
+            "autofire": true,
+            "mode": "LINKED",
             "weapons": {
-                "WS0016": "cyclone",
-                "WS0017": "cyclone"
+                "WS0016": "gauss",
+                "WS0017": "gauss"
             }
         },
         {
@@ -44,15 +43,13 @@
         },
         {
             "autofire": true,
-            "mode": "ALTERNATING",
+            "mode": "LINKED",
             "weapons": {"WS0003": "heavymortar"}
         },
         {
             "autofire": true,
             "mode": "LINKED",
             "weapons": {
-                "WS0001": "flak",
-                "WS0002": "flak",
                 "WS0004": "lightac",
                 "WS0005": "lightac",
                 "WS0008": "lightac",
@@ -63,6 +60,8 @@
             "autofire": true,
             "mode": "LINKED",
             "weapons": {
+                "WS0001": "flak",
+                "WS0002": "flak",
                 "WS0010": "vulcan",
                 "WS0011": "vulcan",
                 "WS0012": "vulcan",

@@ -3,7 +3,7 @@
 	"everyFrameEffect": "scripts.kissa.LOST_SECTOR.weapons.nskr_cdummy1Effect",
 	"specClass":"projectile",
 	"type":"MISSILE",
-	"size":"SMALL",
+	"size":"MEDIUM",
 	"displayArcRadius":600,
 	"turretSprite":"",
 	"turretGunSprite":"",

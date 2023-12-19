@@ -432,7 +432,7 @@ public class nskr_kestevenScavenger extends BaseCampaignEventListener implements
 
         simpleSystem simpleSystem = new simpleSystem(new Random(), 1);
         simpleSystem.pickTags = pickTags;
-        simpleSystem.pickOnlyInConstellation = true;
+        simpleSystem.pickOnlyInProcgen = true;
 
         if (!simpleSystem.get().isEmpty()) {
             StarSystemAPI pick = simpleSystem.pick();

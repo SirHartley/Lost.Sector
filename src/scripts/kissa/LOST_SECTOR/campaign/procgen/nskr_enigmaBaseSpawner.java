@@ -101,7 +101,7 @@ public class nskr_enigmaBaseSpawner {
         simpleSystem simpleSystem = new simpleSystem(new Random(), 1);
         simpleSystem.blacklistTags = banTags;
         simpleSystem.blacklistEntities = banEntities;
-        simpleSystem.pickOnlyInConstellation = true;
+        simpleSystem.pickOnlyInProcgen = true;
         simpleSystem.pickStars = pickStar;
         simpleSystem.enforceSystemStarType = true;
 

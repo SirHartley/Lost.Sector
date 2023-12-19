@@ -36,7 +36,7 @@ public class nskr_bountyLoot extends BaseCampaignEventListener implements EveryF
 		//mothership "bounty" loot
 		if (loser.getMemoryWithoutUpdate().contains(nskr_mothershipSpawner.LOOT_KEY)){
 			fleetInfo info = fleetUtil.getFleets(nskr_mothershipSpawner.FLEET_ARRAY_KEY).get(0);
-			if (loser.getFlagship()!=info.flagship || loser.getFlagship()==null) {
+			if (loser.getFlagship()==null) {
 
 				loot.addCommodity("alpha_core", 1);
 
@@ -52,7 +52,7 @@ public class nskr_bountyLoot extends BaseCampaignEventListener implements EveryF
 		//eternity "bounty" loot
 		if (loser.getMemoryWithoutUpdate().contains(nskr_eternitySpawner.LOOT_KEY)){
 			fleetInfo info = fleetUtil.getFleets(nskr_eternitySpawner.FLEET_ARRAY_KEY).get(0);
-			if (loser.getFlagship()!=info.flagship || loser.getFlagship()==null) {
+			if (loser.getFlagship()==null) {
 
 				loot.addCommodity("alpha_core", 2);
 				loot.addCommodity("nskr_electronics", 500);
@@ -81,7 +81,7 @@ public class nskr_bountyLoot extends BaseCampaignEventListener implements EveryF
 		//rorq "bounty" loot
 		if (loser.getMemoryWithoutUpdate().contains(nskr_rorqSpawner.LOOT_KEY)){
 			fleetInfo info = fleetUtil.getFleets(nskr_rorqSpawner.FLEET_ARRAY_KEY).get(0);
-			if (loser.getFlagship()!=info.flagship || loser.getFlagship()==null) {
+			if (loser.getFlagship()==null) {
 				float paid = nskr_rorqSpawner.BOUNTY_PAYOUT * plugin.computePlayerContribFraction();
 				setAmountPaid(paid, nskr_rorqSpawner.DEFEAT_ID_PAID);
 				Global.getSector().getPlayerFleet().getCargo().getCredits().add(paid);

@@ -1,7 +1,7 @@
 {
     "displayName": "Rip And Tear",
     "fluxCapacitors": 0,
-    "fluxVents": 48,
+    "fluxVents": 40,
     "goalVariant": true,
     "hullId": "nskr_kingslayer",
     "hullMods": [
@@ -18,15 +18,9 @@
         {
             "autofire": true,
             "mode": "LINKED",
-            "weapons": {"WS0017": "mjolnir"}
-        },
-        {
-            "autofire": false,
-            "mode": "ALTERNATING",
             "weapons": {
-                "WS0006": "reaper",
-                "WS0007": "reaper",
-                "WS0016": "cyclone"
+                "WS0016": "mjolnir",
+                "WS0017": "mjolnir"
             }
         },
         {
@@ -37,6 +31,14 @@
                 "WS0015": "sabotpod",
                 "WS0018": "sabotpod",
                 "WS0019": "sabotpod"
+            }
+        },
+        {
+            "autofire": false,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0006": "reaper",
+                "WS0007": "reaper"
             }
         },
         {

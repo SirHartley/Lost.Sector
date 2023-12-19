@@ -1,7 +1,7 @@
 {
     "displayName": "SERIAL 004",
     "fluxCapacitors": 21,
-    "fluxVents": 20,
+    "fluxVents": 22,
     "goalVariant": false,
     "hullId": "nskr_sovereign",
     "hullMods": [

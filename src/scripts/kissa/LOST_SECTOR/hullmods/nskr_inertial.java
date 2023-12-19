@@ -3,6 +3,7 @@ package scripts.kissa.LOST_SECTOR.hullmods;
 import com.fs.starfarer.api.GameState;
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.combat.*;
+import com.fs.starfarer.api.graphics.SpriteAPI;
 import com.fs.starfarer.api.loading.WeaponSpecAPI;
 import com.fs.starfarer.api.ui.Alignment;
 import com.fs.starfarer.api.ui.LabelAPI;
@@ -101,8 +102,15 @@ public class nskr_inertial extends BaseHullMod {
                     }
 
                     //GLOW
-                    if (wep.getSprite()!=null) {
-                        renderUtil.renderGlow(wep.getLocation(), wep.getSprite().getHeight() * 0.33f, glow);
+                    //fucking cursed as fuck, null checking isn't enough?? don't ask me how to detect if weap has no sprite then
+                    SpriteAPI wSprite = null;
+                    try {
+                        wSprite = wep.getSprite();
+                    } catch (ArrayIndexOutOfBoundsException ex) {
+                        continue;
+                    }
+                    if (wSprite!=null && wSprite.getHeight()>0f) {
+                        renderUtil.renderGlow(wep.getLocation(), wSprite.getHeight() * 0.33f, glow);
                     }
                 }
             }

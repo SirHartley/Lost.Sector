@@ -1,7 +1,7 @@
 {
     "displayName": "Black Ops",
     "fluxCapacitors": 0,
-    "fluxVents": 5,
+    "fluxVents": 8,
     "hullId": "nskr_nemesis",
     "hullMods": [
         "armoredweapons",

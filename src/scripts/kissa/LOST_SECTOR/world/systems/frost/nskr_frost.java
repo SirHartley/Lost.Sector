@@ -24,11 +24,23 @@ import com.fs.starfarer.api.impl.campaign.terrain.HyperspaceTerrainPlugin;
 import com.fs.starfarer.api.util.Misc;
 import com.fs.starfarer.api.util.Pair;
 import com.fs.starfarer.api.util.WeightedRandomPicker;
+import indevo.industries.artillery.utils.ArtilleryStationPlacer;
 import org.jetbrains.annotations.Nullable;
 import org.lazywizard.lazylib.MathUtils;
 import org.lazywizard.lazylib.VectorUtils;
 import org.lwjgl.util.vector.Vector2f;
+import scripts.kissa.LOST_SECTOR.nskr_modPlugin;
+import scripts.kissa.LOST_SECTOR.util.ids;
 import scripts.kissa.LOST_SECTOR.util.util;
+import indevo.ids.Ids;
+import indevo.industries.artillery.conditions.ArtilleryStationCondition;
+import indevo.industries.artillery.entities.ArtilleryStationEntityPlugin;
+import indevo.industries.artillery.entities.WatchtowerEntityPlugin;
+import indevo.industries.artillery.scripts.ArtilleryStationScript;
+import indevo.industries.artillery.scripts.CampaignAttackScript;
+import indevo.utils.ModPlugin;
+import indevo.utils.helper.Settings;
+
 
 import java.awt.Color;
 import java.util.*;
@@ -259,7 +271,7 @@ public class nskr_frost {
 		glacier.applySpecChanges();
 
 		PlanetAPI siberia = system.addPlanet("nskr_siberia", star, "Siberia", "cryovolcanic", 10, 230, 8500, 750);
-		//siberia.applySpecChanges();
+		//shiver.applySpecChanges();
 
 		PlanetAPI shiver = system.addPlanet("nskr_shiver", star, "Shiver", "frozen", 80, 150, 11500, 1150);
 		//shiver.applySpecChanges();

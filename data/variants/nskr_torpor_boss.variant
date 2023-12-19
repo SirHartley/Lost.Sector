@@ -1,7 +1,7 @@
 {
     "displayName": "SERIAL 007",
     "fluxCapacitors": 10,
-    "fluxVents": 4,
+    "fluxVents": 5,
     "goalVariant": false,
     "hullId": "nskr_torpor",
     "hullMods": [

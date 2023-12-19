@@ -31,4 +31,5 @@ public class ids {
     public static final String INERTIAL_SUPERCHARGER_HULLMOD_ID = "nskr_inertial";
     public static final String VOLATILE_FLUX_INJECTOR_HULLMOD_ID = "nskr_volatile";
     public static final String HIGH_CAPACITANCE_BANKS_HULLMOD_ID = "nskr_bigBats";
+    public static final String CRITICAL_POINT_PROTECTION_HULLMOD_ID = "nskr_criticalArmor";
 }

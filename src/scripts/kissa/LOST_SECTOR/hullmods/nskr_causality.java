@@ -72,7 +72,7 @@ public class nskr_causality extends BaseHullMod {
 
 	public void applyEffectsAfterShipCreation(ShipAPI ship, String id) {
 
-		int dmods = (int)util.getDMods(ship.getVariant().getPermaMods());
+		int dmods = (int)util.getDMods(ship.getVariant());
 		if(dmods>0) {
 			ship.getMutableStats().getFluxDissipation().modifyPercent(id, -DMOD_PENALTY * dmods);
 			ship.getMutableStats().getFluxCapacity().modifyPercent(id, -DMOD_PENALTY * dmods);
@@ -203,29 +203,30 @@ public class nskr_causality extends BaseHullMod {
 		tooltip.addSectionHeading("Details", Alignment.MID, pad);
 		TooltipMakerAPI text = tooltip.beginImageWithText("graphics/icons/hullsys/ammo_feeder.png", 36.0f);
 		text.addPara(TEXT1, 0.0f, util.NICE_YELLOW, TEXT1);
-		text.addPara("-15%% weapon flux usage.", 0.0f, util.BON_GREEN, "15%");
-		text.addPara("+15%% energy weapon damage.", 0.0f, util.BON_GREEN, "15%");
-		text.addPara("+15%% ballistic weapon rate of fire (with an additional matching reduction in flux usage).", 0.0f, util.BON_GREEN, "15%");
+		text.addPara("-15%% weapon flux usage.", 2.0f, util.BON_GREEN, "15%");
+		text.addPara("+15%% energy weapon damage.", 2.0f, util.BON_GREEN, "15%");
+		text.addPara("+15%% ballistic weapon rate of fire (with an additional matching reduction in flux usage).", 2.0f, util.BON_GREEN, "15%");
 		tooltip.addImageWithText(pad);
 
 		text = tooltip.beginImageWithText("graphics/icons/hullsys/damper_field.png", 36.0f);
 		text.addPara(TEXT2, 0.0f, util.NICE_YELLOW, TEXT2);
-		text.addPara("-Max energy capacity is " + (int)ship.getMaxFlux(), 0.0f, util.BON_GREEN, "" + (int)ship.getMaxFlux());
-		text.addPara("-Maximum safe time dilation is " + maxEnergy, 0.0f, util.BON_GREEN, "" + maxEnergy);
-		text.addPara("-Absorbing more energy dramatically increases time dilation.", 0.0f, util.NICE_YELLOW, "");
-		text.addPara("-Going above 50%% energy capacity increases the weapons buff.", 0.0f, util.NICE_YELLOW, "50%");
-		text.addPara("-Absorbed projectiles grant more energy than missiles.", 0.0f, util.BON_GREEN, "");
-		text.addPara("-Absorbed missiles deal 1x the original damage while absorbed projectiles deal 1.5x the damage.", 0.0f, util.BON_GREEN, "");
+		text.addPara("-Max energy capacity is " + (int)ship.getMaxFlux(), 2.0f, util.BON_GREEN, "" + (int)ship.getMaxFlux());
+		text.addPara("-Maximum safe time dilation is " + maxEnergy, 2.0f, util.BON_GREEN, "" + maxEnergy);
+		text.addPara("-Absorbing more energy dramatically increases time dilation.", 2.0f, util.NICE_YELLOW, "");
+		text.addPara("-Going above 50%% energy capacity increases the weapons buff.", 2.0f, util.NICE_YELLOW, "50%");
+		text.addPara("-Absorbed projectiles grant more energy than missiles.", 2.0f, util.BON_GREEN, "");
+		text.addPara("-Absorbed missiles deal 1x the original damage while absorbed projectiles deal 1.5x the damage.", 2.0f, util.BON_GREEN, "");
+		text.addPara("-Created bolts counts as an energy weapon for bonuses, while created homing blobs count as a missile weapon for bonuses.", 2.0f, util.BON_GREEN, "");
 		tooltip.addImageWithText(pad);
 
 		text = tooltip.beginImageWithText("graphics/icons/hullsys/entropy_amplifier.png", 36.0f);
 		text.addPara(TEXT3, 0.0f, util.TT_ORANGE, TEXT3);
-		text.addPara("-Going above energy capacity is dangerous.", 0.0f, util.TT_ORANGE, "dangerous");
-		text.addPara("-Will cause unpredictable anomalies.", 0.0f, util.TT_ORANGE, "");
-		text.addPara("-Ship receives "+(int)BEAM_PENALTY_MULT+"x"+" more damage from beams.", 0.0f, util.TT_ORANGE, (int)BEAM_PENALTY_MULT+"x");
-		text.addPara("-Any D-mods on the hull will reduce flux capacity, flux dissipation, and peak performance time by "+(int)DMOD_PENALTY+"%%"+" each.", 0.0f, util.TT_ORANGE, (int)DMOD_PENALTY+"%");
-		int dmods = (int)util.getDMods(ship.getVariant().getPermaMods());
-		if(dmods>0)text.addPara("-Current penalty "+(int)(dmods*DMOD_PENALTY)+"%%", 0.0f, util.TT_ORANGE, (int)(dmods*DMOD_PENALTY)+"%");
+		text.addPara("-Going above energy capacity is dangerous.", 2.0f, util.TT_ORANGE, "dangerous");
+		text.addPara("-Will cause unpredictable anomalies.", 2.0f, util.TT_ORANGE, "");
+		text.addPara("-Ship receives "+(int)BEAM_PENALTY_MULT+"x"+" more damage from beams.", 2.0f, util.TT_ORANGE, (int)BEAM_PENALTY_MULT+"x");
+		text.addPara("-Any D-mods on the hull will reduce flux capacity, flux dissipation, and peak performance time by "+(int)DMOD_PENALTY+"%%"+" each.", 2.0f, util.TT_ORANGE, (int)DMOD_PENALTY+"%");
+		int dmods = (int)util.getDMods(ship.getVariant());
+		if(dmods>0)text.addPara("-Current penalty "+(int)(dmods*DMOD_PENALTY)+"%%", 2.0f, util.TT_ORANGE, (int)(dmods*DMOD_PENALTY)+"%");
 		tooltip.addImageWithText(pad);
 	}
 

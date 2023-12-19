@@ -116,7 +116,7 @@ public class nskr_blacksiteSpawner {
 
         simpleSystem simpleSystem = new simpleSystem(new Random(), 1);
         simpleSystem.blacklistEntities = banEntities;
-        simpleSystem.pickOnlyInConstellation = true;
+        simpleSystem.pickOnlyInProcgen = true;
 
         if (!simpleSystem.get().isEmpty()) {
             StarSystemAPI pick = simpleSystem.pick();

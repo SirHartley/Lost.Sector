@@ -101,7 +101,7 @@ public class contractInfo {
         COMBAT_SUBTYPES.add(new Pair<>(Factions.LUDDIC_PATH, 3f));
         COMBAT_SUBTYPES.add(new Pair<>(Factions.PIRATES, 3f));
         COMBAT_SUBTYPES.add(new Pair<>(Factions.REMNANTS, 3f));
-        COMBAT_SUBTYPES.add(new Pair<>(Factions.DERELICT, 3f));
+        //COMBAT_SUBTYPES.add(new Pair<>(Factions.DERELICT, 3f));
         COMBAT_SUBTYPES.add(new Pair<>(ids.ENIGMA_FACTION_ID, 3f));
     }
     public static final List<Pair<String, Float>> SCAV_SUBTYPES = new ArrayList<>();

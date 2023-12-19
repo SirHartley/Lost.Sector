@@ -1,14 +1,13 @@
 {
     "displayName": "Hybrid",
-    "fluxCapacitors": 5,
-    "fluxVents": 8,
+    "fluxCapacitors": 3,
+    "fluxVents": 13,
     "goalVariant": true,
     "hullId": "nskr_blackbird",
     "hullMods": [
         "fluxdistributor",
-        "fluxcoil",
         "hardenedshieldemitter",
-        "nskr_inertial"
+        "nskr_criticalArmor"
     ],
     "permaMods": [],
     "sMods": [],

@@ -1,8 +1,8 @@
 {
 	"id":"nskr_causality2_dummy",  # this id must match what's in the spreadsheet
 	"specClass":"projectile",
-	"type":"BALLISTIC",
-	"size":"LARGE",
+	"type":"ENERGY",
+	"size":"MEDIUM",
 	"displayArcRadius":600,
 	"turretSprite":"graphics/weapons/hellbore_cannon_turret_base.png",
 	"turretGunSprite":"graphics/weapons/hellbore_cannon_turret_recoil.png",

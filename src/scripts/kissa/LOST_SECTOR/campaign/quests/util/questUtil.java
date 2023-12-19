@@ -75,38 +75,38 @@ public class questUtil {
     }
 
     //for kesteven quest line
-    public static SectorEntityToken getRandomTTMarket(Random random, boolean allowHybrasil) {
-        List<MarketAPI> validMarkets = new ArrayList<>();
-        for (MarketAPI market : Misc.getFactionMarkets(Factions.TRITACHYON)) {
-            boolean isValid = true;
-            StarSystemAPI system = market.getStarSystem();
-            if (system.hasTag(Tags.THEME_HIDDEN) || system.hasTag(Tags.SYSTEM_CUT_OFF_FROM_HYPER) ||
-                    system.getStar() == null || system.getPlanets().size()<1) {
-                isValid = false;
-            }
-            if (market.isHidden() || market.isPlanetConditionMarketOnly()){
-                isValid = false;
-            }
-            if (!allowHybrasil) {
-                //ban hybrasil initially, too hard
-                if (system.getName().toLowerCase().startsWith("hybrasil")){
-                    isValid = false;
-                }
-            }
-            if (isValid) {
-                validMarkets.add(market);
-            }
-        }
-        if (validMarkets.isEmpty()){
-            if (allowHybrasil){
-                log("ERROR no valid TT markets picking random TT market");
-                return getRandomFactionMarket(random, Factions.TRITACHYON);
-            }
-            log("ERROR no valid TT markets try again");
-            return getRandomTTMarket(random, true);
-        }
-        return validMarkets.get(mathUtil.getSeededRandomNumberInRange(0,validMarkets.size()-1, random)).getPrimaryEntity();
-    }
+    //public static SectorEntityToken getRandomTTMarket(Random random, boolean allowHybrasil) {
+    //    List<MarketAPI> validMarkets = new ArrayList<>();
+    //    for (MarketAPI market : Misc.getFactionMarkets(Factions.TRITACHYON)) {
+    //        boolean isValid = true;
+    //        StarSystemAPI system = market.getStarSystem();
+    //        if (system.hasTag(Tags.THEME_HIDDEN) || system.hasTag(Tags.SYSTEM_CUT_OFF_FROM_HYPER) ||
+    //                system.getStar() == null || system.getPlanets().size()<1) {
+    //            isValid = false;
+    //        }
+    //        if (market.isHidden() || market.isPlanetConditionMarketOnly()){
+    //            isValid = false;
+    //        }
+    //        if (!allowHybrasil) {
+    //            //ban hybrasil initially, too hard
+    //            if (system.getName().toLowerCase().startsWith("hybrasil")){
+    //                isValid = false;
+    //            }
+    //        }
+    //        if (isValid) {
+    //            validMarkets.add(market);
+    //        }
+    //    }
+    //    if (validMarkets.isEmpty()){
+    //        if (allowHybrasil){
+    //            log("ERROR no valid TT markets picking random TT market");
+    //            return getRandomFactionMarket(random, Factions.TRITACHYON);
+    //        }
+    //        log("ERROR no valid TT markets try again");
+    //        return getRandomTTMarket(random, true);
+    //    }
+    //    return validMarkets.get(mathUtil.getSeededRandomNumberInRange(0,validMarkets.size()-1, random)).getPrimaryEntity();
+    //}
 
     private static StarSystemAPI getRandomSystem(Random random) {
         simpleSystem simpleSystem = new simpleSystem(random, 1);
@@ -124,7 +124,7 @@ public class questUtil {
         simpleSystem simpleSystem = new simpleSystem(random, 2);
         simpleSystem.maxDistance = 27500f;
         simpleSystem.blacklistTags = banTags;
-        simpleSystem.pickOnlyInConstellation = true;
+        simpleSystem.pickOnlyInProcgen = true;
 
         if (!simpleSystem.get().isEmpty()) {
             StarSystemAPI pick = simpleSystem.pick();
@@ -147,7 +147,7 @@ public class questUtil {
         simpleSystem simpleSystem = new simpleSystem(random, 2);
         simpleSystem.minDistance = 32500f;
         simpleSystem.blacklistTags = banTags;
-        simpleSystem.pickOnlyInConstellation = true;
+        simpleSystem.pickOnlyInProcgen = true;
         simpleSystem.minStarsInConstellation = 2;
 
         if (!simpleSystem.get().isEmpty()) {
@@ -168,7 +168,7 @@ public class questUtil {
 
         simpleSystem simpleSystem = new simpleSystem(random, 1);
         simpleSystem.blacklistSystems = banSys;
-        simpleSystem.pickOnlyInConstellation = true;
+        simpleSystem.pickOnlyInProcgen = true;
 
         //First, get all the valid systems and put them in a separate list
         List<StarSystemAPI> validSystems = new ArrayList<>();
@@ -207,7 +207,7 @@ public class questUtil {
         simpleSystem simpleSystem = new simpleSystem(random, minPlanets);
         simpleSystem.blacklistSystems = banSys;
         simpleSystem.allowNeutron = true;
-        simpleSystem.pickOnlyInConstellation = true;
+        simpleSystem.pickOnlyInProcgen = true;
 
         //First, get all the valid systems and put them in a separate list
         List<StarSystemAPI> validSystems = new ArrayList<>();
@@ -241,7 +241,7 @@ public class questUtil {
 
         simpleSystem simpleSystem = new simpleSystem(random, 1);
         simpleSystem.pickEntities = entities;
-        simpleSystem.pickOnlyInConstellation = true;
+        simpleSystem.pickOnlyInProcgen = true;
 
         if (!simpleSystem.get().isEmpty()) {
             StarSystemAPI pick = simpleSystem.pick();
@@ -640,7 +640,7 @@ public class questUtil {
         Map<String, Object> data = Global.getSector().getPersistentData();
         String id = nskr_kestevenQuest.PERSISTENT_KEY+"Start3";
         if (!data.containsKey(id))
-            data.put(id, getRandomTTMarket(nskr_kestevenQuest.getRandom(), false));
+            data.put(id, getRandomFactionMarket(nskr_kestevenQuest.getRandom(), Factions.TRITACHYON, questStageManager.JOB3_MARKET_BLACKLIST));
 
         return (SectorEntityToken) data.get(id);
     }

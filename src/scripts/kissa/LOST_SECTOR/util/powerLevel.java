@@ -31,7 +31,7 @@ public class powerLevel {
             float wepValue = 0f;
             float wingValue = 0f;
             boolean unfit = false;
-            float dMods = util.getDMods(ship.getVariant().getPermaMods());
+            float dMods = util.getDMods(ship.getVariant());
             ShipHullSpecAPI spec = ship.getHullSpec();
             //- for Dmods + for Smods
             value += spec.getBaseValue() * (1f - (dMods * 0.05f) * (1f + (ship.getVariant().getSMods().size()) * 0.05f));

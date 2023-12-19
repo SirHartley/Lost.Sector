@@ -28,7 +28,7 @@ public class nskr_enigmaHullmodListener extends BaseCampaignEventListener implem
         DEFAULT_KEYS.add(KEY_BASE+"#1");
         DEFAULT_KEYS.add(KEY_BASE+"#2");
         DEFAULT_KEYS.add(KEY_BASE+"#3");
-        DEFAULT_KEYS.add(KEY_BASE+"#4");
+        //DEFAULT_KEYS.add(KEY_BASE+"#4");
         DEFAULT_KEYS.add(KEY_BASE+"#5");
         DEFAULT_KEYS.add(KEY_BASE+"#6");
         DEFAULT_KEYS.add(KEY_BASE+"#7");
@@ -36,7 +36,6 @@ public class nskr_enigmaHullmodListener extends BaseCampaignEventListener implem
         DEFAULT_KEYS.add(KEY_BASE+"#9");
         DEFAULT_KEYS.add(KEY_BASE+"#10");
     }
-    //
 
     static void log(final String message) {
         Global.getLogger(nskr_enigmaHullmodListener.class).info(message);

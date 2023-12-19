@@ -12,6 +12,7 @@ import com.fs.starfarer.api.combat.ShipAPI;
 import com.fs.starfarer.api.fleet.FleetMemberAPI;
 import com.fs.starfarer.api.impl.campaign.rulecmd.PaginatedOptions;
 import com.fs.starfarer.api.impl.campaign.rulecmd.SetStoryOption;
+import com.fs.starfarer.api.loading.HullModSpecAPI;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import com.fs.starfarer.api.util.Misc;
 import com.fs.starfarer.api.util.Misc.Token;
@@ -250,15 +251,14 @@ public class nskr_modRemoval extends PaginatedOptions {
         Color gr = Misc.getStoryBrightColor();
 
         int count = targetShip.getVariant().getSMods().size();
-        //remove sp
-        Global.getSector().getPlayerStats().setStoryPoints(Global.getSector().getPlayerStats().getStoryPoints()-1);
         text.setFontSmallInsignia();
-        //text.addPara("Used 1 Story point",g,gr,"1 Story point","");
         text.setFontInsignia();
 
         //remove
         LinkedHashSet<String> sModsCopy = new LinkedHashSet<>(targetShip.getVariant().getSMods());
         for (String s : sModsCopy){
+            HullModSpecAPI spec = Global.getSettings().getHullModSpec(s);
+            if (spec!=null && spec.getTags().contains("rat_alteration")) continue;
             targetShip.getVariant().removePermaMod(s);
         }
         text.addParagraph("The hull is offloaded at a dry-dock so the crew can begin work on it.");

@@ -26,14 +26,14 @@ public class nskr_blackOpsSetup implements EveryFrameScript {
 
     public static void scanWeaponBlueprints() {
         for (FactionAPI f : Global.getSector().getAllFactions()) {
-            for (String weapon : Global.getSector().getFaction(f.getId()).getKnownWeapons()) {
-                if (Global.getSettings().getWeaponSpec(weapon).hasTag(Tags.RESTRICTED)) continue;
-                //garbo
-                if (Global.getSettings().getWeaponSpec(weapon).hasTag("base_bp") || Global.getSettings().getWeaponSpec(weapon).hasTag("pirate")) continue;
-                if (!Global.getSector().getFaction(SPEC_OPS_ID).knowsWeapon(weapon)) {
-                    Global.getSector().getFaction(SPEC_OPS_ID).addKnownWeapon(weapon, true);
-                }
-            }
+            //for (String weapon : Global.getSector().getFaction(f.getId()).getKnownWeapons()) {
+            //    if (Global.getSettings().getWeaponSpec(weapon).hasTag(Tags.RESTRICTED)) continue;
+            //    //garbo
+            //    if (Global.getSettings().getWeaponSpec(weapon).hasTag("base_bp") || Global.getSettings().getWeaponSpec(weapon).hasTag("pirate")) continue;
+            //    if (!Global.getSector().getFaction(SPEC_OPS_ID).knowsWeapon(weapon)) {
+            //        Global.getSector().getFaction(SPEC_OPS_ID).addKnownWeapon(weapon, true);
+            //    }
+            //}
             for (String fighter : Global.getSector().getFaction(f.getId()).getKnownFighters()) {
                 if (Global.getSettings().getFighterWingSpec(fighter).hasTag(Tags.RESTRICTED)) continue;
                 //garbo

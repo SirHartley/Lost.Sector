@@ -6,9 +6,11 @@ import com.fs.starfarer.api.campaign.*;
 import com.fs.starfarer.api.campaign.ai.CampaignFleetAIAPI;
 import com.fs.starfarer.api.campaign.ai.FleetAssignmentDataAPI;
 import com.fs.starfarer.api.campaign.ai.ModularFleetAIAPI;
-import com.fs.starfarer.api.impl.campaign.ids.Factions;
-import com.fs.starfarer.api.impl.campaign.ids.FleetTypes;
-import com.fs.starfarer.api.impl.campaign.ids.MemFlags;
+import com.fs.starfarer.api.combat.ShipVariantAPI;
+import com.fs.starfarer.api.fleet.FleetMemberAPI;
+import com.fs.starfarer.api.fleet.FleetMemberType;
+import com.fs.starfarer.api.impl.campaign.ids.*;
+import com.fs.starfarer.api.loading.VariantSource;
 import org.lazywizard.lazylib.MathUtils;
 import org.lwjgl.util.vector.Vector2f;
 import scripts.kissa.LOST_SECTOR.campaign.fleets.bounties.nskr_abyssSpawner;
@@ -38,6 +40,8 @@ public class nskr_interceptManager extends BaseCampaignEventListener implements 
     public static final float ARO_DESPAWN_TIMER = 45f;
     public static final float MESSENGER_SPAWN_CHANCE  = 0.04f;
     public static final float MESSENGER_DESPAWN_TIMER = 20f;
+    public static final float AUTO_HUNTER_SPAWN_CHANCE  = 0.01f;
+    public static final float AUTO_HUNTER_DP_REQ  = 75f;
 
     public static final float IN_CORE_DIST = 25000f;
     public static final String FLEET_ARRAY_KEY = "$nskr_interceptManagerFleets";
@@ -46,11 +50,13 @@ public class nskr_interceptManager extends BaseCampaignEventListener implements 
     public static final String ARO_FLEET_KEY = "$nskr_interceptManagerAROfleet";
     public static final String MESSENGER_FLEET_KEY = "$nskr_interceptManagerMessengerFleet";
     public static final String MESSENGER_FLEET_TALKED_KEY = "$nskr_interceptManagerMessengerTalked";
+    public static final String AUTO_HUNTER_FLEET_KEY = "$nskr_interceptManagerAutoHunterFleet";
     private final List<CampaignFleetAPI> removed = new ArrayList<>();
     nskr_saved<Float> counter;
     nskr_saved<Float> fleetCounter;
     nskr_saved<Boolean> aroFleetSpawned;
     nskr_saved<Boolean> messengerFleetSpawned;
+    nskr_saved<Boolean> autoHunterFleetSpawned;
     CampaignFleetAPI pf;
     public nskr_interceptManager() {
         super(false);
@@ -60,6 +66,7 @@ public class nskr_interceptManager extends BaseCampaignEventListener implements 
         //spawn check booleans
         this.aroFleetSpawned = new nskr_saved<>("nskr_interceptManagerAROFleetSpawned", false);
         this.messengerFleetSpawned = new nskr_saved<>("nskr_interceptManagerMessengerFleetSpawned", false);
+        this.autoHunterFleetSpawned = new nskr_saved<>("nskr_interceptManagerAutoHunterFleetSpawned", false);
         //init randoms
         getRandom(PERSISTENT_RANDOM_KEY);
         getRandom(PERSISTENT_FLEET_RANDOM_KEY);
@@ -120,6 +127,18 @@ public class nskr_interceptManager extends BaseCampaignEventListener implements 
                     }
                 }
             }
+            //AUTO HUNTER
+            if (!autoHunterFleetSpawned.val){
+                //spawn check
+                if (hyperSpace && distance < IN_CORE_DIST*2f && AutoHunterCanSpawn() && Global.getSector().getFaction(Factions.PLAYER).getRelationship(Factions.LUDDIC_PATH)<0f) {
+                    //rng check
+                    if (random.nextFloat()<AUTO_HUNTER_SPAWN_CHANCE) {
+                        spawnAutoHunterFleet(getRandom(PERSISTENT_FLEET_RANDOM_KEY));
+                        autoHunterFleetSpawned.val = true;
+                    }
+                }
+            }
+
             //
             counter.val=0f;
         }
@@ -239,7 +258,58 @@ public class nskr_interceptManager extends BaseCampaignEventListener implements 
                         }
                     }
                 }
-                //
+                //Auto hunter fleet
+                if (fleet.getMemoryWithoutUpdate().contains(AUTO_HUNTER_FLEET_KEY)){
+                    boolean despawn = false;
+
+                    if (fleet.getFleetPoints()*4.0f<f.strength){
+                        despawn = true;
+                    }
+
+                    Vector2f fp = fleet.getLocationInHyperspace();
+                    Vector2f pp = this.pf.getLocationInHyperspace();
+                    float dist = MathUtils.getDistance(pp, fp);
+                    if (despawn) {
+                        if (dist > Global.getSettings().getMaxSensorRangeHyper()) {
+                            //tracker for cleaning the list
+                            this.removed.add(fleet);
+                            fleet.despawn();
+                        }
+                    }
+                    //stop here when defeated
+                    if (despawn) continue;
+                    //assignment logic
+                    FleetAssignmentDataAPI curr = fleet.getAI().getCurrentAssignment();
+                    if (curr == null) {
+                        fleet.clearAssignments();
+                        fleet.addAssignment(FleetAssignment.HOLD, fleet.getContainingLocation().createToken(fleet.getLocation()), Float.MAX_VALUE, "holding");
+                        log("null assignment");
+                    }
+                    //used special maneuvers
+                    if (curr!=null && curr.getAssignment()==FleetAssignment.STANDING_DOWN) {
+                        CampaignFleetAIAPI ai = fleet.getAI();
+                        if (ai instanceof ModularFleetAIAPI) {
+                            // needed to interrupt an in-progress pursuit
+                            ModularFleetAIAPI m = (ModularFleetAIAPI) ai;
+                            m.getStrategicModule().getDoNotAttack().add(pf, 1f);
+                            m.getTacticalModule().setTarget(null);
+                        }
+                    }
+                    //logic
+
+                    //intercept
+                    //chase the player for 30 days and if not defeated, then give up and guard a random path market
+                    if (f.age<30f){
+                        fleetUtil.gotoAndInterceptPlayerAI(fleet, f, fleetUtil.interceptBehaviour.AROUND);
+                    } else {
+                        //filthy check to pick new target once
+                        if (f.target.getMarket()==null){
+                            f.target = questUtil.getRandomFactionMarket(random, Factions.LUDDIC_PATH);
+                        }
+                        fleetUtil.guardTargetAI(fleet, f, fleetUtil.guardMovementBehaviour.ORBIT, fleetUtil.guardAttackBehaviour.PLAYER, 0.01f);
+                    }
+
+                }
 
             }
 
@@ -298,7 +368,7 @@ public class nskr_interceptManager extends BaseCampaignEventListener implements 
         fleets.add(new fleetInfo(fleet, null, fleet.getContainingLocation().createToken(fleet.getLocation())));
         fleetUtil.setFleets(fleets, FLEET_ARRAY_KEY);
 
-        log("AROfleet SPAWNED " + fleet.getName() + " size " + combatPoints);
+        log("ARO fleet SPAWNED " + fleet.getName() + " size " + combatPoints);
     }
 
     public static final String MESSENGER_FLEET_NAME = "Merc Messenger";
@@ -342,6 +412,78 @@ public class nskr_interceptManager extends BaseCampaignEventListener implements 
         fleetUtil.setFleets(fleets, FLEET_ARRAY_KEY);
 
         log("Messenger SPAWNED " + fleet.getName() + " size " + combatPoints);
+    }
+
+    public static final String AUTO_HUNTER_FLEET_NAME = "Hunter Fanatics";
+    public void spawnAutoHunterFleet(Random random) {
+
+        float combatPoints = mathUtil.getSeededRandomNumberInRange(70f, 80f, random);
+        //power scaling
+        combatPoints += combatPoints * powerLevel.get(0.2f, 0f,1.5f);
+
+        //apply settings
+        combatPoints *= nskr_modPlugin.getScriptedFleetSizeMult();
+
+        ArrayList<String> keys = new ArrayList<>();
+        keys.add(MemFlags.FLEET_IGNORES_OTHER_FLEETS);
+        keys.add(MemFlags.FLEET_FIGHT_TO_THE_LAST);
+        keys.add(MemFlags.MEMORY_KEY_SAW_PLAYER_WITH_TRANSPONDER_ON);
+        keys.add(MemFlags.MEMORY_KEY_MAKE_HOLD_VS_STRONGER);
+        keys.add(AUTO_HUNTER_FLEET_KEY);
+
+        simpleFleet simpleFleet = new simpleFleet(pf.getContainingLocation().createToken(pf.getLocation()), Factions.LUDDIC_PATH, combatPoints, keys, random);
+
+        simpleFleet.name = AUTO_HUNTER_FLEET_NAME;
+        simpleFleet.ignoreMarketFleetSizeMult = true;
+        simpleFleet.qualityOverride = mathUtil.getSeededRandomNumberInRange(0.70f, 0.80f, random);
+        simpleFleet.sMods = mathUtil.getSeededRandomNumberInRange(1, 2, random);
+        simpleFleet.assignment = FleetAssignment.INTERCEPT;
+        simpleFleet.assignmentText = "intercepting your fleet";
+        simpleFleet.interceptPlayer = true;
+        CampaignFleetAPI fleet = simpleFleet.create();
+
+        //spawning
+        final Vector2f loc = new Vector2f(MathUtils.getPointOnCircumference(pf.getLocation(), (pf.getSensorStrength()*0.90f)+(fleet.getSensorProfile()*0.90f), random.nextFloat() * 360.0f));
+        fleet.setLocation(loc.x, loc.y);
+        fleet.setFacing(random.nextFloat() * 360.0f);
+
+        //ADD HULLMODS
+        for (FleetMemberAPI curr : fleet.getFleetData().getMembersListCopy()) {
+            if (curr.isFighterWing()) continue;
+            ShipVariantAPI v = curr.getVariant();
+            if (v==null) continue;
+
+            //random
+            if (random.nextFloat()<0.50f || curr.isFlagship()){
+                v.addPermaMod("nskr_machineSpirit");
+                v.addTag(Tags.TAG_NO_AUTOFIT);
+            }
+        }
+
+        //fleet.setFaction(Factions.LUDDIC_PATH, true);
+        //update
+        fleetUtil.update(fleet, random);
+
+        //add to mem IMPORTANT
+        List<fleetInfo> fleets = fleetUtil.getFleets(FLEET_ARRAY_KEY);
+        fleets.add(new fleetInfo(fleet, null, fleet.getContainingLocation().createToken(fleet.getLocation())));
+        fleetUtil.setFleets(fleets, FLEET_ARRAY_KEY);
+
+        log("Auto Hunter SPAWNED " + fleet.getName() + " size " + combatPoints);
+    }
+
+    public boolean AutoHunterCanSpawn() {
+
+        float autoCount = 0f;
+        for (FleetMemberAPI m : Global.getSector().getPlayerFleet().getMembersWithFightersCopy()) {
+            if (m.isFighterWing()) continue;
+            if (m.getVariant() == null) continue;
+            if (m.getVariant().getHullMods().contains(HullMods.AUTOMATED) || m.getVariant().getHullMods().contains("sotf_sierrasconcord")) {
+
+                autoCount += m.getDeploymentPointsCost();
+            }
+        }
+        return autoCount >= AUTO_HUNTER_DP_REQ;
     }
 
     public static Random getRandom(String id) {

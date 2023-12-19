@@ -7,9 +7,9 @@
     "hullMods": [
         "fluxdistributor",
         "fluxcoil",
-        "nskr_inertial",
         "insulatedengine",
-        "autorepair"
+        "autorepair",
+        "nskr_criticalArmor"
     ],
     "permaMods": [],
     "sMods": [],

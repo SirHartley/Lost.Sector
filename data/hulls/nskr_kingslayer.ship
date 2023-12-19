@@ -12,7 +12,7 @@
   "shieldRadius": 231,
   "viewOffset": 0,
   "builtInMods": [
-    "nskr_hwi"
+    "hbi"
   ],
   "weaponSlots": [
     {
@@ -153,7 +153,7 @@
     {
       "id": "WS0016",
       "size": "LARGE",
-      "type": "COMPOSITE",
+      "type": "BALLISTIC",
       "mount": "HARDPOINT",
       "arc": 5,
       "angle": 0,
@@ -162,7 +162,7 @@
     {
       "id": "WS0017",
       "size": "LARGE",
-      "type": "COMPOSITE",
+      "type": "BALLISTIC",
       "mount": "HARDPOINT",
       "arc": 5,
       "angle": -0,

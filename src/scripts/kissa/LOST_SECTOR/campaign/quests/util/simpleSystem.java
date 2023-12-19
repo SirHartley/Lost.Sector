@@ -5,7 +5,6 @@ import com.fs.starfarer.api.campaign.SectorAPI;
 import com.fs.starfarer.api.campaign.SectorEntityToken;
 import com.fs.starfarer.api.campaign.StarSystemAPI;
 import com.fs.starfarer.api.campaign.econ.MarketAPI;
-import com.fs.starfarer.api.impl.campaign.ids.StarTypes;
 import com.fs.starfarer.api.impl.campaign.ids.Tags;
 import com.fs.starfarer.api.impl.campaign.procgen.Constellation;
 import com.fs.starfarer.api.impl.campaign.procgen.StarSystemGenerator;
@@ -45,7 +44,7 @@ public class simpleSystem {
     public boolean allowEnteredByPlayer = true;
     public boolean pickOnlyMarket = false;
     public boolean enforceSystemStarType = false;
-    public boolean pickOnlyInConstellation = false;
+    public boolean pickOnlyInProcgen = false;
     public int minStarsInConstellation = 1;
 
     public simpleSystem(Random random, int minPlanets) {
@@ -66,9 +65,10 @@ public class simpleSystem {
             if (system.hasTag(Tags.THEME_HIDDEN) || system.hasTag(Tags.SYSTEM_CUT_OFF_FROM_HYPER) || system.getPlanets().size()<minPlanets) {
                 continue;
             }
-            if (pickOnlyInConstellation){
+            if (pickOnlyInProcgen){
                 Constellation c = system.getConstellation();
                 if (c==null) continue;
+                if (!system.isProcgen()) continue;
                 int count = 1;
                 for (StarSystemAPI s : Global.getSector().getStarSystems()){
                     if (s.getConstellation()==null) continue;

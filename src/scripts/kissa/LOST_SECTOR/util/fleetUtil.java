@@ -148,7 +148,7 @@ public class fleetUtil {
         return false;
     }
     private static boolean defeatedCheck(CampaignFleetAPI fleet, fleetInfo info, CampaignFleetAPI pf) {
-        if (info.flagship!= fleet.getFlagship() || fleet.getFlagship()==null){
+        if (fleet.getFlagship()==null){
             if (fleet.getFleetPoints()< info.strength*0.25f) {
                 if (fleet.getAI().getCurrentAssignmentType() != FleetAssignment.ORBIT_PASSIVE) {
                     fleet.clearAssignments();
@@ -383,6 +383,28 @@ public class fleetUtil {
         return ship;
     }
 
+    public static FleetMemberAPI generateShip(ShipVariantAPI variant, boolean noAutofit, boolean alwaysRecover, List<String> tags, List<String> hullmods) {
+        // tags
+        for (String t : tags){
+            variant.addTag(t);
+        }
+        // permamods
+        for (String h : hullmods){
+            variant.addPermaMod(h, false);
+        }
+        if (noAutofit)variant.addTag(Tags.TAG_NO_AUTOFIT);
+        if (alwaysRecover)variant.addTag(Tags.VARIANT_ALWAYS_RECOVERABLE);
+        variant.addTag(Tags.TAG_RETAIN_SMODS_ON_RECOVERY);
+        variant.setSource(VariantSource.REFIT);
+        FleetMemberAPI ship = Global.getFactory().createFleetMember(FleetMemberType.SHIP, variant);
+
+        if(noAutofit)ship.setVariant(variant, false, true);
+        //attempt at keeping the variants intact
+        if(!noAutofit)ship.setVariant(variant, true, true);
+
+        return ship;
+    }
+
     public static void setAIOfficers(CampaignFleetAPI fleet){
         for (FleetMemberAPI m : fleet.getMembersWithFightersCopy()){
             setAIOfficer(m);
@@ -449,7 +471,7 @@ public class fleetUtil {
         for (String key : FLEET_ARRAY_KEYS) {
             for (fleetInfo f : fleetUtil.getFleets(key)){
                 FleetMemberAPI flagship = f.fleet.getFlagship();
-                if (flagship==f.flagship && flagship!=null && f.flagshipSimpleMember!=null){
+                if (flagship!=null && f.flagshipSimpleMember!=null){
                     fix(flagship, f.flagshipSimpleMember);
                 }
                 if (!f.secondaries.isEmpty()){

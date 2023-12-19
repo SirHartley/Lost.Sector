@@ -7,11 +7,13 @@ import java.util.Random;
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.InteractionDialogImageVisual;
 import com.fs.starfarer.api.campaign.InteractionDialogAPI;
+import com.fs.starfarer.api.campaign.SectorEntityToken;
 import com.fs.starfarer.api.campaign.TextPanelAPI;
 import com.fs.starfarer.api.campaign.econ.MarketAPI;
 import com.fs.starfarer.api.campaign.rules.MemoryAPI;
 import com.fs.starfarer.api.characters.FullName.Gender;
 import com.fs.starfarer.api.characters.PersonAPI;
+import com.fs.starfarer.api.impl.campaign.ids.MemFlags;
 import com.fs.starfarer.api.impl.campaign.ids.Ranks;
 import com.fs.starfarer.api.impl.campaign.intel.bar.PortsideBarData;
 import com.fs.starfarer.api.impl.campaign.intel.bar.events.BaseBarEvent;
@@ -359,6 +361,14 @@ public class nskr_kQuest5Bar extends BaseBarEvent {
         //d1 already found cache
         if (optionData==OptionId.D1){
             options.clearOptions();
+            //mark as important
+            for (SectorEntityToken entity : Global.getSector().getStarSystem("Unknown Site").getAllEntities()){
+                if (entity.getId()==null) continue;
+                if (entity.getId().equals("nskr_cache_core")){
+                    entity.getMemoryWithoutUpdate().set(MemFlags.MEMORY_KEY_MISSION_IMPORTANT, true);
+                }
+            }
+
             text.addPara("Jack has a look of genuine amazement on his face, while Alice looks more skeptical.");
             text.addPara("\"That's incredible. You will be saving us a lot of work, if you are speaking the truth.\"");
             text.addPara("Alice starts explaining in the same dry tone. \"I suppose we will have to tell you more about this Chip now. At the moment of the collapse the Cache was hosting the Unlimited Production Chip. The Chip contains the keys to the old Domain's great secrets, so many technologies in one neat package.\"");

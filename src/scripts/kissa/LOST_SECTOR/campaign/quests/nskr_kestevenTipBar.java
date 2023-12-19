@@ -294,7 +294,7 @@ public class nskr_kestevenTipBar extends BaseBarEvent {
         }
         //default
         simpleSystem.allowEnteredByPlayer = false;
-        simpleSystem.pickOnlyInConstellation = true;
+        simpleSystem.pickOnlyInProcgen = true;
 
         if (!simpleSystem.get().isEmpty()) {
             StarSystemAPI pick = simpleSystem.pick();

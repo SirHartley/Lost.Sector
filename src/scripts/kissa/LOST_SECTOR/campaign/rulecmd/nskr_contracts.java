@@ -107,12 +107,12 @@ public class nskr_contracts extends BaseHubMission {
         TextPanelAPI text = dialog.getTextPanel();
 
         if (contract.type== contractInfo.contractType.ELIMINATE){
-            String hostileStr = "";
-            if (!contract.isFactionBounty) hostileStr = "hostile";
+            String hostileStr = " ";
+            if (!contract.isFactionBounty) hostileStr = " hostile ";
 
             text.addPara("\"The powers that be have authorized mercenary contracts for the destruction of enemy assets.\"");
             text.addPara("\"And as it happens we have a new elimination contract available, it would require the destruction of " +
-                    contract.count+ " "+hostileStr+" " + contractManager.getTypeString(contract)+".\"", tc, h, contract.count+"", "");
+                    contract.count + hostileStr + contractManager.getTypeString(contract)+".\"", tc, h, contract.count+"", "");
             text.addPara("\"The payout per target vessel is "+Misc.getDGSCredits(contract.rewardPer)+" for a total of "+Misc.getDGSCredits(contract.totalReward)+". " +
                     "You will be paid upon the full completion of the contract.\"", tc, h, Misc.getDGSCredits(contract.rewardPer), Misc.getDGSCredits(contract.totalReward));
             text.addPara("\"Are you interested captain?\"");

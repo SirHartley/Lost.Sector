@@ -223,7 +223,7 @@ public class nskr_outpost {
 		simpleSystem.allowMarkets = false;
 		simpleSystem.blacklistTags = banTags;
 		simpleSystem.blacklistSystemTypes = banTypes;
-		simpleSystem.pickOnlyInConstellation = true;
+		simpleSystem.pickOnlyInProcgen = true;
 
 		StarSystemAPI pick = null;
 		while (pick == null) {

@@ -415,7 +415,7 @@ public class nskr_hyperspaceEnigmaSpawner extends BaseCampaignEventListener impl
 
     private SectorEntityToken getGoToTarget(Random random) {
         simpleSystem simpleSystem = new simpleSystem(random, 2);
-        simpleSystem.pickOnlyInConstellation = true;
+        simpleSystem.pickOnlyInProcgen = true;
 
         float maxDist = 8000f;
         //First, get all the valid systems and put them in a separate list

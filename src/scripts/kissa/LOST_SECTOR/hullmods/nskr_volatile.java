@@ -21,7 +21,7 @@ import java.util.Set;
 public class nskr_volatile extends BaseHullMod {
 
     public static final float ROF_BONUS = 40f;
-    public static final float FLUX_BONUS = 50f;
+    public static final float FLUX_BONUS = 67f;
     public final Map<HullSize, Float> SPEED_BONUS = new HashMap<>();
     {
         SPEED_BONUS.put(HullSize.FRIGATE, 50f);

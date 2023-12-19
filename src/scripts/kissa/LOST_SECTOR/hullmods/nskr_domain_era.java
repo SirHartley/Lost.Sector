@@ -77,16 +77,10 @@ public class nskr_domain_era extends BaseHullMod {
 
 
 	public void addPostDescriptionSection(TooltipMakerAPI tooltip, ShipAPI.HullSize hullSize, ShipAPI ship, float width, boolean isForModSpec) {
-		if (Global.getSector()==null) return;
-		if (Global.getSector().getPlayerFleet()==null) return;
-
-		nskr_enigmaHullmodListener.update();
-
 		float pad = 12.0f;
 		Color tc = Misc.getHighlightColor();
 		Color y = Misc.getHighlightColor();
 		Color bad = util.TT_ORANGE;
-
 
 		//SO penalty
 		if (ship.getMutableStats().getVariant().hasHullMod(HullMods.SAFETYOVERRIDES)) {
@@ -96,7 +90,10 @@ public class nskr_domain_era extends BaseHullMod {
 			tooltip.addPara("-Maximum combat readiness of the ship is decreased by " + (int) (CR_PENALTY) + "%" + "%", 2.0f, bad, (int) (CR_PENALTY) + "%");
 		}
 
+		if (Global.getSector()==null) return;
+		if (Global.getSector().getPlayerFleet()==null) return;
 
+		nskr_enigmaHullmodListener.update();
 
 		ArrayList<String> unlocks = nskr_enigmaHullmodListener.getUnlocks(nskr_enigmaHullmodListener.UNLOCKS_MEM_KEY);
 		//everything unlocked
@@ -121,11 +118,12 @@ public class nskr_domain_era extends BaseHullMod {
 			tooltip.addPara("-Maneuverability is reduced by "+(int)(SPEED_PENALTY*2f)+"%"+"%", 2.0f, bad, (int)(SPEED_PENALTY*2f)+"%");
 		}
 		if (unlocks.contains(nskr_enigmaHullmodListener.KEY_BASE+"#3")) {
-			tooltip.addPara("-Top speed is reduced by "+(int)(SPEED_PENALTY)+"su/s", 2.0f, bad, (int)(SPEED_PENALTY)+"su/s");
+			tooltip.addPara("-Top speed is reduced both by "+(int)(SPEED_PENALTY)+"%% " +
+					"and by an additional "+(int)(SPEED_PENALTY)+"su/s flat", 2.0f, bad,  (int)(SPEED_PENALTY)+"%", (int)(SPEED_PENALTY)+"su/s");
 		}
-		if (unlocks.contains(nskr_enigmaHullmodListener.KEY_BASE+"#4")) {
-			tooltip.addPara("-Top speed is reduced by an additional "+(int)(SPEED_PENALTY)+"%"+"%", 2.0f, bad, (int)(SPEED_PENALTY)+"%");
-		}
+		//if (unlocks.contains(nskr_enigmaHullmodListener.KEY_BASE+"#4")) {
+		//	tooltip.addPara("-Top speed is reduced by an additional "+(int)(SPEED_PENALTY)+"%"+"%", 2.0f, bad, (int)(SPEED_PENALTY)+"%");
+		//}
 		if (unlocks.contains(nskr_enigmaHullmodListener.KEY_BASE+"#6")) {
 			tooltip.addPara("-Non-missile weapon flux use reduced by "+(int)(FLUX_BONUS)+"%"+"%", 2.0f, y, (int)(FLUX_BONUS)+"%");
 		}
@@ -140,6 +138,25 @@ public class nskr_domain_era extends BaseHullMod {
 		}
 		if (unlocks.contains(nskr_enigmaHullmodListener.KEY_BASE+"#10")) {
 			tooltip.addPara("-Weapon ordnance point cost reduced by "+"1/2/4"+" points based on size", 2.0f, y, "1/2/4");
+		}
+
+		//Final Overdrive
+		if (unlocks.size()>=nskr_enigmaHullmodListener.DEFAULT_KEYS.size()){
+			tooltip.addSectionHeading("Final Overdrive", Alignment.MID, pad);
+
+			tooltip.addPara("Upon receiving damage that would take the ship below 33%% of maximum hull, it activates an emergency overdrive that grants a second wind for the ship. " +
+					"Does not activate while overloaded or venting, ship can not be destroyed before activation otherwise.", pad, y, "");
+			tooltip.addPara("Regenerates "+(int)nskr_rage_mod.HULL_REPAIR_PERCENT+"%% of maximum hull and recover every armor cell to 75%% if below that value. " +
+					"Dissipate 50%% of current flux, cruiser size hulls are phased for "+(int)nskr_rage_mod.MAX_DISAPPEAR_TIME+" seconds. " +
+					"Lose "+(int)Math.abs(nskr_rage_mod.ENRAGE_PPT_PENALTY)+"%% of remaining peak performance time.", pad, y, "");
+			tooltip.addPara("Gain major improvements to many stats", pad, y, "");
+
+			tooltip.addPara("-Top speed is increased both by "+(int)(nskr_rage_mod.ENRAGE_SPEED_BONUS)+"%% " +
+					"and by an additional "+(int)(nskr_rage_mod.ENRAGE_SPEED_BONUS_FLAT)+"su/s flat ", pad, y,  (int)(nskr_rage_mod.ENRAGE_SPEED_BONUS)+"%", (int)(nskr_rage_mod.ENRAGE_SPEED_BONUS_FLAT)+"su/s");
+			tooltip.addPara("-Ballistic weapon rate of fire increased and flux use reduced by "+(int)(nskr_rage_mod.ENRAGE_BALLISTIC_ROF_BONUS)+"%"+"%", 2.0f, y, (int)(nskr_rage_mod.ENRAGE_BALLISTIC_ROF_BONUS)+"%");
+			tooltip.addPara("-Energy weapon damage increased by "+(int)(nskr_rage_mod.ENRAGE_ENERGY_DMG_BONUS)+"%"+"%", 2.0f, y, (int)(nskr_rage_mod.ENRAGE_ENERGY_DMG_BONUS)+"%");
+			tooltip.addPara("-Flux dissipation increased by "+(int)(nskr_rage_mod.ENRAGE_FLUX_MULTI_BONUS)+"%"+"%", 2.0f, y, (int)(nskr_rage_mod.ENRAGE_FLUX_MULTI_BONUS)+"%");
+			tooltip.addPara("-Shield unfold and turn rate increased by "+(int)(nskr_rage_mod.SHIELD_SPEED_BONUS)+"%"+"%", 2.0f, y, (int)(nskr_rage_mod.SHIELD_SPEED_BONUS)+"%");
 		}
 
 	}

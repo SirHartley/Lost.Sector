@@ -4,10 +4,7 @@ import com.fs.starfarer.api.BaseModPlugin;
 import com.fs.starfarer.api.EveryFrameScript;
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.PluginPick;
-import com.fs.starfarer.api.campaign.BaseCampaignEventListener;
-import com.fs.starfarer.api.campaign.CampaignPlugin;
-import com.fs.starfarer.api.campaign.GenericPluginManagerAPI;
-import com.fs.starfarer.api.campaign.SectorEntityToken;
+import com.fs.starfarer.api.campaign.*;
 import com.fs.starfarer.api.campaign.econ.MarketAPI;
 import com.fs.starfarer.api.characters.PersonAPI;
 import com.fs.starfarer.api.combat.MissileAIPlugin;
@@ -19,6 +16,10 @@ import com.fs.starfarer.api.impl.campaign.procgen.ProcgenUsedNames;
 import com.fs.starfarer.api.impl.campaign.rulecmd.Nex_TransferMarket;
 import com.fs.starfarer.api.impl.campaign.shared.SharedData;
 import exerelin.campaign.SectorManager;
+import indevo.ids.Ids;
+import indevo.industries.artillery.conditions.ArtilleryStationCondition;
+import indevo.industries.artillery.scripts.ArtilleryStationScript;
+import indevo.industries.artillery.utils.ArtilleryStationPlacer;
 import lunalib.lunaSettings.LunaSettings;
 import org.dark.shaders.light.LightData;
 import org.dark.shaders.util.ShaderLib;
@@ -454,6 +455,31 @@ public class nskr_modPlugin extends BaseModPlugin {
             if (asteria!=null && Global.getSettings().getBoolean("Enable_IndEvo_minefields")) asteria.addCondition("IndEvo_mineFieldCondition");
             if (asteria!=null && Global.getSettings().getBoolean("dryDock")) asteria.addIndustry("IndEvo_dryDock");
             if (outpost!=null && Global.getSettings().getBoolean("PrivatePort")) outpost.getMarket().addIndustry("IndEvo_PrivatePort");
+
+            PlanetAPI siberia = null;
+            for (PlanetAPI p : Global.getSector().getStarSystem(nskr_frost.getName()).getPlanets()){
+                if (p.getId().equals("nskr_siberia")){
+                    siberia = p;
+                    break;
+                }
+            }
+            //add railgun surprise
+            if (siberia!=null){
+                ArtilleryStationScript script = new ArtilleryStationScript(siberia.getMarket());
+                script.setDestroyed(false);
+                siberia.getMarket().getMemoryWithoutUpdate().set(ArtilleryStationScript.TYPE_KEY, "railgun");
+                siberia.addScript(script);
+                siberia.getMemoryWithoutUpdate().set(ArtilleryStationScript.SCRIPT_KEY, script);
+                siberia.getMarket().addTag(Ids.TAG_ARTILLERY_STATION);
+                siberia.getContainingLocation().addTag(Ids.TAG_SYSTEM_HAS_ARTILLERY);
+
+                siberia.getMarket().addCondition(ArtilleryStationCondition.ID);
+
+                StarSystemAPI system = siberia.getStarSystem();
+                if (system.getEntitiesWithTag(Ids.TAG_WATCHTOWER).isEmpty()) {
+                    ArtilleryStationPlacer.placeWatchtowers(system, ids.ENIGMA_FACTION_ID);
+                }
+            }
         }
         //ppl
         nskr_gen.genPeople();

@@ -64,18 +64,20 @@ public class nskr_mothership extends BaseHullMod {
         float fuel = getFuel(FUEL_BASE_KEY + member.getId()) / 10f;
         boolean player = isInPlayerFleet(member.getStats());
         if (player) {
-            if (fuel > 0f) {
-                unApplyPenaltyStats(FUEL_BASE_KEY+"out_of_fuel", stats);
-                //cap count for subroutine
-                if (getCapitalCount(pf)<=1){
-                    applySubroutineStats(FUEL_BASE_KEY, pf, stats);
+            if (!member.isMothballed()) {
+                if (fuel > 0f) {
+                    unApplyPenaltyStats(FUEL_BASE_KEY + "out_of_fuel", stats);
+                    //cap count for subroutine
+                    if (getCapitalCount(pf) <= 1) {
+                        applySubroutineStats(FUEL_BASE_KEY, pf, stats);
+                    } else {
+                        unApplySubroutineStats(FUEL_BASE_KEY, pf, stats);
+                    }
+
                 } else {
-                    unApplySubroutineStats(FUEL_BASE_KEY, pf, stats);
+                    applyPenaltyStats(FUEL_BASE_KEY + "out_of_fuel", stats);
+
                 }
-
-            } else {
-                applyPenaltyStats(FUEL_BASE_KEY+"out_of_fuel", stats);
-
             }
         } else {
             if (member.getFleetData()==null) return;
@@ -86,7 +88,7 @@ public class nskr_mothership extends BaseHullMod {
         /////PAUSE CHECK
         if (Global.getSector().isPaused()) return;
 
-        if (player) {
+        if (player && !member.isMothballed()) {
             //consume fuel
             if (fuel > 0f) {
                 setFuel(id, getFuel(id) - amount);
@@ -98,7 +100,7 @@ public class nskr_mothership extends BaseHullMod {
     }
 
     private void applySubroutineStats(String id, CampaignFleetAPI fleet, MutableShipStatsAPI stats) {
-        stats.getMaxCombatReadiness().modifyFlat(id, CR_BONUS * 0.01f);
+        stats.getMaxCombatReadiness().modifyFlat(id, CR_BONUS * 0.01f, "Mothership Subroutine bonus");
 
         for (FleetMemberAPI m : fleet.getMembersWithFightersCopy()) {
             if (m.getVariant()==null) continue;
@@ -121,7 +123,7 @@ public class nskr_mothership extends BaseHullMod {
     }
 
     private void applyPenaltyStats(String id, MutableShipStatsAPI stats) {
-        stats.getMaxCombatReadiness().modifyFlat(id, -CR_PENALTY * 0.01f);
+        stats.getMaxCombatReadiness().modifyFlat(id, -CR_PENALTY * 0.01f, "Mothership out of AI Cores");
 
     }
 

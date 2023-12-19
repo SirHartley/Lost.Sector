@@ -1,7 +1,7 @@
 {
     "displayName": "Fleet",
     "fluxCapacitors": 0,
-    "fluxVents": 33,
+    "fluxVents": 36,
     "goalVariant": true,
     "hullId": "nskr_sunburst",
     "hullMods": [
@@ -33,7 +33,7 @@
         {
             "autofire": true,
             "mode": "LINKED",
-            "weapons": {"WS0001": "heavyneedler"}
+            "weapons": {"WS0001": "ionbeam"}
         },
         {
             "autofire": true,

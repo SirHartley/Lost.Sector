@@ -1,7 +1,7 @@
 {
     "displayName": "Rat's Nest",
     "fluxCapacitors": 0,
-    "fluxVents": 17,
+    "fluxVents": 37,
     "goalVariant": true,
     "hullId": "nskr_kingslayer",
     "hullMods": [
@@ -9,8 +9,7 @@
         "heavyarmor",
         "missleracks",
         "unstable_injector",
-        "armoredweapons",
-        "ballistic_rangefinder"
+        "armoredweapons"
     ],
     "permaMods": [],
     "sMods": [],
@@ -20,11 +19,6 @@
             "autofire": true,
             "mode": "LINKED",
             "weapons": {"WS0016": "multineedler"}
-        },
-        {
-            "autofire": false,
-            "mode": "LINKED",
-            "weapons": {"WS0017": "hurricane"}
         },
         {
             "autofire": false,
@@ -41,7 +35,8 @@
             "mode": "LINKED",
             "weapons": {
                 "WS0014": "chaingun",
-                "WS0015": "chaingun"
+                "WS0015": "chaingun",
+                "WS0017": "hephag"
             }
         },
         {

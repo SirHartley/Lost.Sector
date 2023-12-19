@@ -487,7 +487,8 @@ public class nskr_cache {
         entity.getLocation().x = fleet.getLocation().x + (10f - (float) Math.random() * 50f);
         entity.getLocation().y = fleet.getLocation().y + (10f - (float) Math.random() * 50f);
 
-        entity.getMemory().set(MemFlags.MEMORY_KEY_MISSION_IMPORTANT, true);
+        if (questUtil.getStage()>=16) entity.getMemory().set(MemFlags.MEMORY_KEY_MISSION_IMPORTANT, true);
+
         entity.getMemory().set(CORE_KEY, true);
         entity.getMemoryWithoutUpdate().set(MusicPlayerPluginImpl.KEEP_PLAYING_LOCATION_MUSIC_DURING_ENCOUNTER_MEM_KEY, true);
 

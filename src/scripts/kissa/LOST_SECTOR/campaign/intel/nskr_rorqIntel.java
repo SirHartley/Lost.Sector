@@ -39,7 +39,6 @@ public class nskr_rorqIntel extends BaseIntelPlugin {
     @Override
     public void advance(float amount) {
         if (fleet.getFlagship()==null || flagship != fleet.getFlagship()) {
-            fleet.getMemoryWithoutUpdate().unset(nskr_rorqSpawner.LOOT_KEY);
             gone = true;
         }
 

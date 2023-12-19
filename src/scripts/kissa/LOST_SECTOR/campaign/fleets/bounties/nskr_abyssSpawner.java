@@ -228,6 +228,9 @@ public class nskr_abyssSpawner extends BaseCampaignEventListener implements Ever
         simpleFleet.secondaries = secondaries;
         simpleFleet.assignment = FleetAssignment.PATROL_SYSTEM;
         simpleFleet.assignmentText = "error #506, try again?";
+
+        simpleFleet.aiFleetProperties = true;
+
         CampaignFleetAPI fleet = simpleFleet.create();
 
         //makes sure we are not in a star
@@ -293,7 +296,7 @@ public class nskr_abyssSpawner extends BaseCampaignEventListener implements Ever
         simpleSystem.pickStars = pickTypes;
         simpleSystem.pickTags = pickTags;
         simpleSystem.enforceSystemStarType = true;
-        simpleSystem.pickOnlyInConstellation = true;
+        simpleSystem.pickOnlyInProcgen = true;
 
         if (!simpleSystem.get().isEmpty()) {
             StarSystemAPI pick = simpleSystem.pick();

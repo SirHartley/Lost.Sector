@@ -1,7 +1,7 @@
 {
     "displayName": "SERIAL 001",
     "fluxCapacitors": 0,
-    "fluxVents": 16,
+    "fluxVents": 18,
     "goalVariant": true,
     "hullId": "nskr_nemesis",
     "hullMods": [

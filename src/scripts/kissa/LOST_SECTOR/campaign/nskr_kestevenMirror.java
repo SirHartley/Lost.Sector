@@ -47,11 +47,11 @@ public class nskr_kestevenMirror implements EveryFrameScript {
         FactionAPI f = Global.getSector().getFaction(ids.KESTEVEN_FACTION_ID);
         FactionSpecAPI fSpec = f.getFactionSpec();
 
-        for (String weapon : Global.getSector().getFaction(Factions.INDEPENDENT).getKnownWeapons()) {
-            if (!f.knowsWeapon(weapon)) {
-                f.addKnownWeapon(weapon, true);
-            }
-        }
+        //for (String weapon : Global.getSector().getFaction(Factions.INDEPENDENT).getKnownWeapons()) {
+        //    if (!f.knowsWeapon(weapon)) {
+        //        f.addKnownWeapon(weapon, true);
+        //    }
+        //}
         
         for (String ship : Global.getSector().getFaction(Factions.INDEPENDENT).getKnownShips()) {
             //ignore GH content

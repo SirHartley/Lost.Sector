@@ -1,7 +1,7 @@
 {
     "displayName": "Archon",
-    "fluxCapacitors": 7,
-    "fluxVents": 6,
+    "fluxCapacitors": 8,
+    "fluxVents": 7,
     "goalVariant": true,
     "hullId": "nskr_sovereign_e",
     "hullMods": [

@@ -38,28 +38,40 @@ public class blacksiteInfo {
 
         this.faction = pickFactionType();
 
-        switch (faction){
-            case Factions.PIRATES:
-                this.points = mathUtil.getSeededRandomNumberInRange(150f, 175f, random);
+        this.count = mathUtil.getSeededRandomNumberInRange(1, 3, random);
+        float mult = 1f;
+        switch (this.count){
+            case 1:
+                mult = 0.67f;
                 break;
-            case Factions.LUDDIC_PATH:
-                this.points = mathUtil.getSeededRandomNumberInRange(125f, 150f, random);
+            case 2:
+                mult = 1.0f;
                 break;
-            case Factions.TRITACHYON:
-                this.points = mathUtil.getSeededRandomNumberInRange(100f, 125f, random);
-                break;
-            case ids.KESTEVEN_FACTION_ID:
-                this.points = mathUtil.getSeededRandomNumberInRange(100f, 125f, random);
-                break;
-            case ids.ENIGMA_FACTION_ID:
-                this.points = mathUtil.getSeededRandomNumberInRange(75f, 100f, random);
-                break;
-            case Factions.REMNANTS:
-                this.points = mathUtil.getSeededRandomNumberInRange(100f, 125f, random);
+            case 3:
+                mult = 1.33f;
                 break;
         }
 
-        this.count = mathUtil.getSeededRandomNumberInRange(1, 4, random);
+        switch (faction){
+            case Factions.PIRATES:
+                this.points = mathUtil.getSeededRandomNumberInRange(150f, 175f, random) * mult;
+                break;
+            case Factions.LUDDIC_PATH:
+                this.points = mathUtil.getSeededRandomNumberInRange(125f, 150f, random) * mult;
+                break;
+            case Factions.TRITACHYON:
+                this.points = mathUtil.getSeededRandomNumberInRange(100f, 125f, random) * mult;
+                break;
+            case ids.KESTEVEN_FACTION_ID:
+                this.points = mathUtil.getSeededRandomNumberInRange(100f, 125f, random) * mult;
+                break;
+            case ids.ENIGMA_FACTION_ID:
+                this.points = mathUtil.getSeededRandomNumberInRange(75f, 100f, random) * mult;
+                break;
+            case Factions.REMNANTS:
+                this.points = mathUtil.getSeededRandomNumberInRange(100f, 125f, random) * mult;
+                break;
+        }
     }
 
     public static final List<Pair<String, Float>> FACTIONS = new ArrayList<>();

@@ -1,6 +1,6 @@
 {
     "displayName": "SERIAL 006",
-    "fluxCapacitors": 9,
+    "fluxCapacitors": 10,
     "fluxVents": 0,
     "goalVariant": true,
     "hullId": "nskr_torpor",

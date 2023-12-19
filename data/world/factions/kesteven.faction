@@ -87,8 +87,14 @@
 		],
 	},
 	"knownFighters":{
-		"tags":["kesteven", "independent", "base_bp"],
+		"tags":["kesteven"],
 		"fighters":[
+		"broadsword_wing",
+		"xyphos_wing",
+		"claw_wing",
+		"wasp_wing",
+		
+		
 		],
 	},
 	"priorityFighters":{
@@ -97,8 +103,36 @@
 		],
 	},
 	"knownWeapons":{
-		"tags":["kesteven", "merc", "independent", "base_bp", "lowtech_bp", "midline_bp", "hightech_bp", "missile_bp"],
+		"tags":["kesteven"],
 		"weapons":[
+		"lightneedler",
+		"railgun",
+		"dualflak",
+		"heavymauler",
+		"hveldriver",
+		"amblaster",
+		"phasebeam",
+		"heavyblaster",
+		"ionpulser",
+		"plasma",
+		"vulcan",
+		"reaper",
+		"typhoon",
+		"sabot",
+		"sabotpod",
+		"flak",
+		"lightdualmg",
+		"chaingun",
+		"heavymg",
+		"heavyneedler",
+		"autopulse",
+		"phasecl",
+		"heatseeker",
+		"salamanderpod",
+		"hil",
+		"ionbeam",
+		"ioncannon",
+		
 		
 		"nskr_bc_single",
 		"nskr_bc_tube",
@@ -146,7 +180,11 @@
 			"hiressensors",
 			"converted_fighterbay",
 			"ballistic_rangefinder",
+			
 			"nskr_inertial",
+			"nskr_volatile",
+			"nskr_bigBats",
+			"nskr_criticalArmor",
 		],
 	},
 	"factionDoctrine":{

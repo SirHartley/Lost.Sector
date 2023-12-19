@@ -1,7 +1,7 @@
 {
     "displayName": "Hybrid",
     "fluxCapacitors": 0,
-    "fluxVents": 40,
+    "fluxVents": 48,
     "goalVariant": true,
     "hullId": "nskr_prosperity",
     "hullMods": [

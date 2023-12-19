@@ -54,6 +54,11 @@ public class questStageManager extends BaseCampaignEventListener implements Ever
     public static final String JOB3_FAIL_KEY = "KestevenQuestJob3Fail";
     public static final String JOB3_TIMER_KEY = "KestevenQuestJob3Timer";
     public static final String JOB3_TARGET_DISCOVERED = "KestevenQuestJob3Discovered";
+    public static final ArrayList<String> JOB3_MARKET_BLACKLIST = new ArrayList<>();
+    static {
+        JOB3_MARKET_BLACKLIST.add("eochu_bres");
+        JOB3_MARKET_BLACKLIST.add("culann");
+    }
     public static final String E_MESSENGER_TALKED_KEY = "KestevenQuestEMessengerTalkedKey";
     public static final String E_MESSENGER_TALKED_ASK_ABOUT_KEY = "KestevenQuestEMessengerTalkedKeyAskAbout";
     public static final String JOB4_WAIT_KEY = "KestevenQuestJob4WaitTimer";
@@ -316,19 +321,19 @@ public class questStageManager extends BaseCampaignEventListener implements Ever
         //    questUtil.setDisksRecovered(5);
         //}
 
-        //int targetStage = 11;
-        //int s = stage;
-        //frameWait2++;
-        //if (frameWait2>50) {
-        //    if (stage < targetStage) {
-        //        frameWait2=0;
-        //        s++;
-        //        questUtil.setStage(s);
-        //    }
-        //}
-        //if (Global.getSector().getFaction(Factions.PLAYER).getRelationship("kesteven")<0.9f){
-        //    Global.getSector().getFaction(Factions.PLAYER).setRelationship("kesteven", 1f);
-        //}
+       //int targetStage = 6;
+       //int s = stage;
+       //frameWait2++;
+       //if (frameWait2>50) {
+       //    if (stage < targetStage) {
+       //        frameWait2=0;
+       //        s++;
+       //        questUtil.setStage(s);
+       //    }
+       //}
+       //if (Global.getSector().getFaction(Factions.PLAYER).getRelationship("kesteven")<0.9f){
+       //    Global.getSector().getFaction(Factions.PLAYER).setRelationship("kesteven", 1f);
+       //}
 
         //start job 1
         if (stage ==1) {
@@ -848,7 +853,7 @@ public class questStageManager extends BaseCampaignEventListener implements Ever
                         fleet.getMemoryWithoutUpdate().clear();
                         fleet.getMemoryWithoutUpdate().set(MemFlags.FLEET_IGNORES_OTHER_FLEETS, true);
 
-                        SectorEntityToken loc = questUtil.getRandomTTMarket(new Random(), true);
+                        SectorEntityToken loc = questUtil.getRandomFactionMarket(new Random(), Factions.TRITACHYON);
                         if (loc != null && loc.getMarket() != null) {
                             fleet.addAssignment(FleetAssignment.GO_TO_LOCATION_AND_DESPAWN, loc, Float.MAX_VALUE, "returning to " + loc.getName());
                             log("Qmanager " + fleet.getName() + " RETURNING ");

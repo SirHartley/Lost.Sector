@@ -1,3 +1,40 @@
+Version 0.6.1a
+-ONLY save compatible with 0.6.0x versions-
+
+New Stuff:
+- Added Critical Point Protection hullmod
+   - Kesteven hullmod that lets you armor tank squishy ships
+- Added a fun encounter for those with Automated ships   
+
+Balance changes:
+SHIPS
+- Prosperity reduced flux dissipation 1000->900
+- Nighthawk reduced flux dissipation 600->550
+- Kingslayer swapped large composites to ballistics, reduced max OP 330->320, reduced top speed 40->35
+- Sunburst base burn increased 6->7, swapped all universals to synergies
+WEAPONS
+- BastionCracker Torpedo Tube OP cost lowered 10->8
+- BastionCracker Torpedo OP cost lowered 2->1
+- Modular Huginn wing OP cost lowered 22->16
+- Bite ALG OP cost lowered 9->8
+- Surge Plasma Scatterer increased base range 450->600
+- Mega Flux Rocket Pod reduced max ammo 12->9
+- Giga Pulse Cannon dps reduced from 444->404
+MISC
+- Volatile Flux Injector increased cap bonus 50%->67%
+- Added a fun surprise to the Frost system, if you have IndEvo
+- Blacksites with multiple fleets are now harder
+
+Fixes:
+- Fixed a rare crash with Inertial Supercharger
+- Fixed S-Mod removal and Fleet size requirement skip options using 2 SP instead of 1 SP
+- Fixed Sunburst consuming cores while mothballed
+   - Also should no longer show up in Midnight's store
+- Fixed some AI fleets being able to retreat when they shouldn't
+- Fixed the Peacekeepers bounty not despawning in some cases, For real this time
+- Fixed some CR tooltip texts
+- Massively improved Kesteven's weapon selection - their autofits should no longer suck ass
+- Improved AED AI, have fun :)
 
 Version 0.6.0d
 -ONLY save compatible with 0.6.0x versions-
@@ -11,7 +48,7 @@ Version 0.6.0c
 
 - Fixed a possible crash when blacksite fleets couldn't find a random market
 
-CHANGELOG 0.6.0b:
+Version 0.6.0b:
 -ONLY save compatible with 0.6.0x versions-
 
 - Some visual changes and updates
@@ -20,7 +57,7 @@ CHANGELOG 0.6.0b:
 
 - Fixed a crash when hitting ESC on certain parts of the mothership fleet dialog
 
-CHANGELOG 0.6.0a:
+Version 0.6.0a:
 -BREAKS SAVES-
 
 - 2 new Enigma / (Pt) ships 

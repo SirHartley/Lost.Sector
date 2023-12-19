@@ -126,7 +126,7 @@ nskr_ttCollectorDialogInitial,OpenCommLink,"$faction.id == tritachyon score:100
 $entity.isHostile
 !$ignorePlayerCommRequests
 nskr_ttCollectorDialog hasOption",,"""You have something we need $playerName. We know you are working with those snakes from Kesteven."" $HeOrShe shakes $hisOrHer head in disapproval.
-""Don't think you just own the whole sector like that, it's time we even the score. Hand over those Artifact Electronics you have and we can call it even captain.""","nskr_ttCollectorDialogInitialText:Continue",
+""Don't think you just own the whole sector like that, it's time we even the score. Hand over those Artifact Electronics you have and we can call it a day captain.""","nskr_ttCollectorDialogInitialText:Continue",
 nskr_ttCollectorDialogInitialText,DialogOptionSelected,"$option == nskr_ttCollectorDialogInitialText","nskr_ttCollectorDialog canPay
 $entity.ignorePlayerCommRequests = true 10",,,
 nskr_ttCollectorDialogPayAll,DialogOptionSelected,"$option ==nskr_ttCollectorDialogPayAll","nskr_ttCollectorDialog pay
@@ -496,6 +496,19 @@ The comm link is cut before you have a chance to respond.","AROstrikeDialogEnd:C
 AROstrikeDialogEnd,DialogOptionSelected,"$option == AROstrikeDialogEnd","EndConversation
 ShowDefaultVisual","the $fleetName powers up their weapons and moves in to engage.",,
 "#END ARO STRIKE dialog",,,,,,
+,,,,,,
+# AUTO HUNTER dialog,,,,,,
+AutoHunterDialogInit,BeginFleetEncounter,"$faction.id == luddic_path score:1000
+!$ignorePlayerCommRequests
+$nskr_interceptManagerAutoHunterFleet","HailPlayer",,,
+AutoHunterDialogInitial,OpenCommLink,"$faction.id == luddic_path score:1000
+$entity.isHostile
+$entity.nskr_interceptManagerAutoHunterFleet score:100","$entity.ignorePlayerCommRequests = true 100","""The weight of your actions has become unbearable $playerName. The sector will see no more of this evil, such has it been decided."" $HeOrShe lets the weight of $hisOrHer words hang for just a moment. ""No more, for the most wicked are burned in infernium fire and judged as ashes in the oblivion. I hope you find absolution in those last moments."" 
+
+The comm link is cut, seems like $heOrShe didn't want a response to $hisOrHer speech.","AutoHunterDialogEnd:Cut the comm link",
+AutoHunterDialogEnd,DialogOptionSelected,"$option == AutoHunterDialogEnd","EndConversation
+ShowDefaultVisual","the $fleetName power up their weapons and move in to engage.",,
+"#END AUTO HUNTER dialog",,,,,,
 ,,,,,,
 # DEBT collector dialog,,,,,,
 nskr_loanSharkDialogInit,BeginFleetEncounter,"$faction.id == kesteven score:1000

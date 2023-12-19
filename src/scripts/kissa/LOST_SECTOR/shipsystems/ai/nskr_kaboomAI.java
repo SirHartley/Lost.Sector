@@ -6,10 +6,9 @@ import com.fs.starfarer.api.combat.ShipSystemAIScript;
 import com.fs.starfarer.api.combat.ShipSystemAPI;
 import com.fs.starfarer.api.combat.ShipwideAIFlags;
 import com.fs.starfarer.api.util.IntervalUtil;
-import org.lazywizard.lazylib.MathUtils;
-import org.lazywizard.lazylib.VectorUtils;
 import scripts.kissa.LOST_SECTOR.util.combatUtil;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 import org.lazywizard.lazylib.combat.AIUtils;
@@ -20,7 +19,7 @@ public class nskr_kaboomAI implements ShipSystemAIScript {
     private CombatEngineAPI engine = null;
     private ShipAPI ship;
     private final IntervalUtil tracker = new IntervalUtil(0.50f, 1.00f);
-    public static final float DEGREES = 140f;
+    //public static final float DEGREES = 150f;
 
     @Override
     public void advance(float amount, Vector2f missileDangerDir, Vector2f collisionDangerDir, ShipAPI target) {
@@ -38,29 +37,29 @@ public class nskr_kaboomAI implements ShipSystemAIScript {
             float decisionLevel = 0f;
             float hullRatio = ship.getHitpoints() / ship.getMaxHitpoints();
 
-            List<ShipAPI> ships = new ArrayList<>(100);
-            List<ShipAPI> currTargets = new ArrayList<>(100);
-            List<ShipAPI> friendlies = new ArrayList<>(100);
-            List<ShipAPI> currFriendlies = new ArrayList<>(100);
-            ships.addAll(combatUtil.getShipsWithinRange(ship.getLocation(), 800f));
-            friendlies.addAll(combatUtil.getShipsWithinRange(ship.getLocation(), 500f));
+            List<ShipAPI> currTargets = new ArrayList<>();
+            List<ShipAPI> ships = new ArrayList<>(combatUtil.getShipsWithinRange(ship.getLocation(), 1000f));
+            List<ShipAPI> friendlies = new ArrayList<>(combatUtil.getShipsWithinRange(ship.getLocation(), 1000f));
 
             for (ShipAPI possibleShip : ships){
-            if (possibleShip.getOwner() == ship.getOwner()) continue;
-            if (possibleShip.getHullSize() == ShipAPI.HullSize.FIGHTER) continue;
+                if (possibleShip.getOwner() == ship.getOwner()) continue;
+                if (possibleShip.getHullSize() == ShipAPI.HullSize.FIGHTER) continue;
 
-            if (possibleShip.getHullSize() == ShipAPI.HullSize.FRIGATE) {
-                decisionLevel += (15f);
-            }
-            if (possibleShip.getHullSize() == ShipAPI.HullSize.DESTROYER) {
-                decisionLevel += (25f);
-            }
-            if (possibleShip.getHullSize() != ShipAPI.HullSize.DESTROYER && possibleShip.getHullSize() != ShipAPI.HullSize.FRIGATE) {
-                decisionLevel += (50f);
-            }
-            currTargets.add(possibleShip);
-            //macgyver debugger
-            //engine.addFloatingText(ship.getLocation(), "test", 1f+decisionLevel, Color.cyan, ship, 0.5f, 1.0f);
+                switch (possibleShip.getHullSize()){
+                    case FRIGATE:
+                        decisionLevel += 10f;
+                        break;
+                    case DESTROYER:
+                        decisionLevel += 15f;
+                        break;
+                    case CRUISER:
+                        decisionLevel += 25f;
+                        break;
+                    case CAPITAL_SHIP:
+                        decisionLevel += 50f;
+                        break;
+                }
+                currTargets.add(possibleShip);
             }
             if (hullRatio < 0.75f) {
                 decisionLevel += 25f;
@@ -69,24 +68,17 @@ public class nskr_kaboomAI implements ShipSystemAIScript {
                 decisionLevel += 10f;
             }
 
-            float facing = ship.getFacing();
-            Vector2f curr = ship.getLocation();
             for (ShipAPI possibleShip : friendlies){
-                //only care about allies in front
                 if (possibleShip.getOwner() != ship.getOwner()) continue;
                 if (possibleShip.getHullSize() == ShipAPI.HullSize.FIGHTER) continue;
                 if (possibleShip.getHullSpec().getBaseHullId().equals("nskr_aed")) continue;
-                float angle = VectorUtils.getAngle(curr, possibleShip.getLocation());
-                // ignore everything outside of a y degree cone
-                if (Math.abs(MathUtils.getShortestRotation(angle, facing)) > DEGREES) {
-                    continue;
-                }
-                currFriendlies.add(possibleShip);
+                decisionLevel -= 15f;
             }
             //don't use when nothing is around
             if (currTargets.isEmpty()) decisionLevel = 0;
-            //don't use when allies are *that* close
-            if (!currFriendlies.isEmpty()) decisionLevel = 0;
+
+            //macgyver debugger
+            //engine.addFloatingText(ship.getLocation(), "weight " +(int)decisionLevel, 24f, Color.cyan, ship, 0.5f, 1.0f);
 
             if (decisionLevel >= 40f) {
                 ship.useSystem();

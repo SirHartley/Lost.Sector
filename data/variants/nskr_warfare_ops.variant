@@ -1,6 +1,6 @@
 {
     "displayName": "Black Ops",
-    "fluxCapacitors": 0,
+    "fluxCapacitors": 2,
     "fluxVents": 20,
     "hullId": "nskr_warfare",
     "hullMods": [

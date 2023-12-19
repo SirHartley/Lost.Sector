@@ -1,6 +1,6 @@
 {
     "displayName": "SERIAL 003",
-    "fluxCapacitors": 1,
+    "fluxCapacitors": 2,
     "fluxVents": 10,
     "goalVariant": true,
     "hullId": "nskr_epochx",

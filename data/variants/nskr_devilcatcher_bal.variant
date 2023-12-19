@@ -8,7 +8,7 @@
         "nskr_inertial",
         "targetingunit",
         "unstable_injector",
-        "heavyarmor"
+        "nskr_criticalArmor"
     ],
     "permaMods": [],
     "sMods": [],

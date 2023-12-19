@@ -1,7 +1,7 @@
 {
     "displayName": "Hybrid",
     "fluxCapacitors": 0,
-    "fluxVents": 17,
+    "fluxVents": 21,
     "goalVariant": true,
     "hullId": "nskr_nighthawk",
     "hullMods": [
