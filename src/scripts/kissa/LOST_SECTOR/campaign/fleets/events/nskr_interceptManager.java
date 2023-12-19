@@ -453,10 +453,11 @@ public class nskr_interceptManager extends BaseCampaignEventListener implements 
             ShipVariantAPI v = curr.getVariant();
             if (v==null) continue;
 
-            //random
+            //random and flagship
             if (random.nextFloat()<0.50f || curr.isFlagship()){
                 v.addPermaMod("nskr_machineSpirit");
                 v.addTag(Tags.TAG_NO_AUTOFIT);
+                if (curr.isFlagship()) v.addTag(Tags.VARIANT_ALWAYS_RECOVERABLE);
             }
         }
 
