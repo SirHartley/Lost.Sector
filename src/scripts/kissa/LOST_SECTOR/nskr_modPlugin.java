@@ -452,9 +452,16 @@ public class nskr_modPlugin extends BaseModPlugin {
         if (IS_INDEVO) {
             MarketAPI asteria = Global.getSector().getEconomy().getMarket("nskr_asteria");
             SectorEntityToken outpost = util.getOutpost();
-            if (asteria!=null && Global.getSettings().getBoolean("Enable_IndEvo_minefields")) asteria.addCondition("IndEvo_mineFieldCondition");
-            if (asteria!=null && Global.getSettings().getBoolean("dryDock")) asteria.addIndustry("IndEvo_dryDock");
-            if (outpost!=null && Global.getSettings().getBoolean("PrivatePort")) outpost.getMarket().addIndustry("IndEvo_PrivatePort");
+            try {
+                if (asteria != null && Global.getSettings().getBoolean("IndEvo_Enable_minefields"))
+                    asteria.addCondition("IndEvo_mineFieldCondition");
+                if (asteria != null && Global.getSettings().getBoolean("IndEvo_dryDock"))
+                    asteria.addIndustry("IndEvo_dryDock");
+                if (outpost != null && Global.getSettings().getBoolean("IndEvo_PrivatePort"))
+                    outpost.getMarket().addIndustry("IndEvo_PrivatePort");
+            }  catch (RuntimeException ex) {
+                log("ERROR - wrong Ind.Evo version");
+            }
 
             PlanetAPI siberia = null;
             for (PlanetAPI p : Global.getSector().getStarSystem(nskr_frost.getName()).getPlanets()){

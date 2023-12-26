@@ -1,3 +1,9 @@
+Version 0.6.1b
+-ONLY save compatible with 0.6.xx versions-
+
+Fixes:
+- No longer incompatible with newest Ind.Evo release
+
 Version 0.6.1a
 -ONLY save compatible with 0.6.0x versions-
 
