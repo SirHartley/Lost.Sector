@@ -326,6 +326,8 @@ public class questUtil {
         for (MarketAPI market : Misc.getFactionMarkets(faction)) {
             boolean isValid = true;
             StarSystemAPI system = market.getStarSystem();
+            //crash on hyperspace markets??
+            if (system==null) continue;
             if (system.hasTag(Tags.THEME_HIDDEN) || system.hasTag(Tags.SYSTEM_CUT_OFF_FROM_HYPER) ||
                     system.getStar() == null || system.getPlanets().size()<1) {
                 isValid = false;

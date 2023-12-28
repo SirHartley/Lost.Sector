@@ -1,3 +1,9 @@
+Version 0.6.1c
+-ONLY save compatible with 0.6.xx versions-
+
+Fixes:
+- Fixed random campaign crash in fleet target finding logic
+
 Version 0.6.1b
 -ONLY save compatible with 0.6.xx versions-
 
