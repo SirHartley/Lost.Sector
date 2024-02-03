@@ -1,7 +1,7 @@
 {
     "displayName": "Tactical",
     "fluxCapacitors": 0,
-    "fluxVents": 1,
+    "fluxVents": 4,
     "hullId": "nskr_minokawa",
     "hullMods": [
         "armoredweapons",

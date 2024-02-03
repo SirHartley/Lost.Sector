@@ -1,7 +1,7 @@
 {
     "displayName": "Punisher",
-    "fluxCapacitors": 0,
-    "fluxVents": 28,
+    "fluxCapacitors": 1,
+    "fluxVents": 30,
     "goalVariant": true,
     "hullId": "nskr_minokawa_e",
     "hullMods": [

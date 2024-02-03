@@ -42,9 +42,11 @@ public class powerLevel {
                 wepValue += weapon.getBaseValue();
             }
             //wings
-            for (int x = 0; x < ship.getVariant().getNonBuiltInWings().size(); x++) {
+            int x = -1;
+            for (String s : ship.getVariant().getNonBuiltInWings()) {
+                x++;
                 FighterWingSpecAPI wing = ship.getVariant().getWing(x);
-                if (wing == null) continue;
+                if (wing==null) continue;
                 wingValue += wing.getBaseValue();
             }
             //don't count logistics

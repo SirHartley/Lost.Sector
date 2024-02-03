@@ -93,50 +93,19 @@ public class nskr_timewarpStats extends BaseShipSystemScript {
         stats.getMaxSpeed().modifyFlat(id, 100f);
         stats.getAcceleration().modifyFlat(id, 200f);
 
+        CombatEngineAPI engine = Global.getCombatEngine();
+
         //extra fx
+        interval.advance(engine.getElapsedInLastFrame());
+
         ship.setJitter("nskr_timewarpstats", jColor, 2, 2, 4f);
         ship.setJitterUnder("nskr_timewarpstats", jUColor, 2, 10, 4f);
         ship.setJitterShields(false);
-
-        CombatEngineAPI engine = Global.getCombatEngine();
-
-        Vector2f loc = new Vector2f(ship.getLocation());
-        loc.x -= 8f * FastTrig.cos(ship.getFacing() * Math.PI / 180f);
-        loc.y -= 8f * FastTrig.sin(ship.getFacing() * Math.PI / 180f);
-
-        SpriteAPI sprite = ship.getSpriteAPI();
-        float offsetX = sprite.getWidth() / 2 - sprite.getCenterX();
-        float offsetY = sprite.getHeight() / 2 - sprite.getCenterY();
-
-        float trueOffsetX = (float) FastTrig.cos(Math.toRadians(ship.getFacing() - 90f)) * offsetX - (float) FastTrig.sin(Math.toRadians(ship.getFacing() - 90f)) * offsetY;
-        float trueOffsetY = (float) FastTrig.sin(Math.toRadians(ship.getFacing() - 90f)) * offsetX + (float) FastTrig.cos(Math.toRadians(ship.getFacing() - 90f)) * offsetY;
-
-        Vector2f trueLocation = new Vector2f(ship.getLocation().getX() + trueOffsetX, ship.getLocation().getY() + trueOffsetY);
-
-        interval.advance(engine.getElapsedInLastFrame());
         if (interval.intervalElapsed()) {
-            MagicRender.battlespace(
-                    Global.getSettings().getSprite(ship.getHullSpec().getSpriteName()),
-                    MathUtils.getRandomPointInCircle(trueLocation, MathUtils.getRandomNumberInRange(0f, 20f)),
-                    new Vector2f(0, 0),
-                    new Vector2f(ship.getSpriteAPI().getWidth(), ship.getSpriteAPI().getHeight()),
-                    new Vector2f(0, 0),
-                    ship.getFacing() - 90f,
-                    0f,
-                    aIColor,
-                    true,
-                    0f,
-                    0f,
-                    0f,
-                    0f,
-                    0f,
-                    0.1f,
-                    0.1f,
-                    0.1f,
-                    CombatEngineLayers.BELOW_SHIPS_LAYER);
+            createWarpFx(ship, aIColor);
         }
 
-            //make fighters go zoom too
+        //make fighters go zoom too
             Set<ShipAPI> carriedFighters = getFighters(ship);
             for (ShipAPI fighter : carriedFighters) {
                 float atten = 1f;
@@ -144,6 +113,14 @@ public class nskr_timewarpStats extends BaseShipSystemScript {
                 if (!fighter.isAlive()) {
                     fighter.getMutableStats().getTimeMult().unmodify(statId);
                     continue;
+                }
+
+                fighter.setJitter("nskr_timewarpstats", jColor, 2, 2, 4f);
+                fighter.setJitterUnder("nskr_timewarpstats", jUColor, 2, 10, 4f);
+                fighter.setJitterShields(false);
+
+                if (interval.intervalElapsed()) {
+                    createWarpFx(fighter, aIColor);
                 }
 
                 float effectLevelSquared = effectLevel * effectLevel;
@@ -195,6 +172,43 @@ public class nskr_timewarpStats extends BaseShipSystemScript {
 
                 }
             }
+    }
+
+    private void createWarpFx(ShipAPI ship,  Color aIColor) {
+
+        Vector2f loc = new Vector2f(ship.getLocation());
+        loc.x -= 8f * FastTrig.cos(ship.getFacing() * Math.PI / 180f);
+        loc.y -= 8f * FastTrig.sin(ship.getFacing() * Math.PI / 180f);
+
+        SpriteAPI sprite = ship.getSpriteAPI();
+        float offsetX = sprite.getWidth() / 2 - sprite.getCenterX();
+        float offsetY = sprite.getHeight() / 2 - sprite.getCenterY();
+
+        float trueOffsetX = (float) FastTrig.cos(Math.toRadians(ship.getFacing() - 90f)) * offsetX - (float) FastTrig.sin(Math.toRadians(ship.getFacing() - 90f)) * offsetY;
+        float trueOffsetY = (float) FastTrig.sin(Math.toRadians(ship.getFacing() - 90f)) * offsetX + (float) FastTrig.cos(Math.toRadians(ship.getFacing() - 90f)) * offsetY;
+
+        Vector2f trueLocation = new Vector2f(ship.getLocation().getX() + trueOffsetX, ship.getLocation().getY() + trueOffsetY);
+
+        MagicRender.battlespace(
+                Global.getSettings().getSprite(ship.getHullSpec().getSpriteName()),
+                MathUtils.getRandomPointInCircle(trueLocation, MathUtils.getRandomNumberInRange(0f, 20f)),
+                new Vector2f(0, 0),
+                new Vector2f(ship.getSpriteAPI().getWidth(), ship.getSpriteAPI().getHeight()),
+                new Vector2f(0, 0),
+                ship.getFacing() - 90f,
+                0f,
+                aIColor,
+                true,
+                0f,
+                0f,
+                0f,
+                0f,
+                0f,
+                0.1f,
+                0.1f,
+                0.1f,
+                CombatEngineLayers.BELOW_SHIPS_LAYER);
+
     }
 
     public void unapply(MutableShipStatsAPI stats, String id) {

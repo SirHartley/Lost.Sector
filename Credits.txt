@@ -1,7 +1,7 @@
 Credits:
 
 -Additional Scripts :     
-	- DarkRevenant, Nicke535, Sundog, Cycerin, Nia Tahl, Vayra, Tartiflette, theDragn, Histidine, Sebastian Lague, and LazyWizard [Andrey Sitnik and Ivan Solovev (easing functions)]
+	- DarkRevenant, Nicke535, Sundog, Cycerin, Inventor Raccoon, Nia Tahl, Vayra, Tartiflette, theDragn, Histidine, Sebastian Lague, and LazyWizard [Andrey Sitnik and Ivan Solovev (easing functions)]
 -Additional sound fx :
 	- freesound.org :
 	- Russintheus, Ianstargem, Eflex Music, Squidge316, unfa, Morgan Purkis, Madamdata, Anomaex, Xfromarge1, Probrix22

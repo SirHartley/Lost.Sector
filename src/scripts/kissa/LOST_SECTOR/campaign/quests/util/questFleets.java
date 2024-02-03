@@ -59,7 +59,7 @@ public class questFleets {
         //memkeys
         ArrayList<String> keys = new ArrayList<>();
         keys.add(MemFlags.MEMORY_KEY_SAW_PLAYER_WITH_TRANSPONDER_ON);
-        if (!intercept) keys.add(MemFlags.MEMORY_KEY_NO_REP_IMPACT);
+        keys.add(MemFlags.MEMORY_KEY_NO_REP_IMPACT);
         if (!intercept) keys.add(MemFlags.MEMORY_KEY_MAKE_HOSTILE);
         keys.add(MemFlags.FLEET_FIGHT_TO_THE_LAST);
         keys.add(MemFlags.FLEET_IGNORES_OTHER_FLEETS);

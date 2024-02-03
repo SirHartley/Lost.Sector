@@ -29,10 +29,13 @@ nskr_kestevenQuestOptions,DialogOptionSelected,"nskr_OptionStartsWith ""nskr_kes
 SetShortcut nskr_kestevenQuestCancel ""ESCAPE""
 ",,"nskr_kestevenQuestConfirmQuest:Continue
 nskr_kestevenQuestExit:Go back",
-nskr_kestevenQuestOptionsSP,DialogOptionSelected,"nskr_OptionStartsWith ""nskr_kestevenQuest_story_pick_""","nskr_kestevenQuest advanceStageStory
+nskr_kestevenQuestOptionsSP,DialogOptionSelected,"nskr_OptionStartsWith ""nskr_kestevenQuest_story_pick_""","nskr_kestevenQuest advanceStageReqSkip
 SetShortcut nskr_kestevenQuestCancel ""ESCAPE""
 ",,"nskr_kestevenQuestConfirmQuest:Continue
 nskr_kestevenQuestExit:Go back",
+nskr_kestevenQuestOptionsStorySkip,DialogOptionSelected,"nskr_OptionStartsWith ""nskr_kestevenQuest_story_skip_pick_""","nskr_kestevenQuest advanceStageStorySkip
+SetShortcut nskr_kestevenQuestCancel ""ESCAPE""
+",,,
 nskr_kestevenQuestExtraDialogueStart,DialogOptionSelected,"nskr_OptionStartsWith ""nskr_kestevenQuest_extraStart_""","nskr_kestevenQuest extraDialogueStart
 SetShortcut nskr_kestevenQuestCancel ""ESCAPE""","""What do you need to know?""",,
 nskr_kestevenQuestExtraDialogue,DialogOptionSelected,"nskr_OptionStartsWith ""nskr_kestevenQuest_extra_""","nskr_kestevenQuest extraDialogue
@@ -329,7 +332,7 @@ nskr_altEndingOptionLuddic,PopulateOptions,"nskr_IsBaseOfficial admin
 nskr_altEndingDialogLuddic hasOption
 nskr_IsKStage 19",,,"nskr_altEndingPickLuddic:Talk about the Unlimited Production Chip you have",
 nskr_altEndingPickLuddic,DialogOptionSelected,"$option == nskr_altEndingPickLuddic","nskr_altEndingDialogLuddic addOptions",,,
-nskr_altEndingOptionTT,PopulateOptions,"nskr_IsBaseOfficial admin
+nskr_altEndingOptionTT,PopulateOptions,"nskr_IsBaseOfficial ttadmin
 nskr_altEndingDialogTT hasOption
 nskr_IsKStage 19",,,"nskr_altEndingPickTT:Talk about the Unlimited Production Chip you have",
 nskr_altEndingPickTT,DialogOptionSelected,"$option == nskr_altEndingPickTT","nskr_altEndingDialogTT addOptions",,,
@@ -419,7 +422,7 @@ $pkFightSelected = true 100
 
 The comm link is cut before you have a chance to respond.
 
-the $fleetName power up combat systems and move in to engage.
+the Peacekeepers power up combat systems and move in to engage.
 
 ","pkEndComms:Cut the comm link",
 pkEndComms,DialogOptionSelected,"$option == pkEndComms","EndConversation
@@ -494,7 +497,7 @@ $entity.nskr_interceptManagerAROfleet score:100","$entity.ignorePlayerCommReques
 
 The comm link is cut before you have a chance to respond.","AROstrikeDialogEnd:Cut the comm link",
 AROstrikeDialogEnd,DialogOptionSelected,"$option == AROstrikeDialogEnd","EndConversation
-ShowDefaultVisual","the $fleetName powers up their weapons and moves in to engage.",,
+ShowDefaultVisual","The $fleetName powers up their weapons and moves in to engage.",,
 "#END ARO STRIKE dialog",,,,,,
 ,,,,,,
 # AUTO HUNTER dialog,,,,,,
@@ -507,7 +510,7 @@ $entity.nskr_interceptManagerAutoHunterFleet score:100","$entity.ignorePlayerCom
 
 The comm link is cut, seems like $heOrShe didn't want a response to $hisOrHer speech.","AutoHunterDialogEnd:Cut the comm link",
 AutoHunterDialogEnd,DialogOptionSelected,"$option == AutoHunterDialogEnd","EndConversation
-ShowDefaultVisual","the $fleetName power up their weapons and move in to engage.",,
+ShowDefaultVisual","The $fleetName power up their weapons and move in to engage.",,
 "#END AUTO HUNTER dialog",,,,,,
 ,,,,,,
 # DEBT collector dialog,,,,,,
@@ -540,7 +543,7 @@ ShowDefaultVisual
 ","""Looks like it's time to use *other* means of payment."" $HeOrShe says in an arrogant manner.
 The comm link is cut before you can respond.
 
-the $faction $fleetName powers up their weapons and moves in to engage.",,
+The $faction $fleetName powers up their weapons and moves in to engage.",,
 "#END DEBT collector dialog",,,,,,
 ,,,,,,
 # BETRAYAL,,,,,,
@@ -575,17 +578,17 @@ FireAll PopulateOptions","""CID-IFF received [TARGET FRIENDLY] respond true // "
 
 INTERRUPT
 
-are you the maker? scanning. you are not. where is the omega?
+are you [BLOOD]? scanning. you are not. where is the omega?
  
 INTERRUPT 
 
 ""... licensed service technician]. Weapon systems have been powered down for Your Safety. Unit is prepared for approach of [licensed service technician].""
 OR
-""CID-IFF received [TARGET FRIENDLY] respond true // ''Greetings [Integrated Space Defense System Contract Holder ""
+""CID-IFF received [TARGET FRIENDLY] respond true // ''Greetings [Licensed Space Defense Contract Holder] ""
 
 INTERRUPT 
 
-waiting. omega signal query? scanning. no. waiting.
+query. query. query target. is blood? false. [PROTECT TARGET].
 
 INTERRUPT 
 
@@ -671,17 +674,20 @@ $ignorePlayerCommRequests = true 0",,,
 tOffEnigmaPatrolOpenComm,OpenCommLink,"$entity.transponderOffConv score:100
 $faction.id == enigma score:1000","AddText ""\""[TARGET]   [transponder_off] in DSRD operational space is against the law. You're hereby ordered to turn your transponder on and identify yourself immediately.     INTERRUPT     waiting. query (blood). scanning. true. [objective == you will never be one of us]\""""
 AdjustRep $faction.id TRANSPONDER_OFF
-AdjustRepActivePerson TRANSPONDER_OFF",,"0:tOff_refuse:Refuse and cut the comm link",
+AdjustRepActivePerson TRANSPONDER_OFF
+nskr_makeHostile hostile",,"0:tOff_refuse:Refuse and cut the comm link",
 tOffEnigmaPatrolOpenCommUnknown,OpenCommLink,"$entity.transponderOffConv score:100
 !$entity.knowsWhoPlayerIs
 $faction.id == enigma score:1000","AddText""\""[TARGET]   [transponder_off] in DSRD operational space is against the law. You're hereby ordered to turn your transponder on and identify yourself immediately.     INTERRUPT     waiting. query (blood). scanning. true. [objective == you will never be one of us]\""""
 AdjustRep $faction.id TRANSPONDER_OFF
-AdjustRepActivePerson TRANSPONDER_OFF",,"0:tOff_refuse:Refuse and cut the comm link",
+AdjustRepActivePerson TRANSPONDER_OFF
+nskr_makeHostile hostile",,"0:tOff_refuse:Refuse and cut the comm link",
 tOffEnigmaPatrolOpenCommTOn,OpenCommLink,"$entity.transponderOffConv score:100
 $player.transponderOn
 $faction.id == enigma score:1000","AddText ""\""[TARGET]  [transponder_off] in DSRD operational space is against the law. You're hereby ordered to turn your transponder on and identify yourself immediately.     INTERRUPT     waiting. query (blood). scanning. true. [objective == you will never be one of us]\""""
 AdjustRep $faction.id TRANSPONDER_OFF
-AdjustRepActivePerson TRANSPONDER_OFF",,"0:tOff_refuse:Refuse and cut the comm link",
+AdjustRepActivePerson TRANSPONDER_OFF
+nskr_makeHostile hostile",,"0:tOff_refuse:Refuse and cut the comm link",
 "#END enigma patrol stopping player w/ transponder off",,,,,,
 ,,,,,,
 # DORMANT,,,,,,
@@ -712,6 +718,38 @@ enigmaCoreGreetingAlreadySelected,PickGreeting,"$id == nskr_enigmaAdmin score:10
 $enigmaCoreGreetingCommLinkSelected score:100","ShowPersonVisual
 FireAll PopulateOptions","Trying to establish a comm link with the core is not a good idea.",,
 "#END HEART CORE DIALOG",,,,,,
+,,,,,,
+# HELLSPAWN DIALOG,,,,,,
+hellSpawnDialogInit,BeginFleetEncounter,"$isHostile
+!$ignorePlayerCommRequests
+$hellSpawnDisposableFleet","HailPlayer",,,
+hellSpawnDialogInitial,OpenCommLink,"$entity.isHostile
+$entity.hellSpawnDisposableFleet score:1000","$entity.ignorePlayerCommRequests = true 100","""You think you can just waltz back in after what you did to all those people."" $HisOrHer face sours. ""It's about time someone put an end to that."" The comm link is abruptly cut.
+OR
+""You're highly a dangerous individual captain, I'll give you that. A lot of people don't like you, including my superiors."" The comm link is abruptly cut.
+OR
+""It's over for you captain, the sector wont tolerate this. I'm not going to sugarcoat it - you need to die."" The comm link is abruptly cut.
+OR
+""The people deserve to be protected from someone like you. Someone has to step up, and seems like it's my time."" The comm link is abruptly cut.
+OR
+""Hey captain, you're about to have a bad time."" The comm link is abruptly cut.","hellSpawnDialogEnd:Cut the comm link",
+hellSpawnDialogEnd,DialogOptionSelected,"$option == hellSpawnDialogEnd","EndConversation
+ShowDefaultVisual","The $Faction $fleetName power up their weapons and move in to engage.",,
+"#END HELLSPAWN DIALOG",,,,,,
+,,,,,,
+# THRONE'S GIFT DIALOG,,,,,,
+thronesGiftDialogInit,BeginFleetEncounter,"$isHostile
+!$ignorePlayerCommRequests
+$faction.id == luddic_path score:1000
+$thronesGiftDisposableFleet","HailPlayer",,,
+thronesGiftDialogInitial,OpenCommLink,"$entity.isHostile
+$faction.id == luddic_path score:1000
+$entity.thronesGiftDisposableFleet score:1000","$entity.ignorePlayerCommRequests = true 100","""The most foul captain of the profane. You are marked for absolution in holy fire. Prepeare for the end."" The comm link is abruptly cut.
+OR
+""Why would you mock the gifts of creation so blatantly? It doesn't matter, your sins shall shortly be forgiven."" The comm link is abruptly cut.","thronesGiftDialogEnd:Cut the comm link",
+thronesGiftDialogEnd,DialogOptionSelected,"$option == thronesGiftDialogEnd","EndConversation
+ShowDefaultVisual","The $Faction $fleetName power up their weapons and move in to engage.",,
+"#END THRONE'S GIFT DIALOG",,,,,,
 "#END MISC EVENTS",,,,,,
 ,,,,,,
 # CONTRACTS,,,,,,

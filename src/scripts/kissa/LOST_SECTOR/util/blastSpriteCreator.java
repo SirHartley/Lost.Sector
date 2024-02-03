@@ -12,7 +12,7 @@ import java.io.IOException;
 
 public class blastSpriteCreator {
     //
-    //creates "blastwave" effects by rendering a circle for x period
+    //creates "blastwave" and other effects by rendering a sprite for x period
     //
     public static final String SPRITE_PATH = "graphics/fx/shields256.png";
     public static class blastSpriteListener implements AdvanceableListener {

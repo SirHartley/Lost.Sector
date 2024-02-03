@@ -1,7 +1,7 @@
 {
     "displayName": "Support",
-    "fluxCapacitors": 0,
-    "fluxVents": 41,
+    "fluxCapacitors": 7,
+    "fluxVents": 50,
     "goalVariant": true,
     "hullId": "nskr_prosperity",
     "hullMods": [

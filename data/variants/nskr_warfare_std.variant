@@ -1,6 +1,6 @@
 {
     "displayName": "SERIAL 003",
-    "fluxCapacitors": 0,
+    "fluxCapacitors": 2,
     "fluxVents": 20,
     "hullId": "nskr_warfare",
 	"goalVariant": true,

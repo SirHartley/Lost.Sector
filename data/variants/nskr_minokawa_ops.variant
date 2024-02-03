@@ -1,7 +1,7 @@
 {
     "displayName": "Black Ops",
     "fluxCapacitors": 0,
-    "fluxVents": 11,
+    "fluxVents": 14,
     "hullId": "nskr_minokawa",
     "hullMods": [
         "targetingunit",

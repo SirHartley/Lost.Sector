@@ -26,11 +26,15 @@ import java.util.*;
 import java.util.List;
 
 import org.lwjgl.input.Keyboard;
+import scripts.kissa.LOST_SECTOR.campaign.quests.nskr_glacierCommsDialog;
+import scripts.kissa.LOST_SECTOR.campaign.quests.util.questFleets;
 import scripts.kissa.LOST_SECTOR.campaign.quests.util.questStageManager;
 import scripts.kissa.LOST_SECTOR.campaign.quests.nskr_artifactDialog;
 import scripts.kissa.LOST_SECTOR.campaign.quests.nskr_elizaDialog;
 import scripts.kissa.LOST_SECTOR.campaign.quests.util.questUtil;
+import scripts.kissa.LOST_SECTOR.nskr_modPlugin;
 import scripts.kissa.LOST_SECTOR.util.*;
+import scripts.kissa.LOST_SECTOR.world.nskr_gen;
 import scripts.kissa.LOST_SECTOR.world.systems.frost.nskr_frost;
 
 public class nskr_kestevenQuest extends PaginatedOptions {
@@ -40,7 +44,8 @@ public class nskr_kestevenQuest extends PaginatedOptions {
 	//
 	public static final String PERSISTENT_RANDOM_KEY = "nskr_kestevenQuestRandom";
 	public static final String DIALOG_OPTION_PREFIX = "nskr_kestevenQuest_pick_";
-	public static final String DIALOG_OPTION_PREFIX_STORY = "nskr_kestevenQuest_story_pick_";
+	public static final String DIALOG_OPTION_PREFIX_REQ_SKIP = "nskr_kestevenQuest_story_pick_";
+	public static final String DIALOG_OPTION_PREFIX_STORY_SKIP = "nskr_kestevenQuest_story_skip_pick_";
 	public static final String DIALOG_OPTION_EXTRA_START_PREFIX = "nskr_kestevenQuest_extraStart_";
 	public static final String DIALOG_OPTION_EXTRA_PREFIX = "nskr_kestevenQuest_extra_";
 	public static final String PERSISTENT_KEY = "nskr_kestevenQuest";
@@ -49,6 +54,8 @@ public class nskr_kestevenQuest extends PaginatedOptions {
 	public static final String JOB5_JACK_TIP_KEY = "nskr_kestevenQuestJob5JackTip";
 	public static final String JOB5_ALICE_TIP_KEY = "nskr_kestevenQuestJob5AliceTip";
 	public static final String JOB5_ALICE_TIP_KEY2 = "nskr_kestevenQuestJob5AliceTip2";
+	public static final String SKIPPED_STORY_KEY = "nskr_kestevenQuestSkippedStory";
+
 	public static final int JOB1_ARTIFACTS = 70;
 	public static final int STAGE1_PAYOUT = 155000;
 	public static final int STAGE3_PAYOUT = 205000;
@@ -86,6 +93,7 @@ public class nskr_kestevenQuest extends PaginatedOptions {
 	private boolean aliceTip = false;
 	private boolean aliceTip2 = false;
 	private boolean allDisks = false;
+	private boolean storyCompleted = false;
 
 	private PersonAPI jack;
 	private PersonAPI alice;
@@ -158,17 +166,21 @@ public class nskr_kestevenQuest extends PaginatedOptions {
 				showQuestInfoAndPrepare(dialog.getTextPanel());
 				extraEsc = false;
 				break;
-			case "advanceStageStory":
+			case "advanceStageReqSkip":
 				showOptions();
 				SPOptionPicked();
 				showQuestInfoAndPrepare(dialog.getTextPanel());
+				extraEsc = false;
+				break;
+			case "advanceStageStorySkip":
+				showOptions();
+				SkipStoryOptionPicked();
 				extraEsc = false;
 				break;
 			case "extraDialogueStart":
 				showOptions();
 				extraDialogueStart();
 				extraEsc = true;
-				//showOptions();
 				break;
 			case "extraDialogue":
 				int index = Integer.parseInt(memoryMap.get(MemKeys.LOCAL).getString("$option").substring(DIALOG_OPTION_EXTRA_PREFIX.length()));
@@ -250,6 +262,8 @@ public class nskr_kestevenQuest extends PaginatedOptions {
 
 		diskCount = questUtil.getDisksRecovered();
 		allDisks = questUtil.getDisksRecovered()>=5;
+
+		storyCompleted = (boolean) nskr_modPlugin.loadFromConfig(nskr_modPlugin.COMPLETED_STORY_KEY);
 	}
 	
 	//@Override
@@ -296,10 +310,14 @@ public class nskr_kestevenQuest extends PaginatedOptions {
 			if (stage == 0 && relation >= JOB1_REP) {
 				desc = "Enemy Unknown";
 				jobText = "\"There is a new job available at the moment, are you interested?\"";
+				//skip story
+				if (storyCompleted) addStorySkipOption();
 			}
 			//job 1 not enough rep
 			if (stage == 0 && relation < JOB1_REP) {
 				jobText = "\"There is a new job available at the moment, but we require someone more qualified. Come back later when I know you can be trusted.\"";
+				//skip story
+				if (storyCompleted) addStorySkipOption();
 			}
 			//job 1 accepted
 			if (stage == 1 && job1tip) {
@@ -337,16 +355,22 @@ public class nskr_kestevenQuest extends PaginatedOptions {
 			if (stage == 6 && relation >= JOB3_REP && power > JOB3_POWER) {
 				desc = "Hostile Takeover";
 				jobText = "\"There is a new job available at the moment, are you interested?\"";
+				//skip story
+				if (storyCompleted) addStorySkipOption();
 			}
 			//job 3 too weak
 			if (stage == 6 && power < JOB3_POWER) {
 				jobText = "\"There is a new job available at the moment, but we require someone more qualified. Come back later with a proper fleet.\"";
 				//SP skip
 				addSkipOption();
+				//skip story
+				if (storyCompleted) addStorySkipOption();
 			}
 			//job 3 not enough rep
 			if (stage == 6 && relation < JOB3_REP) {
 				jobText = "\"There is a new job available at the moment, but we require someone more qualified. Come back later when I know you can be trusted.\"";
+				//skip story
+				if (storyCompleted) addStorySkipOption();
 			}
 			//job 3 in progress jack
 			if (stage == 7) {
@@ -374,10 +398,14 @@ public class nskr_kestevenQuest extends PaginatedOptions {
 				jobText = "\"There is a new job available at the moment, but we require someone more qualified. Come back later with a proper fleet.\"";
 				//SP skip
 				addSkipOption();
+				//skip story
+				if (storyCompleted) addStorySkipOption();
 			}
 			//job 5 not enough rep
 			if (stage == 14 && relation < JOB5_REP) {
 				jobText = "\"There is a new job available at the moment, but we require someone more qualified. Come back later when I know you can be trusted.\"";
+				//skip story
+				if (storyCompleted) addStorySkipOption();
 			}
 			//go to bar dumbass
 			if (stage == 15) {
@@ -421,6 +449,8 @@ public class nskr_kestevenQuest extends PaginatedOptions {
 			if (stage == 7) {
 				desc = "Hostile Takeover";
 				jobText = "\"So you finally showed up. Jack has already told me all about you. He doesn't just send any spacer goon over to me, so I have high expectations for you "+player.getName().getFullName()+".\"";
+				//skip story
+				if (storyCompleted) addStorySkipOption();
 			}
 			//job 3 in progress alice
 			if (stage == 8 || stage == 9) {
@@ -440,16 +470,22 @@ public class nskr_kestevenQuest extends PaginatedOptions {
 			if (stage == 11 && relation >= JOB4_REP && power > JOB4_POWER && job4wait || stage == 11 && relation >= JOB4_REP && questUtil.getCompleted(JOB4_SKIP_REQ_KEY)) {
 				desc = "Operation Lifesaver";
 				jobText = "\"There is a new job available at the moment, are you interested?\"";
+				//skip story
+				if (storyCompleted) addStorySkipOption();
 			}
 			//job 4 too weak
 			if (stage == 11 && power < JOB4_POWER && job4wait && !questUtil.getCompleted(JOB4_SKIP_REQ_KEY)) {
 				jobText = "\"There is a new job available at the moment, but we require someone more qualified. Come back later with a proper fleet.\"";
 				//SP skip
 				addSkipOption();
+				//skip story
+				if (storyCompleted) addStorySkipOption();
 			}
 			//job 4 not enough rep
 			if (stage == 11 && relation < JOB4_REP && job4wait) {
 				jobText = "\"There is a new job available at the moment, but we require someone more qualified. Come back later when I know you can be trusted.\"";
+				//skip story
+				if (storyCompleted) addStorySkipOption();
 			}
 			//job 4 in progress
 			if (stage == 12) {
@@ -564,15 +600,15 @@ public class nskr_kestevenQuest extends PaginatedOptions {
 			text.addPara(jobText);
 		}
 
-		dialog.getOptionPanel().addOption(nskr_stringHelper.getString("back", true), "nskr_kestevenQuestExit");
+		dialog.getOptionPanel().addOption("Back", "nskr_kestevenQuestExit");
 	}
 
 	protected void addSkipOption(){
 
-		dialog.getOptionPanel().addOption("I believe you'll find me more than capable.", DIALOG_OPTION_PREFIX_STORY);
-		dialog.makeStoryOption(DIALOG_OPTION_PREFIX_STORY,1,1.00f,"ui_char_spent_story_point");
+		dialog.getOptionPanel().addOption("I believe you'll find me more than capable.", DIALOG_OPTION_PREFIX_REQ_SKIP);
+		dialog.makeStoryOption(DIALOG_OPTION_PREFIX_REQ_SKIP,1,1.00f,"ui_char_spent_story_point");
 		//tooltip
-		dialog.getOptionPanel().addOptionTooltipAppender(DIALOG_OPTION_PREFIX_STORY, new OptionPanelAPI.OptionTooltipCreator() {
+		dialog.getOptionPanel().addOptionTooltipAppender(DIALOG_OPTION_PREFIX_REQ_SKIP, new OptionPanelAPI.OptionTooltipCreator() {
 			public void createTooltip(TooltipMakerAPI tooltip, boolean hadOtherText) {
 				float opad = 10f;
 				float initPad = 0f;
@@ -586,9 +622,9 @@ public class nskr_kestevenQuest extends PaginatedOptions {
 			}
 		});
 		//pop up
-		dialog.getOptionPanel().addOptionConfirmation(DIALOG_OPTION_PREFIX_STORY,
+		dialog.getOptionPanel().addOptionConfirmation(DIALOG_OPTION_PREFIX_REQ_SKIP,
 				new SetStoryOption.BaseOptionStoryPointActionDelegate(dialog,
-						new SetStoryOption.StoryOptionParams(DIALOG_OPTION_PREFIX_STORY,1,"nskr_skipRequirement","ui_char_spent_story_point","Skipped quest reqs.")));
+						new SetStoryOption.StoryOptionParams(DIALOG_OPTION_PREFIX_REQ_SKIP,1,"nskr_skipRequirement","ui_char_spent_story_point","Skipped quest reqs.")));
 
 	}
 
@@ -601,6 +637,102 @@ public class nskr_kestevenQuest extends PaginatedOptions {
 		if (stage==11){
 			questUtil.setCompleted(true, JOB4_SKIP_REQ_KEY);
 		}
+	}
+
+	protected void addStorySkipOption(){
+
+		dialog.getOptionPanel().addOption("You are looking for the Cache and the UPC, right? I think I can help. (Skip story)", DIALOG_OPTION_PREFIX_STORY_SKIP);
+		dialog.makeStoryOption(DIALOG_OPTION_PREFIX_STORY_SKIP,5,0.00f,"ui_char_spent_story_point");
+		//tooltip
+		dialog.getOptionPanel().addOptionTooltipAppender(DIALOG_OPTION_PREFIX_STORY_SKIP, new OptionPanelAPI.OptionTooltipCreator() {
+			public void createTooltip(TooltipMakerAPI tooltip, boolean hadOtherText) {
+				float opad = 10f;
+				float initPad = 0f;
+				if (hadOtherText) initPad = opad;
+				tooltip.addStoryPointUseInfo(initPad, 5, 0f, false);
+				int sp = Global.getSector().getPlayerStats().getStoryPoints();
+				String points = "points";
+				if (sp == 1) points = "point";
+				tooltip.addPara("You have %s " + Misc.STORY + " " + points + ".", opad,
+						Misc.getStoryOptionColor(), "" + sp);
+			}
+		});
+		//pop up
+		dialog.getOptionPanel().addOptionConfirmation(DIALOG_OPTION_PREFIX_STORY_SKIP,
+				new SetStoryOption.BaseOptionStoryPointActionDelegate(dialog,
+						new SetStoryOption.StoryOptionParams(DIALOG_OPTION_PREFIX_STORY_SKIP,5,"nskr_skipStory","ui_char_spent_story_point","Skipped story.")));
+
+	}
+
+	protected void SkipStoryOptionPicked(){
+		Color h = Misc.getHighlightColor();
+		Color g = Misc.getGrayColor();
+		Color tc = Misc.getTextColor();
+		Color r = Misc.getNegativeHighlightColor();
+
+		text.setFontInsignia();
+
+		Global.getSoundPlayer().playUISound("ui_char_spent_story_point",1f,1f);
+
+		if (person==jack) {
+			text.addParagraph("He looks almost flustered. \"What- How did you...\" He thinks for a moment.");
+			text.addParagraph("\"You know we got his strange lead recently pointing to these coordinates, I think you should investigate.\" " +
+					"He looks a little worried. \"Huh, I actually don't remember how we got these...\"");
+		}
+		if (person==alice){
+			text.addParagraph("She looks confused for a moment. \"What- How did you...\" She thinks for a moment.");
+			text.addParagraph("\"You know we got his strange lead recently pointing to these coordinates, I think you should investigate.\" " +
+					"She looks distressed. \"Huh... I actually don't remember how we got these...\"");
+		}
+
+		//job3
+		questUtil.spawnArtifact(questUtil.getJob3Target(),3);
+		util.addDormant(questUtil.getJob3Target(), "enigma", 45f, 50f, 0f, 1f, 1f, 1f, 1, 1);
+		//job4
+		questFleets.spawnJob4Target();
+		questUtil.spawnArtifact(questUtil.getJob4EnemyTarget(),4);
+		questStageManager.spawnJob4Wrecks(nskr_kestevenQuest.getRandom());
+		//job5
+		questUtil.setCompleted(true, nskr_artifactDialog.RECOVERED_4_KEY);
+		questUtil.setCompleted(true, nskr_artifactDialog.RECOVERED_3_KEY);
+		nskr_artifactDialog.setRecoveredSatelliteCount(2);
+		questUtil.setCompleted(true, questStageManager.JOB5_FOUND_FROST_KEY);
+		questUtil.setCompleted(true, nskr_glacierCommsDialog.RECOVERED_KEY);
+		questUtil.setCompleted(true, nskr_kestevenQuest.JOB5_ALICE_TIP_KEY);
+		questUtil.setCompleted(true, nskr_kestevenQuest.JOB5_ALICE_TIP_KEY2);
+		questUtil.setCompleted(true, nskr_kestevenQuest.JOB5_JACK_TIP_KEY);
+		questUtil.setCompleted(true, questStageManager.JOB5_FOUND_ELIZA_KEY);
+		questUtil.setCompleted(true, nskr_elizaDialog.DIALOG_FINISHED_KEY);
+		questUtil.setCompleted(true, nskr_elizaDialog.ELIZA_HELP_KEY);
+		if(questUtil.getElizaLoc()==null) {
+			questUtil.setElizaLoc();
+			PersonAPI eliza = nskr_gen.genEliza();
+			questUtil.getElizaLoc().getMarket().getCommDirectory().addPerson(eliza, 1);
+			questUtil.getElizaLoc().getMarket().addPerson(eliza);
+			log("Eliza loc " + questUtil.getElizaLoc().getMarket().getName());
+		}
+
+		questUtil.setCompleted(true, questStageManager.FOUND_CACHE_KEY);
+		questUtil.setStage(17);
+
+		//ineligible for hard mode completion
+		Map<String, Object> data = Global.getSector().getPersistentData();
+		if (data.containsKey(nskr_modPlugin.STARFARER_MODE_FROM_START_KEY)) {
+			data.put(nskr_modPlugin.STARFARER_MODE_FROM_START_KEY, false);
+		}
+		questUtil.setCompleted(true, SKIPPED_STORY_KEY);
+
+
+		text.setFontSmallInsignia();
+		text.addPara("Added log entry for the Delve", g, h,"the Delve","");
+		text.addPara("Disabled questline achievements", g, r,"Disabled","");
+
+		Global.getSoundPlayer().playUISound("ui_noise_static",1f,1f);
+		text.setFontInsignia();
+
+		//WHY THE FUCK DOESN'T THIS WORK FROM RULES FOR THIS???????
+		dialog.getOptionPanel().addOption("Leave", "nskr_kestevenQuestExit");
+
 	}
 
 	protected void showQuestInfoAndPrepare(TextPanelAPI text)
@@ -919,7 +1051,7 @@ public class nskr_kestevenQuest extends PaginatedOptions {
 
 				if(discovered3)text.addPara("\"It was in the "+loc2.getStarSystem().getName()+". Good thing you figured out where they were heading.\"", tc, h, loc2.getStarSystem().getName(), "");
 				if(!discovered3)text.addPara("\"Despite your efforts to screw this up, by not finding out where they were heading. " +
-						"We managed intercept its target from their comms. It was the "+loc2.getStarSystem().getName()+".\" It's likes she's lecturing a child.", tc, h, loc2.getStarSystem().getName(), "");
+						"We managed intercept its target from their comms. It was the "+loc2.getStarSystem().getName()+".\" Its likes she's lecturing a child.", tc, h, loc2.getStarSystem().getName(), "");
 				//make important
 				artifact2.getMemoryWithoutUpdate().set(MemFlags.MEMORY_KEY_MISSION_IMPORTANT,true);
 			}
@@ -938,7 +1070,7 @@ public class nskr_kestevenQuest extends PaginatedOptions {
 
 				if(discovered3)text.addPara("\"It was in the "+loc2.getStarSystem().getName()+". Good thing you figured out where they were heading.\"", tc, h, loc2.getStarSystem().getName(), "");
 				if(!discovered3)text.addPara("\"Despite your efforts to screw this up, by not finding out where they were heading. " +
-						"We managed intercept its target from their comms. It was the "+loc2.getStarSystem().getName()+".\" It's likes she's lecturing a child.", tc, h, loc2.getStarSystem().getName(), "");
+						"We managed intercept its target from their comms. It was the "+loc2.getStarSystem().getName()+".\" Its likes she's lecturing a child.", tc, h, loc2.getStarSystem().getName(), "");
 			}
 			if (jackTip && diskCount<=2)text.addPara("\"As you know this is not all five disks. We'll get to that in time, just focus on getting the ones we've talked about first.\"",tc,h,"","");
 			if (jackTip && diskCount>2)text.addPara("\"As you know this is not all five disks. Come chat with me later about getting the rest too.\"",tc,h,"","");
@@ -1013,7 +1145,7 @@ public class nskr_kestevenQuest extends PaginatedOptions {
 			noLeave = true;
 		}
 
-		if (!noLeave) dialog.getOptionPanel().addOption(nskr_stringHelper.getString("back", true), "nskr_kestevenQuestExit");
+		if (!noLeave) dialog.getOptionPanel().addOption("Back", "nskr_kestevenQuestExit");
 	}
 	protected void extraDialogueStart()
 	{
@@ -1080,7 +1212,7 @@ public class nskr_kestevenQuest extends PaginatedOptions {
 		text.setFontSmallInsignia();
 		text.setFontInsignia();
 
-		dialog.getOptionPanel().addOption(nskr_stringHelper.getString("back", true), DIALOG_OPTION_PREFIX);
+		dialog.getOptionPanel().addOption("Back", DIALOG_OPTION_PREFIX);
 	}
 
 	protected void extraDialogue(int index)

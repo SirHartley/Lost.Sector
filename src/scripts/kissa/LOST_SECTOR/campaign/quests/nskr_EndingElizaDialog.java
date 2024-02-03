@@ -12,6 +12,9 @@ import com.fs.starfarer.api.impl.campaign.ids.Industries;
 import com.fs.starfarer.api.impl.campaign.ids.MemFlags;
 import com.fs.starfarer.api.impl.campaign.intel.contacts.ContactIntel;
 import com.fs.starfarer.api.util.Misc;
+import scripts.kissa.LOST_SECTOR.campaign.customStart.gamemodeManager;
+import scripts.kissa.LOST_SECTOR.campaign.customStart.intel.hellSpawnEventFactors;
+import scripts.kissa.LOST_SECTOR.campaign.customStart.intel.hellSpawnEventIntel;
 import scripts.kissa.LOST_SECTOR.campaign.econ.nskr_upChip;
 import scripts.kissa.LOST_SECTOR.campaign.quests.util.questUtil;
 import scripts.kissa.LOST_SECTOR.nskr_modPlugin;
@@ -120,6 +123,7 @@ public class nskr_EndingElizaDialog implements InteractionDialogPlugin {
 
             questUtil.setCompleted(true, DIALOG_FINISHED_KEY);
             questUtil.setStage(20);
+            questUtil.saveEnding();
 
             //commission fuckery
             if((Misc.getCommissionFactionId()!=null)) {
@@ -132,6 +136,11 @@ public class nskr_EndingElizaDialog implements InteractionDialogPlugin {
                     }
                 }
             }
+            //hellspawn
+            if (gamemodeManager.getMode() == gamemodeManager.gameMode.HELLSPAWN) hellSpawnEventIntel.get().addFactor(
+                    new hellSpawnEventFactors(100+ mathUtil.getSeededRandomNumberInRange(3,10, getRandom()),
+                    "Gave the UPC to Eliza", "What could possibly go wrong?", ""));
+
             //rewards
             CargoAPI playerCargo = Global.getSector().getPlayerFleet().getCargo();
             //BPs

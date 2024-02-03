@@ -3,7 +3,10 @@ package scripts.kissa.LOST_SECTOR.campaign.fleets.bounties;
 import com.fs.starfarer.api.EveryFrameScript;
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.*;
+import com.fs.starfarer.api.campaign.listeners.ShipRecoveryListener;
 import com.fs.starfarer.api.characters.FullName;
+import com.fs.starfarer.api.combat.ShipVariantAPI;
+import com.fs.starfarer.api.fleet.FleetMemberAPI;
 import com.fs.starfarer.api.impl.campaign.ids.*;
 import com.fs.starfarer.api.impl.campaign.procgen.StarSystemGenerator;
 import com.fs.starfarer.api.impl.campaign.procgen.themes.BaseThemeGenerator;
@@ -20,7 +23,7 @@ import scripts.kissa.LOST_SECTOR.util.util;
 
 import java.util.*;
 
-public class nskr_eternitySpawner extends BaseCampaignEventListener implements EveryFrameScript {
+public class nskr_eternitySpawner extends BaseCampaignEventListener implements EveryFrameScript, ShipRecoveryListener {
     //
     //spawns a special enigma fleet to a random location in a nebula once per game.
     //
@@ -41,7 +44,7 @@ public class nskr_eternitySpawner extends BaseCampaignEventListener implements E
     nskr_saved<Boolean> newGame;
     nskr_saved<Boolean> firstTime;
     private final List<CampaignFleetAPI> removed = new ArrayList<>();
-    CampaignFleetAPI pf;
+    //CampaignFleetAPI pf;
     Random random;
 
     //Weights for the different types of locations we can spawn to
@@ -63,12 +66,14 @@ public class nskr_eternitySpawner extends BaseCampaignEventListener implements E
         //for intel
         this.firstTime = new nskr_saved<>(SAVED_PREFIX + "FirstTime", true);
         this.random = new Random();
+        //listener
+        //Global.getSector().getListenerManager().addListener(this, true);
     }
 
     @Override
     public void advance(float amount) {
-        this.pf = Global.getSector().getPlayerFleet();
-        if (this.pf == null) return;
+        CampaignFleetAPI pf = Global.getSector().getPlayerFleet();
+        if (pf == null) return;
         List<fleetInfo> fleets = fleetUtil.getFleets(FLEET_ARRAY_KEY);
 
         if (Global.getSector().isInFastAdvance()) {
@@ -93,7 +98,7 @@ public class nskr_eternitySpawner extends BaseCampaignEventListener implements E
                 }
 
                 Vector2f fp = fleet.getLocationInHyperspace();
-                Vector2f pp = this.pf.getLocationInHyperspace();
+                Vector2f pp = pf.getLocationInHyperspace();
                 float dist = MathUtils.getDistance(pp, fp);
                 if (despawn) {
                     if (dist > Global.getSettings().getMaxSensorRangeHyper()) {
@@ -116,7 +121,6 @@ public class nskr_eternitySpawner extends BaseCampaignEventListener implements E
                             "extreme caution",
                             Global.getSettings().getColor("yellowTextColor"),
                             Global.getSettings().getColor("yellowTextColor"));
-                    nskr_hintManager.setIntelReceived(true, HINT_KEY);
                     firstTime.val = false;
                 }
             }
@@ -286,5 +290,23 @@ public class nskr_eternitySpawner extends BaseCampaignEventListener implements E
 
     public boolean runWhilePaused() {
         return false;
+    }
+
+    @Override
+    public void reportShipsRecovered(List<FleetMemberAPI> ships, InteractionDialogAPI dialog) {
+
+        for (FleetMemberAPI m : ships) {
+            ShipVariantAPI v = m.getVariant();
+
+            String id = v.getHullSpec().getBaseHullId();
+            if (id.equals("nskr_eternity_e")){
+
+                v.removeTag(Tags.SHIP_LIMITED_TOOLTIP);
+
+                m.setVariant(v, false, false);
+            }
+
+        }
+
     }
 }

@@ -39,7 +39,7 @@ public class nskr_loanShark extends BaseCampaignEventListener implements EveryFr
     nskr_saved<Float> counter;
     nskr_saved<Boolean> collected;
     private final List<CampaignFleetAPI> removed = new ArrayList<>();
-    CampaignFleetAPI pf;
+    //CampaignFleetAPI pf;
     Random random;
 
     static void log(final String message) {
@@ -57,8 +57,8 @@ public class nskr_loanShark extends BaseCampaignEventListener implements EveryFr
 
     @Override
     public void advance(float amount) {
-        this.pf = Global.getSector().getPlayerFleet();
-        if (this.pf == null) return;
+        CampaignFleetAPI pf = Global.getSector().getPlayerFleet();
+        if (pf == null) return;
 
         if (Global.getSector().isInFastAdvance()) {
             counter.val += 2f*amount;
@@ -86,7 +86,7 @@ public class nskr_loanShark extends BaseCampaignEventListener implements EveryFr
                 }
 
                 Vector2f fp = fleet.getLocationInHyperspace();
-                Vector2f pp = this.pf.getLocationInHyperspace();
+                Vector2f pp = pf.getLocationInHyperspace();
                 float dist = MathUtils.getDistance(pp, fp);
                 if (despawn) {
                     if (dist > Global.getSettings().getMaxSensorRangeHyper()) {
@@ -162,6 +162,8 @@ public class nskr_loanShark extends BaseCampaignEventListener implements EveryFr
     }
 
     void spawnCollectorFleet() {
+        CampaignFleetAPI pf = Global.getSector().getPlayerFleet();
+
         Random random = nskr_loanSharkDialog.getRandom();
 
         float combatPoints = mathUtil.getSeededRandomNumberInRange(100f, 110f, random);

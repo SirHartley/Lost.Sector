@@ -1,7 +1,7 @@
 {
     "displayName": "Tactical",
     "fluxCapacitors": 0,
-    "fluxVents": 5,
+    "fluxVents": 8,
     "hullId": "nskr_sovereign",
     "hullMods": [
         "auxiliarythrusters",

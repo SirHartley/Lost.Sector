@@ -31,6 +31,15 @@
 	"nskr_frost_theme":[
 		{"file":"chilling.ogg","source":"sounds/music","volume":0.80}, 
 	],
+	"nskr_holy_spirit_theme":[
+		{"file":"HOLY SPIRIT.ogg","source":"sounds/music","volume":0.80}, 
+	],
+	"nskr_thrn_theme":[
+		{"file":"THRN.ogg","source":"sounds/music","volume":0.80}, 
+	],
+	"nskr_peace":[
+		{"file":"Peace.ogg","source":"sounds/music","volume":1.00}, 
+	],
 	},
 	
 
@@ -398,5 +407,13 @@
 	"nskr_eternity_loop_noise":
 	[
 		{"file":"sounds/nskr_fx/nskr_eternity_loop_noise.ogg","pitch":1.0,"volume":1.00},
+	],
+	"nskr_hellspawn_dodge":
+	[
+		{"file":"sounds/nskr_fx/nskr_hellspawn_dodge.ogg","pitch":1.0,"volume":1.00},
+	],
+	"nskr_gate_conduit_activate":
+	[
+		{"file":"sounds/nskr_fx/nskr_gate_conduit_activate.ogg","pitch":1.0,"volume":1.50},
 	],
 }

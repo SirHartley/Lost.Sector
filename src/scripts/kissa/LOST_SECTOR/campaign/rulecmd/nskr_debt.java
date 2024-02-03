@@ -177,7 +177,7 @@ public class nskr_debt extends PaginatedOptions {
 			index++;
 		}
 
-		addOptionAllPages(nskr_stringHelper.getString("back", true), "nskr_debtMenuReturn");
+		addOptionAllPages("Back", "nskr_debtMenuReturn");
 	}
 
 	public static List<loanInfo> getLoans(){

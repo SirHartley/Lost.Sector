@@ -1,0 +1,17 @@
+{
+	"id":"hellSpawnPeacefulSkill",
+	"governingAptitude":"leadership",
+	"compressHullmods":false,
+	"scope":CUSTOM,
+	"scopeStr":"all combat ships in fleet",
+	"effectGroups":[
+		{
+			"requiredSkillLevel":1,
+			"effectBasedOnLevel":false,
+			"effects":[
+				{"type":"ALL_SHIPS_IN_FLEET", "script":"scripts.kissa.LOST_SECTOR.campaign.customStart.abilities.hellSpawnPeacefulSkill$Level1"},
+				{"type":"SHIP", "script":"scripts.kissa.LOST_SECTOR.campaign.customStart.abilities.hellSpawnPeacefulSkill$Level2"},
+			]
+		},
+	],
+}

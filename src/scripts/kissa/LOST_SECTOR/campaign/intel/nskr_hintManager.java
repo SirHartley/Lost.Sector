@@ -6,6 +6,7 @@ import com.fs.starfarer.api.campaign.BaseCampaignEventListener;
 import com.fs.starfarer.api.campaign.CampaignFleetAPI;
 import com.fs.starfarer.api.campaign.StarSystemAPI;
 import com.fs.starfarer.api.campaign.comm.IntelInfoPlugin;
+import com.fs.starfarer.api.campaign.comm.IntelManagerAPI;
 import com.fs.starfarer.api.impl.campaign.ids.Tags;
 import scripts.kissa.LOST_SECTOR.campaign.fleets.bounties.nskr_abyssSpawner;
 import scripts.kissa.LOST_SECTOR.campaign.fleets.bounties.nskr_eternitySpawner;
@@ -29,11 +30,11 @@ public class nskr_hintManager extends BaseCampaignEventListener implements Every
     public static final float HINT_CHANCE = 0.04f;
 
     private boolean newSystem = false;
-    private nskr_hintIntel intel = null;
     CampaignFleetAPI pf;
     nskr_saved<Float> counter;
     nskr_saved<Boolean> newGame;
     nskr_saved<ArrayList<StarSystemAPI>> sources;
+    private final ArrayList<StarSystemAPI> cleanup = new ArrayList<>();
 
     public nskr_hintManager() {
         super(false);
@@ -73,45 +74,34 @@ public class nskr_hintManager extends BaseCampaignEventListener implements Every
             newGame.val = false;
             log("HINT added sources, size "+sources.val.size());
         }
-        //manually set up removal of hints if we already have the intel (dumb but i CBA to do it properly)
-        //run this first (important)
-        if (!sources.val.isEmpty()) {
-            for (final Iterator<StarSystemAPI> iter = this.sources.val.listIterator(); iter.hasNext(); ) {
-                StarSystemAPI a = iter.next();
-                //FROST
-                if (getIntelReceived(nskr_enigmaBlowerUpper.HINT_KEY)){
-                    if (a == Global.getSector().getStarSystem(nskr_frost.getName())) {
-                        iter.remove();
-                        log("HINT removed hint for "+ a.getName());
-                    }
-                }
-                //UMBRA
-                if (getIntelReceived(nskr_eternitySpawner.HINT_KEY)){
-                    if (a == nskr_eternitySpawner.getLoc().getStarSystem()) {
-                        iter.remove();
-                        log("HINT removed hint for "+ a.getName());
-                    }
-                }
-                //ABYSS
-                if (getIntelReceived(nskr_abyssSpawner.HINT_KEY)){
-                    if (a == nskr_abyssSpawner.getLoc().getStarSystem()) {
-                        iter.remove();
-                        log("HINT removed hint for "+ a.getName());
-                    }
-                }
-                //MOTHERSHIP
-                if (getIntelReceived(nskr_mothershipSpawner.HINT_KEY)){
-                    if (a == nskr_mothershipSpawner.getMothershipBaseLocation().getStarSystem()) {
-                        iter.remove();
-                        log("HINT removed hint for "+ a.getName());
-                    }
-                }
-            }
-        }
         //we used all the hints
         if (sources.val.isEmpty()) return;
 
         if (counter.val>10f) {
+
+            IntelManagerAPI manager = Global.getSector().getIntelManager();
+            //abyss
+            if (manager.hasIntelOfClass(nskr_abyssIntel.class)){
+                StarSystemAPI sys = nskr_abyssSpawner.getLoc().getStarSystem();
+                if (sources.val.contains(sys)) cleanup.add(sys);
+            }
+            //umbra
+            if (manager.hasIntelOfClass(nskr_umbraIntel.class)){
+                StarSystemAPI sys = nskr_eternitySpawner.getLoc().getStarSystem();
+                if (sources.val.contains(sys)) cleanup.add(sys);
+            }
+            //mothership
+            if (manager.hasIntelOfClass(nskr_mothershipIntel.class)){
+                StarSystemAPI sys = nskr_mothershipSpawner.getMothershipBaseLocation().getStarSystem();
+                if (sources.val.contains(sys)) cleanup.add(sys);
+            }
+            //frost
+            if (manager.hasIntelOfClass(nskr_frostIntel.class)){
+                StarSystemAPI sys = Global.getSector().getStarSystem(nskr_frost.getName());
+                if (sources.val.contains(sys)) cleanup.add(sys);
+            }
+            //clean the source hints list, do before checking if we add new intel
+            clean();
 
             //newSystem check
             if(!pf.isInHyperspace()){
@@ -121,7 +111,6 @@ public class nskr_hintManager extends BaseCampaignEventListener implements Every
                     //no core systems
                     if (!sys.hasTag(Tags.THEME_CORE) && !sys.hasTag(Tags.SYSTEM_CUT_OFF_FROM_HYPER)) {
                         newSystem = true;
-                        //log("Hint newSystem");
                     }
                 }
             }
@@ -132,23 +121,28 @@ public class nskr_hintManager extends BaseCampaignEventListener implements Every
                     StarSystemAPI source = sources.val.get(mathUtil.getSeededRandomNumberInRange(0, sources.val.size() - 1, getRandom()));
                     nskr_hintIntel intel = new nskr_hintIntel(source);
                     //Adds our intel
-                    this.intel = intel;
                     Global.getSector().getIntelManager().addIntel(intel, false);
                     log("HINT added INTEL for " + source.getName());
 
                     //clean up
-                    for (final Iterator<StarSystemAPI> iter = this.sources.val.listIterator(); iter.hasNext(); ) {
-                        StarSystemAPI a = iter.next();
-                        if (a == source) {
-                            iter.remove();
-                            log("HINT REMOVED " + source.getName());
-                        }
-                    }
+                    cleanup.add(source);
                 }
             }
             newSystem = false;
 
+            //clean the source hints list, do again for gained intel
+            clean();
+
             counter.val = 0f;
+        }
+    }
+
+    private void clean() {
+        if (!cleanup.isEmpty() && !sources.val.isEmpty()){
+            for (StarSystemAPI s : cleanup){
+                sources.val.remove(s);
+            }
+            cleanup.clear();
         }
     }
 
@@ -173,19 +167,5 @@ public class nskr_hintManager extends BaseCampaignEventListener implements Every
             data.put(PERSISTENT_RANDOM_KEY, new Random(util.getSeedParsed()));
         }
         return (Random) data.get(PERSISTENT_RANDOM_KEY);
-    }
-
-    public static boolean getIntelReceived(String id) {
-        //whether we should spawn hints for this system
-        Map<String, Object> data = Global.getSector().getPersistentData();
-        if (!data.containsKey(id)) data.put(id, false);
-
-        return (boolean)data.get(id);
-    }
-
-    public static void setIntelReceived(boolean remove, String id) {
-        //whether we should spawn hints for this system
-        Map<String, Object> data = Global.getSector().getPersistentData();
-        data.put(id, remove);
     }
 }

@@ -1,6 +1,6 @@
 {
     "displayName": "Tormentor",
-    "fluxCapacitors": 9,
+    "fluxCapacitors": 12,
     "fluxVents": 30,
     "goalVariant": true,
     "hullId": "nskr_minokawa_e",

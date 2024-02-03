@@ -182,7 +182,7 @@ nskr_arcgen,WEAPON,"""The static surge caused the projector to be destroyed, and
 
 nskr_scatterm,WEAPON,"""Receiving accurate readings of the event has become increasingly difficult. Now that we are past the Hagedorn temperature, it simply can't resist the spontaneous anti-matter chains the particle creates. Iterating on our experimental setup is now top priority for the project, I sense that this phenomena has many novel applications.""", "- Department Lead Dr. Leal-Francis - Project log #3401",,,
 
-nskr_plasmal,WEAPON,"""With the application of new magnetic stabilization techniques, the radiant impact magnitude has increased exponentially. It's now clear that a new era of energy weapons is approaching. Under no circumstance can this technology fall into the wrong hands.""", "- Dr. Vaughn - Project Lead",,,
+nskr_plasmal,WEAPON,"""Yea ...[Static]... I'd say that's a big fucking gun, over...""", "- Salvor team Golf - Near [REDACTED]",,,
 
 nskr_hshotgun,WEAPON,"""What do they even need a gun this big for?"" ""You need to stop worrying about the ""what for?"" doctor, it's good for you.""", "- Transcript of surveillance log #353",,,
 
@@ -282,9 +282,9 @@ nskr_outpost,CUSTOM,"Established by the Kesteven Corporation in recent years. Th
 
 nskr_enigmabase,CUSTOM,"An abandoned R&D facility, built either to test equipment in interesting local phenomena or to experiment with that which is best kept far, far away from inhabited worlds. A cursory scan indicates that most of it has been cold and dead for tens of cycles at the very least, but closer inspection reveals that some parts of the station have seen much more recent activity. A closer inspection will yield more answers.",,,,
 
-nskr_blacksite,CUSTOM,"A sizeable makeshift space station used for storage of different goods and equipment. Considering its location on the fringes, it is most likely used to store illegal ones.",,,,
+nskr_blacksite,CUSTOM,"A sizeable makeshift space station used for storage of different goods and equipment. Considering its location on the fringes, its most likely used to store illegal ones.",,,,
 
-nskr_blacksite_cleared,CUSTOM,"A sizeable makeshift space station used for storage of different goods and equipment. Considering its location on the fringes, it is most likely used to store illegal ones. Now cleared of any alarms or possible defenders.",,,,
+nskr_blacksite_cleared,CUSTOM,"A sizeable makeshift space station used for storage of different goods and equipment. Considering its location on the fringes, its most likely used to store illegal ones. Now cleared of any alarms or possible defenders.",,,,
 
 nskr_ice_desert,PLANET,"A cold and dusty planet that manages to maintain some amount of terrestrial water ice in the form of snow, either through asteroid bombardment or the dried up remains of ancient seas. Usually mixed in with frozen carbon dioxide thanks to the very low temperatures.",,,,
 

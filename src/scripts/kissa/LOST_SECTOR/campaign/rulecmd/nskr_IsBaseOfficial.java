@@ -83,6 +83,10 @@ public class nskr_IsBaseOfficial extends BaseCommandPlugin {
 				return MILITARY_POSTS.contains(post);
 			case "admin":
 				return ADMIN_POSTS.contains(post);
+			case "ttadmin":
+				//for alt ending, include Arroyo
+				if (dialog.getInteractionTarget().getActivePerson()==null) return ADMIN_POSTS.contains(post);
+				return ADMIN_POSTS.contains(post) || dialog.getInteractionTarget().getActivePerson().getId().equals("arroyo");
 			case "trade":
 			case "op":
 				return OP_POSTS.contains(post);

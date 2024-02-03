@@ -123,8 +123,8 @@ public class contractManager extends BaseCampaignEventListener implements EveryF
             float completed = 0;
             //normal bounties
             //hostile check
-            if (enemy.getFleet().getFaction().isHostileTo(Global.getSector().getFaction(ids.KESTEVEN_FACTION_ID))) {
-                if (!contract.isFactionBounty) {
+            if (!contract.isFactionBounty) {
+                if (enemy.getFleet().getFaction().isHostileTo(Global.getSector().getFaction(ids.KESTEVEN_FACTION_ID))) {
                     for (FleetMemberAPI m : lost) {
                         ShipHullSpecAPI mspec = m.getHullSpec();
                         if (mspec == null) continue;
@@ -180,22 +180,22 @@ public class contractManager extends BaseCampaignEventListener implements EveryF
                         }
                     }
                 }
-                //faction bounties
-                else {
-                    if (enemy.getFleet() != null && enemy.getFleet().getFaction() != null) {
-                        if (enemy.getFleet().getFaction().getId().equals(contract.subType)) {
-                            for (FleetMemberAPI m : lost) {
-                                ShipHullSpecAPI mspec = m.getHullSpec();
-                                if (mspec == null) continue;
-                                if (mspec.getHullSize() == ShipAPI.HullSize.FIGHTER) continue;
-                                completed++;
-                            }
+            }
+            //faction bounties
+            else {
+                if (enemy.getFleet() != null && enemy.getFleet().getFaction() != null) {
+                    if (enemy.getFleet().getFaction().getId().equals(contract.subType)) {
+                        for (FleetMemberAPI m : lost) {
+                            ShipHullSpecAPI mspec = m.getHullSpec();
+                            if (mspec == null) continue;
+                            if (mspec.getHullSize() == ShipAPI.HullSize.FIGHTER) continue;
+                            completed++;
                         }
                     }
                 }
-                //completed =  Math.max(completed * result.getBattle().getPlayerInvolvementFraction(), 1);
-                contract.completedCount += completed;
             }
+            //completed =  Math.max(completed * result.getBattle().getPlayerInvolvementFraction(), 1);
+            contract.completedCount += completed;
             //
         }
     }

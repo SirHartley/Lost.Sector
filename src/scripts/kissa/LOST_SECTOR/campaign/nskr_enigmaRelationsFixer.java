@@ -4,6 +4,8 @@ package scripts.kissa.LOST_SECTOR.campaign;
 import com.fs.starfarer.api.EveryFrameScript;
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.BaseCampaignEventListener;
+import com.fs.starfarer.api.impl.campaign.ids.Factions;
+import scripts.kissa.LOST_SECTOR.campaign.customStart.gamemodeManager;
 import scripts.kissa.LOST_SECTOR.util.ids;
 import scripts.kissa.LOST_SECTOR.world.nskr_gen;
 
@@ -39,6 +41,11 @@ public class nskr_enigmaRelationsFixer extends BaseCampaignEventListener impleme
 
         //hard set relations
         if (faction.equals(ids.ENIGMA_FACTION_ID)){
+            //uncap on hellspawn
+            if (gamemodeManager.getMode() == gamemodeManager.gameMode.HELLSPAWN){
+                return;
+            }
+
             nskr_gen.setEnigmaRelation(Global.getSector());
         }
 

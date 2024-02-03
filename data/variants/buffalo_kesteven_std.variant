@@ -1,7 +1,7 @@
 {
     "displayName": "Standard",
     "fluxCapacitors": 10,
-    "fluxVents": 4,
+    "fluxVents": 6,
     "hullId": "buffalo_kesteven",
     "hullMods": ["auxiliarythrusters"],
     "permaMods": [],

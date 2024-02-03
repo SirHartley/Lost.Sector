@@ -1,6 +1,6 @@
 {
     "displayName": "Avenger",
-    "fluxCapacitors": 1,
+    "fluxCapacitors": 6,
     "fluxVents": 50,
     "goalVariant": false,
     "hullId": "nskr_rorqual",

@@ -1,6 +1,6 @@
 {
     "displayName": "SERIAL 004",
-    "fluxCapacitors": 3,
+    "fluxCapacitors": 6,
     "fluxVents": 30,
     "hullId": "nskr_minokawa",
     "hullMods": [

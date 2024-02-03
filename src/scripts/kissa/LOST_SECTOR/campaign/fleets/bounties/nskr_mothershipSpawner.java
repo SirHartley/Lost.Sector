@@ -50,7 +50,7 @@ public class nskr_mothershipSpawner  extends BaseCampaignEventListener implement
     nskr_saved<Float> counter;
     nskr_saved<Boolean> firstTime;
     private final List<CampaignFleetAPI> removed = new ArrayList<>();
-    CampaignFleetAPI pf;
+    //CampaignFleetAPI pf;
     Random random;
 
     static void log(final String message) {
@@ -70,8 +70,8 @@ public class nskr_mothershipSpawner  extends BaseCampaignEventListener implement
 
     @Override
     public void advance(float amount) {
-        this.pf = Global.getSector().getPlayerFleet();
-        if (this.pf == null) return;
+        CampaignFleetAPI pf = Global.getSector().getPlayerFleet();
+        if (pf == null) return;
         List<fleetInfo> fleets = fleetUtil.getFleets(FLEET_ARRAY_KEY);
 
         if (Global.getSector().isInFastAdvance()) {
@@ -92,7 +92,7 @@ public class nskr_mothershipSpawner  extends BaseCampaignEventListener implement
                 }
 
                 Vector2f fp = fleet.getLocationInHyperspace();
-                Vector2f pp = this.pf.getLocationInHyperspace();
+                Vector2f pp = pf.getLocationInHyperspace();
                 float dist = MathUtils.getDistance(pp, fp);
                 if (despawn) {
                     if (dist > Global.getSettings().getMaxSensorRangeHyper()) {
@@ -114,7 +114,6 @@ public class nskr_mothershipSpawner  extends BaseCampaignEventListener implement
                             "extreme caution",
                             Global.getSettings().getColor("yellowTextColor"),
                             Global.getSettings().getColor("yellowTextColor"));
-                    nskr_hintManager.setIntelReceived(true, HINT_KEY);
                     firstTime.val = false;
                 }
             }
@@ -135,7 +134,7 @@ public class nskr_mothershipSpawner  extends BaseCampaignEventListener implement
 
         PlanetAPI a1 = system.addPlanet(PLANET1_ID, loc, "Helios", getRandomHabitableType(random),
                 random.nextFloat()*360f,
-                mathUtil.getSeededRandomNumberInRange(40f,75f, random),
+                mathUtil.getSeededRandomNumberInRange(30f,50f, random),
                 loc.getRadius() + mathUtil.getSeededRandomNumberInRange(200f,300f, random),
                 mathUtil.getSeededRandomNumberInRange(90f,120f, random));
         PlanetConditionGenerator.generateConditionsForPlanet(null, a1, system.getAge());
@@ -149,7 +148,7 @@ public class nskr_mothershipSpawner  extends BaseCampaignEventListener implement
 
         PlanetAPI a2 = system.addPlanet(PLANET2_ID, loc, "Polaris", getRandomHabitableType(random),
                 random.nextFloat()*360f,
-                mathUtil.getSeededRandomNumberInRange(40f,75f, random),
+                mathUtil.getSeededRandomNumberInRange(30f,50f, random),
                 loc.getRadius() + mathUtil.getSeededRandomNumberInRange(400f,600f, random),
                 mathUtil.getSeededRandomNumberInRange(120f,150f, random));
         PlanetConditionGenerator.generateConditionsForPlanet(null, a2, system.getAge());

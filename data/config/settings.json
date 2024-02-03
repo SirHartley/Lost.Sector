@@ -42,7 +42,12 @@
 			"nskr_nicholas":"graphics/portraits/nskr_nicholas.png",
 			"nskr_eliza":"graphics/portraits/nskr_eliza.png",
 			"nskr_ai_alpha":"graphics/portraits/nskr_alpha_core1.png",	
-			"nskr_guard":"graphics/portraits/portrait18.png"
+			"nskr_guard":"graphics/portraits/portrait18.png",
+			
+			"nskr_thrn00":"graphics/portraits/nskr_thrn00.png",
+			"nskr_thrn01":"graphics/portraits/nskr_thrn01.png",
+			"nskr_thrn02":"graphics/portraits/nskr_thrn02.png",
+			"nskr_thrn03":"graphics/portraits/nskr_thrn03.png"
 		},
 		"income_report":{
 			"surplus":"graphics/icons/reports/surplus24.png",
@@ -89,5 +94,7 @@
 		"nskr_modRemoval":0.75,
 		#skip Power req for quest
 		"nskr_skipRequirement":1.00,
+		#skip the entire story
+		"nskr_skipStory":0.00,
 	},
 }

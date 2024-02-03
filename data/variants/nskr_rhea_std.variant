@@ -1,7 +1,7 @@
 {
     "displayName": "Raider",
     "fluxCapacitors": 0,
-    "fluxVents": 10,
+    "fluxVents": 14,
     "goalVariant": true,
     "hullId": "nskr_rhea",
     "hullMods": [

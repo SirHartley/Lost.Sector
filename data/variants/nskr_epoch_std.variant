@@ -1,7 +1,7 @@
 {
     "displayName": "SERIAL 005",
     "fluxCapacitors": 0,
-    "fluxVents": 8,
+    "fluxVents": 10,
     "hullId": "nskr_epoch",
 	"goalVariant": true,
     "hullMods": ["hardenedshieldemitter"],

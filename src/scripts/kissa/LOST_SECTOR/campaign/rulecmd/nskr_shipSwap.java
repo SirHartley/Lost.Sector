@@ -185,8 +185,8 @@ public class nskr_shipSwap extends PaginatedOptions {
 		final Map<String, MemoryAPI> memoryMap = this.memoryMap; 
 		
 		dialog.showCargoPickerDialog(nskr_stringHelper.getString("nskr_misc", "shipSwapSelect"),
-				Misc.ucFirst(nskr_stringHelper.getString("confirm")),
-				Misc.ucFirst(nskr_stringHelper.getString("cancel")),
+				Misc.ucFirst("confirm"),
+				Misc.ucFirst("cancel"),
 						true, width, copy, new CargoPickerListener() {
 			public void pickedCargo(CargoAPI cargo) {
 				cargo.sort();
@@ -262,7 +262,7 @@ public class nskr_shipSwap extends PaginatedOptions {
 		if (stock.isEmpty()){
 			text.addParagraph("\"Looks like we don't have any ships in stock at the moment.\"");
 
-			addOptionAllPages(nskr_stringHelper.getString("back", true), "nskr_shipSwapMenuReturn");
+			addOptionAllPages("Back", "nskr_shipSwapMenuReturn");
 			return;
 		}
 
@@ -270,8 +270,8 @@ public class nskr_shipSwap extends PaginatedOptions {
 		final InteractionDialogAPI dialog = this.dialog;
 
 		dialog.showFleetMemberPickerDialog("Choose from the stock",
-				Misc.ucFirst(nskr_stringHelper.getString("confirm")),
-				Misc.ucFirst(nskr_stringHelper.getString("cancel")),
+				Misc.ucFirst("Confirm"),
+				Misc.ucFirst("Cancel"),
 				5, 6, 120,true,true, stock, new FleetMemberPickerListener() {
 					@Override
 					public void pickedFleetMembers(List<FleetMemberAPI> members) {
@@ -315,7 +315,7 @@ public class nskr_shipSwap extends PaginatedOptions {
 							return;
 						}
 
-						if (points>cost) {
+						if (points >= cost) {
 							dialog.getOptionPanel().addOption("Make the purchase", "nskr_shipSwapConfirmPurchase");
 							dialog.getOptionPanel().addOption("\"Never mind.\"", "nskr_shipSwapMenuReturn");
 						} else {
@@ -353,7 +353,7 @@ public class nskr_shipSwap extends PaginatedOptions {
 		if (fakeCargo.isEmpty()){
 			text.addParagraph("\"Looks like we don't have any weapons in stock at the moment.\"");
 
-			addOptionAllPages(nskr_stringHelper.getString("back", true), "nskr_shipSwapMenuReturn");
+			addOptionAllPages("Back", "nskr_shipSwapMenuReturn");
 			return;
 		}
 
@@ -362,8 +362,8 @@ public class nskr_shipSwap extends PaginatedOptions {
 		final InteractionDialogAPI dialog = this.dialog;
 
 		dialog.showCargoPickerDialog("Choose from the stock",
-				Misc.ucFirst(nskr_stringHelper.getString("confirm")),
-				Misc.ucFirst(nskr_stringHelper.getString("cancel")),
+				Misc.ucFirst("Confirm"),
+				Misc.ucFirst("Cancel"),
 				true, width, fakeCargo, new CargoPickerListener() {
 
 					public void pickedCargo(CargoAPI cargo) {

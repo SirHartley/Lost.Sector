@@ -40,7 +40,7 @@ public class nskr_criticalArmor extends BaseHullMod {
         BREAKPOINTS.put(ShipAPI.HullSize.CRUISER, 900f);
         BREAKPOINTS.put(ShipAPI.HullSize.CAPITAL_SHIP, 1200f);
     }
-    public static final float SMOD_PENALTY = 10f;
+    public static final float SMOD_PENALTY = 30f;
 
     public static final Set<String> BLOCKED_HULLMODS = new HashSet<>();
     static {
@@ -51,6 +51,7 @@ public class nskr_criticalArmor extends BaseHullMod {
         //BLOCKED_HULLMODS.add("eis_damperhull");
         BLOCKED_HULLMODS.add("tahlan_daemonarmor");
         BLOCKED_HULLMODS.add("tahlan_daemonplating");
+        BLOCKED_HULLMODS.add("monjeau_armour");
     }
 
     public void applyEffectsBeforeShipCreation(ShipAPI.HullSize hullSize, MutableShipStatsAPI stats, String id) {

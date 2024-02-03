@@ -1,3 +1,19 @@
+Version 0.6.1d
+- Updated for 0.97a
+
+Balance changes:
+- Critical Point Protection increased S-mod Penalty 10%->30%
+- Volatile Flux Injector increased S-mod Penalty 25%->33%
+
+Fixes:
+- Fixed possible memory leak (thanks Sundog)
+- Fixed Space Time Anchor causing ships to take massive damage from beams
+- Fixed rare campaign crash with the hintManager
+- Frost system fleets actually prevent you from disengaging
+- Fixed some unique ships having hidden fleet tooltips forever
+- Fixed Eliza's fight sometimes making you hostile to Independents
+- Fixed faction specific elimination contracts caring about hostilities leading to uncompletable contracts
+
 Version 0.6.1c
 -ONLY save compatible with 0.6.xx versions-
 

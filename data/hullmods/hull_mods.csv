@@ -20,6 +20,8 @@ You gain %s of your monthly fleet expenditures (such as crew pay) as a trickleba
 "EM Core","nskr_emCore",,,,,,,,"TRUE",,0,0,0,0,"scripts.kissa.LOST_SECTOR.hullmods.nskr_stupidFuckingHax","How are you reading this?",,,"graphics/hullmods/terminator_core.png"
 ,,,,,,,,,,,,,,,,,,,
 "Hunter Of The Profane","nskr_machineSpirit",,,,,,,,"TRUE",,0,0,0,0,"scripts.kissa.LOST_SECTOR.hullmods.nskr_machineSpirit","This ships weapon and targeting systems have been extensively modified to disrupt and counter Automated vessels. Wrapped in a tapestry of handcrafted items and religious idols, it is unclear how the system works.",,,"graphics/hullmods/nskr_machineSpirit.png"
+"Hellspawn dummy","nskr_hellSpawnStats",,,,,,,,"TRUE","TRUE",0,0,0,0,"scripts.kissa.LOST_SECTOR.hullmods.nskr_hellSpawnStats",,,,"graphics/hullmods/nskr_machineSpirit.png"
+"ThronesGift dummy","nskr_holySpirit",,,,,,,,"TRUE","TRUE",0,0,0,0,"scripts.kissa.LOST_SECTOR.hullmods.nskr_holySpirit",,,,"graphics/hullmods/nskr_machineSpirit.png"
 "Mothership","nskr_mothership",,,,,,,,"TRUE",,0,0,0,0,"scripts.kissa.LOST_SECTOR.hullmods.nskr_mothership","The vast nature of the ship has some impact on the performance of certain systems.",,,"graphics/hullmods/nskr_mothership.png"
 "Mothership Stats","nskr_mothership_frigate",,,,,,,,"TRUE","TRUE",0,0,0,0,"scripts.kissa.LOST_SECTOR.hullmods.nskr_mothershipFrigateStats","The vast nature of the ship has some impact on the performance of certain systems.",,,"graphics/hullmods/nskr_mothership.png"
 "Causality Core","nskr_causality",,,,,,,,"TRUE",,0,0,0,0,"scripts.kissa.LOST_SECTOR.hullmods.nskr_causality","Energy absorbed from time reversal of incoming projectiles is temporarily stored in the ship giving increasing buffs.",,,"graphics/hullmods/nskr_causality.png"

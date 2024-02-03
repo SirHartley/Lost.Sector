@@ -29,10 +29,7 @@ import scripts.kissa.LOST_SECTOR.campaign.quests.util.fleetInfo;
 import scripts.kissa.LOST_SECTOR.campaign.quests.util.questStageManager;
 import scripts.kissa.LOST_SECTOR.campaign.quests.util.simpleFleetMember;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 public class fleetUtil {
 
@@ -116,6 +113,21 @@ public class fleetUtil {
         //for (FleetMemberAPI m : fleet.getMembersWithFightersCopy()) {
         //    log(fleet.getName()+" ship "+m.getHullSpec().getHullName()+" tags "+m.getVariant().getTags().toString());
         //}
+    }
+
+    public static void updatePlayerFleet(boolean withSort){
+
+        CampaignFleetAPI pf = Global.getSector().getPlayerFleet();
+        for (FleetMemberAPI m : pf.getMembersWithFightersCopy()) {
+            if (m.isFighterWing()) continue;
+
+            m.getVariant().setSource(VariantSource.REFIT);
+            m.setVariant(m.getVariant(), false, false);
+        }
+
+        //FINISHING
+        if (withSort) pf.getFleetData().sort();
+
     }
 
     private static void safetyCheck(CampaignFleetAPI fleet, FleetAssignmentDataAPI curr) {
@@ -421,14 +433,28 @@ public class fleetUtil {
         if (captain==null) return;
         int aiType = captain.getStats().getLevel();
 
+        //no wait this breaks everything
+        //
+        //just in case
+        //if (aiType==1 || aiType==2){
+        //    //actually just make them level 4
+        //    Map<String, Integer> skills = util.createRandomSkills(4, 1f, new Random());
+//
+        //    util.setOfficerSkills(captain, skills);
+//
+        //    aiType = captain.getStats().getLevel();
+        //}
+        //gamma
         if (aiType==3 || aiType==4){
             aiId = "gamma_core";
             portraitId = "graphics/portraits/portrait_ai1b.png";
         }
+        //beta
         if (aiType==5 || aiType==6) {
             aiId = "beta_core";
             portraitId = "graphics/portraits/portrait_ai3b.png";
         }
+        //alpha
         if (aiType==7 || aiType==8) {
             aiId = "alpha_core";
             portraitId = "graphics/portraits/portrait_ai2b.png";

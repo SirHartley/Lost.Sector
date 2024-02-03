@@ -56,7 +56,7 @@ public class nksr_blackOpsManager extends BaseCampaignEventListener implements E
 
     nskr_saved<Float> counter;
     private final List<CampaignFleetAPI> removed = new ArrayList<>();
-    CampaignFleetAPI pf;
+    //CampaignFleetAPI pf;
 
     static void log(final String message) {
         Global.getLogger(nksr_blackOpsManager.class).info(message);
@@ -81,7 +81,7 @@ public class nksr_blackOpsManager extends BaseCampaignEventListener implements E
 
         //logic
         if (counter.val>10f) {
-            pf = Global.getSector().getPlayerFleet();
+            CampaignFleetAPI pf = Global.getSector().getPlayerFleet();
             if (pf == null) return;
             //spawning
             SectorEntityToken home = getUPC();

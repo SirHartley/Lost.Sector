@@ -256,6 +256,8 @@ public class nskr_altEndingDialogLuddic extends PaginatedOptions {
         //FINISH
         questUtil.setCompleted(true, DIALOG_FINISHED_KEY);
         questUtil.setStage(20);
+
+        questUtil.saveEnding();
     }
 
     protected void setSecond(){

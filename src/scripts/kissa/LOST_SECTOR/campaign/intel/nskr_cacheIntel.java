@@ -18,7 +18,6 @@ import java.util.Set;
 
 public class nskr_cacheIntel extends BaseIntelPlugin {
 
-    CampaignFleetAPI pf;
     private final StarSystemAPI system;
     static void log(final String message) {
         Global.getLogger(nskr_cacheIntel.class).info(message);

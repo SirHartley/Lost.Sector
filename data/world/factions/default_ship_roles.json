@@ -190,21 +190,23 @@
 
 	# phase ships
 	"phaseSmall":{
+		"nskr_afflictor_boss_nor":5,
 	},
 	"phaseMedium":{
+		"nskr_harbinger_boss_nor":5,
 	},
 	"phaseLarge":{
-	"nskr_reverie_mss":3,
-	"nskr_reverie_dsb":2,
-	"nskr_reverie_elite":2,
-	"nskr_reverie_str":3,
+		"nskr_reverie_mss":3,
+		"nskr_reverie_dsb":2,
+		"nskr_reverie_elite":2,
+		"nskr_reverie_str":3,
 	},
 	"phaseCapital":{
 	},
 
 	# freighters and such
 	"freighterSmall":{
-	"buffalo_kesteven_std":5,
+		"buffalo_kesteven_std":5,
 
 	},
 	"freighterMedium":{

@@ -3,4 +3,5 @@
     "pirateFaction":false,
     "corvusCompatible":true,
     "hostileToAll":true,    
+	"noSyncRelations":true,
 }

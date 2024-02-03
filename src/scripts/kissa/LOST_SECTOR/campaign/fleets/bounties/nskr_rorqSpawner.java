@@ -71,7 +71,7 @@ public class nskr_rorqSpawner extends BaseCampaignEventListener implements Every
     nskr_saved<Boolean> newGame;
     nskr_saved<Boolean> firstTime;
     private final List<CampaignFleetAPI> removed = new ArrayList<>();
-    CampaignFleetAPI pf;
+    //CampaignFleetAPI pf;
     Random random;
 
     static void log(final String message) {
@@ -93,8 +93,8 @@ public class nskr_rorqSpawner extends BaseCampaignEventListener implements Every
 
     @Override
     public void advance(float amount) {
-        this.pf = Global.getSector().getPlayerFleet();
-        if (this.pf == null) return;
+        CampaignFleetAPI pf = Global.getSector().getPlayerFleet();
+        if (pf == null) return;
         List<fleetInfo> fleets = fleetUtil.getFleets(FLEET_ARRAY_KEY);
 
         if (Global.getSector().isInFastAdvance()) {
@@ -135,7 +135,7 @@ public class nskr_rorqSpawner extends BaseCampaignEventListener implements Every
                 //}
 
                 Vector2f fp = fleet.getLocationInHyperspace();
-                Vector2f pp = this.pf.getLocationInHyperspace();
+                Vector2f pp = pf.getLocationInHyperspace();
                 float dist = MathUtils.getDistance(pp, fp);
                 if (despawn) {
                     if (dist > Global.getSettings().getMaxSensorRangeHyper()) {

@@ -1,7 +1,7 @@
 {
     "displayName": "Standard",
-    "fluxCapacitors": 0,
-    "fluxVents": 40,
+    "fluxCapacitors": 2,
+    "fluxVents": 50,
     "goalVariant": true,
     "hullId": "nskr_borealis",
     "hullMods": [

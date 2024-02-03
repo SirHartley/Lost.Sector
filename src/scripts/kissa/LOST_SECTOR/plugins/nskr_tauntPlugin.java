@@ -151,9 +151,11 @@ public class nskr_tauntPlugin extends BaseEveryFrameCombatPlugin {
                 ShipAPI boss = engine.getFleetManager(fleet.getFlagship().getOwner()).spawnShipOrWing(nskr_cache.SECONDARY_VARIANT_1, loc, 270f, 2f, nskr_cache.createSecondaryCaptain(2));
                 boss.setName(nskr_cache.S1_NAME);
 
-                Global.getCombatEngine().getCombatUI().addMessage(1, boss, textColorFirst, boss.getCaptain().getName().getFullName(), textColorFirst, ": ", textColorSecond, " No more, this ends now.");
-                Global.getCombatEngine().getCombatUI().addMessage(1, Misc.getTextColor(),"unknown ",Misc.getNegativeHighlightColor(),"enemy ",Misc.getTextColor(),"signature detected.");
-                Global.getSoundPlayer().playSound("nskr_prot_warning", 1.0f, 0.8f, new Vector2f(), new Vector2f());
+                Global.getCombatEngine().getCombatUI().addMessage(
+                        1, boss, textColorFirst, boss.getCaptain().getName().getFullName(), textColorFirst, ": ", textColorSecond, " No more, this ends now.");
+                Global.getCombatEngine().getCombatUI().addMessage(
+                        1, Misc.getTextColor(),"unknown ",Misc.getNegativeHighlightColor(),"enemy ",Misc.getTextColor(),"signature detected.");
+                Global.getSoundPlayer().playUISound("nskr_prot_warning", 1.0f, 0.8f);
 
                 data.finalBoss = true;
             }

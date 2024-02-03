@@ -52,7 +52,7 @@ public class nskr_kestevenScavenger extends BaseCampaignEventListener implements
     nskr_saved<Float> spawnCounter;
     nskr_saved<Float> counter;
     private final List<CampaignFleetAPI> removed = new ArrayList<>();
-    CampaignFleetAPI pf;
+    //CampaignFleetAPI pf;
     Random random;
 
     //Weights for the different types of locations we go to
@@ -92,8 +92,8 @@ public class nskr_kestevenScavenger extends BaseCampaignEventListener implements
 
     @Override
     public void advance(float amount) {
-        this.pf = Global.getSector().getPlayerFleet();
-        if (this.pf == null) return;
+        CampaignFleetAPI pf = Global.getSector().getPlayerFleet();
+        if (pf == null) return;
 
         if (Global.getSector().isInFastAdvance()) {
             spawnCounter.val += 2f*amount;
@@ -119,7 +119,7 @@ public class nskr_kestevenScavenger extends BaseCampaignEventListener implements
                 }
 
                 Vector2f fp = fleet.getLocationInHyperspace();
-                Vector2f pp = this.pf.getLocationInHyperspace();
+                Vector2f pp = pf.getLocationInHyperspace();
                 float dist = MathUtils.getDistance(pp, fp);
                 if (despawn) {
                     if (dist > Global.getSettings().getMaxSensorRangeHyper()) {

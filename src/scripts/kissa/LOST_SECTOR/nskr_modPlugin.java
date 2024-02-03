@@ -26,7 +26,9 @@ import org.dark.shaders.util.ShaderLib;
 import org.dark.shaders.util.TextureData;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.lazywizard.lazylib.JSONUtils;
 import scripts.kissa.LOST_SECTOR.campaign.*;
+import scripts.kissa.LOST_SECTOR.campaign.customStart.*;
 import scripts.kissa.LOST_SECTOR.campaign.fleets.*;
 import scripts.kissa.LOST_SECTOR.campaign.fleets.bounties.nskr_abyssSpawner;
 import scripts.kissa.LOST_SECTOR.campaign.fleets.bounties.nskr_eternitySpawner;
@@ -36,11 +38,14 @@ import scripts.kissa.LOST_SECTOR.campaign.fleets.events.nskr_blacksiteManager;
 import scripts.kissa.LOST_SECTOR.campaign.fleets.events.nskr_loanShark;
 import scripts.kissa.LOST_SECTOR.campaign.intel.nskr_hintManager;
 import scripts.kissa.LOST_SECTOR.campaign.fleets.events.nskr_interceptManager;
+import scripts.kissa.LOST_SECTOR.campaign.quests.characters.killBrainManager;
 import scripts.kissa.LOST_SECTOR.campaign.quests.jobs.contractManager;
 import scripts.kissa.LOST_SECTOR.campaign.quests.util.questStageManager;
 import scripts.kissa.LOST_SECTOR.campaign.loot.nskr_bountyLoot;
 import scripts.kissa.LOST_SECTOR.campaign.procgen.*;
 import scripts.kissa.LOST_SECTOR.campaign.quests.nskr_kestevenTipBarCreator;
+import scripts.kissa.LOST_SECTOR.campaign.util.campaignTimer;
+import scripts.kissa.LOST_SECTOR.campaign.util.customCampaignListener;
 import scripts.kissa.LOST_SECTOR.util.fleetUtil;
 import scripts.kissa.LOST_SECTOR.util.ids;
 import scripts.kissa.LOST_SECTOR.util.util;
@@ -91,6 +96,9 @@ public class nskr_modPlugin extends BaseModPlugin {
 
     public static final String STARFARER_MODE_FROM_START_KEY = "nskr_starfarerFromStart";
 
+    public static final String COMPLETED_STORY_KEY = "completedStory";
+    public static final String COMPLETED_STORY_HARD_KEY = "completedStoryHard";
+
     public static boolean IS_NEXELERIN = false;
     public static boolean IS_INDEVO = false;
     public static boolean IS_CC = false;
@@ -100,7 +108,6 @@ public class nskr_modPlugin extends BaseModPlugin {
     public static boolean IS_EXOTICA = false;
     public static final String EMGL = "nskr_emglShot_sub";
     public static final String TREMOR = "nskr_tremor1";
-    private boolean init = false;
 
     //save compat check stuff
     public static final String SAVE_KEY = "nskr_enabled";
@@ -150,6 +157,9 @@ public class nskr_modPlugin extends BaseModPlugin {
                 }
             } catch (UnsupportedOperationException ex){ }
         }
+
+        //CONFIG
+        createDefaultConfig();
     }
 
     @Override
@@ -183,10 +193,13 @@ public class nskr_modPlugin extends BaseModPlugin {
         }
     }
 
+    private boolean init = false;
     @Override
     public void onGameLoad(boolean newGame) {
-        //ADD EFS
+
         if (!init) {
+            //ADD EFS
+            //can't just add at applicationLoad because sector is null
             EFS_LIST.add(new nskr_hyperspaceEnigmaSpawner());
             EFS_LIST.add(new nskr_hintManager());
             EFS_LIST.add(new nskr_rorqSpawner());
@@ -208,9 +221,25 @@ public class nskr_modPlugin extends BaseModPlugin {
             EFS_LIST.add(new nskr_mothershipSpawner());
             EFS_LIST.add(new nskr_blacksiteManager());
             EFS_LIST.add(new nskr_enigmaAIConverter());
+            EFS_LIST.add(new gamemodeManager());
+            EFS_LIST.add(new thronesGiftManager());
+            EFS_LIST.add(new hellSpawnManager());
+            EFS_LIST.add(new customCampaignListener());
+            //EFS_LIST.add(new killBrainManager());
+
+            if (IS_NEXELERIN){
+                EFS_LIST.add(new hellSpawnNexListener());
+            }
 
             init = true;
-            log("LOADED efs scripts");
+        }
+
+        //DISPOSABLE FLEET MANAGERS
+        if (!Global.getSector().hasScript(hellSpawnDisposableFleetSpawner.class)) {
+            Global.getSector().addScript(new hellSpawnDisposableFleetSpawner());
+        }
+        if (!Global.getSector().hasScript(thronesGiftDisposableFleetSpawner.class)) {
+            Global.getSector().addScript(new thronesGiftDisposableFleetSpawner());
         }
 
         nskr_kestevenMirror.borrowIndieBlueprints();
@@ -222,6 +251,7 @@ public class nskr_modPlugin extends BaseModPlugin {
         for (BaseCampaignEventListener script : EFS_LIST){
             Global.getSector().addTransientScript((EveryFrameScript) script);
             Global.getSector().addTransientListener(script);
+            Global.getSector().getListenerManager().addListener(script, true);
         }
 
         nskr_saved.loadPersistentData();
@@ -310,6 +340,23 @@ public class nskr_modPlugin extends BaseModPlugin {
         return false;
     }
 
+    //Thanks to HzDev for just making this for me
+    public static boolean getIndEvoBoolean(String... ids){
+
+        for (String id: ids) {
+            try {
+                if (IS_LUNALIB){
+                    return LunaSettings.getBoolean("IndEvo", id);
+                } else {
+                    return Global.getSettings().getBoolean(id);
+                }
+            } catch (RuntimeException ex) {
+                log("ERROR - wrong Ind.Evo version");
+            }
+        }
+        return false;
+    }
+
     private static JSONObject loadSettings(){
         try {
             return Global.getSettings().loadJSON(SETTINGS_FILE);
@@ -334,15 +381,84 @@ public class nskr_modPlugin extends BaseModPlugin {
         }
     }
 
+    public static void createDefaultConfig(){
+
+        JSONUtils.CommonDataJSONObject config = null;
+        try {
+            config = JSONUtils.loadCommonJSON("LOST_SECTOR_cfg.json", "data/config/LOST_SECTOR_cfg.default");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        } catch (JSONException e) {
+            throw new RuntimeException(e);
+        }
+
+        try {
+            config.save();
+        } catch (JSONException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
+    public static void saveToConfig(String id, Object data){
+
+        JSONUtils.CommonDataJSONObject config = null;
+        try {
+            config = JSONUtils.loadCommonJSON("LOST_SECTOR_cfg.json", "data/config/LOST_SECTOR_cfg.default");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        } catch (JSONException e) {
+            throw new RuntimeException(e);
+        }
+
+        try {
+            config.put(id, data);
+        } catch (JSONException e) {
+            throw new RuntimeException(e);
+        }
+
+        try {
+            config.save();
+        } catch (JSONException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
+    public static Object loadFromConfig(String id){
+
+        JSONUtils.CommonDataJSONObject config = null;
+        try {
+            config = JSONUtils.loadCommonJSON("LOST_SECTOR_cfg.json", "data/config/LOST_SECTOR_cfg.default");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        } catch (JSONException e) {
+            throw new RuntimeException(e);
+        }
+
+        try {
+            return config.get(id);
+        } catch (JSONException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     @Override
     public void beforeGameSave() {
 
         nskr_saved.updatePersistentData();
+        campaignTimer.save();
 
         for (BaseCampaignEventListener script : EFS_LIST){
             Global.getSector().removeTransientScript((EveryFrameScript) script);
             Global.getSector().removeListener(script);
             Global.getSector().removeScriptsOfClass(script.getClass());
+            Global.getSector().getListenerManager().removeListenerOfClass(script.getClass());
+            Global.getSector().getListenerManager().removeListener(script);
         }
 
     }
@@ -353,6 +469,7 @@ public class nskr_modPlugin extends BaseModPlugin {
         for (BaseCampaignEventListener script : EFS_LIST){
             Global.getSector().addTransientScript((EveryFrameScript) script);
             Global.getSector().addTransientListener(script);
+            Global.getSector().getListenerManager().addListener(script, true);
         }
 
         nskr_saved.loadPersistentData();
@@ -382,8 +499,8 @@ public class nskr_modPlugin extends BaseModPlugin {
         ProcgenUsedNames.notifyUsed("Algor");
         ProcgenUsedNames.notifyUsed("Frozen Heart");
 
-        ProcgenUsedNames.notifyUsed("Void");
-        ProcgenUsedNames.notifyUsed("Null");
+        ProcgenUsedNames.notifyUsed("Helios");
+        ProcgenUsedNames.notifyUsed("Polaris");
 
         if (!IS_NEXELERIN || SectorManager.getManager().isCorvusMode()) {
             nskr_arcadia.generate(Global.getSector());
@@ -450,44 +567,45 @@ public class nskr_modPlugin extends BaseModPlugin {
         }
         //indevo
         if (IS_INDEVO) {
+
             MarketAPI asteria = Global.getSector().getEconomy().getMarket("nskr_asteria");
             SectorEntityToken outpost = util.getOutpost();
-            try {
-                if (asteria != null && Global.getSettings().getBoolean("IndEvo_Enable_minefields"))
-                    asteria.addCondition("IndEvo_mineFieldCondition");
-                if (asteria != null && Global.getSettings().getBoolean("IndEvo_dryDock"))
-                    asteria.addIndustry("IndEvo_dryDock");
-                if (outpost != null && Global.getSettings().getBoolean("IndEvo_PrivatePort"))
-                    outpost.getMarket().addIndustry("IndEvo_PrivatePort");
-            }  catch (RuntimeException ex) {
-                log("ERROR - wrong Ind.Evo version");
-            }
 
-            PlanetAPI siberia = null;
-            for (PlanetAPI p : Global.getSector().getStarSystem(nskr_frost.getName()).getPlanets()){
-                if (p.getId().equals("nskr_siberia")){
-                    siberia = p;
-                    break;
+            if (asteria != null && getIndEvoBoolean("IndEvo_Enable_minefields"))
+                asteria.addCondition("IndEvo_mineFieldCondition");
+            if (asteria != null && getIndEvoBoolean("IndEvo_dryDock"))
+                asteria.addIndustry("IndEvo_dryDock");
+            if (outpost != null && getIndEvoBoolean("IndEvo_PrivatePort"))
+                outpost.getMarket().addIndustry("IndEvo_PrivatePort");
+
+            if (outpost != null && getIndEvoBoolean("IndEvo_Enable_Artillery")) {
+                PlanetAPI siberia = null;
+                for (PlanetAPI p : Global.getSector().getStarSystem(nskr_frost.getName()).getPlanets()) {
+                    if (p.getId().equals("nskr_siberia")) {
+                        siberia = p;
+                        break;
+                    }
                 }
-            }
-            //add railgun surprise
-            if (siberia!=null){
-                ArtilleryStationScript script = new ArtilleryStationScript(siberia.getMarket());
-                script.setDestroyed(false);
-                siberia.getMarket().getMemoryWithoutUpdate().set(ArtilleryStationScript.TYPE_KEY, "railgun");
-                siberia.addScript(script);
-                siberia.getMemoryWithoutUpdate().set(ArtilleryStationScript.SCRIPT_KEY, script);
-                siberia.getMarket().addTag(Ids.TAG_ARTILLERY_STATION);
-                siberia.getContainingLocation().addTag(Ids.TAG_SYSTEM_HAS_ARTILLERY);
+                //add railgun surprise
+                if (siberia != null) {
+                    ArtilleryStationScript script = new ArtilleryStationScript(siberia.getMarket());
+                    script.setDestroyed(false);
+                    siberia.getMarket().getMemoryWithoutUpdate().set(ArtilleryStationScript.TYPE_KEY, "railgun");
+                    siberia.addScript(script);
+                    siberia.getMemoryWithoutUpdate().set(ArtilleryStationScript.SCRIPT_KEY, script);
+                    siberia.getMarket().addTag(Ids.TAG_ARTILLERY_STATION);
+                    siberia.getContainingLocation().addTag(Ids.TAG_SYSTEM_HAS_ARTILLERY);
 
-                siberia.getMarket().addCondition(ArtilleryStationCondition.ID);
+                    siberia.getMarket().addCondition(ArtilleryStationCondition.ID);
 
-                StarSystemAPI system = siberia.getStarSystem();
-                if (system.getEntitiesWithTag(Ids.TAG_WATCHTOWER).isEmpty()) {
-                    ArtilleryStationPlacer.placeWatchtowers(system, ids.ENIGMA_FACTION_ID);
+                    StarSystemAPI system = siberia.getStarSystem();
+                    if (system.getEntitiesWithTag(Ids.TAG_WATCHTOWER).isEmpty()) {
+                        ArtilleryStationPlacer.placeWatchtowers(system, ids.ENIGMA_FACTION_ID);
+                    }
                 }
             }
         }
+
         //ppl
         nskr_gen.genPeople();
         //add ruins to frost planets, has to be done after sectorGen

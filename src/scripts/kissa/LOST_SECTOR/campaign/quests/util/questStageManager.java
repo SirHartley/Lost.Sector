@@ -16,6 +16,7 @@ import com.fs.starfarer.api.impl.campaign.terrain.DebrisFieldTerrainPlugin;
 import com.fs.starfarer.api.impl.campaign.world.MoteParticleScript;
 import com.fs.starfarer.api.util.Misc;
 import com.fs.starfarer.api.util.Pair;
+import exerelin.campaign.DiplomacyManager;
 import org.lazywizard.lazylib.MathUtils;
 import org.lazywizard.lazylib.VectorUtils;
 import org.lwjgl.util.vector.Vector2f;
@@ -321,7 +322,7 @@ public class questStageManager extends BaseCampaignEventListener implements Ever
         //    questUtil.setDisksRecovered(5);
         //}
 
-       //int targetStage = 6;
+       //int targetStage = 19;
        //int s = stage;
        //frameWait2++;
        //if (frameWait2>50) {
@@ -445,9 +446,9 @@ public class questStageManager extends BaseCampaignEventListener implements Ever
                 intelStage5.val = true;
                 log("Qmanager added INTEL for " + "The Delve");
                 //BAR EVENTS
-                PortsideBarData.getInstance().addEvent(new nskr_kQuest5ElizaBarMain());
-                PortsideBarData.getInstance().addEvent(new nskr_kQuest5ElizaBarSecond());
-                PortsideBarData.getInstance().addEvent(new nskr_kQuest5ElizaBarFinal());
+                if (stage==16) PortsideBarData.getInstance().addEvent(new nskr_kQuest5ElizaBarMain());
+                if (stage==16) PortsideBarData.getInstance().addEvent(new nskr_kQuest5ElizaBarSecond());
+                if (stage==16) PortsideBarData.getInstance().addEvent(new nskr_kQuest5ElizaBarFinal());
             }
         }
         if (stage==16) {
@@ -656,7 +657,7 @@ public class questStageManager extends BaseCampaignEventListener implements Ever
         questUtil.setCompleted(true, ELIZA_RETURNED_KEY);
     }
 
-    private void spawnJob4Wrecks(Random random) {
+    public static void spawnJob4Wrecks(Random random) {
         SectorEntityToken loc = questUtil.getJob4EnemyTarget();
         StarSystemAPI system = loc.getStarSystem();
 
@@ -1407,13 +1408,29 @@ public class questStageManager extends BaseCampaignEventListener implements Ever
         //relations capper for Eliza ending
         if (questUtil.getCompleted(nskr_EndingElizaDialog.DIALOG_FINISHED_KEY)){
             if (faction.equals(ids.KESTEVEN_FACTION_ID)){
-                if (Global.getSector().getPlayerFaction().getRelationship(faction) > ELIZA_MAX_RELATION_KESTEVEN){
-                    Global.getSector().getPlayerFaction().setRelationship(faction, ELIZA_MAX_RELATION_KESTEVEN);
+                //add Nex rel cap
+                float max;
+                if (nskr_modPlugin.IS_NEXELERIN) {
+                    float maxRel = 1f - DiplomacyManager.getManager().getMaxRelationship(faction, Factions.PLAYER);
+                    max = Math.max(ELIZA_MAX_RELATION_KESTEVEN - maxRel, -1f);
+                } else {
+                    max = ELIZA_MAX_RELATION_KESTEVEN;
+                }
+                if (Global.getSector().getPlayerFaction().getRelationship(faction) > max){
+                    Global.getSector().getPlayerFaction().setRelationship(faction, max);
                 }
             }
             if (faction.equals(Factions.HEGEMONY) || faction.equals("ironshell")){
-                if (Global.getSector().getPlayerFaction().getRelationship(faction) > ELIZA_MAX_RELATION_HEGEMONY){
-                    Global.getSector().getPlayerFaction().setRelationship(faction, ELIZA_MAX_RELATION_HEGEMONY);
+                //add Nex rel cap
+                float max;
+                if (nskr_modPlugin.IS_NEXELERIN) {
+                    float maxRel = 1f - DiplomacyManager.getManager().getMaxRelationship(faction, Factions.PLAYER);
+                    max = Math.max(ELIZA_MAX_RELATION_HEGEMONY - maxRel, -1f);
+                } else {
+                    max = ELIZA_MAX_RELATION_HEGEMONY;
+                }
+                if (Global.getSector().getPlayerFaction().getRelationship(faction) > max){
+                    Global.getSector().getPlayerFaction().setRelationship(faction, max);
                 }
             }
         }

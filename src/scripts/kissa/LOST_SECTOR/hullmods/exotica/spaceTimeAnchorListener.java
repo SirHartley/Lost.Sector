@@ -64,11 +64,23 @@ public class spaceTimeAnchorListener implements DamageTakenModifier, Advanceable
     public String modifyDamageTaken(Object param, CombatEntityAPI target, DamageAPI damage, Vector2f point, boolean shieldHit) {
         if (!shieldHit) {
             float dmg = damage.getDamage();
-            if (dmg > spaceTimeAnchor.DAMAGE_THRESHOLD){
-                float reduction = spaceTimeAnchor.REDUCTION_PER_LEVEL*level;
-                float amount = Math.max(dmg - reduction, spaceTimeAnchor.DAMAGE_THRESHOLD);
+            if (!damage.isDps()) {
+                if (dmg > spaceTimeAnchor.DAMAGE_THRESHOLD) {
+                    float reduction = spaceTimeAnchor.REDUCTION_PER_LEVEL * level;
+                    float amount = Math.max(dmg - reduction, spaceTimeAnchor.DAMAGE_THRESHOLD);
 
-                damage.setDamage(amount);
+                    damage.setDamage(amount);
+                }
+            }
+            //beam dmg is 10 times per second
+            else {
+                dmg /= 10f;
+                if (dmg > spaceTimeAnchor.DAMAGE_THRESHOLD) {
+                    float reduction = spaceTimeAnchor.REDUCTION_PER_LEVEL * level;
+                    float amount = Math.max(dmg - reduction, spaceTimeAnchor.DAMAGE_THRESHOLD);
+
+                    damage.setDamage(amount);
+                }
             }
 
         }

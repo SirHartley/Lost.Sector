@@ -1,7 +1,7 @@
 {
     "displayName": "Black Ops",
     "fluxCapacitors": 0,
-    "fluxVents": 7,
+    "fluxVents": 8,
     "hullId": "nskr_epochx",
     "hullMods": [
         "targetingunit",

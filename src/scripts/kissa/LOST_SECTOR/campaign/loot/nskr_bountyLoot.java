@@ -13,12 +13,16 @@ import scripts.kissa.LOST_SECTOR.campaign.fleets.bounties.nskr_abyssSpawner;
 import scripts.kissa.LOST_SECTOR.campaign.fleets.bounties.nskr_eternitySpawner;
 import scripts.kissa.LOST_SECTOR.campaign.fleets.bounties.nskr_mothershipSpawner;
 import scripts.kissa.LOST_SECTOR.campaign.fleets.bounties.nskr_rorqSpawner;
-import scripts.kissa.LOST_SECTOR.campaign.quests.util.fleetInfo;
-import scripts.kissa.LOST_SECTOR.util.fleetUtil;
+import scripts.kissa.LOST_SECTOR.campaign.quests.util.questUtil;
 
 import java.util.Map;
 
 public class nskr_bountyLoot extends BaseCampaignEventListener implements EveryFrameScript {
+
+	public static final String DEFEATED_ABYSS_KEY = "$nskr_abyssDefeated";
+	public static final String DEFEATED_RORQ_KEY = "$nskr_rorqDefeated";
+	public static final String DEFEATED_UMBRA_KEY = "$nskr_umbraDefeated";
+	public static final String DEFEATED_HELIOS_KEY = "$nskr_heliosDefeated";
 
 	static void log(final String message) {
 		Global.getLogger(nskr_bountyLoot.class).info(message);
@@ -35,8 +39,9 @@ public class nskr_bountyLoot extends BaseCampaignEventListener implements EveryF
 
 		//mothership "bounty" loot
 		if (loser.getMemoryWithoutUpdate().contains(nskr_mothershipSpawner.LOOT_KEY)){
-			fleetInfo info = fleetUtil.getFleets(nskr_mothershipSpawner.FLEET_ARRAY_KEY).get(0);
 			if (loser.getFlagship()==null) {
+				//completed
+				questUtil.setCompleted(true, DEFEATED_HELIOS_KEY);
 
 				loot.addCommodity("alpha_core", 1);
 
@@ -51,8 +56,9 @@ public class nskr_bountyLoot extends BaseCampaignEventListener implements EveryF
 
 		//eternity "bounty" loot
 		if (loser.getMemoryWithoutUpdate().contains(nskr_eternitySpawner.LOOT_KEY)){
-			fleetInfo info = fleetUtil.getFleets(nskr_eternitySpawner.FLEET_ARRAY_KEY).get(0);
 			if (loser.getFlagship()==null) {
+				//completed
+				questUtil.setCompleted(true, DEFEATED_UMBRA_KEY);
 
 				loot.addCommodity("alpha_core", 2);
 				loot.addCommodity("nskr_electronics", 500);
@@ -66,6 +72,9 @@ public class nskr_bountyLoot extends BaseCampaignEventListener implements EveryF
 		//abyss "bounty" loot
 		if (loser.getMemoryWithoutUpdate().contains(nskr_abyssSpawner.LOOT_KEY)){
 			if (!nskr_abyssSpawner.hasBountyShips(loser)) {
+				//completed
+				questUtil.setCompleted(true, DEFEATED_ABYSS_KEY);
+
 				loot.addCommodity("alpha_core", 1);
 				//payout for not recovering
 				if (!nskr_abyssSpawner.hasBountyShips(Global.getSector().getPlayerFleet())) {
@@ -80,8 +89,11 @@ public class nskr_bountyLoot extends BaseCampaignEventListener implements EveryF
 
 		//rorq "bounty" loot
 		if (loser.getMemoryWithoutUpdate().contains(nskr_rorqSpawner.LOOT_KEY)){
-			fleetInfo info = fleetUtil.getFleets(nskr_rorqSpawner.FLEET_ARRAY_KEY).get(0);
 			if (loser.getFlagship()==null) {
+
+				//completed
+				questUtil.setCompleted(true, DEFEATED_RORQ_KEY);
+
 				float paid = nskr_rorqSpawner.BOUNTY_PAYOUT * plugin.computePlayerContribFraction();
 				setAmountPaid(paid, nskr_rorqSpawner.DEFEAT_ID_PAID);
 				Global.getSector().getPlayerFleet().getCargo().getCredits().add(paid);

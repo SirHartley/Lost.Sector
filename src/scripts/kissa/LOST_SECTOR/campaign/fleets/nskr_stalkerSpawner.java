@@ -16,6 +16,7 @@ import com.fs.starfarer.api.loading.WeaponSpecAPI;
 import com.fs.starfarer.api.util.WeightedRandomPicker;
 import org.lazywizard.lazylib.MathUtils;
 import org.lwjgl.util.vector.Vector2f;
+import scripts.kissa.LOST_SECTOR.campaign.customStart.gamemodeManager;
 import scripts.kissa.LOST_SECTOR.campaign.quests.util.fleetInfo;
 import scripts.kissa.LOST_SECTOR.campaign.quests.util.simpleFleet;
 import scripts.kissa.LOST_SECTOR.campaign.quests.nskr_glacierCommsDialog;
@@ -59,7 +60,7 @@ public class nskr_stalkerSpawner extends BaseCampaignEventListener implements Ev
     private final List<CampaignFleetAPI> removed = new ArrayList<>();
     private float threatMult = 0f;
     private boolean updated = false;
-    CampaignFleetAPI pf;
+    //CampaignFleetAPI pf;
     Random random;
 
     //Weights for the different types of locations we go to
@@ -104,8 +105,8 @@ public class nskr_stalkerSpawner extends BaseCampaignEventListener implements Ev
 
     @Override
     public void advance(float amount) {
-        this.pf = Global.getSector().getPlayerFleet();
-        if (this.pf == null) return;
+        CampaignFleetAPI pf = Global.getSector().getPlayerFleet();
+        if (pf == null) return;
         StarSystemAPI target;
         if (locations.val.size() != 0) {
             target = locations.val.get(0);
@@ -130,16 +131,18 @@ public class nskr_stalkerSpawner extends BaseCampaignEventListener implements Ev
         }
         //log("threat "+threatMult);
 
+        if (gamemodeManager.getMode() == gamemodeManager.gameMode.HELLSPAWN) return;
+
         if (counter.val>10f) {
             //update threat mult
             threatMult = getEnigmaThreatScaling(true);
 
             //target
             //no black holes cause AI real dumb with them
-            boolean bh = (this.pf.getStarSystem() != null && !this.pf.isInHyperspace() && this.pf.getStarSystem().getStar() != null && this.pf.getStarSystem().getStar().getTypeId().equals("black_hole"));
-            if (this.pf.getStarSystem() != null && !this.pf.isInHyperspace() && !this.pf.getStarSystem().hasTag(Tags.SYSTEM_CUT_OFF_FROM_HYPER) && !this.pf.getStarSystem().hasTag(Tags.THEME_HIDDEN) && !bh){
+            boolean bh = (pf.getStarSystem() != null && !pf.isInHyperspace() && pf.getStarSystem().getStar() != null && pf.getStarSystem().getStar().getTypeId().equals("black_hole"));
+            if (pf.getStarSystem() != null && !pf.isInHyperspace() && !pf.getStarSystem().hasTag(Tags.SYSTEM_CUT_OFF_FROM_HYPER) && !pf.getStarSystem().hasTag(Tags.THEME_HIDDEN) && !bh){
                 locations.val.clear();
-                locations.val.add(0, this.pf.getStarSystem());
+                locations.val.add(0,pf.getStarSystem());
             }
             boolean updated = false;
             //go to
@@ -163,7 +166,7 @@ public class nskr_stalkerSpawner extends BaseCampaignEventListener implements Ev
                 }
 
                 Vector2f fp = fleet.getLocationInHyperspace();
-                Vector2f pp = this.pf.getLocationInHyperspace();
+                Vector2f pp = pf.getLocationInHyperspace();
                 float dist = MathUtils.getDistance(pp, fp);
 
                 if (despawn){

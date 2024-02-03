@@ -1,6 +1,6 @@
 {
     "displayName": "Hybrid",
-    "fluxCapacitors": 3,
+    "fluxCapacitors": 11,
     "fluxVents": 30,
     "goalVariant": true,
     "hullId": "nskr_devilcatcher",

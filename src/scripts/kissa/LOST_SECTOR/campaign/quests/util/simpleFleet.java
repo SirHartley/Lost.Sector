@@ -157,7 +157,7 @@ public class simpleFleet {
             fleet.addAssignment(assignment, goToLocationTarget, Float.MAX_VALUE, assignmentText);
         }
         //default
-        else {
+        else if (assignment!=null){
             fleet.addAssignment(assignment, loc, Float.MAX_VALUE, assignmentText);
         }
 

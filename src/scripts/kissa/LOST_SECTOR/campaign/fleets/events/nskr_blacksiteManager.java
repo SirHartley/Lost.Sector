@@ -49,7 +49,7 @@ public class nskr_blacksiteManager extends BaseCampaignEventListener implements 
     nskr_saved<Float> counter;
     private final List<CampaignFleetAPI> removedFleets = new ArrayList<>();
     private final List<blacksiteInfo> removedSites = new ArrayList<>();
-    CampaignFleetAPI pf;
+    //CampaignFleetAPI pf;
     Random random;
 
     static void log(final String message) {
@@ -67,8 +67,8 @@ public class nskr_blacksiteManager extends BaseCampaignEventListener implements 
 
     @Override
     public void advance(float amount) {
-        this.pf = Global.getSector().getPlayerFleet();
-        if (this.pf == null) return;
+        CampaignFleetAPI pf = Global.getSector().getPlayerFleet();
+        if (pf == null) return;
 
         if (Global.getSector().isInFastAdvance()) {
             counter.val += 2f*amount;
@@ -110,7 +110,7 @@ public class nskr_blacksiteManager extends BaseCampaignEventListener implements 
                     }
 
                     Vector2f fp = fleet.getLocationInHyperspace();
-                    Vector2f pp = this.pf.getLocationInHyperspace();
+                    Vector2f pp = pf.getLocationInHyperspace();
                     float dist = MathUtils.getDistance(pp, fp);
                     if (despawn) {
                         if (dist > Global.getSettings().getMaxSensorRangeHyper()) {

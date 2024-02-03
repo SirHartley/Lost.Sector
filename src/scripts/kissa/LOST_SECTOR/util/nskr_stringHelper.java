@@ -284,7 +284,7 @@ public class nskr_stringHelper {
                 if (oxfordComma || !includeAnd || num <= strings.size() - 1)
                     str += ", ";
                 if (includeAnd && num == strings.size() - 1)
-                    str += nskr_stringHelper.getString("and") + " ";
+                    str += "and" + " ";
             }
         }
         return str;
@@ -316,7 +316,7 @@ public class nskr_stringHelper {
     public static String getFactionShortName(FactionAPI faction)
     {
         if (faction.isPlayerFaction() && !Misc.isPlayerFactionSetUp()) {
-            return nskr_stringHelper.getString("player");
+            return "player";
         }
 
         String name = faction.getEntityNamePrefix();

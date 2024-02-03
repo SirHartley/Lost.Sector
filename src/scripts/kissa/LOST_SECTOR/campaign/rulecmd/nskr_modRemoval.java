@@ -22,7 +22,6 @@ import java.util.*;
 import java.util.List;
 
 import org.lwjgl.input.Keyboard;
-import scripts.kissa.LOST_SECTOR.campaign.quests.nskr_EndingElizaDialog;
 import scripts.kissa.LOST_SECTOR.campaign.quests.util.questStageManager;
 import scripts.kissa.LOST_SECTOR.campaign.quests.util.questUtil;
 import scripts.kissa.LOST_SECTOR.util.util;
@@ -30,11 +29,10 @@ import scripts.kissa.LOST_SECTOR.util.nskr_stringHelper;
 
 public class nskr_modRemoval extends PaginatedOptions {
 
-
-
     public static final String DIALOG_OPTION_PREFIX = "nskr_modRemoval_pick_";
     public static final String PERSISTENT_RANDOM_KEY = "nskr_modRemovalRandom";
-    public static final String SHIP_IN_MEMORY_KEY = "nskr_modRemovalRandom";
+
+    public static final String SHIP_IN_MEMORY_KEY = "nskr_modRemovalShipInMemory";
     private FleetMemberAPI targetShip;
 
     protected CampaignFleetAPI playerFleet;
@@ -168,8 +166,8 @@ public class nskr_modRemoval extends PaginatedOptions {
         final InteractionDialogAPI dialog = this.dialog;
 
         dialog.showFleetMemberPickerDialog("Pick from your fleet",
-                Misc.ucFirst(nskr_stringHelper.getString("confirm")),
-                Misc.ucFirst(nskr_stringHelper.getString("cancel")),
+                Misc.ucFirst("confirm"),
+                Misc.ucFirst("cancel"),
                 5, 6, 120,true,false, getShipsWithSmods(), new FleetMemberPickerListener() {
                     @Override
                     public void pickedFleetMembers(List<FleetMemberAPI> members) {
@@ -180,18 +178,19 @@ public class nskr_modRemoval extends PaginatedOptions {
                             dialog.getOptionPanel().addOption("Go back", "nskr_modRemovalReturn");
                             return;
                         }
-                        for (FleetMemberAPI f : members){
-                            setShipFromMemory(f);
-                            text.setFontSmallInsignia();
-                            text.addPara("Selected "+f.getShipName()+" "+f.getHullSpec().getHullName()+"-Class",g,h,f.getHullSpec().getHullName(),"");
-                            text.setFontInsignia();
+                        FleetMemberAPI f = members.get(0);
 
-                            String sMods = "S-Mods";
-                            if (f.getVariant().getSMods().size()==1) sMods = "S-Mod";
+                        setShipFromMemory(f);
+                        text.setFontSmallInsignia();
+                        text.addPara("Selected "+f.getShipName()+" "+f.getHullSpec().getHullName()+"-Class", g, h,f.getHullSpec().getHullName(),"");
+                        text.setFontInsignia();
 
-                            dialog.getOptionPanel().addOption("Select "+f.getHullSpec().getHullName()+"-Class has "+f.getVariant().getSMods().size()+" "+sMods,"nskr_modRemoval_pick_ship");
-                            dialog.getOptionPanel().addOption("Go back", "nskr_modRemovalReturn");
-                        }
+                        String sMods = "S-Mods";
+                        if (f.getVariant().getSMods().size()==1) sMods = "S-Mod";
+
+                        dialog.getOptionPanel().addOption("Select "+f.getHullSpec().getHullName()+"-Class has "+f.getVariant().getSMods().size()+" "+sMods,"nskr_modRemoval_pick_ship");
+                        dialog.getOptionPanel().addOption("Go back", "nskr_modRemovalReturn");
+
                     }
 
                     @Override
@@ -258,7 +257,10 @@ public class nskr_modRemoval extends PaginatedOptions {
         LinkedHashSet<String> sModsCopy = new LinkedHashSet<>(targetShip.getVariant().getSMods());
         for (String s : sModsCopy){
             HullModSpecAPI spec = Global.getSettings().getHullModSpec(s);
-            if (spec!=null && spec.getTags().contains("rat_alteration")) continue;
+            if (spec!=null && spec.getTags().contains("rat_alteration")){
+                count -= 1;
+                continue;
+            }
             targetShip.getVariant().removePermaMod(s);
         }
         text.addParagraph("The hull is offloaded at a dry-dock so the crew can begin work on it.");
@@ -294,6 +296,19 @@ public class nskr_modRemoval extends PaginatedOptions {
             if (f.isFighterWing())continue;
             if (f.getVariant()==null)continue;
             if (f.getVariant().getSMods().isEmpty())continue;
+            //alteration check
+            if (f.getVariant().getSMods().size()==1){
+                boolean alteration = false;
+                for (String smod : f.getVariant().getSMods()){
+                    HullModSpecAPI spec = Global.getSettings().getHullModSpec(smod);
+                    if (spec!=null && spec.getTags().contains("rat_alteration")){
+                        alteration = true;
+                        break;
+                    }
+                }
+                if (alteration) continue;
+            }
+            //valid
             validShips.add(f);
         }
 

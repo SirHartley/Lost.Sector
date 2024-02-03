@@ -33,7 +33,7 @@ public class nskr_enigmaBlowerUpper extends BaseCampaignEventListener implements
 
     nskr_saved<Boolean> firstTime;
     boolean doOnce = false;
-    CampaignFleetAPI pf;
+    //CampaignFleetAPI pf;
     private nskr_frostIntel intel = null;
     private float counter = 0f;
     public static final String HINT_KEY = "HINT_FROST";
@@ -85,8 +85,8 @@ public class nskr_enigmaBlowerUpper extends BaseCampaignEventListener implements
         //a slight delay just feels better than an EFS trigger
         if (counter>4f) {
             //INTEL LOGIC
-            this.pf = Global.getSector().getPlayerFleet();
-            if (this.pf == null) return;
+            CampaignFleetAPI pf = Global.getSector().getPlayerFleet();
+            if (pf == null) return;
             final nskr_saved<Boolean> firstTime = this.firstTime;
 
             boolean visibleToPlayer = pf.getContainingLocation() == Global.getSector().getStarSystem(nskr_frost.getName());
@@ -103,7 +103,6 @@ public class nskr_enigmaBlowerUpper extends BaseCampaignEventListener implements
                         "",
                         Global.getSettings().getColor("yellowTextColor"),
                         Global.getSettings().getColor("yellowTextColor"));
-                nskr_hintManager.setIntelReceived(true, HINT_KEY);
                 firstTime.val = false;
             }
             counter = 0f;

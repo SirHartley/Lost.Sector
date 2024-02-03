@@ -16,6 +16,7 @@ import org.lwjgl.util.vector.Vector2f;
 import scripts.kissa.LOST_SECTOR.campaign.nskr_exileManager;
 import scripts.kissa.LOST_SECTOR.campaign.quests.nskr_kQuest5ElizaBarMain;
 import scripts.kissa.LOST_SECTOR.campaign.rulecmd.nskr_kestevenQuest;
+import scripts.kissa.LOST_SECTOR.nskr_modPlugin;
 import scripts.kissa.LOST_SECTOR.util.mathUtil;
 import scripts.kissa.LOST_SECTOR.util.util;
 
@@ -326,7 +327,7 @@ public class questUtil {
         for (MarketAPI market : Misc.getFactionMarkets(faction)) {
             boolean isValid = true;
             StarSystemAPI system = market.getStarSystem();
-            //crash on hyperspace markets??
+            //crash on hyperspace markets
             if (system==null) continue;
             if (system.hasTag(Tags.THEME_HIDDEN) || system.hasTag(Tags.SYSTEM_CUT_OFF_FROM_HYPER) ||
                     system.getStar() == null || system.getPlanets().size()<1) {
@@ -522,6 +523,18 @@ public class questUtil {
     //        }
     //    }
     //}
+
+    public static void saveEnding(){
+
+        //default
+        nskr_modPlugin.saveToConfig(nskr_modPlugin.COMPLETED_STORY_KEY, true);
+        //hard
+        Map<String, Object> data = Global.getSector().getPersistentData();
+        if (data.containsKey(nskr_modPlugin.STARFARER_MODE_FROM_START_KEY)) {
+            if ((boolean) data.get(nskr_modPlugin.STARFARER_MODE_FROM_START_KEY)) nskr_modPlugin.saveToConfig(nskr_modPlugin.COMPLETED_STORY_HARD_KEY, true);
+        }
+
+    }
 
     public static int getStage() {
         String id = questStageManager.KESTEVEN_QUEST_KEY;
@@ -731,5 +744,30 @@ public class questUtil {
 
         Map<String, Object> data = Global.getSector().getPersistentData();
         data.put(id, stage);
+    }
+
+    public static SectorEntityToken getLocation(String id){
+        return getLocation(id, null);
+    }
+    public static SectorEntityToken getLocation(String id, SectorEntityToken defaultLoc){
+
+        Map<String, Object> data = Global.getSector().getPersistentData();
+        if (!data.containsKey(id)) data.put(id, defaultLoc);
+
+        return (SectorEntityToken) data.get(id);
+    }
+    public static SectorEntityToken setLocation(SectorEntityToken loc, String id){
+        Map<String, Object> data = Global.getSector().getPersistentData();
+        data.put(id, loc);
+
+        return (SectorEntityToken) data.get(id);
+    }
+    public static Random getRandom(String id) {
+        Map<String, Object> data = Global.getSector().getPersistentData();
+        if (!data.containsKey(id)) {
+
+            data.put(id,  new Random(new Random().nextLong()));
+        }
+        return (Random) data.get(id);
     }
 }

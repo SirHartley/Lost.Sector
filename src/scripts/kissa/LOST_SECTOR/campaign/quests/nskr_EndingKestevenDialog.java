@@ -132,6 +132,7 @@ public class nskr_EndingKestevenDialog implements InteractionDialogPlugin {
 
             questUtil.setCompleted(true, DIALOG_FINISHED_KEY);
             questUtil.setStage(20);
+            questUtil.saveEnding();
 
             //rewards
             CargoAPI playerCargo = Global.getSector().getPlayerFleet().getCargo();

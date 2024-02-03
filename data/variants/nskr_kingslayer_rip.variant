@@ -1,7 +1,7 @@
 {
     "displayName": "Rip And Tear",
     "fluxCapacitors": 0,
-    "fluxVents": 40,
+    "fluxVents": 45,
     "goalVariant": true,
     "hullId": "nskr_kingslayer",
     "hullMods": [

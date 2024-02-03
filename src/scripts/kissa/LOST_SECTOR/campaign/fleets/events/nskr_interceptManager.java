@@ -57,7 +57,7 @@ public class nskr_interceptManager extends BaseCampaignEventListener implements 
     nskr_saved<Boolean> aroFleetSpawned;
     nskr_saved<Boolean> messengerFleetSpawned;
     nskr_saved<Boolean> autoHunterFleetSpawned;
-    CampaignFleetAPI pf;
+    //CampaignFleetAPI pf;
     public nskr_interceptManager() {
         super(false);
         //logic timer
@@ -71,6 +71,7 @@ public class nskr_interceptManager extends BaseCampaignEventListener implements 
         getRandom(PERSISTENT_RANDOM_KEY);
         getRandom(PERSISTENT_FLEET_RANDOM_KEY);
     }
+
     static void log(final String message) {
         Global.getLogger(nskr_interceptManager.class).info(message);
     }
@@ -84,7 +85,7 @@ public class nskr_interceptManager extends BaseCampaignEventListener implements 
     }
     @Override
     public void advance(float amount) {
-        this.pf = Global.getSector().getPlayerFleet();
+        CampaignFleetAPI pf = Global.getSector().getPlayerFleet();
         if (pf==null)return;
 
         if (Global.getSector().isInFastAdvance()) {
@@ -164,7 +165,7 @@ public class nskr_interceptManager extends BaseCampaignEventListener implements 
                     }
 
                     Vector2f fp = fleet.getLocationInHyperspace();
-                    Vector2f pp = this.pf.getLocationInHyperspace();
+                    Vector2f pp = pf.getLocationInHyperspace();
                     float dist = MathUtils.getDistance(pp, fp);
                     if (despawn) {
                         if (dist > Global.getSettings().getMaxSensorRangeHyper()) {
@@ -267,7 +268,7 @@ public class nskr_interceptManager extends BaseCampaignEventListener implements 
                     }
 
                     Vector2f fp = fleet.getLocationInHyperspace();
-                    Vector2f pp = this.pf.getLocationInHyperspace();
+                    Vector2f pp = pf.getLocationInHyperspace();
                     float dist = MathUtils.getDistance(pp, fp);
                     if (despawn) {
                         if (dist > Global.getSettings().getMaxSensorRangeHyper()) {
@@ -326,6 +327,7 @@ public class nskr_interceptManager extends BaseCampaignEventListener implements 
 
     public static final String ARO_FLEET_NAME = "ARO Strike Group";
     public void spawnAROfleet(Random random) {
+        CampaignFleetAPI pf = Global.getSector().getPlayerFleet();
 
         float combatPoints = mathUtil.getSeededRandomNumberInRange(110f, 130f, random);
         //power scaling
@@ -373,6 +375,7 @@ public class nskr_interceptManager extends BaseCampaignEventListener implements 
 
     public static final String MESSENGER_FLEET_NAME = "Merc Messenger";
     public void spawnMessengerFleet(Random random) {
+        CampaignFleetAPI pf = Global.getSector().getPlayerFleet();
 
         float combatPoints = mathUtil.getSeededRandomNumberInRange(50f, 70f, random);
         //power scaling
@@ -416,6 +419,7 @@ public class nskr_interceptManager extends BaseCampaignEventListener implements 
 
     public static final String AUTO_HUNTER_FLEET_NAME = "Hunter Fanatics";
     public void spawnAutoHunterFleet(Random random) {
+        CampaignFleetAPI pf = Global.getSector().getPlayerFleet();
 
         float combatPoints = mathUtil.getSeededRandomNumberInRange(70f, 80f, random);
         //power scaling

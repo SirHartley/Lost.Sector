@@ -32,7 +32,7 @@ public class nskr_volatile extends BaseHullMod {
     public static final float MAX_RANGE = 800f;
     public static final float RANGE_PENALTY = 0.5f;
     public static final float FIGHTER_RANGE_PENALTY = 0.25f;
-    public static final float SMOD_PENALTY = 25f;
+    public static final float SMOD_PENALTY = 33f;
     public static final  Color afterImageColor = new Color(100, 42, 201, 80);
     public static final  Color engineColor = new Color(100, 42, 201, 255);
 

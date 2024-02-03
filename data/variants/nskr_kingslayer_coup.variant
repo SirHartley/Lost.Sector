@@ -1,7 +1,7 @@
 {
     "displayName": "Coup De Grace",
-    "fluxCapacitors": 0,
-    "fluxVents": 48,
+    "fluxCapacitors": 3,
+    "fluxVents": 50,
     "goalVariant": true,
     "hullId": "nskr_kingslayer",
     "hullMods": [

@@ -367,7 +367,7 @@ public class nskr_kQuest3Bar extends BaseBarEvent {
 			text.addPara("One of the officers notices you \"I can see you're a captain, come join us.\" the officer shouts for you to join.");
 			text.addPara("You sit down with them, and listen as one of the officers tells an anecdote from his last set of patrol duty.");
 			text.addPara("\"... The whole engine section was just missing, with a big hole in his ship, This guy says he doesn't know what happened to it!\" " +
-					"He is struggling to contain his laughter at this point. \"With a straight fucking face, he says that to me! Now that's why I'm never working with those geniuses from the Skathi patrol core ever again.\" He bursts out laughing.");
+					"He is struggling to contain his laughter at this point. \"With a straight fucking face, he says that to me! Now that's why I'm never working with those geniuses from the Skathi patrol squadron ever again.\" He bursts out laughing.");
 
 			options.addOption("Continue",OptionId.E2);
 		}

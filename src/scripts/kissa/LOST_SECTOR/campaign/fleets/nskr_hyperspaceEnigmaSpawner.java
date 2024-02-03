@@ -12,6 +12,7 @@ import com.fs.starfarer.api.util.WeightedRandomPicker;
 import org.jetbrains.annotations.NotNull;
 import org.lazywizard.lazylib.MathUtils;
 import org.lwjgl.util.vector.Vector2f;
+import scripts.kissa.LOST_SECTOR.campaign.customStart.gamemodeManager;
 import scripts.kissa.LOST_SECTOR.campaign.quests.util.fleetInfo;
 import scripts.kissa.LOST_SECTOR.campaign.quests.util.simpleFleet;
 import scripts.kissa.LOST_SECTOR.campaign.quests.util.simpleSystem;
@@ -75,7 +76,7 @@ public class nskr_hyperspaceEnigmaSpawner extends BaseCampaignEventListener impl
     public static final String PERSISTENT_RANDOM_KEY = "nskr_hyperspaceEnigmaSpawnerRandom";
     public static final String PERSISTENT_FLEET_RANDOM_KEY = "nskr_hyperspaceEnigmaSpawnerFleetRandom";
     private final List<CampaignFleetAPI> removed = new ArrayList<>();
-    CampaignFleetAPI pf;
+    //CampaignFleetAPI pf;
     nskr_saved<Float> counter;
     nskr_saved<Float> fleetCounter;
 
@@ -95,7 +96,7 @@ public class nskr_hyperspaceEnigmaSpawner extends BaseCampaignEventListener impl
 
     @Override
     public void advance(float amount) {
-        pf = Global.getSector().getPlayerFleet();
+        CampaignFleetAPI pf = Global.getSector().getPlayerFleet();
         if (pf == null) {
             return;
         }
@@ -107,6 +108,8 @@ public class nskr_hyperspaceEnigmaSpawner extends BaseCampaignEventListener impl
             counter.val += amount;
             fleetCounter.val += amount;
         }
+
+        if (gamemodeManager.getMode() == gamemodeManager.gameMode.HELLSPAWN) return;
 
         //logic
         if (counter.val > 10f) {
@@ -241,6 +244,7 @@ public class nskr_hyperspaceEnigmaSpawner extends BaseCampaignEventListener impl
     }
 
     void spawnEnigmaFleets(Vector2f loc, float power, taskType task) {
+        CampaignFleetAPI pf = Global.getSector().getPlayerFleet();
 
         Random random = getRandom(PERSISTENT_FLEET_RANDOM_KEY);
 
@@ -414,6 +418,8 @@ public class nskr_hyperspaceEnigmaSpawner extends BaseCampaignEventListener impl
     }
 
     private SectorEntityToken getGoToTarget(Random random) {
+        CampaignFleetAPI pf = Global.getSector().getPlayerFleet();
+
         simpleSystem simpleSystem = new simpleSystem(random, 2);
         simpleSystem.pickOnlyInProcgen = true;
 

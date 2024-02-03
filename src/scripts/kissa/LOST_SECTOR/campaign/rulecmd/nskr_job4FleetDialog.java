@@ -180,7 +180,7 @@ public class nskr_job4FleetDialog extends PaginatedOptions {
 			}
 		}
 		text.setFontInsignia();
-		addOptionAllPages(nskr_stringHelper.getString("leave", true), "nskr_job4FleetDialogExit");
+		addOptionAllPages("Leave", "nskr_job4FleetDialogExit");
 	}
 
 	protected void confirmHelp() {

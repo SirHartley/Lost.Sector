@@ -1,6 +1,6 @@
 {
     "displayName": "Support",
-    "fluxCapacitors": 0,
+    "fluxCapacitors": 6,
     "fluxVents": 30,
     "goalVariant": true,
     "hullId": "nskr_stalwart",
