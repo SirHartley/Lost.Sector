@@ -226,7 +226,7 @@ public class nskr_cache {
         gate_main1.setId("nskr_gate_main_debrisBelt");
 
         //11111 stuff
-        SectorEntityToken cache1 = BaseThemeGenerator.addSalvageEntity(system, Entities.WEAPONS_CACHE_HIGH, Factions.NEUTRAL);
+        SectorEntityToken cache1 = BaseThemeGenerator.addSalvageEntity(system, Entities.ALPHA_SITE_WEAPONS_CACHE, Factions.NEUTRAL);
         cache1.getLocation().set(-11111*(1f+(0.03f*(float)Math.random())), -11111*(1f+(0.03f*(float)Math.random())));
         SectorEntityToken cache2 = BaseThemeGenerator.addSalvageEntity(system, Entities.WEAPONS_CACHE_REMNANT, Factions.NEUTRAL);
         cache2.getLocation().set(-11111*(1f+(0.03f*(float)Math.random())), -11111*(1f+(0.03f*(float)Math.random())));
@@ -355,6 +355,13 @@ public class nskr_cache {
         simpleFleet.interceptPlayer = true;
         simpleFleet.assignmentText = "error #406, try again?";
         CampaignFleetAPI fleet = simpleFleet.create();
+
+        //drone tags
+        for (FleetMemberAPI m : fleet.getMembersWithFightersCopy()){
+            if (m.isFighterWing() && util.isProtTech(m)){
+                m.getVariant().addTag(Tags.SHIP_LIMITED_TOOLTIP);
+            }
+        }
 
         //custom key
         fleet.getMemoryWithoutUpdate().set(MemFlags.FLEET_INTERACTION_DIALOG_CONFIG_OVERRIDE_GEN, new CacheGuardFIDConfig());

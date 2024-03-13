@@ -282,7 +282,13 @@ public class nskr_blacksiteManager extends BaseCampaignEventListener implements 
             log("ERROR null entity");
             return;
         }
-        //entity.setDiscoverable(false);
+        //insta discover anywhere
+        //one of these did it
+        entity.setSensorProfile(Float.MAX_VALUE);
+        entity.setExtendedDetectedAtRange(Float.MAX_VALUE);
+        entity.setDetectionRangeDetailsOverrideMult(Float.MAX_VALUE);
+        entity.setDiscoveryXP(0f);
+        entity.setDiscoverable(false);
     }
 
     public static void activate(blacksiteInfo site) {
@@ -344,6 +350,12 @@ public class nskr_blacksiteManager extends BaseCampaignEventListener implements 
             keys.add(MemFlags.MEMORY_KEY_MAKE_HOSTILE);
             keys.add(MemFlags.MEMORY_KEY_MAKE_HOLD_VS_STRONGER);
             keys.add(MemFlags.MEMORY_KEY_MAKE_PREVENT_DISENGAGE);
+            //memflag nonsense
+            keys.add(MemFlags.MEMORY_KEY_AVOID_PLAYER_SLOWLY);
+            keys.add(MemFlags.MEMORY_KEY_MAKE_NON_AGGRESSIVE);
+            keys.add(MemFlags.MEMORY_KEY_PATROL_ALLOW_TOFF);
+            keys.add(MemFlags.MEMORY_KEY_FLEET_DO_NOT_GET_SIDETRACKED);
+            //key
             keys.add(DEFENDER_KEY);
 
             simpleFleet simpleFleet = new simpleFleet(from, faction, combatPoints, keys, random);

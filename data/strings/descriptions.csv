@@ -34,7 +34,7 @@ nskr_pursuer,SHIP,"The Pursuer is an experimental weapons drone with the latest 
 
 nskr_rorqual,SHIP,"The Rorqual-class was the pinnacle of Rogue Co. engineering, pushing the limits of what was thought to be possible. With unique over-charger engine systems and the trademark flux anomaly discharger tech. These vessels were known to be absolute beasts in combat with such well rounded stats that there is almost no weakness. The Rogue Company was a group of the best engineers, privateers and smugglers pushing the boundaries of ship performance and engineering with every ship custom built and hand tuned for maximum performance. Since the collapse almost all of their tech has been lost to time, so only a handful of ships survive to this day.",,,,
 
-nskr_reverie_boss,SHIP,"The flagship of a rogue AI-core that somehow got its hands on a custom Reverie with systems pushed far beyond what is reasonable. With its unique ""Void"" power core pulling impossible levels of power power tearing reality itself apart. This ship will make a swift end to those who dare to oppose it.",Unidentified Vessel,"UNKNOWN ENTRY
+nskr_reverie_boss,SHIP,"The flagship of a rogue AI-core that somehow got its hands on a custom Reverie with systems pushed far beyond what is reasonable. With its unique ""Void"" power core pulling impossible levels of power tearing reality itself apart. This ship will make a swift end to those who dare to oppose it.",Unidentified Vessel,"UNKNOWN ENTRY
 
 Please register your Tri-Tachyon datapad to receive the latest news and updates.",,
 
@@ -106,7 +106,9 @@ nskr_eternity,SHIP,"A seemingly alien design not built to any known spec. This "
 
 Please register your Tri-Tachyon datapad to receive the latest news and updates.",,
 
-nskr_huginn,SHIP,"A special heavy duty attack drone. Has a unique blaster with some serious firepower.",,,,
+nskr_huginn,SHIP,"A special heavy duty attack drone. Has a unique blaster with some serious firepower.",Unidentified Vessel,"UNKNOWN ENTRY
+
+Please register your Tri-Tachyon datapad to receive the latest news and updates.",,
 
 nskr_minokawa_e,SHIP,"[DATABASE ERROR:451]OOOOOOoooooooooooooooo E ee 					If the problem persists please contact your local TriPad(tm) repair & maintenance service ... ... ... 
 

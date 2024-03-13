@@ -22,8 +22,8 @@ public class thronesGiftBackground extends BaseCharacterBackground {
 
     @Override
     public boolean shouldShowInSelection(FactionSpecAPI factionSpec, NexFactionConfig factionConfig) {
-        //if (factionSpec.getId().equals(Factions.LUDDIC_PATH) || factionSpec.getId().equals(Factions.LUDDIC_CHURCH)) return false;
-        return false;
+        if (factionSpec.getId().equals(Factions.LUDDIC_PATH) || factionSpec.getId().equals(Factions.LUDDIC_CHURCH)) return false;
+        return true;
     }
 
     @Override

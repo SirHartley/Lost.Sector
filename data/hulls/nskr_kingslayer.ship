@@ -12,7 +12,8 @@
   "shieldRadius": 231,
   "viewOffset": 0,
   "builtInMods": [
-    "hbi"
+    "hbi",
+	"augmentedengines"
   ],
   "weaponSlots": [
     {

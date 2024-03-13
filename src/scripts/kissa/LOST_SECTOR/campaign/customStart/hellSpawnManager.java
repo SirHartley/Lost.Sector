@@ -342,6 +342,8 @@ public class hellSpawnManager extends BaseCampaignEventListener implements Every
     @Override
     public void reportPlayerReputationChange(String faction, float delta) {
 
+        if (gamemodeManager.getMode() != gamemodeManager.gameMode.HELLSPAWN) return;
+
         if (faction.equals(ids.ENIGMA_FACTION_ID) || faction.equals(Factions.PLAYER)) return;
 
         setRelation(faction);

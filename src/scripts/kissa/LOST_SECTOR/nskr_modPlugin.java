@@ -298,11 +298,6 @@ public class nskr_modPlugin extends BaseModPlugin {
         //HACKS
         fleetUtil.hackBrokenVariants();
 
-        //CRASH CODE
-        //TODO add it
-        //if (Global.getSettings().getModManager().isModEnabled("your_favorite_mod")){
-        //throw new IllegalStateException("Cringe detected");
-        //}
     }
 
     //I HATE JSONS SO MUCH

@@ -64,6 +64,8 @@ public class thronesGiftManager extends BaseCampaignEventListener implements Eve
     @Override
     public void reportPlayerReputationChange(String faction, float delta) {
 
+        if (gamemodeManager.getMode() != gamemodeManager.gameMode.THRONESGIFT) return;
+
         if (faction.equals(Factions.LUDDIC_PATH)) {
             if (Global.getSector().getPlayerFaction().getRelationship(faction) > -0.80f) {
                 Global.getSector().getPlayerFaction().setRelationship(faction, -0.80f);

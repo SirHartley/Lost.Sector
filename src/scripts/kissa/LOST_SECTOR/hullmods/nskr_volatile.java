@@ -64,9 +64,9 @@ public class nskr_volatile extends BaseHullMod {
     @Override
     public void applyEffectsAfterShipCreation(ShipAPI ship, String id) {
 
-        int capCount = ship.getVariant().getNumFluxCapacitors();
-        ship.getMutableStats().getFluxCapacity().modifyPercent(id, FLUX_BONUS);
-        ship.getMutableStats().getFluxCapacity().modifyFlat(id, capCount*(200f*(FLUX_BONUS/100f)));
+        //int capCount = ship.getVariant().getNumFluxCapacitors();
+        //ship.getMutableStats().getFluxCapacity().modifyPercent(id, FLUX_BONUS);
+        //ship.getMutableStats().getFluxCapacity().modifyFlat(id, capCount*(200f*(FLUX_BONUS/100f)));
 
         for (String tmp : BLOCKED_HULLMODS) {
             if (ship.getVariant().getHullMods().contains(tmp)) {
@@ -79,18 +79,24 @@ public class nskr_volatile extends BaseHullMod {
             }
         }
         //smod
-        boolean sMod = isSMod(ship.getMutableStats());
-        if (sMod) ship.getMutableStats().getEmpDamageTakenMult().modifyPercent(id, SMOD_PENALTY);
+        //boolean sMod = isSMod(ship.getMutableStats());
+        //if (sMod) ship.getMutableStats().getEmpDamageTakenMult().modifyPercent(id, SMOD_PENALTY);
     }
 
     @Override
     public void applyEffectsBeforeShipCreation(ShipAPI.HullSize hullSize, MutableShipStatsAPI stats, String id) {
+        int capCount = stats.getVariant().getNumFluxCapacitors();
+        stats.getFluxCapacity().modifyPercent(id, FLUX_BONUS);
+        stats.getFluxCapacity().modifyFlat(id, capCount*(200f*(FLUX_BONUS/100f)));
 
         stats.getWeaponRangeThreshold().modifyFlat(id, MAX_RANGE);
         stats.getWeaponRangeMultPastThreshold().modifyMult(id, RANGE_PENALTY);
 
         stats.getFighterWingRange().modifyMult(id, FIGHTER_RANGE_PENALTY);
 
+        //smod
+        boolean sMod = isSMod(stats);
+        if (sMod) stats.getEmpDamageTakenMult().modifyPercent(id, SMOD_PENALTY);
     }
 
     @Override

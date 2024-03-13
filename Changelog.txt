@@ -1,3 +1,18 @@
+Version 0.6.2a
+New Stuff:
+- Unique Nex background that can be unlocked by beating the Kesteven questline
+   - Throne's Gift
+
+Balance changes:
+- Sunburst DP reduced to 70->65
+- Kingslayer base burn reduced to 7->6, added built-in Augmented Drive Field
+
+Fixes:
+- fixed a rare but severe crash with the Unlimited Production Chip condition
+- fixed being unable to gain any relation with LP
+- Kesteven actually know large ballistics now
+- Volatile Flux Injector bonus is now applied correctly (slight nerf)
+
 Version 0.6.1d
 - Updated for 0.97a
 

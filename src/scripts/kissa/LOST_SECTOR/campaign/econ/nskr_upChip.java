@@ -19,8 +19,12 @@ public class nskr_upChip extends BaseMarketConditionPlugin {
     @Override
     public void apply(String id) {
         super.apply(id);
+        //decived
+        if (market.getFaction()==null) return;
+        if (market.isPlanetConditionMarketOnly()) return;
         //hacks
-        condition.getSpec().setDesc("The Unlimited Production Chip allows unprecedented access to high-end ship production, greatly increasing the military presence of "+market.getFaction().getDisplayNameWithArticle()+".");
+        condition.getSpec().setDesc(
+                "The Unlimited Production Chip allows unprecedented access to high-end ship production, greatly increasing the military presence of "+market.getFaction().getDisplayNameWithArticle()+".");
 
         //more ship production
         Industry industry = getIndustry();
