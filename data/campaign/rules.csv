@@ -732,7 +732,7 @@ OR
 OR
 ""The people deserve to be protected from someone like you. Someone has to step up, and seems like it's my time."" The comm link is abruptly cut.
 OR
-""Hey captain, you're about to have a bad time."" The comm link is abruptly cut.","hellSpawnDialogEnd:Cut the comm link",
+""Hey captain. You're about to have a bad time."" The comm link is abruptly cut.","hellSpawnDialogEnd:Cut the comm link",
 hellSpawnDialogEnd,DialogOptionSelected,"$option == hellSpawnDialogEnd","EndConversation
 ShowDefaultVisual","The $Faction $fleetName power up their weapons and move in to engage.",,
 "#END HELLSPAWN DIALOG",,,,,,

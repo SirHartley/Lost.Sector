@@ -197,6 +197,11 @@ public class nskr_modPlugin extends BaseModPlugin {
     @Override
     public void onGameLoad(boolean newGame) {
 
+        //avoid null manager crash
+        if (IS_NEXELERIN && SectorManager.getManager()==null){
+            IS_NEXELERIN = false;
+        }
+
         if (!init) {
             //ADD EFS
             //can't just add at applicationLoad because sector is null
@@ -271,10 +276,10 @@ public class nskr_modPlugin extends BaseModPlugin {
         //new save check
         if (!data.containsKey(SAVE_KEY)){
             //spawn stuff
-            onNewGameGen();
-            onNewGameAfterProcGenGen();
-            onNewGameAfterEconomyLoadGen();
-            onNewGameAfterTimePassGen();
+            onNewGame();
+            onNewGameAfterProcGen();
+            onNewGameAfterEconomyLoad();
+            onNewGameAfterTimePass();
 
             //TODO fix this 4 real
             //stupid temp hack
@@ -473,10 +478,6 @@ public class nskr_modPlugin extends BaseModPlugin {
 
     @Override
     public void onNewGame() {
-        onNewGameGen();
-    }
-    //wrappers for save compat
-    public void onNewGameGen(){
         ProcgenUsedNames.notifyUsed("Frostbite");
         ProcgenUsedNames.notifyUsed("Newfoundland");
         ProcgenUsedNames.notifyUsed("Greenland");
@@ -516,10 +517,6 @@ public class nskr_modPlugin extends BaseModPlugin {
 
     @Override
     public void onNewGameAfterProcGen() {
-        onNewGameAfterProcGenGen();
-    }
-    //wrappers for save compat
-    public void onNewGameAfterProcGenGen(){
         if (!IS_NEXELERIN || SectorManager.getManager().isCorvusMode()) {
             nskr_frost.generate(Global.getSector());
             //for (int x = 0; x<100;x++)
@@ -536,10 +533,6 @@ public class nskr_modPlugin extends BaseModPlugin {
 
     @Override
     public void onNewGameAfterEconomyLoad() {
-        onNewGameAfterEconomyLoadGen();
-    }
-    //wrappers for save compat
-    public void onNewGameAfterEconomyLoadGen() {
         if (!IS_NEXELERIN || SectorManager.getManager().isCorvusMode()) {
             //spawn the market, has to be done later to work correctly
             nskr_frost.generatePt2(Global.getSector());
@@ -550,10 +543,6 @@ public class nskr_modPlugin extends BaseModPlugin {
 
     @Override
     public void onNewGameAfterTimePass() {
-        onNewGameAfterTimePassGen();
-    }
-    //wrappers for save compat
-    public void onNewGameAfterTimePassGen() {
         //random core workaround
         if (IS_NEXELERIN && !SectorManager.getManager().isCorvusMode()) {
             nskr_frost.generate(Global.getSector());
@@ -615,5 +604,6 @@ public class nskr_modPlugin extends BaseModPlugin {
 
         nskr_gen.setEnigmaRelation(Global.getSector());
     }
+
 }
 

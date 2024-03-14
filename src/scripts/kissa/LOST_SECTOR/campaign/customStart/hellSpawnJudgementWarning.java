@@ -128,7 +128,6 @@ public class hellSpawnJudgementWarning implements InteractionDialogPlugin {
             if (Math.random()<0.10f) thrn.getName().setFirst("THRON");
             else if (Math.random()<0.10f) thrn.getName().setFirst("THRNE");
             else if (Math.random()<0.10f) thrn.getName().setFirst("DIE");
-            else if (Math.random()<0.10f) thrn.getName().setFirst("JUDGE");
             else thrn.getName().setFirst("THRN");
 
             thrn.setPortraitSprite("graphics/portraits/nskr_thrn0"+count+".png");

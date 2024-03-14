@@ -90,7 +90,8 @@ public class hellSpawnJudgementDialog implements InteractionDialogPlugin {
 
         //initial
         if (optionData == OptionId.INITIAL) {
-            text.addPara("Now you are judged.", g, hellSpawnEventIntel.BAR_COLOR, "judged", "");
+            text.addPara("There is no path.", g, hellSpawnEventIntel.BAR_COLOR, "", "");
+            text.addPara("Beyond the scope of justice.", g, hellSpawnEventIntel.BAR_COLOR, "justice", "");
 
             hellSpawnEventIntel intel = hellSpawnEventIntel.get();
             if (intel.getProgress()<hellSpawnManager.PEACEFUL_MAX_POINTS) options.addOption("Continue", OptionId.P1);
@@ -141,7 +142,7 @@ public class hellSpawnJudgementDialog implements InteractionDialogPlugin {
 
             text.setFontInsignia();
 
-            text.addPara("Make good use of it.", g, h, "", "");
+            text.addPara("Do not waste it.", g, h, "", "");
 
             options.addOption("Continue", OptionId.LEAVE);
         }
@@ -177,7 +178,7 @@ public class hellSpawnJudgementDialog implements InteractionDialogPlugin {
             options.addOption("Continue", OptionId.H2);
         }
         if (optionData == OptionId.H2) {
-            text.addPara("This is going to be cathartic.", g, h, "", "");
+            text.addPara("Your empire of ash.", g, h, "", "");
             text.addPara("WELCOME", hellSpawnEventIntel.BAR_COLOR, h, "", "");
             text.addPara("TO", hellSpawnEventIntel.BAR_COLOR, h, "", "");
             text.addPara("HELL", hellSpawnEventIntel.BAR_COLOR, h, "", "");

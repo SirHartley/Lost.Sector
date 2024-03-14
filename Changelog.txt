@@ -1,4 +1,14 @@
+Version 0.6.2b
+SAVE COMPATIBLE
+
+Fixes:
+- Fixed custom background event fleets sometimes doing strange "warping" movements
+- Fixed a crash with custom background fleet spawning logic
+- Fixed a possible crash if both Nex and LOST_SECTOR are enabled for the first time on a save at the same time
+- Fixed a crash if LOST_SECTOR is enabled for the first time on a save without Nexerelin
+
 Version 0.6.2a
+SAVE COMPATIBLE
 New Stuff:
 - Unique Nex background that can be unlocked by beating the Kesteven questline
    - Throne's Gift
@@ -8,8 +18,8 @@ Balance changes:
 - Kingslayer base burn reduced to 7->6, added built-in Augmented Drive Field
 
 Fixes:
-- fixed a rare but severe crash with the Unlimited Production Chip condition
-- fixed being unable to gain any relation with LP
+- Fixed a rare but severe crash with the Unlimited Production Chip condition
+- Fixed being unable to gain any relation with LP
 - Kesteven actually know large ballistics now
 - Volatile Flux Injector bonus is now applied correctly (slight nerf)
 

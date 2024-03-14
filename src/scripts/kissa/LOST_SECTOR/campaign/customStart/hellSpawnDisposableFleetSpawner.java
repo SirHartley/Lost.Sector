@@ -3,8 +3,10 @@ package scripts.kissa.LOST_SECTOR.campaign.customStart;
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.CampaignFleetAPI;
 import com.fs.starfarer.api.campaign.FleetAssignment;
+import com.fs.starfarer.api.campaign.SectorEntityToken;
 import com.fs.starfarer.api.campaign.StarSystemAPI;
 import com.fs.starfarer.api.campaign.econ.MarketAPI;
+import com.fs.starfarer.api.impl.campaign.fleets.DisposableAggroAssignmentAI;
 import com.fs.starfarer.api.impl.campaign.fleets.DisposableFleetManager;
 import com.fs.starfarer.api.impl.campaign.ids.Factions;
 import com.fs.starfarer.api.impl.campaign.ids.MemFlags;
@@ -39,8 +41,8 @@ public class hellSpawnDisposableFleetSpawner extends DisposableFleetManager {
 
     public static final ArrayList<String> EXTRA_FACTIONS = new ArrayList<>();
     static {
-        FLEET_FACTIONS.add(Factions.SCAVENGERS);
-        FLEET_FACTIONS.add(Factions.MERCENARY);
+        EXTRA_FACTIONS.add(Factions.SCAVENGERS);
+        EXTRA_FACTIONS.add(Factions.MERCENARY);
     }
 
     protected Random random = new Random();
@@ -168,20 +170,26 @@ public class hellSpawnDisposableFleetSpawner extends DisposableFleetManager {
         keys.add(DISPOSABLE_FLEET_KEY);
 
         //fleet
-        simpleFleet simpleFleet = new simpleFleet(currSpawnLoc.getCenter(), getFaction(), combatPoints, keys, random);
+        //hyper or in system
+        float hyperChance = 0.50f;
+        SectorEntityToken loc = currSpawnLoc.getCenter();
+        if (random.nextFloat()<hyperChance) loc = system.getHyperspaceAnchor();
+        simpleFleet simpleFleet = new simpleFleet(loc, getFaction(), combatPoints, keys, random);
         simpleFleet.maxShipSize = 4;
         simpleFleet.name = "Protectors";
-        simpleFleet.assignment = FleetAssignment.PATROL_SYSTEM;
+        simpleFleet.assignment = FleetAssignment.RAID_SYSTEM;
         simpleFleet.assignmentText = "patrolling";
 
         CampaignFleetAPI fleet = simpleFleet.create();
+
         if (fleet == null || fleet.isEmpty()) return null;
 
         fleet.getMemoryWithoutUpdate().set(KEY_SYSTEM, system.getName());
         fleet.getMemoryWithoutUpdate().set(KEY_SPAWN_FP, fleet.getFleetPoints());
         fleet.getMemoryWithoutUpdate().set(TIMESTAMP_KEY, Global.getSector().getClock().getTimestamp());
 
-        setLocationAndOrders(fleet, 0.50f, 0.50f);
+        //setLocationAndOrders(fleet, 0.50f, 0.50f);
+        fleet.addScript(new DisposableAggroAssignmentAI(fleet, system, this, hyperChance));
 
         fleetUtil.update(fleet, random);
 

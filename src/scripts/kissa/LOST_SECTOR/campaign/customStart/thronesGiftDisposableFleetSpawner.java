@@ -3,10 +3,12 @@ package scripts.kissa.LOST_SECTOR.campaign.customStart;
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.CampaignFleetAPI;
 import com.fs.starfarer.api.campaign.FleetAssignment;
+import com.fs.starfarer.api.campaign.SectorEntityToken;
 import com.fs.starfarer.api.campaign.StarSystemAPI;
 import com.fs.starfarer.api.campaign.econ.MarketAPI;
 import com.fs.starfarer.api.combat.ShipVariantAPI;
 import com.fs.starfarer.api.fleet.FleetMemberAPI;
+import com.fs.starfarer.api.impl.campaign.fleets.DisposableAggroAssignmentAI;
 import com.fs.starfarer.api.impl.campaign.fleets.DisposableFleetManager;
 import com.fs.starfarer.api.impl.campaign.ids.Factions;
 import com.fs.starfarer.api.impl.campaign.ids.MemFlags;
@@ -67,6 +69,8 @@ public class thronesGiftDisposableFleetSpawner extends DisposableFleetManager {
     @Override
     protected int getDesiredNumFleetsForSpawnLocation() {
         if (gamemodeManager.getMode() != gamemodeManager.gameMode.THRONESGIFT) return 0;
+        //boolean debug = true;
+        //if (debug) return 20;
         float level = (thronesGiftManager.getDpAvailable()-thronesGiftManager.DEFAULT_DP)/50f;
         if (level<1f) return 0;
 
@@ -162,7 +166,11 @@ public class thronesGiftDisposableFleetSpawner extends DisposableFleetManager {
         keys.add(DISPOSABLE_FLEET_KEY);
 
         //fleet
-        simpleFleet simpleFleet = new simpleFleet(currSpawnLoc.getCenter(), Factions.LUDDIC_PATH, combatPoints, keys, random);
+        //hyper or in system
+        float hyperChance = 0.75f;
+        SectorEntityToken loc = currSpawnLoc.getCenter();
+        if (random.nextFloat()<hyperChance) loc = system.getHyperspaceAnchor();
+        simpleFleet simpleFleet = new simpleFleet(loc, Factions.LUDDIC_PATH, combatPoints, keys, random);
         simpleFleet.maxShipSize = 4;
         simpleFleet.name = "Hunters";
         simpleFleet.assignment = FleetAssignment.RAID_SYSTEM;
@@ -171,13 +179,15 @@ public class thronesGiftDisposableFleetSpawner extends DisposableFleetManager {
         simpleFleet.aiFleetProperties = true;
 
         CampaignFleetAPI fleet = simpleFleet.create();
+
         if (fleet == null || fleet.isEmpty()) return null;
 
         fleet.getMemoryWithoutUpdate().set(KEY_SYSTEM, system.getName());
         fleet.getMemoryWithoutUpdate().set(KEY_SPAWN_FP, fleet.getFleetPoints());
         fleet.getMemoryWithoutUpdate().set(TIMESTAMP_KEY, Global.getSector().getClock().getTimestamp());
 
-        setLocationAndOrders(fleet, 0.75f, 0.75f);
+        //setLocationAndOrders(fleet, 0.75f, 0.75f);
+        fleet.addScript(new DisposableAggroAssignmentAI(fleet, system, this, hyperChance));
 
         //HOLY SPIRIT
         for (FleetMemberAPI curr : fleet.getFleetData().getMembersListCopy()) {
@@ -190,6 +200,12 @@ public class thronesGiftDisposableFleetSpawner extends DisposableFleetManager {
                 v.addPermaMod("nskr_holySpirit");
                 v.addTag(Tags.TAG_NO_AUTOFIT);
             }
+            //Hunter hullmod
+            if (random.nextFloat()<0.10f){
+                v.addPermaMod("nskr_machineSpirit");
+                v.addTag(Tags.TAG_NO_AUTOFIT);
+            }
+
         }
         fleetUtil.update(fleet, random);
 

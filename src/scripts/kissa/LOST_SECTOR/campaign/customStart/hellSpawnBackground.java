@@ -24,7 +24,7 @@ public class hellSpawnBackground extends BaseCharacterBackground {
 
     @Override
     public boolean shouldShowInSelection(FactionSpecAPI factionSpec, NexFactionConfig factionConfig) {
-        return false;
+        return unlocked;
     }
 
     @Override

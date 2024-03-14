@@ -2,7 +2,7 @@
 	"id":"lost_sector", # internal id
 	"name":"LOST_SECTOR", # displayed to the player
 	"author":"Kissa Mies. Check credits.txt!",
-	"version":"0.6.2a",
+	"version":"0.6.2b",
 	"description":"The things lost to time are out there. Content expansion.",
 	"gameVersion": "0.97a",
 	"modPlugin":"scripts.kissa.LOST_SECTOR.nskr_modPlugin",
