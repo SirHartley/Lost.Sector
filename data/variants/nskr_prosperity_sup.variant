@@ -70,5 +70,8 @@
             }
         }
     ],
-    "wings": ["xyphos_wing"]
+    "wings": [
+        "xyphos_wing",
+        "xyphos_wing"
+    ]
 }

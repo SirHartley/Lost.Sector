@@ -1,7 +1,7 @@
 {
     "displayName": "Support",
     "fluxCapacitors": 0,
-    "fluxVents": 19,
+    "fluxVents": 18,
     "goalVariant": true,
     "hullId": "nskr_devilcatcher",
     "hullMods": [
@@ -45,5 +45,8 @@
             }
         }
     ],
-    "wings": ["wasp_wing"]
+    "wings": [
+        "wasp_wing",
+        "wasp_wing"
+    ]
 }

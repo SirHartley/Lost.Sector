@@ -642,9 +642,13 @@ public class questUtil {
         Map<String, Object> data = Global.getSector().getPersistentData();
         String id = nskr_kestevenQuest.PERSISTENT_KEY+"Tip1";
         if (!data.containsKey(id)) {
-            data.put(id, getRandomSystemWithEnigmaBase(nskr_kestevenQuest.getRandom()));
-            //dormant
-            util.addDormant(util.getRandomLocationInSystem((StarSystemAPI)data.get(id),true,false, nskr_kestevenQuest.getRandom()),
+            StarSystemAPI sys = getRandomSystemWithEnigmaBase(nskr_kestevenQuest.getRandom());
+            //NO VALID SYSTEMS
+            if (sys==null) return null;
+
+            data.put(id, sys);
+            //add dormant
+            util.addDormant(util.getRandomLocationInSystem(sys ,true,false, nskr_kestevenQuest.getRandom()),
                     "enigma", 20f);
         }
 

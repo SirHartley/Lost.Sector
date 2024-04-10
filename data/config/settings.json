@@ -24,12 +24,6 @@
 		},
 		
 		"portraits":{
-			"nskr_cat1":"graphics/portraits/nskr_cat1.png",
-			"nskr_cat2":"graphics/portraits/nskr_cat2.png",
-			"nskr_cat3":"graphics/portraits/nskr_cat3.png",
-			"nskr_cat4":"graphics/portraits/nskr_cat4.png",
-			"nskr_cat5":"graphics/portraits/nskr_cat5.png",
-			"nskr_cat6":"graphics/portraits/nskr_cat6.png",
 		},
 		"characters":{
 			"nskr_enigma":"graphics/portraits/nskr_enigma.png",	

@@ -34,8 +34,6 @@ public class thronesGiftDisposableFleetSpawner extends DisposableFleetManager {
         FLEET_FACTIONS.add(Factions.PIRATES);
         FLEET_FACTIONS.add(Factions.LUDDIC_CHURCH);
         FLEET_FACTIONS.add(Factions.LUDDIC_PATH);
-        FLEET_FACTIONS.add(Factions.INDEPENDENT);
-        FLEET_FACTIONS.add(Factions.PLAYER);
 
     }
 
@@ -71,33 +69,37 @@ public class thronesGiftDisposableFleetSpawner extends DisposableFleetManager {
         if (gamemodeManager.getMode() != gamemodeManager.gameMode.THRONESGIFT) return 0;
         //boolean debug = true;
         //if (debug) return 20;
-        float level = (thronesGiftManager.getDpAvailable()-thronesGiftManager.DEFAULT_DP)/50f;
+        float level = (thronesGiftManager.getTotalDp() - thronesGiftManager.DEFAULT_DP);
+        level /= 50f;
+        //min auto pts unlock before we spawn fleets
         if (level<1f) return 0;
-
-        thronesGiftIntel intel = getIntel();
-        if (intel == null) return 0;
-
-        if (timestamp != null) {
-            float daysSince = Global.getSector().getClock().getElapsedDaysSince(timestamp);
-            //set maxCount for 30 days based on lvl, then don't spawn again
-            if (daysSince < 30) return maxCount;
-        }
+        return 1;
+//
+        //thronesGiftIntel intel = getIntel();
+        //if (intel == null) return 0;
+//
+        //if (timestamp != null) {
+        //    float daysSince = Global.getSector().getClock().getElapsedDaysSince(timestamp);
+        //    //set maxCount for some days based on lvl, then don't spawn again
+        //    if (daysSince < 14) return maxCount;
+        //}
 
         //rng check
-        float chance = (level/100f)/10f;
-        if (random.nextFloat()<chance) return 0;
-        maxCount = (int)level;
-        //UPDATE TIMER
-        timestamp = Global.getSector().getClock().getTimestamp();
-
-        return maxCount;
+        //float chance = (level)/3f;
+        //if (random.nextFloat() < chance) return 1;
+        //else return 0;
+        //maxCount = (int)level;
+        ////UPDATE TIMER
+        //timestamp = Global.getSector().getClock().getTimestamp();
+//
+        //return maxCount;
     }
 
     @Override
     protected boolean isOkToDespawnAssumingNotPlayerVisible(CampaignFleetAPI fleet) {
         float time = Global.getSector().getClock().getElapsedDaysSince(fleet.getMemoryWithoutUpdate().getLong(TIMESTAMP_KEY));
-        //60 day despawn timer
-        return time>90f;
+        //despawn timer
+        return time > 30f;
     }
 
     protected StarSystemAPI pickCurrentSpawnLocation() {
@@ -147,6 +149,13 @@ public class thronesGiftDisposableFleetSpawner extends DisposableFleetManager {
 
         thronesGiftIntel intel = getIntel();
         if (intel == null) return null;
+
+        //RNG CHECK
+        float level = (thronesGiftManager.getTotalDp() - thronesGiftManager.DEFAULT_DP);
+        level /= 50f;
+        float chance = (level)/4f;
+        //x chance to get deleted
+        if (random.nextFloat() > chance) return null;
 
         float combatPoints = mathUtil.getSeededRandomNumberInRange(50f, 100f, random);
         //power scaling

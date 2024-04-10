@@ -1,3 +1,17 @@
+Version 0.6.2c
+SAVE COMPATIBLE
+- Removed AI-Gen content, you might end up with some blank portraits due to this
+
+Balance changes:
+- Changed Converted Hangar augment. Now gives an additional fighter bay (Cruisers and up) and reduces fighter OP cost by 50%
+- Volatile Flux Injector now incompatible with Safety Overrides
+
+Fixes:
+- Fixed Throne's Gift and HELLSPAWN spawning way too many event fleets
+- Fixed a minor issue in Throne's Gift XP tracking past hitting max lvl
+- Fixed a rare crash with the first Kesteven quest, when it could not find any R&D facilities
+- Fixed Helios bounty getting stuck and spawning infinite wrecks in some rare scenarios
+
 Version 0.6.2b
 SAVE COMPATIBLE
 

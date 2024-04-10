@@ -47,8 +47,10 @@ public class corePlugin extends BaseCampaignPlugin {
             }
         }
         //mothership bounty
-        if (interactionTarget.getId().equals(nskr_mothershipSpawner.PLANET1_ID) && !nskr_mothershipSpawner.getBountyCompleted() || interactionTarget.getId().equals(nskr_mothershipSpawner.PLANET2_ID) && !nskr_mothershipSpawner.getBountyCompleted()) {
-            return new PluginPick<InteractionDialogPlugin>(new nskr_mothershipInteractionBlocker(), PickPriority.MOD_GENERAL);
+        if (interactionTarget.getId().equals(nskr_mothershipSpawner.PLANET1_ID) || interactionTarget.getId().equals(nskr_mothershipSpawner.PLANET2_ID)) {
+            if (!questUtil.getCompleted(nskr_mothershipSpawner.MOTHERSHIP_SPAWNED_MEM_KEY) && !nskr_mothershipSpawner.getBountyCompleted()) {
+                return new PluginPick<InteractionDialogPlugin>(new nskr_mothershipInteractionBlocker(), PickPriority.MOD_GENERAL);
+            }
         }
         //job4hintWreck dialog
         if (interactionTarget.getId().startsWith(questStageManager.JOB4_HINT_WRECK_ID_KEY) && !questUtil.getCompleted(nskr_job4HintWreck.HINT_RECEIVED_KEY)) {

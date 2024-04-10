@@ -1,12 +1,13 @@
 {
     "displayName": "Aggressor",
     "fluxCapacitors": 11,
-    "fluxVents": 0,
+    "fluxVents": 18,
     "goalVariant": true,
     "hullId": "nskr_nighthawk",
     "hullMods": [
         "nskr_volatile",
-        "safetyoverrides"
+        "nskr_inertial",
+        "unstable_injector"
     ],
     "permaMods": [],
     "sMods": [],

@@ -15,6 +15,7 @@ public class thronesGiftManager extends BaseCampaignEventListener implements Eve
     public static final float DP_PER_UNLOCK = 10f;
     public static final String XP_KEY = "thronesGiftManagerXp";
     public static final String DP_KEY = "thronesGiftManagerDp";
+    public static final String TOTAL_DP_KEY = "thronesGiftManagerTotalDp";
 
     private campaignTimer timer;
     private long xp = 0;
@@ -46,6 +47,12 @@ public class thronesGiftManager extends BaseCampaignEventListener implements Eve
         xp = Global.getSector().getPlayerStats().getXP();
         if (xp>oldXp){
             reportXpChanged(xp-oldXp);
+            oldXp = xp;
+        }
+        //wrap around xp once you hit max lvl, 4x1 million xp per wrap
+        if (xp<oldXp) {
+            //Global.getSettings().
+            reportXpChanged((4000000-oldXp) + xp);
             oldXp = xp;
         }
 
@@ -83,6 +90,8 @@ public class thronesGiftManager extends BaseCampaignEventListener implements Eve
             float dp = getDpAvailable();
             dp += DP_PER_UNLOCK;
             setDpAvailable(dp);
+            //total counter
+            setTotalDp(getTotalDp() + DP_PER_UNLOCK);
 
             setXpGained(xp-XP_PER_UNLOCK);
 
@@ -133,6 +142,25 @@ public class thronesGiftManager extends BaseCampaignEventListener implements Eve
         } else {
             data.put(DP_KEY, DEFAULT_DP);
             return (float) data.get(DP_KEY);
+        }
+
+    }
+
+    public static void setTotalDp(float dp){
+
+        Map<String, Object> data = Global.getSector().getPersistentData();
+        data.put(TOTAL_DP_KEY, dp);
+
+    }
+
+    public static float getTotalDp(){
+
+        Map<String, Object> data = Global.getSector().getPersistentData();
+        if (data.containsKey(TOTAL_DP_KEY)){
+            return (float) data.get(TOTAL_DP_KEY);
+        } else {
+            data.put(TOTAL_DP_KEY, DEFAULT_DP);
+            return (float) data.get(TOTAL_DP_KEY);
         }
 
     }

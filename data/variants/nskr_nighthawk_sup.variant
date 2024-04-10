@@ -1,7 +1,7 @@
 {
     "displayName": "Support",
     "fluxCapacitors": 0,
-    "fluxVents": 18,
+    "fluxVents": 17,
     "goalVariant": true,
     "hullId": "nskr_nighthawk",
     "hullMods": [
@@ -68,5 +68,8 @@
             }
         }
     ],
-    "wings": ["wasp_wing"]
+    "wings": [
+        "wasp_wing",
+        "wasp_wing"
+    ]
 }

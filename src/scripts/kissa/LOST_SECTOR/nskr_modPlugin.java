@@ -111,11 +111,11 @@ public class nskr_modPlugin extends BaseModPlugin {
 
     //save compat check stuff
     public static final String SAVE_KEY = "nskr_enabled";
-    public static final String VERSION_KEY = "nskr_0.5.0";
-    public static final ArrayList<String> incompatibleVersions = new ArrayList<>();
-    static {
+    //public static final String VERSION_KEY = "nskr_0.5.0";
+    //public static final ArrayList<String> incompatibleVersions = new ArrayList<>();
+    //static {
         //incompatibleVersions.add("nskr_0.5.0");
-    }
+    //}
 
     static void log(final String message) {
         Global.getLogger(nskr_modPlugin.class).info(message);
@@ -293,11 +293,11 @@ public class nskr_modPlugin extends BaseModPlugin {
             }
         } else {
             //compatible version check
-            String version = (String)data.get(SAVE_KEY);
-            if (incompatibleVersions.contains(version)){
-                String versionParsed = version.replace("nskr_","");
-                throw new IllegalStateException("Incompatible version of LOST_SECTOR detected, revert your install to "+versionParsed+" load this save");
-            }
+            //String version = (String)data.get(SAVE_KEY);
+            //if (incompatibleVersions.contains(version)){
+            //    String versionParsed = version.replace("nskr_","");
+            //    throw new IllegalStateException("Incompatible version of LOST_SECTOR detected, revert your install to "+versionParsed+" load this save");
+            //}
         }
 
         //HACKS
@@ -507,7 +507,8 @@ public class nskr_modPlugin extends BaseModPlugin {
         //new save key
         Map<String, Object> data = Global.getSector().getPersistentData();
         if (!data.containsKey(SAVE_KEY)){
-            data.put(SAVE_KEY, VERSION_KEY);
+            //data.put(SAVE_KEY, VERSION_KEY);
+            data.put(SAVE_KEY, "Installed");
         }
         //hard mode
         if (!data.containsKey(STARFARER_MODE_FROM_START_KEY)) {

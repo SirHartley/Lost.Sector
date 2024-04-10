@@ -122,7 +122,7 @@ public class nskr_artifactDialog implements InteractionDialogPlugin {
 		if (optionData==OptionId.A3){
 			options.clearOptions();
 			text.addPara("The team reports of a hidden compartment inside the satellite. Unlike the rest of the equipment it has proper radiation shielding, clearly it's somehow important for the satellites intended function.");
-			text.addPara("The ops chief runs a set of different scans on the compartment. Revealing inside a shielded data disk, connected to some sort of anti-tempering device. It is unclear what this device would do once triggered.");
+			text.addPara("The ops chief runs a set of different scans on the compartment. Revealing inside a shielded data disk, connected to some sort of anti-tampering device. It is unclear what this device would do once triggered.");
 			text.addPara("Your ops chief looks worried. \"There's no telling from outside what that device will do if triggered.\"");
 
 			options.addOption("Prepare to take the disk", OptionId.A4);
@@ -131,7 +131,7 @@ public class nskr_artifactDialog implements InteractionDialogPlugin {
 		//a4
 		if (optionData==OptionId.A4) {
 			options.clearOptions();
-			text.addPara("The ops chief runs over the data you've gathered one last time. \"Well at least there's no sign of explosives onboard the satellite. Still the device could begin a self-destruct reactor overload, causing an intense radiation leak or an EMP pulse. Alternatively it could simply send a hyperwave ping alerting nearby forces of tampering, whoever those might be.\"");
+			text.addPara("The ops chief runs over the data you've gathered one last time. \"Well at least there's no sign of explosives onboard the satellite. Still the device could begin a self-destruct reactor overload, causing an intense radiation leak or an EM pulse. Alternatively it could simply send a hyperwave ping alerting nearby forces of tampering, whoever those might be.\"");
 			text.addPara("They pause for a second to think. \"... You know, there's a good chance it'll just do nothing. Considering the state that the rest of the equipment is in.\"");
 			text.addPara("You order the ops chief to prepare a plan to recover the disk, and after a short wait you are ready to begin.");
 
@@ -163,7 +163,7 @@ public class nskr_artifactDialog implements InteractionDialogPlugin {
 			if(stage>15)text.addPara("Your comms officer approaches you ready to tell more about this disk. \"This is no ordinary data drive, and it's not just the radiation shielding. It has a construction I've never seen before, it must be the disk we're looking for. As our intel suggested all the data is encrypted, oddly enough the disk uses centuries old Domain encryption.\"");
 			//alt early recovery
 			if(stage<=15)text.addPara("Your comms officer approaches you ready to tell more about this disk. \"This is no ordinary data drive, and it's not just the radiation shielding. It has a construction I've never seen before, and can't find any reference to in our databases. Although all the data is encrypted, oddly enough the disk uses centuries old Domain encryption. So we could break it if we had more data to work with, and the right equipment.\"");
-			text.addPara("Suddenly you are interrupted by multiple alarms going off at once on the bridge. Seems like the anti-tempering device only malfunctioned temporarily. \"Captain, the satellite just fired a hyperwave ping alerting the whole damn constellation of our presence.\"");
+			text.addPara("Suddenly you are interrupted by multiple alarms going off at once on the bridge. Seems like the anti-tampering device only malfunctioned temporarily. \"Captain, the satellite just fired a hyperwave ping alerting the whole damn constellation of our presence.\"");
 			text.addPara("It's time to leave, quickly.",g,h,"","");
 
 			setRecoveredSatelliteCount(1);
@@ -215,7 +215,7 @@ public class nskr_artifactDialog implements InteractionDialogPlugin {
 		//b2
 		if (optionData==OptionId.B2){
 			options.clearOptions();
-			text.addPara("Both the disk and anti-tempering device seem to be intact. The sensors team runs multiple scans on the satellite, then showing projections that confirm its nearly identical to the last one.");
+			text.addPara("Both the disk and anti-tampering device seem to be intact. The sensors team runs multiple scans on the satellite, then showing projections that confirm its nearly identical to the last one.");
 			text.addPara("The ops chief paces back and forth impatiently \"We're ready to go captain, just give us the word.\"");
 
 			options.addOption("Order the disk to be retrieved", OptionId.B3);

@@ -77,31 +77,33 @@ public class hellSpawnDisposableFleetSpawner extends DisposableFleetManager {
         if (gamemodeManager.getMode() != gamemodeManager.gameMode.HELLSPAWN) return 0;
         float level = hellSpawnManager.getLevel();
         if (level<3) return 0;
+        return 1;
 
-        hellSpawnEventIntel intel = getIntel();
-        if (intel == null) return 0;
-
-        if (timestamp != null) {
-            float daysSince = Global.getSector().getClock().getElapsedDaysSince(timestamp);
-            //set maxCount for 30 days based on lvl, then don't spawn again
-            if (daysSince < 30) return maxCount;
-        }
+        //hellSpawnEventIntel intel = getIntel();
+        //if (intel == null) return 0;
+//
+        //if (timestamp != null) {
+        //    float daysSince = Global.getSector().getClock().getElapsedDaysSince(timestamp);
+        //    //set maxCount for some days based on lvl, then don't spawn again
+        //    if (daysSince < 14) return maxCount;
+        //}
 
         //rng check
-        float chance = (level/100f)/10f;
-        if (random.nextFloat()<chance) return 0;
-        maxCount = (int)level;
-        //UPDATE TIMER
-        timestamp = Global.getSector().getClock().getTimestamp();
-
-        return maxCount;
+        //float chance = (level)/33f;
+        //if (random.nextFloat() < chance) return 1;
+        //else return 0;
+        //maxCount = (int)level;
+        ////UPDATE TIMER
+        //timestamp = Global.getSector().getClock().getTimestamp();
+//
+        //return maxCount;
     }
 
     @Override
     protected boolean isOkToDespawnAssumingNotPlayerVisible(CampaignFleetAPI fleet) {
         float time = Global.getSector().getClock().getElapsedDaysSince(fleet.getMemoryWithoutUpdate().getLong(TIMESTAMP_KEY));
-        //60 day despawn timer
-        return time>60f;
+        //despawn timer
+        return time > 30f;
     }
 
     protected StarSystemAPI pickCurrentSpawnLocation() {
@@ -151,6 +153,12 @@ public class hellSpawnDisposableFleetSpawner extends DisposableFleetManager {
 
         hellSpawnEventIntel intel = getIntel();
         if (intel == null) return null;
+
+        //RNG CHECK
+        float level = hellSpawnManager.getLevel();
+        float chance = (level)/6f;
+        //x chance to get deleted
+        if (random.nextFloat() > chance) return null;
 
         float combatPoints = mathUtil.getSeededRandomNumberInRange(20f, 80f, random);
         //power scaling

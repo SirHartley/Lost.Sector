@@ -4,6 +4,7 @@ import com.fs.starfarer.api.GameState;
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.combat.*;
 import com.fs.starfarer.api.combat.ShipAPI.HullSize;
+import com.fs.starfarer.api.impl.campaign.ids.HullMods;
 import com.fs.starfarer.api.ui.Alignment;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import com.fs.starfarer.api.util.IntervalUtil;
@@ -48,6 +49,7 @@ public class nskr_volatile extends BaseHullMod {
     public static final Set<String> BLOCKED_HULLMODS = new HashSet<>();
     static {
         // These hullmods will automatically be removed
+        BLOCKED_HULLMODS.add(HullMods.SAFETYOVERRIDES);
     }
 
     @Override

@@ -42,6 +42,7 @@ public class nskr_mothershipSpawner  extends BaseCampaignEventListener implement
     public static final String PORTRAIT_SPRITE = "graphics/portraits/portrait_ai2.png";
     public static final String MOTHERSHIP_LOC_MEM_KEY = "nskr_mothershipKey";
     public static final String MOTHERSHIP_COMPLETED_MEM_KEY = "nskr_mothershipKeyCompleted";
+    public static final String MOTHERSHIP_SPAWNED_MEM_KEY = "nskr_mothershipKeySpawnedWreck";
     public static final String SAVED_PREFIX = "mothership";
     public static final String HINT_KEY = "HINT_MOTHERSHIP";
     public static final String FLEET_ARRAY_KEY = "$nskr_mothershipSpawnerFleets";
@@ -413,10 +414,11 @@ public class nskr_mothershipSpawner  extends BaseCampaignEventListener implement
                         return;
                     }
 
-                    if (fleet.getFlagship()==null) {
+                    if (fleet.getFlagship()==null && !questUtil.getCompleted(MOTHERSHIP_SPAWNED_MEM_KEY)) {
 
                         //spawn
                         CustomCampaignEntityAPI entity = spawnWreck(fleet, FLAGSHIP_VARIANT, FLAGSHIP_NAME);
+                        questUtil.setCompleted(true, MOTHERSHIP_SPAWNED_MEM_KEY);
 
                         dialog.setInteractionTarget(entity);
                         RuleBasedInteractionDialogPluginImpl plugin = new RuleBasedInteractionDialogPluginImpl();

@@ -48,7 +48,8 @@ public class nskr_mothershipInteractionBlocker implements InteractionDialogPlugi
             fleet = f.fleet;
         }
         if (fleet==null){
-            options.addOption("Leave", OptionId.LEAVE);
+            //options.addOption("Leave", OptionId.LEAVE);
+            dialog.dismiss();
             return;
         }
 

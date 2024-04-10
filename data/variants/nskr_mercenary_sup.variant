@@ -1,7 +1,7 @@
 {
     "displayName": "Support",
     "fluxCapacitors": 0,
-    "fluxVents": 5,
+    "fluxVents": 14,
     "goalVariant": true,
     "hullId": "nskr_mercenary",
     "hullMods": [
@@ -54,5 +54,7 @@
             }
         }
     ],
-    "wings": ["xyphos_wing"]
+    "wings": [
+        "xyphos_wing"
+    ]
 }

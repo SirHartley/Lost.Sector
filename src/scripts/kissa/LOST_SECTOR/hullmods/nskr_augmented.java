@@ -46,7 +46,7 @@ public class nskr_augmented extends BaseHullMod {
 	public static final float NAV_RELAY_BONUS = 10f;
 	public static final float NAV_RELAY_RANGE = 1500f;
 	public static final int NAV_RELAY_MAX = 5;
-	public static final float CH_BONUS = 1.5f;
+	public static final float CH_BONUS = 50f;
 	public static final float CRITICAL_POINT_BONUS = 10f;
 
 	public static final String OPERATIONS_CENTER_ID = "operations_center";
@@ -203,9 +203,15 @@ public class nskr_augmented extends BaseHullMod {
 		}
 		// CONVERTED HANGAR
 		if (stats.getVariant().hasHullMod(CONVERTED_HANGAR_ID)) {
-			stats.getFighterRefitTimeMult().modifyMult(CONVERTED_HANGAR_ID + "_augment", 1 / CH_BONUS);
-			stats.getDynamic().getStat(Stats.REPLACEMENT_RATE_DECREASE_MULT).modifyMult(CONVERTED_HANGAR_ID + "_augment", CH_BONUS);
-			stats.getDynamic().getStat(Stats.REPLACEMENT_RATE_INCREASE_MULT).modifyMult(CONVERTED_HANGAR_ID + "_augment", CH_BONUS);
+			//stats.getFighterRefitTimeMult().modifyMult(CONVERTED_HANGAR_ID + "_augment", 1 / CH_BONUS);
+			//stats.getDynamic().getStat(Stats.REPLACEMENT_RATE_DECREASE_MULT).modifyMult(CONVERTED_HANGAR_ID + "_augment", CH_BONUS);
+			//stats.getDynamic().getStat(Stats.REPLACEMENT_RATE_INCREASE_MULT).modifyMult(CONVERTED_HANGAR_ID + "_augment", CH_BONUS);
+
+			stats.getDynamic().getMod(Stats.BOMBER_COST_MOD).modifyPercent(CONVERTED_HANGAR_ID +"_augment", -CH_BONUS);
+			stats.getDynamic().getMod(Stats.FIGHTER_COST_MOD).modifyPercent(CONVERTED_HANGAR_ID +"_augment", -CH_BONUS);
+			stats.getDynamic().getMod(Stats.INTERCEPTOR_COST_MOD).modifyPercent(CONVERTED_HANGAR_ID +"_augment", -CH_BONUS);
+			stats.getDynamic().getMod(Stats.SUPPORT_COST_MOD).modifyPercent(CONVERTED_HANGAR_ID +"_augment", -CH_BONUS);
+			if (hullSize!=HullSize.DESTROYER) stats.getNumFighterBays().modifyFlat(CONVERTED_HANGAR_ID +"_augment", 1f);
 		}
 		// CRITICAL POINT PROTECTION
 		if (stats.getVariant().hasHullMod(ids.CRITICAL_POINT_PROTECTION_HULLMOD_ID)) {
@@ -483,7 +489,12 @@ public class nskr_augmented extends BaseHullMod {
 		if (ship.getVariant().hasHullMod(CONVERTED_HANGAR_ID)) {
 			TooltipMakerAPI text = tooltip.beginImageWithText("graphics/icons/hullsys/damper_field.png", 32.0f);
 			text.addPara("CONVERTED HANGAR", 0.0f, tc, "CONVERTED HANGAR");
-			text.addPara("Removes the penalty to fighter replacement time, and to replacement rate decrease and increase.", 0.0f, y, "Removes");
+			//text.addPara("Removes the penalty to fighter replacement time, and to replacement rate decrease and increase.", 0.0f, y, "Removes");
+			if (ship.getHullSize()!=HullSize.DESTROYER) {
+				text.addPara("grants an additional fighter bay and reduces all fighter OP costs by " + (int) CH_BONUS + "%%.", 0.0f, y, "additional", (int) CH_BONUS + "%");
+			}else {
+				text.addPara("Reduces all fighter OP costs by " + (int) CH_BONUS + "%%.", 0.0f, y, "additional", (int) CH_BONUS + "%");
+			}
 			tooltip.addImageWithText(pad);
 		}
 		// BIG BATS

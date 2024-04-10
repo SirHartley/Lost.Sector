@@ -14,7 +14,6 @@ Credits:
 	- Deceased Superior Technician
 -Additional art :
 	- Tartiflette, Selkie, Nia Tahl, [Lorc, Delapouite, sbed (game-icons.net)]
-	- Custom portraits and illustrations made with StableDiffusion AI
 -Play-testing :
 	- Avanitia
 	
