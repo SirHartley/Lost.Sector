@@ -1,3 +1,8 @@
+Version 0.6.2d
+SAVE COMPATIBLE
+Fixes:
+- Fixed a major bug in Throne's Gift xp calculation that caused you to get way too many points
+
 Version 0.6.2c
 SAVE COMPATIBLE
 - Removed AI-Gen content, you might end up with some blank portraits due to this

@@ -257,6 +257,11 @@ public class nskr_modPlugin extends BaseModPlugin {
             Global.getSector().addTransientScript((EveryFrameScript) script);
             Global.getSector().addTransientListener(script);
             Global.getSector().getListenerManager().addListener(script, true);
+
+            //reset Throne's gift kludge
+            if (script instanceof thronesGiftManager){
+                ((thronesGiftManager) script).reset();
+            }
         }
 
         nskr_saved.loadPersistentData();

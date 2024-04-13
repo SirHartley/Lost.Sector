@@ -20,6 +20,8 @@ public class thronesGiftManager extends BaseCampaignEventListener implements Eve
     private campaignTimer timer;
     private long xp = 0;
     private long oldXp = 0;
+    private long lvl = 0;
+    private long oldLvl = 0;
 
     public thronesGiftManager() {
         super(false);
@@ -27,6 +29,17 @@ public class thronesGiftManager extends BaseCampaignEventListener implements Eve
         //init
         xp = Global.getSector().getPlayerStats().getXP();
         oldXp = xp;
+        lvl = Global.getSector().getPlayerStats().getLevel();
+        oldLvl = lvl;
+    }
+
+    //reset onGameLoad
+    public void reset() {
+
+        xp = Global.getSector().getPlayerStats().getXP();
+        oldXp = xp;
+        lvl = Global.getSector().getPlayerStats().getLevel();
+        oldLvl = lvl;
     }
 
     @Override
@@ -45,16 +58,19 @@ public class thronesGiftManager extends BaseCampaignEventListener implements Eve
         if (gamemodeManager.getMode() != gamemodeManager.gameMode.THRONESGIFT) return;
 
         xp = Global.getSector().getPlayerStats().getXP();
+        lvl = Global.getSector().getPlayerStats().getLevel();
         if (xp>oldXp){
             reportXpChanged(xp-oldXp);
-            oldXp = xp;
         }
         //wrap around xp once you hit max lvl, 4x1 million xp per wrap
-        if (xp<oldXp) {
+        if (xp<oldXp && lvl==15) {
             //Global.getSettings().
             reportXpChanged((4000000-oldXp) + xp);
-            oldXp = xp;
         }
+
+        //update
+        oldXp = xp;
+        oldLvl = lvl;
 
         //PAUSE CHECK
         if (Global.getSector().isPaused()) return;
