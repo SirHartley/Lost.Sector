@@ -141,17 +141,17 @@
 	[
 		{"file":"sounds/nskr_fx/nskr_timewarp_out.ogg","pitch":1.5,"volume":1.0},
 	],
-	"nskr_zhonya_activate":
+	"nskr_paradox_activate":
 	[
-		{"file":"sounds/nskr_fx/nskr_zhonya_activate.ogg","pitch":1.0,"volume":1.10},
+		{"file":"sounds/nskr_fx/nskr_paradox_activate.ogg","pitch":1.0,"volume":1.10},
 	],
-	"nskr_zhonya_loop":
+	"nskr_paradox_loop":
 	[
-		{"file":"sounds/nskr_fx/nskr_zhonya_loop.ogg","pitch":1.0,"volume":0.80},
+		{"file":"sounds/nskr_fx/nskr_paradox_loop.ogg","pitch":1.0,"volume":0.80},
 	],
-	"nskr_zhonya_deactivate":
+	"nskr_paradox_deactivate":
 	[
-		{"file":"sounds/nskr_fx/nskr_zhonya_deactivate.ogg","pitch":1.0,"volume":1.10},
+		{"file":"sounds/nskr_fx/nskr_paradox_deactivate.ogg","pitch":1.0,"volume":1.10},
 	],	
 	"nskr_system_plasma_burn":
 	[

@@ -2,7 +2,7 @@
 ,,,,,,,,,,,,,,,,,,,,,,,,,,,
 "Reality Splitter","nskr_temporal",,,,,,,,,,"0.25","99","1.00",20,,,"TRUE",,"TRUE","TRUE","TRUE","TRUE","TRUE","TRUE",,"restricted","graphics/icons/hullsys/displacer.png"
 "Timewarp Drive","nskr_timewarp",,,,,,,,2,"0.05","0.25","1.75","0.60","4.25",,,,,"TRUE",,,,,,,"restricted","graphics/icons/hullsys/temporal_shell.png"
-"Zhonya Temporal Paradox","nskr_zhonya",,,,,,,,,,,"2.5",,"17.5",,,,,"TRUE",,,,"TRUE","TRUE",,"restricted","graphics/icons/hullsys/temporal_shell.png"
+"Temporal Paradox","nskr_paradox",,,,,,,,,,,"2.5",,"17.5",,,,,"TRUE",,,,"TRUE","TRUE",,"restricted","graphics/icons/hullsys/temporal_shell.png"
 "Booster Overcharge","nskr_boostdrive",,,,,,,,2,"0.09","0.5",2,"0.5",2,,,,,,,"TRUE","TRUE",,,,,"graphics/icons/hullsys/burn_drive.png"
 "Mass Targeting Array","nskr_masstargeting",,,,,,"0.2",,,,"0.5",15,"0.5",24,,,,,,,,,,,,,"graphics/icons/hullsys/entropy_amplifier.png"
 "Abyssal Phase Cloak","nskr_bosscloak",,,,,,,,,,"0.5",,"0.5",1,"TRUE",,"TRUE","TRUE","TRUE",,,,"TRUE",,"TRUE","restricted","graphics/icons/hullsys/phase_cloak.png"

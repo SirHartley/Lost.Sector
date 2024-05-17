@@ -206,7 +206,7 @@ nskr_bc_single,WEAPON,"A simple dumb-fire torpedo, with a shaped charge warhead 
 
 nskr_bc_tube,WEAPON,"A simple magazine based weapons system carrying multiple torpedoes. A shaped charge warhead ensure massive damage potential against larger vessels.",,,,
 
-nskr_zhonya,SHIP_SYSTEM,"Makes the ship invulnerable and boosts flux dissipation, but prevents it from moving.",Defensive,,,
+nskr_paradox,SHIP_SYSTEM,"Makes the ship invulnerable and boosts flux dissipation, but prevents it from moving.",Defensive,,,
 
 nskr_temporal,SHIP_SYSTEM,"Phase and rapidly charge in the direction the ship is facing and then release an enormous blast of energy.",Movement,,,
 

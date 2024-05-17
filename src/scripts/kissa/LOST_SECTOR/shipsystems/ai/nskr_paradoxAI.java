@@ -11,7 +11,7 @@ import scripts.kissa.LOST_SECTOR.util.combatUtil;
 import java.util.ArrayList;
 import java.util.List;
 
-public class nskr_zhonyaAI implements ShipSystemAIScript {
+public class nskr_paradoxAI implements ShipSystemAIScript {
 
     //avoid these projectiles
     public static final float DEGREES = 5f;

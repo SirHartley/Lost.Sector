@@ -2,6 +2,7 @@ Version 0.6.2d
 SAVE COMPATIBLE
 Fixes:
 - Fixed a major bug in Throne's Gift xp calculation that caused you to get way too many points
+- Fixed first Eliza dialog not showing up on markets with multiple entities
 
 Version 0.6.2c
 SAVE COMPATIBLE
@@ -154,7 +155,7 @@ Version 0.6.0a:
 - Reduced Keres Storm Cannon sustained dps 112,5->100
 - Increased Tremor missile damage 350->375
 - Increased Bite ALG base range 350->400, Increased charge regen from 6s->5s
-- Increased Zhonya cooldown 15s->17.5s
+- Increased Temporal Paradox cooldown 15s->17.5s
 - Increased Volatile Flux Injector s-mod penalty 15%->25%
 - Abyssal tech type renamed to Void
    - Void ship Cruiser and Destroyer phase upkeep reduced, frigate is unchanged
@@ -224,7 +225,7 @@ Version 0.5.0f
 - Prot ships base shield reduced to 60* degrees
 - Final Overdrive changes
    - Reduced charge-up to 2s, does not activate if ship is overloaded or venting
-- Updated Zhonya visuals and sfx
+- Updated Temporal Paradox visuals and sfx
 - Fixed rare miscalculations with player and ship stats in augmented weapons	
 
 Version 0.5.0e

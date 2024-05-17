@@ -14,7 +14,7 @@ import scripts.kissa.LOST_SECTOR.util.mathUtil;
 import java.awt.*;
 import java.io.IOException;
 
-public class nskr_zhonyaStats extends BaseShipSystemScript {
+public class nskr_paradoxStats extends BaseShipSystemScript {
 
 	public static final float FLUX_BONUS = 2.0f;
 
@@ -35,7 +35,7 @@ public class nskr_zhonyaStats extends BaseShipSystemScript {
 	private boolean loaded = false;
 
 	static void log(final String message) {
-		Global.getLogger(nskr_zhonyaStats.class).info(message);
+		Global.getLogger(nskr_paradoxStats.class).info(message);
 	}
 
 	public void apply(MutableShipStatsAPI stats, String id, State state, float effectLevel) {

@@ -71,10 +71,14 @@ public class corePlugin extends BaseCampaignPlugin {
             return new PluginPick<InteractionDialogPlugin>(new nskr_coreDialog(), PickPriority.MOD_GENERAL);
         }
         //job5 eliza dialog
-        if (questUtil.getElizaLoc()!=null){
+        if (questUtil.getElizaLoc()!=null) {
             String loc = questUtil.getElizaLoc().getId();
-            if (interactionTarget.getId().equals(loc) && !questUtil.getCompleted(nskr_elizaDialog.DIALOG_FINISHED_KEY)){
-                return new PluginPick<InteractionDialogPlugin>(new nskr_elizaDialog(), PickPriority.MOD_GENERAL);
+            if (!questUtil.getCompleted(nskr_elizaDialog.DIALOG_FINISHED_KEY)) {
+                if (interactionTarget.getId().equals(loc)) {
+                    return new PluginPick<InteractionDialogPlugin>(new nskr_elizaDialog(), PickPriority.MOD_GENERAL);
+                } else if (interactionTarget.getMarket() != null && interactionTarget.getMarket().getConnectedEntities().contains(questUtil.getElizaLoc())) {
+                    return new PluginPick<InteractionDialogPlugin>(new nskr_elizaDialog(), PickPriority.MOD_GENERAL);
+                }
             }
         }
         //job5 end
