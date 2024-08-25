@@ -1,0 +1,119 @@
+{
+  "hullName": "Verity",
+  "hullId": "nskr_verity",
+  "hullSize": "FRIGATE",
+  "spriteName": "graphics/ships/nskr_verity.png",
+  "style": "MIDLINE",
+  "height": 106,
+  "width": 120,
+  "center": [60, 41],
+  "collisionRadius": 84,
+  "shieldCenter": [0, -0],
+  "shieldRadius": 81,
+  "viewOffset": 0,
+    "builtInMods": [
+    "nskr_acoils",
+  ],
+  "weaponSlots": [
+    {
+      "id": "WS0001",
+      "size": "MEDIUM",
+      "type": "ENERGY",
+      "mount": "HARDPOINT",
+      "arc": 10,
+      "angle": 0,
+      "locations": [12, -42]
+    },
+    {
+      "id": "WS0002",
+      "size": "MEDIUM",
+      "type": "ENERGY",
+      "mount": "HARDPOINT",
+      "arc": 10,
+      "angle": -0,
+      "locations": [12, 42]
+    },
+    {
+      "id": "WS0003",
+      "size": "SMALL",
+      "type": "HYBRID",
+      "mount": "TURRET",
+      "arc": 220,
+      "angle": -60,
+      "locations": [-15, -33]
+    },
+    {
+      "id": "WS0004",
+      "size": "SMALL",
+      "type": "HYBRID",
+      "mount": "TURRET",
+      "arc": 220,
+      "angle": 60,
+      "locations": [-15, 33]
+    }
+  ],
+  "engineSlots": [
+    {
+      "location": [-34.5, -18.5],
+      "length": 40,
+      "width": 8,
+      "angle": 180,
+      "contrailSize": 8,
+      "style": "MIDLINE"
+    },
+    {
+      "location": [-34.5, 18.5],
+      "length": 40,
+      "width": 8,
+      "angle": -180,
+      "contrailSize": 8,
+      "style": "MIDLINE"
+    },
+    {
+      "location": [-37.5, -9.5],
+      "length": 51,
+      "width": 16,
+      "angle": 180,
+      "contrailSize": 16,
+      "style": "MIDLINE"
+    },
+    {
+      "location": [-37.5, 9.5],
+      "length": 51,
+      "width": 16,
+      "angle": -180,
+      "contrailSize": 16,
+      "style": "MIDLINE"
+    }
+  ],
+  "bounds": [
+    36, 3.5,
+    37.5, 7.5,
+    52.5, 8.5,
+    60.5, 12,
+    43, 15.5,
+    37.5, 23.5,
+    13, 34,
+    13, 53.5,
+    -25, 53,
+    -30, 38,
+    -24, 26,
+    -33, 21,
+    -37, 6.5,
+    -22, -0,
+    -37, -6.5,
+    -33, -21,
+    -24, -26,
+    -30, -38,
+    -25, -53,
+    13, -53.5,
+    13, -34,
+    37.5, -23.5,
+    43, -15.5,
+    60.5, -12,
+    52.5, -8.5,
+    37.5, -7.5,
+    36, -3.5,
+    48, -0
+  ]
+}

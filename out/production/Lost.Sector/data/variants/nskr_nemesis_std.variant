@@ -1,0 +1,55 @@
+{
+    "displayName": "SERIAL 001",
+    "fluxCapacitors": 0,
+    "fluxVents": 18,
+    "goalVariant": true,
+    "hullId": "nskr_nemesis",
+    "hullMods": [
+        "hardenedshieldemitter",
+        "magazines",
+        "stabilizedshieldemitter"
+    ],
+    "permaMods": [],
+    "sMods": [],
+    "variantId": "nskr_nemesis_std",
+    "weaponGroups": [
+        {
+            "autofire": false,
+            "mode": "ALTERNATING",
+            "weapons": {
+                "WS0003": "amblaster",
+                "WS0004": "amblaster"
+            }
+        },
+        {
+            "autofire": false,
+            "mode": "ALTERNATING",
+            "weapons": {
+                "WS0011": "nskr_spikes",
+                "WS0012": "nskr_spikes"
+            }
+        },
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {"WS0008": "nskr_scannonm"}
+        },
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0001": "nskr_scatterm",
+                "WS0002": "nskr_scatterm"
+            }
+        },
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0005": "nskr_arcgen",
+                "WS0006": "nskr_arcgen",
+                "WS0007": "vulcan"
+            }
+        }
+    ]
+}

@@ -1,0 +1,14 @@
+{
+    "masterVersionFile": "https://www.dropbox.com/s/y2sr59h2ptq7rir/NSKR.version?dl=1",
+	"directDownloadURL": "https://github.com/kissa-mies/LOST_SECTOR/releases/latest/download/LOST_SECTOR.zip",
+	"changelogURL": "https://www.dropbox.com/s/y6co3qqzogihh2q/Changelog.txt?dl=1",
+    "modName":"LOST_SECTOR",
+    "modThreadId":27556,
+    "modNexusId":"",
+    "modVersion":
+    {
+        "major":0,
+        "minor":6,
+        "patch":"2d",
+    },
+}

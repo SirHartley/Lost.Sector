@@ -1,0 +1,73 @@
+{
+    "displayName": "Guillotine",
+    "fluxCapacitors": 0,
+    "fluxVents": 41,
+    "goalVariant": true,
+    "hullId": "nskr_kingslayer",
+    "hullMods": [
+        "missleracks",
+        "missile_autoloader",
+        "eccm",
+        "converted_hangar",
+        "heavyarmor"
+    ],
+    "permaMods": [],
+    "sMods": [],
+    "variantId": "nskr_kingslayer_mss",
+    "weaponGroups": [
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0016": "gauss",
+                "WS0017": "gauss"
+            }
+        },
+        {
+            "autofire": false,
+            "mode": "ALTERNATING",
+            "weapons": {
+                "WS0014": "sabotpod",
+                "WS0015": "sabotpod",
+                "WS0018": "sabotpod",
+                "WS0019": "sabotpod"
+            }
+        },
+        {
+            "autofire": false,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0006": "reaper",
+                "WS0007": "reaper"
+            }
+        },
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {"WS0003": "heavymortar"}
+        },
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0004": "lightac",
+                "WS0005": "lightac",
+                "WS0008": "lightac",
+                "WS0009": "lightac"
+            }
+        },
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0001": "flak",
+                "WS0002": "flak",
+                "WS0010": "vulcan",
+                "WS0011": "vulcan",
+                "WS0012": "vulcan",
+                "WS0013": "vulcan"
+            }
+        }
+    ],
+    "wings": ["perdition_wing"]
+}

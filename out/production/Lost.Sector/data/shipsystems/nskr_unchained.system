@@ -1,0 +1,22 @@
+{
+	"id":"nskr_unchained",
+	"type":"STAT_MOD",
+	"aiType":"CUSTOM",
+	"aiScript":"scripts.kissa.LOST_SECTOR.shipsystems.ai.nskr_unchainedAI",
+	"statsScript":"scripts.kissa.LOST_SECTOR.shipsystems.nskr_unchainedStats",
+
+	"weaponGlowColor":[255, 0, 38,100],
+	"weaponTypes":[BALLISTIC, MISSILE, ENERGY],
+	"engineGlowLengthMult":1.25,
+	"engineGlowWidthMult":1,
+	"engineGlowGlowMult":1.5,
+	
+	"flameoutOnImpactChance":0,
+
+	"clampTurnRateAfter":true,
+	"clampMaxSpeedAfter":false,
+
+	"useSound":"nskr_unchained_activate",
+	"loopSound":"nskr_unchained_loop",
+	"outOfUsesSound":"gun_out_of_ammo",	
+}

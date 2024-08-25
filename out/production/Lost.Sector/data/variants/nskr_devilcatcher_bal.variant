@@ -1,0 +1,49 @@
+{
+    "displayName": "Firebase",
+    "fluxCapacitors": 0,
+    "fluxVents": 20,
+    "goalVariant": true,
+    "hullId": "nskr_devilcatcher",
+    "hullMods": [
+        "nskr_inertial",
+        "targetingunit",
+        "unstable_injector",
+        "nskr_criticalArmor"
+    ],
+    "permaMods": [],
+    "sMods": [],
+    "variantId": "nskr_devilcatcher_bal",
+    "weaponGroups": [
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {"WS0001": "multineedler"}
+        },
+        {
+            "autofire": false,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0004": "breach",
+                "WS0005": "breach",
+                "WS0006": "breach",
+                "WS0007": "breach"
+            }
+        },
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0002": "lightag",
+                "WS0003": "lightag"
+            }
+        },
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0008": "vulcan",
+                "WS0009": "vulcan"
+            }
+        }
+    ]
+}

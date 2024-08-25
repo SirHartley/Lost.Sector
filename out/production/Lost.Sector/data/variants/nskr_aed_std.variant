@@ -1,0 +1,16 @@
+{
+    "displayName": "Surprise",
+    "fluxCapacitors": 10,
+    "fluxVents": 8,
+	"goalVariant": true,
+    "hullId": "nskr_aed",
+    "hullMods": ["heavyarmor"],
+    "permaMods": [],
+    "sMods": [],
+    "variantId": "nskr_aed_std",
+    "weaponGroups": [{
+        "autofire": false,
+        "mode": "LINKED",
+        "weapons": {"WS0001": "amblaster"}
+    }]
+}

@@ -1,0 +1,48 @@
+{
+  "id": "nskr_scatterm",
+  "specClass": "projectile",
+  "projectileSpecId": "nskr_scatterm_shot",
+  "everyFrameEffect": "scripts.kissa.LOST_SECTOR.weapons.nskr_scatterEffect",
+  "type": "ENERGY",
+  "size": "MEDIUM",
+  "turretSprite": "graphics/weapons/nskr_scatterm_turret.png",
+  "turretGlowSprite": "graphics/weapons/nskr_scatterm_turret_glow.png",
+  "hardpointSprite": "graphics/weapons/nskr_scatterm_hardpoint.png",
+  "hardpointGlowSprite": "graphics/weapons/nskr_scatterm_hardpoint_glow.png",
+  "renderAboveAllWeapons": 0,
+  "glowColor": [
+    255, 100, 147,
+    255
+  ],
+  "turretOffsets": [
+    17,
+    0
+  ],
+  "turretAngleOffsets": [
+    0
+  ],
+  "hardpointOffsets": [
+    23,
+    0
+  ],
+  "hardpointAngleOffsets": [
+    0
+  ],
+  "barrelMode": "ALTERNATING",
+  "interruptibleBurst":false,
+  "animationType": "GLOW_AND_FLASH",
+  "muzzleFlashSpec": {
+    "length": 30,
+    "spread": 20,
+    "particleSizeMin": 30,
+    "particleSizeRange": 15,
+    "particleDuration": 0.18,
+    "particleCount": 18,
+    "particleColor": [
+      255, 100, 118,
+      255
+    ]
+  },
+  "textureType": ROUGH,
+  "fireSoundTwo": "nskr_scatterm_fire"
+}

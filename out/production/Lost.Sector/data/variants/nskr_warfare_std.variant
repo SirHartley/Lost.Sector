@@ -1,0 +1,31 @@
+{
+    "displayName": "SERIAL 003",
+    "fluxCapacitors": 2,
+    "fluxVents": 20,
+    "hullId": "nskr_warfare",
+	"goalVariant": true,
+    "hullMods": ["auxiliarythrusters"],
+    "permaMods": [],
+    "sMods": [],
+    "variantId": "nskr_warfare_std",
+    "weaponGroups": [
+        {
+            "autofire": false,
+            "mode": "LINKED",
+            "weapons": {"WS0002": "nskr_hshotgun"}
+        },
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {"WS0001": "nskr_collector"}
+        },
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0003": "lightneedler",
+                "WS0004": "lightneedler"
+            }
+        }
+    ]
+}

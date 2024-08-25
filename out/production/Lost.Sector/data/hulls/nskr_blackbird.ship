@@ -1,0 +1,202 @@
+{
+  "hullName": "blackbird",
+  "hullId": "nskr_blackbird",
+  "hullSize": "DESTROYER",
+  "spriteName": "graphics/ships/nskr_blackbird.png",
+  "style": "NSKR_AUG",
+  "height": 154,
+  "width": 140,
+  "center": [70, 77],
+  "collisionRadius": 102,
+  "shieldCenter": [0, 0],
+  "shieldRadius": 98.5,
+  "viewOffset": 0,
+  "builtInMods": [
+    "nskr_augmented",
+	"nskr_augmented_weapons",
+    "nskr_takedown"
+  ],
+  "weaponSlots": [
+    {
+      "id": "WS0001",
+      "size": "MEDIUM",
+      "type": "HYBRID",
+      "mount": "TURRET",
+      "arc": 160,
+      "angle": -45,
+      "locations": [13, -41]
+    },
+    {
+      "id": "WS0002",
+      "size": "MEDIUM",
+      "type": "HYBRID",
+      "mount": "TURRET",
+      "arc": 160,
+      "angle": 45,
+      "locations": [13, 41]
+    },
+    {
+      "id": "WS0003",
+      "size": "SMALL",
+      "type": "SYNERGY",
+      "mount": "TURRET",
+      "arc": 140,
+      "angle": -0,
+      "locations": [37, 40]
+    },
+    {
+      "id": "WS0004",
+      "size": "SMALL",
+      "type": "SYNERGY",
+      "mount": "TURRET",
+      "arc": 140,
+      "angle": 0,
+      "locations": [37, -40]
+    },
+    {
+      "id": "WS0005",
+      "size": "SMALL",
+      "type": "HYBRID",
+      "mount": "TURRET",
+      "arc": 140,
+      "angle": 180,
+      "locations": [-30, -0]
+    },
+    {
+      "id": "WS0006",
+      "size": "SMALL",
+      "type": "COMPOSITE",
+      "mount": "HARDPOINT",
+      "arc": 5,
+      "angle": 0,
+      "locations": [56.5, 21]
+    },
+    {
+      "id": "WS0007",
+      "size": "SMALL",
+      "type": "COMPOSITE",
+      "mount": "HARDPOINT",
+      "arc": 5,
+      "angle": -0,
+      "locations": [56.5, -21]
+    },
+    {
+      "id": "WS0008",
+      "size": "MEDIUM",
+      "type": "HYBRID",
+      "mount": "HARDPOINT",
+      "arc": 5,
+      "angle": 0,
+      "locations": [62.5, -0]
+    }
+  ],
+  "engineSlots": [
+    {
+      "location": [-49.5, -41],
+      "length": 50,
+      "width": 10,
+      "angle": 180,
+      "contrailSize": 10,
+      "style": "NSKR_TECHAUG2"
+    },
+    {
+      "location": [-49.5, 41],
+      "length": 50,
+      "width": 10,
+      "angle": -180,
+      "contrailSize": 10,
+      "style": "NSKR_TECHAUG2"
+    },
+    {
+      "location": [-49.5, -55],
+      "length": 50,
+      "width": 10,
+      "angle": 180,
+      "contrailSize": 10,
+      "style": "NSKR_TECHAUG2"
+    },
+    {
+      "location": [-49.5, 55],
+      "length": 50,
+      "width": 10,
+      "angle": -180,
+      "contrailSize": 10,
+      "style": "NSKR_TECHAUG2"
+    },
+    {
+      "location": [-48.5, -41],
+      "length": 28,
+      "width": 6,
+      "angle": 180,
+      "contrailSize": 6,
+      "style": "NSKR_TECHAUG"
+    },
+    {
+      "location": [-48.5, 41],
+      "length": 28,
+      "width": 6,
+      "angle": -180,
+      "contrailSize": 6,
+      "style": "NSKR_TECHAUG"
+    },
+    {
+      "location": [-48.5, 55],
+      "length": 28,
+      "width": 6,
+      "angle": -180,
+      "contrailSize": 6,
+      "style": "NSKR_TECHAUG"
+    },
+    {
+      "location": [-48.5, -55],
+      "length": 28,
+      "width": 6,
+      "angle": 180,
+      "contrailSize": 6,
+      "style": "NSKR_TECHAUG"
+    }
+  ],
+  "bounds": [
+    66, 10.5,
+    36.5, 15,
+    58, 16,
+    58, 26,
+    72, 27,
+    66.5, 38,
+    47, 51.5,
+    40.5, 49,
+    25, 52.5,
+    11, 59,
+    -11.5, 57,
+    -11, 66,
+    -30, 67,
+    -46, 59,
+    -46, 38,
+    -30, 27.5,
+    -48.5, 27.5,
+    -70.5, 11,
+    -68.5, 6.5,
+    -46, 8.5,
+    -56.5, -0,
+    -46, -8.5,
+    -68.5, -6.5,
+    -70.5, -11,
+    -48.5, -27.5,
+    -30, -27.5,
+    -46, -38,
+    -46, -59,
+    -30, -67,
+    -11, -66,
+    -11.5, -57,
+    11, -59,
+    25, -52.5,
+    40.5, -49,
+    47, -51.5,
+    66.5, -38,
+    72, -27,
+    58, -26,
+    58, -16,
+    36.5, -15,
+    66, -10.5
+  ]
+}

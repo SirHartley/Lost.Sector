@@ -1,0 +1,59 @@
+"name","id","tier","rarity","base value","range","damage/second","damage/shot","emp","impact","turn rate","OPs","ammo","ammo/sec","reload size","type","energy/shot","energy/second","chargeup","chargedown","burst size","burst delay","min spread","max spread","spread/shot","spread decay/sec","beam speed","proj speed","launch speed","flight time","proj hitpoints","autofireAccBonus","extraArcForAI","hints","tags","groupTag","tech/manufacturer","for weapon tooltip>>","primaryRoleStr","speedStr","trackingStr","turnRateStr","accuracyStr","customPrimary","customPrimaryHL","customAncillary","customAncillaryHL","noDPSInTooltip","number"
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+"Bastion-Cracker Torpedo Tube","nskr_bc_tube",1,,1250,1200,,2500,,30,6,8,6,,,"HIGH_EXPLOSIVE",0,,0,10,1,,0,0,0,0,,450,40,"4.5",400,,,"STRIKE","strike14, rocket7, kesteven",,"Kesteven",,"Torpedo","Fast","None",,,"When hitting hull or armor deals %s of the targets maximum hitpoints as bonus damage. Against modular stations and ships the module or parent hull with the most hitpoints counts for the bonus damage.","10%",,,"TRUE",369
+"Bastion-Cracker Torpedo","nskr_bc_single",1,,225,1200,,2500,,30,10,1,1,,,"HIGH_EXPLOSIVE",0,,0,4,1,,0,0,0,0,,450,40,"4.5",400,,,"STRIKE","strike9, rocket2, kesteven",,"Kesteven",,"Torpedo","Fast","None",,,"When hitting hull or armor deals %s of the targets maximum hitpoints as bonus damage. Against modular stations and ships the module or parent hull with the most hitpoints counts for the bonus damage.","10%",,,"TRUE",369
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+"Collector Heavy Auto Blaster","nskr_collector",3,,36200,700,,400,,40,6,28,8,"0.75",2,"ENERGY",440,,,"0.25",,,0,5,1,1,,700,,,150,,,,"restricted, enigma, prot_wp, energy19",,"Unknown Prototype",,"Kill",,,,,"Executes any target below %s maximum hitpoints, on armor or hull hit.","15%",,,,420
+"Giga Pulse Cannon","nskr_plasmal",3,,39000,1000,,2000,,150,4,32,40,,,"ENERGY",2000,,"0.5","8.901",2,"0.5",4,10,5,1,,700,,,500,,,"STRIKE, USE_VS_FRIGATES","restricted, enigma, prot_wp, energy16, strike18",,"Unknown Prototype",,"Destruction",,,,,"Projectiles deal damage to all nearby targets on impact.",,,,,420
+"Plasma Burst Canister Cannon","nskr_pbcc",3,,34200,1200,,2000,800,100,5,28,,,,"ENERGY",2400,,0,"5",1,,0,8,2,1,,600,,,300,,,,"restricted, enigma, prot_wp, energy18, he10, kinetic14",,"Unknown Prototype",,"Destruction",,,,,"Splits into %s that deal %s and %s damage each.","4 submunitions | 500 energy | 200 EMP",,,,420
+,"nskr_pbcc_sub",3,,,400,,500,200,10,0,,,,,"ENERGY",,,0,1,1,,0,0,0,0,,1400,,,25,,,"SYSTEM",,,"Unknown Prototype",,,,,,,,,,,,420
+"Mega Shotgun","nskr_hshotgun",3,,30400,900,,1000,,50,6,26,,,,"HIGH_EXPLOSIVE",1000,,0,"2",1,,2,10,4,1,,750,,,300,,,,"restricted, enigma, prot_wp, he19",,"Unknown Prototype",,"Anti-Armor/Hull",,,,,"Spawns %s additional fragments on firing, each having 50%% the range and dealing 20%% the damage of the main weapon. %s of the damage caused by this weapon is dealt as %s damage instead.","5 | 50% | fragmentation",,,,420
+,"nskr_hshotgun_sub",3,,,450,,100,,10,,,,,,"HIGH_EXPLOSIVE",,,,,,,,,,,,600,,,60,,,"SYSTEM",,,"Unknown Prototype",,,,,,,,,,,,420
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+"Freyr EMP Grenade Launcher ","nskr_emgl",3,,11200,700,,500,500,25,12,14,6,"0.33333",3,"ENERGY",700,,0,"2.6",3,"0.2",0,10,4,5,,550,,,75,,,,"restricted, enigma, prot_wp, he10, energy10, strike5",,"Unknown Prototype",,"Burst Dmg / EMP",,,,,"Projectiles %s to the hull and explode after 0.5 seconds causing %s that deal 10%% of the original hit.","Stick | 5 arcs",,,,420
+,"nskr_emgl_sub",3,,,700,,350,500,5,12,,,,,"ENERGY",,,,,,,0,0,0,0,,100,100,1,500,,,"SYSTEM",,,"Unknown Prototype",,,,,,,,,,,,420
+"Keres Storm Cannon","nskr_scannonm",3,,12500,700,,75,150,5,20,15,24,"1.33333",4,"KINETIC",90,,0,"0.075",1,,0,15,"1.5",7,,1000,,,30,,,,"restricted, enigma, prot_wp, kinetic15, strike5",,"Unknown Prototype",,"Suppression",,,,,"Hits on hull or armor have a %s chance to %s to weapons and engines, dealing extra damage equal to 2x the original hit.","25% | arc",,,,420
+"Entropy Inverter Cannon","nskr_inverter",3,,13450,600,,600,,20,20,14,4,"0.22222",2,"ENERGY",660,,,"0.95",1,,0,0,0,0,,800,,,50,,,,"restricted, enigma, prot_wp, energy16",,"Unknown Prototype",,"Destruction",,,,,"Regain %s ammo on hits against armor or hull.",1,,,,420
+"Surge Plasma Scatterer","nskr_scatterm",3,,12200,600,,800,,2,20,12,,,,"HIGH_EXPLOSIVE",480,,,"4.8",3,"0.10",5,15,10,10,,1100,,,5,,,"USE_LESS_VS_SHIELDS","restricted, enigma, prot_wp, energy10, he17, SR",,"Unknown Prototype",,"Anti-Armor",,,,,"Fires %s that deal %s and %s damage each in a spread. Each projectile deals an additional %s damage to armor. This damage is not reduced by armor.","20 projectiles | 20 high-explosive | 20 fragmentation | 10",,,,420
+,"nskr_scatterm_clone",3,,,450,,20,,2,,,,,,"HIGH_EXPLOSIVE",,,,,1,,0,0,10,10,,1100,,,5,,,"SYSTEM",,,"Unknown Prototype",,,,,,,,,,,,420
+"Mega Flux Rocket Pod","nskr_mfrocketpod",3,,14600,2500,,500,600,15,10,12,9,"0.06",3,"ENERGY",0,,0,"16.8",3,"0.35",0,0,0,,,1000,25,"3.1",200,,,"DO_NOT_CONSERVE, FIRE_WHEN_INEFFICIENT","restricted, enigma, prot_wp, rocket15, utility18",,"Unknown Prototype",,"Rocket (Suppression)","Very Fast","None",,,"Generates %s flux to the target on hit. Hits on hull or armor cause %s to weapons and engines, dealing 25%% of the original hit. Hits on shields have a chance to generate up to %s of these arcs based on the target's hard flux level.","500 | 4 arcs | 4",,,,420
+"Tremor MRM Launcher","nskr_tremors",3,,6550,2500,,375,,5,10,6,12,"0.06",4,"ENERGY",,,,"9.25",4,"0.25",,,,,,350,50,"8.5",100,,,"DO_NOT_AIM, CONSERVE_1","restricted, enigma, prot_wp, missile6, utility8",,"Unknown Prototype",,"Saturation","Fast","Good",,,"Highly unpredictable %s.","tracking",,,,420
+"Tremor MRM Pod","nskr_tremorm",3,,12850,2500,,375,,5,20,12,36,"0.12",8,"ENERGY",,,,"18.25",8,"0.25",,,,,,350,50,"8.5",100,,,"DO_NOT_AIM, CONSERVE_1","restricted, enigma, prot_wp, missile13, utility15",,"Unknown Prototype",,"Saturation","Fast","Good",,,"Highly unpredictable %s.","tracking",,,,420
+"Spike MRT Launcher","nskr_spikes",3,,8565,2500,,2000,,20,20,7,3,"0.02",1,"HIGH_EXPLOSIVE",,,,5,1,,,,,,,200,50,12,500,,,"CONSERVE_1, STRIKE, USE_VS_FRIGATES","restricted, enigma, prot_wp, missile9, strike9",,"Unknown Prototype",,"Strike","Medium","Poor",,,"Second Stage Increases speed but removes %s. Explosion launches additional shrapnel on hit. Dealing up to %s damage.","tracking | 7x100 kinetic",,,,420
+"Spike MRT Pod","nskr_spikem",3,,15865,2500,,2000,,20,10,14,10,"0.04",2,"HIGH_EXPLOSIVE",,,,"14.5",2,"0.75",,,,,,200,50,12,500,,,"CONSERVE_1, STRIKE, USE_VS_FRIGATES","restricted, enigma, prot_wp, missile18, strike18",,"Unknown Prototype",,"Strike","Medium","Poor",,,"Second Stage Increases speed but removes %s. Explosion launches additional shrapnel on hit. Dealing up to %s damage.","tracking | 7x100 kinetic",,,,420
+"Bite Arc Lightning Generator","nskr_arcgen",3,,5900,400,,125,250,0,32,8,2,"0.2",2,"ENERGY",250,,0,"0.667",1,,,,,,,5000,,,500,,,"PD","restricted, enigma, prot_wp, pd11",,"Unknown Prototype",,"Point Defense / EMP",,,,,"Fires electric arcs that can chain to %s ship, fighter or missile near the initial target based on the weapons range. Each bolt can only deal at most %s of its potential damage to a target. Leftover damage carries over to the next bolt.","any | half",,,,420
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+"Long Barrel Vulcan Cannon","nskr_vulcanFi",,,,450,,35,,1,75,,,,,"FRAGMENTATION",2,,0,"0.17",1,,0,15,1,15,,1000,,,10,,,"SYSTEM, PD","Point Defense",,,,"Point Defense",,,,,,,,,,
+"Garde Blaster","nskr_huginn_arm_right",,,,600,,250,,20,12,,,,,"ENERGY",20,,0,"1.5",1,,0,0,0,0,,700,,,40,,,"SYSTEM, PD, PD_ALSO",,,"Unknown Prototype",,"General",,,,,"Projectile deals damage to all nearby targets on impact.",,,,,400
+"Obliterator Rockets","nskr_huginn_arm_left",,,,900,,150,,5,30,,,,,"HIGH_EXPLOSIVE",0,,0,"6.75",2,"0.25",0,30,15,10,,400,50,"2.50",100,,,"SYSTEM",,,"Unknown Prototype",,"Anti-Armor","Fast","None",,,,,,,,400
+"Garde Blaster","nskr_huginn_e_arm_right",,,,600,,250,,20,12,,,,,"ENERGY",20,,0,"1.5",1,,0,0,0,0,,700,,,40,,,"SYSTEM, PD, PD_ALSO",,,"Project Enigma",,"General",,,,,"Projectile deals damage to all nearby targets on impact.",,,,,400
+"Obliterator Rockets","nskr_huginn_e_arm_left",,,,900,,150,,5,30,,,,,"HIGH_EXPLOSIVE",0,,0,"6.75",2,"0.25",0,30,15,10,,400,50,"2.50",100,,,"SYSTEM",,,"Project Enigma",,"Anti-Armor","Fast","None",,,,,,,,400
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+"Missile Salvo","nskr_msalvo",0,,200000,1200,,400,400,25,30,12,30,,,"ENERGY",0,,0,1,1,,0,0,0,,,500,100,"3.5",100,,,"SYSTEM",,,,,,,,,,,,,,,400
+"Kaboom Dummy","nskr_kaboom_dummy",0,,3000,2400,,750,,200,5,16,,,,"HIGH_EXPLOSIVE",0,,0,3,1,,0,10,5,10,,750,,,400,,,"SYSTEM",,,,,,,,,,,,,,,400
+"Spike Dummy","nskr_spike_dummy",0,,3000,200,,100,,20,5,16,,,,"KINETIC",0,,0,3,1,,0,10,5,10,,800,,,400,,,"SYSTEM",,,,,,,,,,,,,,,400
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+"Causality1 Dummy","nskr_causality1_dummy",0,,3000,2000,,750,,200,5,16,,,,"HIGH_EXPLOSIVE",0,,0,3,1,,0,10,5,10,,300,300,9,1200,,,"SYSTEM",,,,,,,,,,,,,,,400
+"Causality2 Dummy","nskr_causality2_dummy",0,,3000,1000,,100,,20,5,16,,,,"ENERGY",0,,0,3,1,,0,10,5,10,,1000,,,400,,,"SYSTEM",,,,,,,,,,,,,,,400
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+"MOAB Flak","nskr_bigFlak",,,,1200,,1500,,,,,,,,"HIGH_EXPLOSIVE",0,0,0,"0.1",1,,0,0,0,0,,200,200,4,500,,,"SYSTEM",,,,,,,,,,,,,,,400
+"EM Flak","nskr_emflak",,,,250,,750,1200,,,,,0,,"ENERGY",0,0,0,"0.1",3,"1.5",150,150,0,0,,50,200,6,300,,,"SYSTEM",,,,,,,,,,,,,,,400
+"Stasis Generator","nskr_stasis",0,,1200,1200,,500,500,75,20,10,,,,"ENERGY",0,,0,9999,1,,0,0,0,0,,300,300,"4.5",600,,,"SYSTEM, STRIKE, USE_VS_FRIGATES",,,"Unknown Prototype",,"Support","Fast","None",,,"Slows down all targets in an area on hit.",,,,"TRUE",400
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+"nskr Blinker","nskr_blinker",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,"SYSTEM",,,,,,,,,,,,,,,
+"nskr Blinkerb","nskr_blinkerb",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,"SYSTEM",,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+"Lights Prot1","nskr_prot1_light",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,"SYSTEM",,,,,,,,,,,,,,,
+"Lights Prot2","nskr_prot2_light",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,"SYSTEM",,,,,,,,,,,,,,,
+"Lights Prot3","nskr_prot3_light",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,"SYSTEM",,,,,,,,,,,,,,,
+"Lights Prot3x","nskr_prot3x_light",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,"SYSTEM",,,,,,,,,,,,,,,
+"Lights Prot4","nskr_prot4_light",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,"SYSTEM",,,,,,,,,,,,,,,
+"Lights Prot5","nskr_prot5_light",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,"SYSTEM",,,,,,,,,,,,,,,
+"Lights Prot6","nskr_prot6_light",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,"SYSTEM",,,,,,,,,,,,,,,
+"Lights Prot7","nskr_prot7_light",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,"SYSTEM",,,,,,,,,,,,,,,
+"Lights Prot8","nskr_prot8_light",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,"SYSTEM",,,,,,,,,,,,,,,
+"Lights Prot9","nskr_prot9_light",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,"SYSTEM",,,,,,,,,,,,,,,
+"Lights Prot10","nskr_prot10_light",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,"SYSTEM",,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+"Lights Torpor System","nskr_torpor_system_lights",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,"SYSTEM",,,,,,,,,,,,,,,

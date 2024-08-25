@@ -1,0 +1,242 @@
+{
+  "hullName": "Dragontail",
+  "hullId": "nskr_dragontail",
+  "hullSize": "FRIGATE",
+  "spriteName": "graphics/ships/nskr_dragontail.png",
+  "style": "NSKR_AUG",
+  "height": 96,
+  "width": 160,
+  "center": [80, 48],
+  "collisionRadius": 100,
+  "shieldCenter": [0, 0],
+  "shieldRadius": 94.5,
+  "viewOffset": 0,
+      "builtInMods": [
+	"nskr_pullback",  
+	"nskr_augmented",
+	"nskr_augmented_weapons"
+  ],
+  "weaponSlots": [
+    {
+      "id": "WS0001",
+      "size": "MEDIUM",
+      "type": "HYBRID",
+      "mount": "HARDPOINT",
+      "arc": 5,
+      "angle": 0,
+      "locations": [21.5, -0]
+    },
+    {
+      "id": "WS0002",
+      "size": "SMALL",
+      "type": "HYBRID",
+      "mount": "TURRET",
+      "arc": 120,
+      "angle": 0,
+      "locations": [8, 34]
+    },
+    {
+      "id": "WS0003",
+      "size": "SMALL",
+      "type": "HYBRID",
+      "mount": "TURRET",
+      "arc": 120,
+      "angle": -0,
+      "locations": [8, -34]
+    },
+    {
+      "id": "WS0004",
+      "size": "SMALL",
+      "type": "HYBRID",
+      "mount": "TURRET",
+      "arc": 70,
+      "angle": -0,
+      "locations": [25, -50]
+    },
+    {
+      "id": "WS0005",
+      "size": "SMALL",
+      "type": "HYBRID",
+      "mount": "TURRET",
+      "arc": 70,
+      "angle": 0,
+      "locations": [25, 50]
+    }
+  ],
+  "engineSlots": [
+    {
+      "location": [-42, -11.5],
+      "length": 4,
+      "width": 7,
+      "angle": 180,
+      "contrailSize": 7,
+      "style": "CUSTOM",
+      "styleId": "NSKR_TECHAUG"
+    },
+    {
+      "location": [-42, 11.5],
+      "length": 4,
+      "width": 7,
+      "angle": -180,
+      "contrailSize": 7,
+      "style": "CUSTOM",
+      "styleId": "NSKR_TECHAUG"
+    },
+    {
+      "location": [-42.5, -11.5],
+      "length": 36,
+      "width": 8,
+      "angle": 180,
+      "contrailSize": 8,
+      "style": "CUSTOM",
+      "styleId": "NSKR_TECHAUG2"
+    },
+    {
+      "location": [-42.5, 11.5],
+      "length": 36,
+      "width": 8,
+      "angle": -180,
+      "contrailSize": 8,
+      "style": "CUSTOM",
+      "styleId": "NSKR_TECHAUG2"
+    },
+    {
+      "location": [-42, -0],
+      "length": 4,
+      "width": 7,
+      "angle": 180,
+      "contrailSize": 7,
+      "style": "CUSTOM",
+      "styleId": "NSKR_TECHAUG"
+    },
+    {
+      "location": [-43, -0],
+      "length": 44,
+      "width": 11,
+      "angle": -180,
+      "contrailSize": 11,
+      "style": "CUSTOM",
+      "styleId": "NSKR_TECHAUG2"
+    },
+    {
+      "location": [-41.5, 49.5],
+      "length": 4,
+      "width": 7,
+      "angle": 143,
+      "contrailSize": 7,
+      "style": "CUSTOM",
+      "styleId": "NSKR_TECHAUG"
+    },
+    {
+      "location": [-41.5, -49.5],
+      "length": 4,
+      "width": 7,
+      "angle": -143,
+      "contrailSize": 7,
+      "style": "CUSTOM",
+      "styleId": "NSKR_TECHAUG"
+    },
+    {
+      "location": [-37.5, 55],
+      "length": 4,
+      "width": 7,
+      "angle": 143,
+      "contrailSize": 7,
+      "style": "CUSTOM",
+      "styleId": "NSKR_TECHAUG"
+    },
+    {
+      "location": [-37.5, -55],
+      "length": 4,
+      "width": 7,
+      "angle": -143,
+      "contrailSize": 7,
+      "style": "CUSTOM",
+      "styleId": "NSKR_TECHAUG"
+    },
+    {
+      "location": [-37, 54.5],
+      "length": 37.045856,
+      "width": 6.813077,
+      "angle": 149,
+      "contrailSize": 6.813077,
+      "style": "CUSTOM",
+      "styleId": "NSKR_TECHAUG2"
+    },
+    {
+      "location": [-37, -54.5],
+      "length": 37.045856,
+      "width": 6.813077,
+      "angle": -149,
+      "contrailSize": 6.813077,
+      "style": "CUSTOM",
+      "styleId": "NSKR_TECHAUG2"
+    },
+    {
+      "location": [-41, -49],
+      "length": 37.045856,
+      "width": 6.813077,
+      "angle": -149,
+      "contrailSize": 6.813077,
+      "style": "CUSTOM",
+      "styleId": "NSKR_TECHAUG2"
+    },
+    {
+      "location": [-41, 49],
+      "length": 37.045856,
+      "width": 6.813077,
+      "angle": 149,
+      "contrailSize": 6.813077,
+      "style": "CUSTOM",
+      "styleId": "NSKR_TECHAUG2"
+    }
+  ],
+  "bounds": [
+    27.5, 7,
+    24.5, 10,
+    24, 15.5,
+    16.5, 22.5,
+    21.5, 29,
+    34.5, 19.5,
+    43, 28,
+    34.5, 44,
+    36, 55,
+    27.5, 58.5,
+    16, 78.5,
+    11.5, 78,
+    11.5, 70.5,
+    3, 68,
+    2, 47.5,
+    -8, 53.5,
+    -10.5, 51.5,
+    -33, 57.5,
+    -41, 45.5,
+    -20, 25.5,
+    -27, 25,
+    -30.5, 17,
+    -40, 15,
+    -40, -15,
+    -30.5, -17,
+    -27, -25,
+    -20, -25.5,
+    -41, -45.5,
+    -33, -57.5,
+    -10.5, -51.5,
+    -8, -53.5,
+    2, -47.5,
+    3, -68,
+    11.5, -70.5,
+    11.5, -78,
+    16, -78.5,
+    27.5, -58.5,
+    36, -55,
+    34.5, -44,
+    43, -28,
+    34.5, -19.5,
+    21.5, -29,
+    16.5, -22.5,
+    24, -15.5,
+    24.5, -10,
+    27.5, -7
+  ]
+}

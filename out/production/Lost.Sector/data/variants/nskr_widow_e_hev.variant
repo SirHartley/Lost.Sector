@@ -1,0 +1,34 @@
+{
+    "displayName": "Smasher",
+    "fluxCapacitors": 0,
+    "fluxVents": 6,
+    "goalVariant": true,
+    "hullId": "nskr_widow_e",
+    "hullMods": [
+        "stabilizedshieldemitter",
+        "unstable_injector"
+    ],
+    "permaMods": [],
+    "sMods": [],
+    "variantId": "nskr_widow_e_hev",
+    "weaponGroups": [
+        {
+            "autofire": false,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0002": "nskr_inverter",
+                "WS0003": "nskr_inverter"
+            }
+        },
+        {
+            "autofire": false,
+            "mode": "LINKED",
+            "weapons": {"WS0004": "sabotpod"}
+        },
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {"WS0001": "lightdualmg"}
+        }
+    ]
+}

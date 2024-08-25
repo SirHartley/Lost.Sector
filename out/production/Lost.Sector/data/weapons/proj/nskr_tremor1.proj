@@ -1,0 +1,38 @@
+{
+	"id":"nskr_tremor1",
+	"specClass":"missile",	
+	"missileType":"MISSILE",
+	"onHitEffect":"scripts.kissa.LOST_SECTOR.weapons.nskr_tremorOH",
+	"sprite":"graphics/missiles/nskr_tremor_shot.png",
+	"size":[6,14],	
+	"center":[3,7],
+	"collisionRadius":20,
+	"collisionClass":"MISSILE_NO_FF",
+	"explosionColor":[0, 8, 255,255],  # purely visual, will get a white additively blended core on top of this color
+	"explosionRadius":125, # purely visual
+	"engineSpec":{"turnAcc":1200,
+				  "turnRate":200,
+				  "acc":1500,
+				  "dec":1000},	
+	"engineSlots":[{"id":"ES1",
+					"loc":[-8, 0],
+				    "style":"CUSTOM",
+				    "styleSpec":{
+						"mode":"QUAD_STRIP", # PARTICLES or QUAD_STRIP, determines which params are used
+						"engineColor":[102, 75, 255,255],
+						"contrailDuration":1,
+						"contrailWidthMult":1.0,
+						"contrailWidthAddedFractionAtEnd":2,  # can be negative. makes trail spread out/narrow at the end
+						"contrailMinSeg":2, # min segment length, in pixels
+						"contrailMaxSpeedMult":.0f,
+						"contrailAngularVelocityMult":0.5f,
+						"contrailSpawnDistMult":1, # how far away from engine it starts
+						"contrailColor":[38, 79, 128,150],
+						"glowSizeMult":1,
+						"type":"SMOKE" # GLOW or SMOKE; additive or regular blend mode
+					},
+				    "width":10.0,
+				    "length":60.0,
+				    "angle":180.0}],
+					
+}

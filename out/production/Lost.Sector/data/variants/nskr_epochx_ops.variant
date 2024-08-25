@@ -1,0 +1,31 @@
+{
+    "displayName": "Black Ops",
+    "fluxCapacitors": 0,
+    "fluxVents": 8,
+    "hullId": "nskr_epochx",
+    "hullMods": [
+        "targetingunit",
+        "fluxbreakers",
+        "stabilizedshieldemitter",
+        "fluxdistributor",
+        "auxiliarythrusters"
+    ],
+    "permaMods": [],
+    "sMods": [],
+    "variantId": "nskr_epochx_ops",
+    "weaponGroups": [
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {"WS0001": "hil"}
+        },
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0002": "railgun",
+                "WS0003": "railgun"
+            }
+        }
+    ]
+}

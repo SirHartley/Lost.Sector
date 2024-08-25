@@ -1,0 +1,55 @@
+{
+    "displayName": "SERIAL 002",
+    "fluxCapacitors": 14,
+    "fluxVents": 30,
+    "goalVariant": true,
+    "hullId": "nskr_minokawa",
+    "hullMods": [
+        "targetingunit",
+        "auxiliarythrusters"
+    ],
+    "permaMods": [],
+    "sMods": [],
+    "variantId": "nskr_minokawa_std",
+    "weaponGroups": [
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {"WS0001": "nskr_pbcc"}
+        },
+        {
+            "autofire": false,
+            "mode": "ALTERNATING",
+            "weapons": {
+                "WS0002": "nskr_spikem",
+                "WS0003": "nskr_spikem",
+                "WS0004": "nskr_mfrocketpod",
+                "WS0005": "nskr_mfrocketpod"
+            }
+        },
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0008": "railgun",
+                "WS0009": "railgun",
+                "WS0016": "nskr_scannonm",
+                "WS0017": "nskr_scannonm"
+            }
+        },
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0006": "nskr_arcgen",
+                "WS0007": "nskr_arcgen",
+                "WS0010": "vulcan",
+                "WS0011": "vulcan",
+                "WS0012": "vulcan",
+                "WS0013": "vulcan",
+                "WS0014": "vulcan",
+                "WS0015": "vulcan"
+            }
+        }
+    ]
+}

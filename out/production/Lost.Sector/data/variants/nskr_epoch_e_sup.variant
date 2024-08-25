@@ -1,0 +1,32 @@
+{
+    "displayName": "Pestilent",
+    "fluxCapacitors": 0,
+    "fluxVents": 8,
+    "goalVariant": true,
+    "hullId": "nskr_epoch_e",
+    "hullMods": [
+        "hardenedshieldemitter",
+        "stabilizedshieldemitter"
+    ],
+    "permaMods": [],
+    "sMods": [],
+    "variantId": "nskr_epoch_e_sup",
+    "weaponGroups": [
+        {
+            "autofire": false,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0019": "hveldriver",
+                "WS0020": "hveldriver"
+            }
+        },
+        {
+            "autofire": false,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0002": "nskr_spikes",
+                "WS0003": "nskr_spikes"
+            }
+        }
+    ]
+}

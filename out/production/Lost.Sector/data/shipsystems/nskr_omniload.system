@@ -1,0 +1,10 @@
+{
+	"id":"nskr_omniload",
+	"type":"STAT_MOD",
+	"aiType":"CUSTOM",
+	"aiScript":"scripts.kissa.LOST_SECTOR.shipsystems.ai.nskr_omniLoadAI",
+	"statsScript":"scripts.kissa.LOST_SECTOR.shipsystems.nskr_omniLoadStats",
+	
+	#"useSound":"system_ammo_feeder",
+	"outOfUsesSound":"gun_out_of_ammo",
+}

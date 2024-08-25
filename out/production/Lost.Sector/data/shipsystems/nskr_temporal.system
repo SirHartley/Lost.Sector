@@ -1,0 +1,21 @@
+{
+	"id":"nskr_temporal",
+	"type":"ENGINE_MOD",
+	"aiType":"CUSTOM",
+	"aiScript":"scripts.kissa.LOST_SECTOR.shipsystems.ai.nskr_temporalAI",
+	"statsScript":"scripts.kissa.LOST_SECTOR.shipsystems.nskr_temporalStats",
+	
+	"alwaysAccelerate":true,
+	"clampMaxSpeedAfter":true,
+	
+	"fadeActivationSoundOnChargedown":true,
+	"useSound":"nskr_temporall_activate",
+	"loopSound":"nskr_temporall_loop",
+	"outOfUsesSound":"gun_out_of_ammo",
+	
+	"aiHints":{
+		"activeSpeedIncrease":0,
+		"burstMovementPotential":1000,
+		"averageSpeedIncrease":750,
+	}
+}

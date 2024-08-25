@@ -1,0 +1,6 @@
+"id","variant","tags","tier","rarity","fleet pts","op cost","formation","range","attackRunRange","attackPositionOffset","num","role","role desc","refit","base value",,,,,,,,,,,,,"number"
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+"nskr_pursuer_wing","nskr_pursuer_variant","auto_fighter, no_drop, no_sell",,,0,0,"BOX",800,200,0,2,"FIGHTER","Drone",20,,,,,,,,,,,,,,
+"nskr_huginn_wing","nskr_huginn_variant","auto_fighter, no_drop, no_sell",,,0,0,"BOX",2000,500,0,1,"FIGHTER","Support Drone",22,,,,,,,,,,,,,,
+"nskr_huginn_e_wing","nskr_huginn_e_variant","auto_fighter, no_drop, no_sell",,,0,0,"BOX",2000,500,0,1,"FIGHTER","Support Drone",22,,,,,,,,,,,,,,
+"nskr_huginn_player_wing","nskr_huginn_variant","auto_fighter, enigma, prot_light, restricted",3,,0,16,"BOX",2000,500,0,1,"FIGHTER","Support Drone",22,58520,,,,,,,,,,,,,

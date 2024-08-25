@@ -1,0 +1,94 @@
+{
+	
+	"designTypeColors":{          
+			"Unknown Prototype":[83, 106, 237,255],
+			"Rogue Co.":[220, 156, 61,255],
+			"Void":[219, 0, 66,255],
+			"Domain-Era Prototype":[129, 227, 149,255],
+			"Project Enigma":[237, 225, 225,255],
+			"Kesteven":[240, 182, 43,255],
+    },
+
+	"graphics":{
+		"blueprint_packages":{
+			"nskr_prot_wp":"graphics/icons/cargo/nskr_bp.png",
+			"nskr_prot_light":"graphics/icons/cargo/nskr_bp.png",
+			"nskr_prot_heavy":"graphics/icons/cargo/nskr_bp.png",
+		},
+		
+		"illustrations":{
+			"nskr_heart":"graphics/illustrations/nskr_heart.jpg",
+			"nskr_asteria":"graphics/illustrations/nskr_asteria.jpg",
+			"nskr_crib":"graphics/illustrations/nskr_crib.jpg",
+			"nskr_glacier":"graphics/illustrations/nskr_glacier.jpg",
+		},
+		
+		"portraits":{
+		},
+		"characters":{
+			"nskr_enigma":"graphics/portraits/nskr_enigma.png",	
+			"nskr_lucius":"graphics/portraits/nskr_lucius.png",		
+			"nskr_mother":"graphics/portraits/portrait_ai2.png",	
+			"nskr_pk":"graphics/portraits/nskr_pkGuy.png",
+			"nskr_president":"graphics/portraits/nskr_president.png",
+			"nskr_jack":"graphics/portraits/nskr_jack.png",
+			"nskr_alice":"graphics/portraits/nskr_alice.png",
+			"nskr_nicholas":"graphics/portraits/nskr_nicholas.png",
+			"nskr_eliza":"graphics/portraits/nskr_eliza.png",
+			"nskr_ai_alpha":"graphics/portraits/nskr_alpha_core1.png",	
+			"nskr_guard":"graphics/portraits/portrait18.png",
+			
+			"nskr_thrn00":"graphics/portraits/nskr_thrn00.png",
+			"nskr_thrn01":"graphics/portraits/nskr_thrn01.png",
+			"nskr_thrn02":"graphics/portraits/nskr_thrn02.png",
+			"nskr_thrn03":"graphics/portraits/nskr_thrn03.png"
+		},
+		"income_report":{
+			"surplus":"graphics/icons/reports/surplus24.png",
+		},
+		"campaignMissions":{
+			"umbra":"graphics/icons/missions/data_retrieval.png",
+			"mothership":"graphics/icons/missions/remnant_bounty.png",
+			"pk":"graphics/icons/missions/military_bounty.png",
+			"frost":"graphics/icons/missions/dead_drop.png",
+			"hint":"graphics/icons/missions/visit_object.png",
+			"scav":"graphics/icons/missions/retrieve_from_derelict.png",
+			"job1":"graphics/icons/missions/job1.png",
+			"job2":"graphics/icons/missions/job2.png",
+			"job3":"graphics/icons/missions/job3.png",
+			"job4":"graphics/icons/missions/job4.png",
+		},
+		"misc":{
+			"lost_sector_luna_icon":"graphics/icons/lost_icon.png",
+		},
+		"fx":{
+			"nskr_glow1":"graphics/fx/nskr_glow1.png",
+		},
+		"upgrades": {
+			"temporalConduits": "graphics/icons/upgrades/temporalConduits.png",
+			"spaceTimeAnchor": "graphics/icons/upgrades/spaceTimeAnchor.png",
+		}
+	},
+	
+	"plugins":{
+		"nskr_kaboomPlugin":"scripts.kissa.LOST_SECTOR.plugins.nskr_kaboomPlugin",
+		"nskr_entrancePlugin":"scripts.kissa.LOST_SECTOR.plugins.nskr_entrancePlugin",
+		"nskr_SplitterWeaponPlugin":"scripts.kissa.LOST_SECTOR.plugins.nskr_splitterWeaponPlugin",
+		"nskr_teleporterPlugin":"scripts.kissa.LOST_SECTOR.plugins.nskr_teleporterPlugin",
+		"nskr_tauntPlugin":"scripts.kissa.LOST_SECTOR.plugins.nskr_tauntPlugin",
+	},
+	
+	"ruleCommandPackages":[
+		"scripts.kissa.LOST_SECTOR.campaign.rulecmd",
+	],
+	
+	# Bonus XP values for most story-point-using actions
+	"bonusXP":{
+		#S-Mod Removal
+		"nskr_modRemoval":0.75,
+		#skip Power req for quest
+		"nskr_skipRequirement":1.00,
+		#skip the entire story
+		"nskr_skipStory":0.00,
+	},
+}

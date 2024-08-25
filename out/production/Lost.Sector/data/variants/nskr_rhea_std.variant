@@ -1,0 +1,49 @@
+{
+    "displayName": "Raider",
+    "fluxCapacitors": 0,
+    "fluxVents": 14,
+    "goalVariant": true,
+    "hullId": "nskr_rhea",
+    "hullMods": [
+        "heavyarmor",
+        "missleracks",
+        "reinforcedhull",
+        "dedicated_targeting_core"
+    ],
+    "permaMods": [],
+    "sMods": [],
+    "variantId": "nskr_rhea_std",
+    "weaponGroups": [
+        {
+            "autofire": false,
+            "mode": "ALTERNATING",
+            "weapons": {
+                "WS0011": "hammer",
+                "WS0012": "hammer",
+                "WS0013": "hammerrack"
+            }
+        },
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0001": "lightdualac",
+                "WS0002": "lightdualac",
+                "WS0003": "lightdualac",
+                "WS0004": "lightdualac",
+                "WS0005": "lightdualac",
+                "WS0006": "lightdualac"
+            }
+        },
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0007": "vulcan",
+                "WS0008": "vulcan",
+                "WS0009": "vulcan",
+                "WS0010": "vulcan"
+            }
+        }
+    ]
+}

@@ -1,0 +1,72 @@
+{
+    "playableFaction":true,
+    "corvusCompatible":true,
+	"ngcTooltip":"Money.",
+    "baseFleetCostMultiplier":1.0,    
+	"rebelFleetSuffix":"Rebels",
+	"asteroidMiningFleetName":"Materials Fleet",
+    "gasMiningFleetName":"Materials Fleet",
+    "invasionFleetName":"Invasion Force",
+	"invasionSupportFleetName":"Incursion Force",
+    "responseFleetName":"Task Force",
+    "defenceFleetName":"Defense Force",
+	"suppressionFleetName":"Special Operations Division",
+    "marketSpawnWeight":0.75,    
+    "morality":"neutral",
+	"stabilizeCommodities":["food", "hand_weapons", "supplies"],
+   
+    "maxRelationships":{ "tritachyon":0.30 },
+   	"dispositions":{
+		"hegemony": 10,
+		"tritachyon": -7.5,
+		"luddic_church": -3,
+	},
+   
+    "alignments":{
+		"corporate":0.5,
+        "technocratic":0,
+        "hierarchical":0.5,
+        "militarist":0.5,
+        "diplomatic":0.25,
+        "ideological":0,
+    },
+    "diplomacyTraits":["neutralist", "monopolist", "lowprofile", "devious"],
+
+    "specialForcesNamerClass":"exerelin.campaign.intel.specialforces.namer.PlanetNamer",
+	"specialForcesMaxFleets":1, 
+	"specialForcesPointMult":1.25,
+	"specialForcesSizeMult":1.25,
+    
+    # chance of the faction being picked to send a colony expedition. Default 0 (disabled)
+    "colonyExpeditionChance":1.25,
+    
+    "startShipsSolo":[
+	"nskr_dragontail_bal",
+    ],
+    "startShipsCombatSmall":[
+	"nskr_blackbird_bal", "nskr_kingstork_nrg",
+    ],
+    "startShipsCombatLarge":[
+	"nskr_blackbird_hbd", "nskr_nighthawk_hbd", "nskr_kingstork_bal", 
+    ],
+
+    "startSpecialItems":[
+        [["midline_package", ""]],
+		#[["modspec", "nskr_inertial"]],
+    ],
+    
+    "defenceStations":[
+        {"ids":["orbitalstation", "battlestation", "starfortress"], "weight":0.5},
+        {"ids":["orbitalstation_mid", "battlestation_mid", "starfortress_mid"]},
+        {"ids":["orbitalstation_high", "battlestation_high", "starfortress_high"], "weight":0.5},
+    ],
+    
+    "industrySeeds":[
+        {"id":"orbitalworks", "mult":0.2},
+    ],
+    
+    "bonusSeeds":[
+        {"id":"nanoforge_corrupted", "count":1},
+        {"id":"aiCore_station", "count":1},
+    ],
+}

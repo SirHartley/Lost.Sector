@@ -1,0 +1,57 @@
+{
+    "displayName": "Tactical",
+    "fluxCapacitors": 0,
+    "fluxVents": 5,
+    "hullId": "nskr_nemesis",
+    "hullMods": [
+        "armoredweapons",
+        "turretgyros",
+        "heavyarmor",
+        "magazines",
+        "targetingunit",
+        "fluxbreakers"
+    ],
+    "permaMods": [],
+    "sMods": [],
+    "variantId": "nskr_nemesis_tac",
+    "weaponGroups": [
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {"WS0008": "nskr_scannonm"}
+        },
+        {
+            "autofire": false,
+            "mode": "ALTERNATING",
+            "weapons": {
+                "WS0011": "reaper",
+                "WS0012": "reaper"
+            }
+        },
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0001": "nskr_emgl",
+                "WS0002": "nskr_emgl"
+            }
+        },
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0003": "railgun",
+                "WS0004": "railgun"
+            }
+        },
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0005": "nskr_arcgen",
+                "WS0006": "nskr_arcgen",
+                "WS0007": "vulcan"
+            }
+        }
+    ]
+}

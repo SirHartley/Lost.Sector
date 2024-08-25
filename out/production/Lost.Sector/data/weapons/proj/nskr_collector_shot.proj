@@ -1,0 +1,16 @@
+{
+	"id":"nskr_collector_shot",
+	"specClass":"projectile",
+	"spawnType":"BALLISTIC_AS_BEAM",
+	"onHitEffect": "scripts.kissa.LOST_SECTOR.weapons.nskr_collectorOH",
+	"collisionClass":"RAY",
+	"collisionClassByFighter":"RAY_FIGHTER",
+	"length":50.0,
+	"width":35.0,
+	"fadeTime":0.25,
+	"fringeColor":[200,0,57,255],
+	"coreColor":[255,255,255,200],
+	"textureType":"SMOOTH",  # only needed for BEAM spawnType
+	"textureScrollSpeed":-256.0,
+	"pixelsPerTexel":1.0	
+}

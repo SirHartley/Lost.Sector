@@ -1,0 +1,23 @@
+{
+	"id":"nskr_projfield",
+	"type":"STAT_MOD",
+    "aiType":"CUSTOM",
+    "aiScript":"scripts.kissa.LOST_SECTOR.shipsystems.ai.nskr_projfieldAI",
+	"statsScript":"scripts.kissa.LOST_SECTOR.shipsystems.nskr_projfieldStats",
+	
+	"soundFilterType":"LOWPASS",
+	"soundFilterGain":0.90,
+	"soundFilterGainHF":0.75,
+
+	"fadeActivationSoundOnChargedown":true,
+	"useSound":"nskr_projfield_activate",
+	"loopSound":"nskr_projfield_loop",
+	"deactivateSound":"nskr_system_entropy_off",
+	"outOfUsesSound":"gun_out_of_ammo",
+	
+	"aiHints":{
+	}
+}
+
+
+

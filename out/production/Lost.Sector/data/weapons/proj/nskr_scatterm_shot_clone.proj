@@ -1,0 +1,19 @@
+{
+	"id":"nskr_scatterm_shot_clone",
+	"specClass":"projectile",
+	"spawnType":"BALLISTIC_AS_BEAM",
+	"onHitEffect": "scripts.kissa.LOST_SECTOR.weapons.nskr_scatterOH",
+	"collisionClass":"RAY",
+	"collisionClassByFighter":"RAY_FIGHTER",
+	"length":19.0,
+	"width":4.0,
+	"fadeTime":0.2,
+	"fringeColor":[155, 65, 79,255],
+	"coreColor":[255, 150, 150,255],
+	"glowColor":[217, 89, 102,75],
+	"glowRadius":15,
+	"hitGlowRadius":26,
+	"textureType":"SMOOTH",  # only needed for BEAM spawnType
+	"textureScrollSpeed":-256.0,
+	"pixelsPerTexel":1.0	
+}

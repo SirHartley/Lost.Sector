@@ -1,0 +1,50 @@
+{
+    "displayName": "Purifier",
+    "fluxCapacitors": 18,
+    "fluxVents": 30,
+    "goalVariant": true,
+    "hullId": "nskr_sovereign_e",
+    "hullMods": [
+        "targetingunit",
+        "stabilizedshieldemitter",
+        "fluxdistributor"
+    ],
+    "permaMods": [],
+    "sMods": [],
+    "variantId": "nskr_sovereign_e_std",
+    "weaponGroups": [
+        {
+            "autofire": false,
+            "mode": "LINKED",
+            "weapons": {"WS0003": "nskr_pbcc"}
+        },
+        {
+            "autofire": false,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0001": "nskr_tremors",
+                "WS0002": "nskr_tremors",
+                "WS0012": "nskr_tremorm",
+                "WS0013": "nskr_tremorm"
+            }
+        },
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0006": "hveldriver",
+                "WS0007": "hveldriver"
+            }
+        },
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0004": "nskr_arcgen",
+                "WS0005": "nskr_arcgen",
+                "WS0008": "vulcan",
+                "WS0009": "vulcan"
+            }
+        }
+    ]
+}

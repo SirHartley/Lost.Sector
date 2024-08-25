@@ -1,0 +1,62 @@
+{
+    "displayName": "Mercenary",
+    "fluxCapacitors": 0,
+    "fluxVents": 23,
+    "goalVariant": true,
+    "hullId": "nskr_stalwart",
+    "hullMods": [
+        "heavyarmor",
+        "targetingunit",
+        "armoredweapons"
+    ],
+    "permaMods": [],
+    "sMods": [],
+    "variantId": "nskr_stalwart_merc",
+    "weaponGroups": [
+        {
+            "autofire": false,
+            "mode": "ALTERNATING",
+            "weapons": {
+                "WS0016": "phasecl",
+                "WS0017": "phasecl"
+            }
+        },
+        {
+            "autofire": false,
+            "mode": "ALTERNATING",
+            "weapons": {
+                "WS0010": "sabot",
+                "WS0011": "sabot",
+                "WS0012": "sabot",
+                "WS0013": "sabot",
+                "WS0014": "sabot",
+                "WS0015": "sabot"
+            }
+        },
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {"WS0009": "heavyblaster"}
+        },
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0001": "pdburst",
+                "WS0002": "pdburst"
+            }
+        },
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0003": "mininglaser",
+                "WS0004": "mininglaser",
+                "WS0005": "mininglaser",
+                "WS0006": "mininglaser",
+                "WS0007": "mininglaser",
+                "WS0008": "mininglaser"
+            }
+        }
+    ]
+}

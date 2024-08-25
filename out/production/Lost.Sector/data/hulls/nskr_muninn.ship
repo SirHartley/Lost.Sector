@@ -1,0 +1,299 @@
+{
+  "hullName": "Muninn",
+  "hullId": "nskr_muninn",
+  "hullSize": "DESTROYER",
+  "spriteName": "graphics/ships/nskr_muninn.png",
+  "style": "NSKR_PROT",
+  "height": 160,
+  "width": 186,
+  "center": [93, 76],
+  "collisionRadius": 130.5,
+  "shieldCenter": [0, 0],
+  "shieldRadius": 127.5,
+  "viewOffset": 0,
+  "builtInMods": [
+    "nskr_lost_prot",
+    "nskr_focused_shield",
+	"nskr_rage_mod"
+  ],
+  "builtInWings": [
+    "nskr_huginn_wing",
+    "nskr_huginn_wing"
+  ],
+  "builtInWeapons": {
+    "WS0015": "nskr_prot2_light"
+  },
+  "weaponSlots": [
+    {
+      "id": "WS0001",
+      "size": "MEDIUM",
+      "type": "UNIVERSAL",
+      "mount": "HARDPOINT",
+      "arc": 10,
+      "angle": 0,
+      "locations": [68.5, -18]
+    },
+    {
+      "id": "WS0002",
+      "size": "MEDIUM",
+      "type": "UNIVERSAL",
+      "mount": "HARDPOINT",
+      "arc": 10,
+      "angle": -0,
+      "locations": [68.5, 18]
+    },
+    {
+      "id": "WS0003",
+      "size": "SMALL",
+      "type": "SYNERGY",
+      "mount": "HARDPOINT",
+      "arc": 10,
+      "angle": 0,
+      "locations": [24.5, -66]
+    },
+    {
+      "id": "WS0004",
+      "size": "SMALL",
+      "type": "SYNERGY",
+      "mount": "HARDPOINT",
+      "arc": 10,
+      "angle": -0,
+      "locations": [24.5, 66]
+    },
+    {
+      "id": "WS0005",
+      "size": "SMALL",
+      "type": "HYBRID",
+      "mount": "TURRET",
+      "arc": 131,
+      "angle": -23,
+      "locations": [9, -16]
+    },
+    {
+      "id": "WS0006",
+      "size": "SMALL",
+      "type": "HYBRID",
+      "mount": "TURRET",
+      "arc": 131,
+      "angle": 23,
+      "locations": [9, 16]
+    },
+    {
+      "id": "WS0007",
+      "size": "SMALL",
+      "type": "HYBRID",
+      "mount": "TURRET",
+      "arc": 131,
+      "angle": 180,
+      "locations": [-35.5, -23]
+    },
+    {
+      "id": "WS0008",
+      "size": "SMALL",
+      "type": "HYBRID",
+      "mount": "TURRET",
+      "arc": 131,
+      "angle": -180,
+      "locations": [-35.5, 23]
+    },
+    {
+      "id": "LB 1",
+      "size": "LARGE",
+      "type": "LAUNCH_BAY",
+      "mount": "HIDDEN",
+      "arc": 360,
+      "angle": 0,
+      "locations": [
+        -30.5, -54,
+        -33, -44.5,
+        -21.5, -44,
+        -18, -55,
+        -12.5, -48.5
+      ]
+    },
+    {
+      "id": "LB 2",
+      "size": "LARGE",
+      "type": "LAUNCH_BAY",
+      "mount": "HIDDEN",
+      "arc": 360,
+      "angle": 0,
+      "locations": [
+        -32.5, 60.5,
+        -33.5, 48.5,
+        -19.5, 49.5,
+        -20.5, 60.5,
+        -12, 54.5
+      ]
+    },
+    {
+      "id": "WS0015",
+      "size": "SMALL",
+      "type": "DECORATIVE",
+      "mount": "TURRET",
+      "arc": 0,
+      "angle": 0,
+      "locations": [4, -0]
+    }
+  ],
+  "engineSlots": [
+    {
+      "location": [-68, 33.5],
+      "length": 30.5,
+      "width": 7,
+      "angle": 180,
+      "contrailSize": 7,
+      "style": "CUSTOM",
+      "styleId": "NSKR_TECHP"
+    },
+    {
+      "location": [-68, -34.5],
+      "length": 30.5,
+      "width": 7,
+      "angle": -180,
+      "contrailSize": 7,
+      "style": "CUSTOM",
+      "styleId": "NSKR_TECHP"
+    },
+    {
+      "location": [-71, -25.5],
+      "length": 30.5,
+      "width": 7,
+      "angle": -180,
+      "contrailSize": 7,
+      "style": "CUSTOM",
+      "styleId": "NSKR_TECHP"
+    },
+    {
+      "location": [-71, 24.5],
+      "length": 30.5,
+      "width": 7,
+      "angle": 180,
+      "contrailSize": 7,
+      "style": "CUSTOM",
+      "styleId": "NSKR_TECHP"
+    },
+    {
+      "location": [-71, -19.5],
+      "length": 30.5,
+      "width": 7,
+      "angle": -180,
+      "contrailSize": 7,
+      "style": "CUSTOM",
+      "styleId": "NSKR_TECHP"
+    },
+    {
+      "location": [-71, 18.5],
+      "length": 30.5,
+      "width": 7,
+      "angle": 180,
+      "contrailSize": 7,
+      "style": "CUSTOM",
+      "styleId": "NSKR_TECHP"
+    },
+    {
+      "location": [-67.5, -34.5],
+      "length": 8,
+      "width": 8,
+      "angle": -180,
+      "contrailSize": 8,
+      "style": "CUSTOM",
+      "styleId": "NSKR_TECHP2"
+    },
+    {
+      "location": [-67.5, 33.5],
+      "length": 8,
+      "width": 8,
+      "angle": 180,
+      "contrailSize": 8,
+      "style": "CUSTOM",
+      "styleId": "NSKR_TECHP2"
+    },
+    {
+      "location": [-70.5, 24.5],
+      "length": 8,
+      "width": 8,
+      "angle": 180,
+      "contrailSize": 8,
+      "style": "CUSTOM",
+      "styleId": "NSKR_TECHP2"
+    },
+    {
+      "location": [-70.5, -25.5],
+      "length": 8,
+      "width": 8,
+      "angle": -180,
+      "contrailSize": 8,
+      "style": "CUSTOM",
+      "styleId": "NSKR_TECHP2"
+    },
+    {
+      "location": [-70.5, 18.5],
+      "length": 8,
+      "width": 8,
+      "angle": 180,
+      "contrailSize": 8,
+      "style": "CUSTOM",
+      "styleId": "NSKR_TECHP2"
+    },
+    {
+      "location": [-70.5, -19.5],
+      "length": 8,
+      "width": 8,
+      "angle": -180,
+      "contrailSize": 8,
+      "style": "CUSTOM",
+      "styleId": "NSKR_TECHP2"
+    }
+  ],
+  "bounds": [
+    59, 4,
+    70, 6,
+    70, 26.5,
+    60, 28,
+    60, 37.5,
+    22, 39,
+    10, 32.5,
+    11.5, 46,
+    16, 51,
+    17, 59,
+    25, 62,
+    25, 71.5,
+    18, 74.5,
+    3, 74.5,
+    -6, 72,
+    -42, 89.5,
+    -44.5, 88,
+    -30, 69,
+    -44, 53,
+    -53, 50.5,
+    -58.5, 40,
+    -65, 38.5,
+    -69, 15.5,
+    -58.5, 7,
+    -58.5, -7,
+    -69, -15.5,
+    -65, -38.5,
+    -58.5, -40,
+    -53, -50.5,
+    -44, -53,
+    -30, -69,
+    -44.5, -88,
+    -42, -89.5,
+    -6, -72,
+    3, -74.5,
+    18, -74.5,
+    25, -71.5,
+    25, -62,
+    17, -59,
+    16, -51,
+    11.5, -46,
+    10, -32.5,
+    22, -39,
+    60, -37.5,
+    60, -28,
+    70, -26.5,
+    70, -6,
+    59, -4
+  ]
+}

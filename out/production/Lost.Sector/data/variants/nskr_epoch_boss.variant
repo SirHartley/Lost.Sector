@@ -1,0 +1,38 @@
+{
+    "displayName": "SERIAL 001",
+    "fluxCapacitors": 4,
+    "fluxVents": 10,
+    "hullId": "nskr_epoch",
+    "hullMods": [
+        "heavyarmor",
+        "stabilizedshieldemitter",
+        "armoredweapons"
+    ],
+    "permaMods": [
+        "heavyarmor",
+        "stabilizedshieldemitter"
+    ],
+    "sMods": [
+        "heavyarmor",
+        "stabilizedshieldemitter"
+    ],
+    "variantId": "nskr_epoch_boss",
+    "weaponGroups": [
+        {
+            "autofire": false,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0017": "heavymauler",
+                "WS0018": "heavymauler"
+            }
+        },
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0002": "railgun",
+                "WS0003": "railgun"
+            }
+        }
+    ]
+}

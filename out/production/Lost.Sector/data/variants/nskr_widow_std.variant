@@ -1,0 +1,31 @@
+{
+    "displayName": "SERIAL 001",
+    "fluxCapacitors": 0,
+    "fluxVents": 3,
+    "hullId": "nskr_widow",
+	"goalVariant": true,
+    "hullMods": [],
+    "permaMods": [],
+    "sMods": [],
+    "variantId": "nskr_widow_std",
+    "weaponGroups": [
+        {
+            "autofire": false,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0002": "nskr_scannonm",
+                "WS0003": "nskr_scannonm"
+            }
+        },
+        {
+            "autofire": false,
+            "mode": "LINKED",
+            "weapons": {"WS0004": "nskr_emgl"}
+        },
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {"WS0001": "nskr_arcgen"}
+        }
+    ]
+}

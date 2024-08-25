@@ -1,0 +1,23 @@
+{
+	"id":"nskr_bfpulse",
+	"type":"STAT_MOD",
+	"aiType":"CUSTOM",
+	"aiScript":"scripts.kissa.LOST_SECTOR.shipsystems.ai.nskr_bfpulseAI",
+
+	"statsScript":"scripts.kissa.LOST_SECTOR.shipsystems.nskr_bfPulseStats",
+
+	"jitterColor":[255,150,200,50],
+	"jitterCopies":5,
+	"jitterRange":10,
+	"jitterRangeRadiusFraction":0.05,
+
+	"fadeActivationSoundOnChargedown":false,
+
+	#"useSound":"swp_phaseshuntdrive_activate",
+
+    "aiHints":{
+        "activeSpeedIncrease":0,
+        "burstMovementPotential":0,
+        "averageSpeedIncrease":0,
+    }
+}

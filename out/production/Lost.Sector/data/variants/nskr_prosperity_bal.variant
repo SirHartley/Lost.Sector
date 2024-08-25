@@ -1,0 +1,65 @@
+{
+    "displayName": "Firebase",
+    "fluxCapacitors": 0,
+    "fluxVents": 42,
+    "goalVariant": true,
+    "hullId": "nskr_prosperity",
+    "hullMods": [
+        "targetingunit",
+        "stabilizedshieldemitter",
+        "heavyarmor",
+        "turretgyros",
+        "fluxcoil"
+    ],
+    "permaMods": [],
+    "sMods": [],
+    "variantId": "nskr_prosperity_bal",
+    "weaponGroups": [
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0001": "gauss",
+                "WS0002": "gauss",
+                "WS0003": "gauss",
+                "WS0004": "gauss"
+            }
+        },
+        {
+            "autofire": false,
+            "mode": "ALTERNATING",
+            "weapons": {
+                "WS0005": "nskr_bc_tube",
+                "WS0006": "nskr_bc_tube",
+                "WS0019": "harpoonpod",
+                "WS0020": "harpoonpod",
+                "WS0027": "harpoonpod",
+                "WS0028": "harpoonpod"
+            }
+        },
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0007": "heavymauler",
+                "WS0008": "heavymauler"
+            }
+        },
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0009": "flak",
+                "WS0010": "flak",
+                "WS0011": "vulcan",
+                "WS0012": "vulcan",
+                "WS0013": "vulcan",
+                "WS0014": "vulcan",
+                "WS0015": "vulcan",
+                "WS0016": "vulcan",
+                "WS0017": "vulcan",
+                "WS0018": "vulcan"
+            }
+        }
+    ]
+}

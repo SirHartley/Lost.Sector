@@ -1,0 +1,51 @@
+{
+    "displayName": "Black Ops",
+    "fluxCapacitors": 0,
+    "fluxVents": 12,
+    "hullId": "nskr_nemesis",
+    "hullMods": [
+        "armoredweapons",
+        "pointdefenseai",
+        "fluxbreakers",
+        "stabilizedshieldemitter",
+        "targetingunit",
+        "hardenedshieldemitter"
+    ],
+    "permaMods": [],
+    "sMods": [],
+    "variantId": "nskr_nemesis_ops",
+    "weaponGroups": [
+        {
+            "autofire": false,
+            "mode": "LINKED",
+            "weapons": {"WS0008": "heavymauler"}
+        },
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0011": "heatseeker",
+                "WS0012": "heatseeker"
+            }
+        },
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0001": "hveldriver",
+                "WS0002": "hveldriver"
+            }
+        },
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0003": "vulcan",
+                "WS0004": "vulcan",
+                "WS0005": "nskr_arcgen",
+                "WS0006": "nskr_arcgen",
+                "WS0007": "nskr_arcgen"
+            }
+        }
+    ]
+}

@@ -1,0 +1,36 @@
+{
+    "displayName": "SERIAL 005",
+    "fluxCapacitors": 0,
+    "fluxVents": 10,
+    "hullId": "nskr_widow",
+    "hullMods": [
+        "magazines",
+        "stabilizedshieldemitter"        
+    ],
+    "permaMods": [],
+    "sMods": [
+		"hardenedshieldemitter",
+		"auxiliarythrusters"
+	],
+    "variantId": "nskr_widow_boss",
+    "weaponGroups": [
+        {
+            "autofire": false,
+            "mode": "LINKED",
+            "weapons": {"WS0004": "nskr_inverter"}
+        },
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0002": "heavymg",
+                "WS0003": "heavymg"
+            }
+        },
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {"WS0001": "lightdualmg"}
+        }
+    ]
+}

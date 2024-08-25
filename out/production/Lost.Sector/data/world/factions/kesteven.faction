@@ -1,0 +1,328 @@
+{
+	id:"kesteven",
+	
+	"color":[240, 182, 43,255],
+	"baseUIColor":[232, 170, 35,255],
+	"secondaryUIColor":[9, 42, 99,255],
+    "secondarySegments":2,
+	
+	"displayName":"Kesteven",
+	"displayNameWithArticle":"Kesteven",
+	"displayNameLong":"Kesteven Corporation",
+	"displayNameLongWithArticle":"the Kesteven Corporation",
+	"personNamePrefixAOrAn":"a",
+	"displayNameIsOrAre":"are",
+	"logo":"graphics/factions/kesteven.png",
+	"crest":"graphics/factions/crest_kesteven.png",
+	"shipNamePrefix":"K-Corp",
+	"shipNameSources":{
+		"GREEK":4,
+		"CELTIC":2,
+		"SPACE":1,
+		"GENERAL":1,
+	},
+	"names":{
+		"modern":1,
+		"world":1,
+		"future":1,
+		"myth":1,
+	},
+	# variantOverrides restricts hulls to listed variants and adjusts their probability
+	"variantOverrides":{
+	},
+	# multiplier for how often hulls show up in the faction's fleets
+	"hullFrequency":{
+		"tags":{
+		},
+		"hulls":{
+			"nskr_prosperity":10.0,
+			"nskr_nighthawk":20.0,
+			"nskr_devilcatcher":12.5,
+			"nskr_blackbird":20.0,
+			"nskr_mercenary":20.0,
+			"nskr_dragontail":12.5,
+			"nskr_kingstork":20.0,
+			"buffalo_kesteven":4.0,
+			
+			#garbage
+			"hound":0,
+			"cerberus":0,
+			"condor":0,
+			"buffalo_mk2":0,
+			"buffalo":0,
+			"shepherd":0,
+			"wayfarer":0,
+		},
+	},
+	# ships the faction gets access to when importing S&W out-of-faction
+	"shipsWhenImporting":{
+		"tags":["base_bp"],
+		"hulls":[
+		],
+	},
+	"knownShips":{
+		"tags":["kesteven", "independent"],
+		"hulls":[
+			"nskr_prosperity",
+			"nskr_nighthawk",
+			"nskr_devilcatcher",
+			"nskr_blackbird",
+			"nskr_dragontail",
+			"nskr_kingstork",
+			"buffalo_kesteven",
+			
+			"tarsus",
+			"valkyrie",
+			"mule",
+			"gemini",
+			"phaeton",
+			"dram",
+			"colossus"
+		],
+	},
+	# listing ships here will make the faction mostly use them even if other hulls become available
+	"priorityShips":{
+		"tags":[],
+		"hulls":[
+		],
+	},
+	"knownFighters":{
+		"tags":["kesteven"],
+		"fighters":[
+		"broadsword_wing",
+		"xyphos_wing",
+		"claw_wing",
+		"wasp_wing",
+		
+		
+		],
+	},
+	"priorityFighters":{
+		"tags":[],
+		"fighters":[
+		],
+	},
+	"knownWeapons":{
+		"tags":["kesteven"],
+		"weapons":[
+		"lightneedler",
+		"railgun",
+		"dualflak",
+		"heavymauler",
+		"hveldriver",
+		"amblaster",
+		"phasebeam",
+		"heavyblaster",
+		"ionpulser",
+		"plasma",
+		"vulcan",
+		"reaper",
+		"typhoon",
+		"sabot",
+		"sabotpod",
+		"flak",
+		"lightdualmg",
+		"chaingun",
+		"heavymg",
+		"heavyneedler",
+		"autopulse",
+		"phasecl",
+		"heatseeker",
+		"salamanderpod",
+		"hil",
+		"ionbeam",
+		"ioncannon",
+		"mark9",
+		"hellbore",
+		
+		"nskr_bc_single",
+		"nskr_bc_tube",
+
+		],
+	},
+	"priorityWeapons":{
+		"tags":[],
+		"weapons":[
+		],
+	},
+	"knownHullMods":{
+		"tags":["base_bp", "independent", "kesteven"],
+		"hullMods":[
+			"safetyoverrides",
+			"fluxcoil",
+			"fluxdistributor",
+			"turretgyros",
+			"armoredweapons",
+			"augmentedengines",
+			"autorepair",
+			"converted_hangar",
+			"eccm",
+			"ecm",
+			"nav_relay",
+			"unstable_injector",
+			"magazines",
+			"missleracks",
+			"adaptiveshields", # omni	
+			"extendedshieldemitter",
+			"stabilizedshieldemitter",
+			"advancedshieldemitter", # accelerated
+			"frontemitter",
+			"frontshield",  # makeshift
+			"hardenedshieldemitter",
+			"heavyarmor",
+			"solar_shielding",
+			"blast_doors",
+			"insulatedengine",
+			"targetingunit",
+			"operations_center",
+			"recovery_shuttles",
+			"fluxbreakers",
+			"surveying_equipment",
+			"hiressensors",
+			"converted_fighterbay",
+			"ballistic_rangefinder",
+			
+			"nskr_inertial",
+			"nskr_volatile",
+			"nskr_bigBats",
+			"nskr_criticalArmor",
+		],
+	},
+	"factionDoctrine":{
+		"warships":5,
+		"carriers":0,
+		"phaseShips":0,
+		
+		"officerQuality":3,
+		"shipQuality":2,
+		"numShips":2,
+		
+		"shipSize":3,
+		
+		"aggression":3,
+		
+		"combatFreighterProbability":0.5,     				# instead of some portion of the freighters in a fleet
+		"combatFreighterCombatUseFraction":0.5,				# as part of the normal combat lineup
+		"combatFreighterCombatUseFractionWhenPriority":1,   # as part of normal combat lineup, when marked as priority ship
+		"autofitRandomizeProbability":0.25,
+
+		"commanderSkillsShuffleProbability":1,
+		"commanderSkills":[
+			"crew_training",
+			"officer_training",
+			"coordinated_maneuvers",
+			"electronic_warfare",
+			"flux_regulation",
+		],
+	},
+	"illegalCommodities":[
+		"drugs",
+		"organs",
+		"ai_cores",
+	],
+	"portraits":{
+		"standard_male":[
+			"graphics/portraits/portrait_mercenary01.png",
+			"graphics/portraits/portrait_mercenary06.png",
+			"graphics/portraits/portrait_mercenary04.png",
+			"graphics/portraits/portrait40.png",
+			"graphics/portraits/portrait36.png",
+			"graphics/portraits/portrait38.png",
+			"graphics/portraits/portrait48.png",
+		],
+		"standard_female":[
+			"graphics/portraits/portrait_mercenary08.png",
+			"graphics/portraits/portrait27.png",
+			"graphics/portraits/portrait32.png",			
+			"graphics/portraits/portrait42.png",
+			"graphics/portraits/portrait44.png",
+			"graphics/portraits/portrait46.png",
+			"graphics/portraits/portrait47.png",
+		],
+	},
+	"music":{
+		"theme":"nskr_kesteven_theme",
+		"market_neutral":"nskr_kesteven_theme",
+		"market_hostile":"nskr_kesteven_theme",
+		"market_friendly":"nskr_kesteven_theme",
+		"encounter_neutral":"nskr_kesteven_theme",
+		"encounter_hostile":"nskr_kesteven_theme",
+		"encounter_friendly":"nskr_kesteven_theme",
+	},	
+	"voices":{
+		"LOW":{
+			"soldier":10,
+			"faithful":5,		
+			"spacer":10,
+		},
+		"MEDIUM":{
+			"soldier":10,
+			"business":10,
+			"official":5,
+		},
+		"HIGH":{
+			"soldier":10,
+			"business":10,
+			"official":10,
+		},
+	},
+	"custom":{
+		"allowsTransponderOffTrade":false,
+		"offersCommissions":true,
+		"engagesInHostilities":false,
+		"buysAICores":true,
+		"AICoreValueMult":0.75,
+		"AICoreRepMult":2.5,
+		"buysSurveyData":true,
+		"hostilityImpactOnGrowth":true,
+		"caresAboutAtrocities":true,
+		"punitiveExpeditionData":{
+			"vsCompetitors":false,
+			"vsFreePort":false,
+			"canBombard":false,
+			"territorial":false,
+		},
+	},
+	"ranks":{
+		"ranks":{
+			"factionLeader":{"name":"President"},
+			
+			"spaceCommander":{"name":"Defense Officer"},
+			
+			"kSpaceOperations":{"name":"Space Operations Officer"},
+			"kResearch":{"name":"R&D Manager"},
+			"kIntelligence":{"name":"Communications Officer"},
+		},
+		"posts":{
+			"factionLeader":{"name":"President"},
+			
+			"patrolCommander":{"name":"Junior Commander"},
+			"fleetCommander":{"name":"Fleet Commander"},
+			"baseCommander":{"name":"Minister of Defense"},
+			
+			"outpostCommander":{"name":"Secretary of Defense"},
+			"portmaster":{"name":"Secretary of Interior"},
+			"stationCommander":{"name":"Minister of Interior"},
+			
+			"kSpaceOperations":{"name":"Space Operations Officer"},
+			"kResearch":{"name":"R&D Manager"},
+			"kIntelligence":{"name":"Communications Officer"},
+		},
+	},
+	"fleetTypeNames":{
+		"trade":"Merchant Fleet",
+		"tradeLiner":"Cruise",
+		"tradeSmuggler":"Gray Trader",
+		"smallTrader":"Trader",
+		
+		"patrolSmall":"Scout",
+		"patrolMedium":"Patrol",
+		"patrolLarge":"Defense Armada",
+		
+		"inspectionFleet":"Inspection Fleet",
+		"taskForce":"Task Force",
+		
+		"foodReliefFleet":"Relief Convoy",
+		"mercArmada":"Colony Fleet",
+	},
+},	

@@ -1,0 +1,269 @@
+{
+	# should be a copy of "combatSmall", minus variants that are annoying to fight in low numbers
+	# for example, no Hyperions or fast beam-based kiting loadouts, or ships with damper field
+	"combatSmallForSmallFleet":{
+	"nskr_verity_std":3,
+	"nskr_verity_cbt":3,
+	"nskr_verity_elite":2,
+	
+	"nskr_dragontail_bal":5,
+	"nskr_dragontail_hbd":5,
+	"nskr_dragontail_nrg":5,
+	"nskr_dragontail_agr":5,
+	"nskr_kingstork_bal":5,
+	"nskr_kingstork_hbd":5,
+	"nskr_kingstork_nrg":5,
+	"nskr_kingstork_agr":5,
+	
+	"nskr_epoch_e_std":5,
+	"nskr_epoch_e_hev":5,
+	"nskr_epoch_e_sup":5,
+	"nskr_widow_e_std":5,
+	"nskr_widow_e_hev":5,
+	"nskr_widow_e_cbt":5,
+	
+	"nskr_epoch_tac":5,
+	"nskr_epoch_ops":5,
+	"nskr_widow_tac":5,
+	"nskr_widow_ops":5,
+	},
+	"combatSmall":{
+	"nskr_malediction_std":3,
+	"nskr_malediction_pre":2,
+	"nskr_malediction_sup":2,
+	"nskr_malediction_elite":3,
+	"nskr_verity_std":3,
+	"nskr_verity_dsb":2,
+	"nskr_verity_cbt":3,
+	"nskr_verity_elite":2,
+	
+	"nskr_dragontail_bal":5,
+	"nskr_dragontail_hbd":5,
+	"nskr_dragontail_nrg":5,
+	"nskr_dragontail_sup":5,
+	"nskr_dragontail_agr":5,
+	"nskr_kingstork_bal":5,
+	"nskr_kingstork_hbd":5,
+	"nskr_kingstork_nrg":5,
+	"nskr_kingstork_sup":5,
+	"nskr_kingstork_agr":5,
+	
+	"nskr_epochx_e_std":5,
+	"nskr_epochx_e_hev":5,
+	"nskr_epochx_e_sup":5,
+	"nskr_epoch_e_std":5,
+	"nskr_epoch_e_hev":5,
+	"nskr_epoch_e_sup":5,
+	"nskr_widow_e_std":5,
+	"nskr_widow_e_hev":5,
+	"nskr_widow_e_cbt":5,
+	"nskr_torpor_e_std":4,
+	"nskr_torpor_e_hev":4,
+	"nskr_torpor_e_sup":4,
+	
+	"nskr_epoch_tac":5,
+	"nskr_epoch_ops":5,
+	"nskr_epochx_tac":5,
+	"nskr_epochx_ops":5,
+	"nskr_widow_tac":5,
+	"nskr_widow_ops":5,
+	"nskr_torpor_tac":5,
+	"nskr_torpor_ops":5,
+	
+	"nskr_aed_std":5,
+	
+	},
+	"combatMedium":{
+	
+	"nskr_nemesis_e_std":5,
+	"nskr_nemesis_e_hev":5,
+	"nskr_nemesis_e_sup":5,
+	"nskr_muninn_e_std":5,
+	"nskr_muninn_e_hev":5,
+	"nskr_muninn_e_sup":5,
+	"nskr_warfare_e_std":5,
+	"nskr_warfare_e_hev":5,
+	"nskr_warfare_e_cbt":5,
+	
+	"nskr_muninn_tac":5,
+	"nskr_muninn_ops":5,
+	"nskr_nemesis_tac":5,
+	"nskr_nemesis_ops":5,
+	"nskr_warfare_tac":5,
+	"nskr_warfare_ops":5,
+	
+	"nskr_blackbird_bal":5,
+	"nskr_blackbird_hbd":5,
+	"nskr_blackbird_nrg":5,
+	"nskr_blackbird_sup":5,
+	"nskr_blackbird_agr":5,
+	"nskr_mercenary_bal":5,
+	"nskr_mercenary_hbd":5,
+	"nskr_mercenary_nrg":5,
+	"nskr_mercenary_sup":5,
+	"nskr_mercenary_agr":5,
+	},
+	"combatLarge":{
+	
+	"nskr_stalwart_std":3,
+	"nskr_stalwart_sup":3,
+	"nskr_stalwart_ast":2,
+	"nskr_stalwart_elite":2,
+	"nskr_stalwart_cb":5,
+	"nskr_stalwart_merc":5,
+	"nskr_rhea_std":3,
+	"nskr_rhea_sup":3,
+	"nskr_rhea_elite":2,
+	"nskr_rhea_mss":2,
+	
+	"nskr_sovereign_tac":5,
+	"nskr_sovereign_ops":5,
+	"nskr_minokawa_tac":5,
+	"nskr_minokawa_ops":5,
+	
+	"nskr_sovereign_e_std":5,
+	"nskr_sovereign_e_hev":5,
+	"nskr_sovereign_e_cbt":5,
+	"nskr_minokawa_e_std":5,
+	"nskr_minokawa_e_hev":5,
+	"nskr_minokawa_e_sup":5,
+	
+	"nskr_nighthawk_bal":5,
+	"nskr_nighthawk_hbd":5,
+	"nskr_nighthawk_nrg":5,
+	"nskr_nighthawk_sup":5,
+	"nskr_nighthawk_agr":5,
+	"nskr_devilcatcher_bal":5,
+	"nskr_devilcatcher_hbd":5,
+	"nskr_devilcatcher_nrg":5,
+	"nskr_devilcatcher_sup":5,
+	"nskr_devilcatcher_agr":5,
+	
+	},
+	"combatCapital":{
+	"nskr_borealis_std":3,
+	"nskr_borealis_fsup":3,
+	"nskr_borealis_beam":2,
+	"nskr_borealis_elite":2,
+	"nskr_rorqual_std":10,
+	"nskr_kingslayer_coup":3,
+	"nskr_kingslayer_rip":3,
+	"nskr_kingslayer_rat":2,
+	"nskr_kingslayer_mss":2,
+	
+	"nskr_prosperity_bal":5,
+	"nskr_prosperity_hbd":5,
+	"nskr_prosperity_nrg":5,
+	"nskr_prosperity_sup":5,
+	"nskr_prosperity_agr":5,
+	},
+	
+	
+	# hybrid ships with good combat and cargo capacity
+	"combatFreighterSmall":{
+
+	},
+	"combatFreighterMedium":{
+	
+	},
+	"combatFreighterLarge":{
+
+	},
+	
+	"civilianRandom":{
+
+	},
+
+	# carriers
+	"carrierSmall":{
+
+	
+	},
+	"carrierMedium":{
+
+	
+	},
+
+	"carrierLarge":{
+	
+	},
+
+	# phase ships
+	"phaseSmall":{
+		"nskr_afflictor_boss_nor":5,
+	},
+	"phaseMedium":{
+		"nskr_harbinger_boss_nor":5,
+	},
+	"phaseLarge":{
+		"nskr_reverie_mss":3,
+		"nskr_reverie_dsb":2,
+		"nskr_reverie_elite":2,
+		"nskr_reverie_str":3,
+	},
+	"phaseCapital":{
+	},
+
+	# freighters and such
+	"freighterSmall":{
+		"buffalo_kesteven_std":5,
+
+	},
+	"freighterMedium":{
+
+	},
+	"freighterLarge":{
+
+	},
+	
+	"tankerSmall":{
+
+	},
+	"tankerMedium":{
+
+	},
+	"tankerLarge":{
+	},
+	
+	"personnelSmall":{
+	},
+	"personnelMedium":{
+	},
+	"personnelLarge":{
+	},
+	
+	"linerSmall":{
+	},
+	"linerMedium":{
+	},
+	"linerLarge":{
+	},
+	
+	# utility ships
+	"tug":{
+	},
+	"crig":{
+	},
+	"utility":{
+
+	},
+	
+	"orbitalStationLowTech":{
+	},
+	
+	"battlestationLowTech":{
+	},
+	
+	
+
+
+	# Old/unused below this line
+	"fastAttack":{
+	},
+
+	"escortSmall":{
+	},
+	"escortMedium":{
+	},
+	
+}

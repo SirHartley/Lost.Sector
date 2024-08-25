@@ -1,0 +1,33 @@
+{
+    "displayName": "Tactical",
+    "fluxCapacitors": 0,
+    "fluxVents": 1,
+    "hullId": "nskr_epoch",
+    "hullMods": [
+        "targetingunit",
+        "fluxbreakers",
+        "stabilizedshieldemitter",
+        "fluxdistributor"
+    ],
+    "permaMods": [],
+    "sMods": [],
+    "variantId": "nskr_epoch_tac",
+    "weaponGroups": [
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0017": "hveldriver",
+                "WS0018": "hveldriver"
+            }
+        },
+        {
+            "autofire": false,
+            "mode": "ALTERNATING",
+            "weapons": {
+                "WS0002": "nskr_spikes",
+                "WS0003": "nskr_spikes"
+            }
+        }
+    ]
+}

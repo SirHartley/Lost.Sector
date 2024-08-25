@@ -1,0 +1,66 @@
+{
+    "displayName": "Firebase",
+    "fluxCapacitors": 0,
+    "fluxVents": 18,
+    "goalVariant": true,
+    "hullId": "nskr_nighthawk",
+    "hullMods": [
+        "targetingunit",
+        "heavyarmor",
+        "fluxcoil",
+        "turretgyros",
+        "missleracks"
+    ],
+    "permaMods": [],
+    "sMods": [],
+    "variantId": "nskr_nighthawk_bal",
+    "weaponGroups": [
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0011": "hveldriver",
+                "WS0012": "hveldriver"
+            }
+        },
+        {
+            "autofire": false,
+            "mode": "ALTERNATING",
+            "weapons": {
+                "WS0009": "nskr_bc_single",
+                "WS0010": "nskr_bc_single",
+                "WS0013": "nskr_bc_tube",
+                "WS0014": "nskr_bc_tube"
+            }
+        },
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0001": "lightmortar",
+                "WS0002": "lightmortar",
+                "WS0015": "lightmortar",
+                "WS0016": "lightmortar",
+                "WS0017": "lightmortar"
+            }
+        },
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0003": "railgun",
+                "WS0004": "railgun"
+            }
+        },
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0005": "vulcan",
+                "WS0006": "vulcan",
+                "WS0007": "vulcan",
+                "WS0008": "vulcan"
+            }
+        }
+    ]
+}

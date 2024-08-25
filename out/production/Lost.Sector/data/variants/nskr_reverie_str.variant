@@ -1,0 +1,54 @@
+{
+    "displayName": "Strike",
+    "fluxCapacitors": 16,
+    "fluxVents": 0,
+    "goalVariant": true,
+    "hullId": "nskr_reverie",
+    "hullMods": [
+        "missleracks",
+        "adaptive_coils"
+    ],
+    "permaMods": [],
+    "sMods": [],
+    "variantId": "nskr_reverie_str",
+    "weaponGroups": [
+        {
+            "autofire": false,
+            "mode": "ALTERNATING",
+            "weapons": {
+                "WS0009": "amblaster",
+                "WS0010": "amblaster"
+            }
+        },
+        {
+            "autofire": false,
+            "mode": "ALTERNATING",
+            "weapons": {
+                "WS0001": "typhoon",
+                "WS0002": "typhoon"
+            }
+        },
+        {
+            "autofire": false,
+            "mode": "LINKED",
+            "weapons": {"WS0004": "sabotpod"}
+        },
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0003": "heavyblaster",
+                "WS0005": "ioncannon",
+                "WS0006": "ioncannon"
+            }
+        },
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0007": "pdburst",
+                "WS0008": "pdburst"
+            }
+        }
+    ]
+}

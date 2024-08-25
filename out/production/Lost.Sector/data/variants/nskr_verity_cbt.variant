@@ -1,0 +1,32 @@
+{
+    "displayName": "Combat",
+    "fluxCapacitors": 10,
+    "fluxVents": 3,
+    "goalVariant": true,
+    "hullId": "nskr_verity",
+    "hullMods": [
+        "targetingunit",
+        "hardenedshieldemitter"
+    ],
+    "permaMods": [],
+    "sMods": [],
+    "variantId": "nskr_verity_cbt",
+    "weaponGroups": [
+        {
+            "autofire": false,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0001": "pulselaser",
+                "WS0002": "pulselaser"
+            }
+        },
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0003": "lrpdlaser",
+                "WS0004": "lrpdlaser"
+            }
+        }
+    ]
+}

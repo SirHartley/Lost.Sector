@@ -1,0 +1,46 @@
+{
+  "id": "nskr_bc_tube",
+  "specClass": "projectile",
+  "projectileSpecId": "nskr_bc_shot",
+  "type": "MISSILE",
+  "size": "MEDIUM",
+  "displayArcRadius": 1000,
+  "turretSprite": "graphics/weapons/nskr_bc_tube_turret.png",
+  "hardpointSprite": "graphics/weapons/nskr_bc_tube_hardpoint.png",
+  "renderAboveAllWeapons": 0,
+  "turretOffsets": [
+    12,
+    0
+  ],
+  "turretAngleOffsets": [
+    0
+  ],
+  "hardpointOffsets": [
+    15.5,
+    0
+  ],
+  "hardpointAngleOffsets": [
+    0
+  ],
+  "barrelMode": "LINKED",
+  "animationType": "SMOKE",
+  "smokeSpec": {
+    "particleSizeMin": 12,
+    "particleSizeRange": 12,
+    "cloudParticleCount": 6,
+    "cloudDuration": 1.5,
+    "cloudRadius": 10,
+    "blowbackParticleCount": 4,
+    "blowbackDuration": 2,
+    "blowbackLength": 22,
+    "blowbackSpread": 15,
+    "particleColor": [
+      183,
+      133,
+      37,
+      105
+    ]
+  },
+  "textureType": ROUGH,
+  "fireSoundTwo": "atropos_fire"
+}

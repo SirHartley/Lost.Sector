@@ -1,0 +1,57 @@
+{
+    "displayName": "Fire Support",
+    "fluxCapacitors": 3,
+    "fluxVents": 50,
+    "goalVariant": true,
+    "hullId": "nskr_borealis",
+    "hullMods": ["expanded_deck_crew"],
+    "permaMods": [],
+    "variantId": "nskr_borealis_fsup",
+    "weaponGroups": [
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0001": "hil",
+                "WS0002": "hil"
+            }
+        },
+        {
+            "autofire": false,
+            "mode": "ALTERNATING",
+            "weapons": {
+                "WS0011": "harpoonpod",
+                "WS0012": "harpoonpod",
+                "WS0015": "harpoon",
+                "WS0016": "harpoon"
+            }
+        },
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0007": "mininglaser",
+                "WS0008": "mininglaser",
+                "WS0009": "mininglaser",
+                "WS0010": "mininglaser",
+                "WS0013": "mininglaser",
+                "WS0014": "mininglaser"
+            }
+        },
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0003": "pdburst",
+                "WS0004": "pdburst",
+                "WS0005": "pdburst",
+                "WS0006": "pdburst"
+            }
+        }
+    ],
+    "wings": [
+        "dagger_wing",
+        "dagger_wing",
+        "dagger_wing"
+    ]
+}

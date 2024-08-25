@@ -1,0 +1,50 @@
+{
+    "displayName": "Redeemer",
+    "fluxCapacitors": 20,
+    "fluxVents": 9,
+    "goalVariant": true,
+    "hullId": "nskr_muninn_e",
+    "hullMods": [
+        "hardenedshieldemitter",
+        "stabilizedshieldemitter",
+        "magazines"
+    ],
+    "permaMods": [],
+    "sMods": [],
+    "variantId": "nskr_muninn_e_hev",
+    "weaponGroups": [
+        {
+            "autofire": true,
+            "mode": "ALTERNATING",
+            "weapons": {
+                "WS0001": "nskr_scannonm",
+                "WS0002": "nskr_scannonm"
+            }
+        },
+        {
+            "autofire": false,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0003": "reaper",
+                "WS0004": "reaper"
+            }
+        },
+        {
+            "autofire": false,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0005": "amblaster",
+                "WS0006": "amblaster"
+            }
+        },
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0007": "vulcan",
+                "WS0008": "vulcan"
+            }
+        }
+    ],
+    "wings": []
+}

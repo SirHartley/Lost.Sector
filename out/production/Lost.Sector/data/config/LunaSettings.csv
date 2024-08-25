@@ -1,0 +1,9 @@
+"modID","fieldID","fieldName","fieldType","defaultValue","secondaryValue","fieldDescription","minValue","maxValue","tab"
+"lost_sector","difficultyHeader","DIFFICULTY Header","Header","Difficulty Modes",,,,,
+"lost_sector","difficultyTextField","Text","Text","NOTE a difficulty mode should be enabled [before] starting a play-through, so it can apply to all fleets.",,,,,
+"lost_sector","starfarerMode","TRUE STARFARER MODE","Boolean","FALSE",,"Hard mode, overrides Easy mode. Can you prove yourself a [TRUE STARFARER] by enabling this mode. Enigma fleet size set to 1.25x, Scripted fleet size set to 1.2x, certain special encounters made more difficult. Gain massive bragging rights on discord, or not.",,,
+"lost_sector","easyMode","Easy Mode","Boolean","FALSE",,"A standardized Easy mode, Enigma fleet size set to 0.6x, Scripted fleet size set to 0.7x.",,,
+"lost_sector","fleetsHeader","FLEETS Header","Header","Fleet Size Scaling",,,,,
+"lost_sector","fleetsTextField","Text","Text","Scaling only applies to newly spawned fleets in existing saves. NOTE Easy/Hard mode overrides these values.",,,,,
+"lost_sector","scriptedFleetScaling","Scripted Fleet Size Multiplier","Double","1",,"Size multiplier for scripted event/quest fleets, min value 0.1, only effects the randomly generated portion of fleets.","0.1",5,
+"lost_sector","randomEnigmaFleetScaling","Random Enigma Fleet Size Multiplier","Double","1",,"Size multiplier for wandering Enigma fleets, set to 0 to disable.",0,5,

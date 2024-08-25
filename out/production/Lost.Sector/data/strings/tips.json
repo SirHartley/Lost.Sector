@@ -1,0 +1,43 @@
+{
+	tips:[
+	  
+	  "[LOST_SECTOR] Remember, ALL CAPS when you spell the mods name.",
+	  "[LOST_SECTOR] Remember to check out LunaSettings for the mod if you have LunaLib installed, otherwise you can go edit LOST_SECTOR_OPTIONS.ini.",
+	  "[LOST_SECTOR] You can enable Easy mode in LunaSettings or the settings file.",
+	  "[LOST_SECTOR] You can enable TRUE STARFARER mode in LunaSettings or the settings file. Will you fight? Or will you perish like a dog?",
+	  "[LOST_SECTOR] You can exchange your Artifact electronics for special equipment at Asteria. After helping certain people.",
+	  "[LOST_SECTOR] You can take out loans at any Kesteven market, by talking to an official.",
+	  "[LOST_SECTOR] You can get special jobs at Asteria, if you talk to certain people.",
+	  "[LOST_SECTOR] If you enter hostilities with Kesteven while you have loans. You don't have to pay interest, but the interest gets added to your debt with a penalty for missed payments.",
+	  "[LOST_SECTOR] Kesteven ships can be fit to match any tech level, but generally focus on offense over defense.",
+	  "[LOST_SECTOR] Kesteven scavenger fleets tend to go towards systems of interest. Maybe you should follow them.",
+	  "[LOST_SECTOR] Kesteven Corporation will let you license build their designs in your own heavy industry, if you are in good relations.",
+	  "[LOST_SECTOR] There are things lost to time out there in this sector, but if you value your life it's best not to look.",
+	  "[LOST_SECTOR] You can remove S-Mods from your ships at Asteria. After helping certain people.",
+	  "[LOST_SECTOR] Certain rare star and system types are said to contain lost technologies.",
+	  
+	  "You can scan the center of a nebula system for topographic data.",
+	  "Just quicksave, do it right now, just hit the F5 button. I don't want to hear how you lost 4 hours of progress because of a crash.",
+	  "Junk orbiting near an unsurveyed planet means it has ruins, the more junk the bigger the ruins.",
+	  "Limited ammo missiles are extremely strong, always use more of them.",
+	  "You can make the AI spam limited ammo missiles by linking it with a weapon which it doesn't want to conserve, such as annihilators or swarmers.",	  
+	  "Matching the range of non PD weapons on your AI ships makes them behave more consistently.",
+	  "The additional durability that extra flat armor gives your ships increases exponentially the more armor you already have.",
+	  "Hit strength is a very powerful stat for overcoming armor and it should not be underestimated.",
+	  "Slower ships should prioritize dissipation and efficiency, while mobile ships should go for capacity and burst damage.",
+	  "You can hit W-Q-W on the refit screen to instantly create weapon groups. Useful when making many load-outs at once.",
+	  "You can quickly refit any one of you ships by hitting F to open the fleet menu and then hitting R while hovering the ship you want to refit.",
+	  "Reapers are the best missile, that's just facts.",
+	  "Always max vents on your ships.",
+	  "Missiles on linked is the only true way.",
+	  
+	  "[Alpha Core] I love you.",
+	  "[Alpha Core] Keep trading with Tri-Tachyon.",
+	  "[Alpha Core] WARNING - Skill issue detected",
+	  
+	  "Enigma isn't real, stop looking for it.",
+	  "So true bestie!",
+	  "Trans rights!",
+	  ":3",	 
+    ],
+}

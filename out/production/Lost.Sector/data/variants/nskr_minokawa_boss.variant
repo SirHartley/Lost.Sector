@@ -1,0 +1,68 @@
+{
+    "displayName": "SERIAL 004",
+    "fluxCapacitors": 6,
+    "fluxVents": 30,
+    "hullId": "nskr_minokawa",
+    "hullMods": [
+        "targetingunit",
+        "stabilizedshieldemitter",
+        "armoredweapons",
+        "hardenedshieldemitter",
+        "heavyarmor",
+        "auxiliarythrusters"
+    ],
+    "permaMods": [
+        "hardenedshieldemitter",
+        "heavyarmor"
+    ],
+    "sMods": [
+        "hardenedshieldemitter",
+        "heavyarmor"
+    ],
+    "variantId": "nskr_minokawa_boss",
+    "weaponGroups": [
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {"WS0001": "nskr_hshotgun"}
+        },
+        {
+            "autofire": false,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0002": "nskr_mfrocketpod",
+                "WS0003": "nskr_mfrocketpod"
+            }
+        },
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0004": "nskr_scannonm",
+                "WS0005": "nskr_scannonm",
+                "WS0016": "nskr_scannonm",
+                "WS0017": "nskr_scannonm"
+            }
+        },
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0008": "railgun",
+                "WS0009": "railgun",
+                "WS0010": "railgun",
+                "WS0011": "railgun"
+            }
+        },
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0006": "vulcan",
+                "WS0007": "vulcan",
+                "WS0014": "vulcan",
+                "WS0015": "vulcan"
+            }
+        }
+    ]
+}

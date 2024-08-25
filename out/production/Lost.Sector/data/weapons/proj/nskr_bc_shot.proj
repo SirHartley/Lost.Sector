@@ -1,0 +1,51 @@
+{
+	"id":"nskr_bc_shot",
+	"specClass":"missile",
+	"missileType":"ROCKET",
+	"onHitEffect":"scripts.kissa.LOST_SECTOR.weapons.nskr_bcOH",
+	"sprite":"graphics/missiles/nskr_bc_shot.png",
+	"size":[12,23],	
+	"center":[6,11.5],
+	"collisionRadius":16,
+	"collisionClass":"MISSILE_FF",
+	"explosionColor":[255,125,80,255],  # purely visual, will get a white additively blended core on top of this color
+	"explosionRadius":150, # purely visual
+	"explosionSpec":{"duration":0.1f, # not visual
+					 "radius":100,
+					 "coreRadius":50, # full damage within core radius
+					 "collisionClass":HITS_SHIPS_AND_ASTEROIDS,
+					 "collisionClassByFighter":HITS_SHIPS_AND_ASTEROIDS,
+					 "particleSizeMin":5.0,
+					 "particleSizeRange":3.0,
+					 "particleDuration":1,
+					 "particleCount":50,
+					 "particleColor":[255, 222, 109,255]},
+	"flameoutTime":3, # total time from flameout to full fadeout
+	"armingTime":.5,
+	"noEngineGlowTime":0.5, # time spent without the engine glow being rendered
+	"fadeTime":0.5, # fadeout duration					 
+	"engineSpec":{"turnAcc":100,
+				  "turnRate":30,
+				  "acc":700,
+				  "dec":180},
+	"engineSlots":[{"id":"ES1",
+					"loc":[-10, 0],
+				    "style":"CUSTOM",
+					"styleSpec":{
+						"mode":"QUAD_STRIP", # PARTICLES or QUAD_STRIP, determines which params are used
+						"engineColor":[225,176,70,255],
+						"glowSizeMult":2,
+						"contrailDuration":1.5,
+						"contrailWidthMult":1,
+						"contrailWidthAddedFractionAtEnd":3,  # can be negative. makes trail spread out/narrow at the end
+						"contrailMinSeg":5, # min segment length, in pixels
+						"contrailMaxSpeedMult":.0f,
+						"contrailAngularVelocityMult":0.5f,
+						"contrailSpawnDistMult":.5, # how far away from engine it starts
+						"contrailColor":[255, 177, 31,105],
+						"type":"SMOKE" # GLOW or SMOKE; additive or regular blend mode
+					},
+				    "width":12.0,
+				    "length":30.0,
+				    "angle":180.0}]
+}

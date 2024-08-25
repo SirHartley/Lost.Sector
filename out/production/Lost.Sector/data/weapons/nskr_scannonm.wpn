@@ -1,0 +1,50 @@
+{
+  "animationType": "MUZZLE_FLASH",
+  "barrelMode": "ALTERNATING",
+  "displayArcRadius": 750,
+  "fireSoundTwo": "nskr_scannon_fire",
+  "everyFrameEffect": "scripts.kissa.LOST_SECTOR.weapons.nskr_scannonmEffect",
+  "hardpointAngleOffsets": [
+    0
+  ],
+  "hardpointGunSprite": "graphics/weapons/nskr_scannonm_hardpoint_recoil.png",
+  "hardpointOffsets": [
+    39,
+    0
+  ],
+  "hardpointSprite": "graphics/weapons/nskr_scannonm_hardpoint.png",
+  "id": "nskr_scannonm",
+  "muzzleFlashSpec": {
+    "length": 60,
+    "particleColor": [
+      255,
+      162,
+      100,
+      200
+    ],
+    "particleCount": 10,
+    "particleDuration": 0.15,
+    "particleSizeMin": 6,
+    "particleSizeRange": 8,
+    "spread": 2
+  },
+  "noImpactSounds": false,
+  "noNonShieldImpactSounds": false,
+  "noShieldImpactSounds": false,
+  "projectileSpecId": "nskr_scannon_shot",
+  "renderAboveAllWeapons": 0,
+  "size": "MEDIUM",
+  "specClass": "projectile",
+  "textureType": ROUGH,
+  "turretAngleOffsets": [
+    0
+  ],
+  "turretGunSprite": "graphics/weapons/nskr_scannonm_turret_recoil.png",
+  "turretOffsets": [
+    27.5,
+    0
+  ],
+  "turretSprite": "graphics/weapons/nskr_scannonm_turret.png",
+  "type": "BALLISTIC",
+  "visualRecoil": 5
+}

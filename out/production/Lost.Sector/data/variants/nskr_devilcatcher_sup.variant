@@ -1,0 +1,52 @@
+{
+    "displayName": "Support",
+    "fluxCapacitors": 0,
+    "fluxVents": 18,
+    "goalVariant": true,
+    "hullId": "nskr_devilcatcher",
+    "hullMods": [
+        "converted_hangar",
+        "targetingunit",
+        "nav_relay"
+    ],
+    "permaMods": [],
+    "sMods": [],
+    "variantId": "nskr_devilcatcher_sup",
+    "weaponGroups": [
+        {
+            "autofire": false,
+            "mode": "ALTERNATING",
+            "weapons": {
+                "WS0006": "amblaster",
+                "WS0007": "amblaster"
+            }
+        },
+        {
+            "autofire": false,
+            "mode": "ALTERNATING",
+            "weapons": {
+                "WS0002": "sabot",
+                "WS0003": "sabot",
+                "WS0004": "sabot",
+                "WS0005": "sabot"
+            }
+        },
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {"WS0001": "tachyonlance"}
+        },
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0008": "pdburst",
+                "WS0009": "pdburst"
+            }
+        }
+    ],
+    "wings": [
+        "wasp_wing",
+        "wasp_wing"
+    ]
+}

@@ -1,0 +1,51 @@
+{
+    "displayName": "Black Ops",
+    "fluxCapacitors": 0,
+    "fluxVents": 26,
+    "hullId": "nskr_sovereign",
+    "hullMods": [
+        "hardenedshieldemitter",
+        "targetingunit",
+        "fluxbreakers",
+        "missleracks",
+        "auxiliarythrusters"
+    ],
+    "permaMods": [],
+    "sMods": [],
+    "variantId": "nskr_sovereign_ops",
+    "weaponGroups": [
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {"WS0003": "tachyonlance"}
+        },
+        {
+            "autofire": false,
+            "mode": "ALTERNATING",
+            "weapons": {
+                "WS0001": "gorgon",
+                "WS0002": "gorgon",
+                "WS0004": "gorgon",
+                "WS0005": "gorgon",
+                "WS0012": "gorgonpod",
+                "WS0013": "gorgonpod"
+            }
+        },
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0006": "phasebeam",
+                "WS0007": "phasebeam"
+            }
+        },
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0008": "vulcan",
+                "WS0009": "nskr_arcgen"
+            }
+        }
+    ]
+}

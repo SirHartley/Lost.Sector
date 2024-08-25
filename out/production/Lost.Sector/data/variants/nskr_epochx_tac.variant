@@ -1,0 +1,29 @@
+{
+    "displayName": "Tactical",
+    "fluxCapacitors": 0,
+    "fluxVents": 6,
+    "hullId": "nskr_epochx",
+    "hullMods": [
+        "armoredweapons",
+        "heavyarmor",
+        "fluxbreakers"
+    ],
+    "permaMods": [],
+    "sMods": [],
+    "variantId": "nskr_epochx_tac",
+    "weaponGroups": [
+        {
+            "autofire": false,
+            "mode": "LINKED",
+            "weapons": {"WS0001": "nskr_hshotgun"}
+        },
+        {
+            "autofire": false,
+            "mode": "ALTERNATING",
+            "weapons": {
+                "WS0002": "nskr_spikes",
+                "WS0003": "nskr_spikes"
+            }
+        }
+    ]
+}

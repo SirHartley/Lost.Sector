@@ -1,0 +1,55 @@
+{
+    "displayName": "SERIAL 005",
+    "fluxCapacitors": 20,
+    "fluxVents": 9,
+    "goalVariant": false,
+    "hullId": "nskr_muninn",
+    "hullMods": [
+        "stabilizedshieldemitter",
+        "advancedshieldemitter",
+        "fluxcoil"
+    ],
+    "permaMods": [],
+    "sMods": [
+	    "hardenedshieldemitter",
+        "unstable_injector"
+	],
+    "variantId": "nskr_muninn_boss",
+    "weaponGroups": [
+        {
+            "autofire": false,
+            "mode": "LINKED",
+            "weapons": {"WS0002": "nskr_scatterm"}
+        },
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {"WS0001": "ionpulser"}
+        },
+        {
+            "autofire": false,
+            "mode": "ALTERNATING",
+            "weapons": {
+                "WS0003": "nskr_spikes",
+                "WS0004": "nskr_spikes"
+            }
+        },
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0005": "lightneedler",
+                "WS0006": "lightneedler"
+            }
+        },
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0007": "vulcan",
+                "WS0008": "vulcan"
+            }
+        }
+    ],
+    "wings": []
+}

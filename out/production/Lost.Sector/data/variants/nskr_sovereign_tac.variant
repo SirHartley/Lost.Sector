@@ -1,0 +1,57 @@
+{
+    "displayName": "Tactical",
+    "fluxCapacitors": 0,
+    "fluxVents": 8,
+    "hullId": "nskr_sovereign",
+    "hullMods": [
+        "auxiliarythrusters",
+        "targetingunit",
+        "fluxbreakers",
+        "stabilizedshieldemitter",
+        "unstable_injector"
+    ],
+    "permaMods": [],
+    "sMods": [],
+    "variantId": "nskr_sovereign_tac",
+    "weaponGroups": [
+        {
+            "autofire": false,
+            "mode": "LINKED",
+            "weapons": {"WS0003": "nskr_plasmal"}
+        },
+        {
+            "autofire": false,
+            "mode": "ALTERNATING",
+            "weapons": {
+                "WS0004": "nskr_tremors",
+                "WS0005": "nskr_tremors",
+                "WS0012": "nskr_tremorm",
+                "WS0013": "nskr_tremorm"
+            }
+        },
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0006": "hveldriver",
+                "WS0007": "hveldriver"
+            }
+        },
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0001": "nskr_arcgen",
+                "WS0002": "nskr_arcgen"
+            }
+        },
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0008": "pdburst",
+                "WS0009": "pdburst"
+            }
+        }
+    ]
+}

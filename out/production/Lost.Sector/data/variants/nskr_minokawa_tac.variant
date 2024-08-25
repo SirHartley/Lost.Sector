@@ -1,0 +1,64 @@
+{
+    "displayName": "Tactical",
+    "fluxCapacitors": 0,
+    "fluxVents": 4,
+    "hullId": "nskr_minokawa",
+    "hullMods": [
+        "armoredweapons",
+        "auxiliarythrusters",
+        "magazines",
+        "targetingunit",
+        "hardenedshieldemitter",
+        "stabilizedshieldemitter"
+    ],
+    "permaMods": [],
+    "sMods": [],
+    "variantId": "nskr_minokawa_tac",
+    "weaponGroups": [
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {"WS0001": "nskr_collector"}
+        },
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0002": "nskr_scannonm",
+                "WS0003": "nskr_scannonm",
+                "WS0004": "nskr_scannonm",
+                "WS0005": "nskr_scannonm"
+            }
+        },
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0006": "railgun",
+                "WS0007": "railgun",
+                "WS0008": "railgun",
+                "WS0009": "railgun",
+                "WS0010": "railgun",
+                "WS0011": "railgun"
+            }
+        },
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0012": "vulcan",
+                "WS0013": "vulcan",
+                "WS0014": "vulcan",
+                "WS0015": "vulcan"
+            }
+        },
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0016": "heavyburst",
+                "WS0017": "heavyburst"
+            }
+        }
+    ]
+}

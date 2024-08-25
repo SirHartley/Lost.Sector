@@ -1,0 +1,22 @@
+Hold down keys when clicking the mission to customize.
+
+Space Bar: Re-roll ships.
+Control: Reset settings.
+
+M Key: Toggle mission goal.
+D Key: Next player faction.
+F Key: Next enemy faction.
+A/S Key: Decrease/Increase battle size.
+E/R Key: Decrease/Increase enemy advantage factor.
+I/O Key: Decrease/Increase player quality factor.
+K/L Key: Decrease/Increase enemy quality factor.
+Y/U Key: Decrease/Increase player ordnance points bonus.
+H/J Key: Decrease/Increase enemy ordnance points bonus.
+[ Key: Cycle player s-mods.
+] Key: Cycle enemy s-mods.
+
+Q/W Key: Decrease/Increase objective count.
+Z/X Key: Decrease/Increase map width.
+C/V Key: Decrease/Increase map height.
+T Key: Toggle time acceleration.
+` Key: Toggle "crappy autofit".

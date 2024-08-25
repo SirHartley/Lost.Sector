@@ -1,0 +1,76 @@
+{
+    "displayName": "Hybrid",
+    "fluxCapacitors": 3,
+    "fluxVents": 50,
+    "goalVariant": true,
+    "hullId": "nskr_prosperity",
+    "hullMods": [
+        "targetingunit",
+        "stabilizedshieldemitter",
+        "auxiliarythrusters",
+        "missleracks",
+        "hiressensors",
+        "fluxcoil"
+    ],
+    "permaMods": [],
+    "sMods": [],
+    "variantId": "nskr_prosperity_hbd",
+    "weaponGroups": [
+        {
+            "autofire": false,
+            "mode": "ALTERNATING",
+            "weapons": {
+                "WS0005": "nskr_bc_tube",
+                "WS0006": "nskr_bc_tube",
+                "WS0007": "nskr_bc_tube",
+                "WS0008": "nskr_bc_tube"
+            }
+        },
+        {
+            "autofire": false,
+            "mode": "ALTERNATING",
+            "weapons": {
+                "WS0019": "sabotpod",
+                "WS0020": "sabotpod",
+                "WS0027": "sabotpod",
+                "WS0028": "sabotpod"
+            }
+        },
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0001": "autopulse",
+                "WS0002": "autopulse",
+                "WS0004": "autopulse"
+            }
+        },
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {"WS0003": "hellbore"}
+        },
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0009": "heavyburst",
+                "WS0010": "heavyburst",
+                "WS0015": "pdburst",
+                "WS0016": "pdburst"
+            }
+        },
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0011": "vulcan",
+                "WS0012": "vulcan",
+                "WS0013": "vulcan",
+                "WS0014": "vulcan",
+                "WS0017": "vulcan",
+                "WS0018": "vulcan"
+            }
+        }
+    ]
+}

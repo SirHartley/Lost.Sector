@@ -1,0 +1,61 @@
+{
+    "displayName": "Guillotine",
+    "fluxCapacitors": 0,
+    "fluxVents": 7,
+    "goalVariant": true,
+    "hullId": "nskr_rhea",
+    "hullMods": [
+        "missleracks",
+        "missile_autoloader",
+        "eccm",
+        "auxiliarythrusters",
+        "converted_hangar"
+    ],
+    "permaMods": [],
+    "sMods": [],
+    "variantId": "nskr_rhea_mss",
+    "weaponGroups": [
+        {
+            "autofire": false,
+            "mode": "LINKED",
+            "weapons": {"WS0013": "hammerrack"}
+        },
+        {
+            "autofire": false,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0011": "reaper",
+                "WS0012": "reaper"
+            }
+        },
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0001": "lightac",
+                "WS0002": "lightac",
+                "WS0003": "lightac",
+                "WS0004": "lightac",
+                "WS0005": "lightac",
+                "WS0006": "lightac"
+            }
+        },
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0009": "mininglaser",
+                "WS0010": "mininglaser"
+            }
+        },
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0007": "vulcan",
+                "WS0008": "vulcan"
+            }
+        }
+    ],
+    "wings": ["warthog_wing"]
+}

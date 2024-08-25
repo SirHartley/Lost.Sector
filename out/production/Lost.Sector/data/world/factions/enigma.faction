@@ -1,0 +1,211 @@
+{
+	id:"enigma",
+	"displayName":"Enigma",
+	"displayNameWithArticle":"the Enigma",
+	"displayNameLong":"Enigma",
+	"displayNameLongWithArticle":"the Enigma",
+	"entityNamePrefix":"Enigma",
+	"personNamePrefix":"Enigma",
+	"personNamePrefixAOrAn":"an",
+	"displayNameIsOrAre":"are",
+	
+	"logo":"graphics/factions/enigma.png",
+	"crest":"graphics/factions/crest_enigma.png",
+	"shipNamePrefix":"DSRD",
+	
+	"color":[237, 225, 228, 255],
+	"baseUIColor":[227, 195, 195,255],
+	
+	"secondaryUIColor":[143, 16, 31,255],
+    "secondarySegments":2,
+	
+	"showInIntelTab":false,
+	
+	"shipNameSources":{
+		"MERCANTILE":1,
+		"SPACE":1,
+		"DERELICT_DRONE":1,
+	},
+	"names":{
+		"ai":1,
+	},
+	"variantOverrides":{
+	},
+	# multiplier for how often hulls show up in the faction's fleets
+	"hullFrequency":{
+		"tags":{
+		},
+		"hulls":{
+		"nskr_warfare_e":0.60,
+		"nskr_widow_e":0.60,
+		
+		"nskr_epochx_e":0.25,
+		"nskr_aed":1.00,
+		
+		"nskr_eternity_e":0.00, #:skull_emoji:
+		},
+	},
+	# ships the faction gets access to when importing S&W out-of-faction
+	"shipsWhenImporting":{
+		"tags":["enigma"],
+		"hulls":[
+		],
+	},
+	"knownShips":{
+		"tags":["enigma"],
+		"hulls":[
+		],
+	},
+	# listing ships here will make the faction mostly use them even if other hulls become available
+	"priorityShips":{
+		"tags":[],
+		"hulls":[
+		],
+	},
+	"knownFighters":{
+		"tags":["enigma"],
+		"fighters":[
+		],
+	},
+	"priorityFighters":{
+		"tags":[],
+		"fighters":[
+		],
+	},
+	"knownWeapons":{
+		"tags":["enigma"],
+		"weapons":[
+			"lightneedler",
+			"railgun",
+			"dualflak",
+			"heavymauler",
+			"hveldriver",
+			"amblaster",
+			"phasebeam",
+			"heavyblaster",
+			"ionpulser",
+			"plasma",
+			"vulcan",
+			"reaper",
+			"typhoon",
+			"sabot",
+			"sabotpod",
+			"flak",
+			"lightdualmg",
+			"chaingun",
+			"heavymg",
+			"heavyneedler",
+			"autopulse",
+		
+			"nskr_pbcc",
+			"nskr_hshotgun",
+			"nskr_emgl",
+			"nskr_scannonm",
+			"nskr_scatterm",
+			"nskr_mfrocketpod",
+			"nskr_inverter",
+			"nskr_tremorm",
+			"nskr_tremors",
+			"nskr_spikes",
+			"nskr_spikem",
+			"nskr_arcgen",
+		],
+	},
+	"priorityWeapons":{
+		"tags":[""],
+		"weapons":[
+
+		],
+	},
+	"knownHullMods":{
+		"tags":["base_bp", "enigma"],
+		"hullMods":[
+			"advancedshieldemitter", # accelerated
+			"extendedshieldemitter",
+			"stabilizedshieldemitter",
+			"armoredweapons",
+			"autorepair",
+			"eccm",
+			"ecm",
+			"magazines",
+			"missleracks",
+			"hardenedshieldemitter",
+			"heavyarmor",
+			"insulatedengine",
+			"pointdefenseai",
+			"targetingunit",
+			"nav_relay",
+			"fluxbreakers",
+			"solar_shielding",
+			"fluxcoil",
+			"fluxdistributor",
+			"unstable_injector",
+			"hardened_subsystems",
+		],
+	},
+	"factionDoctrine":{
+		"warships":5,
+		"carriers":0,
+		"phaseShips":2,
+		
+		"officerQuality":5,
+		"shipQuality":5,
+		"numShips":3,
+		
+		"shipSize":3,
+		
+		"aggression":5, # doesn't matter since automated ships are super aggressive regardless
+		
+		"combatFreighterProbability":0,     				# instead of some portion of the freighters in a fleet
+		"combatFreighterCombatUseFraction":1,				# as part of the normal combat lineup
+		"combatFreighterCombatUseFractionWhenPriority":1,   # as part of normal combat lineup, when marked as priority ship
+		"autofitRandomizeProbability":0.25,
+
+		"commanderSkillsShuffleProbability":1,
+		"commanderSkills":[ # unlike other factions, can get up to 3 skills depending
+			"electronic_warfare",
+			"flux_regulation",
+			"coordinated_maneuvers",
+		],
+	},
+	"illegalCommodities":[
+	],
+	"music":{
+		"theme":"nskr_enigma_theme",
+		"market_neutral":"nskr_enigma_theme",
+		"market_hostile":"nskr_enigma_theme",
+		"market_friendly":"nskr_enigma_theme",
+		"encounter_neutral":"nskr_enigma_theme",
+		"encounter_hostile":"nskr_enigma_theme",
+		"encounter_friendly":"nskr_enigma_theme",
+	},	
+	"portraits":{
+		"standard_male":[
+			"graphics/portraits/portrait_ai1b.png",
+			"graphics/portraits/portrait_ai2b.png",
+			"graphics/portraits/portrait_ai3b.png",
+		],
+		"standard_female":[
+			"graphics/portraits/portrait_ai1b.png",
+			"graphics/portraits/portrait_ai2b.png",
+			"graphics/portraits/portrait_ai3b.png",
+		],
+	},
+	"ranks":{
+		"ranks":{
+		},
+		"posts":{
+		},
+	},
+	"custom":{
+		"engageWhenEvenStrength":true,
+		"allowsTransponderOffTrade":false, # to prevent cargoscan dialog from "patrols"
+		"postsNoBounties":true,
+		"fightToTheLast":true, # order a full assault instead of retreating, in most cases
+	},	
+	"fleetTypeNames":{
+		"patrolSmall":"Task Group",
+		"patrolMedium":"Strike Force",
+		"patrolLarge":"Black Ops",
+	},
+},

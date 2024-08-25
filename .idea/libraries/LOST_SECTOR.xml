@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="LOST_SECTOR">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/jars/LOST_SECTOR.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

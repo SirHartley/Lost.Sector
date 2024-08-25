@@ -1,0 +1,72 @@
+{
+    "displayName": "Rat's Nest",
+    "fluxCapacitors": 0,
+    "fluxVents": 37,
+    "goalVariant": true,
+    "hullId": "nskr_kingslayer",
+    "hullMods": [
+        "targetingunit",
+        "heavyarmor",
+        "missleracks",
+        "unstable_injector",
+        "armoredweapons"
+    ],
+    "permaMods": [],
+    "sMods": [],
+    "variantId": "nskr_kingslayer_rat",
+    "weaponGroups": [
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {"WS0016": "multineedler"}
+        },
+        {
+            "autofire": false,
+            "mode": "ALTERNATING",
+            "weapons": {
+                "WS0006": "harpoon",
+                "WS0007": "harpoon",
+                "WS0018": "harpoonpod",
+                "WS0019": "harpoonpod"
+            }
+        },
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0014": "chaingun",
+                "WS0015": "chaingun",
+                "WS0017": "hephag"
+            }
+        },
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0008": "lightneedler",
+                "WS0009": "lightneedler"
+            }
+        },
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0001": "heavymg",
+                "WS0002": "heavymg"
+            }
+        },
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0003": "dualflak",
+                "WS0004": "vulcan",
+                "WS0005": "vulcan",
+                "WS0010": "vulcan",
+                "WS0011": "vulcan",
+                "WS0012": "vulcan",
+                "WS0013": "vulcan"
+            }
+        }
+    ]
+}

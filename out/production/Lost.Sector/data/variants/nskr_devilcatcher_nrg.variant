@@ -1,0 +1,49 @@
+{
+    "displayName": "Blaster",
+    "fluxCapacitors": 0,
+    "fluxVents": 23,
+    "goalVariant": true,
+    "hullId": "nskr_devilcatcher",
+    "hullMods": [
+        "unstable_injector",
+        "targetingunit",
+        "hardenedshieldemitter",
+        "fluxcoil"
+    ],
+    "permaMods": [],
+    "sMods": [],
+    "variantId": "nskr_devilcatcher_nrg",
+    "weaponGroups": [
+        {
+            "autofire": false,
+            "mode": "LINKED",
+            "weapons": {"WS0001": "plasma"}
+        },
+        {
+            "autofire": false,
+            "mode": "ALTERNATING",
+            "weapons": {
+                "WS0004": "nskr_bc_single",
+                "WS0005": "nskr_bc_single",
+                "WS0006": "nskr_bc_single",
+                "WS0007": "nskr_bc_single"
+            }
+        },
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0002": "railgun",
+                "WS0003": "railgun"
+            }
+        },
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0008": "pdburst",
+                "WS0009": "pdburst"
+            }
+        }
+    ]
+}

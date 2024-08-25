@@ -1,0 +1,59 @@
+{
+    "displayName": "Black Ops",
+    "fluxCapacitors": 0,
+    "fluxVents": 14,
+    "hullId": "nskr_minokawa",
+    "hullMods": [
+        "targetingunit",
+        "heavyarmor",
+        "fluxbreakers",
+        "auxiliarythrusters",
+        "armoredweapons",
+        "magazines",
+        "stabilizedshieldemitter"
+    ],
+    "permaMods": [],
+    "sMods": [],
+    "variantId": "nskr_minokawa_ops",
+    "weaponGroups": [
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {"WS0001": "autopulse"}
+        },
+        {
+            "autofire": false,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0002": "nskr_inverter",
+                "WS0003": "nskr_inverter",
+                "WS0004": "nskr_inverter",
+                "WS0005": "nskr_inverter"
+            }
+        },
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0008": "railgun",
+                "WS0009": "railgun"
+            }
+        },
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0006": "vulcan",
+                "WS0007": "vulcan",
+                "WS0010": "vulcan",
+                "WS0011": "vulcan",
+                "WS0012": "vulcan",
+                "WS0013": "vulcan",
+                "WS0014": "vulcan",
+                "WS0015": "vulcan",
+                "WS0016": "heavyburst",
+                "WS0017": "heavyburst"
+            }
+        }
+    ]
+}

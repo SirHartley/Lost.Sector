@@ -1,0 +1,20 @@
+{
+	"id":"nskr_warp",
+	"type":"ENGINE_MOD",
+	"aiType":"CUSTOM",
+	"aiScript":"scripts.kissa.LOST_SECTOR.shipsystems.ai.nskr_warpAI",
+	
+	"statsScript":"scripts.kissa.LOST_SECTOR.shipsystems.nskr_warpStats",
+	
+	"clampMaxSpeedAfter":true,
+
+	"fadeActivationSoundOnChargedown":true,
+
+	"outOfUsesSound":"gun_out_of_ammo",
+	
+	"aiHints":{
+		"activeSpeedIncrease":300,
+		"burstMovementPotential":500,
+		"averageSpeedIncrease":50,
+	}
+}

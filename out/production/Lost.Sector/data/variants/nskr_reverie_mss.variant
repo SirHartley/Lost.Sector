@@ -1,0 +1,50 @@
+{
+    "displayName": "Missile",
+    "fluxCapacitors": 18,
+    "fluxVents": 0,
+    "goalVariant": true,
+    "hullId": "nskr_reverie",
+    "hullMods": [
+        "missleracks",
+        "eccm"
+    ],
+    "permaMods": [],
+    "sMods": [],
+    "variantId": "nskr_reverie_mss",
+    "weaponGroups": [
+        {
+            "autofire": false,
+            "mode": "ALTERNATING",
+            "weapons": {
+                "WS0009": "amblaster",
+                "WS0010": "amblaster"
+            }
+        },
+        {
+            "autofire": false,
+            "mode": "ALTERNATING",
+            "weapons": {
+                "WS0001": "harpoonpod",
+                "WS0002": "harpoonpod",
+                "WS0003": "harpoonpod",
+                "WS0004": "harpoonpod"
+            }
+        },
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0005": "ioncannon",
+                "WS0006": "ioncannon"
+            }
+        },
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0007": "pdburst",
+                "WS0008": "pdburst"
+            }
+        }
+    ]
+}

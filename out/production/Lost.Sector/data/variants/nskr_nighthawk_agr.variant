@@ -1,0 +1,58 @@
+{
+    "displayName": "Aggressor",
+    "fluxCapacitors": 11,
+    "fluxVents": 18,
+    "goalVariant": true,
+    "hullId": "nskr_nighthawk",
+    "hullMods": [
+        "nskr_volatile",
+        "nskr_inertial",
+        "unstable_injector"
+    ],
+    "permaMods": [],
+    "sMods": [],
+    "variantId": "nskr_nighthawk_agr",
+    "weaponGroups": [
+        {
+            "autofire": false,
+            "mode": "ALTERNATING",
+            "weapons": {
+                "WS0009": "sabot",
+                "WS0010": "sabot",
+                "WS0011": "sabotpod",
+                "WS0012": "sabotpod"
+            }
+        },
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0013": "ionpulser",
+                "WS0014": "ionpulser"
+            }
+        },
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0001": "lightac",
+                "WS0002": "lightac",
+                "WS0003": "lightac",
+                "WS0004": "lightac"
+            }
+        },
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0005": "pdlaser",
+                "WS0006": "pdlaser",
+                "WS0007": "pdlaser",
+                "WS0008": "pdlaser",
+                "WS0015": "pdlaser",
+                "WS0016": "pdlaser",
+                "WS0017": "pdlaser"
+            }
+        }
+    ]
+}

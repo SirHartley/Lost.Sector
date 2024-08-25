@@ -1,0 +1,23 @@
+Credits:
+
+-Additional Scripts :     
+	- DarkRevenant, Nicke535, Sundog, Cycerin, Inventor Raccoon, Nia Tahl, Vayra, Tartiflette, theDragn, Histidine, Sebastian Lague, and LazyWizard [Andrey Sitnik and Ivan Solovev (easing functions)]
+-Additional sound fx :
+	- freesound.org :
+	- Russintheus, Ianstargem, Eflex Music, Squidge316, unfa, Morgan Purkis, Madamdata, Anomaex, Xfromarge1, Probrix22
+	- gamesounds.xyz :
+	- Pole Position Production, Bluezone, Sonniss.com, PACEFX, Signum, ScifiWho, Nikolay Overchenko
+	- 99sounds.org :
+	- 99Sounds
+-Music from :	
+	- http://www.nosoapradio.us/ 
+	- Deceased Superior Technician
+-Additional art :
+	- Tartiflette, Selkie, Nia Tahl, [Lorc, Delapouite, sbed (game-icons.net)]
+-Play-testing :
+	- Avanitia
+	
+-Everyone who contributed to all the neat free to use stuff in MagicLib, LazyLib, LunaLib and GraphicsLib.
+-Starsector Discord - for having lots of helpful resources and people.
+-Alex, David, and the rest, for the game itself and all vanilla assets.
+-Everything else - Kissa Mies

@@ -1,0 +1,29 @@
+{
+	"id":"nskr_stasis_shot",
+	"onHitEffect":"scripts.kissa.LOST_SECTOR.weapons.nskr_stasisOH",
+	"specClass":"missile",
+	"missileType":"MISSILE",
+	"sprite":"graphics/missiles/nskr_stasis_torpedo.png",
+	"size":[32,32],	
+	"center":[16,16],
+	"collisionRadius":12,
+	"collisionClass":"MISSILE_NO_FF",
+	"explosionColor":[61, 113, 255,255],  # purely visual, will get a white additively blended core on top of this color
+	"explosionRadius":150, # purely visual
+	"hitGlowRadius":45,	
+	"noCollisionWhileFading":true,
+	"useHitGlowWhenDestroyed":true, # instead of the default explosion
+	"dudProbabilityOnFlameout":0,
+	"fizzleOnReachingWeaponRange":true,					 
+	"armingTime":0,
+	"flameoutTime":0.2, # total time from flameout to full fadeout
+	"noEngineGlowTime":0.2, # time spent without the engine glow being rendered
+	"fadeTime":0.0, # fadeout duration			
+	"glowColor":[100, 152, 255,75],
+	"glowRadius":125,
+	"engineSpec":{"turnAcc":0,
+				  "turnRate":0,
+				  "acc":5000,
+				  "dec":5000},
+	"engineSlots":[],
+}

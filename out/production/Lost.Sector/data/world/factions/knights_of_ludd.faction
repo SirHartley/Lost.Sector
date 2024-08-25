@@ -1,0 +1,33 @@
+{
+    "hullFrequency":{
+        "hulls":{
+        },
+    },
+    "shipsWhenImporting":{
+        "hulls":[
+        ],
+    },
+    "knownShips":{
+        "hulls":[
+        ],
+    },
+    "priorityShips":{
+        "hulls":[     
+        ],
+    },
+    "knownFighters":{
+        "fighters":[
+            
+        ],
+    },
+    "knownWeapons":{
+        "weapons":[
+            
+        ],
+    },
+    "knownHullMods":{
+        "hullMods":[
+            
+        ],
+    },
+},

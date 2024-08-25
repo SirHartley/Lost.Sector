@@ -1,0 +1,72 @@
+{
+    "displayName": "Aggressor",
+    "fluxCapacitors": 2,
+    "fluxVents": 50,
+    "goalVariant": true,
+    "hullId": "nskr_prosperity",
+    "hullMods": [
+        "nskr_volatile",
+        "targetingunit",
+        "fluxcoil",
+        "magazines",
+        "auxiliarythrusters",
+        "insulatedengine"
+    ],
+    "permaMods": [],
+    "sMods": [],
+    "variantId": "nskr_prosperity_agr",
+    "weaponGroups": [
+        {
+            "autofire": false,
+            "mode": "ALTERNATING",
+            "weapons": {
+                "WS0007": "gorgonpod",
+                "WS0008": "gorgonpod",
+                "WS0019": "gorgonpod",
+                "WS0020": "gorgonpod",
+                "WS0027": "gorgonpod",
+                "WS0028": "gorgonpod"
+            }
+        },
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0001": "autopulse",
+                "WS0002": "autopulse",
+                "WS0003": "autopulse",
+                "WS0004": "autopulse"
+            }
+        },
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0005": "ionpulser",
+                "WS0006": "ionpulser"
+            }
+        },
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0015": "pdburst",
+                "WS0016": "pdburst"
+            }
+        },
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0009": "heavyburst",
+                "WS0010": "heavyburst",
+                "WS0011": "mininglaser",
+                "WS0012": "mininglaser",
+                "WS0013": "mininglaser",
+                "WS0014": "mininglaser",
+                "WS0017": "mininglaser",
+                "WS0018": "mininglaser"
+            }
+        }
+    ]
+}

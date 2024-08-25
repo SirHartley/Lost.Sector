@@ -1,0 +1,300 @@
+{
+
+	"nskr_enigmabase":{
+		"defaultName":"Aged R&D Facility", # used if name=null in addCustomEntity()
+		"defaultRadius":50, # used if radius<0 in addCustomEntity()
+		"nameInText":"R&D Facility",
+		"shortName":"Facility",
+		"customDescriptionId":"nskr_enigmabase",
+		"interactionImage":"graphics/illustrations/orbital_construction.jpg",
+		"icon":"graphics/icons/station0.png",
+		"iconWidth":20,
+		"iconHeight":20,
+		"sprite":"graphics/stations/nskr_enigmabase.png",
+		"spriteWidth":35,
+		"spriteHeight":70,
+		"renderShadow":true,
+		"useLightColor":true,
+		"showInCampaign":true,
+		"showIconOnMap":true,
+		"showNameOnMap":false,
+		"scaleNameWithZoom":false,
+		"scaleIconWithZoom":true,
+		"tags":["has_interaction_dialog", "salvageable", "neutrino"],
+		"layers":[STATIONS], # what layer(s) to render in. See CampaignEngineLayers.java for possible values
+	},
+		"nskr_artifact":{
+		"defaultName":"Ancient Satellite", # used if name=null in addCustomEntity()
+		"defaultRadius":20, # used if radius<0 in addCustomEntity()
+		"nameInText":"Ancient Satellite",
+		"shortName":"Satellite",
+		"customDescriptionId":"nskr_artifact",
+		"interactionImage":"graphics/illustrations/generic_probe.jpg",
+		"icon":"graphics/icons/generic_probe_icon.png",
+		"iconWidth":12,
+		"iconHeight":12,
+		"sprite":"graphics/stations/probe.png",
+		"spriteWidth":12,
+		"spriteHeight":12,
+		"renderShadow":true,
+		"useLightColor":true,
+		"showInCampaign":true,
+		"showIconOnMap":true,
+		"showNameOnMap":false,
+		"scaleNameWithZoom":false,
+		"scaleIconWithZoom":true,
+		"tags":["has_interaction_dialog"],
+		"layers":[ASTEROIDS], # what layer(s) to render in. See CampaignEngineLayers.java for possible values
+	},
+		"nskr_core":{
+		"defaultName":"Command Core", # used if name=null in addCustomEntity()
+		"defaultRadius":20, # used if radius<0 in addCustomEntity()
+		"nameInText":"Command Core",
+		"shortName":"Command Core",
+		"customDescriptionId":"nskr_core",
+		"interactionImage":"graphics/illustrations/nskr_core.jpg",
+		"icon":"graphics/icons/generic_probe_icon.png",
+		"iconWidth":12,
+		"iconHeight":12,
+		"sprite":"graphics/stations/probe.png",
+		"spriteWidth":12,
+		"spriteHeight":12,
+		"renderShadow":true,
+		"useLightColor":true,
+		"showInCampaign":true,
+		"showIconOnMap":true,
+		"showNameOnMap":false,
+		"scaleNameWithZoom":false,
+		"scaleIconWithZoom":true,
+		"tags":["has_interaction_dialog"],
+		"layers":[ASTEROIDS], # what layer(s) to render in. See CampaignEngineLayers.java for possible values
+	},
+	
+	"nskr_heart_wreckage":{
+		"defaultName":"Heart Wreckage", # used if name=null in addCustomEntity()
+		"defaultRadius":70, # used if radius<0 in addCustomEntity()
+		"customDescriptionId":"orbital_station_default",
+		"interactionImage":"graphics/illustrations/abandoned_station3.jpg",
+		"icon":"graphics/icons/station0.png",
+		"iconWidth":20,
+		"iconHeight":20,
+		"sprite":"graphics/stations/station_sporeship_derelict.png",
+		"spriteWidth":90,
+		"spriteHeight":90,
+		"renderShadow":true,
+		"useLightColor":true,
+		"showInCampaign":true,
+		"showIconOnMap":true,
+		"showNameOnMap":false,
+		"scaleNameWithZoom":false,
+		"scaleIconWithZoom":true,
+		"tags":["has_interaction_dialog", "salvageable", "neutrino"],
+		"layers":[STATIONS], # what layer(s) to render in. See CampaignEngineLayers.java for possible values
+	},
+	
+	"nskr_blacksite":{
+		"defaultName":"Hidden Facility", # used if name=null in addCustomEntity()
+		"defaultRadius":40, # used if radius<0 in addCustomEntity()
+		"nameInText":"Hidden Facility",
+		"shortName":"Hidden Facility",
+		"customDescriptionId":"nskr_blacksite",
+		"interactionImage":"graphics/illustrations/orbital_construction.jpg",
+		"icon":"graphics/icons/station0.png",
+		"iconWidth":20,
+		"iconHeight":20,
+		"sprite":"graphics/stations/nskr_blacksite.png",
+		"spriteWidth":35,
+		"spriteHeight":70,
+		"renderShadow":true,
+		"useLightColor":true,
+		"showInCampaign":true,
+		"showIconOnMap":true,
+		"showNameOnMap":false,
+		"scaleNameWithZoom":false,
+		"scaleIconWithZoom":true,
+		"tags":["has_interaction_dialog", "neutrino"],
+		"layers":[STATIONS], # what layer(s) to render in. See CampaignEngineLayers.java for possible values
+	},
+	
+	"nskr_blacksite_pirate":{
+		"defaultName":"Pirate Stash", # used if name=null in addCustomEntity()
+		"defaultRadius":40, # used if radius<0 in addCustomEntity()
+		"nameInText":"Pirate Stash",
+		"shortName":"Pirate Stash",
+		"customDescriptionId":"nskr_blacksite_cleared",
+		"interactionImage":"graphics/illustrations/orbital_construction.jpg",
+		"icon":"graphics/icons/station0.png",
+		"iconWidth":20,
+		"iconHeight":20,
+		"sprite":"graphics/stations/nskr_blacksite.png",
+		"spriteWidth":35,
+		"spriteHeight":70,
+		"renderShadow":true,
+		"useLightColor":true,
+		"showInCampaign":true,
+		"showIconOnMap":true,
+		"showNameOnMap":false,
+		"scaleNameWithZoom":false,
+		"scaleIconWithZoom":true,
+		"tags":["has_interaction_dialog", "salvageable", "neutrino"],
+		"layers":[STATIONS], # what layer(s) to render in. See CampaignEngineLayers.java for possible values
+	},
+	
+	"nskr_blacksite_pather":{
+		"defaultName":"Pather Stash", # used if name=null in addCustomEntity()
+		"defaultRadius":40, # used if radius<0 in addCustomEntity()
+		"nameInText":"Pather Stash",
+		"shortName":"Pather Stash",
+		"customDescriptionId":"nskr_blacksite_cleared",
+		"interactionImage":"graphics/illustrations/orbital_construction.jpg",
+		"icon":"graphics/icons/station0.png",
+		"iconWidth":20,
+		"iconHeight":20,
+		"sprite":"graphics/stations/nskr_blacksite.png",
+		"spriteWidth":35,
+		"spriteHeight":70,
+		"renderShadow":true,
+		"useLightColor":true,
+		"showInCampaign":true,
+		"showIconOnMap":true,
+		"showNameOnMap":false,
+		"scaleNameWithZoom":false,
+		"scaleIconWithZoom":true,
+		"tags":["has_interaction_dialog", "salvageable", "neutrino"],
+		"layers":[STATIONS], # what layer(s) to render in. See CampaignEngineLayers.java for possible values
+	},
+	
+	"nskr_blacksite_tritachyon":{
+		"defaultName":"Tri-Tachyon Blacksite", # used if name=null in addCustomEntity()
+		"defaultRadius":40, # used if radius<0 in addCustomEntity()
+		"nameInText":"Tri-Tachyon Blacksite",
+		"shortName":"Tri-Tachyon Blacksite",
+		"customDescriptionId":"nskr_blacksite_cleared",
+		"interactionImage":"graphics/illustrations/orbital_construction.jpg",
+		"icon":"graphics/icons/station0.png",
+		"iconWidth":20,
+		"iconHeight":20,
+		"sprite":"graphics/stations/nskr_blacksite.png",
+		"spriteWidth":35,
+		"spriteHeight":70,
+		"renderShadow":true,
+		"useLightColor":true,
+		"showInCampaign":true,
+		"showIconOnMap":true,
+		"showNameOnMap":false,
+		"scaleNameWithZoom":false,
+		"scaleIconWithZoom":true,
+		"tags":["has_interaction_dialog", "salvageable", "neutrino"],
+		"layers":[STATIONS], # what layer(s) to render in. See CampaignEngineLayers.java for possible values
+	},
+	
+	"nskr_blacksite_kesteven":{
+		"defaultName":"Kesteven Blacksite", # used if name=null in addCustomEntity()
+		"defaultRadius":40, # used if radius<0 in addCustomEntity()
+		"nameInText":"Kesteven Blacksite",
+		"shortName":"Kesteven Blacksite",
+		"customDescriptionId":"nskr_blacksite_cleared",
+		"interactionImage":"graphics/illustrations/orbital_construction.jpg",
+		"icon":"graphics/icons/station0.png",
+		"iconWidth":20,
+		"iconHeight":20,
+		"sprite":"graphics/stations/nskr_blacksite.png",
+		"spriteWidth":35,
+		"spriteHeight":70,
+		"renderShadow":true,
+		"useLightColor":true,
+		"showInCampaign":true,
+		"showIconOnMap":true,
+		"showNameOnMap":false,
+		"scaleNameWithZoom":false,
+		"scaleIconWithZoom":true,
+		"tags":["has_interaction_dialog", "salvageable", "neutrino"],
+		"layers":[STATIONS], # what layer(s) to render in. See CampaignEngineLayers.java for possible values
+	},
+	
+	"nskr_blacksite_enigma":{
+		"defaultName":"Ancient Enigma Hangar", # used if name=null in addCustomEntity()
+		"defaultRadius":40, # used if radius<0 in addCustomEntity()
+		"nameInText":"Ancient Enigma Hangar",
+		"shortName":"Ancient Enigma Hangar",
+		"customDescriptionId":"nskr_blacksite_cleared",
+		"interactionImage":"graphics/illustrations/orbital_construction.jpg",
+		"icon":"graphics/icons/station0.png",
+		"iconWidth":20,
+		"iconHeight":20,
+		"sprite":"graphics/stations/nskr_blacksite.png",
+		"spriteWidth":35,
+		"spriteHeight":70,
+		"renderShadow":true,
+		"useLightColor":true,
+		"showInCampaign":true,
+		"showIconOnMap":true,
+		"showNameOnMap":false,
+		"scaleNameWithZoom":false,
+		"scaleIconWithZoom":true,
+		"tags":["has_interaction_dialog", "salvageable", "neutrino"],
+		"layers":[STATIONS], # what layer(s) to render in. See CampaignEngineLayers.java for possible values
+	},
+	
+		"nskr_blacksite_remnant":{
+		"defaultName":"Ancient Remnant Hangar", # used if name=null in addCustomEntity()
+		"defaultRadius":40, # used if radius<0 in addCustomEntity()
+		"nameInText":"Ancient Remnant Hangar",
+		"shortName":"Ancient Remnant Hangar",
+		"customDescriptionId":"nskr_blacksite_cleared",
+		"interactionImage":"graphics/illustrations/orbital_construction.jpg",
+		"icon":"graphics/icons/station0.png",
+		"iconWidth":20,
+		"iconHeight":20,
+		"sprite":"graphics/stations/nskr_blacksite.png",
+		"spriteWidth":35,
+		"spriteHeight":70,
+		"renderShadow":true,
+		"useLightColor":true,
+		"showInCampaign":true,
+		"showIconOnMap":true,
+		"showNameOnMap":false,
+		"scaleNameWithZoom":false,
+		"scaleIconWithZoom":true,
+		"tags":["has_interaction_dialog", "salvageable", "neutrino"],
+		"layers":[STATIONS], # what layer(s) to render in. See CampaignEngineLayers.java for possible values
+	},
+
+	"nskr_blast":{
+		"showInCampaign":true, # show in campaign layer
+		"showIconOnMap":false,
+		"showNameOnMap":false,
+		"renderCircleIndicator":false, # make clickable,
+		"interactable":false,
+		"layers":[ABOVE], # what layer(s) to render in. See CampaignEngineLayers.java for possible values,
+		"pluginClass":"scripts.kissa.LOST_SECTOR.util.campaignBlastSpriteCreator",
+	},
+	
+	"nskr_anomalous_station":{
+		"defaultName":"Anomalous Station", # used if name=null in addCustomEntity()
+		"defaultRadius":45, # used if radius<0 in addCustomEntity()
+		"nameInText":"anomalous station",
+		"shortName":"station",
+		"customDescriptionId":"station_research_remnant",
+		"interactionImage":"graphics/illustrations/orbital_construction.jpg",
+		"icon":"graphics/icons/station0.png",
+		"iconWidth":20,
+		"iconHeight":20,
+		"sprite":"graphics/stations/station_side00.png",
+		"spriteWidth":40,
+		"spriteHeight":40,
+		"renderShadow":true,
+		"useLightColor":true,
+		"showInCampaign":true,
+		"showIconOnMap":true,
+		"showNameOnMap":false,
+		"scaleNameWithZoom":false,
+		"scaleIconWithZoom":true,
+		"tags":["has_interaction_dialog", "neutrino"],
+		"layers":[STATIONS], # what layer(s) to render in. See CampaignEngineLayers.java for possible values
+	},
+
+
+}
+
+

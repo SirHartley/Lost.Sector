@@ -1,0 +1,50 @@
+{
+    "displayName": "Disabler",
+    "fluxCapacitors": 19,
+    "fluxVents": 0,
+    "goalVariant": true,
+    "hullId": "nskr_reverie",
+    "hullMods": [
+        "missleracks",
+        "fluxbreakers"
+    ],
+    "permaMods": [],
+    "sMods": [],
+    "variantId": "nskr_reverie_dsb",
+    "weaponGroups": [
+        {
+            "autofire": false,
+            "mode": "ALTERNATING",
+            "weapons": {
+                "WS0009": "amblaster",
+                "WS0010": "amblaster"
+            }
+        },
+        {
+            "autofire": false,
+            "mode": "ALTERNATING",
+            "weapons": {
+                "WS0001": "sabotpod",
+                "WS0002": "sabotpod",
+                "WS0004": "sabotpod"
+            }
+        },
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0003": "ionpulser",
+                "WS0005": "lightneedler",
+                "WS0006": "lightneedler"
+            }
+        },
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0007": "pdburst",
+                "WS0008": "pdburst"
+            }
+        }
+    ]
+}

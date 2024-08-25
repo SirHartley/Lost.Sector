@@ -1,0 +1,12 @@
+"id"
+"# NOTES"
+"# Ship IDs entered here will be allowed by the Engineering hub (Reverse Engineering ship hulls)"
+"# Ships that would break the game (Balance/Technical/Lore) if the player could produce them via blueprint should not be on this list."
+"# I'd ask you to not go overboard with forbidding things, we are all in this to have fun. Reverse Engineering is neither easy nor cheap."
+
+"nskr_kingslayer"
+"nskr_rhea"
+"nskr_borealis"
+"nskr_stalwart"
+"nskr_reverie"
+"nskr_verity"

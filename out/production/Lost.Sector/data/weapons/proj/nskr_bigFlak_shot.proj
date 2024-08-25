@@ -1,0 +1,18 @@
+{
+	"id":"nskr_bigFlak_shot",
+	"specClass":"missile",
+	"missileType":"ROCKET",
+	"onHitEffect":"scripts.kissa.LOST_SECTOR.weapons.nskr_bigFlakOH",
+	"sprite":"graphics/missiles/nskr_moab_flak.png",
+	"size":[12,20],	
+	"center":[6,10],
+	"collisionRadius":18,
+	"collisionClass":"MISSILE_NO_FF",
+	"flameoutTime":0.2, # total time from flameout to full fadeout
+	"armingTime":1.5,
+	"fadeTime":0.0, # fadeout duration					 
+	"engineSpec":{"turnAcc":0,
+				  "turnRate":0,
+				  "acc":0,
+				  "dec":0},
+}

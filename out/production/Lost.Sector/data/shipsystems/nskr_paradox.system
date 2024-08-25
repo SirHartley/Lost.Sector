@@ -1,0 +1,23 @@
+{
+	"id":"nskr_paradox",
+	"type":"STAT_MOD",
+    "aiType":"CUSTOM",
+    "aiScript":"scripts.kissa.LOST_SECTOR.shipsystems.ai.nskr_paradoxAI",
+	"statsScript":"scripts.kissa.LOST_SECTOR.shipsystems.nskr_paradoxStats",
+	
+	"soundFilterType":"LOWPASS",
+	"soundFilterGain":0.85,
+	"soundFilterGainHF":0.50,
+
+	"fadeActivationSoundOnChargedown":true,
+	"useSound":"nskr_paradox_activate",
+	"loopSound":"nskr_paradox_loop",
+	"deactivateSound":"nskr_paradox_deactivate",
+	"outOfUsesSound":"gun_out_of_ammo",
+	
+	"aiHints":{
+	}
+}
+
+
+

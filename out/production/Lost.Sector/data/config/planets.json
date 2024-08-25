@@ -1,0 +1,39 @@
+{
+  "nskr_ice_desert":{
+    "name":"Frozen Desert",
+    "descriptionId":"nskr_ice_desert",
+    "tilt":-25,
+    "pitch":-20,
+    "rotation":3,
+    "planetColor":[
+      255,
+      255,
+      255,
+      255
+    ],
+    "atmosphereThickness":0.1,
+    "atmosphereThicknessMin":40,
+    "atmosphereColor":[
+      149,171,169,
+      130
+    ],
+    "texture":"graphics/planets/nskr_ice_desert.jpg",
+    "icon":"graphics/warroom/icon_planet.png",
+    "iconColor":[
+      137,163,160,
+      255
+    ],
+    "isStar":false,
+    "lightPosition":[
+      -1,
+      1,
+      5
+    ],
+    "cloudTexture":"graphics/planets/nskr_clouds_desert01.png",
+    "cloudColor":[
+      184,219,222,
+      200
+    ],
+    "cloudRotation":-6,
+  },
+}

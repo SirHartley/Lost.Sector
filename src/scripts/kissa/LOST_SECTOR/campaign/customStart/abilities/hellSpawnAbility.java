@@ -1,6 +1,5 @@
 package scripts.kissa.LOST_SECTOR.campaign.customStart.abilities;
 
-import com.fs.graphics.C;
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.*;
 import com.fs.starfarer.api.campaign.econ.MarketAPI;

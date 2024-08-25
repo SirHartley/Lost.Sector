@@ -1,0 +1,21 @@
+{
+	"id":"nskr_causality",
+	"type":"STAT_MOD",
+	"aiType":"CUSTOM",
+	"aiScript":"scripts.kissa.LOST_SECTOR.shipsystems.ai.nskr_causalityAI",
+
+	"statsScript":"scripts.kissa.LOST_SECTOR.shipsystems.nskr_causalityStats",
+
+	"jitterColor":[255,150,200,50],
+	"jitterCopies":5,
+	"jitterRange":10,
+	"jitterRangeRadiusFraction":0.05,
+
+	"fadeActivationSoundOnChargedown":false,
+
+    "aiHints":{
+        "activeSpeedIncrease":0,
+        "burstMovementPotential":0,
+        "averageSpeedIncrease":0,
+    }
+}

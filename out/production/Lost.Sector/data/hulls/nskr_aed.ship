@@ -1,0 +1,151 @@
+{
+  "hullName": "AED",
+  "hullId": "nskr_aed",
+  "hullSize": "FRIGATE",
+  "spriteName": "graphics/ships/nskr_aed.png",
+  "style": "NSKR_PROT",
+  "height": 100,
+  "width": 134,
+  "center": [67, 50],
+  "collisionRadius": 89.5,
+  "shieldCenter": [0, 0],
+  "shieldRadius": 88,
+  "viewOffset": 0,
+  "builtInMods": [
+    "automated",
+    "nskr_aed",
+    "phasefield",
+    "delicate"
+  ],
+  "builtInWeapons": {
+    "WS0002": "nskr_prot5_light"
+  },
+  "weaponSlots": [
+    {
+      "id": "WS0001",
+      "size": "SMALL",
+      "type": "ENERGY",
+      "mount": "TURRET",
+      "arc": 300,
+      "angle": 0,
+      "locations": [13, -0]
+    },
+    {
+      "id": "WS0002",
+      "size": "SMALL",
+      "type": "DECORATIVE",
+      "mount": "TURRET",
+      "arc": 0,
+      "angle": 0,
+      "locations": [0, -0]
+    }
+  ],
+  "engineSlots": [
+    {
+      "location": [-39.5, -22.5],
+      "length": 37.5,
+      "width": 12,
+      "angle": 180,
+      "contrailSize": 12,
+      "style": "CUSTOM",
+      "styleId": "NSKR_TECHP"
+    },
+    {
+      "location": [-39.5, 22.5],
+      "length": 37.5,
+      "width": 12,
+      "angle": -180,
+      "contrailSize": 12,
+      "style": "CUSTOM",
+      "styleId": "NSKR_TECHP"
+    },
+    {
+      "location": [-37.5, 5.5],
+      "length": 64.5,
+      "width": 12,
+      "angle": -180,
+      "contrailSize": 12,
+      "style": "CUSTOM",
+      "styleId": "NSKR_TECHP"
+    },
+    {
+      "location": [-37.5, -5.5],
+      "length": 64.5,
+      "width": 12,
+      "angle": 180,
+      "contrailSize": 12,
+      "style": "CUSTOM",
+      "styleId": "NSKR_TECHP"
+    },
+    {
+      "location": [-37, 5.5],
+      "length": 22,
+      "width": 7,
+      "angle": -180,
+      "contrailSize": 7,
+      "style": "CUSTOM",
+      "styleId": "NSKR_TECHP2"
+    },
+    {
+      "location": [-37, -5.5],
+      "length": 22,
+      "width": 7,
+      "angle": 180,
+      "contrailSize": 7,
+      "style": "CUSTOM",
+      "styleId": "NSKR_TECHP2"
+    },
+    {
+      "location": [-39, 22.5],
+      "length": 7.5,
+      "width": 8,
+      "angle": -180,
+      "contrailSize": 8,
+      "style": "CUSTOM",
+      "styleId": "NSKR_TECHP2"
+    },
+    {
+      "location": [-39, -22.5],
+      "length": 7.5,
+      "width": 8,
+      "angle": 180,
+      "contrailSize": 8,
+      "style": "CUSTOM",
+      "styleId": "NSKR_TECHP2"
+    }
+  ],
+  "bounds": [
+    36, 10,
+    16.5, 21,
+    24.5, 23,
+    11, 26,
+    22.5, 37,
+    22.5, 52.5,
+    16, 54,
+    10, 64,
+    -7, 64,
+    -22, 57.5,
+    -28, 37,
+    -47, 36,
+    -39, 28,
+    -39, 16,
+    -27.5, 14.5,
+    -37, 10.5,
+    -37, -10.5,
+    -27.5, -14.5,
+    -39, -16,
+    -39, -28,
+    -47, -36,
+    -28, -37,
+    -22, -57.5,
+    -7, -64,
+    10, -64,
+    16, -54,
+    22.5, -52.5,
+    22.5, -37,
+    11, -26,
+    24.5, -23,
+    16.5, -21,
+    36, -10
+  ]
+}

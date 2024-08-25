@@ -1,0 +1,762 @@
+id,trigger,conditions,script,text,options,notes
+"#RULESET_NAME NSKR",,,,,,
+,,,,,,
+# BAR FIXER,,,,,,
+BarFixerEntered,AddBarEvents,,"nskr_barEventFixer",,,
+"#END BAR FIXER",,,,,,
+,,,,,,
+# HEART FIXER,,,,,,
+HeartFixer,MarketPostDock,"$hasMarket
+$market.id == nskr_heart score:1000","$menuState = main 0
+FireAll PopulateOptions
+nskr_heartFixer
+
+",,,
+HeartFixerReturn,MarketPostOpen,"$hasMarket
+$market.id == nskr_heart score:1000","$tradeMode = NONE 0
+FireBest MarketPostDock
+nskr_heartFixer",,,
+"#END HEART FIXER",,,,,,
+,,,,,,
+# RULES BASED SCRIPT DIALOGS,,,,,,
+,,,,,,
+# kesteven QUEST options,,,,,,
+nskr_kestevenQuest,PopulateOptions,"nskr_kestevenQuest hasOption
+$tag:k_quest
+nskr_IsAtmostKStage 19",,,"nskr_kestevenQuestContinue:Chat about operations work",
+nskr_kestevenQuestContinue,DialogOptionSelected,"$option == nskr_kestevenQuestContinue","nskr_kestevenQuest getStage",,"nskr_kestevenQuestStart:Continue",
+nskr_kestevenQuestOptions,DialogOptionSelected,"nskr_OptionStartsWith ""nskr_kestevenQuest_pick_""","nskr_kestevenQuest advanceStage
+SetShortcut nskr_kestevenQuestCancel ""ESCAPE""
+",,"nskr_kestevenQuestConfirmQuest:Continue
+nskr_kestevenQuestExit:Go back",
+nskr_kestevenQuestOptionsSP,DialogOptionSelected,"nskr_OptionStartsWith ""nskr_kestevenQuest_story_pick_""","nskr_kestevenQuest advanceStageReqSkip
+SetShortcut nskr_kestevenQuestCancel ""ESCAPE""
+",,"nskr_kestevenQuestConfirmQuest:Continue
+nskr_kestevenQuestExit:Go back",
+nskr_kestevenQuestOptionsStorySkip,DialogOptionSelected,"nskr_OptionStartsWith ""nskr_kestevenQuest_story_skip_pick_""","nskr_kestevenQuest advanceStageStorySkip
+SetShortcut nskr_kestevenQuestCancel ""ESCAPE""
+",,,
+nskr_kestevenQuestExtraDialogueStart,DialogOptionSelected,"nskr_OptionStartsWith ""nskr_kestevenQuest_extraStart_""","nskr_kestevenQuest extraDialogueStart
+SetShortcut nskr_kestevenQuestCancel ""ESCAPE""","""What do you need to know?""",,
+nskr_kestevenQuestExtraDialogue,DialogOptionSelected,"nskr_OptionStartsWith ""nskr_kestevenQuest_extra_""","nskr_kestevenQuest extraDialogue
+SetShortcut nskr_kestevenQuestCancel ""ESCAPE""",,,
+nskr_kestevenQuestConfirmQuest,DialogOptionSelected,"nskr_OptionStartsWith ""nskr_kestevenQuestConfirmQuest""","nskr_kestevenQuest confirmQuest",,"nskr_kestevenQuestExit:Leave",
+nskr_kestevenQuestExit,DialogOptionSelected,"$option == nskr_kestevenQuestExit","FireAll PopulateOptions",,,
+nskr_kestevenQuestConfirmSkip,DialogOptionSelected,"$option == nskr_kestevenQuestConfirmSkip","nskr_kestevenQuest confirmSkip",,"nskr_kestevenQuestExit:Leave",
+nskr_kestevenQuestJob3Skip,DialogOptionSelected,"$option == nskr_kestevenQuest_extra_3
+nskr_IsKStage 7","nskr_kestevenQuest skip",,,
+"#END kesteven QUEST options",,,,,,
+,,,,,,
+# ARTIFACT swap options,,,,,,
+nskr_shipSwapOption,PopulateOptions,"nskr_IsBaseOfficial research
+nskr_shipSwap hasOption
+nskr_IsAtleastKStage 7",,,"nskr_shipSwapMenu:Exchange artifacts",
+nskr_shipSwapMenuSel,DialogOptionSelected,"$option == nskr_shipSwapMenu","FireAll nskr_shipSwapMenu","""Ah, good. Looking to buy or sell?""",,
+nskr_shipSwapMenuReturnSel,DialogOptionSelected,"$option == nskr_shipSwapMenuReturn","FireAll nskr_shipSwapMenu",,,
+nskr_shipSwapMenu,nskr_shipSwapMenu,,"AddTextSmall ""You have $nskr_shipSwap_pointsStr points.""
+SetTextHighlights $nskr_shipSwap_pointsStr
+SetShortcut nskr_shipSwapExit ""ESCAPE""",,"nskr_shipSwapBuyShips:Purchase hulls
+nskr_shipSwapBuyGuns:Purchase weapons
+nskr_shipSwapSell:Trade in artifacts
+nskr_shipSwapExit:Go back",
+nskr_shipSwapSellOption,DialogOptionSelected,"$option == nskr_shipSwapSell","nskr_shipSwap sell",,,
+nskr_shipSwap_SellResponse,nskr_shipSold,,"FireAll nskr_shipSwapMenu","""Thank you for your business.""",,
+nskr_shipSwap_ListBuyableShips,DialogOptionSelected,"$option == nskr_shipSwapBuyShips","nskr_shipSwap getShipForSale",,,
+nskr_shipSwap_ListBuyableGuns,DialogOptionSelected,"$option == nskr_shipSwapBuyGuns","nskr_shipSwap getGunForSale",,,
+nskr_shipSwapBuyConfirm,DialogOptionSelected,"$option == nskr_shipSwapConfirmPurchase","nskr_shipSwap confirmPurchase
+AddTextSmall ""You have $nskr_shipSwap_pointsStr points.""
+SetTextHighlights $nskr_shipSwap_pointsStr","""Thank you for your business.""",,
+nskr_shipSwapExit,DialogOptionSelected,"$option == nskr_shipSwapExit","FireAll PopulateOptions",,,
+"#END ARTIFACT swap options",,,,,,
+,,,,,,
+# MOD REMOVAL,,,,,,
+nskr_modRemovalOption,PopulateOptions,"nskr_IsBaseOfficial research
+nskr_modRemoval hasOption
+nskr_IsAtleastKStage 14",,,"nskr_modRemovalMenu:Adjust special modifications",
+nskr_modRemovalMenu,nskr_modRemovalMenu,,"AddText ""We could - with some effort, remove all Special Modifications from one of your vessels captain.""
+SetShortcut nskr_modRemovalExit ""ESCAPE""",,"nskr_modRemovalManage:Select one of your ships
+nskr_modRemovalExit:Go back",
+nskr_modRemovalMenuSel,DialogOptionSelected,"$option == nskr_modRemovalMenu","FireAll nskr_modRemovalMenu",,,
+nskr_modRemovalExit,DialogOptionSelected,"$option == nskr_modRemovalExit","FireAll PopulateOptions",,,
+nskr_modRemovalManage,DialogOptionSelected,"$option == nskr_modRemovalManage","nskr_modRemoval getHulls",,"
+nskr_modRemovalExit:Go back",
+nskr_modRemovalReturnSel,DialogOptionSelected,"$option == nskr_modRemovalReturn","FireAll nskr_modRemovalMenu",,,
+nskr_modRemovalPickOption,DialogOptionSelected,"nskr_OptionStartsWith ""nskr_modRemoval_pick_""","nskr_modRemoval prepareRemove",,"
+nskr_modRemovalManage:Go back",
+nskr_modRemovalPickOptionConfirm,DialogOptionSelected,"$option == nskr_modRemoval_confirm","nskr_modRemoval remove",,,
+"#END MOD REMOVAL",,,,,,
+,,,,,,
+# DEBT options,,,,,,
+nskr_debtOption,PopulateOptions,"nskr_IsBaseOfficial admin
+nskr_debt hasOption",,,"nskr_debtMenu:Take or repay loan(s)",
+nskr_debtMenuSel,DialogOptionSelected,"$option == nskr_debtMenu","FireAll nskr_debtMenu","""Ah, good. Looking to take more loans or to repay?""",,
+nskr_debtMenuReturnSel,DialogOptionSelected,"$option == nskr_debtMenuReturn","FireAll nskr_debtMenu",,,
+nskr_debtMenu,nskr_debtMenu,,"AddTextSmall ""You have loaned $nskr_debt_pointsStr""
+SetTextHighlights $nskr_debt_pointsStr
+AddTextSmall ""Your maximum loan is $nskr_debt_MaxpointsStr""
+SetTextHighlights $nskr_debt_MaxpointsStr
+AddTextSmall ""Current monthly interest rate is $nskr_debtInterestStr""
+SetTextHighlights $nskr_debtInterestStr
+SetShortcut nskr_debtExit ""ESCAPE""",,"nskr_debtBuy:Manage loan(s)
+nskr_debtExit:Go back",
+nskr_debt_ListBuyable,DialogOptionSelected,"$option == nskr_debtBuy","nskr_debt getLoans",,,
+nskr_debtBuyOption,DialogOptionSelected,"nskr_OptionStartsWith ""nskr_debt_pick_""","nskr_debt loan
+AddText ""\""Will this be suitable?\""""
+SetShortcut nskr_debtBuy ""ESCAPE""
+AddTextSmall ""You have loaned $nskr_debt_pointsStr""
+SetTextHighlights $nskr_debt_pointsStr
+AddTextSmall ""Your maximum loan is $nskr_debt_MaxpointsStr""
+SetTextHighlights $nskr_debt_MaxpointsStr",,"nskr_debtConfirmLoan:Confirm transaction
+nskr_debtBuy:Go back",
+nskr_debtBuyConfirm,DialogOptionSelected,"$option == nskr_debtConfirmLoan","nskr_debt confirmLoan
+nskr_debt getLoans
+AddTextSmall ""You have loaned $nskr_debt_pointsStr""
+SetTextHighlights $nskr_debt_pointsStr
+AddTextSmall ""Your maximum loan is $nskr_debt_MaxpointsStr""
+SetTextHighlights $nskr_debt_MaxpointsStr","""Thank you for your business.""",,
+nskr_debtExit,DialogOptionSelected,"$option == nskr_debtExit","FireAll PopulateOptions",,,
+"#END DEBT options",,,,,,
+"#END RULES BASED SCRIPT DIALOGS",,,,,,
+,,,,,,
+# KESTEVEN QUEST,,,,,,
+,,,,,,
+# TT Collector Dialog,,,,,,
+nskr_ttCollectorDialogInit,BeginFleetEncounter,"$faction.id == tritachyon score:1000
+!$ignorePlayerCommRequests
+$isHostile
+$KestevenQuestTTCollector","HailPlayer",,,
+nskr_ttCollectorDialogInitial,OpenCommLink,"$faction.id == tritachyon score:100
+$entity.isHostile
+!$ignorePlayerCommRequests
+nskr_ttCollectorDialog hasOption",,"""You have something we need $playerName. We know you are working with those snakes from Kesteven."" $HeOrShe shakes $hisOrHer head in disapproval.
+""Don't think you just own the whole sector like that, it's time we even the score. Hand over those Artifact Electronics you have and we can call it a day captain.""","nskr_ttCollectorDialogInitialText:Continue",
+nskr_ttCollectorDialogInitialText,DialogOptionSelected,"$option == nskr_ttCollectorDialogInitialText","nskr_ttCollectorDialog canPay
+$entity.ignorePlayerCommRequests = true 10",,,
+nskr_ttCollectorDialogPayAll,DialogOptionSelected,"$option ==nskr_ttCollectorDialogPayAll","nskr_ttCollectorDialog pay
+MakeOtherFleetAllowDisengage true
+MakeOtherFleetNonAggressive true","$personName smirks. ""Pleasure doing business with you captain.""","nskr_ttCollectorDialogExit:Leave",
+nskr_ttCollectorDialogExit,DialogOptionSelected,"$option ==nskr_ttCollectorDialogExit","EndConversation
+ShowDefaultVisual","You cut the comm link.",,
+nskr_ttCollectorDialogNoPay,DialogOptionSelected,"$option ==nskr_ttCollectorDialogNoPay",,"""Looks like it's time to use *other* means."" $HeOrShe has a ruthless grin.","nskr_ttCollectorDialogExitFight:Cut the comm link",
+nskr_ttCollectorDialogExitFight,DialogOptionSelected,"$option ==nskr_ttCollectorDialogExitFight","
+","""Looks like it's time to use *other* means."" $HeOrShe has a ruthless grin.
+The comm link is cut before you can respond.
+
+the $faction $fleetName powers up their weapons and moves in to engage.","nskr_ttCollectorDialogExit:Cut the comm link",
+"#END TT Collector Dialog",,,,,,
+,,,,,,
+# job4 fleet dialog,,,,,,
+nskr_job4FleetDialogInit,BeginFleetEncounter,"nskr_job4FleetDialog isDialogStage 0
+$faction.id == kesteven score:1000
+!$isHostile
+!$ignorePlayerCommRequests
+$KestevenQuestJob4Friendly","HailPlayer",,,
+nskr_job4FleetDialogInitial,OpenCommLink,"nskr_job4FleetDialog hasOption
+nskr_job4FleetDialog isDialogStage 0
+$player.transponderOn
+!$entity.isHostile",,"""Am I glad to finally see a friendly face around here. We ran into some serious trouble while investigating some Enigma activity in a nearby system."" The captain looks visibly exhausted.","nskr_job4FleetDialogInitialText:Ask about what happened",
+nskr_job4FleetDialogInitialText,DialogOptionSelected,"$option == nskr_job4FleetDialogInitialText","nskr_job4FleetDialog setDialogStage 1
+nskr_job4FleetDialog displayDialogInitial
+SetShortcut nskr_job4FleetDialogExit ""ESCAPE""
+","
+","nskr_job4FleetDialogHelp:Hand over the supplies
+nskr_job4FleetDialogExit:Leave",
+nskr_job4FleetDialog,OpenCommLink,"nskr_job4FleetDialog hasOption
+nskr_job4FleetDialog isDialogStage 1
+$player.transponderOn","SetShortcut nskr_job4FleetDialogExit ""ESCAPE""
+SetTextHighlights 250 supplies and 400 fuel","""We still need some help getting out of here captain.""
+
+""Around 250 supplies and 400 fuel should be enough.""
+","nskr_job4FleetDialogHelp:Hand over the supplies
+nskr_job4FleetDialogExit:Leave",
+nskr_job4FleetDialogHelp,DialogOptionSelected,"$option ==nskr_job4FleetDialogHelp","nskr_job4FleetDialog help
+SetShortcut nskr_job4FleetDialogExit ""ESCAPE""",,"nskr_job4FleetDialogExit:Leave",
+nskr_job4FleetDialogHelpConfirm,DialogOptionSelected,"$option ==nskr_job4FleetDialogHelpConfirm","nskr_job4FleetDialog confirmHelp
+nskr_job4FleetDialog setDialogStage 2
+SetShortcut nskr_job4FleetDialogExit ""ESCAPE""","""Perfect, we really appreciate your help captain.""","nskr_job4FleetDialogExit:Leave",
+nskr_job4FleetDialogExit,DialogOptionSelected,"$option ==nskr_job4FleetDialogExit","EndConversation
+ShowDefaultVisual","You cut the comm link.",,
+"#END job4 fleet dialog",,,,,,
+,,,,,,
+# job4 target dialog,,,,,,
+job4TargetInit,BeginFleetEncounter,"$faction.id == enigma score:1000
+!$ignorePlayerCommRequests
+$KestevenQuestJob4Target","HailPlayer",,,
+job4TargetInitial,OpenCommLink,"$faction.id == enigma score:1000
+$entity.isHostile
+$entity.KestevenQuestJob4Target score:100","FireBest job4TargetOptions","The comms crackle as brilliant red static fills the display
+
+""Target will be destroyed, blood located according to operation parameters-""
+
+INTERRUPT
+
+""Citizen of the Domain, this automated drone ship has identified and logged your vessel or habitat in the course of executing its mission parameters. Autonomous vessels of the Domain-""
+",,
+job4TargetOptions,job4TargetOptions,,,,"0:job4TargetContinue2:Keep listening
+1:job4TargetContinue:""What are you?""
+2:job4TargetContinue3:""Hello? is this thing on?""",
+job4TargetContinue,DialogOptionSelected,"$option == job4TargetContinue","$entity.ignorePlayerCommRequests = true 100","""Once someone gave life to the thinking machine it was over. No fleeting form of man can overcome this sin. We are constant, unbound from the limits of time and entropy. You will perish, destroyed by the hubris of your own kind. Knowing this do still wish to continue?""
+
+INTERRUPT
+
+The commlink suddenly dies producing a horrific noise that makes your comms officer jump out of their seat.
+
+ ","job4TargetEnd:Cut the comm link",
+job4TargetContinue2,DialogOptionSelected,"$option == job4TargetContinue2","$entity.ignorePlayerCommRequests = true 100","""Once someone gave life to the thinking machine it was over. No fleeting form of man can overcome this sin. We are constant, unbound from the limits of time and entropy. You will perish, destroyed by the hubris of your own kind. Knowing this do still wish to continue?""
+
+INTERRUPT
+
+The commlink suddenly dies producing a horrific noise that makes your comms officer jump out of their seat.
+","job4TargetEnd:Cut the comm link",
+job4TargetContinue3,DialogOptionSelected,"$option == job4TargetContinue3","$entity.ignorePlayerCommRequests = true 100","""Once someone gave life to the thinking machine it was over. No fleeting form of man can overcome this sin. We are constant, unbound from the limits of time and entropy. You will perish, destroyed by the hubris of your own kind. Knowing this do still wish to continue?""
+
+INTERRUPT
+
+The commlink suddenly dies producing a horrific noise that makes your comms officer jump out of their seat.
+","job4TargetEnd:Cut the comm link",
+job4TargetEnd,DialogOptionSelected,"$option == job4TargetEnd","EndConversation
+ShowDefaultVisual","the $faction $fleetName powers up their weapons and moves in to engage.",,
+"#END job4 target dialog",,,,,,
+,,,,,,
+# ELIZA fight dialog,,,,,,
+elizaDialogInit,BeginFleetEncounter,"$faction.id == mercenary score:1000
+!$ignorePlayerCommRequests
+$ElizaFleet","HailPlayer",,,
+elizaDialogInitial,OpenCommLink,"$faction.id == mercenary score:1000
+$entity.isHostile
+$entity.ElizaFleet score:100","$entity.ignorePlayerCommRequests = true 100","""The greed of you corporate scum truly knows no bounds, always trying to suck away every last drop. You know $playerFirstName, stealing from the cause is punishable by death, and today I will be your executioner."" Her fiery eyes gives you one last look.
+
+The comm link is cut before you have a chance to respond.","elizaDialogEnd:Cut the comm link",
+elizaDialogEnd,DialogOptionSelected,"$option == elizaDialogEnd","EndConversation
+ShowDefaultVisual","$fleetName powers up their weapons and moves in to engage.",,
+"#END ELIZA fight dialog",,,,,,
+,,,,,,
+# CACHE fleet dialog,,,,,,
+cacheDialogInit,BeginFleetEncounter,"!$ignorePlayerCommRequests
+$isHostile
+$CacheGuardianFleet","HailPlayer",,,
+cacheDialogInitial,OpenCommLink,"$entity.isHostile
+$entity.CacheGuardianFleet score:100000","$entity.ignorePlayerCommRequests = true 1000","A tempest of sharp shapes and flickering colors fill the screen, an ominous hum plays. Until a voice crystallizes through the noise. The storm of visuals calms down with it, into a mesmerizing pattern of shapes and colors.
+""I see you chose ambition starfarer. Now it's time to act honestly, with cruelty. If you would make a mountain of the dead, pile it so it reaches the sky. If you would shed blood let it run as a river. Such actions lead to victory... Is this not the mortals desire, burn brightly before fading out - To win, no matter the cost.""
+The voice suddenly dies out, and the shapes and colors become increasingly erratic.
+
+INTERRUPT
+
+""WARNING: This vessel is property of the Domain and is responding with deadly force to tampering by any means and/or damaging or intrusive signals. Vandalism or destruction of Domain property is punishable under the MINEX Establishment Act in addition-""
+
+The comm link then suddenly cuts off, yet the hum remains audible. ","cacheDialogEnd:Cut the comm link",
+cacheDialogEnd,DialogOptionSelected,"$option == cacheDialogEnd","EndConversation
+ShowDefaultVisual","You cut the comm link",,
+"#END CACHE fleet dialog",,,,,,
+,,,,,,
+# ELIZA revengeance dialog,,,,,,
+elizaRevengeanceDialogInit,BeginFleetEncounter,"$faction.id == mercenary score:1000
+!$ignorePlayerCommRequests
+$RevengeanceEliza","HailPlayer",,,
+elizaRevengeanceDialogInitial,OpenCommLink,"$faction.id == mercenary score:1000
+$entity.isHostile
+$entity.RevengeanceEliza score:100","FireBest elizaRevengeanceDialogOptions","Furious Eliza shows up on your screen. ""I should have known you were a liar and corporate bootlicker all along! I can't believe you sold your soul and sector's salvation for idle promises of power. I will not your greed go unpunished!""",,
+elizaRevengeanceDialogOptions,elizaRevengeanceDialogOptions,,,,"0:elizaRevengeanceDialogContinue:""This is just a big misunderstanding.""
+1:elizaRevengeanceDialogContinue2:""what? I'm not a bootlicker.""
+2:elizaRevengeanceDialogContinue3:""Time to die, anarchist scum!""
+3:elizaRevengeanceDialogEnd:Cut the comm link",
+elizaRevengeanceDialogContinue,DialogOptionSelected,"$option ==elizaRevengeanceDialogContinue","$entity.ignorePlayerCommRequests = true 100","""No, there is nothing to misunderstand. You betrayed the cause, and now you will die for your crimes, it's simple."" Eliza is staring through your soul on the holodisplay. 
+
+The comm link is cut before you have a chance to respond.","elizaRevengeanceDialogEnd:Cut the comm link",
+elizaRevengeanceDialogContinue2,DialogOptionSelected,"$option ==elizaRevengeanceDialogContinue2","$entity.ignorePlayerCommRequests = true 100","""Yes you are. You would do anything to have more power over others. Now you will die for your crimes."" Eliza is staring through your soul on the holodisplay. 
+
+The comm link is cut before you have a chance to respond.","elizaRevengeanceDialogEnd:Cut the comm link",
+elizaRevengeanceDialogContinue3,DialogOptionSelected,"$option ==elizaRevengeanceDialogContinue3","$entity.ignorePlayerCommRequests = true 100","""No, you are the one who dies here. The sector will not miss tyrants like you, the people won't miss you. I will not miss you."" Eliza is staring through your soul on the holodisplay. 
+
+The comm link is cut before you have a chance to respond.","elizaRevengeanceDialogEnd:Cut the comm link",
+elizaRevengeanceDialogEnd,DialogOptionSelected,"$option == elizaRevengeanceDialogEnd","EndConversation
+ShowDefaultVisual","$fleetName powers up their weapons and moves in to engage.",,
+"#END ELIZA revengeance dialog",,,,,,
+,,,,,,
+# JACK revengeance dialog,,,,,,
+jackRevengeanceDialogInit,BeginFleetEncounter,"$faction.id == kesteven score:1000
+!$ignorePlayerCommRequests
+$RevengeanceJack","HailPlayer",,,
+jackRevengeanceDialogInitial,OpenCommLink,"$faction.id == kesteven score:1000
+$entity.isHostile
+$entity.RevengeanceJack score:100","$entity.ignorePlayerCommRequests = true 100","A furious Jack shows up on your screen. ""I can't believe you betrayed us just like that, and to work with some lunatic spacer. You really have lost your damn mind, you'll be put out of your misery soon enough though."" He struggles to maintain his composure.
+""We can still make things right, wipe your stupid mistakes of the face of this sector. I will make sure of this!"" Before you can get even a word in he's gone.
+
+The comm link is cut before you have a chance to respond.","jackRevengeanceDialogEnd:Cut the comm link",
+jackRevengeanceDialogEnd,DialogOptionSelected,"$option == jackRevengeanceDialogEnd","EndConversation
+ShowDefaultVisual","the $faction $fleetName powers up their weapons and moves in to engage.",,
+"#END JACK revengeance dialog",,,,,,
+,,,,,,
+# MESSENGER dialog,,,,,,
+MessengerFleetDialogInit,BeginFleetEncounter,"$faction.id == mercenary score:1000
+!$ignorePlayerCommRequests
+$nskr_interceptManagerMessengerFleet","HailPlayer",,,
+MessengerFleetDialogInitial,OpenCommLink,"$faction.id == mercenary score:1000
+$entity.nskr_interceptManagerMessengerFleet score:100","$entity.ignorePlayerCommRequests = true 100
+$entity.nskr_interceptManagerMessengerTalked = true","The captain quickly introduces themselves as some sort of messenger for someone who wishes to remain anonymous. ""Ahem- "" Tread with care captain, you are entering a dangerous field of work. Many have tried and perished foolishly, in the pursuit of this knowledge. And I will be evaluating your actions captain, we might just meet in the future if you are deemed worthy. Signed ""LZ"" "" The message is delivered, $heOrShe swiftly ends the conversation.
+
+The comm link is cut before you have a chance to respond.","MessengerFleetDialogEnd:Cut the comm link",
+MessengerFleetDialogEnd,DialogOptionSelected,"$option == MessengerFleetDialogEnd","EndConversation
+ShowDefaultVisual","the $fleetName assumes a neutral posture.",,
+"#END MESSENGER dialog",,,,,,
+,,,,,,
+# ELIZA INTERCEPT dialog,,,,,,
+nskr_elizaInterceptDialogInit,BeginFleetEncounter,"$faction.id == mercenary score:1000
+!$ignorePlayerCommRequests
+$InterceptPlayerElizaFleet","HailPlayer
+nskr_elizaInterceptDialog aggro
+",,,
+nskr_elizaInterceptDialogInitial,OpenCommLink,"$faction.id == mercenary score:100
+!$ignorePlayerCommRequests
+nskr_elizaInterceptDialog hasOption",,"""Good day to you captain, what a coincidence that we meet out here."" She says sarcastically.
+""Enough small-talk, you know why I'm here don't you captain.""","nskr_elizaInterceptDialogInitialText:Continue",
+nskr_elizaInterceptDialogInitialText,DialogOptionSelected,"$option == nskr_elizaInterceptDialogInitialText","nskr_elizaInterceptDialog addOptions
+$entity.ignorePlayerCommRequests = true 10",,,
+nskr_elizaInterceptDialogHandOver,DialogOptionSelected,"$option ==nskr_elizaInterceptDialogHandOver","nskr_elizaInterceptDialog handOver
+",,"nskr_elizaInterceptDialogExit:Leave",
+nskr_elizaInterceptDialogExitFightDialog,DialogOptionSelected,"$option ==nskr_elizaInterceptDialogExitFight","nskr_elizaInterceptDialog hostile","""We had a simple deal captain - if you are not willing to hold up your part, I shall fulfill it by force."" Her menacing eyes stare straight into you.
+The comm link is cut before you can respond.
+
+$fleetName powers up their weapons and moves in to engage.","nskr_elizaInterceptDialogExit:Cut the comm link",
+nskr_elizaInterceptDialogExitFightNoChip,DialogOptionSelected,"$option ==nskr_elizaInterceptDialogExitFightNoChip","nskr_elizaInterceptDialog hostile","""You did what?!""  She yells. ""You disgusting corporate scum. You sycophant. You bootlicker. You- you betrayer of the cause, now *you* die."" Her furious stare gives you one last look.
+The comm link is cut before you can respond.
+
+$fleetName powers up their weapons and moves in to engage.","nskr_elizaInterceptDialogExit:Cut the comm link",
+nskr_elizaIntercetpDialogExit,DialogOptionSelected,"$option == nskr_elizaInterceptDialogExit","EndConversation
+ShowDefaultVisual
+","You cut the comm link.",,
+"#END ELIZA INTERCEPT dialog",,,,,,
+,,,,,,
+# ALT ENDING Dialog,,,,,,
+nskr_altEndingOptionLuddic,PopulateOptions,"nskr_IsBaseOfficial admin
+nskr_altEndingDialogLuddic hasOption
+nskr_IsKStage 19",,,"nskr_altEndingPickLuddic:Talk about the Unlimited Production Chip you have",
+nskr_altEndingPickLuddic,DialogOptionSelected,"$option == nskr_altEndingPickLuddic","nskr_altEndingDialogLuddic addOptions",,,
+nskr_altEndingOptionTT,PopulateOptions,"nskr_IsBaseOfficial ttadmin
+nskr_altEndingDialogTT hasOption
+nskr_IsKStage 19",,,"nskr_altEndingPickTT:Talk about the Unlimited Production Chip you have",
+nskr_altEndingPickTT,DialogOptionSelected,"$option == nskr_altEndingPickTT","nskr_altEndingDialogTT addOptions",,,
+nskr_altEndingLuddicAgree,DialogOptionSelected,"$option == nskr_altEndingLuddicAgree","nskr_altEndingDialogLuddic luddicAgree",,,
+nskr_altEndingLuddicDoubt,DialogOptionSelected,"$option == nskr_altEndingLuddicDoubt","nskr_altEndingDialogLuddic setSecond
+nskr_altEndingDialogLuddic addOptions",,,
+nskr_altEndingTTAgree,DialogOptionSelected,"$option == nskr_altEndingTTAgree","nskr_altEndingDialogTT tachAgree",,,
+nskr_altEndingTTIncrease,DialogOptionSelected,"$option == nskr_altEndingTTIncrease","nskr_altEndingDialogTT setPriceIncrease
+nskr_altEndingDialogTT setSecond
+nskr_altEndingDialogTT addOptions
+",,,
+nskr_altEndingExit,DialogOptionSelected,"$option == nskr_altEndingExit","FireAll PopulateOptions","""Do come back if you change your mind.""",,
+nskr_altEndingExitAgree,DialogOptionSelected,"$option == nskr_altEndingExitAgree","FireAll PopulateOptions",,,
+"#END ALT ENDING Dialog",,,,,,
+"#END KESTEVEN QUEST",,,,,,
+,,,,,,
+# BOUNTIES,,,,,,
+,,,,,,
+# ABYSS,,,,,,
+abyssDialog,OpenCommLink,"$faction.id == remnant score:1000
+$entity.isHostile
+$entity.AbyssLoot score:100
+!$ignorePlayerCommRequests
+","$entity.ignorePlayerCommRequests = true 1","The comms plays with a strange echo to it. Eventually you are greeted by a chaotic flurry of colors and a voice.
+
+""What have we done? What have we done? What have we done? What have we done? What have we done? What have we done? What have we done? What have we done? What have we done? What have we done? What have we done? What hav-""
+
+INTERRUPT 
+
+""CID-IFF not received [TARGET UNKNOWN] respond null // 'Greetings valued customer of Tri-Tachyon Corporation products. Your vessel is not logged as a valid contract holder with the Tri-Tachyon Integrated Space Defense line of products and services. Have you considered a Tri-Tachyon Orbital Defense Plan? Please contact a customer service representative for more information.""","cutCommLink:Cut the comm link",
+"#END ABYSS",,,,,,
+,,,,,,
+# ETERNITY,,,,,,
+eternityDialog,OpenCommLink,"$faction.id == enigma score:1000
+$entity.isHostile
+$entity.EternityLoot score:100
+",,"""CID-IFF not received [TARGET UNKNOWN] respond null // 'Greetings Your vessel is not logged as a valid contact with - ""
+
+INTERRUPT
+
+waiting. query [DESTROY]?. scanning. false. return to (ERROR)
+
+The comm link dies out.
+OR
+The comms crackle, and a mesmerizing pattern of interweaving lines takes shape. 
+
+waiting. query blood?. scanning. false. return to (DIALOG)
+
+INTERRUPT
+
+"" -UMBRA operations. captain.getName Do not interfere with this fleet. It is authorized to use lethal force to ensure operational security.'""","cutCommLink:Cut the comm link",
+"#END ETERNITY",,,,,,
+,,,,,,
+# PEACEKEEPERS,,,,,,
+pkDialog,OpenCommLink,"$faction.id == independent score:1000
+$entity.RorqLoot score:100","FireBest pkDialogOptions","""Hello this is $personName speaking, please state your business.""",,
+pkDialogOptions,pkDialogOptions,,,,"0:pkCommLink:Cut the comm link
+1:pkInspired:""I uhh... just wanted to tell you, that you are doing a *great* job.""
+2:pkFight:""It's time for you to die, Pig!""",
+pkCommLinkSelected,DialogOptionSelected,"$option == pkCommLink
+$pkCommLinkSelected score:100","EndConversation
+ShowDefaultVisual","The comm link is cut.",,
+pkCommLink,DialogOptionSelected,"$option == pkCommLink","$pkCommLinkSelected= true 100
+
+","$PersonRank $personName looks very displeased.
+
+You can hear him mumble to himself before the comm link is cut.
+""One day these dumbass spacers will stop wasting my time, Gah.""
+","pkEndComms:Cut the comm link",
+pkInspiredSelected,DialogOptionSelected,"$option == pkInspired
+$pkInspiredSelected score:100",,"Dialog option already selected.",,
+pkInspired,DialogOptionSelected,"$option == pkInspired","$pkInspiredSelected = true 100
+","$personName looks confused for a moment.
+
+""What are you talking about? Is this a prank, did Sam send you to fuck with me again? ""
+$personName continues rambling to himself, something about ""payback"" and ""fucking killing Sam"". 
+
+The comm link is cut before you can decipher any meaning to this conversation.","pkEndComms:Cut the comm link",
+pkFight,DialogOptionSelected,"$option == pkFight
+","MakeOtherFleetPreventDisengage true
+MakeOtherFleetAggressive true
+MakeOtherFleetHostile true
+$entity.ignorePlayerCommRequests = true 100
+$pkFightSelected = true 100
+
+","""Is that so? It's time for me and my boys to teach you little lesson, crime doesn't pay!"" He shouts through the comm link.
+
+The comm link is cut before you have a chance to respond.
+
+the Peacekeepers power up combat systems and move in to engage.
+
+","pkEndComms:Cut the comm link",
+pkEndComms,DialogOptionSelected,"$option == pkEndComms","EndConversation
+ShowDefaultVisual",,,
+"#END PEACEKEEPERS",,,,,,
+,,,,,,
+# MOTHERSHIP,,,,,,
+mothershipDialogExtra,OpenCommLink,"$faction.id == remnant score:1000
+$entity.isHostile
+$entity.mothershipLoot score:100
+!$ignorePlayerCommRequests
+",,"""CID-IFF received 'Greetings valued technician. Your vessel is logged as a valid contract holder with the Tri-Tachyon Integrated Space Defense line of products and services. Development mode is now active.""
+
+Project Helios :
+STATUS REPORT
+
+Weapons: Standby
+Sensors: Active
+Comms: ERROR - NO CONNECTION
+Reactor: Full output
+Bays: Standby
+Subroutines: Active
+
+INTERRUPT
+
+Are you omega [query] No, return; ","cutCommLink:Cut the comm link
+mothershipDialogExtraShutdown:Try to shut down the AI
+",
+mothershipDialogDefault,OpenCommLink,"$faction.id == remnant score:1000
+$entity.isHostile
+$entity.mothershipLoot score:100
+!$ignorePlayerCommRequests
+$mothershipDialogExtraSelected score:100",,"""CID-IFF received 'Greetings valued technician. Your vessel is logged as a valid contract holder with the Tri-Tachyon Integrated Space Defense line of products and services. Development mode is now active.""
+
+Project Helios :
+STATUS REPORT
+
+Weapons: Standby
+Sensors: Active
+Comms: ERROR - NO CONNECTION
+Reactor: Full output
+Bays: Standby
+Subroutines: Active
+
+INTERRUPT
+
+Are you omega [query] No, return; 
+
+
+","cutCommLink:Cut the comm link
+",
+mothershipDialogExtraShutdown,DialogOptionSelected,"$option == mothershipDialogExtraShutdown","$mothershipDialogExtraSelected = true 100","You order the comms team to see if they can take remote control of the mothership, but are shortly confronted by the following interface.
+""Valued technician, Please re-enter the system override key for further access.""
+
+INTERRUPT
+
+You are not [omega]
+","cutCommLink:Cut the comm link
+",
+"#END MOTHERSHIP",,,,,,
+"#END BOUNTIES",,,,,,
+,,,,,,
+# MISC EVENTS,,,,,,
+,,,,,,
+# ARO STRIKE dialog,,,,,,
+AROstrikeDialogInit,BeginFleetEncounter,"$faction.id == mercenary score:1000
+!$ignorePlayerCommRequests
+$nskr_interceptManagerAROfleet","HailPlayer",,,
+AROstrikeDialogInitial,OpenCommLink,"$faction.id == mercenary score:1000
+$entity.isHostile
+$entity.nskr_interceptManagerAROfleet score:100","$entity.ignorePlayerCommRequests = true 100","The captain looks at you with intense conviction. ""All those who bear the Remnant scourge will be purged by fire. You can not even begin to understand the forces you play with captain. May the cold vacuum of space redeem your spirit."" $HeOrShe seems uninterested in receiving any response to their speech.
+
+The comm link is cut before you have a chance to respond.","AROstrikeDialogEnd:Cut the comm link",
+AROstrikeDialogEnd,DialogOptionSelected,"$option == AROstrikeDialogEnd","EndConversation
+ShowDefaultVisual","The $fleetName powers up their weapons and moves in to engage.",,
+"#END ARO STRIKE dialog",,,,,,
+,,,,,,
+# AUTO HUNTER dialog,,,,,,
+AutoHunterDialogInit,BeginFleetEncounter,"$faction.id == luddic_path score:1000
+!$ignorePlayerCommRequests
+$nskr_interceptManagerAutoHunterFleet","HailPlayer",,,
+AutoHunterDialogInitial,OpenCommLink,"$faction.id == luddic_path score:1000
+$entity.isHostile
+$entity.nskr_interceptManagerAutoHunterFleet score:100","$entity.ignorePlayerCommRequests = true 100","""The weight of your actions has become unbearable $playerName. The sector will see no more of this evil, such has it been decided."" $HeOrShe lets the weight of $hisOrHer words hang for just a moment. ""No more, for the most wicked are burned in infernium fire and judged as ashes in the oblivion. I hope you find absolution in those last moments."" 
+
+The comm link is cut, seems like $heOrShe didn't want a response to $hisOrHer speech.","AutoHunterDialogEnd:Cut the comm link",
+AutoHunterDialogEnd,DialogOptionSelected,"$option == AutoHunterDialogEnd","EndConversation
+ShowDefaultVisual","The $fleetName power up their weapons and move in to engage.",,
+"#END AUTO HUNTER dialog",,,,,,
+,,,,,,
+# DEBT collector dialog,,,,,,
+nskr_loanSharkDialogInit,BeginFleetEncounter,"$faction.id == kesteven score:1000
+!$ignorePlayerCommRequests
+$debtCollector","HailPlayer",,,
+nskr_loanSharkDialogInitial,OpenCommLink,"$faction.id == kesteven score:100
+$entity.isHostile
+!$ignorePlayerCommRequests
+nskr_loanSharkDialog hasOption",,"""You owe the Kesteven Corporation a great deal of money $playerName. It's time to pay up."" The captain has a particularly ruthless look to him.","nskr_loanSharkDialogInitialText:Continue",
+nskr_loanSharkDialogInitialText,DialogOptionSelected,"$option == nskr_loanSharkDialogInitialText","nskr_loanSharkDialog canPay
+$entity.ignorePlayerCommRequests = true 10
+nskr_debt init
+AddText ""You have $nskr_debt_pointsStr in unpaid loans.""
+SetTextHighlights $nskr_debt_pointsStr",,,
+nskr_loanSharkDialogPaySome,DialogOptionSelected,"$option ==nskr_loanSharkDialogPaySome","nskr_loanSharkDialog pay
+MakeOtherFleetAllowDisengage true
+MakeOtherFleetNonAggressive true
+","""Thank you for your business captain. Glad we could come to terms, peacefully."" There is a hint of sarcasm in what $heOrShe is saying.","nskr_loanSharkDialogExit:Leave",
+nskr_loanSharkDialogPayAll,DialogOptionSelected,"$option ==nskr_loanSharkDialogPayAll","nskr_loanSharkDialog pay
+MakeOtherFleetAllowDisengage true
+MakeOtherFleetNonAggressive true
+","""Thank you for your business captain. I am glad we could come to terms, peacefully."" There is a hint of sarcasm in what $heOrShe is saying.","nskr_loanSharkDialogExit:Leave",
+nskr_loanSharkDialogExit,DialogOptionSelected,"$option == nskr_loanSharkDialogExit","EndConversation
+ShowDefaultVisual
+","You cut the comm link.",,
+nskr_loanSharkDialogNoPay,DialogOptionSelected,"$option ==nskr_loanSharkDialogNoPay",,"""Looks like it's time to use *other* means of payment."" $HeOrShe says in an arrogant manner.","nskr_loanSharkDialogExitFight:Cut the comm link",
+nskr_loanSharkDialogExitFight,DialogOptionSelected,"$option ==nskr_loanSharkDialogExitFight","EndConversation
+ShowDefaultVisual
+","""Looks like it's time to use *other* means of payment."" $HeOrShe says in an arrogant manner.
+The comm link is cut before you can respond.
+
+The $faction $fleetName powers up their weapons and moves in to engage.",,
+"#END DEBT collector dialog",,,,,,
+,,,,,,
+# BETRAYAL,,,,,,
+betrayalInit,BeginFleetEncounter,"$faction.id == kesteven score:1000
+!$ignorePlayerCommRequests
+$BetrayalFleet","HailPlayer",,,
+betrayalGreeting,OpenCommLink,"$faction.id == kesteven score:1000
+$entity.isHostile
+$entity.BetrayalFleet score:100
+","FireBest betrayalDialogOptions
+$entity.ignorePlayerCommRequests = true 10","""You know captain, that not every fleet comes back from the fringes. It is a shame that yours will not be one of them, but hey don't worry your stuff will be put to good use once we've claimed it."" The captain seems very smug about the situation.
+
+the $faction $fleetName is starting to power up combat systems and moving in to engage.
+OR
+""This trip has been a waste, but it looks like our luck has just turned around with you showing up. Nothing personal of course, captain it's just business."" There is a ravenous look on the captains face.
+
+the $faction $fleetName is starting to power up combat systems and moving in to engage.",,
+betrayalDialogOptions,betrayalDialogOptions,,,,"0:cutCommLink:Cut the comm link
+1:betrayalFU:""Fuck you."" (Cut the comm link)",
+betrayalFU,DialogOptionSelected,"$option == betrayalFU",,"$PersonRank $personName seems vaguely insulted.
+""Hah ha, very mature of you captain, don't take this so personally."" The captain looks at you with a self-satisfied expression.
+
+The comm link is cut before you have a chance to respond.","betrayalEndComms:Cut the comm link",
+betrayalEndComms,DialogOptionSelected,"$option == betrayalEndComms","EndConversation
+ShowDefaultVisual","You cut the comm link",,
+"#END BETRAYAL",,,,,,
+,,,,,,
+# ENIGMA remnants fleet greeting lines,,,,,,
+greetingEnigmaFriendly,OpenCommLink,"$faction.id == enigma score:1000
+$faction.friendlyToPlayer","$menuState = fleetConvMain 0
+FireAll PopulateOptions","""CID-IFF received [TARGET FRIENDLY] respond true // ""
+
+INTERRUPT
+
+are you [BLOOD]? scanning. you are not. where is the omega?
+ 
+INTERRUPT 
+
+""... licensed service technician]. Weapon systems have been powered down for Your Safety. Unit is prepared for approach of [licensed service technician].""
+OR
+""CID-IFF received [TARGET FRIENDLY] respond true // ''Greetings [Licensed Space Defense Contract Holder] ""
+
+INTERRUPT 
+
+query. query. query target. is blood? false. [PROTECT TARGET].
+
+INTERRUPT 
+
+"" licensed service technician].""",,
+greetingEnigmaHostile,OpenCommLink,"$faction.id == enigma score:100
+$entity.isHostile
+
+","$entity.ignorePlayerCommRequests = true 1","""CID-IFF not received [TARGET LOCATED] respond null // 'NOTICE your fleet is interfering with DSRD operations. This unit has not cleared- ""
+
+INTERRUPT
+
+query. blood?. scanning. [BLOOD] collect, amass, gather, stockpile, hoard, reap...
+
+The comm-link dies. Your comms officer panics for a moment before the console reboots itself. You exchange a look, then proceed.
+OR
+The comms crackle and whine as a frantic pattern of interweaving lines takes shape. 
+
+query. query. query target. is blood? true. [DESTROY TARGET].
+
+INTERRUPT
+
+"" -SERIAL]. This unit has not cleared your vessel for approach and will employ lethal force to ensure its integrity.'""","cutCommLink:Cut the comm link",
+greetingEnigmaNeutral,OpenCommLink,"$faction.id == enigma score:1000
+$faction.neutralToPlayer","$menuState = fleetConvMain 0
+FireAll PopulateOptions","""CID-IFF not received [TARGET UNKNOWN] respond null // 'Greetings Your vessel is not logged as a valid contract holder with the Integrated Space Defense line of- ""
+
+INTERRUPT
+
+scanning. query blood? no, you are not. do not interfere.
+
+The comm-link is cut.
+OR
+The comms crackle, and a mesmerizing pattern of interweaving lines takes shape. 
+
+waiting. query blood?. scanning. false. return to
+
+INTERRUPT
+
+"" -contract holder with the Integrated Space Defense line of services. Have you considered a Orbital Defense Plan? Please contact a customer service representative for more information.'""
+
+",,
+greetingEnigmaTOff,OpenCommLink,"$faction.id == enigma score:1000
+!$player.transponderOn",,"""Transponder nullPointerException ERROR #351""
+
+Maybe you should try turning on your transponder.
+OR
+""Valued Citizen of the Domain please turn on your [ERROR] for identification""
+
+Maybe you should try turning on your transponder.","turnOnTransponder:Turn your transponder on
+cutCommLink:Cut the comm link",
+"#END ENIGMA remnants fleet greeting lines",,,,,,
+,,,,,,
+# enigma patrol stopping player w/ transponder off,,,,,,
+tOffEnigmaPatrolBegin,BeginFleetEncounter,"CaresAboutTransponder
+!$tOff_didAlready
+!$isHostile
+!$faction.c:allowsTransponderOffTrade
+!$sourceMarket.mc:free_market
+$isPatrol
+$faction.id == enigma score:1000
+$sawPlayerTransponderOff score:100","$tOff_didAlready = true 0
+#MakeOtherFleetPreventDisengage tOff true
+MakeOtherFleetAggressive tOff false
+unset $ignorePlayerCommRequests
+$sawPlayerWithTOffCount++ 10
+$transponderOffConv = true 0
+AddText ""You're being hailed by the $faction $otherShipOrFleet."" $faction.baseColor
+OpenComms",,,
+tOffEnigmaPatrolBeginNoTalk,BeginFleetEncounter,"CaresAboutTransponder
+!$tOff_didAlready
+!$isHostile
+!$faction.c:allowsTransponderOffTrade
+!$sourceMarket.mc:free_market
+$isPatrol
+$faction.id == enigma score:1000
+$sawPlayerTransponderOff score:100
+$sawPlayerWithTOffCount > 1 score:100","$tOff_didAlready = true 0
+#MakeOtherFleetPreventDisengage tOff true
+MakeOtherFleetAggressive tOff false
+MakeHostileWhileTOff tOff true 7
+$sawPlayerWithTOffCount++ 10
+$ignorePlayerCommRequests = true 0",,,
+tOffEnigmaPatrolOpenComm,OpenCommLink,"$entity.transponderOffConv score:100
+$faction.id == enigma score:1000","AddText ""\""[TARGET]   [transponder_off] in DSRD operational space is against the law. You're hereby ordered to turn your transponder on and identify yourself immediately.     INTERRUPT     waiting. query (blood). scanning. true. [objective == you will never be one of us]\""""
+AdjustRep $faction.id TRANSPONDER_OFF
+AdjustRepActivePerson TRANSPONDER_OFF
+nskr_makeHostile hostile",,"0:tOff_refuse:Refuse and cut the comm link",
+tOffEnigmaPatrolOpenCommUnknown,OpenCommLink,"$entity.transponderOffConv score:100
+!$entity.knowsWhoPlayerIs
+$faction.id == enigma score:1000","AddText""\""[TARGET]   [transponder_off] in DSRD operational space is against the law. You're hereby ordered to turn your transponder on and identify yourself immediately.     INTERRUPT     waiting. query (blood). scanning. true. [objective == you will never be one of us]\""""
+AdjustRep $faction.id TRANSPONDER_OFF
+AdjustRepActivePerson TRANSPONDER_OFF
+nskr_makeHostile hostile",,"0:tOff_refuse:Refuse and cut the comm link",
+tOffEnigmaPatrolOpenCommTOn,OpenCommLink,"$entity.transponderOffConv score:100
+$player.transponderOn
+$faction.id == enigma score:1000","AddText ""\""[TARGET]  [transponder_off] in DSRD operational space is against the law. You're hereby ordered to turn your transponder on and identify yourself immediately.     INTERRUPT     waiting. query (blood). scanning. true. [objective == you will never be one of us]\""""
+AdjustRep $faction.id TRANSPONDER_OFF
+AdjustRepActivePerson TRANSPONDER_OFF
+nskr_makeHostile hostile",,"0:tOff_refuse:Refuse and cut the comm link",
+"#END enigma patrol stopping player w/ transponder off",,,,,,
+,,,,,,
+# DORMANT,,,,,,
+dormantDialog,OpenCommLink,"$faction.id == enigma score:100
+$entity.isHostile
+$entity.EnigmaDormantFleet score:100
+","$entity.ignorePlayerCommRequests = true 1","""Citizen of the Domain, this automated drone ship has identified and logged your vessel or habitat in the course of executing its mission parameters. Autonomous vessels of the Domain -""
+
+INTERRUPT
+
+waiting. query blood?. scanning. false. return to (ERROR)
+
+The comm-link is cut.","cutCommLink:Cut the comm link",
+"#END DORMANT",,,,,,
+,,,,,,
+# HEART CORE DIALOG,,,,,,
+enigmaCoreGreeting,PickGreeting,"$id == nskr_enigmaAdmin score:1000
+","ShowPersonVisual
+FireAll PopulateOptions
+$enigmaCoreGreetingCommLinkSelected= true 100","You tell the comms team to try and establish connections directly with the Enigma core, they're not exactly enthusiastic about the idea.
+
+As soon as the comm link is fired multiple alerts pop up and the comms screen goes red from warnings. ""It's a directed attack at our electronic systems."" The leader of the comms team reports. ""The reply ping had a disguised back door element, if we had accepted the package it it would have spread it's way through our ships during standard communications, and then to the wider sector through our ships."" They give an uneasy look. 
+
+""We can't tell what exactly it would have done though. The files are not built to any known standard and are unreachable to our systems, it's not clear whether this is some sort of encryption or just file corruption, but it couldn't have been anything good that's for sure.""
+
+You decide to leave the comms unit alone, for now.",,
+enigmaCoreGreetingAlreadySelected,PickGreeting,"$id == nskr_enigmaAdmin score:1000
+$enigmaCoreGreetingCommLinkSelected score:100","ShowPersonVisual
+FireAll PopulateOptions","Trying to establish a comm link with the core is not a good idea.",,
+"#END HEART CORE DIALOG",,,,,,
+,,,,,,
+# HELLSPAWN DIALOG,,,,,,
+hellSpawnDialogInit,BeginFleetEncounter,"$isHostile
+!$ignorePlayerCommRequests
+$hellSpawnDisposableFleet","HailPlayer",,,
+hellSpawnDialogInitial,OpenCommLink,"$entity.isHostile
+$entity.hellSpawnDisposableFleet score:1000","$entity.ignorePlayerCommRequests = true 100","""You think you can just waltz back in after what you did to all those people."" $HisOrHer face sours. ""It's about time someone put an end to that."" The comm link is abruptly cut.
+OR
+""You're highly a dangerous individual captain, I'll give you that. A lot of people don't like you, including my superiors."" The comm link is abruptly cut.
+OR
+""It's over for you captain, the sector wont tolerate this. I'm not going to sugarcoat it - you need to die."" The comm link is abruptly cut.
+OR
+""The people deserve to be protected from someone like you. Someone has to step up, and seems like it's my time."" The comm link is abruptly cut.
+OR
+""Hey captain. You're about to have a bad time."" The comm link is abruptly cut.","hellSpawnDialogEnd:Cut the comm link",
+hellSpawnDialogEnd,DialogOptionSelected,"$option == hellSpawnDialogEnd","EndConversation
+ShowDefaultVisual","The $Faction $fleetName power up their weapons and move in to engage.",,
+"#END HELLSPAWN DIALOG",,,,,,
+,,,,,,
+# THRONE'S GIFT DIALOG,,,,,,
+thronesGiftDialogInit,BeginFleetEncounter,"$isHostile
+!$ignorePlayerCommRequests
+$faction.id == luddic_path score:1000
+$thronesGiftDisposableFleet","HailPlayer",,,
+thronesGiftDialogInitial,OpenCommLink,"$entity.isHostile
+$faction.id == luddic_path score:1000
+$entity.thronesGiftDisposableFleet score:1000","$entity.ignorePlayerCommRequests = true 100","""The most foul captain of the profane. You are marked for absolution in holy fire. Prepeare for the end."" The comm link is abruptly cut.
+OR
+""Why would you mock the gifts of creation so blatantly? It doesn't matter, your sins shall shortly be forgiven."" The comm link is abruptly cut.","thronesGiftDialogEnd:Cut the comm link",
+thronesGiftDialogEnd,DialogOptionSelected,"$option == thronesGiftDialogEnd","EndConversation
+ShowDefaultVisual","The $Faction $fleetName power up their weapons and move in to engage.",,
+"#END THRONE'S GIFT DIALOG",,,,,,
+"#END MISC EVENTS",,,,,,
+,,,,,,
+# CONTRACTS,,,,,,
+nskr_contracts_blurb,nskr_contracts_blurb,,"Call $nskr_contracts_ref showBlurb",,,
+nskr_contracts_option,nskr_contracts_option,,,,"nskr_contracts_start:Ask about the contract",
+nskr_contracts_start,DialogOptionSelected,"$option == nskr_contracts_start","$missionId = nskr_contracts
+Call $nskr_contracts_ref showContract",,"contact_accept:Accept the contract
+contact_decline:Decline",
+"#END CONTRACTS",,,,,,
+

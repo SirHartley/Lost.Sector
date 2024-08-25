@@ -1,0 +1,8 @@
+{
+	"id":"nskr_emflak",
+	"type":"WEAPON",
+	"aiType":"CANISTER_FLAK",
+	
+	"weaponDataId":"nskr_emflak",
+	"outOfUsesSound":"gun_out_of_ammo",
+}

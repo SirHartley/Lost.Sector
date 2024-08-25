@@ -1,0 +1,42 @@
+{
+    "displayName": "Hybrid",
+    "fluxCapacitors": 9,
+    "fluxVents": 0,
+    "goalVariant": true,
+    "hullId": "nskr_dragontail",
+    "hullMods": [
+        "unstable_injector",
+        "turretgyros",
+        "nskr_bigBats"
+    ],
+    "permaMods": [],
+    "sMods": [],
+    "variantId": "nskr_dragontail_hbd",
+    "weaponGroups": [
+        {
+            "autofire": false,
+            "mode": "LINKED",
+            "weapons": {"WS0004": "amblaster"}
+        },
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {"WS0001": "heavyac"}
+        },
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {"WS0005": "ioncannon"}
+        },
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {"WS0003": "pdlaser"}
+        },
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {"WS0002": "vulcan"}
+        }
+    ]
+}

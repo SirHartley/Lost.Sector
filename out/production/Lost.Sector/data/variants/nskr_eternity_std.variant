@@ -1,0 +1,32 @@
+{
+    "displayName": "SERIAL null",
+    "fluxCapacitors": 10,
+    "fluxVents": 8,
+    "hullId": "nskr_eternity",
+	"goalVariant": false,
+    "hullMods": [
+	"unstable_injector",
+	"stabilizedshieldemitter"
+	],
+    "permaMods": [],
+    "sMods": [],
+    "variantId": "nskr_eternity_std",
+    "weaponGroups": [
+        {
+            "autofire": false,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0001": "nskr_scatterm",
+                "WS0002": "nskr_scatterm"
+            }
+        },
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0003": "lightdualmg",
+                "WS0004": "lightdualmg"
+            }
+        }
+    ]
+}
