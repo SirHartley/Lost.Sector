@@ -11,7 +11,7 @@ This software is a work of fiction. Any similarity to real life figures, events,
 
 Any derivative work CAN NOT be associated with, or encourage, illegal or
 illicit activities
-
 Any derivative work must also comply with Starsector's EULA
+Any derivative work must be within the context of a Starsector mod
 
 Anything not created by the author (Kissa Mies) belongs to their original creators and maintains its original license.
