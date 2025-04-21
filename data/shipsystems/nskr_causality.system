@@ -2,9 +2,9 @@
 	"id":"nskr_causality",
 	"type":"STAT_MOD",
 	"aiType":"CUSTOM",
-	"aiScript":"scripts.kissa.LOST_SECTOR.shipsystems.ai.nskr_causalityAI",
+	"aiScript":"ai.shipsystems.lostsector.nskr_causalityAI",
 
-	"statsScript":"scripts.kissa.LOST_SECTOR.shipsystems.nskr_causalityStats",
+	"statsScript":"shipsystems.lostsector.nskr_causalityStats",
 
 	"jitterColor":[255,150,200,50],
 	"jitterCopies":5,

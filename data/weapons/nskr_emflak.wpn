@@ -1,7 +1,7 @@
 {
 	"id":"nskr_emflak",
 	"specClass":"projectile",
-	 "everyFrameEffect": "scripts.kissa.LOST_SECTOR.weapons.nskr_emflakEffect",
+	 "everyFrameEffect": "weapons.lostsector.nskr_emflakEffect",
 	"type":"SYSTEM",
 	"size":"SMALL",
 	"turretSprite":"",

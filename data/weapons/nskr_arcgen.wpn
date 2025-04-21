@@ -4,7 +4,7 @@
   "projectileSpecId": "nskr_arcgen_dummy",
   "type": "ENERGY",
   "size": "SMALL",
-  "everyFrameEffect": "scripts.kissa.LOST_SECTOR.weapons.nskr_arcgenScript",
+  "everyFrameEffect": "weapons.lostsector.nskr_arcgenScript",
   "turretSprite": "graphics/weapons/nskr_arcgen_turret.png",
   "hardpointSprite": "graphics/weapons/nskr_arcgen_hardpoint.png",
   "renderAboveAllWeapons": 0,

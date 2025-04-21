@@ -2,9 +2,9 @@
 	"id":"nskr_timewarp",
 	"type":"ENGINE_MOD",
 	"aiType":"CUSTOM",
-	"aiScript":"scripts.kissa.LOST_SECTOR.shipsystems.ai.nskr_timewarpAI",
+	"aiScript":"ai.shipsystems.lostsector.nskr_timewarpAI",
 	
-	"statsScript":"scripts.kissa.LOST_SECTOR.shipsystems.nskr_timewarpStats",
+	"statsScript":"shipsystems.lostsector.nskr_timewarpStats",
 	
 	"clampMaxSpeedAfter":true,
 	

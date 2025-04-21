@@ -2,9 +2,9 @@
 	"id":"nskr_pullback",
 	"type":"ENGINE_MOD",
 	"aiType":"CUSTOM",
-	"aiScript":"scripts.kissa.LOST_SECTOR.shipsystems.ai.nskr_pullbackAI",
+	"aiScript":"ai.shipsystems.lostsector.nskr_pullbackAI",
 	
-	"statsScript":"scripts.kissa.LOST_SECTOR.shipsystems.nskr_pullbackStats",
+	"statsScript":"shipsystems.lostsector.nskr_pullbackStats",
 	
 	"clampMaxSpeedAfter":true,
 

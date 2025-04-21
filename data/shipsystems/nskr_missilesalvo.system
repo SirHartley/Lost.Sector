@@ -2,9 +2,9 @@
 	"id":"nskr_missilesalvo",
 	"type":"STAT_MOD",
 	"aiType":"CUSTOM",
-	"aiScript":"scripts.kissa.LOST_SECTOR.shipsystems.ai.nskr_missileSalvoAI",
+	"aiScript":"ai.shipsystems.lostsector.nskr_missileSalvoAI",
 	
-	"statsScript":"scripts.kissa.LOST_SECTOR.shipsystems.nskr_missileSalvoStats",
+	"statsScript":"shipsystems.lostsector.nskr_missileSalvoStats",
 	"canUseWhileRightClickSystemOn":true,
 
 	"fadeActivationSoundOnChargedown":true,

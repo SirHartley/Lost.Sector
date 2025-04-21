@@ -2,8 +2,8 @@
 	"id":"nskr_kaboom",
 	"type":"STAT_MOD",
 	"aiType":"CUSTOM",
-	"aiScript":"scripts.kissa.LOST_SECTOR.shipsystems.ai.nskr_kaboomAI",
-	"statsScript":"scripts.kissa.LOST_SECTOR.shipsystems.nskr_kaboomStats",
+	"aiScript":"ai.shipsystems.lostsector.nskr_kaboomAI",
+	"statsScript":"shipsystems.lostsector.nskr_kaboomStats",
 	
 	"alwaysAccelerate":true,
 	"clampMaxSpeedAfter":true,

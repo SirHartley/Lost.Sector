@@ -2,8 +2,8 @@
 	"id":"nskr_boostdrive",
 	"type":"ENGINE_MOD",
 	"aiType":"CUSTOM",
-	"aiScript":"scripts.kissa.LOST_SECTOR.shipsystems.ai.nskr_engineAI",
-	"statsScript":"scripts.kissa.LOST_SECTOR.shipsystems.nskr_boostDriveStats",
+	"aiScript":"ai.shipsystems.lostsector.nskr_engineAI",
+	"statsScript":"shipsystems.lostsector.nskr_boostDriveStats",
 	
 	"engineGlowColor":[250, 255, 100,255],
 	"engineGlowLengthMult":2.0,

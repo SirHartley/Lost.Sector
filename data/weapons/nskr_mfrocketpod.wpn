@@ -4,7 +4,7 @@
   "projectileSpecId": "nskr_mfrocket",
   "type": "MISSILE",
   "size": "MEDIUM",
-  "everyFrameEffect": "scripts.kissa.LOST_SECTOR.weapons.nskr_mfrocketEffect",
+  "everyFrameEffect": "weapons.lostsector.nskr_mfrocketEffect",
   "turretSprite": "graphics/weapons/nskr_mfrocketpod_turret.png",
   "hardpointSprite": "graphics/weapons/nskr_mfrocketpod_hardpoint.png",
   "renderAboveAllWeapons": 0,

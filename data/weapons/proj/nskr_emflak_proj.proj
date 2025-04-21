@@ -2,7 +2,7 @@
 	"id":"nskr_emflak_proj",
 	"specClass":"missile",
 	"missileType":"BOMB",
-	"onFireEffect":"scripts.kissa.LOST_SECTOR.weapons.nskr_emflakPlugin",
+	"onFireEffect":"weapons.lostsector.nskr_emflakPlugin",
 	"sprite":"graphics/missiles/nskr_emflak.png",
 	"size":[10,16],	
 	"center":[5,8],

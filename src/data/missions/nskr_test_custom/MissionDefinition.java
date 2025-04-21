@@ -15,7 +15,7 @@ import com.fs.starfarer.api.input.InputEventAPI;
 import com.fs.starfarer.api.mission.FleetSide;
 import com.fs.starfarer.api.mission.MissionDefinitionAPI;
 import com.fs.starfarer.api.util.WeightedRandomPicker;
-import scripts.kissa.LOST_SECTOR.missions.nskr_BaseRandomBattle;
+import lostsector.missions.nskr_BaseRandomBattle;
 import java.util.List;
 import org.lazywizard.lazylib.MathUtils;
 import org.lwjgl.input.Keyboard;

@@ -3,7 +3,7 @@
 	"type":"PHASE_CLOAK",
 	"aiType":"PHASE_CLOAK",
 	
-	"statsScript":"scripts.kissa.LOST_SECTOR.shipsystems.nskr_bossPhaseStats",
+	"statsScript":"shipsystems.lostsector.nskr_bossPhaseStats",
 	"runScriptWhilePaused":true, # only for the player's ship
 	"runScriptWhileIdle":true,  # this means unapply() never gets called
 	"blockActionsWhileChargingDown":false,

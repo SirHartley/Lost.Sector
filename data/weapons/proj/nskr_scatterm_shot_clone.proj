@@ -2,7 +2,7 @@
 	"id":"nskr_scatterm_shot_clone",
 	"specClass":"projectile",
 	"spawnType":"BALLISTIC_AS_BEAM",
-	"onHitEffect": "scripts.kissa.LOST_SECTOR.weapons.nskr_scatterOH",
+	"onHitEffect": "weapons.lostsector.nskr_scatterOH",
 	"collisionClass":"RAY",
 	"collisionClassByFighter":"RAY_FIGHTER",
 	"length":19.0,

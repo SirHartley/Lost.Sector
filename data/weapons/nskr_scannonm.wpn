@@ -3,7 +3,7 @@
   "barrelMode": "ALTERNATING",
   "displayArcRadius": 750,
   "fireSoundTwo": "nskr_scannon_fire",
-  "everyFrameEffect": "scripts.kissa.LOST_SECTOR.weapons.nskr_scannonmEffect",
+  "everyFrameEffect": "weapons.lostsector.nskr_scannonmEffect",
   "hardpointAngleOffsets": [
     0
   ],

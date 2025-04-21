@@ -2,8 +2,8 @@
 	"id":"nskr_energyprecision",
 	"type":"STAT_MOD",
 	"aiType":"CUSTOM",
-	"aiScript":"scripts.kissa.LOST_SECTOR.shipsystems.ai.nskr_energyPrecisionAI",
-	"statsScript":"scripts.kissa.LOST_SECTOR.shipsystems.nskr_energyPrecisionStats",
+	"aiScript":"ai.shipsystems.lostsector.nskr_energyPrecisionAI",
+	"statsScript":"shipsystems.lostsector.nskr_energyPrecisionStats",
 
 	"weaponGlowColor":[91, 136, 255,100],
 	"weaponTypes":[ENERGY],

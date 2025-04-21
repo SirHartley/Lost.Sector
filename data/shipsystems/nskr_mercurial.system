@@ -2,9 +2,9 @@
 	"id":"nskr_mercurial",
 	"type":"ENGINE_MOD",
 	"aiType":"CUSTOM",
-	"aiScript":"scripts.kissa.LOST_SECTOR.shipsystems.ai.nskr_mercurialAI",
+	"aiScript":"ai.shipsystems.lostsector.nskr_mercurialAI",
 	
-	"statsScript":"scripts.kissa.LOST_SECTOR.shipsystems.nskr_mercurialStats",
+	"statsScript":"shipsystems.lostsector.nskr_mercurialStats",
 	
 	"engineGlowColor":[176,0,0,255],
 	"engineGlowContrailColor":[184,92,0,25],

@@ -2,8 +2,8 @@
 	"id":"nskr_powersurge",
 	"type":"ENGINE_MOD",
 	"aiType":"CUSTOM",
-	"aiScript":"scripts.kissa.LOST_SECTOR.shipsystems.ai.nskr_engineAI",
-	"statsScript":"scripts.kissa.LOST_SECTOR.shipsystems.nskr_powersurgeStats",
+	"aiScript":"ai.shipsystems.lostsector.nskr_engineAI",
+	"statsScript":"shipsystems.lostsector.nskr_powersurgeStats",
 	
 	"engineGlowColor":[170, 220, 255, 125],
 	"engineGlowLengthMult":2.0,

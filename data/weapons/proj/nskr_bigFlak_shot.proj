@@ -2,7 +2,7 @@
 	"id":"nskr_bigFlak_shot",
 	"specClass":"missile",
 	"missileType":"ROCKET",
-	"onHitEffect":"scripts.kissa.LOST_SECTOR.weapons.nskr_bigFlakOH",
+	"onHitEffect":"weapons.lostsector.nskr_bigFlakOH",
 	"sprite":"graphics/missiles/nskr_moab_flak.png",
 	"size":[12,20],	
 	"center":[6,10],

@@ -4,7 +4,7 @@
 	"spawnType":"BALLISTIC",
 	"collisionClass":"PROJECTILE_FF",
 	"collisionClassByFighter":"PROJECTILE_FIGHTER",
-	"onHitEffect":"scripts.kissa.LOST_SECTOR.weapons.nskr_scannonOH",
+	"onHitEffect":"weapons.lostsector.nskr_scannonOH",
 	"glowSprite":"graphics/missiles/nskr_scannon_shot_glow.png",
 	"glowColor":[60,213,255,255],
 	"glowSizeMult":3.5,

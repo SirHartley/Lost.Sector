@@ -2,7 +2,7 @@
 	"id":"nskr_mfrocket",
 	"specClass":"missile",
 	"missileType":"ROCKET",
-	"onHitEffect": "scripts.kissa.LOST_SECTOR.weapons.nskr_mfrocketOH",
+	"onHitEffect": "weapons.lostsector.nskr_mfrocketOH",
 	"sprite":"graphics/missiles/nskr_mfrocket.png",
 	"size":[6,24],	
 	"center":[3,12],

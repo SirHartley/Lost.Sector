@@ -1,6 +1,6 @@
 {
 	"id":"nskr_inverter_shot",
-	"onHitEffect":"scripts.kissa.LOST_SECTOR.weapons.nskr_inverterOH",
+	"onHitEffect":"weapons.lostsector.nskr_inverterOH",
 	"specClass":"projectile",
 	"spawnType":"BALLISTIC_AS_BEAM",
 	"collisionClass":"RAY",

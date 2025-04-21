@@ -1,5 +1,7 @@
 Credits:
 
+Kissa Mies: Created the original Mod LOST_SECTOR and everything in it
+
 -Additional Scripts :     
 	- DarkRevenant, Nicke535, Sundog, Cycerin, Inventor Raccoon, Nia Tahl, Vayra, Tartiflette, theDragn, Histidine, Sebastian Lague, and LazyWizard [Andrey Sitnik and Ivan Solovev (easing functions)]
 -Additional sound fx :
@@ -20,4 +22,3 @@ Credits:
 -Everyone who contributed to all the neat free to use stuff in MagicLib, LazyLib, LunaLib and GraphicsLib.
 -Starsector Discord - for having lots of helpful resources and people.
 -Alex, David, and the rest, for the game itself and all vanilla assets.
--Everything else - Kissa Mies
