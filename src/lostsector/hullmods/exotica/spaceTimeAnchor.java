@@ -8,11 +8,11 @@ import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import com.fs.starfarer.api.util.Misc;
 import exoticatechnologies.modifications.ShipModifications;
 import exoticatechnologies.modifications.upgrades.Upgrade;
+import lostsector.util.util;
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
-import lostsector.util.util;
 
-import java.awt.Color;
+import java.awt.*;
 
 public class spaceTimeAnchor extends Upgrade {
 

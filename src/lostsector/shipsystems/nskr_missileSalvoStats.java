@@ -5,8 +5,9 @@ import com.fs.starfarer.api.combat.*;
 import com.fs.starfarer.api.impl.combat.BaseShipSystemScript;
 import com.fs.starfarer.api.util.Misc;
 import org.lazywizard.lazylib.MathUtils;
-import java.awt.Color;
 import org.lwjgl.util.vector.Vector2f;
+
+import java.awt.*;
 
 public class nskr_missileSalvoStats extends BaseShipSystemScript {
 

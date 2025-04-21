@@ -1,18 +1,14 @@
 package lostsector.shipsystems.ai;
 
-import com.fs.starfarer.api.combat.CombatEngineAPI;
-import com.fs.starfarer.api.combat.ShipAPI;
-import com.fs.starfarer.api.combat.ShipSystemAIScript;
-import com.fs.starfarer.api.combat.ShipSystemAPI;
-import com.fs.starfarer.api.combat.ShipwideAIFlags;
+import com.fs.starfarer.api.combat.*;
 import com.fs.starfarer.api.util.IntervalUtil;
-import org.lazywizard.lazylib.CollisionUtils;
 import lostsector.util.combatUtil;
+import org.lazywizard.lazylib.CollisionUtils;
+import org.lazywizard.lazylib.combat.AIUtils;
+import org.lwjgl.util.vector.Vector2f;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.lazywizard.lazylib.combat.AIUtils;
-import org.lwjgl.util.vector.Vector2f;
 
 public class nskr_emBlastAI implements ShipSystemAIScript {
 

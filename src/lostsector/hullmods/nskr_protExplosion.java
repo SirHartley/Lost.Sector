@@ -3,15 +3,15 @@ package lostsector.hullmods;
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.combat.ShipAPI;
 import com.fs.starfarer.api.combat.listeners.AdvanceableListener;
+import lostsector.util.blastSpriteCreator;
+import lostsector.util.mathUtil;
+import lostsector.util.util;
 import org.dark.shaders.distortion.DistortionShader;
 import org.dark.shaders.distortion.WaveDistortion;
 import org.lazywizard.lazylib.MathUtils;
 import org.lazywizard.lazylib.VectorUtils;
 import org.lazywizard.lazylib.combat.entities.SimpleEntity;
 import org.lwjgl.util.vector.Vector2f;
-import lostsector.util.mathUtil;
-import lostsector.util.util;
-import lostsector.util.blastSpriteCreator;
 
 import java.awt.*;
 import java.util.HashMap;

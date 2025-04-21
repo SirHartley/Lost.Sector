@@ -11,17 +11,16 @@ import com.fs.starfarer.api.impl.campaign.ids.MemFlags;
 import com.fs.starfarer.api.impl.campaign.rulecmd.PaginatedOptions;
 import com.fs.starfarer.api.util.Misc;
 import com.fs.starfarer.api.util.Misc.Token;
+import lostsector.campaign.quests.nskr_EndingKestevenDialog;
+import lostsector.campaign.quests.util.questStageManager;
+import lostsector.campaign.quests.util.questUtil;
+import lostsector.util.util;
 
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
-
-import lostsector.campaign.quests.nskr_EndingKestevenDialog;
-import lostsector.campaign.quests.util.questStageManager;
-import lostsector.campaign.quests.util.questUtil;
-import lostsector.util.util;
 
 public class nskr_elizaInterceptDialog extends PaginatedOptions {
 

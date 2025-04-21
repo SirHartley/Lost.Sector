@@ -14,13 +14,11 @@ import com.fs.starfarer.api.impl.campaign.ids.Tags;
 import com.fs.starfarer.api.impl.campaign.procgen.themes.BaseThemeGenerator;
 import com.fs.starfarer.api.loading.WeaponSpecAPI;
 import com.fs.starfarer.api.util.WeightedRandomPicker;
-import org.lazywizard.lazylib.MathUtils;
-import org.lwjgl.util.vector.Vector2f;
 import lostsector.campaign.customStart.gamemodeManager;
-import lostsector.campaign.quests.util.fleetInfo;
-import lostsector.campaign.quests.util.simpleFleet;
 import lostsector.campaign.quests.nskr_glacierCommsDialog;
+import lostsector.campaign.quests.util.fleetInfo;
 import lostsector.campaign.quests.util.questUtil;
+import lostsector.campaign.quests.util.simpleFleet;
 import lostsector.nskr_modPlugin;
 import lostsector.nskr_saved;
 import lostsector.util.fleetUtil;
@@ -28,10 +26,13 @@ import lostsector.util.mathUtil;
 import lostsector.util.powerLevel;
 import lostsector.util.util;
 import lostsector.world.systems.frost.nskr_frost;
+import org.lazywizard.lazylib.MathUtils;
+import org.lwjgl.util.vector.Vector2f;
 
 import java.util.*;
 
-import static lostsector.campaign.fleets.nskr_hyperspaceEnigmaSpawner.*;
+import static lostsector.campaign.fleets.nskr_hyperspaceEnigmaSpawner.fleetLevel;
+import static lostsector.campaign.fleets.nskr_hyperspaceEnigmaSpawner.getFleetLevel;
 
 public class nskr_stalkerSpawner extends BaseCampaignEventListener implements EveryFrameScript {
     //

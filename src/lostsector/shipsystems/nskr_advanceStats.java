@@ -7,13 +7,13 @@ import com.fs.starfarer.api.graphics.SpriteAPI;
 import com.fs.starfarer.api.impl.combat.BaseShipSystemScript;
 import com.fs.starfarer.api.util.IntervalUtil;
 import com.fs.starfarer.api.util.Pair;
-import org.magiclib.util.MagicRender;
+import lostsector.util.mathUtil;
 import org.dark.shaders.distortion.DistortionShader;
 import org.dark.shaders.distortion.WaveDistortion;
 import org.dark.shaders.post.PostProcessShader;
 import org.lazywizard.lazylib.MathUtils;
 import org.lwjgl.util.vector.Vector2f;
-import lostsector.util.mathUtil;
+import org.magiclib.util.MagicRender;
 
 import java.awt.*;
 import java.io.IOException;

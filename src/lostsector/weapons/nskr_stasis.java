@@ -1,17 +1,20 @@
 package lostsector.weapons;
 
 import com.fs.starfarer.api.Global;
-import com.fs.starfarer.api.combat.*;
+import com.fs.starfarer.api.combat.CollisionClass;
+import com.fs.starfarer.api.combat.CombatEngineAPI;
+import com.fs.starfarer.api.combat.DamagingProjectileAPI;
+import com.fs.starfarer.api.combat.ShipAPI;
 import com.fs.starfarer.api.combat.listeners.AdvanceableListener;
 import com.fs.starfarer.api.util.IntervalUtil;
-import org.lazywizard.lazylib.MathUtils;
-import org.lazywizard.lazylib.combat.CombatUtils;
-import org.lwjgl.util.vector.Vector2f;
 import lostsector.shipsystems.ai.nskr_stasisAI;
 import lostsector.shipsystems.nskr_stasisStats;
 import lostsector.util.blastSpriteCreator;
 import lostsector.util.mathUtil;
 import lostsector.util.util;
+import org.lazywizard.lazylib.MathUtils;
+import org.lazywizard.lazylib.combat.CombatUtils;
+import org.lwjgl.util.vector.Vector2f;
 
 import java.awt.*;
 import java.util.HashMap;

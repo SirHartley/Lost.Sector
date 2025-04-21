@@ -2,14 +2,17 @@ package lostsector.hullmods;
 
 import com.fs.starfarer.api.GameState;
 import com.fs.starfarer.api.Global;
-import com.fs.starfarer.api.combat.*;
+import com.fs.starfarer.api.combat.BaseHullMod;
+import com.fs.starfarer.api.combat.MutableShipStatsAPI;
+import com.fs.starfarer.api.combat.ShipAPI;
+import com.fs.starfarer.api.combat.ShipHullSpecAPI;
 import com.fs.starfarer.api.impl.campaign.ids.HullMods;
 import com.fs.starfarer.api.ui.Alignment;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import com.fs.starfarer.api.util.Misc;
-import org.magiclib.util.MagicIncompatibleHullmods;
 import lostsector.util.mathUtil;
 import lostsector.util.util;
+import org.magiclib.util.MagicIncompatibleHullmods;
 
 import java.awt.*;
 import java.util.HashMap;

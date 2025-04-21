@@ -1,14 +1,17 @@
 package lostsector.plugins;
 
 import com.fs.starfarer.api.Global;
-import com.fs.starfarer.api.combat.*;
+import com.fs.starfarer.api.combat.CombatEngineAPI;
+import com.fs.starfarer.api.combat.EveryFrameWeaponEffectPlugin;
+import com.fs.starfarer.api.combat.ShipAPI;
+import com.fs.starfarer.api.combat.WeaponAPI;
 import com.fs.starfarer.api.graphics.SpriteAPI;
-import java.awt.Color;
-
 import com.fs.starfarer.api.util.IntervalUtil;
+import lostsector.util.util;
 import org.lazywizard.lazylib.MathUtils;
 import org.lwjgl.util.vector.Vector2f;
-import lostsector.util.util;
+
+import java.awt.*;
 
 
 public class nskr_prototypeGlows implements EveryFrameWeaponEffectPlugin {

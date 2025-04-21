@@ -1,9 +1,5 @@
 package lostsector.campaign.quests;
 
-import java.awt.*;
-import java.util.Map;
-import java.util.Random;
-
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.InteractionDialogImageVisual;
 import com.fs.starfarer.api.campaign.InteractionDialogAPI;
@@ -21,6 +17,10 @@ import com.fs.starfarer.api.util.Misc;
 import lostsector.campaign.quests.util.questStageManager;
 import lostsector.campaign.quests.util.questUtil;
 import lostsector.util.util;
+
+import java.awt.*;
+import java.util.Map;
+import java.util.Random;
 
 public class nskr_kQuest5Bar extends BaseBarEvent {
 

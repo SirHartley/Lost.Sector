@@ -8,22 +8,22 @@ package lostsector.shipsystems;
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.combat.*;
 import com.fs.starfarer.api.impl.combat.BaseShipSystemScript;
-import org.magiclib.util.MagicLensFlare;
-import org.lazywizard.lazylib.FastTrig;
-import org.lazywizard.lazylib.MathUtils;
-import org.lazywizard.lazylib.VectorUtils;
-import org.lazywizard.lazylib.combat.CombatUtils;
 import lostsector.util.combatUtil;
-
-import java.awt.Color;
-import java.util.ArrayList;
-import java.util.List;
 import org.dark.shaders.distortion.DistortionShader;
 import org.dark.shaders.distortion.RippleDistortion;
 import org.dark.shaders.light.LightShader;
 import org.dark.shaders.light.StandardLight;
+import org.lazywizard.lazylib.FastTrig;
+import org.lazywizard.lazylib.MathUtils;
+import org.lazywizard.lazylib.VectorUtils;
+import org.lazywizard.lazylib.combat.CombatUtils;
 import org.lazywizard.lazylib.combat.entities.SimpleEntity;
 import org.lwjgl.util.vector.Vector2f;
+import org.magiclib.util.MagicLensFlare;
+
+import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class nskr_bfPulseStats extends BaseShipSystemScript {
 

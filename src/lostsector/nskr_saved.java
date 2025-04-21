@@ -5,7 +5,9 @@ package lostsector;
 
 import com.fs.starfarer.api.Global;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 public class nskr_saved<T> {
     public static final String PREFIX = "nskr_";

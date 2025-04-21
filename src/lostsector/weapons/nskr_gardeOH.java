@@ -1,12 +1,12 @@
 package lostsector.weapons;
 
-import java.awt.Color;
-
 import com.fs.starfarer.api.combat.*;
 import com.fs.starfarer.api.combat.listeners.ApplyDamageResultAPI;
-import org.magiclib.util.MagicLensFlare;
-import org.lwjgl.util.vector.Vector2f;
 import lostsector.util.combatUtil;
+import org.lwjgl.util.vector.Vector2f;
+import org.magiclib.util.MagicLensFlare;
+
+import java.awt.*;
 
 public class nskr_gardeOH implements OnHitEffectPlugin {
 

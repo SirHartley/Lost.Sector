@@ -8,10 +8,10 @@ import com.fs.starfarer.api.fleet.FleetMemberAPI;
 import com.fs.starfarer.api.impl.campaign.FleetInteractionDialogPluginImpl;
 import com.fs.starfarer.api.impl.campaign.ids.Factions;
 import com.fs.starfarer.api.impl.campaign.ids.MemFlags;
-import com.fs.starfarer.api.util.Pair;
 import com.fs.starfarer.api.util.Misc;
-import org.lazywizard.lazylib.MathUtils;
+import com.fs.starfarer.api.util.Pair;
 import lostsector.util.ids;
+import org.lazywizard.lazylib.MathUtils;
 
 import java.util.ArrayList;
 import java.util.List;

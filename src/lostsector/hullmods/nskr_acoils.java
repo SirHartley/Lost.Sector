@@ -1,6 +1,9 @@
 package lostsector.hullmods;
 
-import com.fs.starfarer.api.combat.*;
+import com.fs.starfarer.api.combat.BaseHullMod;
+import com.fs.starfarer.api.combat.MutableShipStatsAPI;
+import com.fs.starfarer.api.combat.ShipAPI;
+import com.fs.starfarer.api.combat.WeaponAPI;
 import com.fs.starfarer.api.combat.listeners.WeaponBaseRangeModifier;
 
 public class nskr_acoils extends BaseHullMod {

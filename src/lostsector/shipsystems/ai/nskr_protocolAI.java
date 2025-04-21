@@ -5,13 +5,12 @@ package lostsector.shipsystems.ai;
 
 import com.fs.starfarer.api.combat.*;
 import com.fs.starfarer.api.util.IntervalUtil;
+import lostsector.util.combatUtil;
+import org.lazywizard.lazylib.combat.AIUtils;
+import org.lwjgl.util.vector.Vector2f;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import org.lazywizard.lazylib.combat.AIUtils;
-import org.lwjgl.util.vector.Vector2f;
-import lostsector.util.combatUtil;
 
 
 public class nskr_protocolAI implements ShipSystemAIScript {

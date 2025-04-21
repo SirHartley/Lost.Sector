@@ -4,14 +4,14 @@ import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.combat.*;
 import com.fs.starfarer.api.combat.listeners.AdvanceableListener;
 import com.fs.starfarer.api.util.Misc;
+import lostsector.util.blastSpriteCreator;
+import lostsector.util.mathUtil;
 import org.dark.shaders.distortion.DistortionShader;
 import org.dark.shaders.distortion.RippleDistortion;
 import org.lazywizard.lazylib.MathUtils;
 import org.lazywizard.lazylib.combat.CombatUtils;
 import org.lwjgl.util.vector.Vector2f;
 import org.magiclib.util.MagicLensFlare;
-import lostsector.util.blastSpriteCreator;
-import lostsector.util.mathUtil;
 
 import java.awt.*;
 import java.util.ArrayList;

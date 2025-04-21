@@ -9,14 +9,14 @@ import com.fs.starfarer.api.characters.PersonAPI;
 import com.fs.starfarer.api.impl.campaign.missions.hub.BaseHubMission;
 import com.fs.starfarer.api.util.Misc;
 import com.fs.starfarer.api.util.Misc.Token;
-import org.lwjgl.input.Keyboard;
 import lostsector.campaign.intel.nskr_contractIntel;
 import lostsector.campaign.quests.jobs.contractInfo;
 import lostsector.campaign.quests.jobs.contractManager;
+import org.lwjgl.input.Keyboard;
 
 import java.awt.*;
-import java.util.*;
 import java.util.List;
+import java.util.Map;
 
 public class nskr_contracts extends BaseHubMission {
     //

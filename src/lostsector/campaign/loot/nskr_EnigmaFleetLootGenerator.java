@@ -13,8 +13,8 @@ import com.fs.starfarer.api.campaign.FleetEncounterContextPlugin.FleetMemberData
 import com.fs.starfarer.api.characters.PersonAPI;
 import com.fs.starfarer.api.fleet.FleetMemberAPI;
 import com.fs.starfarer.api.loading.WeaponSpecAPI;
-import org.lazywizard.lazylib.MathUtils;
 import lostsector.util.util;
+import org.lazywizard.lazylib.MathUtils;
 
 import java.util.ArrayList;
 import java.util.List;

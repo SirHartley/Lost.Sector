@@ -3,11 +3,11 @@ package lostsector.shipsystems.ai;
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.combat.*;
 import com.fs.starfarer.api.util.IntervalUtil;
+import lostsector.shipsystems.nskr_harmonicsStats;
+import lostsector.util.util;
 import org.lazywizard.lazylib.combat.AIUtils;
 import org.lazywizard.lazylib.combat.CombatUtils;
 import org.lwjgl.util.vector.Vector2f;
-import lostsector.shipsystems.nskr_harmonicsStats;
-import lostsector.util.util;
 
 import java.util.ArrayList;
 import java.util.HashMap;

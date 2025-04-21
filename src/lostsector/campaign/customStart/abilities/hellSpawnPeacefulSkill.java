@@ -3,15 +3,21 @@ package lostsector.campaign.customStart.abilities;
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.BattleAPI;
 import com.fs.starfarer.api.campaign.CampaignFleetAPI;
-import com.fs.starfarer.api.characters.*;
-import com.fs.starfarer.api.combat.*;
+import com.fs.starfarer.api.characters.AfterShipCreationSkillEffect;
+import com.fs.starfarer.api.characters.MutableCharacterStatsAPI;
+import com.fs.starfarer.api.characters.ShipSkillEffect;
+import com.fs.starfarer.api.characters.SkillSpecAPI;
+import com.fs.starfarer.api.combat.CombatEntityAPI;
+import com.fs.starfarer.api.combat.DamageAPI;
+import com.fs.starfarer.api.combat.MutableShipStatsAPI;
+import com.fs.starfarer.api.combat.ShipAPI;
 import com.fs.starfarer.api.combat.listeners.AdvanceableListener;
 import com.fs.starfarer.api.combat.listeners.DamageTakenModifier;
 import com.fs.starfarer.api.impl.campaign.skills.BaseSkillEffectDescription;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import com.fs.starfarer.api.util.Misc;
-import org.lwjgl.util.vector.Vector2f;
 import lostsector.campaign.customStart.hellSpawnManager;
+import org.lwjgl.util.vector.Vector2f;
 
 import java.awt.*;
 

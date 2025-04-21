@@ -16,12 +16,10 @@ import com.fs.starfarer.api.mission.MissionDefinitionAPI;
 import com.fs.starfarer.api.mission.MissionDefinitionPlugin;
 import com.fs.starfarer.api.util.WeightedRandomPicker;
 import lostsector.missions.nskr_FleetGenerator.GeneratorFleetTypes;
-import java.awt.Color;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
+
+import java.awt.*;
 import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 public class nskr_BaseRandomBattle implements MissionDefinitionPlugin {
 

@@ -8,20 +8,20 @@ import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.combat.*;
 import com.fs.starfarer.api.impl.combat.BaseShipSystemScript;
 import com.fs.starfarer.api.loading.ProjectileSpawnType;
-import org.magiclib.util.MagicLensFlare;
-import org.lazywizard.lazylib.MathUtils;
 import lostsector.hullmods.nskr_causality;
 import lostsector.util.combatUtil;
-
-import java.awt.Color;
-import java.util.*;
-
 import org.dark.shaders.distortion.DistortionShader;
 import org.dark.shaders.distortion.RippleDistortion;
 import org.dark.shaders.light.LightShader;
 import org.dark.shaders.light.StandardLight;
+import org.lazywizard.lazylib.MathUtils;
 import org.lazywizard.lazylib.combat.entities.SimpleEntity;
 import org.lwjgl.util.vector.Vector2f;
+import org.magiclib.util.MagicLensFlare;
+
+import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class nskr_causalityStats extends BaseShipSystemScript {
 

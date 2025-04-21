@@ -1,21 +1,14 @@
 package lostsector.shipsystems.ai;
 
-import com.fs.starfarer.api.combat.CollisionClass;
-import com.fs.starfarer.api.combat.CombatEngineAPI;
-import com.fs.starfarer.api.combat.DamageType;
-import com.fs.starfarer.api.combat.DamagingProjectileAPI;
-import com.fs.starfarer.api.combat.ShipAPI;
-import com.fs.starfarer.api.combat.ShipSystemAIScript;
-import com.fs.starfarer.api.combat.ShipSystemAPI;
-import com.fs.starfarer.api.combat.ShipwideAIFlags;
+import com.fs.starfarer.api.combat.*;
 import com.fs.starfarer.api.util.IntervalUtil;
 import lostsector.shipsystems.nskr_bfPulseStats;
 import lostsector.util.combatUtil;
+import org.lazywizard.lazylib.combat.AIUtils;
+import org.lwjgl.util.vector.Vector2f;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.lazywizard.lazylib.combat.AIUtils;
-import org.lwjgl.util.vector.Vector2f;
 
 public class nskr_bfpulseAI implements ShipSystemAIScript {
 

@@ -11,8 +11,6 @@ import com.fs.starfarer.api.impl.campaign.ids.MemFlags;
 import com.fs.starfarer.api.impl.campaign.ids.Tags;
 import com.fs.starfarer.api.impl.campaign.procgen.themes.BaseThemeGenerator;
 import com.fs.starfarer.api.util.WeightedRandomPicker;
-import org.lazywizard.lazylib.MathUtils;
-import org.lwjgl.util.vector.Vector2f;
 import lostsector.campaign.quests.util.fleetInfo;
 import lostsector.campaign.quests.util.questUtil;
 import lostsector.campaign.quests.util.simpleFleet;
@@ -22,6 +20,8 @@ import lostsector.nskr_saved;
 import lostsector.util.fleetUtil;
 import lostsector.util.mathUtil;
 import lostsector.util.util;
+import org.lazywizard.lazylib.MathUtils;
+import org.lwjgl.util.vector.Vector2f;
 
 import java.util.*;
 

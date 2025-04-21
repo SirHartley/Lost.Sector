@@ -20,8 +20,6 @@ import com.fs.starfarer.api.impl.campaign.ids.Stats;
 import com.fs.starfarer.api.impl.campaign.rulecmd.salvage.MarketCMD;
 import com.fs.starfarer.api.util.Misc;
 import exerelin.campaign.DiplomacyManager;
-import org.lazywizard.lazylib.MathUtils;
-import org.lwjgl.util.vector.Vector2f;
 import lostsector.campaign.customStart.abilities.hellSpawnAbility;
 import lostsector.campaign.customStart.intel.hellSpawnEventFactors;
 import lostsector.campaign.customStart.intel.hellSpawnEventIntel;
@@ -34,6 +32,8 @@ import lostsector.util.fleetUtil;
 import lostsector.util.ids;
 import lostsector.util.mathUtil;
 import lostsector.world.systems.frost.nskr_frost;
+import org.lazywizard.lazylib.MathUtils;
+import org.lwjgl.util.vector.Vector2f;
 
 import java.util.ArrayList;
 import java.util.List;

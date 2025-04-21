@@ -1,11 +1,13 @@
 package lostsector.shipsystems;
 
-import java.awt.Color;
-
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.combat.*;
 import com.fs.starfarer.api.impl.combat.BaseShipSystemScript;
 import com.fs.starfarer.api.util.IntervalUtil;
+import lostsector.util.blastSpriteCreator;
+import lostsector.util.combatUtil;
+import lostsector.util.mathUtil;
+import lostsector.util.util;
 import org.dark.shaders.distortion.DistortionShader;
 import org.dark.shaders.distortion.WaveDistortion;
 import org.dark.shaders.light.LightShader;
@@ -15,10 +17,8 @@ import org.lazywizard.lazylib.VectorUtils;
 import org.lazywizard.lazylib.combat.CombatUtils;
 import org.lazywizard.lazylib.combat.entities.SimpleEntity;
 import org.lwjgl.util.vector.Vector2f;
-import lostsector.util.combatUtil;
-import lostsector.util.mathUtil;
-import lostsector.util.blastSpriteCreator;
-import lostsector.util.util;
+
+import java.awt.*;
 
 public class nskr_emBlastStats extends BaseShipSystemScript {
 

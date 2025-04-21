@@ -7,11 +7,11 @@ import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.combat.*;
 import com.fs.starfarer.api.combat.listeners.ApplyDamageResultAPI;
 import com.fs.starfarer.api.util.Misc;
+import lostsector.util.blastSpriteCreator;
+import lostsector.util.combatUtil;
 import org.dark.shaders.light.LightShader;
 import org.dark.shaders.light.StandardLight;
 import org.lwjgl.util.vector.Vector2f;
-import lostsector.util.combatUtil;
-import lostsector.util.blastSpriteCreator;
 
 import java.awt.*;
 

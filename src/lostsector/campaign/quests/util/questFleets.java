@@ -7,15 +7,15 @@ import com.fs.starfarer.api.campaign.SectorEntityToken;
 import com.fs.starfarer.api.campaign.StarSystemAPI;
 import com.fs.starfarer.api.characters.PersonAPI;
 import com.fs.starfarer.api.impl.campaign.ids.*;
-import org.lazywizard.lazylib.MathUtils;
-import org.lwjgl.util.vector.Vector2f;
 import lostsector.campaign.rulecmd.nskr_kestevenQuest;
 import lostsector.campaign.rulecmd.nskr_ttCollectorDialog;
 import lostsector.nskr_modPlugin;
 import lostsector.util.fleetUtil;
 import lostsector.util.mathUtil;
-import lostsector.util.util;
 import lostsector.util.powerLevel;
+import lostsector.util.util;
+import org.lazywizard.lazylib.MathUtils;
+import org.lwjgl.util.vector.Vector2f;
 
 import java.util.*;
 

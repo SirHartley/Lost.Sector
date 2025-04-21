@@ -9,12 +9,9 @@ import com.fs.starfarer.api.campaign.*;
 import com.fs.starfarer.api.campaign.econ.MarketAPI;
 import com.fs.starfarer.api.characters.MutableCharacterStatsAPI;
 import com.fs.starfarer.api.characters.PersonAPI;
-import com.fs.starfarer.api.combat.*;
-
-import java.awt.*;
-import java.util.*;
-import java.util.List;
-
+import com.fs.starfarer.api.combat.ShipAPI;
+import com.fs.starfarer.api.combat.ShipHullSpecAPI;
+import com.fs.starfarer.api.combat.ShipVariantAPI;
 import com.fs.starfarer.api.fleet.FleetMemberAPI;
 import com.fs.starfarer.api.impl.campaign.DModManager;
 import com.fs.starfarer.api.impl.campaign.fleets.FleetFactoryV3;
@@ -24,14 +21,18 @@ import com.fs.starfarer.api.impl.campaign.procgen.themes.BaseThemeGenerator;
 import com.fs.starfarer.api.impl.campaign.procgen.themes.RemnantSeededFleetManager;
 import com.fs.starfarer.api.util.Misc;
 import com.fs.starfarer.api.util.WeightedRandomPicker;
-import org.lazywizard.lazylib.MathUtils;
-import org.lwjgl.util.vector.Vector2f;
-import lostsector.campaign.procgen.nskr_dormantSpawner;
 import lostsector.campaign.nskr_exileManager;
+import lostsector.campaign.procgen.nskr_dormantSpawner;
 import lostsector.campaign.quests.util.questUtil;
 import lostsector.campaign.quests.util.simpleSystem;
 import lostsector.nskr_modPlugin;
 import lostsector.world.systems.frost.nskr_frost;
+import org.lazywizard.lazylib.MathUtils;
+import org.lwjgl.util.vector.Vector2f;
+
+import java.awt.*;
+import java.util.List;
+import java.util.*;
 
 public class util {
 

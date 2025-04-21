@@ -8,13 +8,15 @@ import com.fs.starfarer.api.combat.EngagementResultAPI;
 import com.fs.starfarer.api.fleet.FleetMemberAPI;
 import com.fs.starfarer.api.impl.campaign.ids.MemFlags;
 import com.fs.starfarer.api.util.Misc;
-import org.lazywizard.lazylib.MathUtils;
 import lostsector.campaign.quests.util.questUtil;
 import lostsector.campaign.rulecmd.nskr_kestevenQuest;
 import lostsector.util.util;
+import org.lazywizard.lazylib.MathUtils;
 
 import java.awt.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Map;
+import java.util.Random;
 
 public class nskr_glacierCommsDialog implements InteractionDialogPlugin {
     //

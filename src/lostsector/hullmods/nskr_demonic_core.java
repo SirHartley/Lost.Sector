@@ -5,12 +5,12 @@ import com.fs.starfarer.api.combat.*;
 import com.fs.starfarer.api.combat.ShipAPI.HullSize;
 import com.fs.starfarer.api.graphics.SpriteAPI;
 import com.fs.starfarer.api.util.Pair;
-import org.lazywizard.lazylib.MathUtils;
-import org.lwjgl.util.vector.Vector2f;
 import lostsector.shipsystems.nskr_bfPulseStats;
 import lostsector.util.combatUtil;
 import lostsector.util.mathUtil;
 import lostsector.util.util;
+import org.lazywizard.lazylib.MathUtils;
+import org.lwjgl.util.vector.Vector2f;
 
 import java.awt.*;
 import java.io.IOException;

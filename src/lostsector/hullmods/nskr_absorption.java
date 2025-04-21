@@ -5,9 +5,9 @@ import com.fs.starfarer.api.combat.*;
 import com.fs.starfarer.api.combat.listeners.DamageTakenModifier;
 import com.fs.starfarer.api.ui.Alignment;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
-import org.lwjgl.util.vector.Vector2f;
 import lostsector.util.mathUtil;
 import lostsector.util.util;
+import org.lwjgl.util.vector.Vector2f;
 
 import java.awt.*;
 import java.util.EnumSet;

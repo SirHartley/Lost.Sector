@@ -7,7 +7,6 @@ import com.fs.starfarer.api.impl.campaign.ids.Factions;
 import com.fs.starfarer.api.impl.campaign.ids.Tags;
 import com.fs.starfarer.api.impl.campaign.procgen.themes.BaseThemeGenerator;
 import com.fs.starfarer.api.impl.campaign.procgen.themes.DerelictThemeGenerator;
-import org.lazywizard.lazylib.MathUtils;
 import lostsector.campaign.loot.nskr_bountyLoot;
 import lostsector.campaign.quests.util.questUtil;
 import lostsector.campaign.quests.util.simpleSystem;
@@ -15,6 +14,7 @@ import lostsector.campaign.util.campaignTimer;
 import lostsector.util.ids;
 import lostsector.util.mathUtil;
 import lostsector.util.util;
+import org.lazywizard.lazylib.MathUtils;
 
 import java.util.ArrayList;
 import java.util.List;

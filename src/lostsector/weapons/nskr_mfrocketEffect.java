@@ -3,9 +3,9 @@ package lostsector.weapons;
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.combat.*;
 import com.fs.starfarer.api.util.IntervalUtil;
+import lostsector.util.mathUtil;
 import org.lazywizard.lazylib.MathUtils;
 import org.lwjgl.util.vector.Vector2f;
-import lostsector.util.mathUtil;
 
 import java.awt.*;
 import java.util.HashSet;

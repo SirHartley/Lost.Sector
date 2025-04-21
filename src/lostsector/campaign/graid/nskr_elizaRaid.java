@@ -1,8 +1,5 @@
 package lostsector.campaign.graid;
 
-import java.awt.Color;
-import java.util.Random;
-
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.CampaignFleetAPI;
 import com.fs.starfarer.api.campaign.CargoAPI;
@@ -15,10 +12,13 @@ import com.fs.starfarer.api.impl.campaign.ids.MemFlags;
 import com.fs.starfarer.api.impl.campaign.rulecmd.salvage.MarketCMD.RaidDangerLevel;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import com.fs.starfarer.api.util.Misc;
+import lostsector.campaign.quests.nskr_elizaDialog;
 import lostsector.campaign.quests.util.questFleets;
 import lostsector.campaign.quests.util.questUtil;
-import lostsector.campaign.quests.nskr_elizaDialog;
 import lostsector.util.mathUtil;
+
+import java.awt.*;
+import java.util.Random;
 
 public class nskr_elizaRaid extends AbstractGoalGroundRaidObjectivePluginImpl {
 

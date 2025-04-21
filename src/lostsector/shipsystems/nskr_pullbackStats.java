@@ -2,12 +2,13 @@
 package lostsector.shipsystems;
 
 import com.fs.starfarer.api.Global;
-import com.fs.starfarer.api.combat.*;
+import com.fs.starfarer.api.combat.CombatEngineAPI;
+import com.fs.starfarer.api.combat.MutableShipStatsAPI;
+import com.fs.starfarer.api.combat.ShipAPI;
 import com.fs.starfarer.api.impl.combat.BaseShipSystemScript;
 import lostsector.hullmods.nskr_pullback;
-
-import org.lwjgl.util.vector.Vector2f;
 import lostsector.util.mathUtil;
+import org.lwjgl.util.vector.Vector2f;
 
 public class nskr_pullbackStats extends BaseShipSystemScript {
 

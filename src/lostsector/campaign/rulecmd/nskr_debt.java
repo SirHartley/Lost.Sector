@@ -4,12 +4,7 @@
 package lostsector.campaign.rulecmd;
 
 import com.fs.starfarer.api.Global;
-import com.fs.starfarer.api.campaign.CampaignFleetAPI;
-import com.fs.starfarer.api.campaign.CargoAPI;
-import com.fs.starfarer.api.campaign.FactionAPI;
-import com.fs.starfarer.api.campaign.InteractionDialogAPI;
-import com.fs.starfarer.api.campaign.SectorEntityToken;
-import com.fs.starfarer.api.campaign.TextPanelAPI;
+import com.fs.starfarer.api.campaign.*;
 import com.fs.starfarer.api.campaign.econ.MarketAPI;
 import com.fs.starfarer.api.campaign.rules.MemKeys;
 import com.fs.starfarer.api.campaign.rules.MemoryAPI;
@@ -18,18 +13,17 @@ import com.fs.starfarer.api.combat.ShipAPI;
 import com.fs.starfarer.api.impl.campaign.rulecmd.PaginatedOptions;
 import com.fs.starfarer.api.util.Misc;
 import com.fs.starfarer.api.util.Misc.Token;
+import lostsector.campaign.quests.nskr_EndingElizaDialog;
+import lostsector.campaign.quests.util.questUtil;
+import lostsector.util.util;
+import org.lazywizard.lazylib.MathUtils;
+import org.lwjgl.input.Keyboard;
 
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
-
-import org.lazywizard.lazylib.MathUtils;
-import org.lwjgl.input.Keyboard;
-import lostsector.campaign.quests.nskr_EndingElizaDialog;
-import lostsector.campaign.quests.util.questUtil;
-import lostsector.util.util;
 
 public class nskr_debt extends PaginatedOptions {
 

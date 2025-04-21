@@ -2,20 +2,21 @@
 package lostsector.shipsystems;
 
 import com.fs.starfarer.api.Global;
-import com.fs.starfarer.api.combat.*;
+import com.fs.starfarer.api.combat.CombatEngineAPI;
+import com.fs.starfarer.api.combat.MutableShipStatsAPI;
+import com.fs.starfarer.api.combat.ShipAPI;
 import com.fs.starfarer.api.impl.combat.BaseShipSystemScript;
 import com.fs.starfarer.api.util.IntervalUtil;
+import lostsector.util.combatUtil;
 import org.lazywizard.lazylib.MathUtils;
 import org.lazywizard.lazylib.VectorUtils;
 import org.lazywizard.lazylib.combat.entities.SimpleEntity;
-import lostsector.util.combatUtil;
+import org.lwjgl.util.vector.Vector2f;
 
-import java.awt.Color;
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-
-import org.lwjgl.util.vector.Vector2f;
 
 public class nskr_warpStats extends BaseShipSystemScript {
 

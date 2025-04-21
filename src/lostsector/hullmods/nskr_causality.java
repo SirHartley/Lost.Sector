@@ -11,13 +11,13 @@ import com.fs.starfarer.api.ui.Alignment;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import com.fs.starfarer.api.util.IntervalUtil;
 import com.fs.starfarer.api.util.Pair;
-import org.dark.shaders.post.PostProcessShader;
-import org.lazywizard.lazylib.MathUtils;
-import org.lwjgl.util.vector.Vector2f;
 import lostsector.shipsystems.nskr_causalityStats;
 import lostsector.util.combatUtil;
 import lostsector.util.mathUtil;
 import lostsector.util.util;
+import org.dark.shaders.post.PostProcessShader;
+import org.lazywizard.lazylib.MathUtils;
+import org.lwjgl.util.vector.Vector2f;
 
 import java.awt.*;
 import java.io.IOException;

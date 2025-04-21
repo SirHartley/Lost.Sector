@@ -10,10 +10,10 @@ import com.fs.starfarer.api.impl.campaign.procgen.StarSystemGenerator;
 import com.fs.starfarer.api.impl.campaign.procgen.themes.BaseThemeGenerator;
 import com.fs.starfarer.api.util.Misc;
 import com.fs.starfarer.api.util.WeightedRandomPicker;
-import org.lazywizard.lazylib.MathUtils;
 import lostsector.campaign.quests.util.simpleSystem;
 import lostsector.nskr_modPlugin;
 import lostsector.util.util;
+import org.lazywizard.lazylib.MathUtils;
 
 import java.util.*;
 

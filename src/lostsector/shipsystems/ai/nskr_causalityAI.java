@@ -6,11 +6,11 @@ import com.fs.starfarer.api.util.IntervalUtil;
 import lostsector.hullmods.nskr_causality;
 import lostsector.shipsystems.nskr_causalityStats;
 import lostsector.util.combatUtil;
+import lostsector.util.mathUtil;
+import org.lwjgl.util.vector.Vector2f;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.lwjgl.util.vector.Vector2f;
-import lostsector.util.mathUtil;
 
 public class nskr_causalityAI implements ShipSystemAIScript {
 

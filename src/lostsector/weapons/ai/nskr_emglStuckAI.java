@@ -6,12 +6,12 @@ package lostsector.weapons.ai;
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.combat.*;
 import com.fs.starfarer.api.util.IntervalUtil;
-import org.magiclib.util.MagicRender;
-import org.lazywizard.lazylib.combat.entities.SimpleEntity;
 import lostsector.weapons.nskr_emglScript;
 import org.lazywizard.lazylib.MathUtils;
 import org.lazywizard.lazylib.VectorUtils;
+import org.lazywizard.lazylib.combat.entities.SimpleEntity;
 import org.lwjgl.util.vector.Vector2f;
+import org.magiclib.util.MagicRender;
 
 import java.awt.*;
 import java.util.List;

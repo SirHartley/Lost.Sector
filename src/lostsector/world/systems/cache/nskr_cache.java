@@ -1,8 +1,5 @@
 package lostsector.world.systems.cache;
 
-import java.awt.Color;
-import java.util.*;
-
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.*;
 import com.fs.starfarer.api.characters.FullName;
@@ -25,17 +22,20 @@ import com.fs.starfarer.api.impl.campaign.terrain.DebrisFieldTerrainPlugin;
 import com.fs.starfarer.api.impl.campaign.terrain.HyperspaceTerrainPlugin;
 import com.fs.starfarer.api.impl.campaign.terrain.MagneticFieldTerrainPlugin.MagneticFieldParams;
 import com.fs.starfarer.api.util.Misc;
-import lostsector.campaign.quests.util.*;
-import org.magiclib.util.MagicCampaign;
-import org.lazywizard.lazylib.MathUtils;
-import org.lwjgl.util.vector.Vector2f;
-import scripts.kissa.LOST_SECTOR.campaign.quests.util.*;
 import lostsector.campaign.quests.nskr_artifactDialog;
 import lostsector.campaign.quests.nskr_coreDialog;
+import lostsector.campaign.quests.util.*;
 import lostsector.campaign.rulecmd.nskr_kestevenQuest;
 import lostsector.nskr_modPlugin;
 import lostsector.util.fleetUtil;
 import lostsector.util.util;
+import org.lazywizard.lazylib.MathUtils;
+import org.lwjgl.util.vector.Vector2f;
+import org.magiclib.util.MagicCampaign;
+
+import java.awt.*;
+import java.util.List;
+import java.util.*;
 
 public class nskr_cache {
 

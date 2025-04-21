@@ -3,20 +3,23 @@
 //////////////////////
 package lostsector.shipsystems;
 
-import java.awt.Color;
-import java.util.HashSet;
-import java.util.Set;
-
 import com.fs.starfarer.api.Global;
-import com.fs.starfarer.api.combat.*;
+import com.fs.starfarer.api.combat.CombatEngineAPI;
+import com.fs.starfarer.api.combat.CombatEngineLayers;
+import com.fs.starfarer.api.combat.MutableShipStatsAPI;
+import com.fs.starfarer.api.combat.ShipAPI;
 import com.fs.starfarer.api.graphics.SpriteAPI;
 import com.fs.starfarer.api.impl.combat.BaseShipSystemScript;
 import com.fs.starfarer.api.util.IntervalUtil;
-import org.magiclib.util.MagicRender;
+import lostsector.util.util;
 import org.lazywizard.lazylib.FastTrig;
 import org.lazywizard.lazylib.MathUtils;
 import org.lwjgl.util.vector.Vector2f;
-import lostsector.util.util;
+import org.magiclib.util.MagicRender;
+
+import java.awt.*;
+import java.util.HashSet;
+import java.util.Set;
 
 public class nskr_timewarpStats extends BaseShipSystemScript {
 

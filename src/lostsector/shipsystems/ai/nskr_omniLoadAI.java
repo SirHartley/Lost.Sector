@@ -2,13 +2,13 @@ package lostsector.shipsystems.ai;
 
 import com.fs.starfarer.api.combat.*;
 import com.fs.starfarer.api.util.IntervalUtil;
+import lostsector.shipsystems.nskr_omniLoadStats;
+import lostsector.util.mathUtil;
 import org.lazywizard.lazylib.MathUtils;
 import org.lazywizard.lazylib.VectorUtils;
 import org.lazywizard.lazylib.combat.AIUtils;
 import org.lazywizard.lazylib.combat.CombatUtils;
 import org.lwjgl.util.vector.Vector2f;
-import lostsector.shipsystems.nskr_omniLoadStats;
-import lostsector.util.mathUtil;
 
 public class nskr_omniLoadAI implements ShipSystemAIScript {
 

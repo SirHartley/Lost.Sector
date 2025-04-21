@@ -17,8 +17,9 @@ import lostsector.util.util;
 import lostsector.world.systems.frost.nskr_frost;
 
 import java.awt.*;
-import java.util.*;
 import java.util.List;
+import java.util.Map;
+import java.util.Random;
 
 
 public class nskr_artifactDialog implements InteractionDialogPlugin {

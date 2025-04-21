@@ -5,10 +5,10 @@ import com.fs.starfarer.api.combat.*;
 import com.fs.starfarer.api.combat.ShipAPI.HullSize;
 import com.fs.starfarer.api.graphics.SpriteAPI;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
-import org.magiclib.util.MagicRender;
-import org.lwjgl.util.vector.Vector2f;
 import lostsector.shipsystems.nskr_warpStats;
 import lostsector.util.util;
+import org.lwjgl.util.vector.Vector2f;
+import org.magiclib.util.MagicRender;
 
 import java.awt.*;
 import java.io.IOException;

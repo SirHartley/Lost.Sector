@@ -7,10 +7,10 @@ import com.fs.starfarer.api.campaign.ai.CampaignFleetAIAPI;
 import com.fs.starfarer.api.campaign.ai.FleetAssignmentDataAPI;
 import com.fs.starfarer.api.campaign.ai.ModularFleetAIAPI;
 import com.fs.starfarer.api.campaign.econ.MarketAPI;
-import com.fs.starfarer.api.impl.campaign.ids.*;
+import com.fs.starfarer.api.impl.campaign.ids.Entities;
+import com.fs.starfarer.api.impl.campaign.ids.MemFlags;
+import com.fs.starfarer.api.impl.campaign.ids.Tags;
 import com.fs.starfarer.api.util.Misc;
-import org.lazywizard.lazylib.MathUtils;
-import org.lwjgl.util.vector.Vector2f;
 import lostsector.campaign.econ.nskr_upChip;
 import lostsector.campaign.quests.util.fleetInfo;
 import lostsector.campaign.quests.util.simpleFleet;
@@ -20,8 +20,13 @@ import lostsector.nskr_saved;
 import lostsector.util.fleetUtil;
 import lostsector.util.mathUtil;
 import lostsector.util.util;
+import org.lazywizard.lazylib.MathUtils;
+import org.lwjgl.util.vector.Vector2f;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
 
 public class nksr_blackOpsManager extends BaseCampaignEventListener implements EveryFrameScript {
     //

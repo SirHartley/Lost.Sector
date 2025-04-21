@@ -12,11 +12,9 @@ import lostsector.campaign.fleets.events.blacksiteInfo;
 import lostsector.campaign.fleets.events.nskr_blacksiteDialog;
 import lostsector.campaign.fleets.events.nskr_blacksiteManager;
 import lostsector.campaign.quests.*;
-import lostsector.campaign.rulecmd.nskr_kestevenQuest;
-import scripts.kissa.LOST_SECTOR.campaign.quests.*;
 import lostsector.campaign.quests.util.questStageManager;
 import lostsector.campaign.quests.util.questUtil;
-import scripts.kissa.LOST_SECTOR.campaign.rulecmd.*;
+import lostsector.campaign.rulecmd.nskr_kestevenQuest;
 
 import java.util.Collection;
 import java.util.List;

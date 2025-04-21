@@ -7,8 +7,8 @@ import com.fs.starfarer.api.impl.campaign.ids.HullMods;
 import com.fs.starfarer.api.ui.Alignment;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import com.fs.starfarer.api.util.Misc;
-import org.lwjgl.util.vector.Vector2f;
 import lostsector.util.util;
+import org.lwjgl.util.vector.Vector2f;
 
 import java.awt.*;
 

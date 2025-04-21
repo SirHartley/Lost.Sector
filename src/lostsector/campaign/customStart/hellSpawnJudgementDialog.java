@@ -8,8 +8,6 @@ import com.fs.starfarer.api.combat.EngagementResultAPI;
 import com.fs.starfarer.api.impl.campaign.ids.MemFlags;
 import com.fs.starfarer.api.util.IntervalUtil;
 import com.fs.starfarer.api.util.Misc;
-import org.lazywizard.lazylib.MathUtils;
-import org.lwjgl.util.vector.Vector2f;
 import lostsector.campaign.customStart.intel.hellSpawnEventIntel;
 import lostsector.campaign.quests.util.simpleFleet;
 import lostsector.nskr_modPlugin;
@@ -17,6 +15,8 @@ import lostsector.util.fleetUtil;
 import lostsector.util.ids;
 import lostsector.util.mathUtil;
 import lostsector.util.util;
+import org.lazywizard.lazylib.MathUtils;
+import org.lwjgl.util.vector.Vector2f;
 
 import java.awt.*;
 import java.util.ArrayList;

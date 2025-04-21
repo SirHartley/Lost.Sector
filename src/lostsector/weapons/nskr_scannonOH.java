@@ -1,15 +1,10 @@
 package lostsector.weapons;
 
-import java.awt.Color;
-
+import com.fs.starfarer.api.combat.*;
 import com.fs.starfarer.api.combat.listeners.ApplyDamageResultAPI;
 import org.lwjgl.util.vector.Vector2f;
-import com.fs.starfarer.api.combat.CombatEngineAPI;
-import com.fs.starfarer.api.combat.CombatEntityAPI;
-import com.fs.starfarer.api.combat.DamageType;
-import com.fs.starfarer.api.combat.DamagingProjectileAPI;
-import com.fs.starfarer.api.combat.OnHitEffectPlugin;
-import com.fs.starfarer.api.combat.ShipAPI;
+
+import java.awt.*;
 
 public class nskr_scannonOH implements OnHitEffectPlugin {
 

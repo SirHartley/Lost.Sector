@@ -2,8 +2,8 @@ package lostsector.weapons;
 
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.combat.*;
-import org.lwjgl.input.Keyboard;
 import lostsector.shipsystems.ai.nskr_stasisAI;
+import org.lwjgl.input.Keyboard;
 
 public class nskr_stasisEffect  implements EveryFrameWeaponEffectPlugin, OnFireEffectPlugin {
 

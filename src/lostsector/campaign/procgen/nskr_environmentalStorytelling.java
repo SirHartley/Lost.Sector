@@ -4,7 +4,9 @@
 package lostsector.campaign.procgen;
 
 import com.fs.starfarer.api.Global;
-import com.fs.starfarer.api.campaign.*;
+import com.fs.starfarer.api.campaign.FactionAPI;
+import com.fs.starfarer.api.campaign.SectorEntityToken;
+import com.fs.starfarer.api.campaign.StarSystemAPI;
 import com.fs.starfarer.api.impl.campaign.DerelictShipEntityPlugin;
 import com.fs.starfarer.api.impl.campaign.ids.Entities;
 import com.fs.starfarer.api.impl.campaign.ids.Factions;
@@ -19,11 +21,11 @@ import com.fs.starfarer.api.impl.campaign.terrain.DebrisFieldTerrainPlugin;
 import com.fs.starfarer.api.util.Misc;
 import com.fs.starfarer.api.util.Pair;
 import com.fs.starfarer.api.util.WeightedRandomPicker;
-import org.jetbrains.annotations.Nullable;
-import org.lazywizard.lazylib.MathUtils;
 import lostsector.campaign.quests.util.questUtil;
 import lostsector.campaign.quests.util.simpleSystem;
 import lostsector.util.util;
+import org.jetbrains.annotations.Nullable;
+import org.lazywizard.lazylib.MathUtils;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;

@@ -11,7 +11,6 @@ import com.fs.starfarer.api.impl.campaign.BaseCustomEntityPlugin;
 import com.fs.starfarer.api.impl.campaign.ids.Factions;
 import org.lwjgl.util.vector.Vector2f;
 
-
 import java.awt.*;
 import java.io.IOException;
 import java.util.Random;

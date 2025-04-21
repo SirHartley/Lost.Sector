@@ -3,17 +3,16 @@
 //////////////////////
 package lostsector.shipsystems;
 
-import java.awt.Color;
-import java.util.List;
-
+import com.fs.starfarer.api.Global;
+import com.fs.starfarer.api.combat.*;
+import com.fs.starfarer.api.impl.combat.BaseShipSystemScript;
 import com.fs.starfarer.api.impl.combat.NegativeExplosionVisual;
 import com.fs.starfarer.api.impl.combat.RiftCascadeMineExplosion;
 import com.fs.starfarer.api.util.IntervalUtil;
 import com.fs.starfarer.api.util.Misc;
-import org.magiclib.util.MagicLensFlare;
-import com.fs.starfarer.api.Global;
-import com.fs.starfarer.api.combat.*;
-import com.fs.starfarer.api.impl.combat.BaseShipSystemScript;
+import lostsector.hullmods.nskr_aed;
+import lostsector.util.combatUtil;
+import lostsector.util.util;
 import org.dark.shaders.distortion.DistortionShader;
 import org.dark.shaders.distortion.WaveDistortion;
 import org.dark.shaders.light.LightShader;
@@ -24,9 +23,10 @@ import org.lazywizard.lazylib.VectorUtils;
 import org.lazywizard.lazylib.combat.CombatUtils;
 import org.lazywizard.lazylib.combat.entities.SimpleEntity;
 import org.lwjgl.util.vector.Vector2f;
-import lostsector.hullmods.nskr_aed;
-import lostsector.util.combatUtil;
-import lostsector.util.util;
+import org.magiclib.util.MagicLensFlare;
+
+import java.awt.*;
+import java.util.List;
 
 public class nskr_kaboomStats extends BaseShipSystemScript {
 

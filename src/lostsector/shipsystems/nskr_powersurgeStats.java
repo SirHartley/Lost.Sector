@@ -1,12 +1,13 @@
 package lostsector.shipsystems;
 
 import com.fs.starfarer.api.Global;
-import com.fs.starfarer.api.combat.*;
+import com.fs.starfarer.api.combat.CombatEngineAPI;
+import com.fs.starfarer.api.combat.MutableShipStatsAPI;
+import com.fs.starfarer.api.combat.ShipAPI;
 import com.fs.starfarer.api.impl.combat.BaseShipSystemScript;
-
-import org.lwjgl.util.vector.Vector2f;
 import lostsector.hullmods.nskr_ultracaliber;
 import lostsector.util.mathUtil;
+import org.lwjgl.util.vector.Vector2f;
 
 public class nskr_powersurgeStats extends BaseShipSystemScript {
 

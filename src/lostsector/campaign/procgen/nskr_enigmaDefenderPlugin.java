@@ -9,10 +9,9 @@ import com.fs.starfarer.api.impl.campaign.fleets.FleetFactoryV3;
 import com.fs.starfarer.api.impl.campaign.fleets.FleetParamsV3;
 import com.fs.starfarer.api.impl.campaign.ids.FleetTypes;
 import com.fs.starfarer.api.impl.campaign.rulecmd.salvage.SalvageGenFromSeed;
-import org.lwjgl.util.vector.Vector2f;
 import lostsector.util.fleetUtil;
 import lostsector.util.mathUtil;
-
+import org.lwjgl.util.vector.Vector2f;
 
 import java.util.Random;
 

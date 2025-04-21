@@ -15,17 +15,16 @@ import com.fs.starfarer.api.impl.campaign.ids.Factions;
 import com.fs.starfarer.api.impl.campaign.rulecmd.PaginatedOptions;
 import com.fs.starfarer.api.util.Misc;
 import com.fs.starfarer.api.util.Misc.Token;
+import lostsector.campaign.quests.util.questStageManager;
+import lostsector.campaign.quests.util.questUtil;
+import lostsector.util.util;
+import org.lwjgl.input.Keyboard;
 
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
-
-import org.lwjgl.input.Keyboard;
-import lostsector.campaign.quests.util.questStageManager;
-import lostsector.campaign.quests.util.questUtil;
-import lostsector.util.util;
 
 public class nskr_job4FleetDialog extends PaginatedOptions {
 	//

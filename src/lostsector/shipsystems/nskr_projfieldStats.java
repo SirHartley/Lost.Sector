@@ -5,13 +5,13 @@ import com.fs.starfarer.api.combat.*;
 import com.fs.starfarer.api.graphics.SpriteAPI;
 import com.fs.starfarer.api.impl.combat.BaseShipSystemScript;
 import com.fs.starfarer.api.util.Pair;
-import org.magiclib.util.MagicRender;
+import lostsector.util.mathUtil;
+import lostsector.util.util;
 import org.lazywizard.lazylib.MathUtils;
 import org.lazywizard.lazylib.VectorUtils;
 import org.lazywizard.lazylib.combat.CombatUtils;
 import org.lwjgl.util.vector.Vector2f;
-import lostsector.util.mathUtil;
-import lostsector.util.util;
+import org.magiclib.util.MagicRender;
 
 import java.awt.*;
 import java.util.ArrayList;

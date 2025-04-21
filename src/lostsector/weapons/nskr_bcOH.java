@@ -1,13 +1,13 @@
 package lostsector.weapons;
 
-import java.awt.Color;
-
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.combat.*;
 import com.fs.starfarer.api.combat.listeners.ApplyDamageResultAPI;
+import lostsector.util.combatUtil;
 import org.lazywizard.lazylib.MathUtils;
 import org.lwjgl.util.vector.Vector2f;
-import lostsector.util.combatUtil;
+
+import java.awt.*;
 
 public class nskr_bcOH implements OnHitEffectPlugin {
 

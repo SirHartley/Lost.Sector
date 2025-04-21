@@ -16,8 +16,9 @@ import com.fs.starfarer.api.impl.campaign.fleets.FleetParamsV3;
 import com.fs.starfarer.api.impl.campaign.ids.Stats;
 import com.fs.starfarer.api.mission.FleetSide;
 import com.fs.starfarer.api.mission.MissionDefinitionAPI;
-import java.util.Random;
 import org.lwjgl.util.vector.Vector2f;
+
+import java.util.Random;
 
 public interface nskr_FleetGenerator {
 

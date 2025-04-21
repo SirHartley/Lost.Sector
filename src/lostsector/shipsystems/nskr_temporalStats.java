@@ -3,14 +3,13 @@
 //////////////////////
 package lostsector.shipsystems;
 
-import java.awt.Color;
-import java.util.ArrayList;
-import java.util.List;
-
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.combat.*;
 import com.fs.starfarer.api.impl.campaign.ids.Stats;
 import com.fs.starfarer.api.impl.combat.BaseShipSystemScript;
+import lostsector.util.blastSpriteCreator;
+import lostsector.util.combatUtil;
+import lostsector.util.mathUtil;
 import org.dark.shaders.distortion.DistortionShader;
 import org.dark.shaders.distortion.WaveDistortion;
 import org.dark.shaders.light.LightShader;
@@ -20,9 +19,10 @@ import org.lazywizard.lazylib.MathUtils;
 import org.lazywizard.lazylib.VectorUtils;
 import org.lazywizard.lazylib.combat.CombatUtils;
 import org.lwjgl.util.vector.Vector2f;
-import lostsector.util.blastSpriteCreator;
-import lostsector.util.combatUtil;
-import lostsector.util.mathUtil;
+
+import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class nskr_temporalStats extends BaseShipSystemScript {
 

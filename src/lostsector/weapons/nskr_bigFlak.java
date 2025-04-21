@@ -3,6 +3,11 @@ package lostsector.weapons;
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.combat.*;
 import com.fs.starfarer.api.combat.listeners.AdvanceableListener;
+import lostsector.shipsystems.nskr_bigFlakStats;
+import lostsector.util.blastSpriteCreator;
+import lostsector.util.combatUtil;
+import lostsector.util.mathUtil;
+import lostsector.util.util;
 import org.dark.shaders.light.LightShader;
 import org.dark.shaders.light.StandardLight;
 import org.jetbrains.annotations.Nullable;
@@ -10,11 +15,6 @@ import org.lazywizard.lazylib.MathUtils;
 import org.lazywizard.lazylib.VectorUtils;
 import org.lazywizard.lazylib.combat.CombatUtils;
 import org.lwjgl.util.vector.Vector2f;
-import lostsector.shipsystems.nskr_bigFlakStats;
-import lostsector.util.blastSpriteCreator;
-import lostsector.util.combatUtil;
-import lostsector.util.mathUtil;
-import lostsector.util.util;
 
 import java.awt.*;
 

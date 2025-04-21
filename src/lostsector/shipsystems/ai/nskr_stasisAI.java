@@ -3,13 +3,13 @@ package lostsector.shipsystems.ai;
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.combat.*;
 import com.fs.starfarer.api.util.IntervalUtil;
+import lostsector.shipsystems.nskr_stasisStats;
+import lostsector.weapons.nskr_stasis;
 import org.lazywizard.lazylib.MathUtils;
 import org.lazywizard.lazylib.VectorUtils;
 import org.lazywizard.lazylib.combat.AIUtils;
 import org.lazywizard.lazylib.combat.CombatUtils;
 import org.lwjgl.util.vector.Vector2f;
-import lostsector.shipsystems.nskr_stasisStats;
-import lostsector.weapons.nskr_stasis;
 
 public class nskr_stasisAI implements ShipSystemAIScript {
 

@@ -22,23 +22,17 @@ import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import com.fs.starfarer.api.util.Misc;
 import com.fs.starfarer.api.util.Misc.Token;
 import com.fs.starfarer.api.util.WeightedRandomPicker;
-import java.awt.Color;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
-import java.util.Set;
-
-import org.apache.log4j.Logger;
-import org.lwjgl.input.Keyboard;
 import lostsector.campaign.quests.nskr_EndingKestevenDialog;
 import lostsector.campaign.quests.util.questStageManager;
 import lostsector.campaign.quests.util.questUtil;
-import lostsector.util.util;
 import lostsector.util.nskr_stringHelper;
+import lostsector.util.util;
+import org.apache.log4j.Logger;
+import org.lwjgl.input.Keyboard;
+
+import java.awt.*;
+import java.util.List;
+import java.util.*;
 
 public class nskr_shipSwap extends PaginatedOptions {
 

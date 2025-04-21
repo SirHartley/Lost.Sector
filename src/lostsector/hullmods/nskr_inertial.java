@@ -9,10 +9,10 @@ import com.fs.starfarer.api.ui.Alignment;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import com.fs.starfarer.api.util.IntervalUtil;
 import com.fs.starfarer.api.util.Misc;
-import org.lwjgl.util.vector.Vector2f;
 import lostsector.util.mathUtil;
 import lostsector.util.renderUtil;
 import lostsector.util.util;
+import org.lwjgl.util.vector.Vector2f;
 
 import java.awt.*;
 

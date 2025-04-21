@@ -1,14 +1,14 @@
 package lostsector.weapons;
 
-import java.awt.Color;
-
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.combat.*;
 import com.fs.starfarer.api.combat.listeners.ApplyDamageResultAPI;
-import org.magiclib.util.MagicLensFlare;
 import org.dark.shaders.distortion.DistortionShader;
 import org.dark.shaders.distortion.WaveDistortion;
 import org.lwjgl.util.vector.Vector2f;
+import org.magiclib.util.MagicLensFlare;
+
+import java.awt.*;
 
 public class nskr_inverterOH implements OnHitEffectPlugin {
 

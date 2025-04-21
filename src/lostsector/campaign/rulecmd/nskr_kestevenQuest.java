@@ -20,26 +20,26 @@ import com.fs.starfarer.api.loading.HullModSpecAPI;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import com.fs.starfarer.api.util.Misc;
 import com.fs.starfarer.api.util.Misc.Token;
-
-import java.awt.*;
-import java.util.*;
-import java.util.List;
-
+import lostsector.campaign.quests.nskr_artifactDialog;
+import lostsector.campaign.quests.nskr_elizaDialog;
+import lostsector.campaign.quests.nskr_glacierCommsDialog;
+import lostsector.campaign.quests.util.questFleets;
+import lostsector.campaign.quests.util.questStageManager;
+import lostsector.campaign.quests.util.questUtil;
+import lostsector.nskr_modPlugin;
 import lostsector.util.ids;
 import lostsector.util.mathUtil;
 import lostsector.util.powerLevel;
 import lostsector.util.util;
-import org.lwjgl.input.Keyboard;
-import lostsector.campaign.quests.nskr_glacierCommsDialog;
-import lostsector.campaign.quests.util.questFleets;
-import lostsector.campaign.quests.util.questStageManager;
-import lostsector.campaign.quests.nskr_artifactDialog;
-import lostsector.campaign.quests.nskr_elizaDialog;
-import lostsector.campaign.quests.util.questUtil;
-import lostsector.nskr_modPlugin;
-import scripts.kissa.LOST_SECTOR.util.*;
 import lostsector.world.nskr_gen;
 import lostsector.world.systems.frost.nskr_frost;
+import org.lwjgl.input.Keyboard;
+
+import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
 
 public class nskr_kestevenQuest extends PaginatedOptions {
 

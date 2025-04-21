@@ -8,8 +8,8 @@ import com.fs.starfarer.api.characters.PersonAPI;
 import com.fs.starfarer.api.impl.campaign.ids.*;
 import com.fs.starfarer.api.impl.campaign.shared.SharedData;
 import exerelin.campaign.SectorManager;
-import org.lazywizard.lazylib.MathUtils;
 import lostsector.nskr_modPlugin;
+import org.lazywizard.lazylib.MathUtils;
 
 import java.util.List;
 
