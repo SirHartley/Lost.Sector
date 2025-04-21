@@ -2,7 +2,7 @@
 	"id":"nskr_bc_shot",
 	"specClass":"missile",
 	"missileType":"ROCKET",
-	"onHitEffect":"weapons.lostsector.nskr_bcOH",
+	"onHitEffect":"lostsector.weapons.nskr_bcOH",
 	"sprite":"graphics/missiles/nskr_bc_shot.png",
 	"size":[12,23],	
 	"center":[6,11.5],

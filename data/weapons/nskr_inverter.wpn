@@ -4,7 +4,7 @@
   "projectileSpecId": "nskr_inverter_shot",
   "type": "ENERGY",
   "size": "MEDIUM",
-  "everyFrameEffect": "weapons.lostsector.nskr_inverterEffect",
+  "everyFrameEffect": "lostsector.weapons.nskr_inverterEffect",
   "turretSprite": "graphics/weapons/nskr_inverter_turret.png",
   "turretGlowSprite": "graphics/weapons/nskr_inverter_turret_glow.png",
   "hardpointSprite": "graphics/weapons/nskr_inverter_hardpoint.png",

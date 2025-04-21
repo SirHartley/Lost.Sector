@@ -1,5 +1,5 @@
 {
-    "lost_sector": {
+    "lost.sector": {
         "iconPath":"graphics/icons/lost_icon.png", 
     }
 }

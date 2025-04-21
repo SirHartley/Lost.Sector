@@ -2,8 +2,8 @@
 	"id":"nskr_boostdrive",
 	"type":"ENGINE_MOD",
 	"aiType":"CUSTOM",
-	"aiScript":"ai.shipsystems.lostsector.nskr_engineAI",
-	"statsScript":"shipsystems.lostsector.nskr_boostDriveStats",
+	"aiScript":"lostsector.ai.shipsystems.nskr_engineAI",
+	"statsScript":"lostsector.shipsystems.nskr_boostDriveStats",
 	
 	"engineGlowColor":[250, 255, 100,255],
 	"engineGlowLengthMult":2.0,

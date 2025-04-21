@@ -2,8 +2,8 @@
 	"id":"nskr_paradox",
 	"type":"STAT_MOD",
     "aiType":"CUSTOM",
-    "aiScript":"ai.shipsystems.lostsector.nskr_paradoxAI",
-	"statsScript":"shipsystems.lostsector.nskr_paradoxStats",
+    "aiScript":"lostsector.ai.shipsystems.nskr_paradoxAI",
+	"statsScript":"lostsector.shipsystems.nskr_paradoxStats",
 	
 	"soundFilterType":"LOWPASS",
 	"soundFilterGain":0.85,

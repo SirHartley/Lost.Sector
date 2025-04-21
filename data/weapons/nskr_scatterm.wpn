@@ -2,7 +2,7 @@
   "id": "nskr_scatterm",
   "specClass": "projectile",
   "projectileSpecId": "nskr_scatterm_shot",
-  "everyFrameEffect": "weapons.lostsector.nskr_scatterEffect",
+  "everyFrameEffect": "lostsector.weapons.nskr_scatterEffect",
   "type": "ENERGY",
   "size": "MEDIUM",
   "turretSprite": "graphics/weapons/nskr_scatterm_turret.png",

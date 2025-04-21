@@ -2,8 +2,8 @@
 	"id":"nskr_stasisp",
 	"type":"STAT_MOD",
 	"aiType":"CUSTOM",
-	"aiScript":"ai.shipsystems.lostsector.nskr_stasisAI",
-	"statsScript":"shipsystems.lostsector.nskr_stasisStats",
+	"aiScript":"lostsector.ai.shipsystems.nskr_stasisAI",
+	"statsScript":"lostsector.shipsystems.nskr_stasisStats",
 		
 	"fadeActivationSoundOnChargedown":true,
 	"useSound":"gun_out_of_ammo",

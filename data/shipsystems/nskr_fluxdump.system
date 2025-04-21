@@ -2,8 +2,8 @@
 	"id":"nskr_fluxdump",
 	"type":"STAT_MOD",
 	"aiType":"CUSTOM",
-	"aiScript":"ai.shipsystems.lostsector.nskr_fluxdumpAI",
-	"statsScript":"shipsystems.lostsector.nskr_fluxDumpStats",
+	"aiScript":"lostsector.ai.shipsystems.nskr_fluxdumpAI",
+	"statsScript":"lostsector.shipsystems.nskr_fluxDumpStats",
 
 	"weaponGlowColor":[255, 0, 38,100],
 	"weaponTypes":[BALLISTIC, MISSILE, ENERGY],

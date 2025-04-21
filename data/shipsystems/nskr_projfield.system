@@ -2,8 +2,8 @@
 	"id":"nskr_projfield",
 	"type":"STAT_MOD",
     "aiType":"CUSTOM",
-    "aiScript":"ai.shipsystems.lostsector.nskr_projfieldAI",
-	"statsScript":"shipsystems.lostsector.nskr_projfieldStats",
+    "aiScript":"lostsector.ai.shipsystems.nskr_projfieldAI",
+	"statsScript":"lostsector.shipsystems.nskr_projfieldStats",
 	
 	"soundFilterType":"LOWPASS",
 	"soundFilterGain":0.90,

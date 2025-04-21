@@ -2,7 +2,7 @@
 	"id":"nskr_tremor1",
 	"specClass":"missile",	
 	"missileType":"MISSILE",
-	"onHitEffect":"weapons.lostsector.nskr_tremorOH",
+	"onHitEffect":"lostsector.weapons.nskr_tremorOH",
 	"sprite":"graphics/missiles/nskr_tremor_shot.png",
 	"size":[6,14],	
 	"center":[3,7],

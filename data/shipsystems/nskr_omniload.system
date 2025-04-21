@@ -2,8 +2,8 @@
 	"id":"nskr_omniload",
 	"type":"STAT_MOD",
 	"aiType":"CUSTOM",
-	"aiScript":"ai.shipsystems.lostsector.nskr_omniLoadAI",
-	"statsScript":"shipsystems.lostsector.nskr_omniLoadStats",
+	"aiScript":"lostsector.ai.shipsystems.nskr_omniLoadAI",
+	"statsScript":"lostsector.shipsystems.nskr_omniLoadStats",
 	
 	#"useSound":"system_ammo_feeder",
 	"outOfUsesSound":"gun_out_of_ammo",

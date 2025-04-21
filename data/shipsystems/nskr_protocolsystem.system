@@ -2,9 +2,9 @@
 	"id":"nskr_protocolsystem",
 	"type":"STAT_MOD",
 	"aiType":"CUSTOM",
-	"aiScript":"ai.shipsystems.lostsector.nskr_protocolAI",
+	"aiScript":"lostsector.ai.shipsystems.nskr_protocolAI",
 	
-	"statsScript":"shipsystems.lostsector.nskr_protocolStats",
+	"statsScript":"lostsector.shipsystems.nskr_protocolStats",
 	
 	"useSound":"gun_out_of_ammo",
 	

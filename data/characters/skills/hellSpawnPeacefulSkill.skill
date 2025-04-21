@@ -9,8 +9,8 @@
 			"requiredSkillLevel":1,
 			"effectBasedOnLevel":false,
 			"effects":[
-				{"type":"ALL_SHIPS_IN_FLEET", "script":"abilities.customStart.campaign.lostsector.hellSpawnPeacefulSkill$Level1"},
-				{"type":"SHIP", "script":"abilities.customStart.campaign.lostsector.hellSpawnPeacefulSkill$Level2"},
+				{"type":"ALL_SHIPS_IN_FLEET", "script":"lostsector.abilities.customStart.campaign.hellSpawnPeacefulSkill$Level1"},
+				{"type":"SHIP", "script":"lostsector.abilities.customStart.campaign.hellSpawnPeacefulSkill$Level2"},
 			]
 		},
 	],

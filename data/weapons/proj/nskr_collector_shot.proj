@@ -2,7 +2,7 @@
 	"id":"nskr_collector_shot",
 	"specClass":"projectile",
 	"spawnType":"BALLISTIC_AS_BEAM",
-	"onHitEffect": "weapons.lostsector.nskr_collectorOH",
+	"onHitEffect": "lostsector.weapons.nskr_collectorOH",
 	"collisionClass":"RAY",
 	"collisionClassByFighter":"RAY_FIGHTER",
 	"length":50.0,

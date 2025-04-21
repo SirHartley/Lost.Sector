@@ -2,7 +2,7 @@
 	"id":"nskr_msalvo_shot",
 	"specClass":"missile",	
 	"missileType":"MISSILE",
-	"onHitEffect":"weapons.lostsector.nskr_msalvoOH",
+	"onHitEffect":"lostsector.weapons.nskr_msalvoOH",
 	"sprite":"graphics/missiles/resonator_mrm.png",
 	"size":[6,16],	
 	"center":[3,8],

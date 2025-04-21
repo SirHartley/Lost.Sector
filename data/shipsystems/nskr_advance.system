@@ -2,8 +2,8 @@
 	"id":"nskr_advance",
 	"type":"STAT_MOD",
 	"aiType":"CUSTOM",
-	"aiScript":"ai.shipsystems.lostsector.nskr_advanceAI",
-	"statsScript":"shipsystems.lostsector.nskr_advanceStats",
+	"aiScript":"lostsector.ai.shipsystems.nskr_advanceAI",
+	"statsScript":"lostsector.shipsystems.nskr_advanceStats",
 
 	"engineGlowLengthMult":1.25,
 	"engineGlowWidthMult":1,

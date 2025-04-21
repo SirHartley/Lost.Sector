@@ -1,6 +1,6 @@
 {
 	"id":"nskr_stasis_shot",
-	"onHitEffect":"weapons.lostsector.nskr_stasisOH",
+	"onHitEffect":"lostsector.weapons.nskr_stasisOH",
 	"specClass":"missile",
 	"missileType":"MISSILE",
 	"sprite":"graphics/missiles/nskr_stasis_torpedo.png",

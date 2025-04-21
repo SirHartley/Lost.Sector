@@ -1,6 +1,6 @@
 {
 	"id":"nskr_causality1_dummy_shot",
-	"onHitEffect":"weapons.lostsector.nskr_cdummy1OH",
+	"onHitEffect":"lostsector.weapons.nskr_cdummy1OH",
 	"specClass":"missile",
 	"missileType":"MISSILE",
 	"sprite":"graphics/missiles/rift_torpedo.png",

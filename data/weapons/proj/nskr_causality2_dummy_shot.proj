@@ -1,6 +1,6 @@
 {
 	"id":"nskr_causality2_dummy_shot",
-	"onHitEffect":"weapons.lostsector.nskr_cdummy2OH",
+	"onHitEffect":"lostsector.weapons.nskr_cdummy2OH",
 	"specClass":"projectile",
 	"spawnType":"BALLISTIC_AS_BEAM",
 	"collisionClass":"RAY",

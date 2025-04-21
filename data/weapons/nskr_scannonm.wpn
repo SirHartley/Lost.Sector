@@ -3,7 +3,7 @@
   "barrelMode": "ALTERNATING",
   "displayArcRadius": 750,
   "fireSoundTwo": "nskr_scannon_fire",
-  "everyFrameEffect": "weapons.lostsector.nskr_scannonmEffect",
+  "everyFrameEffect": "lostsector.weapons.nskr_scannonmEffect",
   "hardpointAngleOffsets": [
     0
   ],

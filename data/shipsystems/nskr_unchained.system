@@ -2,8 +2,8 @@
 	"id":"nskr_unchained",
 	"type":"STAT_MOD",
 	"aiType":"CUSTOM",
-	"aiScript":"ai.shipsystems.lostsector.nskr_unchainedAI",
-	"statsScript":"shipsystems.lostsector.nskr_unchainedStats",
+	"aiScript":"lostsector.ai.shipsystems.nskr_unchainedAI",
+	"statsScript":"lostsector.shipsystems.nskr_unchainedStats",
 
 	"weaponGlowColor":[255, 0, 38,100],
 	"weaponTypes":[BALLISTIC, MISSILE, ENERGY],

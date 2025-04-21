@@ -2,9 +2,9 @@
 	"id":"nskr_warp",
 	"type":"ENGINE_MOD",
 	"aiType":"CUSTOM",
-	"aiScript":"ai.shipsystems.lostsector.nskr_warpAI",
+	"aiScript":"lostsector.ai.shipsystems.nskr_warpAI",
 	
-	"statsScript":"shipsystems.lostsector.nskr_warpStats",
+	"statsScript":"lostsector.shipsystems.nskr_warpStats",
 	
 	"clampMaxSpeedAfter":true,
 

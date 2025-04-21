@@ -10,6 +10,13 @@
             </Attribute>
           </value>
         </entry>
+        <entry key="\data\campaign\commodities.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
         <entry key="\data\campaign\market_conditions.csv">
           <value>
             <Attribute>
@@ -31,6 +38,13 @@
             </Attribute>
           </value>
         </entry>
+        <entry key="\data\campaign\sim_opponents.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
         <entry key="\data\campaign\special_items.csv">
           <value>
             <Attribute>
@@ -39,6 +53,13 @@
           </value>
         </entry>
         <entry key="\data\characters\skills\skill_data.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="\data\config\BetterColonyConfig\bc_autospfactions.csv">
           <value>
             <Attribute>
               <option name="separator" value="," />
@@ -59,6 +80,13 @@
             </Attribute>
           </value>
         </entry>
+        <entry key="\data\config\ExiledSpace\subFactions.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
         <entry key="\data\config\LunaSettings.csv">
           <value>
             <Attribute>
@@ -66,7 +94,21 @@
             </Attribute>
           </value>
         </entry>
+        <entry key="\data\config\exerelinFactionConfig\mod_factions.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
         <entry key="\data\config\exerelin\character_backgrounds.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="\data\config\indEvo\embassy_whitelist.csv">
           <value>
             <Attribute>
               <option name="separator" value="," />
@@ -88,6 +130,20 @@
           </value>
         </entry>
         <entry key="\data\config\prism\prism_boss_ships.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="\data\config\prism\prism_ships_blacklist.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="\data\config\ruthlesssector\faction_rep_change_whitelist.csv">
           <value>
             <Attribute>
               <option name="separator" value="," />
@@ -130,6 +186,13 @@
           </value>
         </entry>
         <entry key="\data\strings\descriptions.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="\data\trails\trail_data.csv">
           <value>
             <Attribute>
               <option name="separator" value="," />
