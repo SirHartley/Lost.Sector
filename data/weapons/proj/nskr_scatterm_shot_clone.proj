@@ -2,7 +2,7 @@
 	"id":"nskr_scatterm_shot_clone",
 	"specClass":"projectile",
 	"spawnType":"BALLISTIC_AS_BEAM",
-	"onHitEffect": "lostsector.weaponsScatterOH",
+	"onHitEffect": "lostsector.weapons.ScatterOH",
 	"collisionClass":"RAY",
 	"collisionClassByFighter":"RAY_FIGHTER",
 	"length":19.0,

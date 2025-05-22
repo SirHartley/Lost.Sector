@@ -71,11 +71,11 @@
 	},
 	
 	"plugins":{
-		"nskr_kaboomPlugin":"scripts.kissa.LOST_SECTOR.plugins.KaboomPlugin",
-		"nskr_entrancePlugin":"scripts.kissa.LOST_SECTOR.plugins.EntrancePlugin",
-		"nskr_SplitterWeaponPlugin":"scripts.kissa.LOST_SECTOR.plugins.SplitterWeaponPlugin",
-		"nskr_teleporterPlugin":"scripts.kissa.LOST_SECTOR.plugins.TeleporterPlugin",
-		"nskr_tauntPlugin":"scripts.kissa.LOST_SECTOR.plugins.TauntPlugin",
+		"nskr_kaboomPlugin":"lostsector.plugins.KaboomPlugin",
+		"nskr_entrancePlugin":"lostsector.plugins.EntrancePlugin",
+		"nskr_SplitterWeaponPlugin":"lostsector.plugins.SplitterWeaponPlugin",
+		"nskr_teleporterPlugin":"lostsector.plugins.TeleporterPlugin",
+		"nskr_tauntPlugin":"lostsector.plugins.TauntPlugin",
 	},
 	
 	"ruleCommandPackages":[

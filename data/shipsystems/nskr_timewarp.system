@@ -2,12 +2,11 @@
 	"id":"nskr_timewarp",
 	"type":"ENGINE_MOD",
 	"aiType":"CUSTOM",
-	"aiScript":"lostsector.ai.shipsystems.nskr_timewarpAI",
-	
-	"statsScript":"lostsector.shipsystems.nskr_timewarpStats",
+	"aiScript":"lostsector.shipsystems.ai.TimewarpAI",
+	"statsScript":"lostsector.shipsystems.TimewarpStats",
 	
 	"clampMaxSpeedAfter":true,
-	
+
 	"soundFilterType":"LOWPASS",
 	"soundFilterGain":0.75,
 	"soundFilterGainHF":0.5,

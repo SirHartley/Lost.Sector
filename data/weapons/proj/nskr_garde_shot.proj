@@ -1,6 +1,6 @@
 {
 	"id":"nskr_garde_shot",
-	"onHitEffect":"lostsector.weapons.EardeOH",
+	"onHitEffect":"lostsector.weapons.GardeOH",
 	"specClass":"projectile",
 	"spawnType":"BALLISTIC_AS_BEAM",
 	"collisionClass":"RAY",

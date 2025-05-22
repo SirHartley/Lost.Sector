@@ -2,8 +2,8 @@
 	"id":"nskr_temporal",
 	"type":"ENGINE_MOD",
 	"aiType":"CUSTOM",
-	"aiScript":"lostsector.ai.shipsystems.nskr_temporalAI",
-	"statsScript":"lostsector.shipsystems.nskr_temporalStats",
+	"aiScript":"lostsector.shipsystems.ai.TemporalAI",
+	"statsScript":"lostsector.shipsystems.TemporalStats",
 	
 	"alwaysAccelerate":true,
 	"clampMaxSpeedAfter":true,

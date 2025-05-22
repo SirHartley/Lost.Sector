@@ -2,9 +2,9 @@
 	"id":"nskr_bfpulse",
 	"type":"STAT_MOD",
 	"aiType":"CUSTOM",
-	"aiScript":"lostsector.ai.shipsystems.nskr_bfpulseAI",
+	"aiScript":"lostsector.shipsystems.ai.BFPulseAI",
 
-	"statsScript":"lostsector.shipsystems.nskr_bfPulseStats",
+	"statsScript":"lostsector.shipsystems.BFPulseStats",
 
 	"jitterColor":[255,150,200,50],
 	"jitterCopies":5,

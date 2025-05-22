@@ -2,9 +2,8 @@
 	"id":"nskr_masstargeting",
 	"type":"STAT_MOD",
 	"aiType":"CUSTOM",
-	"aiScript":"lostsector.ai.shipsystems.nskr_massTargetingAI",
-	
-	"statsScript":"lostsector.shipsystems.nskr_massTargetingStats",
+	"aiScript":"lostsector.shipsystems.ai.MassTargetingAI",
+	"statsScript":"lostsector.shipsystems.MassTargetingStats",
 		
 	"fadeActivationSoundOnChargedown":true,
 	"useSound":"nskr_system_entropy",
