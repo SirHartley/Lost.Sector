@@ -8,7 +8,7 @@
 			"requiredSkillLevel":1,
 			"effectBasedOnLevel":false,
 			"effects":[
-				{"type":"SHIP", "script":"lostsector.abilities.customStart.campaign.hellSpawnSkill$Level1"},
+				{"type":"SHIP", "script":"lostsector.abilities.customStart.campaign.HellSpawnSkill$Level1"},
 			]
 		},
 	],

@@ -5,7 +5,7 @@
 	"version":"1.0.a",
 	"description":"The things lost to time are out there. Content expansion.",
 	"gameVersion": "0.98a",
-	"modPlugin":"lostsector.nskr_modPlugin",
+	"modPlugin":"lostsector.ModPlugin",
 	"jars":["jars/Lost.Sector.jar"],
 	"dependencies": [
         {"id": "lw_lazylib", "name": "LazyLib"},

@@ -1,6 +1,6 @@
 package lostsector.util;
 
-import lostsector.campaign.econ.UpChip;
+import lostsector.campaign.econ.UnlimitedProductionChipCondition;
 
 public class LSIds {
 
@@ -27,7 +27,7 @@ public class LSIds {
 
     public static final String CACHE_SYSTEM_NAME = "Unknown Site";
 
-    public static final String UNLIMITED_PRODUCTION_CHIP_CONDITION_ID = UpChip.ID;
+    public static final String UNLIMITED_PRODUCTION_CHIP_CONDITION_ID = UnlimitedProductionChipCondition.ID;
 
     public static final String AUGMENTED_HULLMOD_ID = "nskr_augmented";
     public static final String INERTIAL_SUPERCHARGER_HULLMOD_ID = "nskr_inertial";

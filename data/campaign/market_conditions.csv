@@ -1,4 +1,4 @@
 "name","id","planetary","decivRemove","script","desc","icon","order"
-"Enslaved Population","nskr_enigmaPop",,"TRUE","lostsector.econ.campaign.nskr_enigmaPop","A significant population has been captured by the ruthless Enigma. They are now forced to struggle away under the whims of the AI to keep the war machine going.","graphics/icons/markets/nskr_enigmaPop.png",130
-"Unlimited Production Chip","nskr_upChip",,"TRUE","lostsector.econ.campaign.nskr_upChip","Done in script, you shouldn't see this","graphics/icons/markets/nskr_upChip.png",129
-"Hellspawn","nskr_hellSpawnCondition",,"TRUE","lostsector.econ.campaign.nskr_hellSpawnCondition","One day you'll be brought to justice.","graphics/icons/markets/plundered.png",128
+"Enslaved Population","nskr_enigmaPop",,"TRUE","lostsector.econ.campaign.EnigmaPopCondition","A sizeable population has fallen into Enigma custody, pressed into labor under the erratic directives of the AI. Conditions are harsh, tailored to serve its ongoing military operations with little regard for human limits.","graphics/icons/markets/nskr_enigmaPop.png",130
+"Unlimited Production Chip","nskr_upChip",,"TRUE","lostsector.econ.campaign.UnlimitedProductionChipCondition","Done in script, you shouldn't see this","graphics/icons/markets/nskr_upChip.png",129
+"Hellspawn","nskr_hellSpawnCondition",,"TRUE","lostsector.econ.campaign.HellSpawnCondition","One day you'll be brought to justice.","graphics/icons/markets/plundered.png",128

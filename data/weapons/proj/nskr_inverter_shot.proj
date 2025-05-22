@@ -1,6 +1,6 @@
 {
 	"id":"nskr_inverter_shot",
-	"onHitEffect":"lostsector.weapons.nskr_inverterOH",
+	"onHitEffect":"lostsector.weapons.InverterOH",
 	"specClass":"projectile",
 	"spawnType":"BALLISTIC_AS_BEAM",
 	"collisionClass":"RAY",

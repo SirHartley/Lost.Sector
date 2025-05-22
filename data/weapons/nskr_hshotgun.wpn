@@ -4,7 +4,7 @@
   "projectileSpecId": "nskr_hshotgun_shot",
   "type": "BALLISTIC",
   "size": "LARGE",
-  "everyFrameEffect": "lostsector.weapons.nskr_hshotgunEffect",
+  "everyFrameEffect": "lostsector.weapons.HshotgunEffect",
   "turretSprite": "graphics/weapons/nskr_hshotgun_turret_base.png",
   "turretGunSprite": "graphics/weapons/nskr_hshotgun_turret_recoil.png",
   "hardpointSprite": "graphics/weapons/nskr_hshotgun_hardpoint_base.png",

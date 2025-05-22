@@ -4,7 +4,7 @@
   "projectileSpecId": "nskr_collector_shot",
   "type": "ENERGY",
   "size": "LARGE",
-  "everyFrameEffect": "lostsector.weapons.nskr_collectorEffect",
+  "everyFrameEffect": "lostsector.weapons.CollectorEffect",
   "turretSprite": "graphics/weapons/nskr_collector_turret.png",
   "turretGlowSprite": "graphics/weapons/nskr_collector_turret_glow.png",
   "hardpointSprite": "graphics/weapons/nskr_collector_hardpoint.png",

@@ -15,13 +15,13 @@ import com.fs.starfarer.api.input.InputEventAPI;
 import com.fs.starfarer.api.mission.FleetSide;
 import com.fs.starfarer.api.mission.MissionDefinitionAPI;
 import com.fs.starfarer.api.util.WeightedRandomPicker;
-import lostsector.missions.nskr_BaseRandomBattle;
+import lostsector.missions.BaseRandomBattle;
 import org.lazywizard.lazylib.MathUtils;
 import org.lwjgl.input.Keyboard;
 
 import java.util.List;
 
-public class MissionDefinition extends nskr_BaseRandomBattle {
+public class MissionDefinition extends BaseRandomBattle {
 
     //copy pasted from SWP
     private static int enemyAdvantage;

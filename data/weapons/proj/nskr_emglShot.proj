@@ -12,5 +12,5 @@
 	"textureScrollSpeed":64.0,
 	"pixelsPerTexel":0.0,
 	"bulletSprite":"graphics/missiles/shell_large_blue.png",
-	"onHitEffect":"lostsector.weapons.nskr_emglOH",
+	"onHitEffect":"lostsector.weapons.EmglOH",
 }

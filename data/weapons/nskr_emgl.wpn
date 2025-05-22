@@ -5,7 +5,7 @@
   "type": "BALLISTIC",
   "mountTypeOverride":"HYBRID",
   "size": "MEDIUM",
-  "everyFrameEffect": "lostsector.weapons.nskr_emglScript",
+  "everyFrameEffect": "lostsector.weapons.EmglScript",
   "displayArcRadius": 450,
   "turretSprite": "graphics/weapons/nskr_emgl_turret_base.png",
   "turretGunSprite": "graphics/weapons/nskr_emgl_turret_recoil.png",

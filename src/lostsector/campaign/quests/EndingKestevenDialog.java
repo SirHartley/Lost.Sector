@@ -8,7 +8,7 @@ import com.fs.starfarer.api.combat.EngagementResultAPI;
 import com.fs.starfarer.api.impl.campaign.ids.Factions;
 import com.fs.starfarer.api.impl.campaign.ids.MemFlags;
 import com.fs.starfarer.api.util.Misc;
-import lostsector.campaign.econ.UpChip;
+import lostsector.campaign.econ.UnlimitedProductionChipCondition;
 import lostsector.campaign.quests.util.QuestStageManager;
 import lostsector.campaign.quests.util.QuestUtil;
 import lostsector.campaign.rulecmd.KestevenQuest;
@@ -189,7 +189,7 @@ public class EndingKestevenDialog implements InteractionDialogPlugin {
             if (QuestUtil.getElizaLoc()!=null) QuestUtil.getElizaLoc().getMemory().unset(MemFlags.MEMORY_KEY_MISSION_IMPORTANT);
 
             //CONDITION
-            dialog.getInteractionTarget().getMarket().addCondition(UpChip.ID);
+            dialog.getInteractionTarget().getMarket().addCondition(UnlimitedProductionChipCondition.ID);
 
             text.setFontInsignia();
 

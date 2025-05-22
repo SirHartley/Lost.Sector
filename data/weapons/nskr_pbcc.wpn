@@ -4,7 +4,7 @@
   "projectileSpecId": "nskr_pbcc_shot",
   "type": "BALLISTIC",
   "size": "LARGE",
-  "everyFrameEffect": "lostsector.weapons.nskr_pbccEffect",
+  "everyFrameEffect": "lostsector.weapons.PbccEffect",
   "turretSprite": "graphics/weapons/nskr_pbcc_turret_base.png",
   "turretGunSprite": "graphics/weapons/nskr_pbcc_turret_recoil.png",
   "hardpointSprite": "graphics/weapons/nskr_pbcc_hardpoint_base.png",

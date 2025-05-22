@@ -7,7 +7,7 @@ import com.fs.starfarer.api.impl.campaign.ids.Stats;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import com.fs.starfarer.api.util.Misc;
 
-public class EnigmaPop extends BaseMarketConditionPlugin {
+public class EnigmaPopCondition extends BaseMarketConditionPlugin {
 
     public static final float DEMAND_REDUCTION = 3f;
     public static final float STAB_PENALTY = 3f;

@@ -8,7 +8,7 @@ import com.fs.starfarer.api.impl.campaign.ids.Stats;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import com.fs.starfarer.api.util.Misc;
 
-public class UpChip extends BaseMarketConditionPlugin {
+public class UnlimitedProductionChipCondition extends BaseMarketConditionPlugin {
 
     public static final float FLEET_SIZE = 100f;
     public static final float QUALITY_BONUS = 25f;

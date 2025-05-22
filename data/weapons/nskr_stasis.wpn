@@ -1,6 +1,6 @@
 {
 	"id":"nskr_stasis",
-	"everyFrameEffect": "lostsector.weapons.nskr_stasisEffect",
+	"everyFrameEffect": "lostsector.weaponsStasisEffect",
 	"specClass":"projectile",
 	"type":"MISSILE",
 	"mountTypeOverride":"UNIVERSAL",

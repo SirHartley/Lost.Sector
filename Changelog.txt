@@ -11,7 +11,11 @@ None
 
 1.0.a
 Added - Forked and updated the mod to 0.98a
-
+Adjusted - Complete file restructuring
+Adjusted - Condition descriptions
+Adjusted - Skill descriptions
+Adjusted - Nex Background descriptions
+Adjusted - Cleaned up the tips file
 
 
 --------------------------- Pre-Fork Changelog -----------------------------

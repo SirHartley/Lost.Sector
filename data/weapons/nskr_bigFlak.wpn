@@ -3,7 +3,7 @@
 	"specClass":"projectile",
 	"type":"MISSILE",
 	"size":"MEDIUM",
-	"everyFrameEffect": "lostsector.weapons.nskr_bigFlakEffect",
+	"everyFrameEffect": "lostsector.weapons.BigFlakEffect",
 	"turretSprite":"graphics/fx/empty.png",
 	"hardpointSprite":"graphics/fx/empty.png",	
 	"hardpointOffsets":[8, 0],

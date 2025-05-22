@@ -2,7 +2,7 @@
   "animationType": "SMOKE",
   "barrelMode": "ALTERNATING",
   "fireSoundTwo": "nskr_tremor_fire",
-  #"everyFrameEffect": "scripts.kissa.LOST_SECTOR.weapons.nskr_tremorEffect",
+  #"everyFrameEffect": "scripts.kissa.LOST_SECTOR.weapons.TremorEffect",
   "hardpointAngleOffsets": [
     0,
     0

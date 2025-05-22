@@ -3,7 +3,7 @@
 	"specClass":"beam",
 	"type":"DECORATIVE",
 	"size":"SMALL",
-	"everyFrameEffect":"lostsector.plugins.nskr_prototypeGlows",
+	"everyFrameEffect":"lostsector.plugins.PrototypeGlows",
 	"showDamageWhenDecorative":false,
 	"renderBelowAllWeapons":true,
 	"renderHints":["RENDER_ADDITIVE"],	

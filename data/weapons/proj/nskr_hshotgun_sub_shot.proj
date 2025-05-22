@@ -1,6 +1,6 @@
 {
 	"id":"nskr_hshotgun_sub_shot",
-	"onHitEffect": "lostsector.weapons.nskr_hshotgunOH",
+	"onHitEffect": "lostsector.weapons.HshotgunOH",
 	"specClass":"projectile",
 	"spawnType":"BALLISTIC",
 	"collisionClass":"PROJECTILE_FF",

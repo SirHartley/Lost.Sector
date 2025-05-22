@@ -3,7 +3,7 @@
 	"specClass":"missile",
 	"missileType":"ROCKET",
 	"sprite":"graphics/missiles/nskr_spike_shot.png",
-	"onHitEffect":"lostsector.weapons.nskr_spikeOH",
+	"onHitEffect":"lostsector.weaponsSpikeOH",
 	"size":[8,20],	
 	"center":[4,10],
 	"collisionRadius":30,

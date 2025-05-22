@@ -15,7 +15,7 @@ import com.fs.starfarer.api.util.Misc;
 import lostsector.campaign.customStart.GamemodeManager;
 import lostsector.campaign.customStart.intel.HellSpawnEventFactors;
 import lostsector.campaign.customStart.intel.HellSpawnEventIntel;
-import lostsector.campaign.econ.UpChip;
+import lostsector.campaign.econ.UnlimitedProductionChipCondition;
 import lostsector.campaign.quests.util.QuestUtil;
 import lostsector.ModPlugin;
 import lostsector.util.MathUtilLS;
@@ -224,7 +224,7 @@ public class EndingElizaDialog implements InteractionDialogPlugin {
 
             MarketAPI market = dialog.getInteractionTarget().getMarket();
             //CONDITION
-            market.addCondition(UpChip.ID);
+            market.addCondition(UnlimitedProductionChipCondition.ID);
             //industries
             if (!market.hasIndustry(Industries.HEAVYINDUSTRY) && !market.hasIndustry(Industries.ORBITALWORKS)){
                 market.addIndustry(Industries.ORBITALWORKS);

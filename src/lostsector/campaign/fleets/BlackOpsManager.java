@@ -11,7 +11,7 @@ import com.fs.starfarer.api.impl.campaign.ids.Entities;
 import com.fs.starfarer.api.impl.campaign.ids.MemFlags;
 import com.fs.starfarer.api.impl.campaign.ids.Tags;
 import com.fs.starfarer.api.util.Misc;
-import lostsector.campaign.econ.UpChip;
+import lostsector.campaign.econ.UnlimitedProductionChipCondition;
 import lostsector.campaign.quests.util.FleetInfo;
 import lostsector.campaign.quests.util.SimpleFleet;
 import lostsector.campaign.quests.util.SimpleSystem;
@@ -255,7 +255,7 @@ public class BlackOpsManager extends BaseCampaignEventListener implements EveryF
             for (SectorEntityToken e : sys.getAllEntities()){
                 if (e.getMarket()!=null){
                     if (!e.getMarket().isPlanetConditionMarketOnly()){
-                        if (e.getMarket().hasCondition(UpChip.ID)){
+                        if (e.getMarket().hasCondition(UnlimitedProductionChipCondition.ID)){
                             loc = e;
                             break;
                         }
