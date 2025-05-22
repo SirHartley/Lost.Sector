@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
-public class ElizaInterceptDialog extends PaginatedOptions {
+public class nskr_elizaInterceptDialog extends PaginatedOptions {
 
     //
 
@@ -48,7 +48,7 @@ public class ElizaInterceptDialog extends PaginatedOptions {
     protected List<String> disabledOpts = new ArrayList<>();
 
     static void log(final String message) {
-        Global.getLogger(ElizaInterceptDialog.class).info(message);
+        Global.getLogger(nskr_elizaInterceptDialog.class).info(message);
     }
 
     @Override
@@ -116,7 +116,7 @@ public class ElizaInterceptDialog extends PaginatedOptions {
 
         handed = QuestUtil.getCompleted(QuestStageManager.ELIZA_INTERCEPT_HANDED_OVER);
         finishedKesteven = QuestUtil.getCompleted(EndingKestevenDialog.DIALOG_FINISHED_KEY);
-        finishedAlt = QuestUtil.getCompleted(AltEndingDialogLuddic.DIALOG_FINISHED_KEY);
+        finishedAlt = QuestUtil.getCompleted(nskr_altEndingDialogLuddic.DIALOG_FINISHED_KEY);
     }
 
     @Override

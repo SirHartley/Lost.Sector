@@ -15,7 +15,7 @@ import lostsector.campaign.customStart.intel.HellSpawnEventIntel;
 import lostsector.campaign.quests.util.SimpleFleet;
 import lostsector.ModPlugin;
 import lostsector.util.FleetUtil;
-import lostsector.util.LSIds;
+import lostsector.util.IdsLS;
 import lostsector.util.MathUtilLS;
 import lostsector.util.PowerLevel;
 
@@ -35,7 +35,7 @@ public class HellSpawnDisposableFleetSpawner extends DisposableFleetManager {
         FLEET_FACTIONS.add(Factions.INDEPENDENT);
         FLEET_FACTIONS.add(Factions.PERSEAN);
         FLEET_FACTIONS.add(Factions.DIKTAT);
-        FLEET_FACTIONS.add(LSIds.KESTEVEN_FACTION_ID);
+        FLEET_FACTIONS.add(IdsLS.KESTEVEN_FACTION_ID);
 
     }
 

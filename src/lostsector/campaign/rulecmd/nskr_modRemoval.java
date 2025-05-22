@@ -25,7 +25,7 @@ import java.awt.*;
 import java.util.List;
 import java.util.*;
 
-public class ModRemoval extends PaginatedOptions {
+public class nskr_modRemoval extends PaginatedOptions {
 
     public static final String DIALOG_OPTION_PREFIX = "nskr_modRemoval_pick_";
     public static final String PERSISTENT_RANDOM_KEY = "nskr_modRemovalRandom";
@@ -47,7 +47,7 @@ public class ModRemoval extends PaginatedOptions {
     protected List<String> disabledOpts = new ArrayList<>();
 
     static void log(final String message) {
-        Global.getLogger(ModRemoval.class).info(message);
+        Global.getLogger(nskr_modRemoval.class).info(message);
     }
 
     @Override
@@ -283,7 +283,7 @@ public class ModRemoval extends PaginatedOptions {
         if (market==null) return false;
         if (Global.getSector().getPlayerFaction().getRelationship("kesteven")<=-0.5f) return false;
         if (QuestUtil.asteriaOrOutpost()==null) return false;
-        if (QuestUtil.getCompleted(QuestStageManager.ELIZA_INTERCEPT_HANDED_OVER) || QuestUtil.getCompleted(AltEndingDialogLuddic.DIALOG_FINISHED_KEY)) return false;
+        if (QuestUtil.getCompleted(QuestStageManager.ELIZA_INTERCEPT_HANDED_OVER) || QuestUtil.getCompleted(nskr_altEndingDialogLuddic.DIALOG_FINISHED_KEY)) return false;
 
         return market== QuestUtil.asteriaOrOutpost();
     }

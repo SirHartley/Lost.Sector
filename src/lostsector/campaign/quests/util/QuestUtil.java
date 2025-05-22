@@ -11,7 +11,7 @@ import com.fs.starfarer.api.impl.campaign.procgen.themes.DerelictThemeGenerator;
 import com.fs.starfarer.api.util.Misc;
 import lostsector.campaign.ExileManager;
 import lostsector.campaign.quests.KQuest5ElizaBarMain;
-import lostsector.campaign.rulecmd.KestevenQuest;
+import lostsector.campaign.rulecmd.nskr_kestevenQuest;
 import lostsector.ModPlugin;
 import lostsector.util.MathUtilLS;
 import lostsector.util.MiscLS;
@@ -32,7 +32,7 @@ public class QuestUtil {
     }
 
     public static SectorEntityToken spawnArtifact(SectorEntityToken loc, int number) {
-        Random random = KestevenQuest.getRandom();
+        Random random = nskr_kestevenQuest.getRandom();
         LocationAPI containing = loc.getContainingLocation();
         //log(""+containing.getName()+" "+containing.getId());
         BaseThemeGenerator.EntityLocation createLoc = DerelictThemeGenerator.createLocationAtRandomGap(random, loc, 0f);
@@ -401,7 +401,7 @@ public class QuestUtil {
     }
 
     public static SectorEntityToken pickCacheFleetLoc() {
-        Random random = KestevenQuest.getRandom();
+        Random random = nskr_kestevenQuest.getRandom();
         StarSystemAPI sys = Global.getSector().getStarSystem("Unknown Site");
 
         return sys.createToken(new Vector2f(MathUtilLS.getSeededRandomNumberInRange(-3000f, 3000f, random), MathUtilLS.getSeededRandomNumberInRange(-3000f, 3000f, random)));
@@ -640,15 +640,15 @@ public class QuestUtil {
 
     public static StarSystemAPI getJob1Tip(){
         Map<String, Object> data = Global.getSector().getPersistentData();
-        String id = KestevenQuest.PERSISTENT_KEY+"Tip1";
+        String id = nskr_kestevenQuest.PERSISTENT_KEY+"Tip1";
         if (!data.containsKey(id)) {
-            StarSystemAPI sys = getRandomSystemWithEnigmaBase(KestevenQuest.getRandom());
+            StarSystemAPI sys = getRandomSystemWithEnigmaBase(nskr_kestevenQuest.getRandom());
             //NO VALID SYSTEMS
             if (sys==null) return null;
 
             data.put(id, sys);
             //add dormant
-            MiscLS.addDormant(MiscLS.getRandomLocationInSystem(sys ,true,false, KestevenQuest.getRandom()),
+            MiscLS.addDormant(MiscLS.getRandomLocationInSystem(sys ,true,false, nskr_kestevenQuest.getRandom()),
                     "enigma", 20f);
         }
 
@@ -657,34 +657,34 @@ public class QuestUtil {
 
     public static SectorEntityToken getJob3Start(){
         Map<String, Object> data = Global.getSector().getPersistentData();
-        String id = KestevenQuest.PERSISTENT_KEY+"Start3";
+        String id = nskr_kestevenQuest.PERSISTENT_KEY+"Start3";
         if (!data.containsKey(id))
-            data.put(id, getRandomFactionMarket(KestevenQuest.getRandom(), Factions.TRITACHYON, QuestStageManager.JOB3_MARKET_BLACKLIST));
+            data.put(id, getRandomFactionMarket(nskr_kestevenQuest.getRandom(), Factions.TRITACHYON, QuestStageManager.JOB3_MARKET_BLACKLIST));
 
         return (SectorEntityToken) data.get(id);
     }
 
     public static SectorEntityToken getJob3Target(){
         Map<String, Object> data = Global.getSector().getPersistentData();
-        String id = KestevenQuest.PERSISTENT_KEY+"Target3";
+        String id = nskr_kestevenQuest.PERSISTENT_KEY+"Target3";
         if (!data.containsKey(id))
-            data.put(id, MiscLS.getRandomLocationInSystem(getRandomSystemNearCore(KestevenQuest.getRandom()), false, false, KestevenQuest.getRandom()));
+            data.put(id, MiscLS.getRandomLocationInSystem(getRandomSystemNearCore(nskr_kestevenQuest.getRandom()), false, false, nskr_kestevenQuest.getRandom()));
 
         return (SectorEntityToken) data.get(id);
     }
 
     public static SectorEntityToken getJob4FriendlyTarget(){
         Map<String, Object> data = Global.getSector().getPersistentData();
-        String id = KestevenQuest.PERSISTENT_KEY+"TargetFriendly4";
+        String id = nskr_kestevenQuest.PERSISTENT_KEY+"TargetFriendly4";
         if (!data.containsKey(id))
-            data.put(id, MiscLS.getRandomLocationInSystem(getRandomSystemFarCore(KestevenQuest.getRandom()), false, false, KestevenQuest.getRandom()));
+            data.put(id, MiscLS.getRandomLocationInSystem(getRandomSystemFarCore(nskr_kestevenQuest.getRandom()), false, false, nskr_kestevenQuest.getRandom()));
 
         return (SectorEntityToken) data.get(id);
     }
 
     public static SectorEntityToken getJob4EnemyTarget(){
         Map<String, Object> data = Global.getSector().getPersistentData();
-        String id = KestevenQuest.PERSISTENT_KEY+"TargetEnemy4";
+        String id = nskr_kestevenQuest.PERSISTENT_KEY+"TargetEnemy4";
         if (data.containsKey(id)){
             return (SectorEntityToken) data.get(id);
         }
@@ -693,7 +693,7 @@ public class QuestUtil {
 
     public static SectorEntityToken setJob4EnemyTarget(SectorEntityToken loc){
         Map<String, Object> data = Global.getSector().getPersistentData();
-        String id = KestevenQuest.PERSISTENT_KEY+"TargetEnemy4";
+        String id = nskr_kestevenQuest.PERSISTENT_KEY+"TargetEnemy4";
 
         data.put(id, loc);
         return (SectorEntityToken) data.get(id);
@@ -701,9 +701,9 @@ public class QuestUtil {
 
     public static StarSystemAPI getJob5FrostTip(){
         Map<String, Object> data = Global.getSector().getPersistentData();
-        String id = KestevenQuest.PERSISTENT_KEY+"Job5FrostTip";
+        String id = nskr_kestevenQuest.PERSISTENT_KEY+"Job5FrostTip";
         if (!data.containsKey(id))
-            data.put(id, getRandomSystemNearLocation(MiscLS.getFrost().getStar().getLocationInHyperspace(),7000f,12000f, MiscLS.getFrost(), KestevenQuest.getRandom()));
+            data.put(id, getRandomSystemNearLocation(MiscLS.getFrost().getStar().getLocationInHyperspace(),7000f,12000f, MiscLS.getFrost(), nskr_kestevenQuest.getRandom()));
 
         return (StarSystemAPI) data.get(id);
     }
@@ -711,28 +711,28 @@ public class QuestUtil {
     public static SectorEntityToken getElizaLoc(){
 
         Map<String, Object> data = Global.getSector().getPersistentData();
-        String id = KestevenQuest.PERSISTENT_KEY+"ElizaJob5";
+        String id = nskr_kestevenQuest.PERSISTENT_KEY+"ElizaJob5";
 
         return (SectorEntityToken) data.get(id);
     }
 
     public static void setElizaLoc(){
         Map<String, Object> data = Global.getSector().getPersistentData();
-        String id = KestevenQuest.PERSISTENT_KEY+"ElizaJob5";
-        data.put(id, pickElizaMarket(KestevenQuest.getRandom(), false));
+        String id = nskr_kestevenQuest.PERSISTENT_KEY+"ElizaJob5";
+        data.put(id, pickElizaMarket(nskr_kestevenQuest.getRandom(), false));
     }
 
     public static SectorEntityToken getCacheFleetLoc(){
 
         Map<String, Object> data = Global.getSector().getPersistentData();
-        String id = KestevenQuest.PERSISTENT_KEY+"CacheFleet";
+        String id = nskr_kestevenQuest.PERSISTENT_KEY+"CacheFleet";
 
         return (SectorEntityToken) data.get(id);
     }
 
     public static void setCacheFleetLoc(){
         Map<String, Object> data = Global.getSector().getPersistentData();
-        String id = KestevenQuest.PERSISTENT_KEY+"CacheFleet";
+        String id = nskr_kestevenQuest.PERSISTENT_KEY+"CacheFleet";
         data.put(id, pickCacheFleetLoc());
     }
 

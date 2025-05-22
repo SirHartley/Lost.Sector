@@ -10,7 +10,7 @@ import exerelin.utilities.NexFactionConfig;
 import lostsector.campaign.customStart.intel.HellSpawnEventIntel;
 import lostsector.campaign.customStart.intel.HellSpawnIntel;
 import lostsector.ModPlugin;
-import lostsector.util.LSIds;
+import lostsector.util.IdsLS;
 
 import java.awt.*;
 
@@ -74,7 +74,7 @@ public class HellSpawnBackground extends BaseCharacterBackground {
         Global.getSector().getIntelManager().addIntel( new HellSpawnIntel());
         new HellSpawnEventIntel(null, true);
 
-        Global.getSector().getFaction(LSIds.ENIGMA_FACTION_ID).setRelationship(Factions.PLAYER, 0.75f);
+        Global.getSector().getFaction(IdsLS.ENIGMA_FACTION_ID).setRelationship(Factions.PLAYER, 0.75f);
     }
 
     @Override

@@ -17,7 +17,7 @@ import lostsector.campaign.quests.GlacierCommsDialog;
 import lostsector.campaign.quests.KQuest5ElizaBarMain;
 import lostsector.campaign.quests.util.QuestStageManager;
 import lostsector.campaign.quests.util.QuestUtil;
-import lostsector.campaign.rulecmd.KestevenQuest;
+import lostsector.campaign.rulecmd.nskr_kestevenQuest;
 import lostsector.util.MiscLS;
 
 import java.awt.*;
@@ -82,9 +82,9 @@ public class KQuest5Intel extends BaseIntelPlugin {
 
         recovered = QuestUtil.getDisksRecovered();
 
-        aliceTip = QuestUtil.getCompleted(KestevenQuest.JOB5_ALICE_TIP_KEY);
-        aliceTip2 = QuestUtil.getCompleted(KestevenQuest.JOB5_ALICE_TIP_KEY2);
-        jackTip = QuestUtil.getCompleted(KestevenQuest.JOB5_JACK_TIP_KEY);
+        aliceTip = QuestUtil.getCompleted(nskr_kestevenQuest.JOB5_ALICE_TIP_KEY);
+        aliceTip2 = QuestUtil.getCompleted(nskr_kestevenQuest.JOB5_ALICE_TIP_KEY2);
+        jackTip = QuestUtil.getCompleted(nskr_kestevenQuest.JOB5_JACK_TIP_KEY);
 
         failed = QuestUtil.getFailed(QuestStageManager.JOB5_FAILED_KEY);
         paid = QuestUtil.getCompleted(KQuest5ElizaBarMain.PAID_FOR_INFO);

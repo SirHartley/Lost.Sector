@@ -12,7 +12,7 @@ import lostsector.campaign.customStart.intel.HellSpawnEventIntel;
 import lostsector.campaign.quests.util.SimpleFleet;
 import lostsector.ModPlugin;
 import lostsector.util.FleetUtil;
-import lostsector.util.LSIds;
+import lostsector.util.IdsLS;
 import lostsector.util.MathUtilLS;
 import lostsector.util.MiscLS;
 import org.lazywizard.lazylib.MathUtils;
@@ -67,7 +67,7 @@ public class HellSpawnJudgementDialog implements InteractionDialogPlugin {
         s = Misc.getStoryBrightColor();
         random = HellSpawnManager.getRandom();
 
-        thrn = Global.getSector().getImportantPeople().getPerson(LSIds.THRN_PERSON_ID);
+        thrn = Global.getSector().getImportantPeople().getPerson(IdsLS.THRN_PERSON_ID);
 
         HellSpawnJudgementWarning.playMusic();
 
@@ -280,7 +280,7 @@ public class HellSpawnJudgementDialog implements InteractionDialogPlugin {
         keys.add(MemFlags.MEMORY_KEY_NEVER_AVOID_PLAYER_SLOWLY);
         keys.add(JUDGEMENT_FLEET_KEY);
 
-        SimpleFleet simpleFleet = new SimpleFleet(pf.getContainingLocation().createToken(pf.getLocation()), LSIds.AI_ALL_FACTION_ID, combatPoints, keys, random);
+        SimpleFleet simpleFleet = new SimpleFleet(pf.getContainingLocation().createToken(pf.getLocation()), IdsLS.AI_ALL_FACTION_ID, combatPoints, keys, random);
         simpleFleet.aiFleetProperties = true;
         simpleFleet.ignoreMarketFleetSizeMult = true;
         simpleFleet.name = "Final Judgement";

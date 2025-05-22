@@ -15,7 +15,7 @@ import com.fs.starfarer.api.impl.campaign.intel.bar.PortsideBarData;
 import com.fs.starfarer.api.impl.campaign.intel.bar.events.BaseBarEvent;
 import com.fs.starfarer.api.util.Misc;
 import lostsector.campaign.quests.util.QuestUtil;
-import lostsector.campaign.rulecmd.KestevenQuest;
+import lostsector.campaign.rulecmd.nskr_kestevenQuest;
 import lostsector.util.MathUtilLS;
 
 import java.awt.*;
@@ -94,7 +94,7 @@ public class KQuest5ElizaBarMain extends BaseBarEvent {
 
 		if (count == 0) {
 			options.clearOptions();
-			money = MathUtilLS.getSeededRandomNumberInRange(4000, 7000, KestevenQuest.getRandom());
+			money = MathUtilLS.getSeededRandomNumberInRange(4000, 7000, nskr_kestevenQuest.getRandom());
 			dialog.getVisualPanel().showPersonInfo(person, true);
 			text.addPara("The spacer is busy in thought while drinking and doesn't seem to notice you.");
 			options.addOption("\"I'm looking for Eliza.\"", OptionId.A1);
@@ -258,7 +258,7 @@ public class KQuest5ElizaBarMain extends BaseBarEvent {
 	public static void setPaidForInfoTarget(){
 		Map<String, Object> data = Global.getSector().getPersistentData();
 		String id = PAID_FOR_INFO_LOC;
-		data.put(id, QuestUtil.pickElizaMarket(KestevenQuest.getRandom(), false));
+		data.put(id, QuestUtil.pickElizaMarket(nskr_kestevenQuest.getRandom(), false));
 	}
 
 	public static SectorEntityToken getPaidForInfoTarget(){

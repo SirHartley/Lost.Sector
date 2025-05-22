@@ -177,7 +177,7 @@ public class Gen implements SectorGeneratorPlugin {
         opguy.setId("nskr_opguy");
         opguy.addTag("k_quest");
         opguy.addTag(Tags.CONTACT_MILITARY);
-        opguy.addTag("nskr_contracts");
+        opguy.addTag("Contracts");
         opguy.setVoice(Voices.OFFICIAL);
         loc.getCommDirectory().addPerson(opguy, index);
         loc.addPerson(opguy);
@@ -203,7 +203,7 @@ public class Gen implements SectorGeneratorPlugin {
         researcher.addTag("k_quest");
         researcher.addTag(Tags.CONTACT_MILITARY);
         researcher.addTag(Tags.CONTACT_TRADE);
-        researcher.addTag("nskr_contracts");
+        researcher.addTag("Contracts");
         researcher.setVoice(Voices.SCIENTIST);
         loc.getCommDirectory().addPerson(researcher, index);
         loc.addPerson(researcher);

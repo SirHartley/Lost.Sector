@@ -7,22 +7,29 @@ import com.fs.starfarer.api.campaign.InteractionDialogAPI;
 import com.fs.starfarer.api.campaign.rules.MemoryAPI;
 import com.fs.starfarer.api.impl.campaign.rulecmd.BaseCommandPlugin;
 import com.fs.starfarer.api.util.Misc;
-import lostsector.campaign.quests.util.QuestUtil;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-public class IsKStage extends BaseCommandPlugin {
-	
+public class nskr_hasMemoryKeyStartsWith extends BaseCommandPlugin
+{
 	@Override
 	public boolean execute(String ruleId, InteractionDialogAPI dialog, List<Misc.Token> params, Map<String, MemoryAPI> memoryMap) {
-	boolean is = false;
-	String stringArg = params.get(0).getString(memoryMap);
-	int stage = QuestUtil.getStage();
-	int arg = Integer.parseInt(stringArg);
+		String arg = params.get(0).getString(memoryMap);
+		boolean startsWith = false;
 
-	if (stage==arg) is = true;
+		if (dialog.getInteractionTarget()==null || dialog.getInteractionTarget().getMemory()==null) return false;
 
-	return is;
+		Collection<String>mem = dialog.getInteractionTarget().getMemory().getKeys();
+		if (mem.isEmpty()) return false;
+		for (String m : mem){
+			if (m==null)continue;
+			if (m.startsWith(arg)){
+				startsWith = true;
+				break;
+			}
+		}
+		return startsWith;
 	}
 }

@@ -12,7 +12,7 @@ import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import com.fs.starfarer.api.util.Misc;
 import lostsector.campaign.quests.util.QuestStageManager;
 import lostsector.campaign.quests.util.QuestUtil;
-import lostsector.campaign.rulecmd.KestevenQuest;
+import lostsector.campaign.rulecmd.nskr_kestevenQuest;
 
 import java.awt.*;
 import java.util.Set;
@@ -108,7 +108,7 @@ public class KQuest1Intel extends BaseIntelPlugin {
         if(stage==1 && !sensored)info.addPara("Locate any of the unknown AI force, and run the custom sensors package while engaging them.", initPad, g, h, "", "");
         if(stage==1 && sensored && !deliveredData)info.addPara("With the data gathered, you should return to Jack Lapua in "+asteriaOrOutpost+" to deliver the package.", initPad, g, h, "return to Jack Lapua in "+asteriaOrOutpost, "");
 
-        if(stage==1 && !delivered)info.addPara("Search for more AI activity, and recover the electronics once you've defeated them. Once you have "+ KestevenQuest.JOB1_ARTIFACTS +" Artifact Electronics deliver them to Jack Lapua in "+asteriaOrOutpost+".", initPad, g, h, "", KestevenQuest.JOB1_ARTIFACTS +" Artifact Electronics");
+        if(stage==1 && !delivered)info.addPara("Search for more AI activity, and recover the electronics once you've defeated them. Once you have "+ nskr_kestevenQuest.JOB1_ARTIFACTS +" Artifact Electronics deliver them to Jack Lapua in "+asteriaOrOutpost+".", initPad, g, h, "", nskr_kestevenQuest.JOB1_ARTIFACTS +" Artifact Electronics");
 
         StarSystemAPI loc = QuestUtil.getJob1Tip();
         if(stage==1 && tipped && base)info.addPara("Investigate the "+loc.getName()+".", initPad, g, h, loc.getName(), "");

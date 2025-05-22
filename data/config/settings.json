@@ -79,7 +79,7 @@
 	},
 	
 	"ruleCommandPackages":[
-		"scripts.kissa.LOST_SECTOR.campaign.rulecmd",
+		"lostsector.campaign.rulecmd",
 	],
 	
 	# Bonus XP values for most story-point-using actions

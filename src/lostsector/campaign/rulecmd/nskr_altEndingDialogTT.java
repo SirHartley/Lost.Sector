@@ -8,13 +8,12 @@ import com.fs.starfarer.api.characters.FullName;
 import com.fs.starfarer.api.characters.PersonAPI;
 import com.fs.starfarer.api.combat.ShipAPI;
 import com.fs.starfarer.api.impl.campaign.ids.Factions;
-import com.fs.starfarer.api.impl.campaign.ids.MemFlags;
 import com.fs.starfarer.api.impl.campaign.intel.contacts.ContactIntel;
 import com.fs.starfarer.api.impl.campaign.rulecmd.PaginatedOptions;
 import com.fs.starfarer.api.util.Misc;
 import lostsector.campaign.quests.util.QuestStageManager;
 import lostsector.campaign.quests.util.QuestUtil;
-import lostsector.util.MathUtilLS;
+import lostsector.util.IdsLS;
 import lostsector.util.MiscLS;
 
 import java.awt.*;
@@ -23,11 +22,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
-public class AltEndingDialogLuddic extends PaginatedOptions {
+public class nskr_altEndingDialogTT extends PaginatedOptions {
 
-    public static final String SECOND_TIME_KEY = "nskr_altEndingDialogSecondTimeLuddic";
+    public static final String TT_PAYOUT_KEY = "nskr_altEndingDialogTTPayout";
+    public static final String SECOND_TIME_KEY = "nskr_altEndingDialogSecondTimeTT";
     public static final String PERSON_LOCKED_KEY = "$nskr_altEndingDialogLockedToPerson";
-    public static final String DIALOG_FINISHED_KEY = "nskr_EndingAltDialogKeyFinished";
 
     public static final String PERSISTENT_RANDOM_KEY = "nskr_EndingAltDialogKeyRandom";
     private Color h;
@@ -51,18 +50,18 @@ public class AltEndingDialogLuddic extends PaginatedOptions {
     protected FactionAPI faction;
     protected ShipAPI ship;
 
-    protected List<String> disabledOpts = new ArrayList<>();
+    protected java.util.List<String> disabledOpts = new ArrayList<>();
     private String HisOrHer;
     private String hisOrHer;
     private String HeOrShe;
     private String heOrShe;
 
     static void log(final String message) {
-        Global.getLogger(AltEndingDialogLuddic.class).info(message);
+        Global.getLogger(nskr_altEndingDialogTT.class).info(message);
     }
 
     @Override
-    public boolean execute(String ruleId, InteractionDialogAPI dialog, List< Misc.Token > params, Map<String, MemoryAPI > memoryMap)
+    public boolean execute(String ruleId, InteractionDialogAPI dialog, List< Misc.Token > params, Map<String, MemoryAPI> memoryMap)
     {
         String arg = params.get(0).getString(memoryMap);
         setupVars(dialog, memoryMap);
@@ -77,8 +76,11 @@ public class AltEndingDialogLuddic extends PaginatedOptions {
                 addOptions(QuestUtil.getCompleted(SECOND_TIME_KEY));
                 showOptions();
                 break;
-            case "luddicAgree":
-                luddicAgree();
+            case "tachAgree":
+                tachAgree();
+                break;
+            case "setPriceIncrease":
+                setPrice(2500000f);
                 break;
             case "setSecond":
                 setSecond();
@@ -153,52 +155,57 @@ public class AltEndingDialogLuddic extends PaginatedOptions {
         if (!person.getMemory().contains(PERSON_LOCKED_KEY)) {
             if (!secondTime) {
                 //FIRST
-                text.addPara("\"I hear you speak of a vile creation of mammon.\" " + HeOrShe + " says sharply. \"It must be destroyed, no question about it.\"", tc, h,"destroyed","");
-                text.addPara("\"For these are the evils that corrupt our world - Taking us further from Providence. " +
-                        "You don't deny this do you captain? For certain you knew our reaction to this object, a true walker would know to approach us.\"");
-                text.addPara("\"Is this true captain?\" " + HeOrShe + " rubs " + hisOrHer + " chin with deep intent in " + hisOrHer + " eyes.");
+                text.addPara("\"What a fascinating object you speak of, if you are telling the truth of course.\" "+ HeOrShe +" looks skeptical");
+                String creds = Misc.getDGSCredits(2000000f);
+                text.addPara("\"Such an item holds great power, the Tri-Tachyon corporation is willing to grant "+creds+" for such an item.\"", tc, h,creds,"");
+                text.addPara("\"Remember, such power would come with additional costs, requiring further investment. So... Take it or leave it captain.\"");
 
-                addOption("Destroy the Chip", "nskr_altEndingLuddicAgree");
-                addOption("\"So I would get nothing?\"", "nskr_altEndingLuddicDoubt");
+                String cash = Misc.getDGSCredits(2500000f);
+                addOption("Sell the Chip", "nskr_altEndingTTAgree");
+                addOption("\"How about " + cash + "\"", "nskr_altEndingTTIncrease");
                 addOption("\"Actually, never mind.\"", "nskr_altEndingExit");
             }
             //SECOND
             else {
                 person.getMemory().set(PERSON_LOCKED_KEY, true);
-                text.addPara("\"Faith is not about having something, you do not *get* your way to providence. " +
-                        "When one takes a righteous action - Suddenly they can find themselves walking the right path.\"");
-                text.addPara("\"So, will you help amend for the sins of the past, and destroy the Chip?\" "+ HeOrShe +" questions.", tc, h,"destroy","");
+                text.addPara("\"Damn... You drive a hard bargain captain, but for such an exceptional artifact... I think we can squeeze in some extra investment.\" " +
+                        ""+ HeOrShe +" takes a moment to adjust some datafeeds on "+ hisOrHer +" end.");
+                String cash = Misc.getDGSCredits(2500000f);
+                text.addPara("\""+cash+" for the Chip, in liquid cash. Just think of all the things you could buy.\""+ HeOrShe +" has a ravenous smile.", tc, h,cash,"");
 
-                addOption("Destroy the Chip", "nskr_altEndingLuddicAgree");
+                addOption("Sell the Chip", "nskr_altEndingTTAgree");
                 addOption("\"Actually, never mind.\"", "nskr_altEndingExit");
             }
-        } else if (!QuestUtil.getCompleted(DIALOG_FINISHED_KEY)){
+        } else if (!QuestUtil.getCompleted(nskr_altEndingDialogLuddic.DIALOG_FINISHED_KEY)){
             //person locked, came back to talk
-            text.addPara("\"Have you finally seen the path captain? Or are you here to just waste my time.\"");
-            text.addPara("\"You need to destroy the Chip.\" "+ HeOrShe +" commands.", tc, h,"destroy","");
+            text.addPara("\"Changed your fickle mind yet "+player.getName().getFullName()+"?\"");
+            String cash = Misc.getDGSCredits(2500000f);
+            text.addPara("\"The "+cash+" for the Chip is waiting for you.\"", tc, h,cash,"");
 
-            addOption("Destroy the Chip", "nskr_altEndingLuddicAgree");
+            addOption("Sell the Chip", "nskr_altEndingTTAgree");
             addOption("\"Nope.\"", "nskr_altEndingExit");
         }
     }
 
-    protected void luddicAgree() {
+    protected void tachAgree(){
 
-        text.addPara("\"The tools of mammon shall be rendered to pieces, rightfully reduced to ash, returned to providence. You walk the right path now captain.\" " + HeOrShe + " says with righteous words.");
-        text.addPara("You feel a wave of inspiration pass through you.", g, h, "", "");
+        text.addPara("\"You made the right choice captain. Enjoy the spoils.\" "+HeOrShe+" nods and gets back to work.");
 
-        Global.getSector().getFaction(Factions.PLAYER).adjustRelationship(market.getFactionId(), 0.15f);
+        //credits
+        float creds = getPrice();
+        playerCargo.getCredits().add(creds);
+        //+rep
+        Global.getSector().getFaction(Factions.PLAYER).adjustRelationship(Factions.TRITACHYON,0.15f);
         person.getRelToPlayer().adjustRelationship(0.10f, RepLevel.COOPERATIVE);
-        //add sp
-        Global.getSector().getPlayerStats().setStoryPoints(Global.getSector().getPlayerStats().getStoryPoints() + 8);
 
         text.setFontSmallInsignia();
         //acquire text
-        text.addPara("the Unlimited Production Chip is destroyed", g, r, "destroyed", "");
+        text.addPara("Lost the Unlimited Production Chip",g,r,"Lost","");
 
-        text.addPara("Gained 8 Story points", g, s, "8 Story points", "");
-        text.addPara("Relationship with " + market.getFaction().getDisplayNameWithArticle() + " improved by 15", g, gr, "15", "");
-        text.addPara("Relationship with " + person.getName().getFullName() + " improved by 10", g, gr, "10", "");
+        String payout = Misc.getDGSCredits(creds);
+        text.addPara("Received +" + payout,g,h,"+"+payout,"");
+        text.addPara("Relationship with Tri-Tachyon improved by 15",g,gr,"15","");
+        text.addPara("Relationship with "+person.getName().getFullName()+" improved by 10",g,gr,"10","");
 
         //contact
         if (!ContactIntel.playerHasIntelItemForContact(person)) {
@@ -209,7 +216,16 @@ public class AltEndingDialogLuddic extends PaginatedOptions {
         MiscLS.playUiRepRaiseNoise();
 
         //mad
-        makeMad(text, g, r);
+        nskr_altEndingDialogLuddic.makeMad(text, g, r);
+
+        //add chip
+        StarSystemAPI hybrasil = Global.getSector().getStarSystem("Hybrasil");
+        if (hybrasil!=null) {
+            MarketAPI culann = Global.getSector().getEconomy().getMarket("culann");
+            if (culann != null && culann.getFactionId() != null && culann.getFactionId().equals(Factions.TRITACHYON)) {
+                culann.addCondition(IdsLS.UNLIMITED_PRODUCTION_CHIP_CONDITION_ID);
+            } else market.addCondition(IdsLS.UNLIMITED_PRODUCTION_CHIP_CONDITION_ID);
+        } else market.addCondition(IdsLS.UNLIMITED_PRODUCTION_CHIP_CONDITION_ID);
 
         dialog.getOptionPanel().clearOptions();
 
@@ -218,45 +234,16 @@ public class AltEndingDialogLuddic extends PaginatedOptions {
         showOptions();
     }
 
-    protected static void makeMad(TextPanelAPI text, Color g , Color r){
+    protected void setPrice(float amount){
 
-        //remove important
-        if (QuestUtil.asteriaOrOutpost()!=null) {
-            QuestUtil.asteriaOrOutpost().getMemory().unset(MemFlags.MEMORY_KEY_MISSION_IMPORTANT);
-        }
-        if (QuestUtil.getElizaLoc()!=null){
-            QuestUtil.getElizaLoc().getMemory().unset(MemFlags.MEMORY_KEY_MISSION_IMPORTANT);
-        }
-        //remove contact
-        if(MiscLS.getAlice()!=null) {
-            MiscLS.getAlice().getRelToPlayer().adjustRelationship(-0.50f, RepLevel.HOSTILE);
-            if(ContactIntel.getContactIntel(MiscLS.getAlice())!=null) {
-                ContactIntel.getContactIntel(MiscLS.getAlice()).setState(ContactIntel.ContactState.SUSPENDED);
-            }
-        }
-        if(MiscLS.getJack()!=null) {
-            MiscLS.getJack().getRelToPlayer().adjustRelationship(-0.50f, RepLevel.HOSTILE);
-            if(ContactIntel.getContactIntel(MiscLS.getJack())!=null) {
-                ContactIntel.getContactIntel(MiscLS.getJack()).setState(ContactIntel.ContactState.SUSPENDED);
-            }
-        }
-        //-rep
-        if(MiscLS.getEliza()!=null) {
-            MiscLS.getEliza().getRelToPlayer().adjustRelationship(-0.50f, RepLevel.HOSTILE);
-        }
-        //kesteven rep
-        float repKesteven = MathUtilLS.getSeededRandomNumberInRange(-0.65f, -0.55f, getRandom());
-        if(Global.getSector().getFaction(Factions.PLAYER).getRelationship("kesteven")>repKesteven){
-            Global.getSector().getFaction(Factions.PLAYER).setRelationship("kesteven", repKesteven);
-            repKesteven = Math.round(repKesteven*100f);
-            text.addPara("Relationship with Kesteven reduced to "+(int)repKesteven,g,r,""+(int)repKesteven,"");
-        }
+        QuestUtil.setFloat(amount ,TT_PAYOUT_KEY);
+    }
 
-        //FINISH
-        QuestUtil.setCompleted(true, DIALOG_FINISHED_KEY);
-        QuestUtil.setStage(20);
+    protected float getPrice(){
+        //init
+        if (QuestUtil.getFloat(TT_PAYOUT_KEY)<2000000f) QuestUtil.setFloat(2000000f,TT_PAYOUT_KEY);
 
-        QuestUtil.saveEnding();
+        return QuestUtil.getFloat(TT_PAYOUT_KEY);
     }
 
     protected void setSecond(){
@@ -274,9 +261,9 @@ public class AltEndingDialogLuddic extends PaginatedOptions {
         //person locked
         if (QuestUtil.getCompleted(SECOND_TIME_KEY) && !person.getMemory().contains(PERSON_LOCKED_KEY)) return false;
         //DONE
-        if (QuestUtil.getCompleted(DIALOG_FINISHED_KEY)) return false;
+        if (QuestUtil.getCompleted(nskr_altEndingDialogLuddic.DIALOG_FINISHED_KEY)) return false;
         //pick correct faction market
-        return market.getFactionId().equals(Factions.LUDDIC_PATH) || market.getFactionId().equals(Factions.LUDDIC_CHURCH);
+        return market.getFactionId().equals(Factions.TRITACHYON);
     }
 
     public static Random getRandom() {

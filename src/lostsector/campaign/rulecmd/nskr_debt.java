@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
-public class Debt extends PaginatedOptions {
+public class nskr_debt extends PaginatedOptions {
 
 	//Hack job of nex code, but it just worksTM
 
@@ -55,7 +55,7 @@ public class Debt extends PaginatedOptions {
 	protected List<String> disabledOpts = new ArrayList<>();
 
 	static void log(final String message) {
-		Global.getLogger(Debt.class).info(message);
+		Global.getLogger(nskr_debt.class).info(message);
 	}
 	
 	@Override
@@ -218,27 +218,27 @@ public class Debt extends PaginatedOptions {
 
 		addOption(str, optId);
 		if (amount > 0 && currDebt > maxDebt){
-			log("Debt Loan unavailable, total over max: " + amount);
+			log("nskr_debt Loan unavailable, total over max: " + amount);
 			disabledOpts.add(optId);
 		}
 		if (amount > 0 && amount+currDebt > maxDebt){
-			log("Debt Loan unavailable, over max: " + amount);
+			log("nskr_debt Loan unavailable, over max: " + amount);
 			disabledOpts.add(optId);
 		}
 		if (amount == 0){
-			log("Debt Loan would be 0: " + amount);
+			log("nskr_debt Loan would be 0: " + amount);
 			disabledOpts.add(optId);
 		}
 		if (amount < 0 && (-1*amount) > (int)playerCargo.getCredits().get()){
-			log("Debt Not enough credits: " + amount);
+			log("nskr_debt Not enough credits: " + amount);
 			disabledOpts.add(optId);
 		}
 		if (amount <= 0 && currDebt == 0){
-			log("Debt No debt to repay: " + amount);
+			log("nskr_debt No debt to repay: " + amount);
 			disabledOpts.add(optId);
 		}
 		if (amount < 0 && currDebt+amount < 0){
-			log("Debt Can't overpay: " + amount);
+			log("nskr_debt Can't overpay: " + amount);
 			disabledOpts.add(optId);
 		}
 	}

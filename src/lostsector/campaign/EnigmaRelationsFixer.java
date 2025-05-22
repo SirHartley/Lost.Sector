@@ -5,7 +5,7 @@ import com.fs.starfarer.api.EveryFrameScript;
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.BaseCampaignEventListener;
 import lostsector.campaign.customStart.GamemodeManager;
-import lostsector.util.LSIds;
+import lostsector.util.IdsLS;
 import lostsector.world.Gen;
 
 public class EnigmaRelationsFixer extends BaseCampaignEventListener implements EveryFrameScript  {
@@ -39,7 +39,7 @@ public class EnigmaRelationsFixer extends BaseCampaignEventListener implements E
     public void reportPlayerReputationChange(String faction, float delta) {
 
         //hard set relations
-        if (faction.equals(LSIds.ENIGMA_FACTION_ID)){
+        if (faction.equals(IdsLS.ENIGMA_FACTION_ID)){
             //uncap on hellspawn
             if (GamemodeManager.getMode() == GamemodeManager.gameMode.HELLSPAWN){
                 return;

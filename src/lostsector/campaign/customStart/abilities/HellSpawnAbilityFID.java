@@ -10,7 +10,7 @@ import com.fs.starfarer.api.impl.campaign.ids.Factions;
 import com.fs.starfarer.api.impl.campaign.ids.MemFlags;
 import com.fs.starfarer.api.util.Misc;
 import com.fs.starfarer.api.util.Pair;
-import lostsector.util.LSIds;
+import lostsector.util.IdsLS;
 import org.lazywizard.lazylib.MathUtils;
 
 import java.util.ArrayList;
@@ -33,7 +33,7 @@ public class HellSpawnAbilityFID extends FleetInteractionDialogPluginImpl {
     public static List<String> HELLSPAWN_NEVER_ATTACK = new ArrayList<>();
     static {
         HELLSPAWN_AVOID.add(Factions.PLAYER);
-        HELLSPAWN_AVOID.add(LSIds.ENIGMA_FACTION_ID);
+        HELLSPAWN_AVOID.add(IdsLS.ENIGMA_FACTION_ID);
     }
 
     public HellSpawnAbilityFID() {

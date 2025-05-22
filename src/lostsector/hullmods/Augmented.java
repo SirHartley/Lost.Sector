@@ -12,7 +12,7 @@ import com.fs.starfarer.api.loading.HullModSpecAPI;
 import com.fs.starfarer.api.ui.Alignment;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import com.fs.starfarer.api.util.Misc;
-import lostsector.util.LSIds;
+import lostsector.util.IdsLS;
 import org.lwjgl.util.vector.Vector2f;
 
 import java.awt.*;
@@ -125,7 +125,7 @@ public class Augmented extends BaseHullMod {
 		STAT_HULLMODS.add(FLUX_COIL_ADJUNCT_ID);
 		STAT_HULLMODS.add(FLUX_DISTRIBUTOR_ID);
 		STAT_HULLMODS.add(VOLATILE_ID);
-		STAT_HULLMODS.add(LSIds.HIGH_CAPACITANCE_BANKS_HULLMOD_ID);
+		STAT_HULLMODS.add(IdsLS.HIGH_CAPACITANCE_BANKS_HULLMOD_ID);
 	}
 	public static final Set<String> DURABILITY_HULLMODS = new HashSet<>();
 	static {
@@ -134,7 +134,7 @@ public class Augmented extends BaseHullMod {
 		DURABILITY_HULLMODS.add(BLAST_DOORS_ID);
 		DURABILITY_HULLMODS.add(SOLAR_SHIELDING_ID);
 		DURABILITY_HULLMODS.add(ARMORED_WEAPON_MOUNT_ID);
-		DURABILITY_HULLMODS.add(LSIds.CRITICAL_POINT_PROTECTION_HULLMOD_ID);
+		DURABILITY_HULLMODS.add(IdsLS.CRITICAL_POINT_PROTECTION_HULLMOD_ID);
 	}
 
 	static void log(final String message) {
@@ -218,8 +218,8 @@ public class Augmented extends BaseHullMod {
 			if (hullSize!=HullSize.DESTROYER) stats.getNumFighterBays().modifyFlat(CONVERTED_HANGAR_ID +"_augment", 1f);
 		}
 		// CRITICAL POINT PROTECTION
-		if (stats.getVariant().hasHullMod(LSIds.CRITICAL_POINT_PROTECTION_HULLMOD_ID)) {
-			stats.getMinArmorFraction().modifyPercent(LSIds.CRITICAL_POINT_PROTECTION_HULLMOD_ID +"_augment", CRITICAL_POINT_BONUS);
+		if (stats.getVariant().hasHullMod(IdsLS.CRITICAL_POINT_PROTECTION_HULLMOD_ID)) {
+			stats.getMinArmorFraction().modifyPercent(IdsLS.CRITICAL_POINT_PROTECTION_HULLMOD_ID +"_augment", CRITICAL_POINT_BONUS);
 		}
 	}
 
@@ -502,14 +502,14 @@ public class Augmented extends BaseHullMod {
 			tooltip.addImageWithText(pad);
 		}
 		// BIG BATS
-		if (ship.getVariant().hasHullMod(LSIds.HIGH_CAPACITANCE_BANKS_HULLMOD_ID)) {
+		if (ship.getVariant().hasHullMod(IdsLS.HIGH_CAPACITANCE_BANKS_HULLMOD_ID)) {
 			TooltipMakerAPI text = tooltip.beginImageWithText("graphics/icons/hullsys/high_energy_focus.png", 32.0f);
 			text.addPara("HIGH CAPACITANCE BANKS", 0.0f, tc, "HIGH CAPACITANCE BANKS");
 			text.addPara("Increases system charge regen rate by "+(int)BigBats.AUGMENT_RECHARGE_BONUS+"%"+"%.", 0.0f, y, (int)BigBats.AUGMENT_RECHARGE_BONUS+"%");
 			tooltip.addImageWithText(pad);
 		}
 		// CRITICAL POINT PROTECTION
-		if (ship.getVariant().hasHullMod(LSIds.CRITICAL_POINT_PROTECTION_HULLMOD_ID)) {
+		if (ship.getVariant().hasHullMod(IdsLS.CRITICAL_POINT_PROTECTION_HULLMOD_ID)) {
 			TooltipMakerAPI text = tooltip.beginImageWithText("graphics/icons/hullsys/damper_field.png", 32.0f);
 			text.addPara("CRITICAL POINT PROTECTION", 0.0f, tc, "CRITICAL POINT PROTECTION");
 			text.addPara("Increases minimum armor value by "+(int)CRITICAL_POINT_BONUS+"%"+"%.", 0.0f, y, (int)CRITICAL_POINT_BONUS+"%");

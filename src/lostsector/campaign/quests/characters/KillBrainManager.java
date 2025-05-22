@@ -11,7 +11,7 @@ import lostsector.campaign.loot.BountyLoot;
 import lostsector.campaign.quests.util.QuestUtil;
 import lostsector.campaign.quests.util.SimpleSystem;
 import lostsector.campaign.util.CampaignTimer;
-import lostsector.util.LSIds;
+import lostsector.util.IdsLS;
 import lostsector.util.MathUtilLS;
 import lostsector.util.MiscLS;
 import org.lazywizard.lazylib.MathUtils;
@@ -95,7 +95,7 @@ public class KillBrainManager extends BaseCampaignEventListener implements Every
         LocationAPI containing = loc.getContainingLocation();
 
         BaseThemeGenerator.EntityLocation createLoc = DerelictThemeGenerator.createLocationAtRandomGap(random, loc, 0f);
-        SectorEntityToken artifact = DerelictThemeGenerator.addNonSalvageEntity(containing, createLoc, LSIds.ANOMALOUS_STATION_ENTITY_ID, Factions.NEUTRAL).entity;
+        SectorEntityToken artifact = DerelictThemeGenerator.addNonSalvageEntity(containing, createLoc, IdsLS.ANOMALOUS_STATION_ENTITY_ID, Factions.NEUTRAL).entity;
         artifact.setDiscoverable(true);
         artifact.setSensorProfile(2000f);
 

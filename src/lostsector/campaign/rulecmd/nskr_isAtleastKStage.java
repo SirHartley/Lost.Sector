@@ -12,25 +12,17 @@ import lostsector.campaign.quests.util.QuestUtil;
 import java.util.List;
 import java.util.Map;
 
-public class AdvanceKStage extends BaseCommandPlugin {
+public class nskr_isAtleastKStage extends BaseCommandPlugin {
 	
 	@Override
 	public boolean execute(String ruleId, InteractionDialogAPI dialog, List<Misc.Token> params, Map<String, MemoryAPI> memoryMap) {
-		String arg = params.get(0).getString(memoryMap);
+	boolean isAtleast = false;
+	String stringArg = params.get(0).getString(memoryMap);
+	int stage = QuestUtil.getStage();
+	int arg = Integer.parseInt(stringArg);
 
-		switch (arg)
-		{
-			case "init":
-				break;
-			case "advance":
-				advance();
-				break;
-		}
-		return true;
-	}
+	if (stage>=arg) isAtleast = true;
 
-	protected void advance(){
-		int stage = QuestUtil.getStage();
-		QuestUtil.setStage(stage+1);
+	return isAtleast;
 	}
 }

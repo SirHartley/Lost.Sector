@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class MakeHostile extends PaginatedOptions {
+public class nskr_makeHostile extends PaginatedOptions {
 
     //
 

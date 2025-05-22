@@ -2,7 +2,7 @@ package lostsector.hullmods;
 
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.combat.*;
-import lostsector.util.LSIds;
+import lostsector.util.IdsLS;
 
 public class BigBats extends BaseHullMod {
 
@@ -13,7 +13,7 @@ public class BigBats extends BaseHullMod {
         stats.getSystemUsesBonus().modifyFlat(id, MAX_CHARGES);
     }
     public void applyEffectsAfterShipCreation(ShipAPI ship, String id) {
-        if (ship.getVariant().hasHullMod(LSIds.AUGMENTED_HULLMOD_ID)){
+        if (ship.getVariant().hasHullMod(IdsLS.AUGMENTED_HULLMOD_ID)){
             ship.getMutableStats().getSystemRegenBonus().modifyPercent(id, AUGMENT_RECHARGE_BONUS);
         }
     }

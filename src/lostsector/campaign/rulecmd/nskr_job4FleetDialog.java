@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
-public class Job4FleetDialog extends PaginatedOptions {
+public class nskr_job4FleetDialog extends PaginatedOptions {
 	//
 	//Hack job of nex code, but it just worksTM
 	//
@@ -55,7 +55,7 @@ public class Job4FleetDialog extends PaginatedOptions {
 	protected List<String> disabledOpts = new ArrayList<>();
 
 	static void log(final String message) {
-		Global.getLogger(Job4FleetDialog.class).info(message);
+		Global.getLogger(nskr_job4FleetDialog.class).info(message);
 	}
 	
 	@Override

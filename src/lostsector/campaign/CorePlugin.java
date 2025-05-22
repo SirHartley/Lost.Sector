@@ -14,7 +14,7 @@ import lostsector.campaign.fleets.events.BlacksiteManager;
 import lostsector.campaign.quests.*;
 import lostsector.campaign.quests.util.QuestStageManager;
 import lostsector.campaign.quests.util.QuestUtil;
-import lostsector.campaign.rulecmd.KestevenQuest;
+import lostsector.campaign.rulecmd.nskr_kestevenQuest;
 
 import java.util.Collection;
 import java.util.List;
@@ -58,7 +58,7 @@ public class CorePlugin extends BaseCampaignPlugin {
         }
         //glacier comms dialog
         int stage = QuestUtil.getStage();
-        boolean aliceTip2 = QuestUtil.getCompleted(KestevenQuest.JOB5_ALICE_TIP_KEY2);
+        boolean aliceTip2 = QuestUtil.getCompleted(nskr_kestevenQuest.JOB5_ALICE_TIP_KEY2);
         if (interactionTarget.getId().equals("nskr_glacier") && aliceTip2 && stage>=16 && !QuestUtil.getCompleted(GlacierCommsDialog.RECOVERED_KEY)) {
             return new PluginPick<InteractionDialogPlugin>(new GlacierCommsDialog(), PickPriority.MOD_GENERAL);
         }

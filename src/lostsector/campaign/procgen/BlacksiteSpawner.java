@@ -13,7 +13,7 @@ import lostsector.campaign.fleets.events.BlacksiteInfo;
 import lostsector.campaign.fleets.events.BlacksiteManager;
 import lostsector.campaign.quests.util.QuestUtil;
 import lostsector.campaign.quests.util.SimpleSystem;
-import lostsector.util.LSIds;
+import lostsector.util.IdsLS;
 import lostsector.util.MiscLS;
 import org.lazywizard.lazylib.MathUtils;
 import org.lazywizard.lazylib.VectorUtils;
@@ -72,7 +72,7 @@ public class BlacksiteSpawner {
                 SectorEntityToken base = addDerelict(system, spawnData.one, placeToSpawn.orbit, placeToSpawn.type);
                 //makes sure we are not in a star
                 QuestUtil.spawnAwayFromStarFixer(base);
-                base.setId(LSIds.BLACKSITE_ENTITY_ID+numberOfSpawns);
+                base.setId(IdsLS.BLACKSITE_ENTITY_ID+numberOfSpawns);
 
                 List<BlacksiteInfo> sites = BlacksiteManager.getSites(BlacksiteManager.SITE_ARRAY_KEY);
                 BlacksiteInfo site = new BlacksiteInfo(base, new Random());
@@ -89,10 +89,10 @@ public class BlacksiteSpawner {
                     case Factions.TRITACHYON:
                         base.setName("Tri-Tachyon Blacksite");
                         break;
-                    case LSIds.KESTEVEN_FACTION_ID:
+                    case IdsLS.KESTEVEN_FACTION_ID:
                         base.setName("Kesteven Blacksite");
                         break;
-                    case LSIds.ENIGMA_FACTION_ID:
+                    case IdsLS.ENIGMA_FACTION_ID:
                         base.setName("Ancient Enigma Hangar");
                         break;
                     case Factions.REMNANTS:
@@ -112,7 +112,7 @@ public class BlacksiteSpawner {
     private static StarSystemAPI getRandomSystemWithBlacklist() {
         //ban entities
         List<String> banEntities = new ArrayList<>();
-        banEntities.add(LSIds.BLACKSITE_ENTITY_ID);
+        banEntities.add(IdsLS.BLACKSITE_ENTITY_ID);
 
         SimpleSystem simpleSystem = new SimpleSystem(new Random(), 1);
         simpleSystem.blacklistEntities = banEntities;

@@ -27,7 +27,7 @@ import lostsector.campaign.quests.util.QuestFleets;
 import lostsector.campaign.quests.util.QuestStageManager;
 import lostsector.campaign.quests.util.QuestUtil;
 import lostsector.ModPlugin;
-import lostsector.util.LSIds;
+import lostsector.util.IdsLS;
 import lostsector.util.MathUtilLS;
 import lostsector.util.MiscLS;
 import lostsector.util.PowerLevel;
@@ -41,7 +41,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
-public class KestevenQuest extends PaginatedOptions {
+public class nskr_kestevenQuest extends PaginatedOptions {
 
 	//handles dialogue and rules.csv for the quest line
 	//Hack job of nex code, but it just worksTM
@@ -119,7 +119,7 @@ public class KestevenQuest extends PaginatedOptions {
 
 
 	static void log(final String message) {
-		Global.getLogger(KestevenQuest.class).info(message);
+		Global.getLogger(nskr_kestevenQuest.class).info(message);
 	}
 
 	//STAGE CHEAT SHEET
@@ -258,9 +258,9 @@ public class KestevenQuest extends PaginatedOptions {
 		deliveredData = QuestUtil.getCompleted(QuestStageManager.JOB1_DELIVERED_DATA_KEY);
 		sensored = QuestUtil.getCompleted(QuestStageManager.JOB1_SENSORED_KEY);
 
-		aliceTip = QuestUtil.getCompleted(KestevenQuest.JOB5_ALICE_TIP_KEY);
-		aliceTip2 = QuestUtil.getCompleted(KestevenQuest.JOB5_ALICE_TIP_KEY2);
-		jackTip = QuestUtil.getCompleted(KestevenQuest.JOB5_JACK_TIP_KEY);
+		aliceTip = QuestUtil.getCompleted(nskr_kestevenQuest.JOB5_ALICE_TIP_KEY);
+		aliceTip2 = QuestUtil.getCompleted(nskr_kestevenQuest.JOB5_ALICE_TIP_KEY2);
+		jackTip = QuestUtil.getCompleted(nskr_kestevenQuest.JOB5_JACK_TIP_KEY);
 
 		foundEliza = QuestUtil.getCompleted(QuestStageManager.JOB5_FOUND_ELIZA_KEY);
 
@@ -695,16 +695,16 @@ public class KestevenQuest extends PaginatedOptions {
 		//job4
 		QuestFleets.spawnJob4Target();
 		QuestUtil.spawnArtifact(QuestUtil.getJob4EnemyTarget(),4);
-		QuestStageManager.spawnJob4Wrecks(KestevenQuest.getRandom());
+		QuestStageManager.spawnJob4Wrecks(nskr_kestevenQuest.getRandom());
 		//job5
 		QuestUtil.setCompleted(true, ArtifactDialog.RECOVERED_4_KEY);
 		QuestUtil.setCompleted(true, ArtifactDialog.RECOVERED_3_KEY);
 		ArtifactDialog.setRecoveredSatelliteCount(2);
 		QuestUtil.setCompleted(true, QuestStageManager.JOB5_FOUND_FROST_KEY);
 		QuestUtil.setCompleted(true, GlacierCommsDialog.RECOVERED_KEY);
-		QuestUtil.setCompleted(true, KestevenQuest.JOB5_ALICE_TIP_KEY);
-		QuestUtil.setCompleted(true, KestevenQuest.JOB5_ALICE_TIP_KEY2);
-		QuestUtil.setCompleted(true, KestevenQuest.JOB5_JACK_TIP_KEY);
+		QuestUtil.setCompleted(true, nskr_kestevenQuest.JOB5_ALICE_TIP_KEY);
+		QuestUtil.setCompleted(true, nskr_kestevenQuest.JOB5_ALICE_TIP_KEY2);
+		QuestUtil.setCompleted(true, nskr_kestevenQuest.JOB5_JACK_TIP_KEY);
 		QuestUtil.setCompleted(true, QuestStageManager.JOB5_FOUND_ELIZA_KEY);
 		QuestUtil.setCompleted(true, ElizaDialog.DIALOG_FINISHED_KEY);
 		QuestUtil.setCompleted(true, ElizaDialog.ELIZA_HELP_KEY);
@@ -1530,7 +1530,7 @@ public class KestevenQuest extends PaginatedOptions {
 			String name = modspec.getDisplayName();
 
 			playerCargo.addHullmods(mod,1);
-			ShipSwap.addPoints(50000f);
+			nskr_shipSwap.addPoints(50000f);
 			playerCargo.getCredits().add(STAGE3_PAYOUT);
 			Global.getSector().getFaction(Factions.PLAYER).adjustRelationship("kesteven",0.05f);
 			MiscLS.getAlice().getRelToPlayer().adjustRelationship(0.10f, RepLevel.COOPERATIVE);
@@ -1686,10 +1686,10 @@ public class KestevenQuest extends PaginatedOptions {
 
 	public static final ArrayList<String> MODS = new ArrayList<>();
 	static {
-		MODS.add(LSIds.INERTIAL_SUPERCHARGER_HULLMOD_ID);
-		MODS.add(LSIds.VOLATILE_FLUX_INJECTOR_HULLMOD_ID);
-		MODS.add(LSIds.HIGH_CAPACITANCE_BANKS_HULLMOD_ID);
-		MODS.add(LSIds.CRITICAL_POINT_PROTECTION_HULLMOD_ID);
+		MODS.add(IdsLS.INERTIAL_SUPERCHARGER_HULLMOD_ID);
+		MODS.add(IdsLS.VOLATILE_FLUX_INJECTOR_HULLMOD_ID);
+		MODS.add(IdsLS.HIGH_CAPACITANCE_BANKS_HULLMOD_ID);
+		MODS.add(IdsLS.CRITICAL_POINT_PROTECTION_HULLMOD_ID);
 	}
 
 	private HullModSpecAPI getRewardMod() {

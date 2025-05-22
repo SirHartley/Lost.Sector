@@ -9,7 +9,7 @@ import com.fs.starfarer.api.combat.EngagementResultAPI;
 import com.fs.starfarer.api.impl.campaign.ids.Factions;
 import com.fs.starfarer.api.impl.campaign.ids.Ranks;
 import com.fs.starfarer.api.util.Misc;
-import lostsector.campaign.rulecmd.KestevenQuest;
+import lostsector.campaign.rulecmd.nskr_kestevenQuest;
 import lostsector.util.MiscLS;
 
 import java.awt.*;
@@ -50,7 +50,7 @@ public class CacheDoubtDialog implements InteractionDialogPlugin {
         Color gr = Misc.getPositiveHighlightColor();
         Color r = Misc.getNegativeHighlightColor();
         Color tc = Misc.getTextColor();
-        Random random = KestevenQuest.getRandom();
+        Random random = nskr_kestevenQuest.getRandom();
         //gen people
         FullName.Gender gender = FullName.Gender.MALE;
         if (random.nextFloat() > 0.5f) {

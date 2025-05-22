@@ -5,7 +5,7 @@ import com.fs.starfarer.api.impl.campaign.ids.Factions;
 import com.fs.starfarer.api.impl.campaign.ids.Tags;
 import com.fs.starfarer.api.util.Pair;
 import com.fs.starfarer.api.util.WeightedRandomPicker;
-import lostsector.util.LSIds;
+import lostsector.util.IdsLS;
 import lostsector.util.MathUtilLS;
 
 import java.util.ArrayList;
@@ -62,10 +62,10 @@ public class BlacksiteInfo {
             case Factions.TRITACHYON:
                 this.points = MathUtilLS.getSeededRandomNumberInRange(100f, 125f, random) * mult;
                 break;
-            case LSIds.KESTEVEN_FACTION_ID:
+            case IdsLS.KESTEVEN_FACTION_ID:
                 this.points = MathUtilLS.getSeededRandomNumberInRange(100f, 125f, random) * mult;
                 break;
-            case LSIds.ENIGMA_FACTION_ID:
+            case IdsLS.ENIGMA_FACTION_ID:
                 this.points = MathUtilLS.getSeededRandomNumberInRange(75f, 100f, random) * mult;
                 break;
             case Factions.REMNANTS:
@@ -78,8 +78,8 @@ public class BlacksiteInfo {
     static {
         FACTIONS.add(new Pair<>(Factions.LUDDIC_PATH, 4f));
         FACTIONS.add(new Pair<>(Factions.PIRATES, 4f));
-        FACTIONS.add(new Pair<>(LSIds.ENIGMA_FACTION_ID, 5f));
-        FACTIONS.add(new Pair<>(LSIds.KESTEVEN_FACTION_ID, 6f));
+        FACTIONS.add(new Pair<>(IdsLS.ENIGMA_FACTION_ID, 5f));
+        FACTIONS.add(new Pair<>(IdsLS.KESTEVEN_FACTION_ID, 6f));
         FACTIONS.add(new Pair<>(Factions.TRITACHYON, 6f));
     }
     public String pickFactionType() {

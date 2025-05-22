@@ -12,7 +12,7 @@ import com.fs.starfarer.api.impl.campaign.ids.Ranks;
 import com.fs.starfarer.api.util.IntervalUtil;
 import com.fs.starfarer.api.util.Misc;
 import lostsector.campaign.customStart.intel.HellSpawnJudgementIntel;
-import lostsector.util.LSIds;
+import lostsector.util.IdsLS;
 
 import java.awt.*;
 import java.util.Map;
@@ -126,7 +126,7 @@ public class HellSpawnJudgementWarning implements InteractionDialogPlugin {
 
         interval.advance(amount);
         if (interval.intervalElapsed()){
-            PersonAPI thrn = Global.getSector().getImportantPeople().getPerson(LSIds.THRN_PERSON_ID);
+            PersonAPI thrn = Global.getSector().getImportantPeople().getPerson(IdsLS.THRN_PERSON_ID);
             if (Math.random()<0.10f) thrn.getName().setFirst("THRON");
             else if (Math.random()<0.10f) thrn.getName().setFirst("THRNE");
             else if (Math.random()<0.10f) thrn.getName().setFirst("DIE");
@@ -163,7 +163,7 @@ public class HellSpawnJudgementWarning implements InteractionDialogPlugin {
         thrn.getName().setFirst("THRN");
         thrn.getName().setLast("");
         thrn.setPortraitSprite("graphics/portraits/nskr_thrn00.png");
-        thrn.setId(LSIds.THRN_PERSON_ID);
+        thrn.setId(IdsLS.THRN_PERSON_ID);
 
 
         this.thrn = thrn;

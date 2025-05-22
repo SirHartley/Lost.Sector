@@ -13,8 +13,8 @@ import com.fs.starfarer.api.util.Misc;
 import lostsector.campaign.quests.Job4HintWreck;
 import lostsector.campaign.quests.util.QuestStageManager;
 import lostsector.campaign.quests.util.QuestUtil;
-import lostsector.campaign.rulecmd.Job4FleetDialog;
-import lostsector.campaign.rulecmd.KestevenQuest;
+import lostsector.campaign.rulecmd.nskr_job4FleetDialog;
+import lostsector.campaign.rulecmd.nskr_kestevenQuest;
 import lostsector.util.MiscLS;
 
 import java.awt.*;
@@ -80,7 +80,7 @@ public class KQuest4Intel extends BaseIntelPlugin {
         hintTarget = QuestUtil.getCompleted(QuestStageManager.JOB4_TARGET_HINT_KEY);
         hintFriendly = QuestUtil.getCompleted(Job4HintWreck.HINT_RECEIVED_KEY);
         foundTarget = QuestUtil.getCompleted(QuestStageManager.JOB4_FOUND_TARGET_KEY);
-        nickInfo = QuestUtil.getDialogStage(KestevenQuest.JOB4_INTELLIGENCE_DIALOG_KEY);
+        nickInfo = QuestUtil.getDialogStage(nskr_kestevenQuest.JOB4_INTELLIGENCE_DIALOG_KEY);
         defeatedTarget = QuestUtil.getCompleted(QuestStageManager.JOB4_DESTROYED_KEY);
         outpost = QuestUtil.outpostExists();
         //target
@@ -121,7 +121,7 @@ public class KQuest4Intel extends BaseIntelPlugin {
         init();
 
         //friendly
-        boolean talked = Job4FleetDialog.getDialogStage(Job4FleetDialog.PERSISTENT_KEY)>=1;
+        boolean talked = nskr_job4FleetDialog.getDialogStage(nskr_job4FleetDialog.PERSISTENT_KEY)>=1;
         SectorEntityToken locFr = QuestUtil.getJob4FriendlyTarget();
         String locFriendly = locFr.getStarSystem().getName();
         String locFriendlyOrbit = "";

@@ -7,7 +7,7 @@ import com.fs.starfarer.api.combat.EngagementResultAPI;
 import com.fs.starfarer.api.util.Misc;
 import lostsector.campaign.quests.util.QuestStageManager;
 import lostsector.campaign.quests.util.QuestUtil;
-import lostsector.campaign.rulecmd.KestevenQuest;
+import lostsector.campaign.rulecmd.nskr_kestevenQuest;
 import lostsector.util.MiscLS;
 
 import java.awt.*;
@@ -44,7 +44,7 @@ public class Job4HintWreck implements InteractionDialogPlugin {
         Color gr = Misc.getPositiveHighlightColor();
         Color r = Misc.getNegativeHighlightColor();
         Color tc = Misc.getTextColor();
-        Random random = KestevenQuest.getRandom();
+        Random random = nskr_kestevenQuest.getRandom();
 
         visual.showImageVisual(dialog.getInteractionTarget().getCustomInteractionDialogImageVisual());
 

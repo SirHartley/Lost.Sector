@@ -8,14 +8,14 @@ import com.fs.starfarer.api.impl.campaign.shared.SharedData;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import com.fs.starfarer.api.ui.TooltipMakerAPI.TooltipCreator;
 import com.fs.starfarer.api.util.Misc;
-import lostsector.campaign.rulecmd.Debt;
+import lostsector.campaign.rulecmd.nskr_debt;
 import lostsector.util.MathUtilLS;
 import lostsector.util.MiscLS;
 
 
 public class CrushingDebt implements EconomyTickListener, TooltipCreator {
 
-	//Manages interest and missed payments for Debt
+	//Manages interest and missed payments for nskr_debt
 
 	static void log(final String message) {
 		Global.getLogger(CrushingDebt.class).info(message);
@@ -30,9 +30,9 @@ public class CrushingDebt implements EconomyTickListener, TooltipCreator {
 	public void reportEconomyTick(int iterIndex) {
 		int lastIterInMonth = (int) Global.getSettings().getFloat("economyIterPerMonth") - 1;
 		if (iterIndex != lastIterInMonth) return;
-		Debt.updateInterest();
+		nskr_debt.updateInterest();
 
-		if (Debt.getDebt()==0) return;
+		if (nskr_debt.getDebt()==0) return;
 		if (!MiscLS.kestevenExists()) return;
 
 		MonthlyReport report = SharedData.getData().getCurrentReport();
@@ -41,7 +41,7 @@ public class CrushingDebt implements EconomyTickListener, TooltipCreator {
 
 		int payment = 1;
 		if (Global.getSector().getPlayerFaction().getRelationship("kesteven")>-0.5f) {
-			payment = Math.round(Debt.getDebt() * (Debt.getInterest()/100f));
+			payment = Math.round(nskr_debt.getDebt() * (nskr_debt.getInterest()/100f));
 
 			stipendNode.upkeep = payment;
 			stipendNode.name = "Monthly interest payment for your loan(s)";
@@ -52,9 +52,9 @@ public class CrushingDebt implements EconomyTickListener, TooltipCreator {
 			float rel = (Global.getSector().getPlayerFaction().getRelationship("kesteven")*100f)+100f;
 			rel = MathUtilLS.normalize(rel,0f,50f);
 			float mult = MathUtilLS.lerp(2.25f,1.25f, rel);
-			int withheld = Math.round(Debt.getDebt() * ((mult*Debt.getInterest())/100f));
-			Debt.addDebt(withheld);
-			log("Debt Hostile adding to debt instead, extra debt" + withheld + ", mult " + mult);
+			int withheld = Math.round(nskr_debt.getDebt() * ((mult* nskr_debt.getInterest())/100f));
+			nskr_debt.addDebt(withheld);
+			log("nskr_debt Hostile adding to debt instead, extra debt" + withheld + ", mult " + mult);
 
 			stipendNode.upkeep = payment;
 			stipendNode.name = "Monthly interest payment withheld";
@@ -69,16 +69,16 @@ public class CrushingDebt implements EconomyTickListener, TooltipCreator {
 	public void createTooltip(TooltipMakerAPI tooltip, boolean expanded, Object tooltipParam) {
 		String desc;
 		if (Global.getSector().getPlayerFaction().getRelationship("kesteven")>-0.5f) {
-			float rounded = Debt.getInterest();
+			float rounded = nskr_debt.getInterest();
 			rounded *= 100f;
 			rounded = Math.round(rounded);
 			rounded /= 100f;
 			desc = "Current monthly interest rate is " + rounded + "%";
 			tooltip.addPara(desc, 0f);
-			desc = "You have loaned " + Misc.getDGSCredits(Debt.getDebt());
+			desc = "You have loaned " + Misc.getDGSCredits(nskr_debt.getDebt());
 			tooltip.addPara(desc, 0f);
 		} else {
-			desc = "Monthly interest payment added as debt due to hostilities. Current debt is " + Misc.getDGSCredits(Debt.getDebt());
+			desc = "Monthly interest payment added as debt due to hostilities. Current debt is " + Misc.getDGSCredits(nskr_debt.getDebt());
 			tooltip.addPara(desc, 0f);
 		}
 	}

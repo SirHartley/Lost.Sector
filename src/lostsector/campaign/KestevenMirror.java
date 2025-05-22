@@ -7,7 +7,7 @@ import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.FactionAPI;
 import com.fs.starfarer.api.campaign.FactionSpecAPI;
 import com.fs.starfarer.api.impl.campaign.ids.Factions;
-import lostsector.util.LSIds;
+import lostsector.util.IdsLS;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -42,7 +42,7 @@ public class KestevenMirror implements EveryFrameScript {
 
     public static void borrowIndieBlueprints() {
 
-        FactionAPI f = Global.getSector().getFaction(LSIds.KESTEVEN_FACTION_ID);
+        FactionAPI f = Global.getSector().getFaction(IdsLS.KESTEVEN_FACTION_ID);
         FactionSpecAPI fSpec = f.getFactionSpec();
 
         //for (String weapon : Global.getSector().getFaction(Factions.INDEPENDENT).getKnownWeapons()) {

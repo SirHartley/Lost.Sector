@@ -7,29 +7,30 @@ import com.fs.starfarer.api.campaign.InteractionDialogAPI;
 import com.fs.starfarer.api.campaign.rules.MemoryAPI;
 import com.fs.starfarer.api.impl.campaign.rulecmd.BaseCommandPlugin;
 import com.fs.starfarer.api.util.Misc;
+import lostsector.campaign.quests.util.QuestUtil;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-public class HasMemoryKeyStartsWith extends BaseCommandPlugin
-{
+public class nskr_advanceKStage extends BaseCommandPlugin {
+	
 	@Override
 	public boolean execute(String ruleId, InteractionDialogAPI dialog, List<Misc.Token> params, Map<String, MemoryAPI> memoryMap) {
 		String arg = params.get(0).getString(memoryMap);
-		boolean startsWith = false;
 
-		if (dialog.getInteractionTarget()==null || dialog.getInteractionTarget().getMemory()==null) return false;
-
-		Collection<String>mem = dialog.getInteractionTarget().getMemory().getKeys();
-		if (mem.isEmpty()) return false;
-		for (String m : mem){
-			if (m==null)continue;
-			if (m.startsWith(arg)){
-				startsWith = true;
+		switch (arg)
+		{
+			case "init":
 				break;
-			}
+			case "advance":
+				advance();
+				break;
 		}
-		return startsWith;
+		return true;
+	}
+
+	protected void advance(){
+		int stage = QuestUtil.getStage();
+		QuestUtil.setStage(stage+1);
 	}
 }

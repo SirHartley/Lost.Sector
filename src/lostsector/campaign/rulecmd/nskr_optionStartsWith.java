@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 
-public class OptionStartsWith extends BaseCommandPlugin
+public class nskr_optionStartsWith extends BaseCommandPlugin
 {
 	@Override
 	public boolean execute(String ruleId, InteractionDialogAPI dialog, List<Misc.Token> params, Map<String, MemoryAPI> memoryMap) {

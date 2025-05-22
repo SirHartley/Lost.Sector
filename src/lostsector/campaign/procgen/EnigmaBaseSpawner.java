@@ -19,7 +19,7 @@ import com.fs.starfarer.api.util.Pair;
 import com.fs.starfarer.api.util.WeightedRandomPicker;
 import lostsector.campaign.quests.util.QuestUtil;
 import lostsector.campaign.quests.util.SimpleSystem;
-import lostsector.util.LSIds;
+import lostsector.util.IdsLS;
 import lostsector.util.MiscLS;
 import org.jetbrains.annotations.Nullable;
 
@@ -96,7 +96,7 @@ public class EnigmaBaseSpawner {
         pickStar.add(StarTypes.RED_SUPERGIANT);
         //ban entities
         List<String> banEntities = new ArrayList<>();
-        banEntities.add(LSIds.RD_FACILITY_ENTITY_ID);
+        banEntities.add(IdsLS.RD_FACILITY_ENTITY_ID);
 
         SimpleSystem simpleSystem = new SimpleSystem(new Random(), 1);
         simpleSystem.blacklistTags = banTags;

@@ -4,7 +4,7 @@ import com.fs.starfarer.api.impl.campaign.ids.Factions;
 import com.fs.starfarer.api.util.Pair;
 import com.fs.starfarer.api.util.WeightedRandomPicker;
 import lostsector.ModPlugin;
-import lostsector.util.LSIds;
+import lostsector.util.IdsLS;
 import lostsector.util.MathUtilLS;
 import lostsector.util.PowerLevel;
 
@@ -102,7 +102,7 @@ public class ContractInfo {
         COMBAT_SUBTYPES.add(new Pair<>(Factions.PIRATES, 3f));
         COMBAT_SUBTYPES.add(new Pair<>(Factions.REMNANTS, 3f));
         //COMBAT_SUBTYPES.add(new Pair<>(Factions.DERELICT, 3f));
-        COMBAT_SUBTYPES.add(new Pair<>(LSIds.ENIGMA_FACTION_ID, 3f));
+        COMBAT_SUBTYPES.add(new Pair<>(IdsLS.ENIGMA_FACTION_ID, 3f));
     }
     public static final List<Pair<String, Float>> SCAV_SUBTYPES = new ArrayList<>();
     static {
@@ -183,7 +183,7 @@ public class ContractInfo {
                     calc(DERELICT_BASE, minRandom, maxRandom, mult, DERELICT_BASE_REWARD, rewardMult);
                     isFactionBounty = true;
                     break;
-                case (LSIds.ENIGMA_FACTION_ID):
+                case (IdsLS.ENIGMA_FACTION_ID):
                     calc(ENIGMA_BASE, minRandom, maxRandom, mult, ENIGMA_BASE_REWARD, rewardMult);
                     isFactionBounty = true;
                     break;

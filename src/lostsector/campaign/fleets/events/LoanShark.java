@@ -14,8 +14,8 @@ import com.fs.starfarer.api.impl.campaign.ids.MemFlags;
 import lostsector.campaign.quests.util.FleetInfo;
 import lostsector.campaign.quests.util.QuestUtil;
 import lostsector.campaign.quests.util.SimpleFleet;
-import lostsector.campaign.rulecmd.Debt;
-import lostsector.campaign.rulecmd.LoanSharkDialog;
+import lostsector.campaign.rulecmd.nskr_debt;
+import lostsector.campaign.rulecmd.nskr_loanSharkDialog;
 import lostsector.ModPlugin;
 import lostsector.Saved;
 import lostsector.util.FleetUtil;
@@ -37,7 +37,7 @@ public class LoanShark extends BaseCampaignEventListener implements EveryFrameSc
     public static final float BASE_CHANCE = 0.01f;
     public static final float DESPAWN_TIMER = 45f;
     public static final String COLLECTOR_KEY = "$debtCollector";
-    public static final String FLEET_NAME = "Debt Collector";
+    public static final String FLEET_NAME = "nskr_debt Collector";
 
     public static final String FLEET_ARRAY_KEY = "$nskr_loanSharkFleets";
     Saved<Float> counter;
@@ -73,7 +73,7 @@ public class LoanShark extends BaseCampaignEventListener implements EveryFrameSc
         //logic
         if (counter.val>10f) {
             boolean hostile = Global.getSector().getFaction("kesteven").getRelationship(Factions.PLAYER) <= -0.5f;
-            boolean paid = LoanSharkDialog.getPaid(LoanSharkDialog.PERSISTENT_KEY);
+            boolean paid = nskr_loanSharkDialog.getPaid(nskr_loanSharkDialog.PERSISTENT_KEY);
 
             List<FleetInfo> fleets = FleetUtil.getFleets(FLEET_ARRAY_KEY);
             for (FleetInfo f : fleets) {
@@ -155,8 +155,8 @@ public class LoanShark extends BaseCampaignEventListener implements EveryFrameSc
             //spawn one fleet at a time
             if (fleets.isEmpty() && MiscLS.kestevenExists() && !collected.val) {
                 //can spawn check
-                Random random = LoanSharkDialog.getRandom();
-                if (random.nextFloat()<BASE_CHANCE && pf.isInHyperspace() && pf.getLocation().length()<25000f && hostile && Debt.getDebt()>=250000) {
+                Random random = nskr_loanSharkDialog.getRandom();
+                if (random.nextFloat()<BASE_CHANCE && pf.isInHyperspace() && pf.getLocation().length()<25000f && hostile && nskr_debt.getDebt()>=250000) {
                     this.spawnCollectorFleet();
                     collected.val = true;
                     log("loanShark SPAWNING");
@@ -168,7 +168,7 @@ public class LoanShark extends BaseCampaignEventListener implements EveryFrameSc
     void spawnCollectorFleet() {
         CampaignFleetAPI pf = Global.getSector().getPlayerFleet();
 
-        Random random = LoanSharkDialog.getRandom();
+        Random random = nskr_loanSharkDialog.getRandom();
 
         float combatPoints = MathUtilLS.getSeededRandomNumberInRange(100f, 110f, random);
         //power scaling

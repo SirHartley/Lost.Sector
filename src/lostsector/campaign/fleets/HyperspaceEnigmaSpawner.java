@@ -281,7 +281,7 @@ public class HyperspaceEnigmaSpawner extends BaseCampaignEventListener implement
         keys.add(MemFlags.MEMORY_KEY_PATROL_FLEET);
         //base
         SectorEntityToken home = pf.getContainingLocation().createToken(loc);
-        SimpleFleet simpleFleet = new SimpleFleet(home, LSIds.ENIGMA_FACTION_ID, points, keys, random);
+        SimpleFleet simpleFleet = new SimpleFleet(home, IdsLS.ENIGMA_FACTION_ID, points, keys, random);
         simpleFleet.aiFleetProperties = true;
         simpleFleet.type = type;
         switch (lvl) {

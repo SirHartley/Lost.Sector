@@ -14,7 +14,7 @@ import com.fs.starfarer.api.impl.campaign.ids.MemFlags;
 import com.fs.starfarer.api.impl.campaign.rulecmd.PaginatedOptions;
 import com.fs.starfarer.api.util.Misc;
 import com.fs.starfarer.api.util.Misc.Token;
-import lostsector.campaign.quests.util.QuestStageManager;
+import lostsector.campaign.fleets.events.LoanShark;
 import lostsector.util.MiscLS;
 
 import java.awt.*;
@@ -23,16 +23,19 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
-public class TtCollectorDialog extends PaginatedOptions {
+public class nskr_loanSharkDialog extends PaginatedOptions {
 	//
 	//Hack job of nex code, but it just worksTM
 	//
 
-	public static final String PERSISTENT_KEY = "nskr_ttCollectorDialogKey";
+	private static float relation = 0;
+	public static final String PERSISTENT_KEY = "nskr_loanSharkDialogKey";
 	private final String id = PERSISTENT_KEY;
-	private static boolean paid = false;
-	private float cargo = 0f;
-	public static final String PERSISTENT_RANDOM_KEY = "nskr_ttCollectorDialogRandom";
+	private boolean paid = false;
+	private boolean poor = true;
+	private int money = 0;
+	private float credits = 0f;
+	public static final String PERSISTENT_RANDOM_KEY = "nskr_loanSharkDialogRandom";
 
 	protected CampaignFleetAPI playerFleet;
 	protected SectorEntityToken entity;
@@ -49,7 +52,7 @@ public class TtCollectorDialog extends PaginatedOptions {
 	protected List<String> disabledOpts = new ArrayList<>();
 
 	static void log(final String message) {
-		Global.getLogger(TtCollectorDialog.class).info(message);
+		Global.getLogger(nskr_loanSharkDialog.class).info(message);
 	}
 	
 	@Override
@@ -111,8 +114,11 @@ public class TtCollectorDialog extends PaginatedOptions {
 		player = Global.getSector().getPlayerPerson();
 		person = dialog.getInteractionTarget().getActivePerson();
 
+		relation = Global.getSector().getPlayerFaction().getRelationship("kesteven");
 		paid = getPaid(PERSISTENT_KEY);
-		cargo = playerFleet.getCargo().getCommodityQuantity("nskr_electronics");
+		money = nskr_debt.getDebt();
+		credits = playerCargo.getCredits().get();
+		poor = credits<100000f;
 	}
 	
 	@Override
@@ -122,8 +128,8 @@ public class TtCollectorDialog extends PaginatedOptions {
 		{
 			dialog.getOptionPanel().setEnabled(optId, false);
 		}
-		//dialog.getOptionPanel().setShortcut("TtCollectorDialogExit", Keyboard.KEY_ESCAPE, false, false, false, false);
-		//dialog.getOptionPanel().setShortcut("TtCollectorDialogExitFight", Keyboard.KEY_ESCAPE, false, false, false, false);
+		//dialog.getOptionPanel().setShortcut("LoanSharkDialogExit", Keyboard.KEY_ESCAPE, false, false, false, false);
+		//dialog.getOptionPanel().setShortcut("LoanSharkDialogExitFight", Keyboard.KEY_ESCAPE, false, false, false, false);
 	}
 
 	protected void canPay(){
@@ -135,26 +141,32 @@ public class TtCollectorDialog extends PaginatedOptions {
 		Color tc = Misc.getTextColor();
 		float pad = 3f;
 		float opad = 10f;
-		text.setFontInsignia();
 
 		//can pay check
 		if (!paid) {
-			//give cargo
-			if (cargo > 0f) {
-				text.addPara("\"Our scans show you have "+(int)cargo+" units of Artifact Electronics.\"");
-				text.addPara("\"Just give us all the cargo, and we can stay civilized about this.\"");
+			//not enough
+			if (money>credits && poor) {
+				text.addPara("\"Seems like you don't have enough credits to pay us anything.\"");
 
-				addOption("Hand over the "+(int)cargo+" units of Artifact Electronics", "nskr_ttCollectorDialogPayAll");
-				addOption("\"No, I don't think I will.\"", "nskr_ttCollectorDialogExitFight");
+				addOption("\"Yeah, uhhh... I Don't have any money.\"", "nskr_loanSharkDialogNoPay");
+			}
+			//pay some money
+			if (money>credits && !poor) {
+				text.addPara("\"Seems like you don't have enough credits to pay us everything.\"");
+				text.addPara("\"Just give us all you have, so we don't need to use *other* measures.\"");
 
-			} else {
-				//0 cargo
-				text.addPara("\"Seems like you don't have enough cargo to give us anything.\"");
+				addOption("Pay them " + Misc.getDGSCredits(credits), "nskr_loanSharkDialogPaySome");
+				addOption("\"No, I don't think I will.\"", "nskr_loanSharkDialogExitFight");
+			}
+			//pay all money
+			if (money<=credits) {
+				text.addPara("\"Just give us all the owed money, and we don't need to use *other* measures.\"");
 
-				addOption("\"Yeah, uhhh... I Don't have any of that stuff.\"", "nskr_ttCollectorDialogNoPay");
+				addOption("Pay them " + Misc.getDGSCredits(money), "nskr_loanSharkDialogPayAll");
+				addOption("\"No, I don't think I will.\"", "nskr_loanSharkDialogExitFight");
 			}
 		}
-
+		text.setFontInsignia();
 	}
 
 	protected void pay() {
@@ -168,18 +180,22 @@ public class TtCollectorDialog extends PaginatedOptions {
 		float pad = 3f;
 		float opad = 10f;
 		float toPay = 0f;
-		toPay = cargo;
+		if (money>credits){
+			toPay = credits;
+		} else toPay = money;
 
 		//remove
-		playerCargo.removeCommodity("nskr_electronics", cargo);
-		//paid
+		playerCargo.getCredits().subtract(toPay);
+		nskr_debt.addDebt((int)-toPay);
+		//helped
 		setPaid(true, PERSISTENT_KEY);
 		//relation
-		Global.getSector().getFaction(Factions.PLAYER).adjustRelationship(Factions.TRITACHYON,0.05f);
+		Global.getSector().getFaction(Factions.PLAYER).adjustRelationship("kesteven",0.05f);
 		person.getRelToPlayer().adjustRelationship(0.10f, RepLevel.COOPERATIVE);
 		//completion text
-		text.addPara("Lost "+(int)cargo+" units of Artifact Electronics",g,r,(int)cargo+" units of Artifact Electronics","");
-		text.addPara("Relationship with Tri-tachyon improved by 5",g,gr,"5","");
+		text.addPara("Lost "+Misc.getDGSCredits(toPay),g,r,Misc.getDGSCredits(toPay)+"","");
+		text.addPara("nskr_debt reduced to "+Misc.getDGSCredits(nskr_debt.getDebt()),g,h,Misc.getDGSCredits(nskr_debt.getDebt())+"","");
+		text.addPara("Relationship with Kesteven improved by 5",g,gr,"5","");
 		text.addPara("Relationship with "+person.getNameString()+" improved by 10",g,gr,"10","");
 		//sound
 		Global.getSoundPlayer().playUISound("ui_rep_raise",1f,1f);
@@ -187,18 +203,17 @@ public class TtCollectorDialog extends PaginatedOptions {
 		//un aggro
 		entity.getMemoryWithoutUpdate().clear();
 		entity.getMemoryWithoutUpdate().set(MemFlags.FLEET_IGNORES_OTHER_FLEETS, true);
-		entity.getMemoryWithoutUpdate().set(QuestStageManager.TT_COLLECTOR_KEY, true);
 	}
 
 	//
 	public static boolean validEntity(SectorEntityToken entity)
 	{
 		if (entity==null) return false;
-		if (paid) return false;
+		if (relation>-0.5f) return false;
 		//pick correct fleet
-		if (!entity.getMemory().contains(QuestStageManager.TT_COLLECTOR_KEY)) return false;
+		if (!entity.getMemory().contains(LoanShark.COLLECTOR_KEY)) return false;
 
-		return entity.getFaction().getId().equals(Factions.TRITACHYON);
+		return entity.getFaction().getId().equals("kesteven");
 	}
 
 	public static Random getRandom() {

@@ -159,10 +159,10 @@ public class BlacksiteManager extends BaseCampaignEventListener implements Every
                             case Factions.TRITACHYON:
                                 actionText = "evacuating location";
                                 break;
-                            case LSIds.KESTEVEN_FACTION_ID:
+                            case IdsLS.KESTEVEN_FACTION_ID:
                                 actionText = "evacuating location";
                                 break;
-                            case LSIds.ENIGMA_FACTION_ID:
+                            case IdsLS.ENIGMA_FACTION_ID:
                                 actionText = "destroying location";
                                 break;
                             case Factions.REMNANTS:
@@ -268,10 +268,10 @@ public class BlacksiteManager extends BaseCampaignEventListener implements Every
             case Factions.TRITACHYON:
                 entity = MiscLS.swapSalvageEntity(site.entity, TRITACHYON_ENTITY_ID, getRandom());
                 break;
-            case LSIds.KESTEVEN_FACTION_ID:
+            case IdsLS.KESTEVEN_FACTION_ID:
                 entity = MiscLS.swapSalvageEntity(site.entity, KESTEVEN_ENTITY_ID, getRandom());
                 break;
-            case LSIds.ENIGMA_FACTION_ID:
+            case IdsLS.ENIGMA_FACTION_ID:
                 entity = MiscLS.swapSalvageEntity(site.entity, ENIGMA_ENTITY_ID, getRandom());
                 break;
             case Factions.REMNANTS:
@@ -373,10 +373,10 @@ public class BlacksiteManager extends BaseCampaignEventListener implements Every
                 case Factions.TRITACHYON:
                     simpleFleet.name = "Black Ops Group";
                     break;
-                case LSIds.KESTEVEN_FACTION_ID:
+                case IdsLS.KESTEVEN_FACTION_ID:
                     simpleFleet.name = "Strike Force";
                     break;
-                case LSIds.ENIGMA_FACTION_ID:
+                case IdsLS.ENIGMA_FACTION_ID:
                     simpleFleet.name = "Black Ops "+ MiscLS.getRandomGreekLetter(random, true);
                     break;
                 case Factions.REMNANTS:

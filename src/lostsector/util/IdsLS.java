@@ -2,7 +2,7 @@ package lostsector.util;
 
 import lostsector.campaign.econ.UnlimitedProductionChipCondition;
 
-public class LSIds {
+public class IdsLS {
 
     public static final String LOST_SECTOR_MOD_ID = "lost_sector";
 

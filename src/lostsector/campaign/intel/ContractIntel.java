@@ -14,7 +14,7 @@ import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import com.fs.starfarer.api.util.Misc;
 import lostsector.campaign.quests.jobs.ContractInfo;
 import lostsector.campaign.quests.jobs.ContractManager;
-import lostsector.util.LSIds;
+import lostsector.util.IdsLS;
 
 import java.awt.*;
 import java.util.Iterator;
@@ -64,7 +64,7 @@ public class ContractIntel extends BaseIntelPlugin {
             Global.getSector().getCampaignUI().addMessage("Received "+Misc.getDGSCredits(contract.totalReward),
                     g, Misc.getDGSCredits(contract.totalReward), "", h, h);
             Global.getSector().getCampaignUI().addMessage("Relations with Kesteven improved by "+ (int)(rep*100f),
-                    g, "Kesteven",(int)(rep*100f)+"", Global.getSector().getFaction(LSIds.KESTEVEN_FACTION_ID).getColor(), h);
+                    g, "Kesteven",(int)(rep*100f)+"", Global.getSector().getFaction(IdsLS.KESTEVEN_FACTION_ID).getColor(), h);
 
             Global.getSoundPlayer().playUISound("ui_rep_raise",1f,1f);
             end();

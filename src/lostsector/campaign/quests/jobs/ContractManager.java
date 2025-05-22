@@ -11,9 +11,9 @@ import com.fs.starfarer.api.fleet.FleetMemberAPI;
 import com.fs.starfarer.api.impl.campaign.ids.Factions;
 import lostsector.campaign.quests.EndingKestevenDialog;
 import lostsector.campaign.quests.util.QuestUtil;
-import lostsector.campaign.rulecmd.Contracts;
 import lostsector.Saved;
-import lostsector.util.LSIds;
+import lostsector.campaign.rulecmd.Contracts;
+import lostsector.util.IdsLS;
 import lostsector.util.MiscLS;
 
 import java.util.ArrayList;
@@ -65,7 +65,7 @@ public class ContractManager extends BaseCampaignEventListener implements EveryF
             //do here so we don't have to do it everyFrame
             for (ContractInfo contract : contracts) {
                 //fail
-                if (QuestUtil.getEndMissions() || Global.getSector().getPlayerFaction().getRelationship(LSIds.KESTEVEN_FACTION_ID)<=-0.5f){
+                if (QuestUtil.getEndMissions() || Global.getSector().getPlayerFaction().getRelationship(IdsLS.KESTEVEN_FACTION_ID)<=-0.5f){
                     contract.failed = true;
                 }
             }
@@ -96,7 +96,7 @@ public class ContractManager extends BaseCampaignEventListener implements EveryF
 
         List<ContractInfo> contracts = getContracts(CONTRACT_ARRAY_KEY);
         //no data on ourselves
-        if (loser.getFaction() != Global.getSector().getFaction(LSIds.KESTEVEN_FACTION_ID)) {
+        if (loser.getFaction() != Global.getSector().getFaction(IdsLS.KESTEVEN_FACTION_ID)) {
             for (ContractInfo contract : contracts) {
                 for (CargoStackAPI c : loot.getStacksCopy()) {
                     if (c.getCommodityId() == null) continue;
@@ -124,7 +124,7 @@ public class ContractManager extends BaseCampaignEventListener implements EveryF
             //normal bounties
             //hostile check
             if (!contract.isFactionBounty) {
-                if (enemy.getFleet().getFaction().isHostileTo(Global.getSector().getFaction(LSIds.KESTEVEN_FACTION_ID))) {
+                if (enemy.getFleet().getFaction().isHostileTo(Global.getSector().getFaction(IdsLS.KESTEVEN_FACTION_ID))) {
                     for (FleetMemberAPI m : lost) {
                         ShipHullSpecAPI mspec = m.getHullSpec();
                         if (mspec == null) continue;
@@ -299,7 +299,7 @@ public class ContractManager extends BaseCampaignEventListener implements EveryF
                     typeString = "Derelict vessel";
                 }
                 break;
-            case (LSIds.ENIGMA_FACTION_ID):
+            case (IdsLS.ENIGMA_FACTION_ID):
                 if (contract.count>1 && remaining>1) {
                     typeString = "Enigma vessels";
                 } else {

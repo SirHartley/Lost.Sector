@@ -29,7 +29,7 @@ import lostsector.campaign.quests.util.QuestUtil;
 import lostsector.campaign.util.CampaignTimer;
 import lostsector.ModPlugin;
 import lostsector.util.FleetUtil;
-import lostsector.util.LSIds;
+import lostsector.util.IdsLS;
 import lostsector.util.MathUtilLS;
 import lostsector.world.systems.frost.Frost;
 import org.lazywizard.lazylib.MathUtils;
@@ -344,7 +344,7 @@ public class HellSpawnManager extends BaseCampaignEventListener implements Every
 
         if (GamemodeManager.getMode() != GamemodeManager.gameMode.HELLSPAWN) return;
 
-        if (faction.equals(LSIds.ENIGMA_FACTION_ID) || faction.equals(Factions.PLAYER)) return;
+        if (faction.equals(IdsLS.ENIGMA_FACTION_ID) || faction.equals(Factions.PLAYER)) return;
 
         setRelation(faction);
 
@@ -378,7 +378,7 @@ public class HellSpawnManager extends BaseCampaignEventListener implements Every
         float cap = getRelationshipCap();
         if (cap>0){
             for (FactionAPI f : Global.getSector().getAllFactions()) {
-                if (f.getId().equals(LSIds.ENIGMA_FACTION_ID) || f.getId().equals(Factions.PLAYER)) continue;
+                if (f.getId().equals(IdsLS.ENIGMA_FACTION_ID) || f.getId().equals(Factions.PLAYER)) continue;
                 setRelation(f.getId());
              }
         }

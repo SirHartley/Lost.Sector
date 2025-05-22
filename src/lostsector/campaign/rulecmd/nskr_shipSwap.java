@@ -34,7 +34,7 @@ import java.awt.*;
 import java.util.List;
 import java.util.*;
 
-public class ShipSwap extends PaginatedOptions {
+public class nskr_shipSwap extends PaginatedOptions {
 
 	//Copy pasted from Nexelerin you should use the non cursed og
 
@@ -46,7 +46,7 @@ public class ShipSwap extends PaginatedOptions {
 	public static final int STOCK_COUNT_MAX = 12;
 
 	public static final String PERSISTENT_RANDOM_KEY = "nskr_shipSwapRandom";
-	public static Logger log = Global.getLogger(ShipSwap.class);
+	public static Logger log = Global.getLogger(nskr_shipSwap.class);
 	
 	// Things that count for trade-in
 	public static final Set<String> ALLOWED_IDS = new HashSet<>(Arrays.asList("nskr_electronics"));
@@ -667,7 +667,7 @@ public class ShipSwap extends PaginatedOptions {
 		if (!market.getFaction().getId().equals("kesteven")) return false;
 		if (Global.getSector().getPlayerFaction().getRelationship("kesteven")<=-0.5f) return false;
 		if (QuestUtil.asteriaOrOutpost()==null) return false;
-		if (QuestUtil.getCompleted(QuestStageManager.ELIZA_INTERCEPT_HANDED_OVER) || QuestUtil.getCompleted(AltEndingDialogLuddic.DIALOG_FINISHED_KEY)) return false;
+		if (QuestUtil.getCompleted(QuestStageManager.ELIZA_INTERCEPT_HANDED_OVER) || QuestUtil.getCompleted(nskr_altEndingDialogLuddic.DIALOG_FINISHED_KEY)) return false;
 		return market.getId().equals(QuestUtil.asteriaOrOutpost().getId());
 	}
 	

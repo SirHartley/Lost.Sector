@@ -6,7 +6,7 @@ import com.fs.starfarer.api.campaign.BaseCampaignEventListener;
 import com.fs.starfarer.api.campaign.CampaignFleetAPI;
 import com.fs.starfarer.api.fleet.FleetMemberAPI;
 import lostsector.util.FleetUtil;
-import lostsector.util.LSIds;
+import lostsector.util.IdsLS;
 import lostsector.util.MiscLS;
 
 
@@ -35,7 +35,7 @@ public class EnigmaAIConverter extends BaseCampaignEventListener implements Ever
     //ENIGMA officer hacks
     @Override
     public void reportFleetSpawned(CampaignFleetAPI fleet) {
-        if (fleet.getFaction().getId().equals(LSIds.ENIGMA_FACTION_ID)) {
+        if (fleet.getFaction().getId().equals(IdsLS.ENIGMA_FACTION_ID)) {
             FleetUtil.setAIOfficers(fleet);
             return;
         }

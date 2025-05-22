@@ -7,8 +7,8 @@ import com.fs.starfarer.api.campaign.SectorEntityToken;
 import com.fs.starfarer.api.campaign.StarSystemAPI;
 import com.fs.starfarer.api.characters.PersonAPI;
 import com.fs.starfarer.api.impl.campaign.ids.*;
-import lostsector.campaign.rulecmd.KestevenQuest;
-import lostsector.campaign.rulecmd.TtCollectorDialog;
+import lostsector.campaign.rulecmd.nskr_kestevenQuest;
+import lostsector.campaign.rulecmd.nskr_ttCollectorDialog;
 import lostsector.ModPlugin;
 import lostsector.util.FleetUtil;
 import lostsector.util.MathUtilLS;
@@ -188,7 +188,7 @@ public class QuestFleets {
 
     //tt collector fleet
     public static CampaignFleetAPI spawnCollectorFleet() {
-        Random random = TtCollectorDialog.getRandom();
+        Random random = nskr_ttCollectorDialog.getRandom();
         CampaignFleetAPI pf = Global.getSector().getPlayerFleet();
         float combatPoints = MathUtilLS.getSeededRandomNumberInRange(100f, 120f, random);
         //power scaling
@@ -234,7 +234,7 @@ public class QuestFleets {
 
     //fleets for job 4
     public static CampaignFleetAPI  spawnJob4Splinters(){
-        Random random = KestevenQuest.getRandom();
+        Random random = nskr_kestevenQuest.getRandom();
         StarSystemAPI target = QuestUtil.getJob4FriendlyTarget().getStarSystem();
         //don't spawn in the same system as the friendly fleet
         StarSystemAPI origin = QuestUtil.getRandomSystemWithinConstellation(QuestUtil.getJob4FriendlyTarget().getConstellation(), target, 1, random);
@@ -271,7 +271,7 @@ public class QuestFleets {
 
     //target for job 4
     public static CampaignFleetAPI spawnJob4Target(){
-        Random random = KestevenQuest.getRandom();
+        Random random = nskr_kestevenQuest.getRandom();
 
         StarSystemAPI target = QuestUtil.getJob4FriendlyTarget().getStarSystem();
         //don't spawn in the same system as the friendly fleet
@@ -351,7 +351,7 @@ public class QuestFleets {
 
     //friendly for job 4
     public static CampaignFleetAPI spawnJob4Friendly(){
-        Random random = KestevenQuest.getRandom();
+        Random random = nskr_kestevenQuest.getRandom();
 
         StarSystemAPI origin = QuestUtil.getJob4FriendlyTarget().getStarSystem();
         SectorEntityToken loc = QuestUtil.getJob4FriendlyTarget();
@@ -393,7 +393,7 @@ public class QuestFleets {
 
     //target fleet for job 3
     public static CampaignFleetAPI spawnJob3TargetFleet(){
-        Random random = KestevenQuest.getRandom();
+        Random random = nskr_kestevenQuest.getRandom();
         SectorEntityToken loc = QuestUtil.getJob3Start();
 
         float combatPoints = MathUtilLS.getSeededRandomNumberInRange(130f, 140f, random);

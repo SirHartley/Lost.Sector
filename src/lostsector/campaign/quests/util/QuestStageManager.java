@@ -24,14 +24,14 @@ import lostsector.campaign.ExileManager;
 import lostsector.campaign.procgen.DormantSpawner;
 import lostsector.campaign.procgen.EnvironmentalStorytelling;
 import lostsector.campaign.quests.*;
-import lostsector.campaign.rulecmd.AltEndingDialogLuddic;
-import lostsector.campaign.rulecmd.Job4FleetDialog;
-import lostsector.campaign.rulecmd.KestevenQuest;
-import lostsector.campaign.rulecmd.TtCollectorDialog;
+import lostsector.campaign.rulecmd.nskr_altEndingDialogLuddic;
+import lostsector.campaign.rulecmd.nskr_job4FleetDialog;
+import lostsector.campaign.rulecmd.nskr_kestevenQuest;
+import lostsector.campaign.rulecmd.nskr_ttCollectorDialog;
 import lostsector.ModPlugin;
 import lostsector.Saved;
 import lostsector.util.FleetUtil;
-import lostsector.util.LSIds;
+import lostsector.util.IdsLS;
 import lostsector.util.MathUtilLS;
 import lostsector.util.MiscLS;
 import lostsector.world.systems.cache.Cache;
@@ -48,7 +48,7 @@ public class QuestStageManager extends BaseCampaignEventListener implements Ever
     //
     //manages quest stage changes and mission fleets
     //1000 line efs? no im fine, this works perfectly.
-    public static final String KESTEVEN_QUEST_KEY = "KestevenQuest";
+    public static final String KESTEVEN_QUEST_KEY = "nskr_kestevenQuest";
     public static final String FLEET_ARRAY_KEY = "$kQuestMissionFleets";
     public static final String QUEST_END_KEY = "KestevenQuestEnd";
     public static final String PERSISTENT_RANDOM_KEY = "KestevenQuestRandomKey";
@@ -310,9 +310,9 @@ public class QuestStageManager extends BaseCampaignEventListener implements Ever
         //ArtifactDialog.setRecoveredSatelliteCount(2);
         //QuestUtil.setCompleted(true, JOB5_FOUND_FROST_KEY);
         //QuestUtil.setCompleted(true, GlacierCommsDialog.RECOVERED_KEY);
-        //QuestUtil.setCompleted(true, KestevenQuest.JOB5_ALICE_TIP_KEY);
-        //QuestUtil.setCompleted(true, KestevenQuest.JOB5_ALICE_TIP_KEY2);
-        //QuestUtil.setCompleted(true, KestevenQuest.JOB5_JACK_TIP_KEY);
+        //QuestUtil.setCompleted(true, nskr_kestevenQuest.JOB5_ALICE_TIP_KEY);
+        //QuestUtil.setCompleted(true, nskr_kestevenQuest.JOB5_ALICE_TIP_KEY2);
+        //QuestUtil.setCompleted(true, nskr_kestevenQuest.JOB5_JACK_TIP_KEY);
         //QuestUtil.setCompleted(true, JOB5_FOUND_ELIZA_KEY);
         //QuestUtil.setCompleted(true, ElizaDialog.DIALOG_FINISHED_KEY);
         //QuestUtil.setCompleted(true, ElizaDialog.ELIZA_HELP_KEY);
@@ -414,7 +414,7 @@ public class QuestStageManager extends BaseCampaignEventListener implements Ever
                     //added to mem in the spawner
                 }
                 //hint wrecks/environmental storytelling
-                spawnJob4Wrecks(KestevenQuest.getRandom());
+                spawnJob4Wrecks(nskr_kestevenQuest.getRandom());
 
                 log("Qmanager spawn job4 fleets");
                 jobFleetsSpawned4.val = true;
@@ -422,13 +422,13 @@ public class QuestStageManager extends BaseCampaignEventListener implements Ever
         }
         //job 4 logic
         //dialog reveal logic
-        if (Job4FleetDialog.getDialogStage(Job4FleetDialog.PERSISTENT_KEY)>=1 && !QuestUtil.getCompleted(JOB4_FOUND_TARGET_KEY) && !QuestUtil.getCompleted(JOB4_DESTROYED_KEY)){
+        if (nskr_job4FleetDialog.getDialogStage(nskr_job4FleetDialog.PERSISTENT_KEY)>=1 && !QuestUtil.getCompleted(JOB4_FOUND_TARGET_KEY) && !QuestUtil.getCompleted(JOB4_DESTROYED_KEY)){
 
             QuestUtil.setCompleted(true, JOB4_TARGET_HINT_KEY);
         }
         //job 4
         //found friendly
-        if (Job4FleetDialog.getDialogStage(Job4FleetDialog.PERSISTENT_KEY)>=1 && !QuestUtil.getCompleted(JOB4_FOUND_FRIENDLY_KEY)){
+        if (nskr_job4FleetDialog.getDialogStage(nskr_job4FleetDialog.PERSISTENT_KEY)>=1 && !QuestUtil.getCompleted(JOB4_FOUND_FRIENDLY_KEY)){
 
             QuestUtil.setCompleted(true, JOB4_FOUND_FRIENDLY_KEY);
         }
@@ -462,7 +462,7 @@ public class QuestStageManager extends BaseCampaignEventListener implements Ever
         if (stage==16) {
            //job 5 logic
            //found frost check
-           if (!QuestUtil.getCompleted(JOB5_FOUND_FROST_KEY) && QuestUtil.getCompleted(KestevenQuest.JOB5_ALICE_TIP_KEY2)){
+           if (!QuestUtil.getCompleted(JOB5_FOUND_FROST_KEY) && QuestUtil.getCompleted(nskr_kestevenQuest.JOB5_ALICE_TIP_KEY2)){
                if (pf.getContainingLocation()!=null && pf.getContainingLocation()== MiscLS.getFrost()){
                    //found
                    QuestUtil.setCompleted(true, JOB5_FOUND_FROST_KEY);
@@ -540,7 +540,7 @@ public class QuestStageManager extends BaseCampaignEventListener implements Ever
                 }
                 if (cacheTimer.val > 90f) {
                     //start music
-                    Global.getSector().getStarSystem(LSIds.CACHE_SYSTEM_NAME).getMemoryWithoutUpdate().set(MusicPlayerPluginImpl.MUSIC_SET_MEM_KEY, "nskr_cache_theme");
+                    Global.getSector().getStarSystem(IdsLS.CACHE_SYSTEM_NAME).getMemoryWithoutUpdate().set(MusicPlayerPluginImpl.MUSIC_SET_MEM_KEY, "nskr_cache_theme");
                     //add to mission fleets so we can track it
                     CampaignFleetAPI fleet = Cache.spawnGuardianFleet(pf, QuestUtil.getCacheFleetLoc());
                     Global.getSoundPlayer().playSound("ui_discovered_entity", 1f, 1f, fleet.getLocation(), new Vector2f());
@@ -599,7 +599,7 @@ public class QuestStageManager extends BaseCampaignEventListener implements Ever
                 //can spawn check
                 if (stage>=2 && stage<=15) {
                     boolean cargo = pf.getCargo().getCommodityQuantity("nskr_electronics") >= 50f;
-                    Random random = TtCollectorDialog.getRandom();
+                    Random random = nskr_ttCollectorDialog.getRandom();
                     if (random.nextFloat() < BASE_TT_COLLECT_CHANCE && pf.isInHyperspace() && pf.getLocation().length() < 25000f && cargo) {
 
                         CampaignFleetAPI fleet = QuestFleets.spawnCollectorFleet();
@@ -626,7 +626,7 @@ public class QuestStageManager extends BaseCampaignEventListener implements Ever
             //revengeace fleet spawner
             if (getRandom().nextFloat()<REVENGEANCE_CHANCE && stage == 20 && !vengeanced.val) {
                 //jack
-                if (QuestUtil.getCompleted(EndingElizaDialog.DIALOG_FINISHED_KEY) || QuestUtil.getCompleted(AltEndingDialogLuddic.DIALOG_FINISHED_KEY)){
+                if (QuestUtil.getCompleted(EndingElizaDialog.DIALOG_FINISHED_KEY) || QuestUtil.getCompleted(nskr_altEndingDialogLuddic.DIALOG_FINISHED_KEY)){
                     CampaignFleetAPI fleet = vengeanceJack();
                     vengeanced.val = true;
                     log("Revengeanced Jack");
@@ -705,7 +705,7 @@ public class QuestStageManager extends BaseCampaignEventListener implements Ever
 
     }
     private static String pickRandomVariant(Random random) {
-        FactionAPI faction = Global.getSector().getFaction(LSIds.KESTEVEN_FACTION_ID);
+        FactionAPI faction = Global.getSector().getFaction(IdsLS.KESTEVEN_FACTION_ID);
         ArrayList<String> variants = new ArrayList<>();
         String variant = "";
         while (variants.isEmpty()) {
@@ -849,7 +849,7 @@ public class QuestStageManager extends BaseCampaignEventListener implements Ever
                     }
                 }
                 //logic
-                boolean paid = TtCollectorDialog.getPaid(TtCollectorDialog.PERSISTENT_KEY);
+                boolean paid = nskr_ttCollectorDialog.getPaid(nskr_ttCollectorDialog.PERSISTENT_KEY);
                 //AI LOGIC
                 //intercept
                 if (!paid) {
@@ -1128,7 +1128,7 @@ public class QuestStageManager extends BaseCampaignEventListener implements Ever
             if (QuestUtil.getStage() <= 9) {
                 QuestUtil.setFailed(true, JOB3_FAIL_KEY);
                 QuestUtil.setStage(10);
-                KestevenQuest.spawnEnvironmentalStorytelling();
+                nskr_kestevenQuest.spawnEnvironmentalStorytelling();
                 Global.getSector().getCampaignUI().addMessage("You have ran out of time, mission failed. Report back to "+ QuestUtil.asteriaOrOutpost().getName()+" to finish the job.",
                         Global.getSettings().getColor("standardTextColor"),
                         "mission failed",
@@ -1317,7 +1317,7 @@ public class QuestStageManager extends BaseCampaignEventListener implements Ever
         PersonAPI jack = MiscLS.getJack();
         SectorEntityToken loc = QuestUtil.asteriaOrOutpost().getPrimaryEntity();
         //spawn fleet and add to list
-        CampaignFleetAPI fleet = QuestFleets.spawnJackFleet(loc, jack, KestevenQuest.getRandom());
+        CampaignFleetAPI fleet = QuestFleets.spawnJackFleet(loc, jack, nskr_kestevenQuest.getRandom());
         //remove from market
         loc.getMarket().getCommDirectory().removePerson(jack);
         loc.getMarket().removePerson(jack);
@@ -1415,7 +1415,7 @@ public class QuestStageManager extends BaseCampaignEventListener implements Ever
 
         //relations capper for Eliza ending
         if (QuestUtil.getCompleted(EndingElizaDialog.DIALOG_FINISHED_KEY)){
-            if (faction.equals(LSIds.KESTEVEN_FACTION_ID)){
+            if (faction.equals(IdsLS.KESTEVEN_FACTION_ID)){
                 //add Nex rel cap
                 float max;
                 if (ModPlugin.IS_NEXELERIN) {

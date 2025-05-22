@@ -12,7 +12,7 @@ import lostsector.campaign.quests.util.QuestUtil;
 import java.util.List;
 import java.util.Map;
 
-public class IsAtleastKStage extends BaseCommandPlugin {
+public class nskr_isAtmostKStage extends BaseCommandPlugin {
 	
 	@Override
 	public boolean execute(String ruleId, InteractionDialogAPI dialog, List<Misc.Token> params, Map<String, MemoryAPI> memoryMap) {
@@ -21,7 +21,7 @@ public class IsAtleastKStage extends BaseCommandPlugin {
 	int stage = QuestUtil.getStage();
 	int arg = Integer.parseInt(stringArg);
 
-	if (stage>=arg) isAtleast = true;
+	if (stage<=arg) isAtleast = true;
 
 	return isAtleast;
 	}

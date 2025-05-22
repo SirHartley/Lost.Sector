@@ -6,29 +6,32 @@ import com.fs.starfarer.api.campaign.econ.MarketAPI;
 import com.fs.starfarer.api.campaign.rules.MemoryAPI;
 import com.fs.starfarer.api.impl.campaign.rulecmd.BaseCommandPlugin;
 import com.fs.starfarer.api.util.Misc;
-import lostsector.campaign.quests.KQuest5Bar;
-import lostsector.campaign.quests.util.QuestUtil;
+import lostsector.util.IdsLS;
 
 import java.util.List;
 import java.util.Map;
 
-public class BarEventFixer extends BaseCommandPlugin {
+public class nskr_heartFixer extends BaseCommandPlugin {
+
+    //removes certain entries for heart market
 
     static void log(final String message) {
-        Global.getLogger(BarEventFixer.class).info(message);
+        Global.getLogger(nskr_heartFixer.class).info(message);
     }
 
     @Override
     public boolean execute(String ruleId, InteractionDialogAPI dialog, List<Misc.Token> params, Map<String, MemoryAPI> memoryMap) {
-        int stage = QuestUtil.getStage();
+        if (dialog.getInteractionTarget() == null) return false;
         MarketAPI market = dialog.getInteractionTarget().getMarket();
+        if (market == null || market.getId() == null) return false;
 
-        //job5 bar intial
-        if (stage==15 && market== QuestUtil.asteriaOrOutpost()) {
-            KQuest5Bar event = new KQuest5Bar();
-            event.addPromptAndOption(dialog, memoryMap);
-            log("fixer added job5bar");
+        //Frozen Heart
+        if (market.getId().equals(IdsLS.HEART_ENTITY_ID)) {
+
+            dialog.getOptionPanel().removeOption("marketVisitBar");
+            dialog.getOptionPanel().removeOption("marketOpenCoreUI");
         }
+
         //
 
         return false;

@@ -12,7 +12,7 @@ import com.fs.starfarer.api.util.Misc;
 
 import java.util.*;
 
-public class IsBaseOfficial extends BaseCommandPlugin {
+public class nskr_isBaseOfficial extends BaseCommandPlugin {
 	
 	public static final Set<String> COMMAND_POSTS = new HashSet<>();
 	public static final Set<String> MILITARY_POSTS = new HashSet<>();

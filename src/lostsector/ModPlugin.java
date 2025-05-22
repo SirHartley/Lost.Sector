@@ -40,7 +40,7 @@ import lostsector.campaign.quests.util.QuestStageManager;
 import lostsector.campaign.util.CampaignTimer;
 import lostsector.campaign.util.CustomCampaignListener;
 import lostsector.util.FleetUtil;
-import lostsector.util.LSIds;
+import lostsector.util.IdsLS;
 import lostsector.util.MiscLS;
 import lostsector.weapons.ai.EmglStuckAI;
 import lostsector.weapons.ai.TremorAI;
@@ -152,8 +152,8 @@ public class ModPlugin extends BaseModPlugin {
             //NEX HACKS
             try {
                 List<String> baned = Nex_TransferMarket.NO_TRANSFER_FACTIONS;
-                if (!baned.contains(LSIds.ENIGMA_FACTION_ID)) {
-                    baned.add(LSIds.ENIGMA_FACTION_ID);
+                if (!baned.contains(IdsLS.ENIGMA_FACTION_ID)) {
+                    baned.add(IdsLS.ENIGMA_FACTION_ID);
                 }
             } catch (UnsupportedOperationException ex){ }
         }
@@ -314,9 +314,9 @@ public class ModPlugin extends BaseModPlugin {
 
     public static float getScriptedFleetSizeMult(){
         if (IS_LUNALIB){
-            if (LunaSettings.getBoolean(LSIds.LOST_SECTOR_MOD_ID, "starfarerMode")) return STARFARER_MODE_SCRIPTED_MULT;
-            if (LunaSettings.getBoolean(LSIds.LOST_SECTOR_MOD_ID, "easyMode")) return EASY_MODE_SCRIPTED_MULT;
-            return Math.max(LunaSettings.getFloat(LSIds.LOST_SECTOR_MOD_ID, "scriptedFleetScaling"), 0.1f);
+            if (LunaSettings.getBoolean(IdsLS.LOST_SECTOR_MOD_ID, "starfarerMode")) return STARFARER_MODE_SCRIPTED_MULT;
+            if (LunaSettings.getBoolean(IdsLS.LOST_SECTOR_MOD_ID, "easyMode")) return EASY_MODE_SCRIPTED_MULT;
+            return Math.max(LunaSettings.getFloat(IdsLS.LOST_SECTOR_MOD_ID, "scriptedFleetScaling"), 0.1f);
         } else {
             if (getSettingBoolean("starfarerMode")) return STARFARER_MODE_SCRIPTED_MULT;
             if (getSettingBoolean("easyMode")) return EASY_MODE_SCRIPTED_MULT;
@@ -326,9 +326,9 @@ public class ModPlugin extends BaseModPlugin {
 
     public static float getRandomEnigmaFleetSizeMult(){
         if (IS_LUNALIB){
-            if (LunaSettings.getBoolean(LSIds.LOST_SECTOR_MOD_ID, "starfarerMode")) return STARFARER_MODE_ENIGMA_MULT;
-            if (LunaSettings.getBoolean(LSIds.LOST_SECTOR_MOD_ID, "easyMode")) return EASY_MODE_ENIGMA_MULT;
-            return LunaSettings.getFloat(LSIds.LOST_SECTOR_MOD_ID, "randomEnigmaFleetScaling");
+            if (LunaSettings.getBoolean(IdsLS.LOST_SECTOR_MOD_ID, "starfarerMode")) return STARFARER_MODE_ENIGMA_MULT;
+            if (LunaSettings.getBoolean(IdsLS.LOST_SECTOR_MOD_ID, "easyMode")) return EASY_MODE_ENIGMA_MULT;
+            return LunaSettings.getFloat(IdsLS.LOST_SECTOR_MOD_ID, "randomEnigmaFleetScaling");
         } else {
             if (getSettingBoolean("starfarerMode")) return STARFARER_MODE_SCRIPTED_MULT;
             if (getSettingBoolean("easyMode")) return EASY_MODE_SCRIPTED_MULT;
@@ -338,7 +338,7 @@ public class ModPlugin extends BaseModPlugin {
 
     public static boolean getStarfarerMode(){
         if (IS_LUNALIB){
-            if (LunaSettings.getBoolean(LSIds.LOST_SECTOR_MOD_ID, "starfarerMode")) return true;
+            if (LunaSettings.getBoolean(IdsLS.LOST_SECTOR_MOD_ID, "starfarerMode")) return true;
         } else {
             if (getSettingBoolean("starfarerMode")) return true;
         }
@@ -590,7 +590,7 @@ public class ModPlugin extends BaseModPlugin {
 
                     StarSystemAPI system = siberia.getStarSystem();
                     if (system.getEntitiesWithTag(Ids.TAG_WATCHTOWER).isEmpty()) {
-                        ArtilleryStationPlacer.placeWatchtowers(system, LSIds.ENIGMA_FACTION_ID);
+                        ArtilleryStationPlacer.placeWatchtowers(system, IdsLS.ENIGMA_FACTION_ID);
                     }
                 }
             }

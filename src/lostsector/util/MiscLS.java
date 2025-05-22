@@ -129,7 +129,7 @@ public class MiscLS {
     }
 
     public static boolean kestevenExists(){
-        return Misc.getFactionMarkets(LSIds.KESTEVEN_FACTION_ID).size() > 0;
+        return Misc.getFactionMarkets(IdsLS.KESTEVEN_FACTION_ID).size() > 0;
     }
 
     public static boolean AsteriaExists(){

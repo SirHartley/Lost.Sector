@@ -25,7 +25,7 @@ import com.fs.starfarer.api.util.Misc;
 import lostsector.campaign.quests.ArtifactDialog;
 import lostsector.campaign.quests.CoreDialog;
 import lostsector.campaign.quests.util.*;
-import lostsector.campaign.rulecmd.KestevenQuest;
+import lostsector.campaign.rulecmd.nskr_kestevenQuest;
 import lostsector.ModPlugin;
 import lostsector.util.FleetUtil;
 import lostsector.util.MiscLS;
@@ -251,7 +251,7 @@ public class Cache {
     public static CampaignFleetAPI spawnGuardianFleet(CampaignFleetAPI pf, SectorEntityToken loc) {
         float points = MathUtils.getRandomNumberInRange(45f, 50f);
 
-        Random random = KestevenQuest.getRandom();
+        Random random = nskr_kestevenQuest.getRandom();
 
         //skills
         Map<String, Integer> skills = new HashMap<>(OFFICER_SKILLS);
@@ -520,7 +520,7 @@ public class Cache {
 
         ShipRecoverySpecial.ShipRecoverySpecialData data = new ShipRecoverySpecial.ShipRecoverySpecialData(null);
         //random SP recovery
-        data.storyPointRecovery = KestevenQuest.getRandom().nextFloat()<0.50f;
+        data.storyPointRecovery = nskr_kestevenQuest.getRandom().nextFloat()<0.50f;
         data.notNowOptionExits = true;
         data.noDescriptionText = true;
         DerelictShipEntityPlugin dsep = (DerelictShipEntityPlugin) entity.getCustomPlugin();

@@ -9,7 +9,7 @@ import com.fs.starfarer.api.fleet.FleetMemberAPI;
 import com.fs.starfarer.api.impl.campaign.ids.MemFlags;
 import com.fs.starfarer.api.util.Misc;
 import lostsector.campaign.quests.util.QuestUtil;
-import lostsector.campaign.rulecmd.KestevenQuest;
+import lostsector.campaign.rulecmd.nskr_kestevenQuest;
 import lostsector.util.MiscLS;
 import org.lazywizard.lazylib.MathUtils;
 
@@ -67,7 +67,7 @@ public class GlacierCommsDialog implements InteractionDialogPlugin {
         //options.addOption("Leave", OptionId.LEAVE);
 
         int stage = QuestUtil.getStage();
-        boolean aliceTip2 = QuestUtil.getCompleted(KestevenQuest.JOB5_ALICE_TIP_KEY2);
+        boolean aliceTip2 = QuestUtil.getCompleted(nskr_kestevenQuest.JOB5_ALICE_TIP_KEY2);
         if (stage >= 16 && aliceTip2 && !QuestUtil.getCompleted(RECOVERED_KEY)) {
             options.addOption("Search for the facility", OptionId.A1);
         }

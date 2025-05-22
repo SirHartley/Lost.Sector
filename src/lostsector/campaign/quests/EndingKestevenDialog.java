@@ -11,8 +11,8 @@ import com.fs.starfarer.api.util.Misc;
 import lostsector.campaign.econ.UnlimitedProductionChipCondition;
 import lostsector.campaign.quests.util.QuestStageManager;
 import lostsector.campaign.quests.util.QuestUtil;
-import lostsector.campaign.rulecmd.KestevenQuest;
-import lostsector.campaign.rulecmd.ShipSwap;
+import lostsector.campaign.rulecmd.nskr_kestevenQuest;
+import lostsector.campaign.rulecmd.nskr_shipSwap;
 import lostsector.util.MathUtilLS;
 import lostsector.util.MiscLS;
 
@@ -140,9 +140,9 @@ public class EndingKestevenDialog implements InteractionDialogPlugin {
             //playerCargo.addSpecial(new SpecialItemData("Prot_wp", null), 1);
             playerCargo.addSpecial(new SpecialItemData("nskr_prot_light", null), 1);
             //credits
-            playerCargo.getCredits().add(KestevenQuest.STAGE5_PAYOUT);
+            playerCargo.getCredits().add(nskr_kestevenQuest.STAGE5_PAYOUT);
             //Exchange
-            ShipSwap.addPoints(REWARD_POINTS);
+            nskr_shipSwap.addPoints(REWARD_POINTS);
             //+rep
             Global.getSector().getFaction(Factions.PLAYER).adjustRelationship("kesteven",0.25f);
             jack.getRelToPlayer().adjustRelationship(0.20f, RepLevel.COOPERATIVE);
@@ -150,7 +150,7 @@ public class EndingKestevenDialog implements InteractionDialogPlugin {
             //TT war
             float rep = MathUtilLS.getSeededRandomNumberInRange(-0.70f, -0.65f, getRandom());
             //completion text
-            String payout = Misc.getDGSCredits(KestevenQuest.STAGE5_PAYOUT);
+            String payout = Misc.getDGSCredits(nskr_kestevenQuest.STAGE5_PAYOUT);
             text.setFontSmallInsignia();
             //add sp
             Global.getSector().getPlayerStats().setStoryPoints(Global.getSector().getPlayerStats().getStoryPoints()+1);
