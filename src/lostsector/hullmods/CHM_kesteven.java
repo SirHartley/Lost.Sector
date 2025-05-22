@@ -8,7 +8,7 @@ import com.fs.starfarer.api.combat.ShipAPI.HullSize;
 import java.awt.*;
 
 public class CHM_kesteven extends BaseHullMod {
-    //does nothing, actual effect in nskr_comcrewsBonus
+    //does nothing, actual effect in ComCrewsBonus
     @Override
     public void applyEffectsBeforeShipCreation(HullSize hullSize, MutableShipStatsAPI stats, String id) {
     }

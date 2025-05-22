@@ -1,0 +1,65 @@
+package lostsector.shipsystems;
+
+import com.fs.starfarer.api.Global;
+import com.fs.starfarer.api.combat.CombatEngineAPI;
+import com.fs.starfarer.api.combat.MutableShipStatsAPI;
+import com.fs.starfarer.api.combat.ShipAPI;
+import com.fs.starfarer.api.impl.combat.BaseShipSystemScript;
+import lostsector.hullmods.Absorption;
+import org.lwjgl.util.vector.Vector2f;
+
+import java.awt.*;
+
+public class BubbleStats extends BaseShipSystemScript {
+
+    //basically a dummy, the hullmod does all the work
+
+    //VARIABLES
+    public static final String SOUND_ID = "nskr_bubble";
+    public static final Vector2f ZERO = new Vector2f();
+
+    private boolean activated;
+    private boolean updated = false;
+
+    @Override
+    public void apply(MutableShipStatsAPI stats, String id, State state, float effectLevel) {
+        ShipAPI ship = (ShipAPI) stats.getEntity();
+        CombatEngineAPI engine = Global.getCombatEngine();
+        if (engine.isPaused() || stats.getEntity() == null) return;
+        if (ship.getShield()==null) {
+            engine.addFloatingText(ship.getLocation(), "you have no shield bruh", 36f, Color.RED, ship, 0.5f, 1.0f);
+            return;
+        }
+
+        //make sure variables are correct
+        Absorption.ShipSpecificData data = (Absorption.ShipSpecificData) Global.getCombatEngine().getCustomData().get("ABSORPTION_DATA_KEY" + ship.getId());
+        if (!updated) {
+            activated = false;
+
+            updated = true;
+        }
+        if (state == State.OUT || state == State.ACTIVE) {
+            if (!activated) {
+                Global.getSoundPlayer().playSound(SOUND_ID,1f,1f, ship.getLocation(), ZERO);
+
+                data.timer = Absorption.SYS_TIME;
+                activated = true;
+                ship.getShield().toggleOn();
+            }
+        }
+        Global.getCombatEngine().getCustomData().put("ABSORPTION_DATA_KEY" + ship.getId(), data);
+    }
+
+    @Override
+    public void unapply(MutableShipStatsAPI stats, String id) {
+        ShipAPI ship = (ShipAPI) stats.getEntity();
+        CombatEngineAPI engine = Global.getCombatEngine();
+
+        updated = false;
+    }
+
+    public StatusData getStatusData(int index, State state, float effectLevel) {
+        return null;
+    }
+
+}
