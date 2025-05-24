@@ -22,6 +22,7 @@ public class Arcadia {
 										   ArrayList<SectorEntityToken> connectedEntities, String name, int size,
 										   ArrayList<String> conditionList, ArrayList<ArrayList<String>> industryList, ArrayList<String> submarkets,
 										   float tarrif, boolean freePort) {
+
 		EconomyAPI globalEconomy = Global.getSector().getEconomy();
 		String planetID = primaryEntity.getId();
 		String marketID = planetID/* + "_market"*/;
@@ -79,7 +80,7 @@ public class Arcadia {
 		if (system != null) {
 
 			PlanetAPI star = system.getStar();
-			PlanetAPI asteria = system.addPlanet("nskr_asteria", star, "Asteria", "nskr_ice_desert", 180, 130, 3950, 140);
+			PlanetAPI asteria = system.addPlanet("nskr_asteria", star, "Asteria", "nskr_ice_desert", 10, 130, 3950, 200);
 			asteria.getSpec().setGlowTexture(Global.getSettings().getSpriteName("hab_glows", "sindria"));
 			asteria.getSpec().setGlowColor(new Color(235,245,255,255));
 			asteria.getSpec().setUseReverseLightForGlow(true);
@@ -108,18 +109,15 @@ public class Arcadia {
 					"Asteria", 6,
 					new ArrayList<>(Arrays.asList(
 							Conditions.POPULATION_6,
-							Conditions.INDUSTRIAL_POLITY,
-							Conditions.REGIONAL_CAPITAL,
 							Conditions.ORE_MODERATE,
 							Conditions.RARE_ORE_ABUNDANT,
 							Conditions.POLLUTION,
 							Conditions.COLD)),
 					new ArrayList<>(Arrays.asList(
 							new ArrayList<>(Arrays.asList(Industries.POPULATION)),
-							new ArrayList<>(Arrays.asList(Industries.MEGAPORT, Items.FULLERENE_SPOOL)),
-							new ArrayList<>(Arrays.asList(Industries.HIGHCOMMAND)),
-							new ArrayList<>(Arrays.asList(Industries.ORBITALWORKS, Items.PRISTINE_NANOFORGE)), // Industry
-							new ArrayList<>(Arrays.asList(Industries.REFINING)),
+							new ArrayList<>(Arrays.asList(Industries.MEGAPORT)),
+							new ArrayList<>(Arrays.asList(Industries.MILITARYBASE)),
+							new ArrayList<>(Arrays.asList(Industries.HEAVYINDUSTRY, Items.CORRUPTED_NANOFORGE)), // Industry
 							new ArrayList<>(Arrays.asList(Industries.LIGHTINDUSTRY)),
 							new ArrayList<>(Arrays.asList(Industries.HEAVYBATTERIES)),
 							new ArrayList<>(Arrays.asList(Industries.STARFORTRESS_MID)))),

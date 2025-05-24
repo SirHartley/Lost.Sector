@@ -4,7 +4,7 @@ import lostsector.campaign.econ.UnlimitedProductionChipCondition;
 
 public class IdsLS {
 
-    public static final String LOST_SECTOR_MOD_ID = "lost_sector";
+    public static final String LOST_SECTOR_MOD_ID = "lost.sector";
 
     public static final String KESTEVEN_FACTION_ID = "kesteven";
     public static final String ENIGMA_FACTION_ID = "enigma";

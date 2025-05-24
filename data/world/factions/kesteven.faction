@@ -193,8 +193,8 @@
 		"carriers":0,
 		"phaseShips":0,
 		
-		"officerQuality":3,
-		"shipQuality":2,
+		"officerQuality":1,
+		"shipQuality":4,
 		"numShips":2,
 		
 		"shipSize":3,

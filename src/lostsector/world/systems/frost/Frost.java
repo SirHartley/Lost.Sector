@@ -369,14 +369,12 @@ public class Frost {
 		WeightedRandomPicker<BaseThemeGenerator.EntityLocation> locs = BaseThemeGenerator.getLocations(null, system, null, 100f, WEIGHTS);
 		BaseThemeGenerator.EntityLocation loc = locs.pick();
 
-		BaseThemeGenerator.AddedEntity hearts = BaseThemeGenerator.addNonSalvageEntity(system, loc, "station_sporeship_derelict", "enigma");
+		BaseThemeGenerator.AddedEntity hearts = BaseThemeGenerator.addNonSalvageEntity(system, loc, "nskr_heart_active", "enigma");
 		SectorEntityToken heart = hearts.entity;
+
 		//station
 		heart.setId("nskr_heart");
-		heart.setName("Frozen Heart");
 		heart.setCircularOrbitPointingDown(star, 90, 5400, 330);
-		heart.setInteractionImage("illustrations", "nskr_heart");
-		heart.setCustomDescriptionId("nskr_station_heart");
 		heart.setSensorProfile(2500f);
 		heart.setDiscoveryXP(25000f);
 		heart.setDiscoverable(true);

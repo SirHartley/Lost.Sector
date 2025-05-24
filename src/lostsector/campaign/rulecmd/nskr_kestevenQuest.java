@@ -242,7 +242,7 @@ public class nskr_kestevenQuest extends PaginatedOptions {
 		alice = MiscLS.getAlice();
 		nick = MiscLS.getNick();
 
-		power = PowerLevel.get(0.2f, 0f,2f);
+		power = Global.getSettings().isDevMode() ? 2 : PowerLevel.get(0.2f, 0f,2f);
 		stage = QuestUtil.getStage();
 		relation = Global.getSector().getPlayerFaction().getRelationship("kesteven");
 		foughtEnigma = QuestUtil.getCompleted(QuestStageManager.HAS_FOUGHT_ENIGMA_KEY);

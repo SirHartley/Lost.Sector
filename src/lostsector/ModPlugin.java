@@ -138,16 +138,6 @@ public class ModPlugin extends BaseModPlugin {
         IS_TAHLAN = Global.getSettings().getModManager().isModEnabled("tahlan");
         IS_EXOTICA = Global.getSettings().getModManager().isModEnabled("exoticatechnologies");
 
-        if (!Global.getSettings().getModManager().isModEnabled("MagicLib")){
-            throw new IllegalStateException("You aint got MagicLib loaded bruv, you need it to play with LOST_SECTOR");
-        }
-        if (!Global.getSettings().getModManager().isModEnabled("lw_lazylib")){
-            throw new IllegalStateException("You aint got LazyLib loaded bruv, you need it to play with LOST_SECTOR");
-        }
-        if (!Global.getSettings().getModManager().isModEnabled("shaderLib")){
-            throw new IllegalStateException("You aint got GraphicsLib loaded bruv, you need it to play with LOST_SECTOR");
-        }
-
         if (IS_NEXELERIN) {
             //NEX HACKS
             try {

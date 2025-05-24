@@ -16,6 +16,10 @@ Adjusted - Condition descriptions
 Adjusted - Skill descriptions
 Adjusted - Nex Background descriptions
 Adjusted - Cleaned up the tips file
+Adjusted - Bumped Kesteven faction profile quality to 4 in exchange for officer quality to compensate for loss of nanoforge
+Adjusted - Asteria now orbits exactly opposite of the gas giant
+Adjusted - Severely nerfed the campaign presence of Asteria
+Fixed - Asteria no longer has a shorter orbit time than the other planets in Arcadia (no more planet overlap)
 
 
 --------------------------- Pre-Fork Changelog -----------------------------
