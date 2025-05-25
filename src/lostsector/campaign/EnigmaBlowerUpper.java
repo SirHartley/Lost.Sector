@@ -16,6 +16,9 @@ import com.fs.starfarer.api.impl.campaign.procgen.StarSystemGenerator;
 import com.fs.starfarer.api.impl.campaign.procgen.themes.BaseThemeGenerator;
 import com.fs.starfarer.api.impl.campaign.terrain.DebrisFieldTerrainPlugin;
 import com.fs.starfarer.api.util.Misc;
+import indevo.industries.artillery.scripts.ArtilleryStationScript;
+import indevo.industries.artillery.scripts.CampaignAttackScript;
+import lostsector.ModPlugin;
 import lostsector.campaign.intel.FrostIntel;
 import lostsector.Saved;
 import lostsector.util.MiscLS;
@@ -110,6 +113,23 @@ public class EnigmaBlowerUpper extends BaseCampaignEventListener implements Ever
                 Industry fort = market.getIndustry(Industries.STARFORTRESS);
 
                 if (fort.getDisruptedDays() > 88f && !doOnce) {
+
+                    //disable artillery
+                    if (ModPlugin.IS_INDEVO){
+                        CampaignAttackScript script = null;
+                        for (EveryFrameScript s : market.getPrimaryEntity().getScripts()){
+                            if (s instanceof CampaignAttackScript) {
+                                script = (CampaignAttackScript) s;
+                                break;
+                            }
+                        }
+
+                        if (script != null){
+                            script.disabled = true;
+                            script.isDone = true;
+                        }
+                    }
+
                     StarSystemAPI system = market.getStarSystem();
                     PlanetAPI star = system.getStar();
                     //explode pls

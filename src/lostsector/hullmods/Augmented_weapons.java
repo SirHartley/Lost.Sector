@@ -72,9 +72,19 @@ public class Augmented_weapons extends BaseHullMod {
 
     public void addPostDescriptionSection(TooltipMakerAPI tooltip, ShipAPI.HullSize hullSize, ShipAPI ship, float width, boolean isForModSpec) {
         float pad = 10.0f;
-        MutableShipStatsAPI stats = ship.getMutableStats();
         //update
-        calculateBonus(ship.getAllWeapons(), ship);
+        if (Global.getSettings().isShowingCodex()) {
+            totalCount = 10f;
+            energyCount = 10f;
+            ballisticCount = 10f;
+            missileCount = 10f;
+            energyBonus = 10f;
+            ballisticBonus = 10f;
+            missileBonus = 10f;
+            energyPart = 10f;
+            ballisticPart = 10f;
+            missilePart = 10f;
+        } else calculateBonus(ship.getAllWeapons(), ship);
 
         // it just works
         if (ballisticPart<=1f)ballisticPart *= 10000f;

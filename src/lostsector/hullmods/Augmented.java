@@ -296,134 +296,135 @@ public class Augmented extends BaseHullMod {
 
 	public void addPostDescriptionSection(TooltipMakerAPI tooltip, ShipAPI.HullSize hullSize, ShipAPI ship, float width, boolean isForModSpec) {
 		float pad = 10.0f;
-		MutableShipStatsAPI stats = ship.getMutableStats();
 
 		Color tc = Misc.getHighlightColor();
 		Color y = Misc.getHighlightColor();
+		
+		boolean codex = Global.getSettings().isShowingCodex();
 
 		// HULLMODS
 		tooltip.addSectionHeading("Current Augments", Alignment.MID, pad);
 		// FLUX COIL ADJUNCT
-		if (ship.getVariant().hasHullMod(FLUX_COIL_ADJUNCT_ID)) {
+		if (codex || ship.getVariant().hasHullMod(FLUX_COIL_ADJUNCT_ID)) {
 			TooltipMakerAPI text = tooltip.beginImageWithText("graphics/icons/hullsys/temporal_shell.png", 32.0f);
 			text.addPara("FLUX COIL ADJUNCT", 0.0f, tc, "FLUX COIL ADJUNCT");
 			text.addPara("Gain "+FLUX_COIL_ADJUNCT_BONUS+"%"+"% of current flux as dissipation.", 0.0f, y, FLUX_COIL_ADJUNCT_BONUS+"%");
 			tooltip.addImageWithText(pad);
 		}
 		// TURRET GYROS
-		if (ship.getVariant().hasHullMod(TURRET_GYROS_ID)) {
+		if (codex || ship.getVariant().hasHullMod(TURRET_GYROS_ID)) {
 			TooltipMakerAPI text = tooltip.beginImageWithText("graphics/icons/hullsys/ammo_feeder.png", 32.0f);
 			text.addPara("ADVANCED TURRET GYROS", 0.0f, tc, "ADVANCED TURRET GYROS");
 			text.addPara("Increases weapon range by "+(int)TURRET_GYROS_BONUS+"%"+"%.", 0.0f, y, (int)TURRET_GYROS_BONUS+"%");
 			tooltip.addImageWithText(pad);
 		}
 		// ECM
-		if (ship.getVariant().hasHullMod(ECM_ID)) {
+		if (codex || ship.getVariant().hasHullMod(ECM_ID)) {
 			TooltipMakerAPI text = tooltip.beginImageWithText("graphics/icons/hullsys/interdictor_array.png", 32.0f);
 			text.addPara("ECM PACKAGE", 0.0f, tc, "ECM PACKAGE");
 			text.addPara("Increases damage dealt to target weapons and engines by "+(int)ECM_BONUS+"%"+"%.", 0.0f, y, (int)ECM_BONUS+"%");
 			tooltip.addImageWithText(pad);
 		}
 		// HARDENED SHIELDS
-		if (ship.getVariant().hasHullMod(HARDENED_SHIELDS_ID)) {
+		if (codex || ship.getVariant().hasHullMod(HARDENED_SHIELDS_ID)) {
 			TooltipMakerAPI text = tooltip.beginImageWithText("graphics/icons/hullsys/fortress_shield.png", 32.0f);
 			text.addPara("HARDENED SHIELDS", 0.0f, tc, "HARDENED SHIELDS");
 			text.addPara("Reduces energy weapon flux use by "+(int)HARDENED_SHIELDS_BONUS+"%"+"%.", 0.0f, y, (int)HARDENED_SHIELDS_BONUS+"%");
 			tooltip.addImageWithText(pad);
 		}
 		// HEAVY ARMOR
-		if (ship.getVariant().hasHullMod(HEAVY_ARMOR_ID)) {
+		if (codex || ship.getVariant().hasHullMod(HEAVY_ARMOR_ID)) {
 			TooltipMakerAPI text = tooltip.beginImageWithText("graphics/icons/hullsys/damper_field.png", 32.0f);
 			text.addPara("HEAVY ARMOR", 0.0f, tc, "HEAVY ARMOR");
 			text.addPara("Increases ballistic weapon rate of fire by "+(int)HEAVY_ARMOR_BONUS+"%"+"%.", 0.0f, y, (int)HEAVY_ARMOR_BONUS+"%");
 			tooltip.addImageWithText(pad);
 		}
 		// UNSTABLE INJECTOR
-		if (ship.getVariant().hasHullMod(UNSTABLE_INJECTOR_ID)) {
+		if (codex || ship.getVariant().hasHullMod(UNSTABLE_INJECTOR_ID)) {
 			TooltipMakerAPI text = tooltip.beginImageWithText("graphics/icons/hullsys/burn_drive.png", 32.0f);
 			text.addPara("UNSTABLE INJECTOR", 0.0f, tc, "UNSTABLE INJECTOR");
 			text.addPara("Increases top speed by "+(int)UNSTABLE_INJECTOR_BONUS+"su/s when moving forwards.", 0.0f, y, (int)UNSTABLE_INJECTOR_BONUS+"su/s");
 			tooltip.addImageWithText(pad);
 		}
 		// SOLAR SHIELDING
-		if (ship.getVariant().hasHullMod(SOLAR_SHIELDING_ID)) {
+		if (codex || ship.getVariant().hasHullMod(SOLAR_SHIELDING_ID)) {
 			TooltipMakerAPI text = tooltip.beginImageWithText("graphics/icons/hullsys/damper_field.png", 32.0f);
 			text.addPara("SOLAR SHIELDING", 0.0f, tc, "SOLAR SHIELDING");
 			text.addPara("Reduces beam damage taken by "+(int)SOLAR_SHIELDING_BONUS+"%"+"%.", 0.0f, y, (int)SOLAR_SHIELDING_BONUS+"%");
 			tooltip.addImageWithText(pad);
 		}
 		// REPAIR UNIT
-		if (ship.getVariant().hasHullMod(REPAIR_UNIT_ID)) {
+		if (codex || ship.getVariant().hasHullMod(REPAIR_UNIT_ID)) {
 			TooltipMakerAPI text = tooltip.beginImageWithText("graphics/icons/hullsys/active_flare_launcher.png", 32.0f);
 			text.addPara("AUTOMATED REPAIR UNIT", 0.0f, tc, "AUTOMATED REPAIR UNIT");
 			text.addPara("Reduces CR drain after peak performance time runs out by "+(int)REPAIR_UNIT_BONUS+"%"+"%.", 0.0f, y, (int)REPAIR_UNIT_BONUS+"%");
 			tooltip.addImageWithText(pad);
 		}
 		// IPDAI
-		if (ship.getVariant().hasHullMod(IPDAI_ID)) {
+		if (codex || ship.getVariant().hasHullMod(IPDAI_ID)) {
 			TooltipMakerAPI text = tooltip.beginImageWithText("graphics/icons/hullsys/drone_pd_mid.png", 32.0f);
 			text.addPara("INTEGRATED POINT DEFENSE AI", 0.0f, tc, "INTEGRATED POINT DEFENSE AI");
 			text.addPara("Increases damage dealt to fighters by "+(int)IPDAI_BONUS+"%"+"%.", 0.0f, y, (int)IPDAI_BONUS+"%");
 			tooltip.addImageWithText(pad);
 		}
 		// HIGH RESOLUTION SENSORS
-		if (ship.getVariant().hasHullMod(HIGH_RESOLUTION_SENSORS_ID)) {
+		if (codex || ship.getVariant().hasHullMod(HIGH_RESOLUTION_SENSORS_ID)) {
 			TooltipMakerAPI text = tooltip.beginImageWithText("graphics/icons/hullsys/interdictor_array.png", 32.0f);
 			text.addPara("HIGH RESOLUTION SENSORS", 0.0f, tc, "HIGH RESOLUTION SENSORS");
 			text.addPara("Non missile weapon base range increased by "+(int)HIGH_RESOLUTION_SENSORS_BONUS+" units.", 0.0f, y, (int)HIGH_RESOLUTION_SENSORS_BONUS+"");
 			tooltip.addImageWithText(pad);
 		}
 		// SHIELD SHUNT
-		if (ship.getVariant().hasHullMod(SHIELD_SHUNT_ID)) {
+		if (codex || ship.getVariant().hasHullMod(SHIELD_SHUNT_ID)) {
 			TooltipMakerAPI text = tooltip.beginImageWithText("graphics/icons/hullsys/quantum_disruptor.png", 32.0f);
 			text.addPara("SHIELD SHUNT", 0.0f, tc, "SHIELD SHUNT");
 			text.addPara("Non missile weapon base range increased by "+(int)SHIELD_SHUNT_BONUS+" units.", 0.0f, y, (int)SHIELD_SHUNT_BONUS+"");
 			tooltip.addImageWithText(pad);
 		}
 		// ACCELERATED SHIELDS
-		if (ship.getVariant().hasHullMod(ACCELERATED_SHIELDS_ID)) {
+		if (codex || ship.getVariant().hasHullMod(ACCELERATED_SHIELDS_ID)) {
 			TooltipMakerAPI text = tooltip.beginImageWithText("graphics/icons/hullsys/fortress_shield.png", 32.0f);
 			text.addPara("ACCELERATED SHIELDS", 0.0f, tc, "ACCELERATED SHIELDS");
 			text.addPara("Reduces shield damage taken by "+(int)ACCELERATED_SHIELDS_BONUS+"%"+"%.", 0.0f, y, (int)ACCELERATED_SHIELDS_BONUS+"%");
 			tooltip.addImageWithText(pad);
 		}
 		// STABILIZED SHIELDS
-		if (ship.getVariant().hasHullMod(STABILIZED_SHIELDS_ID)) {
+		if (codex || ship.getVariant().hasHullMod(STABILIZED_SHIELDS_ID)) {
 			TooltipMakerAPI text = tooltip.beginImageWithText("graphics/icons/hullsys/fortress_shield.png", 32.0f);
 			text.addPara("STABILIZED SHIELDS", 0.0f, tc, "STABILIZED SHIELDS");
 			text.addPara("Reduces shield damage taken by "+(int)STABILIZED_SHIELDS_BONUS+"%"+"%.", 0.0f, y, (int)STABILIZED_SHIELDS_BONUS+"%");
 			tooltip.addImageWithText(pad);
 		}
 		// EXTENDED SHIELDS
-		if (ship.getVariant().hasHullMod(EXTENDED_SHIELDS_ID)) {
+		if (codex || ship.getVariant().hasHullMod(EXTENDED_SHIELDS_ID)) {
 			TooltipMakerAPI text = tooltip.beginImageWithText("graphics/icons/hullsys/fortress_shield.png", 32.0f);
 			text.addPara("EXTENDED SHIELDS", 0.0f, tc, "EXTENDED SHIELDS");
 			text.addPara("Reduces shield damage taken by "+(int)EXTENDED_SHIELDS_BONUS+"%"+"%.", 0.0f, y, (int)EXTENDED_SHIELDS_BONUS+"%");
 			tooltip.addImageWithText(pad);
 		}
 		// FRONT CONVERSION
-		if (ship.getVariant().hasHullMod(FRONT_CONVERSION_ID)) {
+		if (codex || ship.getVariant().hasHullMod(FRONT_CONVERSION_ID)) {
 			TooltipMakerAPI text = tooltip.beginImageWithText("graphics/icons/hullsys/fortress_shield.png", 32.0f);
 			text.addPara("SHIELD CONVERSION - FRONT", 0.0f, tc, "SHIELD CONVERSION - FRONT");
 			text.addPara("Reduces shield damage taken by "+(int)FRONT_CONVERSION_BONUS+"%"+"%.", 0.0f, y, (int)FRONT_CONVERSION_BONUS+"%");
 			tooltip.addImageWithText(pad);
 		}
 		// OMNI CONVERSION
-		if (ship.getVariant().hasHullMod(OMNI_CONVERSION_ID)) {
+		if (codex || ship.getVariant().hasHullMod(OMNI_CONVERSION_ID)) {
 			TooltipMakerAPI text = tooltip.beginImageWithText("graphics/icons/hullsys/fortress_shield.png", 32.0f);
 			text.addPara("SHIELD CONVERSION - OMNI", 0.0f, tc, "SHIELD CONVERSION - OMNI");
 			text.addPara("Increases shield unfold rate by "+(int)OMNI_CONVERSION_BONUS+"%"+"%.", 0.0f, y, (int)OMNI_CONVERSION_BONUS+"%");
 			tooltip.addImageWithText(pad);
 		}
 		// BLAST DOORS
-		if (ship.getVariant().hasHullMod(BLAST_DOORS_ID)) {
+		if (codex || ship.getVariant().hasHullMod(BLAST_DOORS_ID)) {
 			TooltipMakerAPI text = tooltip.beginImageWithText("graphics/icons/hullsys/damper_field.png", 32.0f);
 			text.addPara("BLAST DOORS", 0.0f, tc, "BLAST DOORS");
 			text.addPara("Reduces hull damage taken by "+(int)BLAST_DOORS_BONUS+"%"+"% when below half hull.", 0.0f, y, (int)BLAST_DOORS_BONUS+"%");
 			tooltip.addImageWithText(pad);
 		}
 		// OPERATIONS CENTER
-		if (ship.getVariant().hasHullMod(OPERATIONS_CENTER_ID)) {
+		if (codex || ship.getVariant().hasHullMod(OPERATIONS_CENTER_ID)) {
 			TooltipMakerAPI text = tooltip.beginImageWithText("graphics/icons/hullsys/targeting_feed.png", 32.0f);
 			text.addPara("OPERATIONS CENTER", 0.0f, tc, "OPERATIONS CENTER");
 			text.addPara("Prevents peak performance time from dropping by up to "+(int)OPERATIONS_CENTER_BONUS+" seconds, on any friendly ship that stays within "+(int)OPERATIONS_CENTER_RANGE+" units. " +
@@ -431,35 +432,35 @@ public class Augmented extends BaseHullMod {
 			tooltip.addImageWithText(pad);
 		}
 		// RECOVERY SHUTTLES
-		if (ship.getVariant().hasHullMod(RECOVERY_SHUTTLES_ID)) {
+		if (codex || ship.getVariant().hasHullMod(RECOVERY_SHUTTLES_ID)) {
 			TooltipMakerAPI text = tooltip.beginImageWithText("graphics/icons/hullsys/reserve_deployment.png", 32.0f);
 			text.addPara("RECOVERY SHUTTLES", 0.0f, tc, "RECOVERY SHUTTLES");
 			text.addPara("Increases maximum combat readiness by "+(int)RECOVERY_SHUTTLES_BONUS+"%"+"%.", 0.0f, y, (int)RECOVERY_SHUTTLES_BONUS+"%");
 			tooltip.addImageWithText(pad);
 		}
 		// SAFETY OVERRIDE
-		if (ship.getVariant().hasHullMod(SAFETY_OVERRIDE_ID)) {
+		if (codex || ship.getVariant().hasHullMod(SAFETY_OVERRIDE_ID)) {
 			TooltipMakerAPI text = tooltip.beginImageWithText("graphics/icons/hullsys/entropy_amplifier.png", 32.0f);
 			text.addPara("SAFETY OVERRIDES", 0.0f, tc, "SAFETY OVERRIDES");
 			text.addPara("Increases all weapon damage by "+(int)SAFETY_OVERRIDE_BONUS+"%"+"% when above two thirds flux capacity.", 0.0f, y, (int)SAFETY_OVERRIDE_BONUS+"%");
 			tooltip.addImageWithText(pad);
 		}
 		// NAV RELAY
-		if (ship.getVariant().hasHullMod(NAV_RELAY_ID)) {
+		if (codex || ship.getVariant().hasHullMod(NAV_RELAY_ID)) {
 			TooltipMakerAPI text = tooltip.beginImageWithText("graphics/icons/hullsys/reserve_deployment.png", 32.0f);
 			text.addPara("NAV RELAY", 0.0f, tc, "NAV RELAY");
 			text.addPara("Increases top speed by "+(int)NAV_RELAY_BONUS+"su/s"+" for every allied ship with a nav relay within "+(int)NAV_RELAY_RANGE+" units, up to a maximum of "+(int)(NAV_RELAY_MAX*NAV_RELAY_BONUS)+"su/s.", 0.0f, y, (int)NAV_RELAY_BONUS+"su/s");
 			tooltip.addImageWithText(pad);
 		}
 		// IEA
-		if (ship.getVariant().hasHullMod(IEA_ID)) {
+		if (codex || ship.getVariant().hasHullMod(IEA_ID)) {
 			TooltipMakerAPI text = tooltip.beginImageWithText("graphics/icons/hullsys/burn_drive.png", 32.0f);
 			text.addPara("INSULATED ENGINE ASSEMBLY", 0.0f, tc, "INSULATED ENGINE ASSEMBLY");
 			text.addPara("Increases the level at which the zero flux speed boost is active at by "+(int)IEA_BONUS+"%"+"%.", 0.0f, y, (int)IEA_BONUS+"%");
 			tooltip.addImageWithText(pad);
 		}
 		// FLUX DISTRIBUTOR
-		if (ship.getVariant().hasHullMod(FLUX_DISTRIBUTOR_ID)) {
+		if (codex || ship.getVariant().hasHullMod(FLUX_DISTRIBUTOR_ID)) {
 			float fdRounded = FLUX_DISTRIBUTOR_BONUS*10f;
 			fdRounded = Math.round(fdRounded);
 			fdRounded = fdRounded/10f;
@@ -469,32 +470,32 @@ public class Augmented extends BaseHullMod {
 			tooltip.addImageWithText(pad);
 		}
 		// INERTIAL
-		if (ship.getVariant().hasHullMod(INERTIAL_ID)) {
+		if (codex || ship.getVariant().hasHullMod(INERTIAL_ID)) {
 			TooltipMakerAPI text = tooltip.beginImageWithText("graphics/icons/hullsys/temporal_shell.png", 32.0f);
 			text.addPara("INERTIAL SUPERCHARGER", 0.0f, tc, "INERTIAL SUPERCHARGER");
 			text.addPara("The same bonus is also applied to projectile velocity.", 0.0f, y, "");
 			tooltip.addImageWithText(pad);
 		}
 		// VOLATILE
-		if (ship.getVariant().hasHullMod(VOLATILE_ID)) {
+		if (codex || ship.getVariant().hasHullMod(VOLATILE_ID)) {
 			TooltipMakerAPI text = tooltip.beginImageWithText("graphics/icons/hullsys/high_energy_focus.png", 32.0f);
 			text.addPara("VOLATILE FLUX INJECTOR", 0.0f, tc, "VOLATILE FLUX INJECTOR");
 			text.addPara("Penalty from high flux is halved.", 0.0f, y, "");
 			tooltip.addImageWithText(pad);
 		}
 		// AWM
-		if (ship.getVariant().hasHullMod(ARMORED_WEAPON_MOUNT_ID)) {
+		if (codex || ship.getVariant().hasHullMod(ARMORED_WEAPON_MOUNT_ID)) {
 			TooltipMakerAPI text = tooltip.beginImageWithText("graphics/icons/hullsys/damper_field.png", 32.0f);
 			text.addPara("ARMORED WEAPON MOUNTS", 0.0f, tc, "ARMORED WEAPON MOUNTS");
 			text.addPara("Increases hull durability by "+(int)ARMORED_WEAPONS_BONUS+"%"+"%.", 0.0f, y, (int)ARMORED_WEAPONS_BONUS+"%");
 			tooltip.addImageWithText(pad);
 		}
 		// CONVERTED HANGAR
-		if (ship.getVariant().hasHullMod(CONVERTED_HANGAR_ID)) {
+		if (codex || ship.getVariant().hasHullMod(CONVERTED_HANGAR_ID)) {
 			TooltipMakerAPI text = tooltip.beginImageWithText("graphics/icons/hullsys/damper_field.png", 32.0f);
 			text.addPara("CONVERTED HANGAR", 0.0f, tc, "CONVERTED HANGAR");
 			//text.addPara("Removes the penalty to fighter replacement time, and to replacement rate decrease and increase.", 0.0f, y, "Removes");
-			if (ship.getHullSize()!=HullSize.DESTROYER) {
+			if (!codex && ship.getHullSize()!= HullSize.DESTROYER) {
 				text.addPara("grants an additional fighter bay and reduces all fighter OP costs by " + (int) CH_BONUS + "%%.", 0.0f, y, "additional", (int) CH_BONUS + "%");
 			}else {
 				text.addPara("Reduces all fighter OP costs by " + (int) CH_BONUS + "%%.", 0.0f, y, "additional", (int) CH_BONUS + "%");
@@ -502,20 +503,22 @@ public class Augmented extends BaseHullMod {
 			tooltip.addImageWithText(pad);
 		}
 		// BIG BATS
-		if (ship.getVariant().hasHullMod(IdsLS.HIGH_CAPACITANCE_BANKS_HULLMOD_ID)) {
+		if (codex || ship.getVariant().hasHullMod(IdsLS.HIGH_CAPACITANCE_BANKS_HULLMOD_ID)) {
 			TooltipMakerAPI text = tooltip.beginImageWithText("graphics/icons/hullsys/high_energy_focus.png", 32.0f);
 			text.addPara("HIGH CAPACITANCE BANKS", 0.0f, tc, "HIGH CAPACITANCE BANKS");
 			text.addPara("Increases system charge regen rate by "+(int)BigBats.AUGMENT_RECHARGE_BONUS+"%"+"%.", 0.0f, y, (int)BigBats.AUGMENT_RECHARGE_BONUS+"%");
 			tooltip.addImageWithText(pad);
 		}
 		// CRITICAL POINT PROTECTION
-		if (ship.getVariant().hasHullMod(IdsLS.CRITICAL_POINT_PROTECTION_HULLMOD_ID)) {
+		if (codex || ship.getVariant().hasHullMod(IdsLS.CRITICAL_POINT_PROTECTION_HULLMOD_ID)) {
 			TooltipMakerAPI text = tooltip.beginImageWithText("graphics/icons/hullsys/damper_field.png", 32.0f);
 			text.addPara("CRITICAL POINT PROTECTION", 0.0f, tc, "CRITICAL POINT PROTECTION");
 			text.addPara("Increases minimum armor value by "+(int)CRITICAL_POINT_BONUS+"%"+"%.", 0.0f, y, (int)CRITICAL_POINT_BONUS+"%");
 			tooltip.addImageWithText(pad);
 		}
 
+		if (codex) return;
+		
 		//
 		if (ship.getVariant().getUnusedOP(Global.getSector().getPlayerStats())>0) {
 			// STAT

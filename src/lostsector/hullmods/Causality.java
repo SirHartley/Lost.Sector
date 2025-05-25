@@ -4,6 +4,7 @@
 package lostsector.hullmods;
 
 import com.fs.starfarer.api.Global;
+import com.fs.starfarer.api.SettingsAPI;
 import com.fs.starfarer.api.combat.*;
 import com.fs.starfarer.api.combat.ShipAPI.HullSize;
 import com.fs.starfarer.api.graphics.SpriteAPI;
@@ -195,10 +196,12 @@ public class Causality extends BaseHullMod {
 
 	public void addPostDescriptionSection(TooltipMakerAPI tooltip, ShipAPI.HullSize hullSize, ShipAPI ship, float width, boolean isForModSpec) {
 		float pad = 10.0f;
-		float maxEnergy = ((ship.getMaxFlux()/FLUXMULT)*2f)+1f;
+		float maxEnergy = Global.getSettings().isShowingCodex() ? 0 : ((ship.getMaxFlux()/FLUXMULT)*2f)+1f;
 		maxEnergy *= 100f;
 		maxEnergy = Math.round(maxEnergy);
 		maxEnergy /= 100f;
+
+		boolean codex = Global.getSettings().isShowingCodex();
 
 		tooltip.addSectionHeading("Details", Alignment.MID, pad);
 		TooltipMakerAPI text = tooltip.beginImageWithText("graphics/icons/hullsys/ammo_feeder.png", 36.0f);
@@ -210,7 +213,7 @@ public class Causality extends BaseHullMod {
 
 		text = tooltip.beginImageWithText("graphics/icons/hullsys/damper_field.png", 36.0f);
 		text.addPara(TEXT2, 0.0f, MiscLS.NICE_YELLOW, TEXT2);
-		text.addPara("-Max energy capacity is " + (int)ship.getMaxFlux(), 2.0f, MiscLS.BON_GREEN, "" + (int)ship.getMaxFlux());
+		if (!codex) text.addPara("-Max energy capacity is " + (int)ship.getMaxFlux(), 2.0f, MiscLS.BON_GREEN, "" + (int)ship.getMaxFlux());
 		text.addPara("-Maximum safe time dilation is " + maxEnergy, 2.0f, MiscLS.BON_GREEN, "" + maxEnergy);
 		text.addPara("-Absorbing more energy dramatically increases time dilation.", 2.0f, MiscLS.NICE_YELLOW, "");
 		text.addPara("-Going above 50%% energy capacity increases the weapons buff.", 2.0f, MiscLS.NICE_YELLOW, "50%");
@@ -225,7 +228,7 @@ public class Causality extends BaseHullMod {
 		text.addPara("-Will cause unpredictable anomalies.", 2.0f, MiscLS.TT_ORANGE, "");
 		text.addPara("-Ship receives "+(int)BEAM_PENALTY_MULT+"x"+" more damage from beams.", 2.0f, MiscLS.TT_ORANGE, (int)BEAM_PENALTY_MULT+"x");
 		text.addPara("-Any D-mods on the hull will reduce flux capacity, flux dissipation, and peak performance time by "+(int)DMOD_PENALTY+"%%"+" each.", 2.0f, MiscLS.TT_ORANGE, (int)DMOD_PENALTY+"%");
-		int dmods = (int) MiscLS.getDMods(ship.getVariant());
+		int dmods = codex ? 0 : (int) MiscLS.getDMods(ship.getVariant());
 		if(dmods>0)text.addPara("-Current penalty "+(int)(dmods*DMOD_PENALTY)+"%%", 2.0f, MiscLS.TT_ORANGE, (int)(dmods*DMOD_PENALTY)+"%");
 		tooltip.addImageWithText(pad);
 	}

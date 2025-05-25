@@ -158,20 +158,20 @@ public class Outpost {
 		//market
 		MarketAPI outpostMarket = addMarketplace("kesteven", outpost,
 				null,
-				name+" Outpost", 4, // 2 industry limit
+				name+" Outpost", 3, // 2 industry limit
 				new ArrayList<>(Arrays.asList(
-						Conditions.POPULATION_4,
+						Conditions.POPULATION_3,
 						Conditions.OUTPOST,
 						Conditions.FRONTIER)),
 				new ArrayList<>(Arrays.asList(
 						new ArrayList<>(Arrays.asList(Industries.POPULATION)),
 						new ArrayList<>(Arrays.asList(Industries.SPACEPORT)),
-						new ArrayList<>(Arrays.asList(Industries.MILITARYBASE)),
+						new ArrayList<>(Arrays.asList(Industries.PATROLHQ)),
 						//new ArrayList<>(Arrays.asList(Industries.ORBITALWORKS, Items.PRISTINE_NANOFORGE)), // Industry
 						//new ArrayList<>(Arrays.asList(Industries.FUELPROD)),
 						//new ArrayList<>(Arrays.asList(Industries.MINING)),
 						new ArrayList<>(Arrays.asList(Industries.HEAVYINDUSTRY)),
-						new ArrayList<>(Arrays.asList(Industries.HEAVYBATTERIES)),
+						new ArrayList<>(Arrays.asList(Industries.GROUNDDEFENSES)),
 						new ArrayList<>(Arrays.asList(Industries.ORBITALSTATION_MID)))),
 				new ArrayList<>(Arrays.asList(
 						Submarkets.SUBMARKET_OPEN,

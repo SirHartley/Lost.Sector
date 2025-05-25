@@ -105,9 +105,10 @@ public class Volatile extends BaseHullMod {
 
     @Override
     public void advanceInCombat(ShipAPI ship, float amount) {
-        if (Global.getCombatEngine().isPaused() || !ship.isAlive()) {
+        if (Global.getCombatEngine().isPaused() || ship == null || !ship.isAlive()) {
             return;
         }
+
         String id = "nskr_volatile_"+ship.getId();
         MutableShipStatsAPI stats = ship.getMutableStats();
         float fluxRatio = ship.getFluxTracker().getFluxLevel();

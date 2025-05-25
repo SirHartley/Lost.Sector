@@ -1,18 +1,18 @@
 {
 
 	"nskr_enigmabase":{
-		"defaultName":"Aged R&D Facility", # used if name=null in addCustomEntity()
-		"defaultRadius":50, # used if radius<0 in addCustomEntity()
-		"nameInText":"R&D Facility",
-		"shortName":"Facility",
+		"defaultName":"Worn Research Module", # used if name=null in addCustomEntity()
+		"defaultRadius":55, # used if radius<0 in addCustomEntity()
+		"nameInText":"Research Module",
+		"shortName":"Module",
 		"customDescriptionId":"nskr_enigmabase",
 		"interactionImage":"graphics/illustrations/orbital_construction.jpg",
 		"icon":"graphics/icons/station0.png",
 		"iconWidth":20,
 		"iconHeight":20,
-		"sprite":"graphics/stations/nskr_enigmabase.png",
-		"spriteWidth":35,
-		"spriteHeight":70,
+		"sprite":"graphics/stations/nskr_enigmabase_new.png",
+		"spriteWidth":58,
+		"spriteHeight":83,
 		"renderShadow":true,
 		"useLightColor":true,
 		"showInCampaign":true,
@@ -72,15 +72,15 @@
 
 	"nskr_heart_active": {
 		"defaultName":"Frozen Heart", # used if name=null in addCustomEntity()
-		"defaultRadius":110, # used if radius<0 in addCustomEntity()
+		"defaultRadius":100, # used if radius<0 in addCustomEntity()
 		"customDescriptionId":"nskr_station_heart",
 		"interactionImage":"graphics/illustrations/nskr_heart.jpg",
 		"icon":"graphics/icons/station0.png",
 		"iconWidth":20,
 		"iconHeight":20,
 		"sprite":"graphics/stations/nskr_enigmabase2.png",
-		"spriteWidth":164,
-		"spriteHeight":164,
+		"spriteWidth":140,
+		"spriteHeight":140,
 		"renderShadow":true,
 		"useLightColor":true,
 		"showInCampaign":true,
@@ -94,15 +94,15 @@
 
 	"nskr_heart_wreckage":{
 		"defaultName":"Heart Wreckage", # used if name=null in addCustomEntity()
-		"defaultRadius":70, # used if radius<0 in addCustomEntity()
+		"defaultRadius":100, # used if radius<0 in addCustomEntity()
 		"customDescriptionId":"orbital_station_default",
 		"interactionImage":"graphics/illustrations/abandoned_station3.jpg",
 		"icon":"graphics/icons/station0.png",
 		"iconWidth":20,
 		"iconHeight":20,
-		"sprite":"graphics/stations/station_sporeship_derelict.png",
-		"spriteWidth":90,
-		"spriteHeight":90,
+		"sprite":"graphics/stations/nskr_enigmabase2_broke.png",
+		"spriteWidth":140,
+		"spriteHeight":140,
 		"renderShadow":true,
 		"useLightColor":true,
 		"showInCampaign":true,

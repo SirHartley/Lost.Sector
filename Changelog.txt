@@ -11,15 +11,30 @@ None
 
 1.0.a
 Added - Forked and updated the mod to 0.98a
+Added - Frozen Heart now has a custom station sprite
+Added - [IndEvo] Frozen Heart now fires missiles at you
+Added - Codex integration for the whole mod
+Adjusted - New frozen heart description
 Adjusted - Complete file restructuring
-Adjusted - Condition descriptions
-Adjusted - Skill descriptions
-Adjusted - Nex Background descriptions
+Adjusted - Reworked most descriptions
 Adjusted - Cleaned up the tips file
+Adjusted - Reworked Aged R&D Facility sprite
+Adjusted - Renamed Aged R&D Facility to Worn Research Module
+Adjusted - Took a zero off the sales price of the prototype BP packages (2.1m -> 210k)
+Adjusted - Cache/Blacksite fighting defence fleets no longer impacts reputation
 Adjusted - Bumped Kesteven faction profile quality to 4 in exchange for officer quality to compensate for loss of nanoforge
 Adjusted - Asteria now orbits exactly opposite of the gas giant
+Adjusted - Severely nerfed the Kesteven "outpost station"
 Adjusted - Severely nerfed the campaign presence of Asteria
 Fixed - Asteria no longer has a shorter orbit time than the other planets in Arcadia (no more planet overlap)
+
+Confirmed issues
+- Trying to use a story point to skip the "your fleet is not powerful enough" check just straight up doesn't work
+- The Operation Lifesaver quest fleet spawns in target-adjacent systems if no suitable loc can be found, this is not communicated in any way
+
+Unconfirmed issues
+- Volatile Flux Injector spazzing out and not applying
+
 
 
 --------------------------- Pre-Fork Changelog -----------------------------

@@ -24,6 +24,9 @@ import com.fs.starfarer.api.impl.campaign.terrain.HyperspaceTerrainPlugin;
 import com.fs.starfarer.api.util.Misc;
 import com.fs.starfarer.api.util.Pair;
 import com.fs.starfarer.api.util.WeightedRandomPicker;
+import indevo.ids.Ids;
+import indevo.industries.artillery.scripts.CampaignAttackScript;
+import lostsector.ModPlugin;
 import lostsector.util.MiscLS;
 import org.jetbrains.annotations.Nullable;
 import org.lazywizard.lazylib.MathUtils;
@@ -33,6 +36,8 @@ import org.lwjgl.util.vector.Vector2f;
 import java.awt.*;
 import java.util.List;
 import java.util.*;
+
+import static lostsector.ModPlugin.getIndEvoBoolean;
 
 
 public class Frost {
@@ -378,6 +383,10 @@ public class Frost {
 		heart.setSensorProfile(2500f);
 		heart.setDiscoveryXP(25000f);
 		heart.setDiscoverable(true);
+
+		if(ModPlugin.IS_INDEVO && getIndEvoBoolean("IndEvo_Enable_Artillery")){
+			heart.addScript(new CampaignAttackScript(heart, CampaignAttackScript.TYPE_MISSILE));
+		}
 
 		//set random loc
 		pickLocation(sector, system);

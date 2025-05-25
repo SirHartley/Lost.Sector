@@ -355,6 +355,7 @@ public class BlacksiteManager extends BaseCampaignEventListener implements Every
             keys.add(MemFlags.MEMORY_KEY_MAKE_NON_AGGRESSIVE);
             keys.add(MemFlags.MEMORY_KEY_PATROL_ALLOW_TOFF);
             keys.add(MemFlags.MEMORY_KEY_FLEET_DO_NOT_GET_SIDETRACKED);
+            keys.add(MemFlags.MEMORY_KEY_NO_REP_IMPACT);
             //key
             keys.add(DEFENDER_KEY);
 
