@@ -199,6 +199,13 @@
             </Attribute>
           </value>
         </entry>
+        <entry key="\data\hulls\wing_data.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
         <entry key="\data\lights\nskr_bump.csv">
           <value>
             <Attribute>

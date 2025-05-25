@@ -1,9 +1,8 @@
 {
-    "masterVersionFile": "",
-	"directDownloadURL": "",
-	"changelogURL": "",
+    "masterVersionFile": "https://raw.githubusercontent.com/SirHartley/Lost.Sector/refs/heads/main/lostsector.version",
+    "changelogURL":"https://raw.githubusercontent.com/SirHartley/Lost.Sector/refs/heads/main/Changelog.txt",
     "modName":"Lost.Sector",
-    "modThreadId":27556,
+    "modThreadId":"",
     "modNexusId":"",
     "modVersion":
     {
@@ -11,4 +10,7 @@
         "minor":0,
         "patch":"a",
     },
+
+    #Link towards a direct download, fetched from the online version file
+    "directDownloadURL":"https://github.com/SirHartley/Lost.Sector/releases/download/1.0.a/Lost.Sector1.0.a.zip",
 }
