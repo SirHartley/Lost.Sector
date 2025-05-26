@@ -2,7 +2,7 @@
 	"id":"lost.sector", # internal id
 	"name":"Lost.Sector", # displayed to the player
 	"author":"Kissa Mies & Crew, SirHartley",
-	"version":"1.0.a",
+	"version":"1.0.b",
 	"description":"The things lost to time are out there. Content expansion.",
 	"gameVersion": "0.98a",
 	"modPlugin":"lostsector.ModPlugin",

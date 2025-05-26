@@ -59,7 +59,7 @@
 			"job4":"graphics/icons/missions/job4.png",
 		},
 		"misc":{
-			"lost_sector_luna_icon":"graphics/icons/lost_icon.png",
+			"lost_sector_luna_icon":"graphics/icons/lostsector.png",
 		},
 		"fx":{
 			"nskr_glow1":"graphics/fx/nskr_glow1.png",

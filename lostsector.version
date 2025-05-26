@@ -8,9 +8,9 @@
     {
         "major":1,
         "minor":0,
-        "patch":"a",
+        "patch":"b",
     },
 
     #Link towards a direct download, fetched from the online version file
-    "directDownloadURL":"https://github.com/SirHartley/Lost.Sector/releases/download/1.0.a/Lost.Sector1.0.a.zip",
+    "directDownloadURL":"https://github.com/SirHartley/Lost.Sector/releases/download/1.0.b/Lost.Sector1.0.b.zip",
 }

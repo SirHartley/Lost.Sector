@@ -8,6 +8,9 @@ None
 None
 
 --------------------------- Changelog -----------------------------
+1.0.b
+Adjusted - Severely nerfed spawn rates for Borealis, Rhea and Kingslayer
+Fixed - Crash when starting a new game with nexerelin
 
 1.0.a
 Added - Forked and updated the mod to 0.98a
