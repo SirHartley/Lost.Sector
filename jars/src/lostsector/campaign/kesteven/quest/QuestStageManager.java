@@ -539,6 +539,12 @@ public class QuestStageManager extends BaseCampaignEventListener implements Ever
         }
         //mission logic
         if (counter.val>10f) {
+            //job 4 cannot finish without finding the Special Operations fleet, so replace it if something else destroyed it first
+            if (stage == 12 && jobFleetsSpawned4.val && !QuestHelper.getCompleted(JOB4_FOUND_FRIENDLY_KEY) && !hasFleetWithKey(fleets, JOB4_FRIENDLY_KEY)) {
+                CampaignFleetAPI fleet = QuestFleets.spawnJob4Friendly();
+                fleets.add(new FleetInfo(fleet, null, QuestHelper.getJob4FriendlyTarget()));
+                log("Qmanager respawned job4 friendly");
+            }
             //tt vengeance spawner
             //spawn once per campaign
             if (!collected.val) {
@@ -669,6 +675,13 @@ public class QuestStageManager extends BaseCampaignEventListener implements Ever
             loc = pf.getContainingLocation().createToken(newLoc);
         }
         Global.getSector().addPing(loc, Pings.SENSOR_BURST);
+    }
+
+    private static boolean hasFleetWithKey(List<FleetInfo> fleets, String key) {
+        for (FleetInfo f : fleets) {
+            if (f.fleet != null && f.fleet.getMemoryWithoutUpdate().contains(key)) return true;
+        }
+        return false;
     }
 
     private void runFleetLogic(List<FleetInfo> fleets){

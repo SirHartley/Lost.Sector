@@ -38,6 +38,7 @@ Fixed - Spending a story point to get past the "proper fleet" requirement for a 
 Fixed - The 5 story point Skip story option in the Kesteven questline now works
 Fixed - Refusing Hostile Takeover ("I'm not doing this.") now always asks for confirmation instead of sometimes doing nothing
 Fixed - The Operation Lifesaver map marker now points to the Enigma strike group once you have seen it or the Special Operations fleet has sent its coordinates
+Fixed - Operation Lifesaver no longer gets stuck when another fleet destroys the Special Operations fleet before you find it
 
 1.0.b
 Adjusted - Severely nerfed spawn rates for Borealis, Rhea and Kingslayer

@@ -136,6 +136,8 @@ Three sources lead the player on:
 
 Talking to the friendly fleet or seeing it sets `JOB4_FOUND_FRIENDLY_KEY`. Reducing the strike group below 20% of its strength sets `JOB4_DESTROYED_KEY`. With both set, `QuestStageManager` sets stage 13.
 
+If anything other than the player destroys the Special Operations fleet before it is found, `QuestStageManager` spawns a new one at the friendly target. It checks once a day at stage 12, after the destroyed fleet has left the quest fleet list; that happens once the player is out of hyperspace sensor range of it.
+
 If the player contributes to a battle against the Special Operations fleet, `QuestStageManager` sets stage 14 and `JOB4_FAILED_KEY`. The next advance turns that into stage 99 and ends the questline.
 
 Alice's turn-in at stage 13 grants 1 story point, 285,000 credits, a modspec, Kesteven +5 and Alice +10. If the player helped the fleet it also grants an Epoch-class prototype frigate (`nskr_epoch_empty`). Alice becomes a potential contact, Jack's importance rises to high, and S-mod removal (`nskr_modRemoval`) opens at research officials. Stage becomes 14.
