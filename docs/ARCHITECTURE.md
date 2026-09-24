@@ -316,6 +316,7 @@ Quest defects are listed with their quest: [Kesteven questline](quests/KESTEVEN_
 |---|---|
 | `ModPlugin.onGameLoad()` | `IS_NEXERELIN` is cleared for the rest of the session if `SectorManager.getManager()` is null on any load. |
 | `data/config/modSettings.json` | `MagicLib.bounty_board` is empty and only `modFiles/magicBounty_data_example.json` exists, so no MagicLib bounty is registered. |
+| Vanilla asset paths not referenced by vanilla data | `graphics/portraits/portrait_ai2.png` (`settings.json` `nskr_mother`, `MothershipSpawner.PORTRAIT_SPRITE`), `graphics/icons/markets/plundered.png` (`market_conditions.csv` `nskr_hellSpawnCondition`, Nexerelin `character_backgrounds.csv`) and the skill icon `combat_endurance.png` (`skill_data.csv` `nskr_hellSpawnPeacefulSkill`; vanilla data uses `combat_endurance3.png`). Unverified: check them against a game install. |
 
 ## Dead or dormant
 
