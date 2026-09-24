@@ -5,6 +5,7 @@ import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.BaseCampaignEventListener;
 import com.fs.starfarer.api.campaign.SectorEntityToken;
 import com.fs.starfarer.api.campaign.SpecialItemData;
+import com.fs.starfarer.api.campaign.econ.Industry;
 import com.fs.starfarer.api.campaign.econ.MarketAPI;
 import com.fs.starfarer.api.characters.PersonAPI;
 import com.fs.starfarer.api.impl.campaign.ids.Industries;
@@ -246,16 +247,7 @@ public class ExileManager extends BaseCampaignEventListener implements EveryFram
                 admin.getStats().setSkillLevel("indevo_planetary_operations", 1);
             } else admin.getStats().setSkillLevel(Skills.INDUSTRIAL_PLANNING, 1);
             outpost.setAdmin(admin);
-            //remove heavy industry item
-            if (outpost.getIndustry(Industries.HEAVYINDUSTRY)!=null) {
-                if (outpost.getIndustry(Industries.HEAVYINDUSTRY).getSpecialItem().getId().equals(Items.CORRUPTED_NANOFORGE)) {
-                    outpost.getIndustry(Industries.HEAVYINDUSTRY).setSpecialItem(null);
-                }
-            } else if (outpost.getIndustry(Industries.ORBITALWORKS)!=null) {
-                if (outpost.getIndustry(Industries.ORBITALWORKS).getSpecialItem().getId().equals(Items.CORRUPTED_NANOFORGE)) {
-                    outpost.getIndustry(Industries.ORBITALWORKS).setSpecialItem(null);
-                }
-            }
+            removeExileNanoforge(outpost);
             //remove ppl from outpost
             outpost.getCommDirectory().removePerson(michael);
             outpost.removePerson(michael);
@@ -283,6 +275,19 @@ public class ExileManager extends BaseCampaignEventListener implements EveryFram
         asteria.addPerson(alice);
 
         log("UNEXILED to asteria");
+    }
+
+    // exile() gives the Outpost's heavy industry or orbital works a corrupted nanoforge. The market
+    // may have lost the item, or changed hands and back, while Kesteven was in exile.
+    private static void removeExileNanoforge(MarketAPI outpost) {
+        Industry industry = outpost.getIndustry(Industries.HEAVYINDUSTRY);
+        if (industry == null) industry = outpost.getIndustry(Industries.ORBITALWORKS);
+        if (industry == null) return;
+
+        SpecialItemData item = industry.getSpecialItem();
+        if (item != null && Items.CORRUPTED_NANOFORGE.equals(item.getId())) {
+            industry.setSpecialItem(null);
+        }
     }
 
     public static boolean getExiled(String id) {

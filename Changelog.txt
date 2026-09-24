@@ -52,6 +52,7 @@ Fixed - Loading another save or starting a new game without restarting the game 
 Fixed - Mysterious signal hints no longer stop for good when a new campaign is saved twice without reloading
 Fixed - Dormant Enigma fleets in hyperspace no longer hunt a player who carries little Enigma or prototype tech
 Fixed - Nexerelin random sectors and other sectors without Arcadia now place Asteria in a random system, and the Kesteven questline no longer crashes there
+Fixed - Crash when Kesteven's leadership returns to Asteria after the Outpost lost its nanoforge
 
 1.0.b
 Adjusted - Severely nerfed spawn rates for Borealis, Rhea and Kingslayer
