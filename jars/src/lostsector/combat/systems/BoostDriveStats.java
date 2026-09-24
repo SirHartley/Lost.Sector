@@ -16,12 +16,12 @@ public class BoostDriveStats extends BaseShipSystemScript {
 			stats.getMaxTurnRate().unmodify(id);
 		} else {
 			stats.getMaxSpeed().modifyFlat(id, 150f * effectLevel);
-			stats.getAcceleration().modifyFlat(id, 1200f * effectLevel);
 
 			stats.getDeceleration().modifyPercent(id, AGILITY_PENALTY);
 			stats.getTurnAcceleration().modifyPercent(id, AGILITY_PENALTY);
 			stats.getMaxTurnRate().modifyPercent(id, AGILITY_PENALTY);
 		}
+		stats.getAcceleration().modifyFlat(id, 1200f * effectLevel);
 	}
 	public void unapply(MutableShipStatsAPI stats, String id) {
 		stats.getMaxSpeed().unmodify(id);

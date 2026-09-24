@@ -14,13 +14,13 @@ public class MercurialStats extends BaseShipSystemScript {
 			stats.getMaxTurnRate().unmodify(id);
 		} else {
 			stats.getMaxSpeed().modifyFlat(id, MAX_SPEED);
-			stats.getAcceleration().modifyPercent(id, 400f * effectLevel);
-			stats.getDeceleration().modifyPercent(id, 400f * effectLevel);
-			stats.getTurnAcceleration().modifyFlat(id, 30f * effectLevel);
-			stats.getTurnAcceleration().modifyPercent(id, 200f * effectLevel);
 			stats.getMaxTurnRate().modifyFlat(id, 15f);
 			stats.getMaxTurnRate().modifyPercent(id, 100f);
 		}
+		stats.getAcceleration().modifyPercent(id, 400f * effectLevel);
+		stats.getDeceleration().modifyPercent(id, 400f * effectLevel);
+		stats.getTurnAcceleration().modifyFlat(id, 30f * effectLevel);
+		stats.getTurnAcceleration().modifyPercent(id, 200f * effectLevel);
 	}
 
 	public void unapply(MutableShipStatsAPI stats, String id) {

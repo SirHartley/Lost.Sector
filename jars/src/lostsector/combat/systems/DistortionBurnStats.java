@@ -49,12 +49,12 @@ public class DistortionBurnStats extends BaseShipSystemScript {
             stats.getMaxTurnRate().unmodify(id);
         } else {
             stats.getMaxSpeed().modifyFlat(id, MAX_SPEED);
-            stats.getAcceleration().modifyPercent(id, TURN_RATE_MULT * effectLevel);
-            stats.getTurnAcceleration().modifyFlat(id, TURN_RATE_FLAT * effectLevel);
-            stats.getTurnAcceleration().modifyPercent(id, TURN_RATE_MULT * effectLevel);
             stats.getMaxTurnRate().modifyFlat(id, TURN_RATE_FLAT);
             stats.getMaxTurnRate().modifyPercent(id, TURN_RATE_MULT);
         }
+        stats.getAcceleration().modifyPercent(id, TURN_RATE_MULT * effectLevel);
+        stats.getTurnAcceleration().modifyFlat(id, TURN_RATE_FLAT * effectLevel);
+        stats.getTurnAcceleration().modifyPercent(id, TURN_RATE_MULT * effectLevel);
 
         //PARTICLES
         Vector2f particlePos, particleVel;
