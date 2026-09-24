@@ -289,7 +289,7 @@
 		"renderCircleIndicator":false, # make clickable,
 		"interactable":false,
 		"layers":[ABOVE], # what layer(s) to render in. See CampaignEngineLayers.java for possible values,
-		"pluginClass":"lostsector.rendering.BlastSprite",
+		"pluginClass":"lostsector.rendering.CampaignBlastSprite",
 	},
 	
 	"nskr_anomalous_station":{

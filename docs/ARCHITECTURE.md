@@ -80,7 +80,7 @@ Other registrations: `KestevenTipBarEventCreator` bar event creator, guarded by 
 | `data/campaign/market_conditions.csv` | `nskr_enigmaPop` -> `EnigmaPopCondition`, `nskr_upChip` -> `UnlimitedProductionChipCondition`, `nskr_hellSpawnCondition` -> `HellSpawnCondition` |
 | `data/campaign/commodities.csv`, `special_items.csv` | `nskr_electronics`; prototype blueprint packages `nskr_prot_wp`, `nskr_prot_light`, `nskr_prot_heavy` |
 | `data/campaign/procgen/*.csv`, `sim_opponents.csv` | Planet type `nskr_ice_desert`; salvage rows `nskr_enigmabase`, `nskr_heart_wreckage`, `nskr_blacksite_*`; drop groups; simulator opponents |
-| `data/config/custom_entities.json` | Entity specs for Java `addCustomEntity` calls |
+| `data/config/custom_entities.json` | Entity specs for Java `addCustomEntity` calls. A `pluginClass` must implement `CustomCampaignEntityPlugin`: `nskr_blast` -> `rendering/CampaignBlastSprite`, not the combat `BlastSprite`. |
 | `data/config/sounds.json` | Music and sound IDs played from Java |
 | `data/world/factions/factions.csv` | `enigma`, `kesteven`, `prot_ops`, `ai_all`; the other `.faction` files add to vanilla factions |
 | `data/config/modSettings.json` | An empty MagicLib `bounty_board`; AdvancedGunneryControl weapon tags |
