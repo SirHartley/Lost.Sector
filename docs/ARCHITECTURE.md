@@ -43,6 +43,7 @@ Technical routing for the current implementation. Java paths below are relative 
 |---|---|
 | `ModPlugin.onApplicationLoad()` | GraphicsLib shader, texture and light data (skipped if GraphicsLib classes are missing); the `IS_*` optional-mod flags; Nexerelin `Nex_TransferMarket.NO_TRANSFER_FACTIONS` gains `enigma`; `settings/SettingsManager.load()` |
 | `ModPlugin.pickMissileAI()` | `nskr_emglShot_sub` -> `EmpGrenadeAI`, `nskr_tremor1` -> `TremorAI`. No ship, weapon or drone AI picker is overridden. |
+| `ModPlugin.onCodexDataGenerated()` | `combat/systems/PhaseCloakCodexLinks.link()` relates `nskr_bosscloak` and `nskr_poorcloak` to the phase hulls that use them as their defense |
 | `ModPlugin.onGameLoad()` | Order below. Runs for new games and loaded saves. |
 | `ModPlugin.beforeGameSave()` | `persistence/Saved.updatePersistentData()`, `CampaignTimer.save()`, then removes every `EFS_LIST` script and listener from the sector |
 | `ModPlugin.afterGameSave()` | Re-adds `EFS_LIST`, then `persistence/Saved.loadPersistentData()` |
@@ -220,6 +221,8 @@ Polling: every `EFS_LIST` manager advances each frame. Most gate their work with
 | `data/missions/mission_list.csv` | `nskr_test` source is `data/missions/nskr_test/MissionDefinition.java`, compiled by the game at runtime; `nskr_test_custom` is `jars/src/data/missions/nskr_test_custom/MissionDefinition.java`, extending `missions/BaseRandomBattle` |
 
 Exceptions: `nskr_poorcloak` uses vanilla `PhaseCloakStats`; `nskr_animebad` and `nskr_bosscloak` have no `aiScript`; `nskr_emflak.system` is a WEAPON-type system bound through its weapon (`EmFlakEffect`, `EmFlakOnFireEffect`); `nskr_boostdrive` and `nskr_powersurge` share `ai.EngineBoostAI`; `nskr_pullback` is both a hidden hullmod (`PullbackDummy`, trail points) and the Dragontail's system (`PullbackStats`/`PullbackAI`). `nskr_mothership_frigate`, `nskr_hellSpawnStats` and `nskr_holySpirit` are never built in; campaign code adds them at runtime (`Mothership`, `HellSpawnManager`, `ThronesGiftManager`).
+
+Codex: vanilla `CodexDataV2.populateShipSystems` gives every ship system entry `codex_require_related`, so a system is visible and unlocked when a related hull entry is. Do not tag ship systems `codex_unlockable`: that locks them until `SharedUnlockData.reportPlayerAwareOfShipSystem`, which nothing calls. Vanilla never relates a phase hull to its defense system; `PhaseCloakCodexLinks` adds that link for the mod's two cloaks.
 
 ### Ship families
 

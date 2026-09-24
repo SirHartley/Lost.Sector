@@ -70,6 +70,7 @@ import lostsector.persistence.CampaignTimer;
 import lostsector.helper.FleetHelper;
 import lostsector.helper.Ids;
 import lostsector.helper.SectorLookup;
+import lostsector.combat.systems.PhaseCloakCodexLinks;
 import lostsector.combat.weapons.ai.EmpGrenadeAI;
 import lostsector.combat.weapons.ai.TremorAI;
 import lostsector.world.DesertConditionRepair;
@@ -148,6 +149,11 @@ public class ModPlugin extends BaseModPlugin {
                 return new PluginPick<MissileAIPlugin>(new TremorAI(missile, launchingShip), CampaignPlugin.PickPriority.MOD_SET);
         }
         return null;
+    }
+
+    @Override
+    public void onCodexDataGenerated() {
+        PhaseCloakCodexLinks.link();
     }
 
     public void syncNSKRScripts() {
