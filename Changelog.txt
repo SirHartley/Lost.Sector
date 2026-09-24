@@ -33,6 +33,7 @@ Fixed - Reality Splitter's exit blast no longer destroys friendly missiles and f
 Fixed - The Mothership hullmod's codex entry no longer errors, and other hullmod descriptions no longer break when shown without a ship
 Fixed - Prototype, Enigma, Void and Remnant ship systems now unlock in the codex together with their ships
 Fixed - Kesteven fleets no longer include the Buffalo Mk.II
+Added - Descriptions for the Abyssal Phase Cloak and Limited Phase Cloak ship systems
 
 1.0.b
 Adjusted - Severely nerfed spawn rates for Borealis, Rhea and Kingslayer
