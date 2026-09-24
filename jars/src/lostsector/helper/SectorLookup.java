@@ -1,7 +1,6 @@
 package lostsector.helper;
 
 import com.fs.starfarer.api.Global;
-import com.fs.starfarer.api.campaign.PlanetAPI;
 import com.fs.starfarer.api.campaign.SectorEntityToken;
 import com.fs.starfarer.api.campaign.StarSystemAPI;
 import com.fs.starfarer.api.campaign.econ.MarketAPI;
@@ -29,32 +28,14 @@ public class SectorLookup {
     }
 
     public static boolean asteriaExists(){
-        boolean asteria = false;
-        if (Global.getSector().getStarSystem("Arcadia")!=null) {
-            for (PlanetAPI p : Global.getSector().getStarSystem("Arcadia").getPlanets()) {
-                if (p.getId().equals("nskr_asteria")) {
-                    if (p.getMarket() == null) continue;
-                    if (p.getMarket().getFactionId()==null) continue;
-                    if (!p.getMarket().getFactionId().equals("kesteven")) continue;
-                    asteria = true;
-                    break;
-                }
-            }
-        }
-        return asteria;
+        SectorEntityToken asteria = getAsteria();
+        if (asteria == null || asteria.getMarket() == null) return false;
+        return Ids.KESTEVEN_FACTION_ID.equals(asteria.getMarket().getFactionId());
     }
 
+    // Asteria is in Arcadia in Corvus sectors and in a random system otherwise (world/systems/asteria/Asteria).
     public static SectorEntityToken getAsteria(){
-        SectorEntityToken asteria = null;
-        if (Global.getSector().getStarSystem("Arcadia")!=null) {
-            for (PlanetAPI p : Global.getSector().getStarSystem("Arcadia").getPlanets()) {
-                if (p.getId().equals("nskr_asteria")) {
-                    asteria = p;
-                    break;
-                }
-            }
-        }
-        return asteria;
+        return Global.getSector().getEntityById(Ids.ASTERIA_ENTITY_ID);
     }
 
     public static SectorEntityToken getOutpost(){

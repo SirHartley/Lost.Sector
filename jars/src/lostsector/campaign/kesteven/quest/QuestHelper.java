@@ -57,16 +57,14 @@ public class QuestHelper {
         return artifact;
     }
 
+    // Null only when neither Asteria nor the Outpost exists.
     public static MarketAPI asteriaOrOutpost(){
-        MarketAPI market = null;
-        if (ExileManager.getExiled(ExileManager.EXILE_KEY)){
-            market = SectorLookup.getOutpost().getMarket();
-        } else market = SectorLookup.getAsteria().getMarket();
-        //no asteria generated workaround
-        if (market==null){
-            market = SectorLookup.getOutpost().getMarket();
-        }
-        return market;
+        SectorEntityToken asteria = SectorLookup.getAsteria();
+        SectorEntityToken outpost = SectorLookup.getOutpost();
+        MarketAPI asteriaMarket = asteria == null ? null : asteria.getMarket();
+        MarketAPI outpostMarket = outpost == null ? null : outpost.getMarket();
+        boolean useOutpost = asteriaMarket == null || ExileManager.getExiled(ExileManager.EXILE_KEY);
+        return useOutpost && outpostMarket != null ? outpostMarket : asteriaMarket;
     }
 
     public static boolean outpostExists(){

@@ -75,7 +75,7 @@ import lostsector.combat.weapons.ai.EmpGrenadeAI;
 import lostsector.combat.weapons.ai.TremorAI;
 import lostsector.world.DesertConditionRepair;
 import lostsector.world.SectorGen;
-import lostsector.world.systems.arcadia.Arcadia;
+import lostsector.world.systems.asteria.Asteria;
 import lostsector.world.systems.cache.Cache;
 import lostsector.world.systems.frost.Frost;
 import lostsector.world.systems.outpost.Outpost;
@@ -345,7 +345,7 @@ public class ModPlugin extends BaseModPlugin {
         ProcgenUsedNames.notifyUsed("Polaris");
 
         if (!IS_NEXERELIN || SectorManager.getManager().isCorvusMode()) {
-            Arcadia.generate(Global.getSector());
+            Asteria.generate(Global.getSector());
         }
         SharedData.getData().getPersonBountyEventData().addParticipatingFaction("kesteven");
         SectorGen.setKestevenRelation(Global.getSector());
@@ -366,6 +366,7 @@ public class ModPlugin extends BaseModPlugin {
         if (!IS_NEXERELIN || SectorManager.getManager().isCorvusMode()) {
             Frost.generate(Global.getSector());
             Outpost.generate(Global.getSector());
+            Asteria.generateInRandomSystemIfMissing(Global.getSector());
         }
         //once per campaign
         MothershipSpawner.spawnPlanets(MothershipSpawner.getMothershipBaseLocation(), new Random());
@@ -392,6 +393,7 @@ public class ModPlugin extends BaseModPlugin {
         if (IS_NEXERELIN && !SectorManager.getManager().isCorvusMode()) {
             Frost.generate(Global.getSector());
             Outpost.generate(Global.getSector());
+            Asteria.generateInRandomSystemIfMissing(Global.getSector());
             Frost.generatePt2(Global.getSector());
         }
         //indevo

@@ -10,7 +10,6 @@ import com.fs.starfarer.api.characters.PersonAPI;
 import com.fs.starfarer.api.impl.campaign.ids.Industries;
 import com.fs.starfarer.api.impl.campaign.ids.Items;
 import com.fs.starfarer.api.impl.campaign.ids.Skills;
-import exerelin.campaign.SectorManager;
 import lostsector.campaign.kesteven.quest.QuestStageManager;
 import lostsector.campaign.kesteven.quest.QuestHelper;
 import lostsector.ModPlugin;
@@ -139,8 +138,8 @@ public class ExileManager extends BaseCampaignEventListener implements EveryFram
             if (!getExiled(EXILE_KEY)) {
                 exile();
                 setExiled(true, EXILE_KEY);
-                //exile popup
-                if (!ModPlugin.IS_NEXERELIN || SectorManager.getManager().isCorvusMode()) {
+                // Silent when Asteria was never generated: Kesteven has been at the Outpost from the start.
+                if (SectorLookup.getAsteria() != null) {
                     Global.getSector().getCampaignUI().addMessage("With the loss of Asteria, the leadership of Kesteven Corporation has fled to "+ QuestHelper.outpostName()+".",
                             Global.getSettings().getColor("standardTextColor"),
                             "Kesteven Corporation",

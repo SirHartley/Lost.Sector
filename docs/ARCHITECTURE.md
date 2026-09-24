@@ -47,16 +47,16 @@ Technical routing for the current implementation. Java paths below are relative 
 | `ModPlugin.onGameLoad()` | Order below. Runs for new games and loaded saves. |
 | `ModPlugin.beforeGameSave()` | `persistence/Saved.updatePersistentData()`, `CampaignTimer.save()`, then removes every `EFS_LIST` script and listener from the sector |
 | `ModPlugin.afterGameSave()` | Re-adds `EFS_LIST`, then `persistence/Saved.loadPersistentData()` |
-| `ModPlugin.onNewGame()` | Reserves procgen system names; Arcadia/Asteria (Corvus mode or no Nexerelin); Kesteven bounty participation and relations; writes `SAVE_KEY` and `STARFARER_MODE_FROM_START_KEY` |
-| `ModPlugin.onNewGameAfterProcGen()` | Frost part 1 and Outpost (Corvus mode or no Nexerelin); Mothership planets, Enigma bases, dormant spawns, environmental storytelling, Cache system |
+| `ModPlugin.onNewGame()` | Reserves procgen system names; Asteria in Arcadia (Corvus mode or no Nexerelin); Kesteven bounty participation and relations; writes `SAVE_KEY` and `STARFARER_MODE_FROM_START_KEY` |
+| `ModPlugin.onNewGameAfterProcGen()` | Frost part 1, Outpost and, if Arcadia was missing, Asteria in a random system (Corvus mode or no Nexerelin); Mothership planets, Enigma bases, dormant spawns, environmental storytelling, Cache system |
 | `ModPlugin.onNewGameAfterEconomyLoad()` | Frost part 2 market (Corvus mode or no Nexerelin), `DerelictTeaserSpawner.spawnRogues()` |
-| `ModPlugin.onNewGameAfterTimePass()` | Frost and Outpost in Nexerelin random-core games, IndEvo features, `SectorGen.genPeople()`, Frost ruins, `DesertConditionRepair.fix()`, blacksites, Mothership fleet, Enigma relations |
+| `ModPlugin.onNewGameAfterTimePass()` | Frost, Outpost and Asteria in a random system in Nexerelin random-core games, IndEvo features, `SectorGen.genPeople()`, Frost ruins, `DesertConditionRepair.fix()`, blacksites, Mothership fleet, Enigma relations |
 
 `onGameLoad` order: Nexerelin null-manager guard -> `createManagers()`: clears the `persistence/Saved` registry and `CampaignTimer` instances and builds new `EFS_LIST` instances -> `HellSpawnDisposableFleetSpawner` and `ThronesGiftDisposableFleetSpawner` behind `hasScript` -> `kesteven/KestevenBlueprints.borrowIndieBlueprints()` -> `kesteven/BlackOpsBlueprints.scanWeaponBlueprints()` -> `syncNSKRScripts()` -> `registerPlugin(new CorePlugin())` -> `EFS_LIST` as transient scripts, transient listeners and listener-manager listeners -> `persistence/Saved.loadPersistentData()` -> `KestevenTipBarEventCreator` -> `Difficulty.clearStarfarerFromStartUnlessStarfarer()` -> new-save generation -> `FleetHelper.hackBrokenVariants()`.
 
 A save without `ModPlugin.SAVE_KEY` (`nskr_enabled`) in sector persistent data runs all four `onNewGame*` hooks from `onGameLoad`, then adds a Kesteven station commander to `nskr_asteria`. This is how the mod is added to an existing save.
 
-Nexerelin random-core games never generate Arcadia/Asteria, and `SectorGen.genPeople()` places Michael, Jack and Alice only on Asteria and Nicholas only in Corvus mode. `kesteven/ExileManager.exile()` creates any missing quest people on the Outpost.
+Sectors without Arcadia (Nexerelin random-core games, or Arcadia removed) get Asteria from `Asteria.generateInRandomSystemIfMissing()`, called after `Outpost.generate()`. Look Asteria up by entity ID (`helper/SectorLookup.getAsteria()`), never through Arcadia. `SectorGen.genPeople()` places Michael, Jack and Alice on Asteria and Nicholas on the Outpost. If no system qualifies, Asteria is not generated, `QuestHelper.asteriaOrOutpost()` returns the Outpost, and `kesteven/ExileManager.exile()` creates the missing quest people there.
 
 Scripts use two lifecycles:
 
@@ -122,7 +122,7 @@ World generation is static calls from the `ModPlugin` hooks; `world/SectorGen.ge
 
 | Owner | Creates / stable IDs |
 |---|---|
-| `world/systems/arcadia/Arcadia` | Asteria in vanilla Arcadia: `nskr_asteria`, `nskr_asteria_station` |
+| `world/systems/asteria/Asteria` | Asteria (`nskr_asteria`, `nskr_asteria_station`): in vanilla Arcadia, otherwise in a random procgen system near the core that has no market, Enigma base or Enigma fleet, preferring white dwarfs. That system becomes a core system and gets `nskr_asteria_relay` unless it has a comm relay, which then turns Kesteven. |
 | `world/systems/frost/Frost` | New system with a random name from `SYS_NAME_LIST`: planets `nskr_bleak`, `nskr_glacier`, `nskr_siberia`, `nskr_shiver`, `nskr_algor`; `nskr_heart`; `nskr_frost_gate`, `nskr_frost_relay`; debris and derelicts |
 | `world/systems/cache/Cache` | System `Unknown Site`: gate `nskr_cacheGate`, `nskr_cache_derelict1`-`4`, `nskr_cache_core` |
 | `world/systems/outpost/Outpost` | In a random system near the core: `nskr_outpost`, `nskr_outpost_gate`, `nskr_outpost_relay` |

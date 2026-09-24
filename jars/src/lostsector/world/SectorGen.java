@@ -7,7 +7,6 @@ import com.fs.starfarer.api.characters.FullName;
 import com.fs.starfarer.api.characters.PersonAPI;
 import com.fs.starfarer.api.impl.campaign.ids.*;
 import com.fs.starfarer.api.impl.campaign.shared.SharedData;
-import exerelin.campaign.SectorManager;
 import lostsector.ModPlugin;
 import org.lazywizard.lazylib.MathUtils;
 
@@ -120,13 +119,10 @@ public class SectorGen implements SectorGeneratorPlugin {
         genMichael(asteria, 0);
         genJack(asteria, 1);
         genAlice(asteria, 2);
-        //we do manual gen
+        // Without Asteria the first ExileManager tick creates everyone on the Outpost and moves Nicholas.
         if (outpost!=null) {
-            if (!ModPlugin.IS_NEXERELIN || SectorManager.getManager().isCorvusMode()) {
-                genNicholas(outpost, 2);
-            }
+            genNicholas(outpost, 2);
         }
-
     }
 
     public static void genMichael(MarketAPI loc, int index) {
