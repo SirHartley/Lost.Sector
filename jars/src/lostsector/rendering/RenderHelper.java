@@ -9,7 +9,7 @@ import java.awt.*;
 
 public class RenderHelper {
 
-    public static final String SPRITE_PATH = "graphics/fx/nskr_glow1.png";
+    public static final String SPRITE_PATH = "graphics/lostsector/fx/nskr_glow1.png";
     public static void renderGlow(Vector2f point, float size, Color color) {
 
         SpriteAPI temp = Global.getSettings().getSprite(SPRITE_PATH);

@@ -322,7 +322,7 @@ public class QuestFleets {
         simpleCaptain.isAiCore = true;
         simpleCaptain.aiCoreID = "alpha_core";
         simpleCaptain.personality = Personalities.RECKLESS;
-        simpleCaptain.portraitSpritePath = "graphics/portraits/nskr_alpha_core1.png";
+        simpleCaptain.portraitSpritePath = "graphics/lostsector/portraits/nskr_alpha_core1.png";
         simpleCaptain.rankId = Ranks.SPACE_ADMIRAL;
         simpleCaptain.firstName = "Enforcer-Unit";
         simpleCaptain.lastName = MiscHelper.getRandomGreekLetter(random, true);

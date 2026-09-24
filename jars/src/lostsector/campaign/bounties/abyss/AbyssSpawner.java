@@ -46,7 +46,7 @@ public class AbyssSpawner extends BaseCampaignEventListener implements EveryFram
     public static final String FS_NAME = "Piercing Darkness";
     public static final String FACTION = "remnant";
     public static final String LOOT_KEY = "$AbyssLoot";
-    public static final String PORTRAIT_SPRITE = "graphics/portraits/nskr_lucius.png";
+    public static final String PORTRAIT_SPRITE = "graphics/lostsector/portraits/nskr_lucius.png";
     public static final String MEMORY_KEY = "ABYSS";
     public static final String SAVED_PREFIX = "abyss";
     public static final String LOG_PREFIX = "abyssSpawner";

@@ -2,7 +2,7 @@
   "hullName": "Dragontail",
   "hullId": "nskr_dragontail",
   "hullSize": "FRIGATE",
-  "spriteName": "graphics/ships/nskr_dragontail.png",
+  "spriteName": "graphics/lostsector/ships/nskr_dragontail.png",
   "style": "NSKR_AUG",
   "height": 96,
   "width": 160,

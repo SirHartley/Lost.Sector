@@ -112,7 +112,7 @@ public class ThronesGiftHolySpiritListener implements AdvanceableListener {
             //set portrait
             if (ship.getCaptain()!=null) {
                 ogPortrait = ship.getCaptain().getPortraitSprite();
-                ship.getCaptain().setPortraitSprite("graphics/portraits/nskr_thrn00.png");
+                ship.getCaptain().setPortraitSprite("graphics/lostsector/portraits/nskr_thrn00.png");
             }
 
             entrance = true;

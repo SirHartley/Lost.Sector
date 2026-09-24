@@ -5,7 +5,7 @@
 	"collisionClass":"PROJECTILE_FF",
 	"collisionClassByFighter":"PROJECTILE_FIGHTER",
 	"onHitEffect":"lostsector.combat.weapons.StormCannonOnHitEffect",
-	"glowSprite":"graphics/missiles/nskr_scannon_shot_glow.png",
+	"glowSprite":"graphics/lostsector/missiles/nskr_scannon_shot_glow.png",
 	"glowColor":[60,213,255,255],
 	"glowSizeMult":3.5,
 	"length":50.0,
@@ -16,5 +16,5 @@
 	"coreColor":[214,239,255,155],	
 	"textureScrollSpeed":64.0,
 	"pixelsPerTexel":5.0,
-	"bulletSprite":"graphics/missiles/nskr_scannon_shot.png"
+	"bulletSprite":"graphics/lostsector/missiles/nskr_scannon_shot.png"
 }

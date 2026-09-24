@@ -2,7 +2,7 @@
   "hullName": "blackbird",
   "hullId": "nskr_blackbird",
   "hullSize": "DESTROYER",
-  "spriteName": "graphics/ships/nskr_blackbird.png",
+  "spriteName": "graphics/lostsector/ships/nskr_blackbird.png",
   "style": "NSKR_AUG",
   "height": 154,
   "width": 140,

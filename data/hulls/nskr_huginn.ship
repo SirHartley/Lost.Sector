@@ -2,7 +2,7 @@
   "hullName": "Huginn",
   "hullId": "nskr_huginn",
   "hullSize": "FIGHTER",
-  "spriteName": "graphics/ships/drones/nskr_huginn.png",
+  "spriteName": "graphics/lostsector/ships/drones/nskr_huginn.png",
   "style": "NSKR_PROT",
   "height": 42,
   "width": 54,

@@ -2,7 +2,7 @@
   "hullName": "Harbinger",
   "hullId": "nskr_harbinger_boss",
   "hullSize": "DESTROYER",
-  "spriteName": "graphics/ships/nskr_harbinger_boss.png",
+  "spriteName": "graphics/lostsector/ships/nskr_harbinger_boss.png",
   "style": "DEMON_TECH",
   "height": 152,
   "width": 134,

@@ -4,8 +4,8 @@
   "projectileSpecId": "nskr_rocketFi_shot",
   "type": "MISSILE",
   "size": "MEDIUM",
-  "turretSprite": "graphics/weapons/nskr_huginn_arm_left.png",
-  "hardpointSprite": "graphics/weapons/nskr_huginn_arm_left.png",
+  "turretSprite": "graphics/lostsector/weapons/nskr_huginn_arm_left.png",
+  "hardpointSprite": "graphics/lostsector/weapons/nskr_huginn_arm_left.png",
   "renderAboveAllWeapons": 0,
   "turretOffsets": [
     11.5,

@@ -2,7 +2,7 @@
   "hullName": "Warfare",
   "hullId": "nskr_warfare_e",
   "hullSize": "DESTROYER",
-  "spriteName": "graphics/ships/nskr_warfare_e.png",
+  "spriteName": "graphics/lostsector/ships/nskr_warfare_e.png",
   "style": "NSKR_PROT",
   "height": 176,
   "width": 150,

@@ -2,7 +2,7 @@
   "hullName": "nighthawk",
   "hullId": "nskr_nighthawk",
   "hullSize": "CRUISER",
-  "spriteName": "graphics/ships/nskr_nighthawk.png",
+  "spriteName": "graphics/lostsector/ships/nskr_nighthawk.png",
   "style": "NSKR_AUG",
   "height": 154,
   "width": 308,

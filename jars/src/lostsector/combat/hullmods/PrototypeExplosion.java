@@ -22,7 +22,7 @@ public class PrototypeExplosion {
     //custom ship explosion for prot and enigma ships
     //
     //shockwave
-    public static final String SPRITE_PATH = "graphics/fx/nskr_blast1.png";
+    public static final String SPRITE_PATH = "graphics/lostsector/fx/nskr_blast1.png";
     public static final Color SHOCKWAVE_COLOR = new Color(255, 43, 86, 25);
     public static final float SHOCKWAVE_SIZE = 900f;
     public static final float SHOCKWAVE_SPEED = 600f;

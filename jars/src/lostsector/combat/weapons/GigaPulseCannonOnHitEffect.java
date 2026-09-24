@@ -24,7 +24,7 @@ public class GigaPulseCannonOnHitEffect implements OnHitEffectPlugin {
     public static final Color CORE_COLOR = new Color(30, 184, 255, 250);
     public static final Color FLASH_COLOR = new Color(224, 255, 248, 200);
     //shockwave
-    public static final String SPRITE_PATH = "graphics/fx/nskr_blast_plasmal.png";
+    public static final String SPRITE_PATH = "graphics/lostsector/fx/nskr_blast_plasmal.png";
     public static final float SHOCKWAVE_SIZE = 580f;
 
     @Override

@@ -13,7 +13,7 @@
     5.5,
     5
   ],
-  "hardpointSprite": "graphics/weapons/nskr_tremorrack_hardpoint.png",
+  "hardpointSprite": "graphics/lostsector/weapons/nskr_tremorrack_hardpoint.png",
   "id": "nskr_tremors",
   "noImpactSounds": false,
   "noNonShieldImpactSounds": false,
@@ -51,6 +51,6 @@
     3,
     5
   ],
-  "turretSprite": "graphics/weapons/nskr_tremorrack_turret.png",
+  "turretSprite": "graphics/lostsector/weapons/nskr_tremorrack_turret.png",
   "type": "MISSILE"
 }

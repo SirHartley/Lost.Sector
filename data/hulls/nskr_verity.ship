@@ -2,7 +2,7 @@
   "hullName": "Verity",
   "hullId": "nskr_verity",
   "hullSize": "FRIGATE",
-  "spriteName": "graphics/ships/nskr_verity.png",
+  "spriteName": "graphics/lostsector/ships/nskr_verity.png",
   "style": "MIDLINE",
   "height": 106,
   "width": 120,

@@ -2,7 +2,7 @@
   "hullName": "rorqual",
   "hullId": "nskr_rorqual",
   "hullSize": "CAPITAL_SHIP",
-  "spriteName": "graphics/ships/nskr_rorqual.png",
+  "spriteName": "graphics/lostsector/ships/nskr_rorqual.png",
   "style": "NSKR_ROGUE",
   "height": 284,
   "width": 262,

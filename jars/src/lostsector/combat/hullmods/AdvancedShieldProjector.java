@@ -20,7 +20,7 @@ public class AdvancedShieldProjector extends BaseHullMod {
 	public static final float RESISTANCE_BONUS = 0.50f;
 	public static final float FOLD_BONUS = 1.00f;
 
-	public static final String INNER_LARGE = "graphics/fx/nskr_protShield.png";
+	public static final String INNER_LARGE = "graphics/lostsector/fx/nskr_protShield.png";
 	//public static final String INNER_LARGE = "graphics/fx/shields256.png";
 
 	public static final String MOD_ICON = "graphics/icons/hullsys/fortress_shield.png";

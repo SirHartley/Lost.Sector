@@ -132,7 +132,7 @@ public class HellSpawnJudgementWarning implements InteractionDialogPlugin {
             else if (Math.random()<0.10f) thrn.getName().setFirst("DIE");
             else thrn.getName().setFirst("THRN");
 
-            thrn.setPortraitSprite("graphics/portraits/nskr_thrn0"+count+".png");
+            thrn.setPortraitSprite("graphics/lostsector/portraits/nskr_thrn0"+count+".png");
 
             count++;
         }
@@ -162,7 +162,7 @@ public class HellSpawnJudgementWarning implements InteractionDialogPlugin {
         thrn.setRankId(Ranks.UNKNOWN);
         thrn.getName().setFirst("THRN");
         thrn.getName().setLast("");
-        thrn.setPortraitSprite("graphics/portraits/nskr_thrn00.png");
+        thrn.setPortraitSprite("graphics/lostsector/portraits/nskr_thrn00.png");
         thrn.setId(Ids.THRN_PERSON_ID);
 
 

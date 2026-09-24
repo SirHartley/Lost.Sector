@@ -22,7 +22,7 @@ public class TeleportDummy extends BaseHullMod {
 	public static final Vector2f ZERO = new Vector2f();
 	private boolean loaded = false;
 	private SpriteAPI sprite = null;
-	public static final String SPRITE_PATH = "graphics/fx/nskr_select.png";
+	public static final String SPRITE_PATH = "graphics/lostsector/fx/nskr_select.png";
 	private Vector2f tPoint;
 	float angle = 0f;
 

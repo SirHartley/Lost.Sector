@@ -186,7 +186,7 @@ public class Stasis {
     }
 
     public static final String SPRITE_PATH_1 = "graphics/fx/explosion0.png";
-    public static final String SPRITE_PATH_2 = "graphics/fx/nskr_blast_plasmal.png";
+    public static final String SPRITE_PATH_2 = "graphics/lostsector/fx/nskr_blast_plasmal.png";
 
     public static final Color SHOCKWAVE_COLOR_1 = new Color(123, 179, 255, 50);
     public static final Color SHOCKWAVE_COLOR_2 = new Color(161, 200, 255, 15);

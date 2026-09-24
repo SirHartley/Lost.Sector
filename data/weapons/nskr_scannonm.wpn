@@ -7,12 +7,12 @@
   "hardpointAngleOffsets": [
     0
   ],
-  "hardpointGunSprite": "graphics/weapons/nskr_scannonm_hardpoint_recoil.png",
+  "hardpointGunSprite": "graphics/lostsector/weapons/nskr_scannonm_hardpoint_recoil.png",
   "hardpointOffsets": [
     39,
     0
   ],
-  "hardpointSprite": "graphics/weapons/nskr_scannonm_hardpoint.png",
+  "hardpointSprite": "graphics/lostsector/weapons/nskr_scannonm_hardpoint.png",
   "id": "nskr_scannonm",
   "muzzleFlashSpec": {
     "length": 60,
@@ -39,12 +39,12 @@
   "turretAngleOffsets": [
     0
   ],
-  "turretGunSprite": "graphics/weapons/nskr_scannonm_turret_recoil.png",
+  "turretGunSprite": "graphics/lostsector/weapons/nskr_scannonm_turret_recoil.png",
   "turretOffsets": [
     27.5,
     0
   ],
-  "turretSprite": "graphics/weapons/nskr_scannonm_turret.png",
+  "turretSprite": "graphics/lostsector/weapons/nskr_scannonm_turret.png",
   "type": "BALLISTIC",
   "visualRecoil": 5
 }

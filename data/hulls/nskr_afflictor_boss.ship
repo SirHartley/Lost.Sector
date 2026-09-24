@@ -2,7 +2,7 @@
   "hullName": "Afflictor",
   "hullId": "nskr_afflictor_boss",
   "hullSize": "FRIGATE",
-  "spriteName": "graphics/ships/nskr_phase_strike_ff_boss.png",
+  "spriteName": "graphics/lostsector/ships/nskr_phase_strike_ff_boss.png",
   "style": "DEMON_TECH",
   "height": 120,
   "width": 72,

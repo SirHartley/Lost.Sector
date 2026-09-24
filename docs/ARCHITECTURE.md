@@ -88,7 +88,7 @@ Other registrations: `KestevenTipBarEventCreator` bar event creator, guarded by 
 | `data/config/{indEvo,BetterColonyConfig,CommissionBonus,ExiledSpace,prism,ruthlesssector,starship_legends}/` | Read only by those mods |
 | `data/config/version/version_files.csv` | Registers `lostsector.version` with Version Checker |
 
-IntelliJ compiles `jars/src` to `jars/production` and builds the `jars/Lost.Sector.jar` artifact. Build procedure: [CLAUDE.md](../CLAUDE.md#building).
+Mod assets live under `graphics/lostsector/` and `sounds/lostsector/`; paths outside those folders refer to vanilla assets. IntelliJ compiles `jars/src` to `jars/production` and builds the `jars/Lost.Sector.jar` artifact. Build procedure: [CLAUDE.md](../CLAUDE.md#building).
 
 ### Optional integrations
 

@@ -41,7 +41,7 @@ public class EternitySpawner extends BaseCampaignEventListener implements EveryF
     public static final String FS_NAME = "DSRD Shadows Of Tomorrow";
     public static final String FACTION = "enigma";
     public static final String LOOT_KEY = "$EternityLoot";
-    public static final String PORTRAIT_SPRITE = "graphics/portraits/nskr_enigma.png";
+    public static final String PORTRAIT_SPRITE = "graphics/lostsector/portraits/nskr_enigma.png";
     public static final String ETERNITY_KEY = "ETERNITY";
     public static final String SAVED_PREFIX = "eternity";
     public static final String LOG_PREFIX = "EternitySpawner";

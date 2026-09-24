@@ -169,7 +169,7 @@ public class AugmentedSystemsListener {
         public static final String MOD_BUFFID = AugmentedSystems.NAV_RELAY_ID+"_augment";
         public static final String MOD_NAME = "Nav Relay Augment";
         public static final Color RENDER_COLOR = new Color(68, 133, 207, 15);
-        public static final String SPRITE_PATH = "graphics/fx/nskr_circle.png";
+        public static final String SPRITE_PATH = "graphics/lostsector/fx/nskr_circle.png";
         private SpriteAPI sprite = null;
         private boolean loaded = false;
 
@@ -248,7 +248,7 @@ public class AugmentedSystemsListener {
         public static final String MOD_BUFFID = AugmentedSystems.OPERATIONS_CENTER_ID+"_augment";
         public static final String MOD_NAME = "Operations Center Augment";
         public static final Color RENDER_COLOR = new Color(68, 207, 100, 15);
-        public static final String SPRITE_PATH = "graphics/fx/nskr_circle.png";
+        public static final String SPRITE_PATH = "graphics/lostsector/fx/nskr_circle.png";
         private SpriteAPI sprite = null;
         private boolean loaded = false;
 

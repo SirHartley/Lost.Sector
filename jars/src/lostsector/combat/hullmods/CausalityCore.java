@@ -47,7 +47,7 @@ public class CausalityCore extends BaseHullMod {
 	private float shipTimeMult;
 	private float maxEnergy;
 	public static final String ENGINE_DATA_KEY = "nskr_causalityRenderer";
-	public static final String SPRITE_PATH = "graphics/fx/nskr_select.png";
+	public static final String SPRITE_PATH = "graphics/lostsector/fx/nskr_select.png";
 	public static final String TEXT1 = "Weapons";
 	public static final String TEXT2 = "Energy";
 	public static final String TEXT3 = "Warning";

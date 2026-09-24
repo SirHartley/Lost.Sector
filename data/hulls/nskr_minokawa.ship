@@ -2,7 +2,7 @@
   "hullName": "minokawa",
   "hullId": "nskr_minokawa",
   "hullSize": "CRUISER",
-  "spriteName": "graphics/ships/nskr_minokawa.png",
+  "spriteName": "graphics/lostsector/ships/nskr_minokawa.png",
   "style": "NSKR_PROT",
   "height": 206,
   "width": 388,

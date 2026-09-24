@@ -27,7 +27,7 @@ public class EmFlak {
     public static final Color EXPLO_COLOR2 = new Color(82, 72, 68, 30);
     public static final Color PARTICLE_COLOR = new Color(179, 63, 111, 175);
     public static final Color SMOKE_COLOR = new Color(75, 74, 74, 100);
-    public static final String SPRITE_PATH = "graphics/fx/nskr_blast1.png";
+    public static final String SPRITE_PATH = "graphics/lostsector/fx/nskr_blast1.png";
 
     public static class emFlakListener implements AdvanceableListener {
         public DamagingProjectileAPI projectile;

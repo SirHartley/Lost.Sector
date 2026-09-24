@@ -98,7 +98,7 @@ public class Cache {
 
         //system.getMemoryWithoutUpdate().set(MusicPlayerPluginImpl.MUSIC_SET_MEM_KEY, "Cache_theme");
 
-        system.setBackgroundTextureFilename("graphics/backgrounds/nskr_cache.jpg");
+        system.setBackgroundTextureFilename("graphics/lostsector/backgrounds/nskr_cache.jpg");
         //LOC
         system.getLocation().set(createCacheLoc(50000f, 65000f, 10000f));
 
@@ -340,7 +340,7 @@ public class Cache {
         simpleCaptain.isAiCore = true;
         simpleCaptain.aiCoreID = "alpha_core";
         simpleCaptain.personality = Personalities.RECKLESS;
-        simpleCaptain.portraitSpritePath = "graphics/portraits/nskr_enigma.png";
+        simpleCaptain.portraitSpritePath = "graphics/lostsector/portraits/nskr_enigma.png";
         simpleCaptain.rankId = Ranks.UNKNOWN;
         simpleCaptain.firstName = COM_NAME;
         simpleCaptain.lastName = COM_LAST_NAME;
@@ -543,7 +543,7 @@ public class Cache {
         commander.setId("nskr_"+COM_NAME+number);
         commander.setAICoreId("alpha_core");
         commander.setPersonality(Personalities.RECKLESS);
-        commander.setPortraitSprite("graphics/portraits/nskr_enigma.png");
+        commander.setPortraitSprite("graphics/lostsector/portraits/nskr_enigma.png");
         commander.setPostId(null);
         commander.setRankId(Ranks.UNKNOWN);
         FullName name = new FullName(COM_NAME,"#"+number,FullName.Gender.FEMALE);

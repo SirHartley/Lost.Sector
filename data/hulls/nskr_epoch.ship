@@ -2,7 +2,7 @@
   "hullName": "epoch",
   "hullId": "nskr_epoch",
   "hullSize": "FRIGATE",
-  "spriteName": "graphics/ships/nskr_epoch.png",
+  "spriteName": "graphics/lostsector/ships/nskr_epoch.png",
   "style": "NSKR_PROT",
   "height": 126,
   "width": 134,

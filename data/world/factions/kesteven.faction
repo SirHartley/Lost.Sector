@@ -12,8 +12,8 @@
 	"displayNameLongWithArticle":"the Kesteven Corporation",
 	"personNamePrefixAOrAn":"a",
 	"displayNameIsOrAre":"are",
-	"logo":"graphics/factions/kesteven.png",
-	"crest":"graphics/factions/crest_kesteven.png",
+	"logo":"graphics/lostsector/factions/kesteven.png",
+	"crest":"graphics/lostsector/factions/crest_kesteven.png",
 	"shipNamePrefix":"K-Corp",
 	"shipNameSources":{
 		"GREEK":4,

@@ -57,11 +57,11 @@ public class AdvanceStats extends BaseShipSystemScript {
 
 	private final List<Pair<SpriteAPI, String>> sprites = new ArrayList<>();
 	{
-		sprites.add(0, new Pair<>(gradeD,"graphics/fx/nskr_d.png"));
-		sprites.add(1, new Pair<>(gradeC,"graphics/fx/nskr_c.png"));
-		sprites.add(2, new Pair<>(gradeB,"graphics/fx/nskr_b.png"));
-		sprites.add(3, new Pair<>(gradeA,"graphics/fx/nskr_a.png"));
-		sprites.add(4, new Pair<>(gradeS,"graphics/fx/nskr_s.png"));
+		sprites.add(0, new Pair<>(gradeD,"graphics/lostsector/fx/nskr_d.png"));
+		sprites.add(1, new Pair<>(gradeC,"graphics/lostsector/fx/nskr_c.png"));
+		sprites.add(2, new Pair<>(gradeB,"graphics/lostsector/fx/nskr_b.png"));
+		sprites.add(3, new Pair<>(gradeA,"graphics/lostsector/fx/nskr_a.png"));
+		sprites.add(4, new Pair<>(gradeS,"graphics/lostsector/fx/nskr_s.png"));
 	}
 	private boolean updated = false;
 	private WaveDistortion wave;

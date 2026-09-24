@@ -2,7 +2,7 @@
   "hullName": "Kingstork",
   "hullId": "nskr_kingstork",
   "hullSize": "FRIGATE",
-  "spriteName": "graphics/ships/nskr_kingstork.png",
+  "spriteName": "graphics/lostsector/ships/nskr_kingstork.png",
   "style": "NSKR_AUG",
   "height": 112,
   "width": 106,

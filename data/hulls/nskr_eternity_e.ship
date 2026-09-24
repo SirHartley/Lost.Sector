@@ -2,7 +2,7 @@
   "hullName": "Eternity",
   "hullId": "nskr_eternity_e",
   "hullSize": "FRIGATE",
-  "spriteName": "graphics/ships/nskr_eternity_e.png",
+  "spriteName": "graphics/lostsector/ships/nskr_eternity_e.png",
   "style": "NSKR_PROT",
   "height": 178,
   "width": 112,

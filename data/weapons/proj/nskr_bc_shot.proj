@@ -3,7 +3,7 @@
 	"specClass":"missile",
 	"missileType":"ROCKET",
 	"onHitEffect":"lostsector.combat.weapons.BiteCannonOnHitEffect",
-	"sprite":"graphics/missiles/nskr_bc_shot.png",
+	"sprite":"graphics/lostsector/missiles/nskr_bc_shot.png",
 	"size":[12,23],	
 	"center":[6,11.5],
 	"collisionRadius":16,

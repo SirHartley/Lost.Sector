@@ -2,7 +2,7 @@
   "hullName": "torpor",
   "hullId": "nskr_torpor",
   "hullSize": "FRIGATE",
-  "spriteName": "graphics/ships/nskr_torpor.png",
+  "spriteName": "graphics/lostsector/ships/nskr_torpor.png",
   "style": "NSKR_PROT",
   "height": 116,
   "width": 120,

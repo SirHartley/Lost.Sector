@@ -65,8 +65,8 @@ public class RealitySplitterStats extends BaseShipSystemScript {
     public static final float EXPLOSION_FORCE_VS_ALLIES_MODIFIER = .5f;
     //sound
     public static final String SOUND_ID = "nskr_temporall_off";
-    public static final String SPRITE_PATH_SHOCKWAVE = "graphics/fx/nskr_blast_soft.png";
-    public static final String SPRITE_PATH_GLOW = "graphics/fx/nskr_glow1.png";
+    public static final String SPRITE_PATH_SHOCKWAVE = "graphics/lostsector/fx/nskr_blast_soft.png";
+    public static final String SPRITE_PATH_GLOW = "graphics/lostsector/fx/nskr_glow1.png";
 
     // Local variables, don't touch these
     private boolean Explosions = true;

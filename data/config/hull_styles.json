@@ -50,7 +50,7 @@
 		"shieldInnerColor":[237, 252, 255, 75],
 		"fluxVentCoreColor":[255, 43, 92,255],
 		"fluxVentFringeColor":[255, 20, 145,255],
-		"fluxVentTextureSheet":"graphics/fx/nskr_vent.png", # optional, this is the default value
+		"fluxVentTextureSheet":"graphics/lostsector/fx/nskr_vent.png", # optional, this is the default value
 		"engineLoopSet":"nskr_prot_engine_loop", 					# id of entry in sounds.json
 		"engineAccelerateSet":"nskr_prot_engine_accelerate",		# id of entry in sounds.json
 		"empLoopSet":"emp_loop",						# id of entry in sounds.json

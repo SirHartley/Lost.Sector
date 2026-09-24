@@ -55,7 +55,7 @@ public class RorqualSpawner extends BaseCampaignEventListener implements EveryFr
     //for checking is the player defeated the bounty and contribution
     public static final String DEFEAT_ID = "RORQ_LOOT";
     public static final String DEFEAT_ID_PAID = "RORQ_LOOT_PAID";
-    public static final String PORTRAIT_SPRITE = "graphics/portraits/nskr_pkGuy.png";
+    public static final String PORTRAIT_SPRITE = "graphics/lostsector/portraits/nskr_pkGuy.png";
     public static final String MEMORY_KEY = "RORQ";
     public static final String SAVED_PREFIX = "rorq";
     public static final String LOG_PREFIX = "rorqSpawner";

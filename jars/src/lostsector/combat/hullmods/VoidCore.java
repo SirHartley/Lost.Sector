@@ -26,7 +26,7 @@ public class VoidCore extends BaseHullMod {
 
 	//In-script variables
 	public static final String ENGINE_DATA_KEY = "nskr_demonic_coreRenderer";
-	public static final String SPRITE_PATH = "graphics/fx/nskr_select.png";
+	public static final String SPRITE_PATH = "graphics/lostsector/fx/nskr_select.png";
 
 	public void applyEffectsBeforeShipCreation(HullSize hullSize, MutableShipStatsAPI stats, String id) {
 		stats.getSuppliesPerMonth().modifyMult(id, SUPPLY_USE_MULT);

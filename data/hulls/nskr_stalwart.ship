@@ -2,7 +2,7 @@
   "hullName": "Stalwart",
   "hullId": "nskr_stalwart",
   "hullSize": "CRUISER",
-  "spriteName": "graphics/ships/nskr_stalwart.png",
+  "spriteName": "graphics/lostsector/ships/nskr_stalwart.png",
   "style": "MIDLINE",
   "height": 210,
   "width": 208,

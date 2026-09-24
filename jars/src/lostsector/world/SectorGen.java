@@ -106,7 +106,7 @@ public class SectorGen implements SectorGeneratorPlugin {
             admin.setRankId(Ranks.FACTION_LEADER);
             admin.getName().setFirst("Enigma");
             admin.getName().setLast("");
-            admin.setPortraitSprite("graphics/portraits/nskr_enigma.png");
+            admin.setPortraitSprite("graphics/lostsector/portraits/nskr_enigma.png");
 
             admin.getStats().setSkillLevel(Skills.HYPERCOGNITION, 1);
             admin.getStats().setSkillLevel(Skills.INDUSTRIAL_PLANNING, 1);
@@ -147,7 +147,7 @@ public class SectorGen implements SectorGeneratorPlugin {
         admin.getName().setFirst("Michael");
         admin.getName().setLast("Roux");
         admin.setId("nskr_president");
-        admin.setPortraitSprite("graphics/portraits/nskr_president.png");
+        admin.setPortraitSprite("graphics/lostsector/portraits/nskr_president.png");
         if (ModPlugin.IS_INDEVO) {
             admin.getStats().setSkillLevel("indevo_industrial_planning", 1);
         } else {
@@ -173,7 +173,7 @@ public class SectorGen implements SectorGeneratorPlugin {
         opguy.setRankId("kSpaceOperations");
         opguy.getName().setFirst("Jack");
         opguy.getName().setLast("Lapua");
-        opguy.setPortraitSprite("graphics/portraits/nskr_jack.png");
+        opguy.setPortraitSprite("graphics/lostsector/portraits/nskr_jack.png");
         opguy.setId("nskr_opguy");
         opguy.addTag("k_quest");
         opguy.addTag(Tags.CONTACT_MILITARY);
@@ -198,7 +198,7 @@ public class SectorGen implements SectorGeneratorPlugin {
         researcher.setRankId("kResearch");
         researcher.getName().setFirst("Alice");
         researcher.getName().setLast("Lumi");
-        researcher.setPortraitSprite("graphics/portraits/nskr_alice.png");
+        researcher.setPortraitSprite("graphics/lostsector/portraits/nskr_alice.png");
         researcher.setId("nskr_researcher");
         researcher.addTag("k_quest");
         researcher.addTag(Tags.CONTACT_MILITARY);
@@ -223,7 +223,7 @@ public class SectorGen implements SectorGeneratorPlugin {
         intelligence.setRankId("kIntelligence");
         intelligence.getName().setFirst("Nicholas");
         intelligence.getName().setLast("Antoine");
-        intelligence.setPortraitSprite("graphics/portraits/nskr_nicholas.png");
+        intelligence.setPortraitSprite("graphics/lostsector/portraits/nskr_nicholas.png");
         intelligence.setId("nskr_intelligence");
         intelligence.addTag("k_quest");
         intelligence.addTag(Tags.CONTACT_MILITARY);
@@ -243,7 +243,7 @@ public class SectorGen implements SectorGeneratorPlugin {
         anarchist.setRankId("pAnarchist");
         anarchist.getName().setFirst("Eliza");
         anarchist.getName().setLast("");
-        anarchist.setPortraitSprite("graphics/portraits/nskr_eliza.png");
+        anarchist.setPortraitSprite("graphics/lostsector/portraits/nskr_eliza.png");
         anarchist.setId("nskr_anarchist");
         anarchist.addTag("k_anarchist");
         anarchist.addTag(Tags.CONTACT_UNDERWORLD);

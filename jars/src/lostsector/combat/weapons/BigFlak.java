@@ -99,7 +99,7 @@ public class BigFlak {
     public static final String SPRITE_PATH_1 = "graphics/fx/explosion5.png";
     public static final String SPRITE_PATH_4 = "graphics/fx/explosion6.png";
     public static final String SPRITE_PATH_2 = "graphics/fx/explosion_ring0.png";
-    public static final String SPRITE_PATH_3 = "graphics/fx/nskr_blast_plasmal.png";
+    public static final String SPRITE_PATH_3 = "graphics/lostsector/fx/nskr_blast_plasmal.png";
 
     public static final Color SHOCKWAVE_COLOR_1 = new Color(255, 238, 241, 200);
     public static final Color SHOCKWAVE_COLOR_5 = new Color(255, 247, 249, 255);

@@ -248,7 +248,7 @@ public class Frost {
 		system.setLightColor(STAR_LIGHT_COLOR);
 		system.setDoNotShowIntelFromThisLocationOnMap(true);
 
-		system.setBackgroundTextureFilename("graphics/backgrounds/nskr_frost.jpg");
+		system.setBackgroundTextureFilename("graphics/lostsector/backgrounds/nskr_frost.jpg");
 
 		system.getMemoryWithoutUpdate().set(MusicPlayerPluginImpl.MUSIC_SET_MEM_KEY, "nskr_frost_theme");
 

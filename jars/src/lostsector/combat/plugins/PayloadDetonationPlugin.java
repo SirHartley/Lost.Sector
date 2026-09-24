@@ -20,7 +20,7 @@ public class PayloadDetonationPlugin extends BaseEveryFrameCombatPlugin {
     //handles postmortem FX for aed
 
     // sprite path - necessary if loaded here and not in settings.json
-    public static final String SPRITE_PATH = "graphics/fx/nskr_blast1.png";
+    public static final String SPRITE_PATH = "graphics/lostsector/fx/nskr_blast1.png";
     //base
     public static final Color SHOCKWAVE_COLOR = new Color(208, 36, 76, 12);
     public static final Vector2f ZERO = new Vector2f();

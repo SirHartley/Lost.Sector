@@ -17,7 +17,7 @@
       149,171,169,
       130
     ],
-    "texture":"graphics/planets/nskr_ice_desert.jpg",
+    "texture":"graphics/lostsector/planets/nskr_ice_desert.jpg",
     "icon":"graphics/warroom/icon_planet.png",
     "iconColor":[
       137,163,160,
@@ -29,7 +29,7 @@
       1,
       5
     ],
-    "cloudTexture":"graphics/planets/nskr_clouds_desert01.png",
+    "cloudTexture":"graphics/lostsector/planets/nskr_clouds_desert01.png",
     "cloudColor":[
       184,219,222,
       200

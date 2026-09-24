@@ -2,7 +2,7 @@
   "hullName": "Devilcatcher",
   "hullId": "nskr_devilcatcher",
   "hullSize": "CRUISER",
-  "spriteName": "graphics/ships/nskr_devilcatcher.png",
+  "spriteName": "graphics/lostsector/ships/nskr_devilcatcher.png",
   "style": "NSKR_AUG",
   "height": 210,
   "width": 214,

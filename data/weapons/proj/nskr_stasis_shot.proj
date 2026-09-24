@@ -3,7 +3,7 @@
 	"onHitEffect":"lostsector.combat.weapons.StasisOnHitEffect",
 	"specClass":"missile",
 	"missileType":"MISSILE",
-	"sprite":"graphics/missiles/nskr_stasis_torpedo.png",
+	"sprite":"graphics/lostsector/missiles/nskr_stasis_torpedo.png",
 	"size":[32,32],	
 	"center":[16,16],
 	"collisionRadius":12,

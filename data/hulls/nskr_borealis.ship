@@ -2,7 +2,7 @@
   "hullName": "borealis",
   "hullId": "nskr_borealis",
   "hullSize": "CAPITAL_SHIP",
-  "spriteName": "graphics/ships/nskr_borealis.png",
+  "spriteName": "graphics/lostsector/ships/nskr_borealis.png",
   "style": "HIGH_TECH",
   "height": 274,
   "width": 280,

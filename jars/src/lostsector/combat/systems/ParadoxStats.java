@@ -23,10 +23,10 @@ public class ParadoxStats extends BaseShipSystemScript {
 	public static final float DISTORTION_RADIUS = 275f;
 	public static final Color OG_COLOR = new Color(255, 255, 255);
 
-	public static final String SPRITE_PATH = "graphics/fx/nskr_epoch_golden.png";
-	public static final String SPRITE_PATH_E = "graphics/fx/nskr_epoch_e_golden.png";
-	public static final String SPRITE_PATH_X = "graphics/fx/nskr_epochx_golden.png";
-	public static final String SPRITE_PATH_EX = "graphics/fx/nskr_epochx_e_golden.png";
+	public static final String SPRITE_PATH = "graphics/lostsector/fx/nskr_epoch_golden.png";
+	public static final String SPRITE_PATH_E = "graphics/lostsector/fx/nskr_epoch_e_golden.png";
+	public static final String SPRITE_PATH_X = "graphics/lostsector/fx/nskr_epochx_golden.png";
+	public static final String SPRITE_PATH_EX = "graphics/lostsector/fx/nskr_epochx_e_golden.png";
 
 	private final IntervalUtil sparkleInterval = new IntervalUtil(0.15f, 0.30f);
 	private SpriteAPI ogSprite = null;

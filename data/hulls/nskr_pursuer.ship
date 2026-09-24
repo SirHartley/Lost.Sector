@@ -2,7 +2,7 @@
   "hullName": "pursuer",
   "hullId": "nskr_pursuer",
   "hullSize": "FIGHTER",
-  "spriteName": "graphics/ships/drones/nskr_pursuer.png",
+  "spriteName": "graphics/lostsector/ships/drones/nskr_pursuer.png",
   "style": "HIGH_TECH",
   "height": 34,
   "width": 34,

@@ -9,8 +9,8 @@
 	"personNamePrefixAOrAn":"an",
 	"displayNameIsOrAre":"are",
 	
-	"logo":"graphics/factions/enigma.png",
-	"crest":"graphics/factions/crest_enigma.png",
+	"logo":"graphics/lostsector/factions/enigma.png",
+	"crest":"graphics/lostsector/factions/crest_enigma.png",
 	"shipNamePrefix":"DSRD",
 	
 	"color":[237, 225, 228, 255],

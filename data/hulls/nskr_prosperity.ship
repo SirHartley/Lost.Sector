@@ -2,7 +2,7 @@
   "hullName": "prosperity",
   "hullId": "nskr_prosperity",
   "hullSize": "CAPITAL_SHIP",
-  "spriteName": "graphics/ships/nskr_prosperity.png",
+  "spriteName": "graphics/lostsector/ships/nskr_prosperity.png",
   "style": "NSKR_AUG",
   "height": 306,
   "width": 422,

@@ -2,7 +2,7 @@
   "hullName": "Sovereign (e)",
   "hullId": "nskr_sovereign_e",
   "hullSize": "CRUISER",
-  "spriteName": "graphics/ships/nskr_sovereign_e.png",
+  "spriteName": "graphics/lostsector/ships/nskr_sovereign_e.png",
   "style": "NSKR_PROT",
   "height": 220,
   "width": 320,
