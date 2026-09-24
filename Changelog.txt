@@ -48,6 +48,7 @@ Fixed - Data recovery contracts for Artifact Electronics now count the Artifact 
 Fixed - With Industrial.Evolution or Tahlan Shipworks, their contract types no longer become more common every time a contract is rolled
 Fixed - Finished quest, bounty, contract and hint intel now leaves the intel screen a few days after it ends
 Fixed - Hellspawn event progress entries now drop off the event's list after 30 days, like vanilla events
+Fixed - Loading another save or starting a new game without restarting the game no longer carries over event, spawner and faction ship data from the previous campaign
 
 1.0.b
 Adjusted - Severely nerfed spawn rates for Borealis, Rhea and Kingslayer

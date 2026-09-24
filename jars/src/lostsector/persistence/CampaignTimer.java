@@ -63,6 +63,10 @@ public class CampaignTimer {
         timer = 0f;
     }
 
+    public static void clearInstances(){
+        INSTANCES.clear();
+    }
+
     public static void save(){
         for (CampaignTimer timer : INSTANCES){
             Map<String, Object> data = Global.getSector().getPersistentData();

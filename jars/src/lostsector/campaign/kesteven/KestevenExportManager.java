@@ -5,7 +5,6 @@ import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.BaseCampaignEventListener;
 import com.fs.starfarer.api.campaign.FactionAPI;
 import com.fs.starfarer.api.campaign.FactionProductionAPI;
-import com.fs.starfarer.api.campaign.FactionSpecAPI;
 import com.fs.starfarer.api.combat.ShipAPI;
 import com.fs.starfarer.api.combat.ShipHullSpecAPI;
 import com.fs.starfarer.api.impl.campaign.ids.Factions;
@@ -103,7 +102,6 @@ public class KestevenExportManager extends BaseCampaignEventListener implements 
 
     public static void exportBlueprints(String faction, ExportLevel level) {
         FactionAPI f = Global.getSector().getFaction(faction);
-        FactionSpecAPI fSpec = f.getFactionSpec();
 
         for (String weapon : WEAPONS) {
             if (!f.knowsWeapon(weapon)) {
@@ -118,11 +116,11 @@ public class KestevenExportManager extends BaseCampaignEventListener implements 
                 if (level==ExportLevel.LOW && spec.getHullSize()!=ShipAPI.HullSize.DESTROYER && spec.getHullSize()!=ShipAPI.HullSize.FRIGATE) {
                     //cleanup old levels
                     if (f.knowsShip(ship)) {
-                        setFreq(ship, 0f, fSpec);
+                        setFreq(ship, 0f, f);
                         f.removeKnownShip(ship);
                     }
                     if (f.useWhenImportingShip(ship)) {
-                        setFreq(ship, 0f, fSpec);
+                        setFreq(ship, 0f, f);
                         f.removeUseWhenImportingShip(ship);
                     }
                     continue;
@@ -131,11 +129,11 @@ public class KestevenExportManager extends BaseCampaignEventListener implements 
                 if (level==ExportLevel.CRUISER && spec.getHullSize()!=ShipAPI.HullSize.CRUISER && spec.getHullSize()!=ShipAPI.HullSize.DESTROYER && spec.getHullSize()!=ShipAPI.HullSize.FRIGATE) {
                     //cleanup old levels
                     if (f.knowsShip(ship)) {
-                        setFreq(ship, 0f, fSpec);
+                        setFreq(ship, 0f, f);
                         f.removeKnownShip(ship);
                     }
                     if (f.useWhenImportingShip(ship)) {
-                        setFreq(ship, 0f, fSpec);
+                        setFreq(ship, 0f, f);
                         f.removeUseWhenImportingShip(ship);
                     }
                     continue;
@@ -155,7 +153,6 @@ public class KestevenExportManager extends BaseCampaignEventListener implements 
 
     public static void stopExportBlueprints(String faction) {
         FactionAPI f = Global.getSector().getFaction(faction);
-        FactionSpecAPI spec = f.getFactionSpec();
 
         for (String weapon : WEAPONS) {
             if (f.knowsWeapon(weapon)) {
@@ -165,14 +162,14 @@ public class KestevenExportManager extends BaseCampaignEventListener implements 
 
         for (String ship : SHIPS) {
             if (f.knowsShip(ship)) {
-                setFreq(ship, 0f, spec);
+                setFreq(ship, 0f, f);
                 f.removeKnownShip(ship);
             }
         }
 
         for (String baseShip : SHIPS) {
             if (f.useWhenImportingShip(baseShip)) {
-                setFreq(baseShip, 0f, spec);
+                setFreq(baseShip, 0f, f);
                 f.removeUseWhenImportingShip(baseShip);
             }
         }
@@ -184,10 +181,9 @@ public class KestevenExportManager extends BaseCampaignEventListener implements 
         }
     }
 
-    public static void setFreq(String ship, float value, FactionSpecAPI spec) {
-        HashMap<String, Float> map = new HashMap<>();
-        map.put(ship, value);
-        spec.setHullFrequency(map);
+    // The faction instance, not its spec: specs are shared by every game in the session.
+    public static void setFreq(String ship, float value, FactionAPI faction) {
+        faction.getHullFrequency().put(ship, value);
     }
 
     private ExportLevel getLevel(String faction) {

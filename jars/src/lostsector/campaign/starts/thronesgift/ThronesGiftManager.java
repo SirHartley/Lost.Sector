@@ -35,15 +35,6 @@ public class ThronesGiftManager extends BaseCampaignEventListener implements Eve
         oldLvl = lvl;
     }
 
-    //reset onGameLoad
-    public void reset() {
-
-        xp = Global.getSector().getPlayerStats().getXP();
-        oldXp = xp;
-        lvl = Global.getSector().getPlayerStats().getLevel();
-        oldLvl = lvl;
-    }
-
     @Override
     public boolean isDone() {
         return false;

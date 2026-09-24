@@ -13,6 +13,10 @@ public class Saved<T> {
     public static final String PREFIX = "nskr_";
     static Map<String, Saved> instanceRegistry = new HashMap();
 
+    public static void clearRegistry() {
+        instanceRegistry.clear();
+    }
+
     public static void updatePersistentData() {
         for(Saved saved : instanceRegistry.values()) {
             Global.getSector().getPersistentData().put(saved.key, saved.val);

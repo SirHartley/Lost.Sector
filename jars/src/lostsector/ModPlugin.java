@@ -91,7 +91,7 @@ import java.util.Random;
 
 public class ModPlugin extends BaseModPlugin {
 
-    public static ArrayList<BaseCampaignEventListener> EFS_LIST = new ArrayList<>();
+    public static final ArrayList<BaseCampaignEventListener> EFS_LIST = new ArrayList<>();
 
     public static final String STARFARER_MODE_FROM_START_KEY = "nskr_starfarerFromStart";
 
@@ -176,7 +176,43 @@ public class ModPlugin extends BaseModPlugin {
         }
     }
 
-    private boolean init = false;
+    // Managers keep per-save state in instance fields, Saved values and CampaignTimers, which read
+    // the sector's persistent data when constructed, so every load builds new instances.
+    private static void createManagers() {
+        Saved.clearRegistry();
+        CampaignTimer.clearInstances();
+        EFS_LIST.clear();
+
+        EFS_LIST.add(new HyperspaceEnigmaSpawner());
+        EFS_LIST.add(new HintManager());
+        EFS_LIST.add(new RorqualSpawner());
+        EFS_LIST.add(new EternitySpawner());
+        EFS_LIST.add(new HeartOccupation());
+        EFS_LIST.add(new StalkerSpawner());
+        EFS_LIST.add(new EnigmaRelations());
+        EFS_LIST.add(new KestevenScavenger());
+        EFS_LIST.add(new KestevenExportManager());
+        EFS_LIST.add(new GuardSpawner());
+        EFS_LIST.add(new AbyssSpawner());
+        EFS_LIST.add(new QuestStageManager());
+        EFS_LIST.add(new ExileManager());
+        EFS_LIST.add(new LoanShark());
+        EFS_LIST.add(new InterceptManager());
+        EFS_LIST.add(new BlackOpsManager());
+        EFS_LIST.add(new ContractManager());
+        EFS_LIST.add(new EnigmaHullmodListener());
+        EFS_LIST.add(new MothershipSpawner());
+        EFS_LIST.add(new BlacksiteManager());
+        EFS_LIST.add(new EnigmaAIConverter());
+        EFS_LIST.add(new GameModeManager());
+        EFS_LIST.add(new ThronesGiftManager());
+        EFS_LIST.add(new HellSpawnManager());
+
+        if (IS_NEXERELIN){
+            EFS_LIST.add(new HellSpawnNexListener());
+        }
+    }
+
     @Override
     public void onGameLoad(boolean newGame) {
 
@@ -185,40 +221,7 @@ public class ModPlugin extends BaseModPlugin {
             IS_NEXERELIN = false;
         }
 
-        if (!init) {
-            //ADD EFS
-            //can't just add at applicationLoad because sector is null
-            EFS_LIST.add(new HyperspaceEnigmaSpawner());
-            EFS_LIST.add(new HintManager());
-            EFS_LIST.add(new RorqualSpawner());
-            EFS_LIST.add(new EternitySpawner());
-            EFS_LIST.add(new HeartOccupation());
-            EFS_LIST.add(new StalkerSpawner());
-            EFS_LIST.add(new EnigmaRelations());
-            EFS_LIST.add(new KestevenScavenger());
-            EFS_LIST.add(new KestevenExportManager());
-            EFS_LIST.add(new GuardSpawner());
-            EFS_LIST.add(new AbyssSpawner());
-            EFS_LIST.add(new QuestStageManager());
-            EFS_LIST.add(new ExileManager());
-            EFS_LIST.add(new LoanShark());
-            EFS_LIST.add(new InterceptManager());
-            EFS_LIST.add(new BlackOpsManager());
-            EFS_LIST.add(new ContractManager());
-            EFS_LIST.add(new EnigmaHullmodListener());
-            EFS_LIST.add(new MothershipSpawner());
-            EFS_LIST.add(new BlacksiteManager());
-            EFS_LIST.add(new EnigmaAIConverter());
-            EFS_LIST.add(new GameModeManager());
-            EFS_LIST.add(new ThronesGiftManager());
-            EFS_LIST.add(new HellSpawnManager());
-
-            if (IS_NEXERELIN){
-                EFS_LIST.add(new HellSpawnNexListener());
-            }
-
-            init = true;
-        }
+        createManagers();
 
         //DISPOSABLE FLEET MANAGERS
         if (!Global.getSector().hasScript(HellSpawnDisposableFleetSpawner.class)) {
@@ -238,11 +241,6 @@ public class ModPlugin extends BaseModPlugin {
             Global.getSector().addTransientScript((EveryFrameScript) script);
             Global.getSector().addTransientListener(script);
             Global.getSector().getListenerManager().addListener(script, true);
-
-            // EFS_LIST instances carry over between saves, so re-read the loaded save's XP.
-            if (script instanceof ThronesGiftManager){
-                ((ThronesGiftManager) script).reset();
-            }
         }
 
         Saved.loadPersistentData();
