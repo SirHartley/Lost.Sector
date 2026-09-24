@@ -247,15 +247,16 @@ public class OperationLifesaverIntel extends BaseIntelPlugin {
     public SectorEntityToken getMapLocation(SectorMapAPI map) {
         init();
 
-        SectorEntityToken loc = null;
-        if (stage==12) loc = Global.getSector().getHyperspace().createToken(constellation.getLocation());
-        if (stage==12 && foundFriendly) loc = QuestHelper.getJob4FriendlyTarget();
-        if (stage==12 && locTarget !=null && nickInfo>=1 && !defeatedTarget) loc = locTarget.getStarSystem().getCenter();
-        if (stage==12 && !foundFriendly && defeatedTarget && hintFriendly) loc = QuestHelper.getJob4FriendlyTarget();
-        if (stage==12 && locTarget !=null && foundTarget && foundFriendly && !defeatedTarget) loc = locTarget;
-        if (stage==12 && foundFriendly && defeatedTarget) loc = QuestHelper.getJob4FriendlyTarget();
-        if (stage==13) loc = QuestHelper.asteriaOrOutpost().getPrimaryEntity();
-        return loc;
+        if (stage == 13) return QuestHelper.asteriaOrOutpost().getPrimaryEntity();
+        if (stage != 12) return null;
+
+        // The leads shown by addBulletPoints, most precise first.
+        boolean targetActive = locTarget != null && !defeatedTarget;
+        if (targetActive && (foundTarget || hintTarget)) return locTarget;
+        if (!foundFriendly && hintFriendly) return target;
+        if (targetActive && nickInfo >= 1) return locTarget.getStarSystem().getCenter();
+        if (foundFriendly) return target;
+        return Global.getSector().getHyperspace().createToken(constellation.getLocation());
     }
 
     @Override

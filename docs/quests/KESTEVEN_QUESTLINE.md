@@ -132,6 +132,8 @@ Three sources lead the player on:
 - The hint wreck (`HintWreckDialog`, id prefix `$job4HintWreck`) gives the friendly fleet's system.
 - The Special Operations fleet (`nskr_job4FleetDialog`, transponder must be on) tells its story, sends the strike group coordinates, and asks for 250 supplies and 400 fuel. Giving them sets `JOB4_HELPED_KEY`, and the fleet flies home.
 
+`OperationLifesaverIntel` lists each lead the player has. Its map marker points at the most precise one: the strike group once seen or once the Special Operations fleet sent its coordinates; else the friendly fleet's coordinates from the hint wreck while that fleet is not found; else the system Nicholas named; else the found friendly fleet; else the briefing's constellation. The strike group leads apply only until it is destroyed.
+
 Talking to the friendly fleet or seeing it sets `JOB4_FOUND_FRIENDLY_KEY`. Reducing the strike group below 20% of its strength sets `JOB4_DESTROYED_KEY`. With both set, `QuestStageManager` sets stage 13.
 
 If the player contributes to a battle against the Special Operations fleet, `QuestStageManager` sets stage 14 and `JOB4_FAILED_KEY`. The next advance turns that into stage 99 and ends the questline.

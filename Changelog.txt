@@ -37,6 +37,7 @@ Added - Descriptions for the Abyssal Phase Cloak and Limited Phase Cloak ship sy
 Fixed - Spending a story point to get past the "proper fleet" requirement for a Kesteven job now works and shows the job briefing
 Fixed - The 5 story point Skip story option in the Kesteven questline now works
 Fixed - Refusing Hostile Takeover ("I'm not doing this.") now always asks for confirmation instead of sometimes doing nothing
+Fixed - The Operation Lifesaver map marker now points to the Enigma strike group once you have seen it or the Special Operations fleet has sent its coordinates
 
 1.0.b
 Adjusted - Severely nerfed spawn rates for Borealis, Rhea and Kingslayer
