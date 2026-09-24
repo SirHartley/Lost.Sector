@@ -27,6 +27,8 @@ Fixed - The Cache guardian's taunts, music and reinforcement no longer go missin
 Fixed - The Advanced Shield Projector description now shows the base shield size of the ship you are looking at
 Fixed - Causal Interference and Mega Flux Rocket Pod visual effects no longer multiply with every copy in the battle
 Fixed - Booster Overcharge, Distortion Burn and Mercurial Overdrive acceleration and turning bonuses now wind down with the system instead of staying at full strength
+Fixed - Crash when a fighter-sized strikecraft from another mod carries Volatile Flux Injector
+Adjusted - Volatile Flux Injector's description now says its speed and rate of fire bonuses apply only in combat and change with flux
 
 1.0.b
 Adjusted - Severely nerfed spawn rates for Borealis, Rhea and Kingslayer

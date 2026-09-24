@@ -27,6 +27,8 @@ public class VolatileFluxInjector extends BaseHullMod {
     public static final float FLUX_BONUS = 67f;
     public final Map<HullSize, Float> SPEED_BONUS = new HashMap<>();
     {
+        SPEED_BONUS.put(HullSize.DEFAULT, 50f);
+        SPEED_BONUS.put(HullSize.FIGHTER, 50f);
         SPEED_BONUS.put(HullSize.FRIGATE, 50f);
         SPEED_BONUS.put(HullSize.DESTROYER, 40f);
         SPEED_BONUS.put(HullSize.CRUISER, 30f);
@@ -160,14 +162,14 @@ public class VolatileFluxInjector extends BaseHullMod {
         tooltip.addSectionHeading("Stats", Alignment.MID, pad);
         if (ship!=null) {
             float mod = SPEED_BONUS.get(ship.getHullSize());
-            tooltip.addPara("+"+(int)mod+"su/s"+" to top speed.", pad, ColorHelper.BON_GREEN, (int)mod+"su/s");
+            tooltip.addPara("Up to +"+(int)mod+"su/s"+" to top speed.", pad, ColorHelper.BON_GREEN, (int)mod+"su/s");
         } else{
             float frig = SPEED_BONUS.get(HullSize.FRIGATE);
             float cap = SPEED_BONUS.get(HullSize.CAPITAL_SHIP);
-            tooltip.addPara("+"+(int)frig+"-"+(int)cap+"su/s"+" to top speed, based on hull size.", pad, ColorHelper.BON_GREEN, (int)frig+"-"+(int)cap+"su/s");
+            tooltip.addPara("Up to +"+(int)frig+"-"+(int)cap+"su/s"+" to top speed, based on hull size.", pad, ColorHelper.BON_GREEN, (int)frig+"-"+(int)cap+"su/s");
         }
-        tooltip.addPara("+"+(int)ROF_BONUS+"%%"+" to all weapon rate of fire.", 0.0f, ColorHelper.BON_GREEN, (int)ROF_BONUS+"%");
-        tooltip.addPara("-Full bonus to speed and rate fo fire at zero flux, down to zero at 50%% flux, full penalty at 100%% flux.", 0.0f, ColorHelper.NICE_YELLOW, "");
+        tooltip.addPara("Up to +"+(int)ROF_BONUS+"%%"+" to all weapon rate of fire.", 0.0f, ColorHelper.BON_GREEN, (int)ROF_BONUS+"%");
+        tooltip.addPara("-Combat only. Both bonuses change with current flux: full bonus at zero flux, none at 50%% flux, full penalty at 100%% flux.", 0.0f, ColorHelper.NICE_YELLOW, "");
         if(ship!=null) {
             if (ship.getVariant().hasHullMod("nskr_augmented")) {
                 tooltip.addPara("-Penalty is equal up to 50%% of the bonus, but as a negative.", 0.0f, ColorHelper.TT_ORANGE, "Penalty is equal up to 50% of the bonus");
