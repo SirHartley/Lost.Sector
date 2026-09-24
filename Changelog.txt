@@ -25,6 +25,7 @@ Fixed - No More Chains (Kingslayer) no longer keeps its energy and missile rate 
 Fixed - Every Nemesis in a battle now starts in Relocation Protocol and cycles its Adaptive Protocol modes in order, not just the first one
 Fixed - The Cache guardian's taunts, music and reinforcement no longer go missing when another fleet joins the battle
 Fixed - The Advanced Shield Projector description now shows the base shield size of the ship you are looking at
+Fixed - Causal Interference and Mega Flux Rocket Pod visual effects no longer multiply with every copy in the battle
 
 1.0.b
 Adjusted - Severely nerfed spawn rates for Borealis, Rhea and Kingslayer

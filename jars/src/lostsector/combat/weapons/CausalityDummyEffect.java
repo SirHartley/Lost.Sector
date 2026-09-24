@@ -1,6 +1,5 @@
 package lostsector.combat.weapons;
 
-import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.combat.*;
 import com.fs.starfarer.api.util.IntervalUtil;
 import org.lazywizard.lazylib.MathUtils;
@@ -31,26 +30,24 @@ public class CausalityDummyEffect implements EveryFrameWeaponEffectPlugin {
             return;
         }
 
-        for (DamagingProjectileAPI proj : engine.getProjectiles()) {
-            String spec = proj.getProjectileSpecId();
+        arcInterval.advance(engine.getElapsedInLastFrame());
+        if (!arcInterval.intervalElapsed()) {
+            return;
+        }
 
-            if (!PROJ_IDS.contains(spec)) {
+        // CausalityStats fires these shots from a fake weapon, so they belong to this mount's ship, not to the mount.
+        ShipAPI ship = weapon.getShip();
+        for (DamagingProjectileAPI proj : engine.getProjectiles()) {
+            if (proj.getSource() != ship || !PROJ_IDS.contains(proj.getProjectileSpecId())) {
                 continue;
             }
 
-            ShipAPI ship = proj.getSource();
             Vector2f point = proj.getLocation();
-            arcInterval.advance(Global.getCombatEngine().getElapsedInLastFrame());
-            if (arcInterval.intervalElapsed()) {
-                for (int x = 0; x < 1; x++) {
-                    float angle = (float) Math.random() * 360f;
-                    float distance = (float) Math.random() * 75f + 25f;
-                    Vector2f point1 = MathUtils.getPointOnCircumference(point, distance, angle);
+            float angle = (float) Math.random() * 360f;
+            float distance = (float) Math.random() * 75f + 25f;
+            Vector2f point1 = MathUtils.getPointOnCircumference(point, distance, angle);
 
-                    engine.spawnEmpArcVisual(point, new SimpleEntity(point), point1, new SimpleEntity(point1), 10f, CORE_COLOR, FRINGE_COLOR);
-
-                }
-            }
+            engine.spawnEmpArcVisual(point, new SimpleEntity(point), point1, new SimpleEntity(point1), 10f, CORE_COLOR, FRINGE_COLOR);
         }
     }
 }
