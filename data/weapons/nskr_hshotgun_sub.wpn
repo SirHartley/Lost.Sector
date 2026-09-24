@@ -23,5 +23,4 @@
 					   "particleCount":75,
 					   "particleColor":[255,140,50,255]},
 	"projectileSpecId":"nskr_hshotgun_sub_shot",
-	"fireSoundTwo":"nskr_superd_fireb",
 }
