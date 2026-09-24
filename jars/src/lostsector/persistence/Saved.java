@@ -5,7 +5,6 @@ package lostsector.persistence;
 
 import com.fs.starfarer.api.Global;
 
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -23,26 +22,13 @@ public class Saved<T> {
         }
     }
 
+    // Owners are rebuilt on every game load (ModPlugin.createManagers), so defaultVal is always a
+    // fresh object. After a save, the stored object is the live value itself and must not be cleared.
     public static void loadPersistentData() {
+        Map<String, Object> data = Global.getSector().getPersistentData();
         for(Saved saved : instanceRegistry.values()) {
-            if(Global.getSector().getPersistentData().containsKey(saved.key)) {
-                saved.val = Global.getSector().getPersistentData().get(saved.key);
-
-                if(saved.val == null) saved.val = saved.defaultVal;
-
-                if(saved.val instanceof Collection) ((Collection)saved.defaultVal).clear();
-                else if(saved.val instanceof Map) ((Map)saved.defaultVal).clear();
-            } else if(saved.val != null && saved.val.getClass().isPrimitive()) {
-                saved.val = saved.defaultVal;
-            } else if(saved.val instanceof Collection) {
-                ((Collection)saved.val).clear();
-                ((Collection)saved.defaultVal).clear();
-            } else if(saved.val instanceof Map) {
-                ((Map)saved.val).clear();
-                ((Map)saved.defaultVal).clear();
-            } else {
-                saved.val = saved.defaultVal;
-            }
+            Object stored = data.get(saved.key);
+            saved.val = stored != null ? stored : saved.defaultVal;
         }
     }
 
