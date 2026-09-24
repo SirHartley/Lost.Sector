@@ -15,7 +15,6 @@ import com.fs.starfarer.api.fleet.FleetMemberAPI;
 import com.fs.starfarer.api.input.InputEventAPI;
 import com.fs.starfarer.api.mission.FleetSide;
 import com.fs.starfarer.api.util.Misc;
-import com.fs.starfarer.api.util.Pair;
 import lostsector.helper.ShipHelper;
 import lostsector.world.systems.cache.Cache;
 import org.lazywizard.lazylib.MathUtils;
@@ -106,15 +105,9 @@ public class CacheBossTauntPlugin extends BaseEveryFrameCombatPlugin {
 
         //check only once since this is an EFS
         if (checked && !boss) return;
-        //boss fleet check
-        CampaignFleetAPI fleet = getFleetFromBattle(battle);
-        for (String key : fleet.getMemoryWithoutUpdate().getKeys()){
-            if (BOSS_KEYS.contains(key)){
-                boss = true;
-                break;
-            }
-        }
+        CampaignFleetAPI fleet = getBossFleet(battle);
         checked = true;
+        boss = fleet != null;
         if(!boss) return;
 
         CombatFleetManagerAPI enemy = engine.getFleetManager(FleetSide.ENEMY);
@@ -285,25 +278,14 @@ public class CacheBossTauntPlugin extends BaseEveryFrameCombatPlugin {
         if (ship == null) ship = Global.getCombatEngine().getFleetManager(FleetSide.ENEMY).getShipFor(member);
         return ship;
     }
-    private CampaignFleetAPI getFleetFromBattle(BattleAPI battle) {
-        CampaignFleetAPI bestFallback = null;
-        List<Pair<CampaignFleetAPI, Float>> fleetsSorted = new ArrayList<>();
+    private CampaignFleetAPI getBossFleet(BattleAPI battle) {
         for (CampaignFleetAPI fleet : battle.getNonPlayerSide()) {
-            float strength = fleet.getEffectiveStrength();
-            fleetsSorted.add(new Pair<>(fleet, strength));
+            for (String key : BOSS_KEYS) {
+                if (fleet.getMemoryWithoutUpdate().contains(key)) return fleet;
+            }
         }
-        Collections.sort(fleetsSorted, FLEET_COMPARE);
-        for (Pair<CampaignFleetAPI, Float> entry : fleetsSorted) {
-            return entry.one;
-        }
-        return bestFallback;
+        return null;
     }
-    private final Comparator<Pair<CampaignFleetAPI, Float>> FLEET_COMPARE = new Comparator<Pair<CampaignFleetAPI, Float>>() {
-        @Override
-        public int compare(Pair<CampaignFleetAPI, Float> f1, Pair<CampaignFleetAPI, Float> f2) {
-            return Float.compare(f1.two, f2.two);
-        }
-    };
     private List<FleetMemberAPI> getLostPlayer() {
         return Global.getCombatEngine().getFleetManager(FleetSide.PLAYER).getDisabledCopy();
     }
