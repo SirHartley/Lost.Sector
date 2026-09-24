@@ -41,7 +41,6 @@ public class MiscLS {
     public static final Color TT_ORANGE = new Color(255, 109, 31, 255);
     public static final Color BON_GREEN = new Color(142, 255, 21, 255);
     public static final Color NICE_YELLOW = new Color(255, 219, 36, 255);
-    public static final Color EXOTICA_RED = new Color(141, 42, 38, 255);
 
     static void log(final String message) {
         Global.getLogger(MiscLS.class).info(message);

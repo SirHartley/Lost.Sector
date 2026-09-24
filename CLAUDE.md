@@ -13,11 +13,10 @@ Reviews, explanations, audits, and proposals are read-only unless the user reque
 1. Read the current remote `CLAUDE.md` in full at the start of each new task. Within the same task, reuse the version already read unless the instructions change. Read new or changed instruction files before following them.
 2. Use the `starsector-knowledge` skill before answering or changing anything related to vanilla Starsector. It contains the official API, decompiled internals, and vanilla data for one exact game version. Do not rely on memory.
 3. If the skill is incomplete, inspect the read-only archives under `lib/`. Extract them to a temporary directory, never into the repository.
-   - `starfarer.api.zip` contains the official game API source.
+   - `starfarer.api.zip` contains the official game API source; `starfarer.api.jar` is the compiled API.
    - `GraphicsLib.zip`, `Lazylib_lunalib.zip`, and `MagicLib.zip` contain dependency sources and jars.
-   - Nexerelin, Exotica Technologies and Industrial.Evolution are optional integrations; their archives belong in `lib/` as well.
-   - For GraphicsLib, LazyLib, LunaLib, MagicLib, Nexerelin, Exotica Technologies and Industrial.Evolution, `lib/` is the primary source because the Starsector skill covers vanilla only.
-   - `lib/` is not yet populated in this repository. Until an archive is added, report the missing source instead of guessing its API.
+   - `ExerelinCore.jar` (Nexerelin) and `IndEvo.jar` (Industrial.Evolution) are compiled jars without source. Read their signatures with `javap`; report behavior that needs their source as unverified.
+   - For GraphicsLib, LazyLib, LunaLib, MagicLib, Nexerelin and Industrial.Evolution, `lib/` is the primary source because the Starsector skill covers vanilla only.
 4. Select the required guides using [Which guide to read](#which-guide-to-read). Apply every matching row, including for reviews and fixes to existing behavior. Follow required skill reading as well; this table does not waive full-reference reads required by a skill.
 
 ### Which guide to read
@@ -50,6 +49,7 @@ The dictionaries distinguish checked recipes from extracted names, expressions a
 - Make one commit per requested change. If one message contains several changes, commit them separately in the requested order.
 - Keep each commit message to one short, plain-English summary. Do not include testing notes, agent or model names, co-author trailers, session metadata, links, formatting, or session URLs.
 - Update the affected documentation in the same commit, following [Documentation upkeep](#documentation-upkeep). Do this without a separate user request.
+- Add a `Changelog.txt` entry for every change players can notice, in the same commit, under the top (next-release) section. Use the existing forms `Added -`, `Adjusted -`, `Fixed -` and `Removed -`, one line per entry, in player terms. Refactors, documentation, tools and build setup get no entry.
 - Work only in the current task checkout. A live mod installation, including any copy under a Starsector `mods` folder, and every unrelated checkout are read-only unless the user explicitly asks you to change them.
 - Do not deploy or synchronize the mod after merge unless the user explicitly requests it.
 - Keep all Java tools and automated checks under `src`, in the normal `Lost.Sector` module. Do not add separate test source trees or duplicate game classes. Tools may read existing game constants and types; do not change runtime classes to support them.
@@ -78,6 +78,7 @@ Update documents automatically as part of each relevant change, not by a backgro
 
 | Document | Owns | Update when / how |
 |---|---|---|
+| `Changelog.txt` | Player-facing change list for each release | Add one entry per user-affecting change in the commit that makes it, under the top (next-release) section. Do not rename released sections. |
 | `AGENTS.md` | Codex discovery | Keep it a short pointer to this file. Do not copy workflow policy into it. |
 | `CLAUDE.md` | Task scope, subagent instructions, tools, commits, PRs, builds, comments, document maintenance | Replace changed policies here and update links. Keep provider-specific instructions explicitly scoped. |
 | `docs/ARCHITECTURE.md` | Technical routing: owners, registrations, data flow, lifecycle and cross-system constraints | Update the affected route or contract; remove obsolete owners. Use exact paths and symbols. No lore, writing advice, release history, or duplicate policy. |
@@ -222,7 +223,7 @@ Subagents perform research and scoping, not shipped code. The UI assignment take
 
 ## Version names
 
-`mod_info.json` `version`, the `modVersion` in `lostsector.version`, the release tag in its `directDownloadURL`, and the top `Changelog.txt` entry all name `1.0.b`. The release version uses a letter patch (`1.0.a`, `1.0.b`).
+`mod_info.json` `version`, the `modVersion` in `lostsector.version` and the release tag in its `directDownloadURL` name the released version, `1.0.b`. The release version uses a letter patch (`1.0.a`, `1.0.b`). The top `Changelog.txt` section, `1.0.c`, collects entries for the next release; the user sets the version files when publishing it.
 
 Version Checker reads `lostsector.version` and `Changelog.txt` from `main` through `masterVersionFile` and `changelogURL`. Merging a change to those files publishes it to players. Do not change version names or release metadata unless the user asks.
 
@@ -247,18 +248,18 @@ The project uses Java 17; `.idea/misc.xml` sets the language level. IntelliJ com
 
 Required compile dependencies:
 
-- `starfarer.api.jar` and `starfarer_obf.jar` from the game's `starsector-core` directory;
-- `Graphics.jar` from GraphicsLib;
-- `LazyLib.jar` and `Kotlin-Runtime.jar` from LazyLib; the Kotlin runtime supplies the `org.jetbrains.annotations` classes used in `src`;
-- `MagicLib.jar` from MagicLib;
-- `LunaLib.jar` from LunaLib;
-- the Nexerelin jar (`ExerelinCore`), the Exotica Technologies jar and the Industrial.Evolution jar, used only by code behind the optional-integration flags;
+- `lib/starfarer.api.jar`, and `starfarer_obf.jar` from the game's `starsector-core` directory;
+- `Graphics.jar` from `lib/GraphicsLib.zip`;
+- `LazyLib.jar` and `jars/internal/Kotlin-Runtime.jar` from `lib/Lazylib_lunalib.zip`; the Kotlin runtime supplies the `org.jetbrains.annotations` classes used in `src`;
+- `MagicLib.jar` from `lib/MagicLib.zip`;
+- `LunaLib.jar` from `lib/Lazylib_lunalib.zip`;
+- `lib/ExerelinCore.jar` and `lib/IndEvo.jar`, used only by code behind the optional-integration flags;
 - `lwjgl-2.9.3.jar`;
 - `lwjgl_util-2.9.3.jar`;
 - `json-20140107.jar`;
 - `log4j-1.2.17.jar`.
 
-These dependencies provide `org.lwjgl.util.vector`, `org.lwjgl.opengl`, `org.json`, and `Global.getLogger()`. LazyLib, MagicLib and GraphicsLib are the declared runtime dependencies in `mod_info.json`. LunaLib, Nexerelin, Exotica Technologies and Industrial.Evolution are compile-time requirements for their integration classes; [ARCHITECTURE.md](docs/ARCHITECTURE.md) records how each is gated at runtime.
+The last four ship with the game in `starsector-core`; the same versions from Maven Central compile identically when no game install is available. These dependencies provide `org.lwjgl.util.vector`, `org.lwjgl.opengl`, `org.json`, and `Global.getLogger()`. LazyLib, MagicLib and GraphicsLib are the declared runtime dependencies in `mod_info.json`. LunaLib, Nexerelin and Industrial.Evolution are compile-time requirements for their integration classes; [ARCHITECTURE.md](docs/ARCHITECTURE.md) records how each is gated at runtime.
 
 Reference command:
 

@@ -367,15 +367,7 @@ public class Cache {
         //custom key
         fleet.getMemoryWithoutUpdate().set(MemFlags.FLEET_INTERACTION_DIALOG_CONFIG_OVERRIDE_GEN, new CacheGuardFIDConfig());
 
-        //set faction correctly
-        if (ModPlugin.IS_EXOTICA) {
-            //captains
-            fleet.setFaction(Factions.DERELICT, true);
-            //for correct upgrades and exotics
-            fleet.setFaction("enigma", false);
-        } else {
-            fleet.setFaction(Factions.DERELICT, true);
-        }
+        fleet.setFaction(Factions.DERELICT, true);
 
 
 

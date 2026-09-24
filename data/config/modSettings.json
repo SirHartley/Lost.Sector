@@ -8,15 +8,6 @@
 		},
     },
 	
-	"exoticatechnologies": {
-		
-		"factionsWithConfigs": [
-			"enigma",
-			"kesteven",
-			"prot_ops"
-		],
-  },
-  
   	"AdvancedGunneryControl":{
         "suggestedWeaponTags": {
 

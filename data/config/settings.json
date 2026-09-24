@@ -64,10 +64,6 @@
 		"fx":{
 			"nskr_glow1":"graphics/fx/nskr_glow1.png",
 		},
-		"upgrades": {
-			"temporalConduits": "graphics/icons/upgrades/temporalConduits.png",
-			"spaceTimeAnchor": "graphics/icons/upgrades/spaceTimeAnchor.png",
-		}
 	},
 	
 	"plugins":{
