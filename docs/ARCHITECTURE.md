@@ -10,19 +10,20 @@ Technical routing for the current implementation. Java paths below are relative 
 | [RULES.md](RULES.md) | Rules syntax, execution and project routing contracts |
 | [RULES_AUTHORING.md](RULES_AUTHORING.md) | Using and debugging commands, memory and text replacements, including Java integration; vanilla dictionaries and source corrections |
 | [UI.md](UI.md) | Java custom panels, widgets, renderers, sprites, tooltips, layout and input; shared text guidelines in DIALOGUE.md |
+| [Quest implementation](quests/README.md) | Kesteven questline stages, state and dialogue map; contracts and bounties |
 
 ## Start here
 
 | Change / symptom | Route |
 |---|---|
-| Kesteven questline stage or job | `rules.csv -> rulecmd/nskr_kestevenQuest -> quests/util/QuestUtil.getStage/setStage`; automatic transitions in `quests/util/QuestStageManager.advance()`; intel `intel/KQuest*Intel` |
+| Kesteven questline stage or job | `rules.csv -> rulecmd/nskr_kestevenQuest -> quests/util/QuestUtil.getStage/setStage`; automatic transitions in `quests/util/QuestStageManager.advance()`; intel `intel/KQuest*Intel`; [questline walkthrough](quests/KESTEVEN_QUESTLINE.md) |
 | Quest entity opens the wrong dialog | `CorePlugin.pickInteractionDialogPlugin -> quests/*Dialog`, `fleets/events/BlacksiteDialog`, `fleets/bounties/MothershipInteractionBlocker`, custom-start FIDs |
 | Endings and the production chip | `quests/EndingKestevenDialog`, `quests/EndingElizaDialog`, `rulecmd/nskr_altEndingDialogLuddic/TT -> QuestUtil.saveEnding()`; `econ/UnlimitedProductionChipCondition -> fleets/BlackOpsManager.getUPC()` |
-| Named bounties | `fleets/bounties/*Spawner -> intel/HintManager -> intel/*Intel -> loot/BountyLoot` |
+| Named bounties | `fleets/bounties/*Spawner -> intel/HintManager -> intel/*Intel -> loot/BountyLoot`; [bounty structure](quests/CONTRACTS_AND_BOUNTIES.md#named-bounties) |
 | Roaming Enigma fleets | `fleets/HyperspaceEnigmaSpawner`, `fleets/StalkerSpawner`, `procgen/DormantSpawner`, `procgen/EnigmaBaseSpawner` + `EnigmaDefenderPlugin`; officers `EnigmaAIConverter`; loot `loot/EnigmaFleetLootGenerator` |
 | Event fleets | `fleets/events/InterceptManager`, `fleets/events/LoanShark`, quest fleets from `QuestStageManager` via `quests/util/QuestFleets`; dialogue in `rules.csv` or `rulecmd/nskr_ttCollectorDialog`, `nskr_loanSharkDialog`, `nskr_elizaInterceptDialog` |
 | Debt, ship swap, S-mod removal | Official menus in `rules.csv -> rulecmd/nskr_debt`, `nskr_shipSwap`, `nskr_modRemoval`; monthly interest `CrushingDebt` |
-| Contracts | `person_missions.csv -> rulecmd/Contracts -> intel/ContractIntel`; `quests/jobs/ContractManager` |
+| Contracts | `person_missions.csv -> rulecmd/Contracts -> intel/ContractIntel`; `quests/jobs/ContractManager`; [contracts](quests/CONTRACTS_AND_BOUNTIES.md#contracts) |
 | Blacksites | `procgen/BlacksiteSpawner -> fleets/events/BlacksiteManager -> CorePlugin -> BlacksiteDialog` |
 | Custom starts | Nexerelin background -> `customStart/GamemodeManager` -> `HellSpawnManager` or `ThronesGiftManager`; unlocked by `LOST_SECTOR_cfg.json` |
 | New-game content, adding the mod to a save | `ModPlugin.onNewGame*` and the `SAVE_KEY` check in `onGameLoad`; [world generation](#save-identity) |
@@ -45,20 +46,22 @@ Technical routing for the current implementation. Java paths below are relative 
 | `ModPlugin.onGameLoad()` | Order below. Runs for new games and loaded saves. |
 | `ModPlugin.beforeGameSave()` | `Saved.updatePersistentData()`, `CampaignTimer.save()`, then removes every `EFS_LIST` script and listener from the sector |
 | `ModPlugin.afterGameSave()` | Re-adds `EFS_LIST`, then `Saved.loadPersistentData()` |
-| `ModPlugin.onNewGame()` | Reserves procgen system names; Arcadia/Asteria; Kesteven bounty participation and relations; writes `SAVE_KEY` and `STARFARER_MODE_FROM_START_KEY` |
-| `ModPlugin.onNewGameAfterProcGen()` | Frost part 1, Outpost, Mothership planets, Enigma bases, dormant spawns, environmental storytelling, Cache system |
-| `ModPlugin.onNewGameAfterEconomyLoad()` | Frost part 2 market, `RogueSpawner.spawnRogues()` |
-| `ModPlugin.onNewGameAfterTimePass()` | Nexerelin random-core rerun of Frost/Outpost, IndEvo features, `Gen.genPeople()`, Frost ruins, `DesertFixer.fix()`, Blacksite, Mothership fleet, Enigma relations |
+| `ModPlugin.onNewGame()` | Reserves procgen system names; Arcadia/Asteria (Corvus mode or no Nexerelin); Kesteven bounty participation and relations; writes `SAVE_KEY` and `STARFARER_MODE_FROM_START_KEY` |
+| `ModPlugin.onNewGameAfterProcGen()` | Frost part 1 and Outpost (Corvus mode or no Nexerelin); Mothership planets, Enigma bases, dormant spawns, environmental storytelling, Cache system |
+| `ModPlugin.onNewGameAfterEconomyLoad()` | Frost part 2 market (Corvus mode or no Nexerelin), `RogueSpawner.spawnRogues()` |
+| `ModPlugin.onNewGameAfterTimePass()` | Frost and Outpost in Nexerelin random-core games, IndEvo features, `Gen.genPeople()`, Frost ruins, `DesertFixer.fix()`, blacksites, Mothership fleet, Enigma relations |
 
 `onGameLoad` order: Nexerelin null-manager guard -> `EFS_LIST` construction (once per client session, guarded by the instance field `init`) -> `HellSpawnDisposableFleetSpawner` and `ThronesGiftDisposableFleetSpawner` behind `hasScript` -> `KestevenMirror.borrowIndieBlueprints()` -> `BlackOpsSetup.scanWeaponBlueprints()` -> `syncNSKRScripts()` -> `registerPlugin(new CorePlugin())` -> `EFS_LIST` as transient scripts, transient listeners and listener-manager listeners, with `ThronesGiftManager.reset()` -> `Saved.loadPersistentData()` -> `KestevenTipBarCreator` -> Starfarer-mode check -> new-save generation -> `FleetUtil.hackBrokenVariants()`.
 
 A save without `ModPlugin.SAVE_KEY` (`nskr_enabled`) in sector persistent data runs all four `onNewGame*` hooks from `onGameLoad`, then adds a Kesteven station commander to `nskr_asteria`. This is how the mod is added to an existing save.
 
+Nexerelin random-core games never generate Arcadia/Asteria, and `Gen.genPeople()` places Michael, Jack and Alice only on Asteria and Nicholas only in Corvus mode. `ExileManager.exile()` creates any missing quest people on the Outpost.
+
 Scripts use two lifecycles:
 
 | Tier | Members | Lifecycle |
 |---|---|---|
-| Transient `EFS_LIST` | `HyperspaceEnigmaSpawner`, `HintManager`, `RorqSpawner`, `EternitySpawner`, `EnigmaBlowerUpper`, `StalkerSpawner`, `EnigmaRelationsFixer`, `KestevenScavenger`, `KestevenExportManager`, `GuardSpawner`, `AbyssSpawner`, `QuestStageManager`, `ExileManager`, `LoanShark`, `InterceptManager`, `BlackOpsManager`, `ContractManager`, `EnigmaHullmodListener`, `MothershipSpawner`, `BlacksiteManager`, `EnigmaAIConverter`, `GamemodeManager`, `ThronesGiftManager`, `HellSpawnManager`, `CustomCampaignListener`; `HellSpawnNexListener` only with Nexerelin | Each is a `BaseCampaignEventListener` and `EveryFrameScript`, advanced every campaign frame. Removed before each save and re-added after it; state lives in `Saved` fields and `CampaignTimer`s, not in the script object. |
+| Transient `EFS_LIST` | Built once per client session and reused for every save loaded in it: `HyperspaceEnigmaSpawner`, `HintManager`, `RorqSpawner`, `EternitySpawner`, `EnigmaBlowerUpper`, `StalkerSpawner`, `EnigmaRelationsFixer`, `KestevenScavenger`, `KestevenExportManager`, `GuardSpawner`, `AbyssSpawner`, `QuestStageManager`, `ExileManager`, `LoanShark`, `InterceptManager`, `BlackOpsManager`, `ContractManager`, `EnigmaHullmodListener`, `MothershipSpawner`, `BlacksiteManager`, `EnigmaAIConverter`, `GamemodeManager`, `ThronesGiftManager`, `HellSpawnManager`, `CustomCampaignListener`; `HellSpawnNexListener` only with Nexerelin | Each is a `BaseCampaignEventListener` and `EveryFrameScript`, advanced every campaign frame. Removed before each save and re-added after it. Only `Saved` fields are reloaded per save; other instance fields carry over from the previous save loaded in the session. |
 | Saved scripts | `EnigmaFleetLootGenerator`, with listeners `CrushingDebt`, `LicensingFees` and `ComCrewsBonus` registered inside its guard; `BountyLoot`; generic plugin `EnigmaDefenderPlugin` | Added once by `syncNSKRScripts()` behind `hasScript`/`hasPlugin` checks and serialized with the save. The three economy listeners react to `reportEconomyTick`. |
 
 `CorePlugin` is a transient `BaseCampaignPlugin`: vanilla drops transient plugins when saving, so `onGameLoad` registers it again. Its `pickInteractionDialogPlugin` routes quest and event entities to their Java dialogs by entity ID and memory state.
@@ -74,9 +77,9 @@ Other registrations: `KestevenTipBarCreator` bar event creator, guarded by `hasE
 | `data/campaign/rules.csv` | Dialogue; see [project routing](RULES.md#project-routing) |
 | `data/campaign/person_missions.csv` | `Contracts` mission offer |
 | `data/campaign/abilities.csv` | `nskr_hellSpawnAbility` -> `campaign/customStart/abilities/HellSpawnAbility` |
-| `data/campaign/market_conditions.csv` | `nskr_enigmaPop` -> `EnigmaPopCondition`, `nskr_upChip` -> `UnlimitedProductionChipCondition` (`campaign/econ/`) |
-| `data/campaign/commodities.csv`, `special_items.csv` | `nskr_electronics`; prototype blueprint packages `nskr_prot_wp`/`nskr_prot_light` |
-| `data/campaign/procgen/*.csv`, `sim_opponents.csv` | Planet type `nskr_ice_desert`, `nskr_enigmabase` salvage row, drop groups; simulator opponents |
+| `data/campaign/market_conditions.csv` | `nskr_enigmaPop` -> `EnigmaPopCondition`, `nskr_upChip` -> `UnlimitedProductionChipCondition`, `nskr_hellSpawnCondition` -> `HellSpawnCondition` (`campaign/econ/`) |
+| `data/campaign/commodities.csv`, `special_items.csv` | `nskr_electronics`; prototype blueprint packages `nskr_prot_wp`, `nskr_prot_light`, `nskr_prot_heavy` |
+| `data/campaign/procgen/*.csv`, `sim_opponents.csv` | Planet type `nskr_ice_desert`; salvage rows `nskr_enigmabase`, `nskr_heart_wreckage`, `nskr_blacksite_*`; drop groups; simulator opponents |
 | `data/config/custom_entities.json` | Entity specs for Java `addCustomEntity` calls |
 | `data/config/sounds.json` | Music and sound IDs played from Java |
 | `data/world/factions/factions.csv` | `enigma`, `kesteven`, `prot_ops`, `ai_all`; the other `.faction` files add to vanilla factions |
@@ -95,10 +98,10 @@ IntelliJ compiles to `jars/production` and builds the `jars/Lost.Sector.jar` art
 | Flag (mod ID) | Gated owners |
 |---|---|
 | `IS_NEXELERIN` (`nexerelin`) | World generation mode, `HellSpawnNexListener`, diplomacy calls in `QuestStageManager`, `HellSpawnManager`, `ExileManager`, `Gen`. Also cleared in `onGameLoad` when `SectorManager.getManager()` is null. `HellSpawnBackground`/`ThronesGiftBackground` extend Nexerelin's `BaseCharacterBackground` and are reached only through Nexerelin's background CSV. |
-| `IS_INDEVO` (`IndEvo`) | IndEvo features in `onNewGameAfterTimePass`, `Frost`, `EnigmaBlowerUpper`; `getIndEvoBoolean` |
+| `IS_INDEVO` (`IndEvo`) | IndEvo features in `onNewGameAfterTimePass`, `Frost`, `Outpost`, `Gen`, `ExileManager`, `EnigmaBlowerUpper`, `ContractInfo`; `getIndEvoBoolean` |
 | `IS_EXOTICA` (`exoticatechnologies`) | `Cache`. `hullmods/exotica/*` extend Exotica's `Upgrade` and are reached only through `upgrades.json`. |
 | `IS_LUNALIB` (`lunalib`) | `ModPlugin` settings getters; otherwise `LOST_SECTOR_OPTIONS.ini` |
-| `IS_TAHLAN` (`tahlan`) | `ContractInfo` |
+| `IS_TAHLAN` (`tahlan`) | `ContractInfo` reward table |
 | `IS_CC` (`timid_commissioned_hull_mods`) | `ComCrewsBonus` |
 | `IS_IRONSHELL` (`timid_xiv`) | `EndingElizaDialog`, `QuestStageManager` |
 
@@ -109,7 +112,7 @@ Keep foreign classes behind these flags or behind the foreign mod's own loader. 
 | Mechanism | Stored as | Rename hazard |
 |---|---|---|
 | `Saved<T>` | Sector persistent data under `Saved.PREFIX` (`nskr_`) plus the constructor key. `ModPlugin` writes all instances before save and reloads them on load and after save. | Changing a key loses that value. `InterceptManager` and `HyperspaceEnigmaSpawner` keys already contain `nskr_`, so their stored keys start `nskr_nskr_`; `BlackOpsManager` uses `nksr_blackOpsManagerCounter` (stored as `nskr_nksr_...`). Preserve these exact strings or migrate them. |
-| `CampaignTimer` | The timer object itself, in sector persistent data under the owner's fully qualified class name plus `Timer` | Moving or renaming `GamemodeManager`, `ThronesGiftManager` or `HellSpawnManager` silently starts a fresh timer. `KillBrainManager` also uses one, though it is not registered. |
+| `CampaignTimer` | The timer object itself, in sector persistent data under the owner's fully qualified class name plus `Timer` | Moving or renaming `GamemodeManager`, `ThronesGiftManager` or `HellSpawnManager` silently starts a fresh timer; renaming `CampaignTimer` breaks loading. `KillBrainManager` also uses one, though it is not registered. |
 | Saved scripts and plugins | The objects listed under Saved scripts above | Their class names and fields are serialized. |
 | `ModPlugin.SAVE_KEY` `nskr_enabled`, `STARFARER_MODE_FROM_START_KEY` `nskr_starfarerFromStart` | Sector persistent data | Renaming `SAVE_KEY` reruns world generation on every existing save. |
 | `Frost.NAME_KEY` `$nskr_frostName` | Sector persistent data, not memory, despite the `$` | Holds the generated Frost system name. |
@@ -166,9 +169,9 @@ Folders contain related effects, AI and helpers; use `rg --files src/lostsector/
 | `quests/util/QuestStageManager` | Kesteven questline state and automatic transitions, quest fleets, failure to stage 99. Runs while paused. |
 | `quests/util/QuestUtil` | Stage and flag accessors over sector persistent data (`getStage`, `getCompleted`, `getFloat`), artifact spawning, `saveEnding()` |
 | `quests/util/QuestFleets`, `SimpleFleet`, `SimpleFleetMember`, `SimpleCaptain`, `SimpleSystem`, `FleetInfo` | Fleet and system builders shared by spawners |
-| `quests/*Dialog`, `quests/Job4HintWreck` | Java `InteractionDialogPlugin`s opened by `CorePlugin` |
-| `quests/KQuest3Bar`, `KQuest5Bar`, `KQuest5ElizaBar*`, `KestevenTipBar`, `KestevenTipBarCreator` | Bar events; `rulecmd/nskr_barEventFixer` adds `KQuest5Bar` and `KestevenTipBarCreator` creates `KestevenTipBar` |
-| `quests/jobs/ContractManager`, `ContractInfo` | Contract failure checks and offer reset every 600 days |
+| `quests/*Dialog`, `quests/Job4HintWreck` | Java `InteractionDialogPlugin`s opened by `CorePlugin`; `CacheDoubtDialog` is opened by `QuestStageManager` |
+| `quests/KQuest3Bar`, `KQuest5Bar`, `KQuest5ElizaBar*`, `KestevenTipBar`, `KestevenTipBarCreator` | Bar events. `QuestStageManager` adds `KQuest3Bar` and the Eliza bars to `PortsideBarData`; `rulecmd/nskr_barEventFixer` adds `KQuest5Bar` on each visit; `KestevenTipBarCreator` creates `KestevenTipBar`. |
+| `quests/jobs/ContractManager`, `ContractInfo` | Contract failure checks; offer reset when its counter reaches 600 seconds (about 60 days) |
 | `graid/ElizaRaid`, `ElizaRaidObjectiveCreator` | Ground-raid objective for Eliza's data disks |
 | `intel/HintManager`, `HintIntel` | System hints for bounties and Frost |
 | `intel/*Intel` | Quest, bounty, contract and cache intel; each adds itself as a script |
@@ -185,7 +188,7 @@ Folders contain related effects, AI and helpers; use `rg --files src/lostsector/
 | `customStart/HellSpawnBackground`, `ThronesGiftBackground` | Nexerelin backgrounds unlocked by the completed-story flags |
 | `econ/EnigmaPopCondition`, `HellSpawnCondition`, `UnlimitedProductionChipCondition` | Market conditions |
 
-Polling: every `EFS_LIST` manager advances each frame. Most gate their work with a `Saved<Float>` counter and return while paused. `QuestStageManager`, `EnigmaBlowerUpper`, `HellSpawnManager` and `ThronesGiftManager` also do work while paused; `CampaignTimer.advance()` does not count paused time.
+Polling: every `EFS_LIST` manager advances each frame. Most gate their work with a `Saved<Float>` counter and return while paused. Counters add the frame `amount` in seconds, and vanilla `SECONDS_PER_GAME_DAY` is 10, so a threshold of `10f` is one campaign day. Many managers add `2 * amount` while the campaign is in fast advance. `QuestStageManager`, `EnigmaBlowerUpper`, `HellSpawnManager` and `ThronesGiftManager` also do work while paused; `CampaignTimer.advance()` does not count paused time.
 
 
 ### Combat data bindings
@@ -207,7 +210,8 @@ Exceptions: `nskr_poorcloak` uses vanilla `PhaseCloakStats`; `nskr_animebad` and
 |---|---|---|
 | Kesteven | `nskr_prosperity`, `nskr_nighthawk`, `nskr_devilcatcher`, `nskr_blackbird`, `nskr_mercenary`, `nskr_dragontail`, `nskr_kingstork` | One system each; `Takedown` (Blackbird), `Pullback` (Dragontail). Kesteven hullmods: `Inertial`, `Volatile`, `BigBats`, `CriticalArmor`, `CHM_kesteven`, `Hwi`, `Missile_spec`, `Acoils`, `BigLightMags` |
 | Unknown Prototype / Project Enigma pairs | `nskr_minokawa`, `nskr_sovereign`, `nskr_nemesis`, `nskr_muninn`, `nskr_warfare`, `nskr_eternity`, `nskr_epoch`, `nskr_epochx`, `nskr_widow`, `nskr_torpor`, each with an `_e` Enigma twin sharing its system | Built-in `nskr_focused_shield` (`Focused_shield`). `MiscLS.protOrEnigma()` reads `nskr_lost_prot` / `nskr_domain_era`; `MiscLS.isProtTech()` reads `nskr_focused_shield` / `nskr_kaboom`. Hull-specific: `Protocol` + `nskr_protocolsystem` (Nemesis), `Causality` + `nskr_causality` (Eternity), `Stasis*` + `nskr_stasisp` + `plugins/TorporSystemLights` (Torpor), `Teleport_dummy` + `WarpStats` (Sovereign) |
-| Drones | `nskr_huginn`/`_e`, `nskr_pursuer`, `nskr_aed` (Rupture) | Huginn arm weapons (`GardeOH`); `Aed` + `KaboomStats` + `plugins/KaboomPlugin` |
+| Drones and wings | `nskr_huginn`/`_e` wings; `nskr_aed` (Rupture, Project Enigma) | Huginn arm weapons (`GardeOH`); `Aed` + `KaboomStats` + `plugins/KaboomPlugin` |
+| Other hulls | High Tech `nskr_borealis` (`MassTargeting*`), `nskr_malediction`, `nskr_pursuer` (also `nskr_pursuer_wing`), `nskr_reverie` (`MissileSalvo*`); Midline `nskr_verity`, `nskr_stalwart` (`nskr_emflak`); Pirate `nskr_kingslayer`, `nskr_rhea`; Rogue Co. `nskr_rorqual` | One system each |
 | Bosses | `nskr_reverie_boss`, `nskr_harbinger_boss`, `nskr_afflictor_boss` | Shared `Demonic_core` and `nskr_bosscloak` (`BossPhaseStats`); main systems `nskr_bfpulse`, `nskr_animebad`, vanilla `acausaldisruptor` |
 | Remnant Sunburst | `nskr_sunburst` | `Mothership`/`MothershipFrigateStats`, `nskr_harmonics` (`Harmonics*`) |
 
@@ -272,11 +276,14 @@ Java custom-panel behavior, sprite state and drawing gotchas are in [UI.md](UI.m
 
 ## Live hazards
 
+Quest defects are listed with their quest: [Kesteven questline](quests/KESTEVEN_QUESTLINE.md#defects-found-by-reading-the-source), [contracts](quests/CONTRACTS_AND_BOUNTIES.md#contracts) and the [fleet conversations](quests/KESTEVEN_DIALOGUE.md#fleet-conversations).
+
 | Location | Hazard |
 |---|---|
-| `data/campaign/person_missions.csv` | The `Contracts` row names plugin `lostsector.rulecmd.campaign.Contracts`; the class is `lostsector.campaign.rulecmd.Contracts`. Vanilla `PersonMissionSpec.createMission()` instantiates this name. Runtime result not yet confirmed. |
 | `data/config/LunaSettings.csv` | Rows use mod ID `lost_sector`; the `ModPlugin` getters query `IdsLS.LOST_SECTOR_MOD_ID` (`lost.sector`). |
-| `rulecmd/nskr_loanSharkDialog`, `nskr_ttCollectorDialog` | `case "setPaid"` has no `break` and falls into `canPay`. No row calls `setPaid`. |
+| `ModPlugin.getRandomEnigmaFleetSizeMult()` | Without LunaLib, Starfarer and easy mode return the scripted-fleet multipliers instead of the Enigma ones. |
+| `CampaignTimer` | Reads its stored value only in its constructor, once per client session. Loading a second save in the same session keeps the first save's timers, and `CampaignTimer.save()` writes them into the second save. |
+| `ModPlugin.onGameLoad()` | `IS_NEXELERIN` is cleared for the rest of the session if `SectorManager.getManager()` is null on any load. |
 | `data/config/modSettings.json` | `MagicLib.bounty_board` is empty and only `modFiles/magicBounty_data_example.json` exists, so no MagicLib bounty is registered. |
 | `data/weapons/nskr_tremors.wpn` | A commented `everyFrameEffect` names the removed `scripts.kissa.LOST_SECTOR` package. |
 
@@ -290,5 +297,5 @@ Java custom-panel behavior, sprite state and drawing gotchas are in [UI.md](UI.m
 | `plugins/TeleporterPlugin` | Registered and run every frame; every `addTeleportation()` call is commented out |
 | `Saved.deletePersistantData()` | No caller |
 | `KestevenMirror`, `BlackOpsSetup` `EveryFrameScript` methods | Never instantiated as scripts |
-| `GamemodeManager` daily timer branch | Empty |
+| `GamemodeManager` timer branch | Empty. Its `CampaignTimer` timeout is `1f` seconds, like the other `CampaignTimer` owners. |
 | `hullmods/StupidFuckingHax` as `nskr_stupidFuckingHax` | Not built into any hull; the same class also backs `nskr_emCore` on `nskr_pursuer` |

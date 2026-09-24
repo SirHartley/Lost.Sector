@@ -1,0 +1,64 @@
+# Contracts and bounties
+
+The repeatable Kesteven contracts and the four named bounty fleets. The bounties are one-off fleets with an intel entry and a reward, not quests with stages. Java paths are relative to `src/lostsector/campaign/`.
+
+## Contracts
+
+| Owner | Role |
+|---|---|
+| `data/campaign/person_missions.csv` | Offers mission `Contracts` to people tagged `Contracts` (Jack and Alice, set in `world/Gen`) |
+| `rulecmd/Contracts` | `BaseHubMission`: holds the pending offer and shows it |
+| `quests/jobs/ContractInfo` | One contract: type, subtype, count, reward, progress, failed flag |
+| `quests/jobs/ContractManager` | `EFS_LIST` script and listener: progress, failure and offer reset |
+| `intel/ContractIntel` | The accepted contract; pays on completion |
+| `rules.csv` `nskr_contracts_blurb`, `nskr_contracts_option`, `nskr_contracts_start` | Hub mission routing through `Call $nskr_contracts_ref` |
+
+**Offers.** One pending offer per type is saved as a `ContractInfo` in persistent data: `nskr_contractsEliminate` and `nskr_contractsRecovery`. The `Contracts` constructor creates missing offers. Jack offers elimination; anyone else (Alice) offers data recovery. `create()` refuses when the player already has an accepted contract of that type (one of each).
+
+**Types.**
+
+| Type | Subtypes | Progress |
+|---|---|---|
+| Elimination | Hull size or role (standard, frigate, destroyer, cruiser, capital, phase, logistics, carrier), or a faction: Luddic Path, pirates, Remnants, Enigma | `ContractManager.reportPlayerEngagement` counts matching destroyed enemy ships |
+| Data recovery | Commodities: metals, supplies, fuel, heavy machinery, `artifact_electronics`, AI cores; IndEvo parts and Tahlan cores when those mods are active | `ContractManager.reportEncounterLootGenerated` adds loot stacks whose commodity id equals the subtype, from non-Kesteven losers |
+
+**Accepting.** `accept()` adds `ContractIntel`, stores the contract in sector memory (`$contractManagerContracts`), clears the offer, and aborts the hub mission as a success. From then on the contract lives in `ContractInfo` and `ContractIntel`.
+
+**Completion.** When progress reaches the count, `ContractIntel` pays the total reward and raises Kesteven by 2 plus reward/100,000, and the offering person by half that.
+
+**Failure and reset.** Every second (0.1 day), `ContractManager` fails all contracts if the questline has ended or the player's Kesteven relationship is -0.50 or lower. When its reset counter reaches 600 seconds (about 60 days), pending offers are discarded and new ones are created on the next offer.
+
+**Defects found by reading the source:**
+
+- `person_missions.csv` names the plugin `lostsector.rulecmd.campaign.Contracts`; the class is `lostsector.campaign.rulecmd.Contracts`. Vanilla `PersonMissionSpec.createMission()` passes this name to `getInstanceOfScript`. The runtime result has not been checked.
+- The `artifact_electronics` recovery subtype never progresses: the Artifact Electronics commodity id is `nskr_electronics`.
+
+## Named bounties
+
+All four spawners are `EFS_LIST` scripts in `fleets/bounties/`. Rewards are paid by `loot/BountyLoot`, a saved script listening for encounter loot.
+
+| Bounty | Fleet | Commander | Flagship | Location | Reward |
+|---|---|---|---|---|---|
+| `AbyssSpawner` | "Void Group", Remnant | Lucius | Hollow-class "Piercing Darkness" (`nskr_reverie_boss`), with a Chasm (`nskr_harbinger_boss`) and two Fissures (`nskr_afflictor_boss`) | Orbiting a body in a Remnant-themed red giant system, or any red giant | 1 Alpha Core; the Anti-Remnant Organization pays 600,000 credits if the player's fleet holds none of the bounty ships when the loot is generated |
+| `EternitySpawner` | "Commander Umbra's Fleet", Enigma | Umbra | Eternity-class "DSRD Shadows Of Tomorrow" (`nskr_eternity_e_boss`) | Nebula system without a Remnant theme | 2 Alpha Cores and 500 Artifact Electronics |
+| `RorqSpawner` | "Peacekeepers", mercenary fleet shown as Independent | Alistair Walsh | Rorqual-class "ISS White Whale" (`nskr_rorqual_boss`), with a Conquest and two Champions | Patrols Independent markets and switches to another after a counter reaches 30 | 315,000 credits times the player's contribution, as an anonymous "donation" |
+| `MothershipSpawner` | "Project Helios Remnant", Remnant | "CREATOR-A3401#" | Sunburst-class "TTDS Helios" (`nskr_sunburst_boss`) | Guards two habitable planets, Helios and Polaris (`nskr_terra1`, `nskr_terra2`), created at new game | 1 Alpha Core |
+
+Shared structure (Abyss and Eternity in detail; the others follow the same outline):
+
+1. **Spawn.** Once per campaign, when the spawner's fleet list is empty and its `Saved` `NewGame` flag is true, the fleet spawns at a location stored under a persistent key: `ABYSS`, `ETERNITY` or `RORQ`; the Mothership uses `nskr_mothershipKey`.
+2. **Tracking.** The fleet is kept in a sector-memory list (`$nskr_<name>SpawnerFleets`) and has `MEMORY_KEY_MISSION_IMPORTANT`.
+3. **First sighting.** When the fleet is first visible to the player, the intel entry (`AbyssIntel`, `UmbraIntel`, `RorqIntel` or `MothershipIntel`) is added. A message reads: "Initial examinations of the … fleet shows an unusual flagship, the …-Class. Approach with extreme caution."
+4. **Despawn.** Every 4 seconds (every 10 for the Peacekeepers), the spawner removes the fleet once it has no bounty ships left and is out of sensor range.
+5. **Reward.** `BountyLoot.reportEncounterLootGenerated` recognises the fleet by its loot key (`$AbyssLoot`, `$EternityLoot`, `$RorqLoot`, `$mothershipLoot`). It adds the reward and sets `$nskr_abyssDefeated`, `$nskr_umbraDefeated`, `$nskr_rorqDefeated` or `$nskr_heliosDefeated`. These are persistent-data flags despite the `$`.
+6. **Recovery.** The Abyss and Eternity spawners are `ShipRecoveryListener`s and remove the limited-tooltip tag from recovered bounty ships.
+
+Other pieces:
+
+- **Hints.** `intel/HintManager` rolls 4% when the player enters a new system outside the core. A hit adds a `HintIntel` pointing to the Abyss, Eternity, Mothership or Frost system. A hint source is dropped once that bounty's own intel exists.
+- **Rules conversations.** Comm rows `abyssDialog`, `eternityDialog`, `pkDialog*` and `mothershipDialog*` hold the fleets' voice. The Mothership comm offers "Try to shut down the AI", which fails.
+- **Mothership planets.** `CorePlugin` routes both planets to `MothershipInteractionBlocker` until the fleet has been beaten. The Mothership's fleet-interaction config records `nskr_mothershipKeySpawnedWreck` when its flagship is gone. `nskr_mothershipKeyCompleted` marks the bounty done.
+- **Peacekeepers.** The fleet can be destroyed by someone else; `RorqIntel` then reports the chance missed. `procgen/RogueSpawner` places a Rorqual derelict as a teaser.
+- **ARO strike group.** `fleets/events/InterceptManager` can spawn an ARO strike group when the player's fleet contains Abyss bounty ships (`AbyssSpawner.hasBountyShips`).
+
+None of the bounties has stages, dialogue choices that change state, or a failure path beyond another party killing the Peacekeepers.
