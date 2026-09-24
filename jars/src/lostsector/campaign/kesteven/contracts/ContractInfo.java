@@ -103,31 +103,35 @@ public class ContractInfo {
         COMBAT_SUBTYPES.add(new Pair<>(Factions.REMNANTS, 3f));
         COMBAT_SUBTYPES.add(new Pair<>(Ids.ENIGMA_FACTION_ID, 3f));
     }
+    public static final List<Pair<String, Float>> TAHLAN_COMBAT_SUBTYPES = new ArrayList<>();
+    static {
+        TAHLAN_COMBAT_SUBTYPES.add(new Pair<>("tahlan_legioinfernalis", 3f));
+    }
     public static final List<Pair<String, Float>> SCAV_SUBTYPES = new ArrayList<>();
     static {
         SCAV_SUBTYPES.add(new Pair<>("metals", 25f));
         SCAV_SUBTYPES.add(new Pair<>("supplies", 5f));
         SCAV_SUBTYPES.add(new Pair<>("fuel", 5f));
         SCAV_SUBTYPES.add(new Pair<>("heavy_machinery", 15f));
-        SCAV_SUBTYPES.add(new Pair<>("artifact_electronics", 7.5f));
+        SCAV_SUBTYPES.add(new Pair<>("nskr_electronics", 7.5f));
         SCAV_SUBTYPES.add(new Pair<>("gamma_core", 5f));
         SCAV_SUBTYPES.add(new Pair<>("beta_core", 2.5f));
         SCAV_SUBTYPES.add(new Pair<>("alpha_core", 1f));
+    }
+    public static final List<Pair<String, Float>> INDEVO_SCAV_SUBTYPES = new ArrayList<>();
+    static {
+        INDEVO_SCAV_SUBTYPES.add(new Pair<>("IndEvo_parts", 15f));
+        INDEVO_SCAV_SUBTYPES.add(new Pair<>("IndEvo_rare_parts", 5f));
+    }
+    public static final List<Pair<String, Float>> TAHLAN_SCAV_SUBTYPES = new ArrayList<>();
+    static {
+        TAHLAN_SCAV_SUBTYPES.add(new Pair<>("tahlan_daemoncore", 2f));
+        TAHLAN_SCAV_SUBTYPES.add(new Pair<>("tahlan_archdaemoncore", 1f));
     }
 
     public ContractInfo(ContractType type, Random random) {
         this.type = type;
         this.random = random;
-        //add from mods
-        if (ModPlugin.IS_INDEVO){
-            SCAV_SUBTYPES.add(new Pair<>("IndEvo_parts", 15f));
-            SCAV_SUBTYPES.add(new Pair<>("IndEvo_rare_parts", 5f));
-        }
-        if (ModPlugin.IS_TAHLAN){
-            SCAV_SUBTYPES.add(new Pair<>("tahlan_daemoncore", 2f));
-            SCAV_SUBTYPES.add(new Pair<>("tahlan_archdaemoncore", 1f));
-            COMBAT_SUBTYPES.add(new Pair<>("tahlan_legioinfernalis", 3f));
-        }
 
         create();
     }
@@ -206,7 +210,7 @@ public class ContractInfo {
                 case ("heavy_machinery"):
                     calc(HEAVY_MACHINERY_BASE, minRandom, maxRandom, mult, HEAVY_MACHINERY_BASE_REWARD, rewardMult);
                     break;
-                case ("artifact_electronics"):
+                case ("nskr_electronics"):
                     calc(ARTIFACT_ELECTRONICS_BASE, minRandom, maxRandom, mult, ARTIFACT_ELECTRONICS_BASE_REWARD, rewardMult);
                     break;
                 case ("IndEvo_parts"):
@@ -254,18 +258,21 @@ public class ContractInfo {
     public String randomSubType() {
         WeightedRandomPicker<String> picker = new WeightedRandomPicker<>();
         picker.setRandom(random);
-        List<Pair<String, Float>> toPick;
         if (type==ContractType.ELIMINATE){
-            toPick = COMBAT_SUBTYPES;
+            addSubTypes(picker, COMBAT_SUBTYPES);
+            if (ModPlugin.IS_TAHLAN) addSubTypes(picker, TAHLAN_COMBAT_SUBTYPES);
         } else {
-            toPick = SCAV_SUBTYPES;
+            addSubTypes(picker, SCAV_SUBTYPES);
+            if (ModPlugin.IS_INDEVO) addSubTypes(picker, INDEVO_SCAV_SUBTYPES);
+            if (ModPlugin.IS_TAHLAN) addSubTypes(picker, TAHLAN_SCAV_SUBTYPES);
         }
-        for (Pair<String,Float> s : toPick){
-            picker.add(s.one,s.two);
-        }
-        String role = picker.pick();
+        return picker.pick();
+    }
 
-        return role;
+    private static void addSubTypes(WeightedRandomPicker<String> picker, List<Pair<String, Float>> subTypes) {
+        for (Pair<String, Float> s : subTypes){
+            picker.add(s.one, s.two);
+        }
     }
 
     public enum ContractType {

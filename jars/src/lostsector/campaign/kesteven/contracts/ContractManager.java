@@ -322,7 +322,7 @@ public class ContractManager extends BaseCampaignEventListener implements EveryF
             case ("heavy_machinery"):
                 typeString = "heavy machinery";
                 break;
-            case ("artifact_electronics"):
+            case ("nskr_electronics"):
                 typeString = "artifact electronics";
                 break;
             case ("IndEvo_parts"):

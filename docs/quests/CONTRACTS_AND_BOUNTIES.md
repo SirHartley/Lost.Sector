@@ -6,7 +6,7 @@ The repeatable Kesteven contracts and the four named bounty fleets. The bounties
 
 | Owner | Role |
 |---|---|
-| `data/campaign/person_missions.csv` | Offers mission `ContractsMission` to people tagged `ContractsMission` (Jack and Alice, set in `world/SectorGen`) |
+| `data/campaign/person_missions.csv` | Offers mission `nskr_contracts` (plugin `lostsector.campaign.kesteven.contracts.ContractsMission`) to people tagged `Contracts` (Jack and Alice, set in `world/SectorGen`). The mission id is the prefix of the rules triggers `nskr_contracts_blurb` and `nskr_contracts_option` and the `$missionId` that vanilla's `contact_accept` row passes to the mission hub. |
 | `kesteven/contracts/ContractsMission` | `BaseHubMission`: holds the pending offer and shows it |
 | `kesteven/contracts/ContractInfo` | One contract: type, subtype, count, reward, progress, failed flag |
 | `kesteven/contracts/ContractManager` | `EFS_LIST` script and listener: progress, failure and offer reset |
@@ -15,23 +15,18 @@ The repeatable Kesteven contracts and the four named bounty fleets. The bounties
 
 **Offers.** One pending offer per type is saved as a `ContractInfo` in persistent data: `nskr_contractsEliminate` and `nskr_contractsRecovery`. The `ContractsMission` constructor creates missing offers. Jack offers elimination; anyone else (Alice) offers data recovery. `create()` refuses when the player already has an accepted contract of that type (one of each).
 
-**Types.**
+**Types.** `ContractInfo.randomSubType()` picks from the base weight lists and adds the optional-mod lists only while `ModPlugin.IS_TAHLAN` or `IS_INDEVO` is set.
 
 | Type | Subtypes | Progress |
 |---|---|---|
-| Elimination | Hull size or role (standard, frigate, destroyer, cruiser, capital, phase, logistics, carrier), or a faction: Luddic Path, pirates, Remnants, Enigma | `ContractManager.reportPlayerEngagement` counts matching destroyed enemy ships |
-| Data recovery | Commodities: metals, supplies, fuel, heavy machinery, `artifact_electronics`, AI cores; IndEvo parts and Tahlan cores when those mods are active | `ContractManager.reportEncounterLootGenerated` adds loot stacks whose commodity id equals the subtype, from non-Kesteven losers |
+| Elimination | Hull size or role (standard, frigate, destroyer, cruiser, capital, phase, logistics, carrier), or a faction: Luddic Path, pirates, Remnants, Enigma, and Legio Infernalis when Tahlan is active | `ContractManager.reportPlayerEngagement` counts matching destroyed enemy ships |
+| Data recovery | Commodities: metals, supplies, fuel, heavy machinery, Artifact Electronics (`nskr_electronics`), AI cores; IndEvo parts and Tahlan cores when those mods are active | `ContractManager.reportEncounterLootGenerated` adds loot stacks whose commodity id equals the subtype, from non-Kesteven losers |
 
 **Accepting.** `accept()` adds `ContractIntel`, stores the contract in sector memory (`$contractManagerContracts`), clears the offer, and aborts the hub mission as a success. From then on the contract lives in `ContractInfo` and `ContractIntel`.
 
 **Completion.** When progress reaches the count, `ContractIntel` pays the total reward and raises Kesteven by 2 plus reward/100,000, and the offering person by half that.
 
 **Failure and reset.** Every second (0.1 day), `ContractManager` fails all contracts if the questline has ended or the player's Kesteven relationship is -0.50 or lower. When its reset counter reaches 600 seconds (about 60 days), pending offers are discarded and new ones are created on the next offer.
-
-**Defects found by reading the source:**
-
-- `person_missions.csv` names the plugin `lostsector.rulecmd.campaign.Contracts`; the class is `lostsector.campaign.kesteven.contracts.ContractsMission`. Vanilla `PersonMissionSpec.createMission()` passes this name to `getInstanceOfScript`. The runtime result has not been checked.
-- The `artifact_electronics` recovery subtype never progresses: the Artifact Electronics commodity id is `nskr_electronics`.
 
 ## Named bounties
 
