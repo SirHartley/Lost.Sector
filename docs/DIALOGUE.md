@@ -6,7 +6,7 @@ These guidelines apply whether text comes from `rules.csv`, Java or another data
 
 - [LORE.md](LORE.md): setting definitions, absolute knowledge limits, prose style, character instructions, examples, terminology and information-release order.
 - [UI.md](UI.md): Java-bound custom UI implementation, including panels, widgets, tooltips, sprites, layout and input. It uses this document's shared text guidelines.
-- [RULES.md](RULES.md): CSV format, rule execution, project routing and technical validation. [RULES_AUTHORING.md](RULES_AUTHORING.md): command/key usage, pronoun context, memory lifetime and Java integration, including fixes to existing mechanisms. Read both as applicable and the required rules skills; neither is a prose guide.
+- [RULES_WRITING.md](RULES_WRITING.md): how to structure rules content: the writing process, choosing a structure per screen, conditions, state, text placement, options and exits. [RULES.md](RULES.md): CSV format, rule execution, project routing and technical validation. [RULES_AUTHORING.md](RULES_AUTHORING.md): command/key usage, pronoun context, memory lifetime and Java integration, including fixes to existing mechanisms. Read them as applicable and the required rules skills; none is a prose guide.
 - [ARCHITECTURE.md](ARCHITECTURE.md): code and data owners, registrations, and lifecycle connections.
 - [CLAUDE.md](../CLAUDE.md#documentation-upkeep): task workflow and automatic documentation upkeep.
 
@@ -46,7 +46,7 @@ Apply these requirements to all player-facing text, including rules-authored dia
 - Use established player-facing labels and saved values. Explain restrictions and consequences before a choice; distinguish an offer or preview from an actual result. Shared formatting must not conceal a condition or imply a grant that did not happen.
 - Fit text to its display without shrinking ordinary prose into receipt text or stripping out its character. Shorten repetition, split information at a useful point or adjust the layout as appropriate. Shared presentation does not mean a shared voice or a repeated sentence template.
 
-Rules command ordering and option styling are covered by [RULES.md](RULES.md#project-routing). Java custom-panel layout and rendering are covered by [UI.md](UI.md). Neither implementation path is exempt from the checks above.
+Rules text placement, options and exits are covered by [RULES_WRITING.md](RULES_WRITING.md); command ordering by [RULES.md](RULES.md#project-routing). Java custom-panel layout and rendering are covered by [UI.md](UI.md). Neither implementation path is exempt from the checks above.
 
 ## Writing
 
@@ -97,10 +97,10 @@ Custom-panel opening and return behavior is covered by [UI.md](UI.md#custom-dial
 
 ## Technical handoff
 
-Before a rules edit, read [RULES.md](RULES.md), the relevant mechanisms in [RULES_AUTHORING.md](RULES_AUTHORING.md) and the required rules references. The authoring guide also applies to Java-only changes to commands, memory and text replacements. Keep prose review separate from CSV round-trip checks, column counts, token/command validation, state tracing, and runtime tests. The Starsector Editor is never a technical rules validator.
+Before a rules edit, read [RULES_WRITING.md](RULES_WRITING.md), [RULES.md](RULES.md), the relevant mechanisms in [RULES_AUTHORING.md](RULES_AUTHORING.md) and the required rules references. The authoring guide also applies to Java-only changes to commands, memory and text replacements. Keep prose review separate from CSV round-trip checks, column counts, token/command validation, state tracing, and runtime tests. The Starsector Editor is never a technical rules validator.
 
 Trace each affected route through initial contact, questions, acceptance, return, insufficient cargo, hand-in, next round, cancellation and exit as applicable. Include overlapping flags and save/load state. Do not invent a dependency on an unavailable visualizer. Report what static checks establish and what still requires in-game QA.
 
 ## Maintenance
 
-Update the relevant section in the same commit when text workflow, shared text presentation or a reusable dialogue convention changes. Keep shared guidelines content-agnostic; label subject-specific additions separately. Keep Java custom UI contracts in `UI.md`; setting facts, knowledge limits, prose style, characterization and their explanatory examples in `LORE.md`; engine semantics and project rules contracts in `RULES.md`; command/key integration procedures in `RULES_AUTHORING.md`; and owner/connection information in `ARCHITECTURE.md`. Repair cross-links after moving a section. Do not append a task history or copy complete dialogue trees into this guide.
+Update the relevant section in the same commit when text workflow, shared text presentation or a reusable dialogue convention changes. Keep shared guidelines content-agnostic; label subject-specific additions separately. Keep Java custom UI contracts in `UI.md`; setting facts, knowledge limits, prose style, characterization and their explanatory examples in `LORE.md`; engine semantics and project rules contracts in `RULES.md`; rules structure and writing process in `RULES_WRITING.md`; command/key integration procedures in `RULES_AUTHORING.md`; and owner/connection information in `ARCHITECTURE.md`. Repair cross-links after moving a section. Do not append a task history or copy complete dialogue trees into this guide.
