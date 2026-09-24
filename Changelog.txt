@@ -60,6 +60,7 @@ Fixed - ARO Strike Groups, the Merc Messenger and Hunter Fanatics now react to y
 Fixed - The Kesteven debt collector fleet is named Debt Collector again instead of showing an internal ID
 Fixed - Markets no longer keep the Enigma population supply bonus or the Unlimited Production Chip production and quality bonuses after losing those conditions
 Fixed - Reality Splitter's exit blast no longer hits the ship that uses it
+Fixed - The Temporal Paradox system description is no longer cut off
 
 1.0.b
 Adjusted - Severely nerfed spawn rates for Borealis, Rhea and Kingslayer
