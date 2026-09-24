@@ -11,7 +11,7 @@ import com.fs.starfarer.api.ui.Alignment;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import com.fs.starfarer.api.util.Misc;
 import lostsector.helper.MathHelper;
-import lostsector.helper.MiscHelper;
+import lostsector.rendering.ColorHelper;
 import org.magiclib.util.MagicIncompatibleHullmods;
 
 import java.awt.*;
@@ -129,15 +129,15 @@ public class CriticalPointProtection extends BaseHullMod {
         if (ship!=null && isApplicableToShip(ship)) {
             tooltip.addSectionHeading("Stats", Alignment.MID, pad);
             tooltip.addPara(
-                    "-With a base armor of "+(int)ship.getHullSpec().getArmorRating()+" adds "+(int)getValue(ship.getHullSize(), ship.getHullSpec())+" bonus armor to this ship.", pad, MiscHelper.NICE_YELLOW, (int)getValue(ship.getHullSize(), ship.getHullSpec())+"");
+                    "-With a base armor of "+(int)ship.getHullSpec().getArmorRating()+" adds "+(int)getValue(ship.getHullSize(), ship.getHullSpec())+" bonus armor to this ship.", pad, ColorHelper.NICE_YELLOW, (int)getValue(ship.getHullSize(), ship.getHullSpec())+"");
         }
         tooltip.addSectionHeading("Additional Info", Alignment.MID, pad);
-        tooltip.addPara("-Incompatible with Heavy Armor.", pad, MiscHelper.TT_ORANGE, "");
-        tooltip.addPara("-Incompatible with phase ships.", 0.0f, MiscHelper.TT_ORANGE, "");
+        tooltip.addPara("-Incompatible with Heavy Armor.", pad, ColorHelper.TT_ORANGE, "");
+        tooltip.addPara("-Incompatible with phase ships.", 0.0f, ColorHelper.TT_ORANGE, "");
 
         if (Global.getCurrentState() == GameState.CAMPAIGN){
             tooltip.addSectionHeading("S-mod penalty", bad, negativeBackground, Alignment.MID, pad);
-            tooltip.addPara("Reduces the ship's maneuverability by "+(int)SMOD_PENALTY+"%%.", pad, MiscHelper.NICE_YELLOW, (int)SMOD_PENALTY+"%");
+            tooltip.addPara("Reduces the ship's maneuverability by "+(int)SMOD_PENALTY+"%%.", pad, ColorHelper.NICE_YELLOW, (int)SMOD_PENALTY+"%");
             if (!sMod) tooltip.addPara("This effect only applies if this hullmod is built into the hull using a story point. Cheap hullmods have stronger effects.", pad, storyColor, "story point");
         }
     }

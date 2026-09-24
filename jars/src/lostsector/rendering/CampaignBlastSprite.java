@@ -1,7 +1,6 @@
 package lostsector.rendering;
 
 import lostsector.helper.MathHelper;
-import lostsector.helper.MiscHelper;
 
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.CampaignEngineLayers;
@@ -129,12 +128,12 @@ public class CampaignBlastSprite extends BaseCustomEntityPlugin {
         if (alphaEaseOutQuad) timerAlpha = MathHelper.easeOutQuad(timerAlpha);
 
         //color shift
-        color = MiscHelper.blendColors(color, colorOut, timerAlpha);
+        color = ColorHelper.blendColors(color, colorOut, timerAlpha);
         //lerp size
         vSize = MathHelper.lerp(vSize * startSizeMult, vSize * endSizeMult, MathHelper.smoothStep(timerSize));
         size = new Vector2f(vSize + baseSize, vSize + baseSize);
         //lerp alpha
-        alpha = MiscHelper.clamp255((int) MathHelper.lerp(alpha * 1.0f, alpha * 0.0f, MathHelper.smoothStep(timerAlpha)));
+        alpha = ColorHelper.clamp255((int) MathHelper.lerp(alpha * 1.0f, alpha * 0.0f, MathHelper.smoothStep(timerAlpha)));
         Color color2 = new Color(color.getRed(), color.getGreen(), color.getBlue(), (int) alpha);
 
         temp.setSize(size.x, size.y);

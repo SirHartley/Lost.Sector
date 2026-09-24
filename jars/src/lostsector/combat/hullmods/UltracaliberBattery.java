@@ -5,7 +5,7 @@ import com.fs.starfarer.api.combat.*;
 import com.fs.starfarer.api.ui.Alignment;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import lostsector.helper.MathHelper;
-import lostsector.helper.MiscHelper;
+import lostsector.rendering.ColorHelper;
 import org.lwjgl.util.vector.Vector2f;
 
 import java.awt.*;
@@ -95,11 +95,11 @@ public class UltracaliberBattery extends BaseHullMod {
 
         tooltip.addSectionHeading("Details", Alignment.MID, pad);
         TooltipMakerAPI text = tooltip.beginImageWithText("graphics/icons/hullsys/ammo_feeder.png", 36.0f);
-        text.addPara("+"+(int)DAMAGE_MULT+"%"+"% projectile weapon damage.", 0.0f, MiscHelper.BON_GREEN, (int)DAMAGE_MULT+"%");
-        text.addPara("+"+(int)WEAPON_HEALTH+"%"+"% to durability of all weapons.", 0.0f, MiscHelper.BON_GREEN, (int)WEAPON_HEALTH+"%");
-        text.addPara("+"+(int)SYS_ROF_MULT+"%"+"% weapon rate of fire decaying over five seconds after system use.", 0.0f, MiscHelper.BON_GREEN, (int)SYS_ROF_MULT+"%");
-        text.addPara("-"+(int)ROF_MULT+"%"+"% weapon rate of fire.", 0.0f, MiscHelper.TT_ORANGE, (int)ROF_MULT+"%");
-        text.addPara("-weapon range past "+(int)MAX_RANGE+" units is reduced by one third." , 0.0f, MiscHelper.TT_ORANGE, (int)MAX_RANGE+"");
+        text.addPara("+"+(int)DAMAGE_MULT+"%"+"% projectile weapon damage.", 0.0f, ColorHelper.BON_GREEN, (int)DAMAGE_MULT+"%");
+        text.addPara("+"+(int)WEAPON_HEALTH+"%"+"% to durability of all weapons.", 0.0f, ColorHelper.BON_GREEN, (int)WEAPON_HEALTH+"%");
+        text.addPara("+"+(int)SYS_ROF_MULT+"%"+"% weapon rate of fire decaying over five seconds after system use.", 0.0f, ColorHelper.BON_GREEN, (int)SYS_ROF_MULT+"%");
+        text.addPara("-"+(int)ROF_MULT+"%"+"% weapon rate of fire.", 0.0f, ColorHelper.TT_ORANGE, (int)ROF_MULT+"%");
+        text.addPara("-weapon range past "+(int)MAX_RANGE+" units is reduced by one third." , 0.0f, ColorHelper.TT_ORANGE, (int)MAX_RANGE+"");
         tooltip.addImageWithText(pad);
 
     }

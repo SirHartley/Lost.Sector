@@ -14,7 +14,7 @@ import lostsector.helper.fleet.FleetInfo;
 import lostsector.helper.fleet.SimpleFleet;
 import lostsector.helper.FleetHelper;
 import lostsector.helper.MathHelper;
-import lostsector.helper.MiscHelper;
+import lostsector.helper.StringHelper;
 import lostsector.rendering.CampaignBlastSprite;
 import org.lazywizard.lazylib.MathUtils;
 import org.lwjgl.util.vector.Vector2f;
@@ -89,7 +89,7 @@ public class HellSpawnAbility extends BaseDurationAbility {
 
             SimpleFleet simpleFleet = new SimpleFleet(pf, "enigma", combatPoints, keys, random);
             simpleFleet.aiFleetProperties = true;
-            simpleFleet.name = "Swarm" + " " + MiscHelper.getRandomGreekLetter(random, true);
+            simpleFleet.name = "Swarm" + " " + StringHelper.getRandomGreekLetter(random, true);
             simpleFleet.assignment = FleetAssignment.PATROL_SYSTEM;
             simpleFleet.assignmentText = "seeking";
             CampaignFleetAPI fleet = simpleFleet.create();

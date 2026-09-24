@@ -19,7 +19,8 @@ import lostsector.settings.Difficulty;
 import lostsector.persistence.Saved;
 import lostsector.helper.FleetHelper;
 import lostsector.helper.MathHelper;
-import lostsector.helper.MiscHelper;
+import lostsector.helper.SectorLookup;
+import lostsector.helper.SystemHelper;
 import org.lazywizard.lazylib.MathUtils;
 import org.lwjgl.util.vector.Vector2f;
 
@@ -272,7 +273,7 @@ public class KestevenScavenger extends BaseCampaignEventListener implements Ever
         }
 
         //don't spawn when kesteven is gone
-        if (!MiscHelper.kestevenExists()) return;
+        if (!SectorLookup.kestevenExists()) return;
 
         //10 = 1 day
         if (spawnCounter.val>SCAV_TIMER*10f) {
@@ -437,7 +438,7 @@ public class KestevenScavenger extends BaseCampaignEventListener implements Ever
             return pick;
         }
         log("ERROR no valid system");
-        return MiscHelper.getRandomNonCoreSystem(new Random());
+        return SystemHelper.getRandomNonCoreSystem(new Random());
     }
 
     public boolean isDone() {

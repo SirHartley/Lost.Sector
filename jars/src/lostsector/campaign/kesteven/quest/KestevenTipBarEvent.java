@@ -18,7 +18,7 @@ import com.fs.starfarer.api.util.Misc;
 import lostsector.campaign.kesteven.quest.KestevenTipIntel;
 import lostsector.helper.fleet.SystemPicker;
 import lostsector.helper.MathHelper;
-import lostsector.helper.MiscHelper;
+import lostsector.helper.SystemHelper;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -243,7 +243,7 @@ public class KestevenTipBarEvent extends BaseBarEvent {
         Map<String, Object> data = Global.getSector().getPersistentData();
         if (!data.containsKey(PERSISTENT_RANDOM_KEY)) {
 
-            data.put(PERSISTENT_RANDOM_KEY, new Random(MiscHelper.getSeedParsed()));
+            data.put(PERSISTENT_RANDOM_KEY, new Random(MathHelper.getSeedParsed()));
         }
         return (Random)data.get(PERSISTENT_RANDOM_KEY);
     }
@@ -286,7 +286,7 @@ public class KestevenTipBarEvent extends BaseBarEvent {
                 if (e.getTags()==null) continue;
                 if (e.getTags().contains(Tags.BEACON_LOW) || e.getTags().contains(Tags.BEACON_MEDIUM) || e.getTags().contains(Tags.BEACON_HIGH)){
                     if (e.getOrbit()==null || e.getOrbit().getFocus()==null) continue;
-                    pickSystems.add(MiscHelper.getNearestSystem(e.getOrbit().getFocus().getLocation()));
+                    pickSystems.add(SystemHelper.getNearestSystem(e.getOrbit().getFocus().getLocation()));
                 }
             }
             //add

@@ -16,7 +16,8 @@ import com.fs.starfarer.api.impl.campaign.intel.bar.events.BaseBarEvent;
 import com.fs.starfarer.api.util.Misc;
 import lostsector.campaign.kesteven.quest.QuestStageManager;
 import lostsector.campaign.kesteven.quest.QuestHelper;
-import lostsector.helper.MiscHelper;
+import lostsector.helper.SectorLookup;
+import lostsector.helper.UiSounds;
 
 import java.awt.*;
 import java.util.Map;
@@ -103,7 +104,7 @@ public class DelveMeetingBarEvent extends BaseBarEvent {
 
         this.dialog = dialog;
 
-        asteria = MiscHelper.getAsteria()!=null;
+        asteria = SectorLookup.getAsteria()!=null;
         initial = true;
         //grab the default image
         if (defaultImage==null) {
@@ -112,7 +113,7 @@ public class DelveMeetingBarEvent extends BaseBarEvent {
 
         options.clearOptions();
         if (asteria){
-            dialog.getVisualPanel().showLargePlanet(MiscHelper.getAsteria());
+            dialog.getVisualPanel().showLargePlanet(SectorLookup.getAsteria());
         } else{
             dialog.getVisualPanel().showPersonInfo(person, true);
         }
@@ -133,11 +134,11 @@ public class DelveMeetingBarEvent extends BaseBarEvent {
         Color gr = Misc.getPositiveHighlightColor();
         Color r = Misc.getNegativeHighlightColor();
         Color tc = Misc.getTextColor();
-        asteria = MiscHelper.getAsteria()!=null;
+        asteria = SectorLookup.getAsteria()!=null;
 
         String name = Global.getSector().getPlayerPerson().getName().getFirst();
-        PersonAPI jack = MiscHelper.getJack();
-        PersonAPI alice = MiscHelper.getAlice();
+        PersonAPI jack = QuestPeople.getJack();
+        PersonAPI alice = QuestPeople.getAlice();
         disks = DataSatelliteDialog.getRecoveredSatelliteCount()>0;
         boolean foundCache = QuestHelper.getCompleted(QuestStageManager.FOUND_CACHE_KEY);
 
@@ -327,7 +328,7 @@ public class DelveMeetingBarEvent extends BaseBarEvent {
                 String payout = Misc.getDGSCredits(ADVANCE_CREDITS);
                 text.setFontSmallInsignia();
                 text.addPara("Received +"+payout,g,h,"+"+payout,"");
-                MiscHelper.playUiStaticNoise();
+                UiSounds.playUiStaticNoise();
                 text.setFontInsignia();
             }
             text.addPara("Jack leans forward towards you to, he narrows his eyes, and speaks in a disapproving tone.");

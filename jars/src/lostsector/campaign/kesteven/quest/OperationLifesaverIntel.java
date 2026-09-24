@@ -15,7 +15,7 @@ import lostsector.campaign.kesteven.quest.QuestStageManager;
 import lostsector.campaign.kesteven.quest.QuestHelper;
 import lostsector.dialogue.rules.nskr_job4FleetDialog;
 import lostsector.dialogue.rules.nskr_kestevenQuest;
-import lostsector.helper.MiscHelper;
+import lostsector.helper.SectorLookup;
 
 import java.awt.*;
 import java.util.Set;
@@ -135,7 +135,7 @@ public class OperationLifesaverIntel extends BaseIntelPlugin {
         if(relation<=-0.50f && stage<=13)info.addPara("You need to get back to non-hostile relations with Kesteven, if you want to finish this job.", initPad, g, h, "non-hostile relations", "");
 
         if(stage==12 && !foundFriendly) info.addPara("Figure out the location of the Operations fleet, and establish contact.", opad, g,h, "", "");
-        SectorEntityToken outpostEntity = MiscHelper.getOutpost();
+        SectorEntityToken outpostEntity = SectorLookup.getOutpost();
         if (outpostEntity!=null) {
             String outpostLoc = outpostEntity.getName();
             String outpostSys = outpostEntity.getStarSystem().getName();

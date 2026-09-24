@@ -7,7 +7,7 @@ import com.fs.starfarer.api.campaign.CampaignFleetAPI;
 import com.fs.starfarer.api.fleet.FleetMemberAPI;
 import lostsector.helper.FleetHelper;
 import lostsector.helper.Ids;
-import lostsector.helper.MiscHelper;
+import lostsector.helper.ShipHelper;
 
 
 public class EnigmaAIConverter extends BaseCampaignEventListener implements EveryFrameScript {
@@ -41,8 +41,8 @@ public class EnigmaAIConverter extends BaseCampaignEventListener implements Ever
         //check for Enigma ships
         for (FleetMemberAPI m : fleet.getMembersWithFightersCopy()) {
             if (m.isFighterWing()) continue;
-            if (MiscHelper.isProtTech(m)) {
-                String protOrEnigma = MiscHelper.protOrEnigma(m);
+            if (ShipHelper.isProtTech(m)) {
+                String protOrEnigma = ShipHelper.protOrEnigma(m);
                 if (protOrEnigma!=null && protOrEnigma.equals("enigma")){
                     FleetHelper.setAIOfficer(m);
                 }

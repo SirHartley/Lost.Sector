@@ -14,7 +14,7 @@ import lostsector.campaign.kesteven.quest.QuestHelper;
 import lostsector.persistence.Saved;
 import lostsector.campaign.kesteven.contracts.ContractsMission;
 import lostsector.helper.Ids;
-import lostsector.helper.MiscHelper;
+import lostsector.helper.ShipHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -166,7 +166,7 @@ public class ContractManager extends BaseCampaignEventListener implements EveryF
                                 break;
                             case ("logistics"):
                                 if (mspec.getHints() == null) continue;
-                                if (MiscHelper.isLogistics(mspec.getHints())) {
+                                if (ShipHelper.isLogistics(mspec.getHints())) {
                                     completed++;
                                 }
                                 break;

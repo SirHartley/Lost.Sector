@@ -12,7 +12,7 @@ import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import com.fs.starfarer.api.util.IntervalUtil;
 import com.fs.starfarer.api.util.Misc;
 import lostsector.helper.MathHelper;
-import lostsector.helper.MiscHelper;
+import lostsector.rendering.ColorHelper;
 import org.magiclib.util.MagicIncompatibleHullmods;
 
 import java.awt.*;
@@ -137,7 +137,7 @@ public class VolatileFluxInjector extends BaseHullMod {
 
         this.afterImageTimer.advance(Global.getCombatEngine().getElapsedInLastFrame());
         if (this.afterImageTimer.intervalElapsed()) {
-            Color color = MiscHelper.shiftAlpha(afterImageColor, ratio);
+            Color color = ColorHelper.shiftAlpha(afterImageColor, ratio);
             ship.addAfterimage(color, 0.0f, 0.0f, ship.getVelocity().x * -0.8f, ship.getVelocity().y * -0.8f, 0.0f, 0.0f, 0.0f, 0.3f, true, true, false);
         }
         ship.getEngineController().fadeToOtherColor(this, engineColor, null, 1f, 0.5f*ratio);
@@ -160,33 +160,33 @@ public class VolatileFluxInjector extends BaseHullMod {
         tooltip.addSectionHeading("Stats", Alignment.MID, pad);
         if (ship!=null) {
             float mod = SPEED_BONUS.get(ship.getHullSize());
-            tooltip.addPara("+"+(int)mod+"su/s"+" to top speed.", pad, MiscHelper.BON_GREEN, (int)mod+"su/s");
+            tooltip.addPara("+"+(int)mod+"su/s"+" to top speed.", pad, ColorHelper.BON_GREEN, (int)mod+"su/s");
         } else{
             float frig = SPEED_BONUS.get(HullSize.FRIGATE);
             float cap = SPEED_BONUS.get(HullSize.CAPITAL_SHIP);
-            tooltip.addPara("+"+(int)frig+"-"+(int)cap+"su/s"+" to top speed, based on hull size.", pad, MiscHelper.BON_GREEN, (int)frig+"-"+(int)cap+"su/s");
+            tooltip.addPara("+"+(int)frig+"-"+(int)cap+"su/s"+" to top speed, based on hull size.", pad, ColorHelper.BON_GREEN, (int)frig+"-"+(int)cap+"su/s");
         }
-        tooltip.addPara("+"+(int)ROF_BONUS+"%%"+" to all weapon rate of fire.", 0.0f, MiscHelper.BON_GREEN, (int)ROF_BONUS+"%");
-        tooltip.addPara("-Full bonus to speed and rate fo fire at zero flux, down to zero at 50%% flux, full penalty at 100%% flux.", 0.0f, MiscHelper.NICE_YELLOW, "");
+        tooltip.addPara("+"+(int)ROF_BONUS+"%%"+" to all weapon rate of fire.", 0.0f, ColorHelper.BON_GREEN, (int)ROF_BONUS+"%");
+        tooltip.addPara("-Full bonus to speed and rate fo fire at zero flux, down to zero at 50%% flux, full penalty at 100%% flux.", 0.0f, ColorHelper.NICE_YELLOW, "");
         if(ship!=null) {
             if (ship.getVariant().hasHullMod("nskr_augmented")) {
-                tooltip.addPara("-Penalty is equal up to 50%% of the bonus, but as a negative.", 0.0f, MiscHelper.TT_ORANGE, "Penalty is equal up to 50% of the bonus");
+                tooltip.addPara("-Penalty is equal up to 50%% of the bonus, but as a negative.", 0.0f, ColorHelper.TT_ORANGE, "Penalty is equal up to 50% of the bonus");
             } else {
-                tooltip.addPara("-Penalty is equal up to the bonus, but as a negative.", 0.0f, MiscHelper.TT_ORANGE, "Penalty is equal up to the bonus");
+                tooltip.addPara("-Penalty is equal up to the bonus, but as a negative.", 0.0f, ColorHelper.TT_ORANGE, "Penalty is equal up to the bonus");
             }
         }
-        tooltip.addPara("+"+(int)FLUX_BONUS+"%%"+" to flux capacity and the effectiveness of additional capacitors.", 0.0f, MiscHelper.BON_GREEN, (int)FLUX_BONUS+"%");
-        tooltip.addPara("-Weapon range past "+(int)MAX_RANGE+" units is reduced by "+(int)50f+"%%" + " at all times.", 0.0f, MiscHelper.TT_ORANGE, (int)50f+"%");
-        tooltip.addPara("-Wing engagement range is reduced by "+(int)75f+"%%" + " at all times.", 0.0f, MiscHelper.TT_ORANGE, (int)75f+"%");
+        tooltip.addPara("+"+(int)FLUX_BONUS+"%%"+" to flux capacity and the effectiveness of additional capacitors.", 0.0f, ColorHelper.BON_GREEN, (int)FLUX_BONUS+"%");
+        tooltip.addPara("-Weapon range past "+(int)MAX_RANGE+" units is reduced by "+(int)50f+"%%" + " at all times.", 0.0f, ColorHelper.TT_ORANGE, (int)50f+"%");
+        tooltip.addPara("-Wing engagement range is reduced by "+(int)75f+"%%" + " at all times.", 0.0f, ColorHelper.TT_ORANGE, (int)75f+"%");
 
         tooltip.addSectionHeading("Additional Info", Alignment.MID, pad);
-        tooltip.addPara("-Also grants an acceleration buff while on low flux.", pad, MiscHelper.NICE_YELLOW, "");
-        tooltip.addPara("-Active venting or being overloaded counts as being at full flux.", 0.0f, MiscHelper.NICE_YELLOW, "");
-        tooltip.addPara("-Incompatible with phase ships.", 0.0f, MiscHelper.TT_ORANGE, "");
+        tooltip.addPara("-Also grants an acceleration buff while on low flux.", pad, ColorHelper.NICE_YELLOW, "");
+        tooltip.addPara("-Active venting or being overloaded counts as being at full flux.", 0.0f, ColorHelper.NICE_YELLOW, "");
+        tooltip.addPara("-Incompatible with phase ships.", 0.0f, ColorHelper.TT_ORANGE, "");
 
         if (Global.getCurrentState() == GameState.CAMPAIGN){
             tooltip.addSectionHeading("S-mod penalty", bad, negativeBackground, Alignment.MID, pad);
-            tooltip.addPara("Increases EMP damage taken by "+(int)SMOD_PENALTY+"%%.", pad, MiscHelper.NICE_YELLOW, (int)SMOD_PENALTY+"%");
+            tooltip.addPara("Increases EMP damage taken by "+(int)SMOD_PENALTY+"%%.", pad, ColorHelper.NICE_YELLOW, (int)SMOD_PENALTY+"%");
             if (!sMod) tooltip.addPara("This effect only applies if this hullmod is built into the hull using a story point. Cheap hullmods have stronger effects.", pad, storyColor, "story point");
         }
     }

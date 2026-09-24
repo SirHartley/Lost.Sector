@@ -25,7 +25,7 @@ import lostsector.settings.Difficulty;
 import lostsector.persistence.Saved;
 import lostsector.helper.FleetHelper;
 import lostsector.helper.MathHelper;
-import lostsector.helper.MiscHelper;
+import lostsector.helper.SystemHelper;
 import lostsector.world.systems.frost.Frost;
 import org.lazywizard.lazylib.MathUtils;
 import org.lwjgl.util.vector.Vector2f;
@@ -348,7 +348,7 @@ public class MothershipSpawner  extends BaseCampaignEventListener implements Eve
         getSystemsWithGasGiant(systems, validSystems);
         //add any system as back-up
         while (validSystems.isEmpty()){
-            systems.add(MiscHelper.getRandomNonCoreSystem(random));
+            systems.add(SystemHelper.getRandomNonCoreSystem(random));
             getSystemsWithGasGiant(systems, validSystems);
             log("ERROR no gas giant Remnant systems");
         }

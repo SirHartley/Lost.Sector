@@ -6,7 +6,7 @@ import com.fs.starfarer.api.combat.ShipAPI.HullSize;
 import com.fs.starfarer.api.graphics.SpriteAPI;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import lostsector.combat.systems.WarpStats;
-import lostsector.helper.MiscHelper;
+import lostsector.helper.ShipHelper;
 import org.lwjgl.util.vector.Vector2f;
 import org.magiclib.util.MagicRender;
 
@@ -37,7 +37,7 @@ public class TeleportDummy extends BaseHullMod {
 		ShipSystemAPI.SystemState state = ship.getSystem().getState();
 
 		Color color;
-		if (MiscHelper.protOrEnigma(ship).equals("enigma")){
+		if (ShipHelper.protOrEnigma(ship).equals("enigma")){
 			color = ENIGMA_COLOR;
 		} else{
 			color = PROT_COLOR;

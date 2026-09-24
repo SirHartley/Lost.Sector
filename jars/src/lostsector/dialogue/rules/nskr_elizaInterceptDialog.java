@@ -14,7 +14,8 @@ import com.fs.starfarer.api.util.Misc.Token;
 import lostsector.campaign.kesteven.quest.EndingKestevenDialog;
 import lostsector.campaign.kesteven.quest.QuestStageManager;
 import lostsector.campaign.kesteven.quest.QuestHelper;
-import lostsector.helper.MiscHelper;
+import lostsector.helper.MathHelper;
+import lostsector.campaign.kesteven.quest.QuestPeople;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -169,7 +170,7 @@ public class nskr_elizaInterceptDialog extends PaginatedOptions {
         QuestHelper.setCompleted(true, QuestStageManager.ELIZA_INTERCEPT_HANDED_OVER);
 
         //rep
-        MiscHelper.getEliza().getRelToPlayer().adjustRelationship(0.05f, RepLevel.COOPERATIVE);
+        QuestPeople.getEliza().getRelToPlayer().adjustRelationship(0.05f, RepLevel.COOPERATIVE);
         if(Global.getSector().getFaction(Factions.PLAYER).getRelationship("kesteven")>-0.35f) {
             Global.getSector().getFaction(Factions.PLAYER).setRelationship("kesteven", -0.35f);
         }
@@ -204,7 +205,7 @@ public class nskr_elizaInterceptDialog extends PaginatedOptions {
         dialog.getInteractionTarget().getMemoryWithoutUpdate().unset(MemFlags.MEMORY_KEY_MISSION_IMPORTANT);
 
         //-rep
-        MiscHelper.getEliza().getRelToPlayer().adjustRelationship(-0.75f, RepLevel.VENGEFUL);
+        QuestPeople.getEliza().getRelToPlayer().adjustRelationship(-0.75f, RepLevel.VENGEFUL);
 
         Global.getSoundPlayer().playUISound("ui_rep_drop",1f,1f);
     }
@@ -228,7 +229,7 @@ public class nskr_elizaInterceptDialog extends PaginatedOptions {
         Map<String, Object> data = Global.getSector().getPersistentData();
         if (!data.containsKey(PERSISTENT_RANDOM_KEY)) {
 
-            data.put(PERSISTENT_RANDOM_KEY, new Random(MiscHelper.getSeedParsed()));
+            data.put(PERSISTENT_RANDOM_KEY, new Random(MathHelper.getSeedParsed()));
         }
         return (Random) data.get(PERSISTENT_RANDOM_KEY);
     }

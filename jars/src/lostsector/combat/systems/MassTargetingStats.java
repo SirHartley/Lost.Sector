@@ -10,7 +10,7 @@ import com.fs.starfarer.api.combat.ShipAPI;
 import com.fs.starfarer.api.graphics.SpriteAPI;
 import com.fs.starfarer.api.impl.combat.BaseShipSystemScript;
 import lostsector.helper.MathHelper;
-import lostsector.helper.MiscHelper;
+import lostsector.rendering.ColorHelper;
 import org.lwjgl.util.vector.Vector2f;
 import org.magiclib.util.MagicRender;
 
@@ -71,7 +71,7 @@ public class MassTargetingStats extends BaseShipSystemScript {
         float amount = engine.getElapsedInLastFrame();
 
         //jitter
-        Color color1 = MiscHelper.randomiseColor(COLOR, 10, 5, 15, 5, true);
+        Color color1 = ColorHelper.randomiseColor(COLOR, 10, 5, 15, 5, true);
         Color color2 = color1;
 
         //range is actually bigger
@@ -86,15 +86,15 @@ public class MassTargetingStats extends BaseShipSystemScript {
         if (timer > 2f) timer = 0f;
 
         float alpha = color1.getAlpha()*effectLevel;
-        color1 = MiscHelper.setAlpha(color1,(int)alpha);
+        color1 = ColorHelper.setAlpha(color1,(int)alpha);
         float vSize = size2.getX();
         float nTimer = 0f;
         nTimer = MathHelper.normalize(timer,0f,2f);
 
         vSize = MathHelper.lerp(vSize*0.15f, vSize*1.25f, nTimer);
         size2 = new Vector2f(vSize, vSize);
-        alpha = MiscHelper.clamp255((int) MathHelper.lerp(alpha*1.0f, alpha*0.3f, nTimer));
-        color2 = MiscHelper.setAlpha(color1,(int)alpha);
+        alpha = ColorHelper.clamp255((int) MathHelper.lerp(alpha*1.0f, alpha*0.3f, nTimer));
+        color2 = ColorHelper.setAlpha(color1,(int)alpha);
 
         MagicRender.singleframe(sprite, ship.getLocation(), size, angle, color1, false);
         //second one that changes size

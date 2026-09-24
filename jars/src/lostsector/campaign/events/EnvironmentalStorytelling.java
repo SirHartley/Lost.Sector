@@ -23,7 +23,8 @@ import com.fs.starfarer.api.util.Pair;
 import com.fs.starfarer.api.util.WeightedRandomPicker;
 import lostsector.campaign.kesteven.quest.QuestHelper;
 import lostsector.helper.fleet.SystemPicker;
-import lostsector.helper.MiscHelper;
+import lostsector.campaign.enigma.DormantSpawner;
+import lostsector.helper.SystemHelper;
 import org.jetbrains.annotations.Nullable;
 import org.lazywizard.lazylib.MathUtils;
 
@@ -97,7 +98,7 @@ public class EnvironmentalStorytelling {
                 }
 
                 //dormant
-                SectorEntityToken dormant = MiscHelper.addDormant(MiscHelper.getRandomLocationInSystem(system,false,true, new Random()),
+                SectorEntityToken dormant = DormantSpawner.addDormant(SystemHelper.getRandomLocationInSystem(system,false,true, new Random()),
                         "enigma", MathUtils.getRandomNumberInRange(80f,120f));
                 //makes sure we are not in a star
                 QuestHelper.spawnAwayFromStarFixer(dormant,2.0f);
@@ -160,7 +161,7 @@ public class EnvironmentalStorytelling {
                 SectorEntityToken debrisField = Misc.addDebrisField(system, params_debrisField, StarSystemGenerator.random);
                 debrisField.setSensorProfile(1000f);
                 debrisField.setDiscoverable(true);
-                SectorEntityToken loc = MiscHelper.getRandomLocationInSystem(system,false,true,new Random());
+                SectorEntityToken loc = SystemHelper.getRandomLocationInSystem(system,false,true,new Random());
                 debrisField.setCircularOrbit(loc.getOrbitFocus(),loc.getCircularOrbitAngle(), loc.getCircularOrbitRadius(), loc.getCircularOrbitPeriod());
                 debrisField.setId("nskr_debrisField_"+new Random().nextLong());
 
@@ -198,7 +199,7 @@ public class EnvironmentalStorytelling {
             return pick;
         }
         log("ERROR no valid system");
-        return MiscHelper.getRandomNonCoreSystem(new Random());
+        return SystemHelper.getRandomNonCoreSystem(new Random());
     }
 
     public static String pickRandomVariant(String factionId, Random random, boolean enigma) {

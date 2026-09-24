@@ -12,7 +12,7 @@ import com.fs.starfarer.api.impl.campaign.ids.Factions;
 import com.fs.starfarer.api.loading.FighterWingSpecAPI;
 import com.fs.starfarer.api.loading.WeaponSpecAPI;
 import lostsector.persistence.Saved;
-import lostsector.helper.MiscHelper;
+import lostsector.helper.SectorLookup;
 
 import java.util.*;
 
@@ -89,7 +89,7 @@ public class KestevenExportManager extends BaseCampaignEventListener implements 
             {
                 if (f.getId().equals("kesteven")) continue;
                 ExportLevel level = getLevel(f.getId());
-                if (level==ExportLevel.NONE || !MiscHelper.kestevenExists()) {
+                if (level==ExportLevel.NONE || !SectorLookup.kestevenExists()) {
                     stopExportBlueprints(f.getId());
                 } else {
                     exportBlueprints(f.getId(), level);

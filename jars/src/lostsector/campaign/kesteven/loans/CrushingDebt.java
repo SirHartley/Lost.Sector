@@ -10,7 +10,7 @@ import com.fs.starfarer.api.ui.TooltipMakerAPI.TooltipCreator;
 import com.fs.starfarer.api.util.Misc;
 import lostsector.dialogue.rules.nskr_debt;
 import lostsector.helper.MathHelper;
-import lostsector.helper.MiscHelper;
+import lostsector.helper.SectorLookup;
 
 
 public class CrushingDebt implements EconomyTickListener, TooltipCreator {
@@ -33,7 +33,7 @@ public class CrushingDebt implements EconomyTickListener, TooltipCreator {
 		nskr_debt.updateInterest();
 
 		if (nskr_debt.getDebt()==0) return;
-		if (!MiscHelper.kestevenExists()) return;
+		if (!SectorLookup.kestevenExists()) return;
 
 		MonthlyReport report = SharedData.getData().getCurrentReport();
 		FDNode fleetNode = report.getNode(MonthlyReport.FLEET);

@@ -23,7 +23,8 @@ import lostsector.settings.Difficulty;
 import lostsector.persistence.Saved;
 import lostsector.helper.FleetHelper;
 import lostsector.helper.MathHelper;
-import lostsector.helper.MiscHelper;
+import lostsector.helper.SectorLookup;
+import lostsector.helper.ShipHelper;
 import lostsector.helper.PowerLevel;
 import lostsector.world.systems.frost.Frost;
 import org.lazywizard.lazylib.MathUtils;
@@ -267,7 +268,7 @@ public class StalkerSpawner extends BaseCampaignEventListener implements EveryFr
         }
 
         //don't spawn when enigma is gone
-        if (!MiscHelper.enigmaExists()) return;
+        if (!SectorLookup.enigmaExists()) return;
 
         //10 = 1 day
         if (spawnCounter.val>STALKER_TIMER*10f) {
@@ -300,7 +301,7 @@ public class StalkerSpawner extends BaseCampaignEventListener implements EveryFr
             if (m.isFighterWing()) continue;
             if (m.getVariant()==null) continue;
             if (m.getHullSpec()==null) continue;
-            if (MiscHelper.isProtTech(m)){
+            if (ShipHelper.isProtTech(m)){
                 protDP += m.getDeploymentPointsCost();
             }
             for (String wep : m.getVariant().getNonBuiltInWeaponSlots()) {

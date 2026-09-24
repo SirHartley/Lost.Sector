@@ -20,6 +20,38 @@ public class StringHelper {
 
     public static final String HR = "-----------------------------------------------------------------------------";
 
+    public static final ArrayList<String> GREEK_LETTERS = new ArrayList<>();
+    static {
+        GREEK_LETTERS.add("alpha");
+        GREEK_LETTERS.add("beta");
+        GREEK_LETTERS.add("gamma");
+        GREEK_LETTERS.add("delta");
+        GREEK_LETTERS.add("epsilon");
+        GREEK_LETTERS.add("zeta");
+        GREEK_LETTERS.add("eta");
+        GREEK_LETTERS.add("theta");
+        GREEK_LETTERS.add("iota");
+        GREEK_LETTERS.add("kappa");
+        GREEK_LETTERS.add("lambda");
+        GREEK_LETTERS.add("mu");
+        GREEK_LETTERS.add("nu");
+        GREEK_LETTERS.add("xi");
+        GREEK_LETTERS.add("omicron");
+        GREEK_LETTERS.add("pi");
+        GREEK_LETTERS.add("rho");
+        GREEK_LETTERS.add("sigma");
+        GREEK_LETTERS.add("tau");
+        GREEK_LETTERS.add("upsilon");
+        GREEK_LETTERS.add("phi");
+        GREEK_LETTERS.add("chi");
+        GREEK_LETTERS.add("psi");
+        GREEK_LETTERS.add("omega");
+    }
+
+    static void log(final String message) {
+        Global.getLogger(StringHelper.class).info(message);
+    }
+
     public static String getString(String category, String id, boolean ucFirst) {
         String str = "";
         try {
@@ -319,5 +351,46 @@ public class StringHelper {
         return name;
     }
 
+    public static String parseCustom(String primary, String hl){
+        int loopCount = 0;
+        int indexInSequence = 0;
+        while (primary.contains("%s")){
+            String h = "";
+            if (hl.contains("|")){
+                if (loopCount==0){
+                    h = (String)hl.subSequence(0, hl.indexOf("|")-1);
+                    indexInSequence = hl.indexOf("|")+1;
+                }
+                if (loopCount>=1){
+                    log("index1 "+indexInSequence);
+                    if(hl.indexOf("|", indexInSequence)>0) {
+                        log("index2 "+indexInSequence);
+                        h = (String) hl.subSequence(indexInSequence+1, hl.indexOf("|", indexInSequence) - 1);
+                        indexInSequence = hl.indexOf("|", indexInSequence)+1;
+                        log("index3 "+indexInSequence);
+                    } else {
+                        h = (String) hl.subSequence(indexInSequence+1, hl.length());
+                    }
+                }
+            } else h= hl;
+            primary = primary.replaceFirst("%s", h);
+            loopCount++;
+        }
 
+        return primary;
+    }
+
+    public static String getRandomGreekLetter(Random random, boolean capitalized) {
+        if (!capitalized) {
+            return GREEK_LETTERS.get(MathHelper.getSeededRandomNumberInRange(0, GREEK_LETTERS.size() - 1, random));
+        } else {
+            return capitalizeFirstLetter(GREEK_LETTERS.get(MathHelper.getSeededRandomNumberInRange(0, GREEK_LETTERS.size() - 1, random)));
+        }
+    }
+
+    public static String capitalizeFirstLetter(String string) {
+        String first = string.substring(0,1);
+        String capitalized = first.toUpperCase();
+        return string.replaceFirst(first, capitalized);
+    }
 }

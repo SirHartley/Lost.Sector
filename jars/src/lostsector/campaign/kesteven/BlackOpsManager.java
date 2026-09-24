@@ -19,7 +19,7 @@ import lostsector.settings.Difficulty;
 import lostsector.persistence.Saved;
 import lostsector.helper.FleetHelper;
 import lostsector.helper.MathHelper;
-import lostsector.helper.MiscHelper;
+import lostsector.helper.SystemHelper;
 import org.lazywizard.lazylib.MathUtils;
 import org.lwjgl.util.vector.Vector2f;
 
@@ -314,7 +314,7 @@ public class BlackOpsManager extends BaseCampaignEventListener implements EveryF
             } else {
                 //no hostiles
                 //pick
-                target= MiscHelper.getRandomMarket(random, true);
+                target= SystemHelper.getRandomMarket(random, true);
             }
         }
 
@@ -377,7 +377,7 @@ public class BlackOpsManager extends BaseCampaignEventListener implements EveryF
             return pick;
         }
         log("ERROR no valid system");
-        return MiscHelper.getRandomNonCoreSystem(random);
+        return SystemHelper.getRandomNonCoreSystem(random);
     }
 
     public static Random getRandom() {

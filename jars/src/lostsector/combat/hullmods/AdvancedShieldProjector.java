@@ -7,7 +7,7 @@ import com.fs.starfarer.api.combat.ShipAPI.HullSize;
 import com.fs.starfarer.api.ui.Alignment;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import lostsector.helper.MathHelper;
-import lostsector.helper.MiscHelper;
+import lostsector.rendering.ColorHelper;
 import org.magiclib.util.MagicIncompatibleHullmods;
 
 import java.awt.*;
@@ -89,9 +89,9 @@ public class AdvancedShieldProjector extends BaseHullMod {
 		//make shield color change with flux too
 		final Color shieldColor = new Color(
 				255,
-				MiscHelper.clamp255(Math.round(251 - ((250) * (fluxRatio)))),
-				MiscHelper.clamp255(Math.round(251 - ((250) * (fluxRatio)))),
-				MiscHelper.clamp255(Math.round(175 + ((75 * fluxRatio)))));
+				ColorHelper.clamp255(Math.round(251 - ((250) * (fluxRatio)))),
+				ColorHelper.clamp255(Math.round(251 - ((250) * (fluxRatio)))),
+				ColorHelper.clamp255(Math.round(175 + ((75 * fluxRatio)))));
 		ship.getShield().setInnerColor(shieldColor);
 		//tooltip stuff
 		float sizeBonusTt = Math.round(sizeBonus);
@@ -119,10 +119,10 @@ public class AdvancedShieldProjector extends BaseHullMod {
 
 		tooltip.addSectionHeading("Additional Info", Alignment.MID, pad);
 		if (! Global.getSettings().isShowingCodex() && ship.getVariant().hasHullMod("stabilizedshieldemitter")){
-			tooltip.addPara("-Stabilized Shields installed.", pad, MiscHelper.NICE_YELLOW, "");
-			tooltip.addPara("-Full resistance and fold bonus achieved at 75%% flux instead.", 0.0f, MiscHelper.NICE_YELLOW, "75%");
+			tooltip.addPara("-Stabilized Shields installed.", pad, ColorHelper.NICE_YELLOW, "");
+			tooltip.addPara("-Full resistance and fold bonus achieved at 75%% flux instead.", 0.0f, ColorHelper.NICE_YELLOW, "75%");
 		} else {
-			tooltip.addPara("-Full resistance and fold bonus achieved at 75%% flux instead, if Stabilized Shields is installed.", pad, MiscHelper.NICE_YELLOW, "");
+			tooltip.addPara("-Full resistance and fold bonus achieved at 75%% flux instead, if Stabilized Shields is installed.", pad, ColorHelper.NICE_YELLOW, "");
 		}
 	}
 

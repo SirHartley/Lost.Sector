@@ -8,7 +8,7 @@ import com.fs.starfarer.api.util.Pair;
 import lostsector.combat.systems.TemporalRuptureStats;
 import lostsector.helper.MathHelper;
 import lostsector.helper.CombatHelper;
-import lostsector.helper.MiscHelper;
+import lostsector.rendering.ColorHelper;
 import org.lazywizard.lazylib.MathUtils;
 import org.lwjgl.util.vector.Vector2f;
 
@@ -190,7 +190,7 @@ public class VoidCore extends BaseHullMod {
 						alpha = MathHelper.smoothStep(MathHelper.lerp(0f, 3f, MathHelper.inverse(target.two)));
 					}
 					Color color = COLOR1;
-					color = MiscHelper.setAlpha(color, (int)(color.getAlpha()*alpha));
+					color = ColorHelper.setAlpha(color, (int)(color.getAlpha()*alpha));
 
 					Vector2f size = new Vector2f(25f, 25f);
 					float damageMult = 1 + proj.getDamageAmount() / 250;

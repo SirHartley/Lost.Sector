@@ -11,7 +11,7 @@ import com.fs.starfarer.api.ui.Alignment;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import com.fs.starfarer.api.util.Misc;
 import lostsector.campaign.enigma.EnigmaHullmodListener;
-import lostsector.helper.MiscHelper;
+import lostsector.rendering.ColorHelper;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -80,7 +80,7 @@ public class UnknownProduction extends BaseHullMod {
 		float pad = 12.0f;
 		Color tc = Misc.getHighlightColor();
 		Color y = Misc.getHighlightColor();
-		Color bad = MiscHelper.TT_ORANGE;
+		Color bad = ColorHelper.TT_ORANGE;
 
 		//SO penalty
 		if (ship.getMutableStats().getVariant().hasHullMod(HullMods.SAFETYOVERRIDES)) {

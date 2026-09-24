@@ -15,7 +15,8 @@ import com.fs.starfarer.api.util.Misc;
 import lostsector.campaign.kesteven.quest.QuestStageManager;
 import lostsector.campaign.kesteven.quest.QuestHelper;
 import lostsector.helper.MathHelper;
-import lostsector.helper.MiscHelper;
+import lostsector.campaign.kesteven.quest.QuestPeople;
+import lostsector.helper.UiSounds;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -206,7 +207,7 @@ public class nskr_altEndingDialogLuddic extends PaginatedOptions {
         }
 
         //sound
-        MiscHelper.playUiRepRaiseNoise();
+        UiSounds.playUiRepRaiseNoise();
 
         //mad
         makeMad(text, g, r);
@@ -228,21 +229,21 @@ public class nskr_altEndingDialogLuddic extends PaginatedOptions {
             QuestHelper.getElizaLoc().getMemory().unset(MemFlags.MEMORY_KEY_MISSION_IMPORTANT);
         }
         //remove contact
-        if(MiscHelper.getAlice()!=null) {
-            MiscHelper.getAlice().getRelToPlayer().adjustRelationship(-0.50f, RepLevel.HOSTILE);
-            if(ContactIntel.getContactIntel(MiscHelper.getAlice())!=null) {
-                ContactIntel.getContactIntel(MiscHelper.getAlice()).setState(ContactIntel.ContactState.SUSPENDED);
+        if(QuestPeople.getAlice()!=null) {
+            QuestPeople.getAlice().getRelToPlayer().adjustRelationship(-0.50f, RepLevel.HOSTILE);
+            if(ContactIntel.getContactIntel(QuestPeople.getAlice())!=null) {
+                ContactIntel.getContactIntel(QuestPeople.getAlice()).setState(ContactIntel.ContactState.SUSPENDED);
             }
         }
-        if(MiscHelper.getJack()!=null) {
-            MiscHelper.getJack().getRelToPlayer().adjustRelationship(-0.50f, RepLevel.HOSTILE);
-            if(ContactIntel.getContactIntel(MiscHelper.getJack())!=null) {
-                ContactIntel.getContactIntel(MiscHelper.getJack()).setState(ContactIntel.ContactState.SUSPENDED);
+        if(QuestPeople.getJack()!=null) {
+            QuestPeople.getJack().getRelToPlayer().adjustRelationship(-0.50f, RepLevel.HOSTILE);
+            if(ContactIntel.getContactIntel(QuestPeople.getJack())!=null) {
+                ContactIntel.getContactIntel(QuestPeople.getJack()).setState(ContactIntel.ContactState.SUSPENDED);
             }
         }
         //-rep
-        if(MiscHelper.getEliza()!=null) {
-            MiscHelper.getEliza().getRelToPlayer().adjustRelationship(-0.50f, RepLevel.HOSTILE);
+        if(QuestPeople.getEliza()!=null) {
+            QuestPeople.getEliza().getRelToPlayer().adjustRelationship(-0.50f, RepLevel.HOSTILE);
         }
         //kesteven rep
         float repKesteven = MathHelper.getSeededRandomNumberInRange(-0.65f, -0.55f, getRandom());
@@ -283,7 +284,7 @@ public class nskr_altEndingDialogLuddic extends PaginatedOptions {
         Map<String, Object> data = Global.getSector().getPersistentData();
         if (!data.containsKey(PERSISTENT_RANDOM_KEY)) {
 
-            data.put(PERSISTENT_RANDOM_KEY, new Random(MiscHelper.getSeedParsed()));
+            data.put(PERSISTENT_RANDOM_KEY, new Random(MathHelper.getSeedParsed()));
         }
         return (Random) data.get(PERSISTENT_RANDOM_KEY);
     }

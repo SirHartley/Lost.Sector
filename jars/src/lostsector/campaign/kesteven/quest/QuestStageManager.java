@@ -33,7 +33,7 @@ import lostsector.persistence.Saved;
 import lostsector.helper.FleetHelper;
 import lostsector.helper.Ids;
 import lostsector.helper.MathHelper;
-import lostsector.helper.MiscHelper;
+import lostsector.helper.SectorLookup;
 import lostsector.world.systems.cache.Cache;
 import org.lazywizard.lazylib.MathUtils;
 import org.lazywizard.lazylib.VectorUtils;
@@ -186,7 +186,7 @@ public class QuestStageManager extends BaseCampaignEventListener implements Ever
         stage = QuestHelper.getStage();
 
         //both mission markets lost failure
-        if (!ExileManager.canExile() && !MiscHelper.asteriaExists() && !QuestHelper.getEndMissions()){
+        if (!ExileManager.canExile() && !SectorLookup.asteriaExists() && !QuestHelper.getEndMissions()){
             QuestHelper.setStage(99);
             QuestHelper.setEndMissions(true);
             log("ERROR sector is fucked, ending missions");
@@ -228,7 +228,7 @@ public class QuestStageManager extends BaseCampaignEventListener implements Ever
         if (stage>=16 && QuestHelper.getCompleted(JOB5_FOUND_ELIZA_KEY) && !QuestHelper.getCompleted(KILLED_ELIZA_KEY)) {
             if(QuestHelper.getElizaLoc().getMarket().isPlanetConditionMarketOnly()){
                 log("Qmanager eliza loc deciv, changing");
-                PersonAPI eliza = MiscHelper.getEliza();
+                PersonAPI eliza = QuestPeople.getEliza();
                 String oldLoc = QuestHelper.getElizaLoc().getMarket().getPrimaryEntity().getName();
                 //new loc
                 QuestHelper.setElizaLoc();
@@ -326,7 +326,7 @@ public class QuestStageManager extends BaseCampaignEventListener implements Ever
                 //BAR EVENT
                 PortsideBarData.getInstance().addEvent(new HostileTakeoverBarEvent());
                 //DORMANT fleet at target
-                MiscHelper.addDormant(QuestHelper.getJob3Target(), "enigma", 45f, 50f, 0f, 1f, 1f, 1f, 1, 1);
+                DormantSpawner.addDormant(QuestHelper.getJob3Target(), "enigma", 45f, 50f, 0f, 1f, 1f, 1f, 1, 1);
                 log("Qmanager added dormant to target " + QuestHelper.getJob3Target().getName() +" "+ QuestHelper.getJob3Target().getStarSystem().getName());
             }
             //logic
@@ -410,7 +410,7 @@ public class QuestStageManager extends BaseCampaignEventListener implements Ever
            //job 5 logic
            //found frost check
            if (!QuestHelper.getCompleted(JOB5_FOUND_FROST_KEY) && QuestHelper.getCompleted(nskr_kestevenQuest.JOB5_ALICE_TIP_KEY2)){
-               if (pf.getContainingLocation()!=null && pf.getContainingLocation()== MiscHelper.getFrost()){
+               if (pf.getContainingLocation()!=null && pf.getContainingLocation()== SectorLookup.getFrost()){
                    //found
                    QuestHelper.setCompleted(true, JOB5_FOUND_FROST_KEY);
                }
@@ -598,7 +598,7 @@ public class QuestStageManager extends BaseCampaignEventListener implements Ever
     }
 
     private void respawnEliza(SectorEntityToken loc) {
-        PersonAPI eliza = MiscHelper.getEliza();
+        PersonAPI eliza = QuestPeople.getEliza();
         //add eliza to market
         loc.getMarket().getCommDirectory().addPerson(eliza,1);
         loc.getMarket().addPerson(eliza);
@@ -1229,7 +1229,7 @@ public class QuestStageManager extends BaseCampaignEventListener implements Ever
     }
 
     private CampaignFleetAPI vengeanceEliza(boolean intercept){
-        PersonAPI eliza = MiscHelper.getEliza();
+        PersonAPI eliza = QuestPeople.getEliza();
         SectorEntityToken loc = QuestHelper.getElizaLoc();
         //-rep
         if (!intercept) eliza.getRelToPlayer().adjustRelationship(-0.75f, RepLevel.VENGEFUL);
@@ -1247,7 +1247,7 @@ public class QuestStageManager extends BaseCampaignEventListener implements Ever
         return fleet;
     }
     private CampaignFleetAPI vengeanceJack(){
-        PersonAPI jack = MiscHelper.getJack();
+        PersonAPI jack = QuestPeople.getJack();
         SectorEntityToken loc = QuestHelper.asteriaOrOutpost().getPrimaryEntity();
         //spawn fleet and add to list
         CampaignFleetAPI fleet = QuestFleets.spawnJackFleet(loc, jack, nskr_kestevenQuest.getRandom());
@@ -1382,7 +1382,7 @@ public class QuestStageManager extends BaseCampaignEventListener implements Ever
         Map<String, Object> data = Global.getSector().getPersistentData();
         if (!data.containsKey(PERSISTENT_RANDOM_KEY)) {
 
-            data.put(PERSISTENT_RANDOM_KEY, new Random(MiscHelper.getSeedParsed()));
+            data.put(PERSISTENT_RANDOM_KEY, new Random(MathHelper.getSeedParsed()));
         }
         return (Random) data.get(PERSISTENT_RANDOM_KEY);
     }

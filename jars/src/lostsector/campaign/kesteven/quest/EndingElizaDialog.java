@@ -19,7 +19,6 @@ import lostsector.campaign.kesteven.quest.UnlimitedProductionChipCondition;
 import lostsector.campaign.kesteven.quest.QuestHelper;
 import lostsector.ModPlugin;
 import lostsector.helper.MathHelper;
-import lostsector.helper.MiscHelper;
 
 import java.awt.*;
 import java.util.Map;
@@ -86,7 +85,7 @@ public class EndingElizaDialog implements InteractionDialogPlugin {
         Color r = Misc.getNegativeHighlightColor();
         Color tc = Misc.getTextColor();
 
-        PersonAPI eliza = MiscHelper.getEliza();
+        PersonAPI eliza = QuestPeople.getEliza();
 
         text.addPara(optionText, b, h, "", "");
 
@@ -204,16 +203,16 @@ public class EndingElizaDialog implements InteractionDialogPlugin {
             //CONTACT
             ContactIntel.addPotentialContact(1f, eliza, dialog.getInteractionTarget().getMarket(), text);
 
-            if(MiscHelper.getAlice()!=null) {
-                MiscHelper.getAlice().getRelToPlayer().adjustRelationship(-0.75f, RepLevel.VENGEFUL);
-                if(ContactIntel.getContactIntel(MiscHelper.getAlice())!=null) {
-                    ContactIntel.getContactIntel(MiscHelper.getAlice()).setState(ContactIntel.ContactState.SUSPENDED);
+            if(QuestPeople.getAlice()!=null) {
+                QuestPeople.getAlice().getRelToPlayer().adjustRelationship(-0.75f, RepLevel.VENGEFUL);
+                if(ContactIntel.getContactIntel(QuestPeople.getAlice())!=null) {
+                    ContactIntel.getContactIntel(QuestPeople.getAlice()).setState(ContactIntel.ContactState.SUSPENDED);
                 }
             }
-            if(MiscHelper.getJack()!=null) {
-                MiscHelper.getJack().getRelToPlayer().adjustRelationship(-0.75f, RepLevel.VENGEFUL);
-                if(ContactIntel.getContactIntel(MiscHelper.getJack())!=null) {
-                    ContactIntel.getContactIntel(MiscHelper.getJack()).setState(ContactIntel.ContactState.SUSPENDED);
+            if(QuestPeople.getJack()!=null) {
+                QuestPeople.getJack().getRelToPlayer().adjustRelationship(-0.75f, RepLevel.VENGEFUL);
+                if(ContactIntel.getContactIntel(QuestPeople.getJack())!=null) {
+                    ContactIntel.getContactIntel(QuestPeople.getJack()).setState(ContactIntel.ContactState.SUSPENDED);
                 }
             }
 
@@ -286,7 +285,7 @@ public class EndingElizaDialog implements InteractionDialogPlugin {
         Map<String, Object> data = Global.getSector().getPersistentData();
         if (!data.containsKey(PERSISTENT_RANDOM_KEY)) {
 
-            data.put(PERSISTENT_RANDOM_KEY, new Random(MiscHelper.getSeedParsed()));
+            data.put(PERSISTENT_RANDOM_KEY, new Random(MathHelper.getSeedParsed()));
         }
         return (Random) data.get(PERSISTENT_RANDOM_KEY);
     }

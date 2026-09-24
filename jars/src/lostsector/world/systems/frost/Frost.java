@@ -26,7 +26,8 @@ import com.fs.starfarer.api.util.Pair;
 import com.fs.starfarer.api.util.WeightedRandomPicker;
 import indevo.industries.artillery.scripts.CampaignAttackScript;
 import lostsector.ModPlugin;
-import lostsector.helper.MiscHelper;
+import lostsector.campaign.enigma.DormantSpawner;
+import lostsector.helper.SystemHelper;
 import org.jetbrains.annotations.Nullable;
 import org.lazywizard.lazylib.MathUtils;
 import org.lazywizard.lazylib.VectorUtils;
@@ -298,7 +299,7 @@ public class Frost {
 		float minGap = 50f;
 		//DORMANT
 		for (int x = 0; x < 8; x++) {
-			MiscHelper.addDormant(MiscHelper.getRandomLocationInSystem(system, false, true, new Random()), "enigma", 5f, 100f, 0.50f, 0.25f, 0.75f, 0f, 0, 0);
+			DormantSpawner.addDormant(SystemHelper.getRandomLocationInSystem(system, false, true, new Random()), "enigma", 5f, 100f, 0.50f, 0.25f, 0.75f, 0f, 0, 0);
 		}
 		//////DERELICT TIME
 		float recoveryChance = 0.25f;

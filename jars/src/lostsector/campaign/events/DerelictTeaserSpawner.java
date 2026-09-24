@@ -20,7 +20,7 @@ import com.fs.starfarer.api.util.Misc;
 import com.fs.starfarer.api.util.Pair;
 import com.fs.starfarer.api.util.WeightedRandomPicker;
 import lostsector.helper.fleet.SystemPicker;
-import lostsector.helper.MiscHelper;
+import lostsector.helper.SystemHelper;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -76,7 +76,7 @@ public class DerelictTeaserSpawner {
                     // The picked location's orbit or its focus can be null.
                     SectorEntityToken entity = null;
                     if (placeToSpawn.orbit==null || placeToSpawn.orbit.getFocus()==null){
-                        entity = MiscHelper.getRandomLocationInSystem(system, true,true, new Random());
+                        entity = SystemHelper.getRandomLocationInSystem(system, true,true, new Random());
                         log("ERROR placeToSpawn is null");
                     } else entity = placeToSpawn.orbit.getFocus();
 
@@ -116,7 +116,7 @@ public class DerelictTeaserSpawner {
             return pick;
         }
         log("ERROR no valid system");
-        return MiscHelper.getRandomNonCoreSystem(new Random());
+        return SystemHelper.getRandomNonCoreSystem(new Random());
     }
 
 

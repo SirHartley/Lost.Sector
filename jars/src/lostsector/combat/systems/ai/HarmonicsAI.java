@@ -4,7 +4,7 @@ import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.combat.*;
 import com.fs.starfarer.api.util.IntervalUtil;
 import lostsector.combat.systems.HarmonicsStats;
-import lostsector.helper.MiscHelper;
+import lostsector.helper.ShipHelper;
 import org.lazywizard.lazylib.combat.AIUtils;
 import org.lazywizard.lazylib.combat.CombatUtils;
 import org.lwjgl.util.vector.Vector2f;
@@ -94,7 +94,7 @@ public class HarmonicsAI  implements ShipSystemAIScript {
                 if (enemy.getOwner()==t.getOwner()) continue;
                 if (enemy.isFighter()) continue;
 
-                score += 25f * MiscHelper.getLinearMod(enemy, 1.0f);
+                score += 25f * ShipHelper.getLinearMod(enemy, 1.0f);
             }
 
             scores.put(t, score);

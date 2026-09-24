@@ -10,7 +10,7 @@ import com.fs.starfarer.api.impl.campaign.procgen.Constellation;
 import com.fs.starfarer.api.impl.campaign.procgen.StarSystemGenerator;
 import com.fs.starfarer.api.util.Misc;
 import lostsector.helper.MathHelper;
-import lostsector.helper.MiscHelper;
+import lostsector.helper.SystemHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -81,7 +81,7 @@ public class SystemPicker {
                 if (system.hasTag(Tags.THEME_CORE) || system.hasTag(Tags.THEME_CORE_POPULATED)) continue;
             }
             if (!allowNeutron){
-                if (MiscHelper.hasNeutronStar(system)) continue;
+                if (SystemHelper.hasNeutronStar(system)) continue;
             }
             if (!allowMarkets){
                 if (!Misc.getMarketsInLocation(system.getCenter().getContainingLocation()).isEmpty()){

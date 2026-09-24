@@ -18,7 +18,9 @@ import lostsector.ModPlugin;
 import lostsector.settings.Setting;
 import lostsector.settings.SettingsManager;
 import lostsector.helper.MathHelper;
-import lostsector.helper.MiscHelper;
+import lostsector.campaign.enigma.DormantSpawner;
+import lostsector.helper.SectorLookup;
+import lostsector.helper.SystemHelper;
 import org.jetbrains.annotations.Nullable;
 import org.lazywizard.lazylib.MathUtils;
 import org.lazywizard.lazylib.VectorUtils;
@@ -58,11 +60,11 @@ public class QuestHelper {
     public static MarketAPI asteriaOrOutpost(){
         MarketAPI market = null;
         if (ExileManager.getExiled(ExileManager.EXILE_KEY)){
-            market = MiscHelper.getOutpost().getMarket();
-        } else market = MiscHelper.getAsteria().getMarket();
+            market = SectorLookup.getOutpost().getMarket();
+        } else market = SectorLookup.getAsteria().getMarket();
         //no asteria generated workaround
         if (market==null){
-            market = MiscHelper.getOutpost().getMarket();
+            market = SectorLookup.getOutpost().getMarket();
         }
         return market;
     }
@@ -100,7 +102,7 @@ public class QuestHelper {
             return pick;
         }
         log("ERROR no valid system");
-        return MiscHelper.getRandomNonCoreSystem(random);
+        return SystemHelper.getRandomNonCoreSystem(random);
     }
 
     //for kesteven quest line
@@ -124,7 +126,7 @@ public class QuestHelper {
             return pick;
         }
         log("ERROR no valid system");
-        return MiscHelper.getRandomNonCoreSystem(random);
+        return SystemHelper.getRandomNonCoreSystem(random);
     }
 
     //for kesteven quest line
@@ -315,7 +317,7 @@ public class QuestHelper {
                 return getRandomFactionMarket(random, faction, new ArrayList<String>());
             } else {
                 log("ERROR no valid " + faction + " markets picking random market");
-                return MiscHelper.getRandomMarket(random, false);
+                return SystemHelper.getRandomMarket(random, false);
             }
         }
         return validMarkets.get(MathHelper.getSeededRandomNumberInRange(0,validMarkets.size()-1, random)).getPrimaryEntity();
@@ -572,7 +574,7 @@ public class QuestHelper {
 
             data.put(id, sys);
             //add dormant
-            MiscHelper.addDormant(MiscHelper.getRandomLocationInSystem(sys ,true,false, nskr_kestevenQuest.getRandom()),
+            DormantSpawner.addDormant(SystemHelper.getRandomLocationInSystem(sys ,true,false, nskr_kestevenQuest.getRandom()),
                     "enigma", 20f);
         }
 
@@ -592,7 +594,7 @@ public class QuestHelper {
         Map<String, Object> data = Global.getSector().getPersistentData();
         String id = nskr_kestevenQuest.PERSISTENT_KEY+"Target3";
         if (!data.containsKey(id))
-            data.put(id, MiscHelper.getRandomLocationInSystem(getRandomSystemNearCore(nskr_kestevenQuest.getRandom()), false, false, nskr_kestevenQuest.getRandom()));
+            data.put(id, SystemHelper.getRandomLocationInSystem(getRandomSystemNearCore(nskr_kestevenQuest.getRandom()), false, false, nskr_kestevenQuest.getRandom()));
 
         return (SectorEntityToken) data.get(id);
     }
@@ -601,7 +603,7 @@ public class QuestHelper {
         Map<String, Object> data = Global.getSector().getPersistentData();
         String id = nskr_kestevenQuest.PERSISTENT_KEY+"TargetFriendly4";
         if (!data.containsKey(id))
-            data.put(id, MiscHelper.getRandomLocationInSystem(getRandomSystemFarCore(nskr_kestevenQuest.getRandom()), false, false, nskr_kestevenQuest.getRandom()));
+            data.put(id, SystemHelper.getRandomLocationInSystem(getRandomSystemFarCore(nskr_kestevenQuest.getRandom()), false, false, nskr_kestevenQuest.getRandom()));
 
         return (SectorEntityToken) data.get(id);
     }
@@ -627,7 +629,7 @@ public class QuestHelper {
         Map<String, Object> data = Global.getSector().getPersistentData();
         String id = nskr_kestevenQuest.PERSISTENT_KEY+"Job5FrostTip";
         if (!data.containsKey(id))
-            data.put(id, getRandomSystemNearLocation(MiscHelper.getFrost().getStar().getLocationInHyperspace(),7000f,12000f, MiscHelper.getFrost(), nskr_kestevenQuest.getRandom()));
+            data.put(id, getRandomSystemNearLocation(SectorLookup.getFrost().getStar().getLocationInHyperspace(),7000f,12000f, SectorLookup.getFrost(), nskr_kestevenQuest.getRandom()));
 
         return (StarSystemAPI) data.get(id);
     }

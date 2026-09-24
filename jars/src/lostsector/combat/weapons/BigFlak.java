@@ -6,7 +6,7 @@ import com.fs.starfarer.api.combat.listeners.AdvanceableListener;
 import lostsector.combat.systems.BigFlakStats;
 import lostsector.rendering.BlastSprite;
 import lostsector.helper.MathHelper;
-import lostsector.helper.MiscHelper;
+import lostsector.rendering.ColorHelper;
 import lostsector.helper.CombatHelper;
 import org.dark.shaders.light.LightShader;
 import org.dark.shaders.light.StandardLight;
@@ -165,7 +165,7 @@ public class BigFlak {
 
         //particle fx
         Vector2f particlePos, particleVel;
-        Color color = MiscHelper.randomiseColor(PARTICLE_COLOR, 25, 0,25,25,false);
+        Color color = ColorHelper.randomiseColor(PARTICLE_COLOR, 25, 0,25,25,false);
         for (int x = 0; x < 125; x++) {
             particlePos = MathUtils.getRandomPointOnCircumference(point, (float) Math.random() * 200f);
             particleVel = Vector2f.sub(particlePos, point, null);

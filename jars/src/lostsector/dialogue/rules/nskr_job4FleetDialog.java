@@ -17,7 +17,7 @@ import com.fs.starfarer.api.util.Misc;
 import com.fs.starfarer.api.util.Misc.Token;
 import lostsector.campaign.kesteven.quest.QuestStageManager;
 import lostsector.campaign.kesteven.quest.QuestHelper;
-import lostsector.helper.MiscHelper;
+import lostsector.helper.MathHelper;
 import org.lwjgl.input.Keyboard;
 
 import java.awt.*;
@@ -258,7 +258,7 @@ public class nskr_job4FleetDialog extends PaginatedOptions {
 		Map<String, Object> data = Global.getSector().getPersistentData();
 		if (!data.containsKey(PERSISTENT_RANDOM_KEY)) {
 
-			data.put(PERSISTENT_RANDOM_KEY, new Random(MiscHelper.getSeedParsed()));
+			data.put(PERSISTENT_RANDOM_KEY, new Random(MathHelper.getSeedParsed()));
 		}
 		return (Random) data.get(PERSISTENT_RANDOM_KEY);
 	}

@@ -18,7 +18,7 @@ import lostsector.helper.fleet.SimpleFleet;
 import lostsector.settings.Difficulty;
 import lostsector.persistence.Saved;
 import lostsector.helper.FleetHelper;
-import lostsector.helper.MiscHelper;
+import lostsector.helper.SectorLookup;
 import lostsector.helper.PowerLevel;
 import org.lazywizard.lazylib.MathUtils;
 import org.lwjgl.util.vector.Vector2f;
@@ -152,7 +152,7 @@ public class GuardSpawner extends BaseCampaignEventListener implements EveryFram
         if (market.getFaction()!=Global.getSector().getFaction("kesteven")) return;
         //logic
         //spawn one fleet at a time
-        if (fleets.isEmpty() && respawnCounter.val<=0f && MiscHelper.kestevenExists()) {
+        if (fleets.isEmpty() && respawnCounter.val<=0f && SectorLookup.kestevenExists()) {
             this.spawnGuardFleet();
         }
     }

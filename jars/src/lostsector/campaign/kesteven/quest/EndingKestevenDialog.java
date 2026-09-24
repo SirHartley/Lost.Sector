@@ -14,7 +14,6 @@ import lostsector.campaign.kesteven.quest.QuestHelper;
 import lostsector.dialogue.rules.nskr_kestevenQuest;
 import lostsector.dialogue.rules.nskr_shipSwap;
 import lostsector.helper.MathHelper;
-import lostsector.helper.MiscHelper;
 
 import java.awt.*;
 import java.util.Map;
@@ -87,8 +86,8 @@ public class EndingKestevenDialog implements InteractionDialogPlugin {
         Color r = Misc.getNegativeHighlightColor();
         Color tc = Misc.getTextColor();
 
-        PersonAPI jack = MiscHelper.getJack();
-        PersonAPI alice = MiscHelper.getAlice();
+        PersonAPI jack = QuestPeople.getJack();
+        PersonAPI alice = QuestPeople.getAlice();
 
         text.addPara(optionText, b, h, "", "");
 
@@ -160,8 +159,8 @@ public class EndingKestevenDialog implements InteractionDialogPlugin {
             text.addPara("Acquired "+Misc.getWithDGS(REWARD_POINTS)+" exchange points",g,h,Misc.getWithDGS(REWARD_POINTS)+" exchange points","");
             //CONTACT lvl increase
             text.addPara("Increased contact level with Kesteven contacts",g,gr,"","");
-            MiscHelper.getJack().setImportance(PersonImportance.VERY_HIGH);
-            MiscHelper.getAlice().setImportance(PersonImportance.VERY_HIGH);
+            QuestPeople.getJack().setImportance(PersonImportance.VERY_HIGH);
+            QuestPeople.getAlice().setImportance(PersonImportance.VERY_HIGH);
 
             text.addPara("Relationship with Kesteven improved by 25",g,gr,"25","");
             text.addPara("Relationship with Jack Lapua improved by 20",g,gr,"20","");
@@ -177,8 +176,8 @@ public class EndingKestevenDialog implements InteractionDialogPlugin {
                 text.addPara("Kesteven and Tri-Tachyon enter hostilities",g,r,"enter hostilities","");
             }
 
-            if(MiscHelper.getEliza()!=null) {
-                MiscHelper.getEliza().getRelToPlayer().adjustRelationship(-0.75f, RepLevel.VENGEFUL);
+            if(QuestPeople.getEliza()!=null) {
+                QuestPeople.getEliza().getRelToPlayer().adjustRelationship(-0.75f, RepLevel.VENGEFUL);
             }
             //remove important
             QuestHelper.asteriaOrOutpost().getMemory().unset(MemFlags.MEMORY_KEY_MISSION_IMPORTANT);
@@ -244,7 +243,7 @@ public class EndingKestevenDialog implements InteractionDialogPlugin {
         Map<String, Object> data = Global.getSector().getPersistentData();
         if (!data.containsKey(PERSISTENT_RANDOM_KEY)) {
 
-            data.put(PERSISTENT_RANDOM_KEY, new Random(MiscHelper.getSeedParsed()));
+            data.put(PERSISTENT_RANDOM_KEY, new Random(MathHelper.getSeedParsed()));
         }
         return (Random) data.get(PERSISTENT_RANDOM_KEY);
     }

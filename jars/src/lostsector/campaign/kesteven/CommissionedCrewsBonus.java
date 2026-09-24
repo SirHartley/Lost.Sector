@@ -9,7 +9,7 @@ import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import com.fs.starfarer.api.ui.TooltipMakerAPI.TooltipCreator;
 import com.fs.starfarer.api.util.Misc;
 import lostsector.ModPlugin;
-import lostsector.helper.MiscHelper;
+import lostsector.helper.ShipHelper;
 
 public class CommissionedCrewsBonus implements EconomyTickListener, TooltipCreator {
 
@@ -38,7 +38,7 @@ public class CommissionedCrewsBonus implements EconomyTickListener, TooltipCreat
 		if (iterIndex != lastIterInMonth) return;
 
 		if (!ModPlugin.IS_CC) return;
-		if (!MiscHelper.hasCCBonus()) return;
+		if (!ShipHelper.hasCCBonus()) return;
 
 		payment = 0;
 		MonthlyReport oldReport = SharedData.getData().getPreviousReport();

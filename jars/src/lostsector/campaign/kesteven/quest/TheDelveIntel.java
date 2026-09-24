@@ -18,7 +18,7 @@ import lostsector.campaign.kesteven.quest.ElizaSearchBarEvent;
 import lostsector.campaign.kesteven.quest.QuestStageManager;
 import lostsector.campaign.kesteven.quest.QuestHelper;
 import lostsector.dialogue.rules.nskr_kestevenQuest;
-import lostsector.helper.MiscHelper;
+import lostsector.helper.SectorLookup;
 
 import java.awt.*;
 import java.util.Set;
@@ -166,7 +166,7 @@ public class TheDelveIntel extends BaseIntelPlugin {
         if (stage == 16 && aliceTip2 && !foundFrost) {
             StarSystemAPI tipSystem = QuestHelper.getJob5FrostTip();
             String constellation = QuestHelper.parseConstellation(tipSystem.getConstellation().getNameWithType());
-            float distLY = Misc.getDistanceLY(tipSystem.getConstellation().getLocation(), MiscHelper.getFrost().getStar().getLocationInHyperspace())*1.5f;
+            float distLY = Misc.getDistanceLY(tipSystem.getConstellation().getLocation(), SectorLookup.getFrost().getStar().getLocationInHyperspace())*1.5f;
             distLY *= 100f;
             distLY = Math.round(distLY);
             distLY /= 100f;
@@ -174,7 +174,7 @@ public class TheDelveIntel extends BaseIntelPlugin {
             info.addPara("Find the red dwarf system that is within " + distLY + " light-years of the " + constellation + ".", initPad, g, h, distLY + " light-years", constellation);
         }
         if (stage == 16 && aliceTip2 && foundFrost && !recoveredGlacier) {
-            info.addPara("Find the comms facility on the tundra planet in the " + MiscHelper.getFrost().getName() + ".", initPad, g, h, MiscHelper.getFrost().getName(), "");
+            info.addPara("Find the comms facility on the tundra planet in the " + SectorLookup.getFrost().getName() + ".", initPad, g, h, SectorLookup.getFrost().getName(), "");
         }
 
         //Eliza

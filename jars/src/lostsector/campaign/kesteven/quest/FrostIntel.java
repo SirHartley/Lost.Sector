@@ -8,7 +8,7 @@ import com.fs.starfarer.api.impl.campaign.intel.BaseIntelPlugin;
 import com.fs.starfarer.api.ui.SectorMapAPI;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import com.fs.starfarer.api.util.Misc;
-import lostsector.helper.MiscHelper;
+import lostsector.helper.SectorLookup;
 import lostsector.world.systems.frost.Frost;
 
 import java.awt.*;
@@ -31,7 +31,7 @@ public class FrostIntel extends BaseIntelPlugin {
 
     //updates variables, DO NOT do this in advance
     private void init(){
-        if (!MiscHelper.enigmaExists()){
+        if (!SectorLookup.enigmaExists()){
             endAfterDelay();
             gone = true;
         }

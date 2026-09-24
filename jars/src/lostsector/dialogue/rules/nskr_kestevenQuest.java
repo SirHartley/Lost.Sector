@@ -30,7 +30,10 @@ import lostsector.ModPlugin;
 import lostsector.settings.Setting;
 import lostsector.helper.Ids;
 import lostsector.helper.MathHelper;
-import lostsector.helper.MiscHelper;
+import lostsector.campaign.enigma.DormantSpawner;
+import lostsector.campaign.kesteven.quest.QuestPeople;
+import lostsector.helper.SectorLookup;
+import lostsector.helper.SystemHelper;
 import lostsector.helper.PowerLevel;
 import lostsector.world.SectorGen;
 import lostsector.world.systems.frost.Frost;
@@ -237,9 +240,9 @@ public class nskr_kestevenQuest extends PaginatedOptions {
 		player = Global.getSector().getPlayerPerson();
 		person = dialog.getInteractionTarget().getActivePerson();
 
-		jack = MiscHelper.getJack();
-		alice = MiscHelper.getAlice();
-		nick = MiscHelper.getNick();
+		jack = QuestPeople.getJack();
+		alice = QuestPeople.getAlice();
+		nick = QuestPeople.getNick();
 
 		power = Global.getSettings().isDevMode() ? 2 : PowerLevel.get(0.2f, 0f,2f);
 		stage = QuestHelper.getStage();
@@ -677,7 +680,7 @@ public class nskr_kestevenQuest extends PaginatedOptions {
 
 		//job3
 		QuestHelper.spawnArtifact(QuestHelper.getJob3Target(),3);
-		MiscHelper.addDormant(QuestHelper.getJob3Target(), "enigma", 45f, 50f, 0f, 1f, 1f, 1f, 1, 1);
+		DormantSpawner.addDormant(QuestHelper.getJob3Target(), "enigma", 45f, 50f, 0f, 1f, 1f, 1f, 1, 1);
 		//job4
 		QuestFleets.spawnJob4Target();
 		QuestHelper.spawnArtifact(QuestHelper.getJob4EnemyTarget(),4);
@@ -895,7 +898,7 @@ public class nskr_kestevenQuest extends PaginatedOptions {
 			desc = "\"Their task was to analyze suspected Enigma activity in "+ constellation.getName()+" constellation" +". Your job is to locate them, establish contact, and eliminate any existing threats in the area. Pay for the job is " + payout + "\"";
 			text.addPara(desc,tc,h,constellation.getName()+" constellation" ,payout);
 
-			if (QuestHelper.outpostExists())text.addPara("\"Oh, by the way, you should talk to Nicholas Antoine. He works in communications and is currently stationed at "+ MiscHelper.getOutpost().getName()+". He most likely has some more information.\"",tc,h, MiscHelper.getOutpost().getName(),"");
+			if (QuestHelper.outpostExists())text.addPara("\"Oh, by the way, you should talk to Nicholas Antoine. He works in communications and is currently stationed at "+ SectorLookup.getOutpost().getName()+". He most likely has some more information.\"",tc,h, SectorLookup.getOutpost().getName(),"");
 
 			if(power<JOB4_POWER+0.15f){
 				text.addPara("\"Looking at what you currently have at your disposal. This job could be exceptionally difficult for your current fleet.\" There is a look of doubt on her face.",tc,h,"exceptionally difficult","");
@@ -1079,7 +1082,7 @@ public class nskr_kestevenQuest extends PaginatedOptions {
 		}
 		//job 5 tip 2 alice
 		if(stage==16 && person==alice && jackTip && aliceTip && !aliceTip2) {
-			StarSystemAPI frost = MiscHelper.getFrost();
+			StarSystemAPI frost = SectorLookup.getFrost();
 			StarSystemAPI tipSystem = QuestHelper.getJob5FrostTip();
 			String constellation = QuestHelper.parseConstellation(tipSystem.getConstellation().getNameWithType());
 			float distLY = Misc.getDistanceLY(tipSystem.getConstellation().getLocation(), frost.getStar().getLocationInHyperspace())*1.5f;
@@ -1399,7 +1402,7 @@ public class nskr_kestevenQuest extends PaginatedOptions {
 			text.addPara("\"I am very disappointed in you captain.\" She looks eager to cut the comm link on you.");
 			text.setFontSmallInsignia();
 			Global.getSector().getFaction(Factions.PLAYER).adjustRelationship("kesteven",-0.05f);
-			MiscHelper.getAlice().getRelToPlayer().adjustRelationship(-0.10f, RepLevel.VENGEFUL);
+			QuestPeople.getAlice().getRelToPlayer().adjustRelationship(-0.10f, RepLevel.VENGEFUL);
 			//penalty text
 			text.addPara("Relationship with Kesteven reduced by 5",g,r,"5","");
 			text.addPara("Relationship with Alice Lumi reduced by 10",g,r,"10","");
@@ -1412,7 +1415,7 @@ public class nskr_kestevenQuest extends PaginatedOptions {
 			SectorEntityToken loc = QuestHelper.getJob3Target();
 			spawnEnvironmentalStorytelling();
 			QuestHelper.spawnArtifact(loc,3);
-			MiscHelper.addDormant(loc, "enigma", 45f, 50f, 0f, 1f, 1f, 1f, 1, 1);
+			DormantSpawner.addDormant(loc, "enigma", 45f, 50f, 0f, 1f, 1f, 1f, 1, 1);
 		}
 		text.setFontInsignia();
 	}
@@ -1420,9 +1423,9 @@ public class nskr_kestevenQuest extends PaginatedOptions {
 	public static void spawnEnvironmentalStorytelling(){
 		SectorEntityToken loc = QuestHelper.getJob3Target();
 
-		Frost.addDerelict(loc.getStarSystem(), "doom_Strike", MiscHelper.createRandomNearOrbit(loc), ShipRecoverySpecial.ShipCondition.BATTERED, Math.random()<0.50f, null);
-		Frost.addDerelict(loc.getStarSystem(), "atlas_Standard", MiscHelper.createRandomNearOrbit(loc), ShipRecoverySpecial.ShipCondition.BATTERED, Math.random()<0.50f, null);
-		Frost.addDerelict(loc.getStarSystem(), "shrike_Attack", MiscHelper.createRandomNearOrbit(loc), ShipRecoverySpecial.ShipCondition.BATTERED, Math.random()<0.50f, null);
+		Frost.addDerelict(loc.getStarSystem(), "doom_Strike", SystemHelper.createRandomNearOrbit(loc), ShipRecoverySpecial.ShipCondition.BATTERED, Math.random()<0.50f, null);
+		Frost.addDerelict(loc.getStarSystem(), "atlas_Standard", SystemHelper.createRandomNearOrbit(loc), ShipRecoverySpecial.ShipCondition.BATTERED, Math.random()<0.50f, null);
+		Frost.addDerelict(loc.getStarSystem(), "shrike_Attack", SystemHelper.createRandomNearOrbit(loc), ShipRecoverySpecial.ShipCondition.BATTERED, Math.random()<0.50f, null);
 
 		DebrisFieldTerrainPlugin.DebrisFieldParams params_loc_main = new DebrisFieldTerrainPlugin.DebrisFieldParams(
 				350f, // field radius - should not go above 1000 for performance reasons
@@ -1434,7 +1437,7 @@ public class nskr_kestevenQuest extends PaginatedOptions {
 		SectorEntityToken frost_main1 = Misc.addDebrisField(loc.getStarSystem(), params_loc_main, StarSystemGenerator.random);
 		frost_main1.setSensorProfile(1000f);
 		frost_main1.setDiscoverable(true);
-		frost_main1.setOrbit(MiscHelper.createRandomNearOrbit(loc));
+		frost_main1.setOrbit(SystemHelper.createRandomNearOrbit(loc));
 		frost_main1.setId("nskr_loc_main_debrisBelt");
 	}
 
@@ -1474,7 +1477,7 @@ public class nskr_kestevenQuest extends PaginatedOptions {
 			playerCargo.addHullmods(mod,1);
 			playerCargo.getCredits().add(STAGE1_PAYOUT);
 			Global.getSector().getFaction(Factions.PLAYER).adjustRelationship("kesteven",0.05f);
-			MiscHelper.getJack().getRelToPlayer().adjustRelationship(0.10f, RepLevel.COOPERATIVE);
+			QuestPeople.getJack().getRelToPlayer().adjustRelationship(0.10f, RepLevel.COOPERATIVE);
 			//completion text
 			String payout = Misc.getDGSCredits(STAGE1_PAYOUT);
 			String desc = "Received +" + payout;
@@ -1518,7 +1521,7 @@ public class nskr_kestevenQuest extends PaginatedOptions {
 			nskr_shipSwap.addPoints(50000f);
 			playerCargo.getCredits().add(STAGE3_PAYOUT);
 			Global.getSector().getFaction(Factions.PLAYER).adjustRelationship("kesteven",0.05f);
-			MiscHelper.getAlice().getRelToPlayer().adjustRelationship(0.10f, RepLevel.COOPERATIVE);
+			QuestPeople.getAlice().getRelToPlayer().adjustRelationship(0.10f, RepLevel.COOPERATIVE);
 			//completion text
 			String payout = Misc.getDGSCredits(STAGE3_PAYOUT);
 			String desc = "Received +" + payout;
@@ -1539,7 +1542,7 @@ public class nskr_kestevenQuest extends PaginatedOptions {
 			text.addPara("Okay, shes *really* frustrated with you.",g,h,"","");
 			text.setFontSmallInsignia();
 			Global.getSector().getFaction(Factions.PLAYER).adjustRelationship("kesteven",-0.05f);
-			MiscHelper.getAlice().getRelToPlayer().adjustRelationship(-0.10f, RepLevel.VENGEFUL);
+			QuestPeople.getAlice().getRelToPlayer().adjustRelationship(-0.10f, RepLevel.VENGEFUL);
 			//completion text
 			text.addPara("Relationship with Kesteven reduced by 5",g,r,"5","");
 			text.addPara("Relationship with Alice Lumi reduced by 10",g,r,"10","");
@@ -1570,7 +1573,7 @@ public class nskr_kestevenQuest extends PaginatedOptions {
 			text.addPara("Gained 1 Story point",g,s,"1 Story point","");
 			playerCargo.getCredits().add(STAGE4_PAYOUT);
 			Global.getSector().getFaction(Factions.PLAYER).adjustRelationship("kesteven",0.05f);
-			MiscHelper.getAlice().getRelToPlayer().adjustRelationship(0.10f, RepLevel.COOPERATIVE);
+			QuestPeople.getAlice().getRelToPlayer().adjustRelationship(0.10f, RepLevel.COOPERATIVE);
 			//completion text
 			HullModSpecAPI modspec = getRewardMod();
 			String mod = modspec.getId();
@@ -1591,7 +1594,7 @@ public class nskr_kestevenQuest extends PaginatedOptions {
 			ContactIntel.addPotentialContact(1f,person, dialog.getInteractionTarget().getMarket(), text);
 			//CONTACT lvl increase
 			text.addPara("Increased contact level with Kesteven contacts",g,gr,"","");
-			MiscHelper.getJack().setImportance(PersonImportance.HIGH);
+			QuestPeople.getJack().setImportance(PersonImportance.HIGH);
 		}
 		//finish job 4 helped
 		if(stage == 13 && helped) {
@@ -1612,7 +1615,7 @@ public class nskr_kestevenQuest extends PaginatedOptions {
 			playerFleet.getFleetData().addFleetMember("nskr_epoch_empty");
 			playerCargo.getCredits().add(STAGE4_PAYOUT);
 			Global.getSector().getFaction(Factions.PLAYER).adjustRelationship("kesteven",0.05f);
-			MiscHelper.getAlice().getRelToPlayer().adjustRelationship(0.10f, RepLevel.COOPERATIVE);
+			QuestPeople.getAlice().getRelToPlayer().adjustRelationship(0.10f, RepLevel.COOPERATIVE);
 			//completion text
 			String payout = Misc.getDGSCredits(STAGE4_PAYOUT);
 			String desc = "Received +" + payout;
@@ -1629,13 +1632,13 @@ public class nskr_kestevenQuest extends PaginatedOptions {
 			ContactIntel.addPotentialContact(1f,person, dialog.getInteractionTarget().getMarket(), text);
 			//CONTACT lvl increase
 			text.addPara("Increased contact level with Kesteven contacts",g,gr,"","");
-			MiscHelper.getJack().setImportance(PersonImportance.HIGH);
+			QuestPeople.getJack().setImportance(PersonImportance.HIGH);
 		}
 		//job 5 alice tip 2 know frost system
 		if(stage == 16 && jackTip && aliceTip && !allDisks) {
 			text.setFontInsignia();
 			text.addPara("Alice pauses for a moment to think about what you said, and then proceeds to look up something on her datapad.");
-			text.addPara("\"I think you are right, impressive. Now find the tundra planet in the "+ MiscHelper.getFrost().getName()+" ASAP.\"",tc,h, MiscHelper.getFrost().getName(),"");
+			text.addPara("\"I think you are right, impressive. Now find the tundra planet in the "+ SectorLookup.getFrost().getName()+" ASAP.\"",tc,h, SectorLookup.getFrost().getName(),"");
 
 			Global.getSoundPlayer().playUISound("ui_rep_raise",1f,1f);
 
@@ -1706,7 +1709,7 @@ public class nskr_kestevenQuest extends PaginatedOptions {
 		Map<String, Object> data = Global.getSector().getPersistentData();
 		if (!data.containsKey(PERSISTENT_RANDOM_KEY)) {
 
-			data.put(PERSISTENT_RANDOM_KEY, new Random(MiscHelper.getSeedParsed()));
+			data.put(PERSISTENT_RANDOM_KEY, new Random(MathHelper.getSeedParsed()));
 		}
 		return (Random)data.get(PERSISTENT_RANDOM_KEY);
 	}

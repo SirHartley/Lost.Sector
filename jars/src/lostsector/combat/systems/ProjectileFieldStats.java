@@ -6,7 +6,7 @@ import com.fs.starfarer.api.graphics.SpriteAPI;
 import com.fs.starfarer.api.impl.combat.BaseShipSystemScript;
 import com.fs.starfarer.api.util.Pair;
 import lostsector.helper.MathHelper;
-import lostsector.helper.MiscHelper;
+import lostsector.rendering.ColorHelper;
 import org.lazywizard.lazylib.MathUtils;
 import org.lazywizard.lazylib.VectorUtils;
 import org.lazywizard.lazylib.combat.CombatUtils;
@@ -66,7 +66,7 @@ public class ProjectileFieldStats extends BaseShipSystemScript {
         float amount = engine.getElapsedInLastFrame();
 
         //jitter
-        Color color1 = MiscHelper.randomiseColor(COLOR, 10, 5, 15, 5, true);
+        Color color1 = ColorHelper.randomiseColor(COLOR, 10, 5, 15, 5, true);
         Color color2 = color1;
 
         Vector2f size = new Vector2f((range*2f)+50f, (range*2f)+50f);
@@ -80,15 +80,15 @@ public class ProjectileFieldStats extends BaseShipSystemScript {
         if (timer > 0.5f) timer = 0f;
 
         float alpha = color1.getAlpha()*3f*effectLevel;
-        color1 = MiscHelper.setAlpha(color1, (int)(color1.getAlpha()*effectLevel));
+        color1 = ColorHelper.setAlpha(color1, (int)(color1.getAlpha()*effectLevel));
         float vSize = size2.getX();
         float nTimer = 0f;
         nTimer = MathHelper.normalize(timer,0f,0.5f);
 
         vSize = MathHelper.lerp(vSize*0.10f, vSize*1.50f, nTimer);
         size2 = new Vector2f(vSize, vSize);
-        alpha = MiscHelper.clamp255((int) MathHelper.lerp(alpha*1.0f, alpha*0.3f, nTimer));
-        color2 = MiscHelper.setAlpha(color1,(int)alpha);
+        alpha = ColorHelper.clamp255((int) MathHelper.lerp(alpha*1.0f, alpha*0.3f, nTimer));
+        color2 = ColorHelper.setAlpha(color1,(int)alpha);
 
         //base
         MagicRender.singleframe(sprite, ship.getLocation(), size, angle, color1, false);

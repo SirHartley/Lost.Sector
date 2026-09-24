@@ -11,7 +11,7 @@ import com.fs.starfarer.api.impl.combat.RiftCascadeMineExplosion;
 import com.fs.starfarer.api.util.IntervalUtil;
 import com.fs.starfarer.api.util.Misc;
 import lostsector.combat.hullmods.AntimatterPayload;
-import lostsector.helper.MiscHelper;
+import lostsector.rendering.ColorHelper;
 import lostsector.helper.CombatHelper;
 import org.dark.shaders.distortion.DistortionShader;
 import org.dark.shaders.distortion.WaveDistortion;
@@ -137,8 +137,8 @@ public class PayloadStats extends BaseShipSystemScript {
                     Vector2f point1 = MathUtils.getPointOnCircumference(sloc, distance, angle);
                     Vector2f point2 = MathUtils.getPointOnCircumference(sloc, distance2, angle2);
                     if (ship != null) {
-                        Color color1 = MiscHelper.randomiseColor(new Color(150,100,200,255),100,50,50,0,true);
-                        Color color6 = MiscHelper.randomiseColor(new Color(150,100,200,155),100,50,50,0,true);
+                        Color color1 = ColorHelper.randomiseColor(new Color(150,100,200,255),100,50,50,0,true);
+                        Color color6 = ColorHelper.randomiseColor(new Color(150,100,200,155),100,50,50,0,true);
                         Global.getCombatEngine().spawnEmpArcVisual(point1, ship, point2, ship,
                                 MathUtils.getRandomNumberInRange(5f, 20f), // thickness of the lightning bolt
                                 color1, //Central color

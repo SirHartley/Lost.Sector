@@ -14,7 +14,7 @@ import lostsector.campaign.events.blacksite.BlacksiteManager;
 import lostsector.campaign.kesteven.quest.QuestHelper;
 import lostsector.helper.fleet.SystemPicker;
 import lostsector.helper.Ids;
-import lostsector.helper.MiscHelper;
+import lostsector.helper.SystemHelper;
 import org.lazywizard.lazylib.MathUtils;
 import org.lazywizard.lazylib.VectorUtils;
 
@@ -124,7 +124,7 @@ public class BlacksiteSpawner {
             return pick;
         }
         log("used all valid systems");
-        return MiscHelper.getRandomNonCoreSystem(new Random());
+        return SystemHelper.getRandomNonCoreSystem(new Random());
     }
 
     //Mini-function for generating derelicts

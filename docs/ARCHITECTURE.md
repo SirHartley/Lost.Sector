@@ -32,7 +32,7 @@ Technical routing for the current implementation. Java paths below are relative 
 | Rules menu, option routing, highlights | [Project routing](RULES.md#project-routing), [shared text presentation](DIALOGUE.md#shared-text-presentation) |
 | Command arguments, mission calls, memory lifetime, missing text replacements | [Rules implementation guide](RULES_AUTHORING.md) and its dictionaries, including for Java-only fixes |
 | Hullmod, system or weapon behavior | [Combat data bindings](#combat-data-bindings) -> class in `combat/hullmods/`, `combat/systems/`, `combat/weapons/` |
-| Prototype versus Enigma presentation | `helper/MiscHelper.protOrEnigma()` / `isProtTech()` |
+| Prototype versus Enigma presentation | `helper/ShipHelper.protOrEnigma()` / `isProtTech()` |
 | Missile AI | `ModPlugin.pickMissileAI()` -> `combat/weapons/ai/` |
 | Combat effects | `combat/plugins/`, GraphicsLib data in `data/lights` and `data/trails`, MagicLib `MagicRender` |
 
@@ -173,7 +173,7 @@ Packages group code by feature. Use `rg --files jars/src/lostsector/<package>` f
 | `bounties/*/*Spawner` | One named bounty fleet each, spawned once per game; loot flag `LOOT_KEY`; `MothershipSpawner` also places the planets and `MothershipInteractionBlocker` |
 | `events/InterceptManager`, `kesteven/loans/LoanShark` | ARO strike, messenger and auto-hunter fleets; debt collectors |
 | `events/blacksite/BlacksiteManager`, `BlacksiteDialog`, `BlacksiteInfo`, `BlacksiteSpawner` | Blacksite placement, defenders and self-destruct timer; saved `BlacksiteInfo` records |
-| `enigma/EnigmaBaseSpawner`, `enigma/DormantSpawner`, `events/DerelictTeaserSpawner`, `events/EnvironmentalStorytelling` | One-time placement: Enigma bases, dormant fleets, teaser derelicts (including the Rorqual), storytelling derelicts; `enigma/EnigmaDefenderPlugin` supplies salvage defenders |
+| `enigma/EnigmaBaseSpawner`, `enigma/DormantSpawner`, `events/DerelictTeaserSpawner`, `events/EnvironmentalStorytelling` | One-time placement: Enigma bases, dormant fleets, teaser derelicts (including the Rorqual), storytelling derelicts; `enigma/EnigmaDefenderPlugin` supplies salvage defenders. `DormantSpawner.addDormant()` places one dormant fleet of any faction and is also used by the questline, Frost, the Cache and environmental storytelling. |
 | `bounties/BountyLoot`, `enigma/EnigmaFleetLoot` | Encounter loot listeners for the bounties and for Enigma casualties |
 
 ### Kesteven questline, contracts and hints
@@ -182,6 +182,7 @@ Packages group code by feature. Use `rg --files jars/src/lostsector/<package>` f
 |---|---|
 | `kesteven/quest/QuestStageManager` | Kesteven questline state and automatic transitions, quest fleets, failure to stage 99. Runs while paused. |
 | `kesteven/quest/QuestHelper` | Stage and flag accessors over sector persistent data (`getStage`, `getCompleted`, `getFloat`), artifact spawning, `saveEnding()` |
+| `kesteven/quest/QuestPeople` | Quest person lookups: Jack, Alice, Nicholas, Michael and Eliza; the first four return null while their current market is missing |
 | `kesteven/quest/QuestFleets`; `helper/fleet/SimpleFleet`, `SimpleFleetMember`, `SimpleCaptain`, `SystemPicker`, `FleetInfo` | Quest fleet spawns; fleet and system builders shared by all spawners |
 | `kesteven/quest/*Dialog` | Java `InteractionDialogPlugin`s opened by `CorePlugin`; `CacheDoubtDialog` is opened by `QuestStageManager` |
 | `kesteven/quest/*BarEvent`, `KestevenTipBarEventCreator` | Bar events. `QuestStageManager` adds `HostileTakeoverBarEvent` and the Eliza search bar events to `PortsideBarData`; `dialogue/rules/nskr_barEventFixer` adds `DelveMeetingBarEvent` on each visit; `KestevenTipBarEventCreator` creates `KestevenTipBarEvent`. |
@@ -224,7 +225,7 @@ Exceptions: `nskr_poorcloak` uses vanilla `PhaseCloakStats`; `nskr_animebad` and
 | Family | Hulls | Owners |
 |---|---|---|
 | Kesteven | `nskr_prosperity`, `nskr_nighthawk`, `nskr_devilcatcher`, `nskr_blackbird`, `nskr_mercenary`, `nskr_dragontail`, `nskr_kingstork` | One system each; `TakedownDummy` (Blackbird), `PullbackDummy` (Dragontail). Kesteven hullmods: `InertialSupercharger`, `VolatileFluxInjector`, `HighCapacitanceBanks`, `CriticalPointProtection`, `KestevenConnections`, `HeavyWeaponsIntegration`, `HeavyMissileSpec`, `HighEnergyWeaponSystems`, `MicroweightMagazines` |
-| Unknown Prototype / Project Enigma pairs | `nskr_minokawa`, `nskr_sovereign`, `nskr_nemesis`, `nskr_muninn`, `nskr_warfare`, `nskr_eternity`, `nskr_epoch`, `nskr_epochx`, `nskr_widow`, `nskr_torpor`, each with an `_e` Enigma twin sharing its system | Built-in `nskr_focused_shield` (`AdvancedShieldProjector`). `MiscHelper.protOrEnigma()` reads `nskr_lost_prot` / `nskr_domain_era`; `MiscHelper.isProtTech()` reads `nskr_focused_shield` / `nskr_kaboom`. Hull-specific: `AdaptiveProtocol` + `nskr_protocolsystem` (Nemesis), `CausalityCore` + `nskr_causality` (Eternity), `Stasis*` + `nskr_stasisp` + `combat/weapons/TorporLightsEffect` (Torpor; `StasisEffect` fires on `Setting.STASIS_FIRE_KEY`), `TeleportDummy` + `WarpStats` (Sovereign) |
+| Unknown Prototype / Project Enigma pairs | `nskr_minokawa`, `nskr_sovereign`, `nskr_nemesis`, `nskr_muninn`, `nskr_warfare`, `nskr_eternity`, `nskr_epoch`, `nskr_epochx`, `nskr_widow`, `nskr_torpor`, each with an `_e` Enigma twin sharing its system | Built-in `nskr_focused_shield` (`AdvancedShieldProjector`). `ShipHelper.protOrEnigma()` reads `nskr_lost_prot` / `nskr_domain_era`; `ShipHelper.isProtTech()` reads `nskr_focused_shield` / `nskr_kaboom`. Hull-specific: `AdaptiveProtocol` + `nskr_protocolsystem` (Nemesis), `CausalityCore` + `nskr_causality` (Eternity), `Stasis*` + `nskr_stasisp` + `combat/weapons/TorporLightsEffect` (Torpor; `StasisEffect` fires on `Setting.STASIS_FIRE_KEY`), `TeleportDummy` + `WarpStats` (Sovereign) |
 | Drones and wings | `nskr_huginn`/`_e` wings; `nskr_aed` (Rupture, Project Enigma) | Huginn arm weapons (`HuginnArmOnHitEffect`); `AntimatterPayload` + `PayloadStats` + `combat/plugins/PayloadDetonationPlugin` |
 | Other hulls | High Tech `nskr_borealis` (`MassTargeting*`), `nskr_malediction`, `nskr_pursuer` (also `nskr_pursuer_wing`), `nskr_reverie` (`MissileSalvo*`); Midline `nskr_verity`, `nskr_stalwart` (`nskr_emflak`); Pirate `nskr_kingslayer`, `nskr_rhea`; Rogue Co. `nskr_rorqual` | One system each |
 | Bosses | `nskr_reverie_boss`, `nskr_harbinger_boss`, `nskr_afflictor_boss` | Shared `VoidCore` and `nskr_bosscloak` (`AbyssalPhaseCloakStats`); main systems `nskr_bfpulse`, `nskr_animebad`, vanilla `acausaldisruptor` |
@@ -248,13 +249,17 @@ Prototype weapons (`prot_wp` tag, Unknown Prototype manufacturer) have one `*Eff
 | File | Owner / connection |
 |---|---|
 | `Ids` | Stable faction, person, entity and hullmod IDs; mod ID `lost.sector` |
-| `MiscHelper` | Shared campaign and combat helpers: colours, prototype/Enigma identity, fixed-location and person lookups, dormant fleets |
+| `SectorLookup` | Fixed places (`getFrost`, `getAsteria`, `getOutpost`) and existence checks (`enigmaExists`, `kestevenExists`, `asteriaExists`) |
+| `SystemHelper` | Random system, market and in-system location picks; gate, relay and neutron-star checks; nearest system; entity swaps |
+| `ShipHelper` | Prototype/Enigma identity (`isProtTech`, `protOrEnigma`), logistics and D-mod checks, officer skills, hull-size multiplier (`getLinearMod`) |
 | `CombatHelper` | Range queries pinned to LazyLib 2.4b behavior; area damage including station modules |
-| `MathHelper` | Easing, noise, seeded random ranges (modified from LazyLib) |
+| `MathHelper` | Easing, noise, seeded random ranges (modified from LazyLib); sector seed (`getSeedParsed`) |
 | `FleetHelper` | Fleet generation and assignment AI helpers; `hackBrokenVariants()` on load |
 | `PowerLevel` | Player fleet strength for encounter scaling |
 | `rendering/BlastSprite`, `rendering/CampaignBlastSprite` | Timed blast sprites in combat and campaign (`HellSpawnAbility`) |
-| `StringHelper` | Token substitution helpers adapted from Nexerelin |
+| `rendering/ColorHelper` | Colour utilities and the tooltip colours `TT_ORANGE`, `BON_GREEN`, `NICE_YELLOW` |
+| `StringHelper` | Token substitution helpers adapted from Nexerelin; Greek-letter names |
+| `UiSounds` | UI sound shortcuts |
 
 ### Settings
 

@@ -10,7 +10,6 @@ import com.fs.starfarer.api.impl.campaign.graid.GroundRaidObjectivePlugin;
 import com.fs.starfarer.api.impl.campaign.rulecmd.salvage.MarketCMD.RaidType;
 import lostsector.campaign.kesteven.quest.ElizaDialog;
 import lostsector.campaign.kesteven.quest.QuestHelper;
-import lostsector.helper.MiscHelper;
 
 import java.util.List;
 import java.util.Map;
@@ -26,7 +25,7 @@ public class ElizaRaidObjectiveCreator implements GroundRaidObjectivesListener {
         if (market == null) return;
 
         if(QuestHelper.getCompleted(ElizaDialog.ELIZA_RAID_KEY) && !QuestHelper.getCompleted(ElizaDialog.ELIZA_FIGHT_KEY) && market== QuestHelper.getElizaLoc().getMarket()) {
-            ElizaRaid raid = new ElizaRaid(market, MiscHelper.getEliza());
+            ElizaRaid raid = new ElizaRaid(market, QuestPeople.getEliza());
             objectives.add(raid);
         }
     }

@@ -16,7 +16,7 @@ import com.fs.starfarer.api.input.InputEventAPI;
 import com.fs.starfarer.api.mission.FleetSide;
 import com.fs.starfarer.api.util.Misc;
 import com.fs.starfarer.api.util.Pair;
-import lostsector.helper.MiscHelper;
+import lostsector.helper.ShipHelper;
 import lostsector.world.systems.cache.Cache;
 import org.lazywizard.lazylib.MathUtils;
 import org.lazywizard.lazylib.VectorUtils;
@@ -259,7 +259,7 @@ public class CacheBossTauntPlugin extends BaseEveryFrameCombatPlugin {
             if (member == null) continue;
             if (member.isFighterWing()) continue;
             //boss ship check
-            if (!MiscHelper.isProtTech(member)) continue;
+            if (!ShipHelper.isProtTech(member)) continue;
             validMembers.add(member);
         }
         return validMembers;
@@ -270,7 +270,7 @@ public class CacheBossTauntPlugin extends BaseEveryFrameCombatPlugin {
             if (member == null) continue;
             if (member.isFighterWing()) continue;
             //boss ship check
-            if (!MiscHelper.isProtTech(member)) continue;
+            if (!ShipHelper.isProtTech(member)) continue;
             validMembers.add(member);
         }
         return validMembers;

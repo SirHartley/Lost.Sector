@@ -12,7 +12,7 @@ import com.fs.starfarer.api.impl.campaign.ids.Stats;
 import com.fs.starfarer.api.impl.campaign.ids.Tags;
 import com.fs.starfarer.api.impl.combat.BaseShipSystemScript;
 import com.fs.starfarer.api.util.IntervalUtil;
-import lostsector.helper.MiscHelper;
+import lostsector.rendering.ColorHelper;
 import org.lazywizard.lazylib.MathUtils;
 
 import java.awt.*;
@@ -123,7 +123,7 @@ public class AbyssalPhaseCloakStats extends BaseShipSystemScript {
 
             //color stuff
             Color color1 = new Color(179, Math.round(MathUtils.getRandomNumberInRange(20f,100f)), Math.round(MathUtils.getRandomNumberInRange(23f,163f)), 100);
-            Color color1b = new Color (MiscHelper.clamp255((color1.getRed())), MiscHelper.clamp255((color1.getGreen())), MiscHelper.clamp255((color1.getBlue())), MiscHelper.clamp255((color1.getAlpha())));
+            Color color1b = new Color (ColorHelper.clamp255((color1.getRed())), ColorHelper.clamp255((color1.getGreen())), ColorHelper.clamp255((color1.getBlue())), ColorHelper.clamp255((color1.getAlpha())));
             //afterimage
             this.afterImageTimer.advance(Global.getCombatEngine().getElapsedInLastFrame());
             if (this.afterImageTimer.intervalElapsed()) {

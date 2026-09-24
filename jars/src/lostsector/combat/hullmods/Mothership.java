@@ -11,7 +11,8 @@ import com.fs.starfarer.api.impl.campaign.ids.Stats;
 import com.fs.starfarer.api.ui.Alignment;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import com.fs.starfarer.api.util.Misc;
-import lostsector.helper.MiscHelper;
+import lostsector.rendering.ColorHelper;
+import lostsector.helper.UiSounds;
 
 import java.awt.*;
 import java.util.Map;
@@ -148,7 +149,7 @@ public class Mothership extends BaseHullMod {
                     Global.getSettings().getColor("yellowTextColor"),
                     Global.getSettings().getColor("yellowTextColor"));
 
-            MiscHelper.playUiStaticNoise();
+            UiSounds.playUiStaticNoise();
         } else if (cargo.getCommodityQuantity("beta_core")>0f) {
             cargo.removeCommodity("beta_core", 1f);
 
@@ -161,7 +162,7 @@ public class Mothership extends BaseHullMod {
                     Global.getSettings().getColor("yellowTextColor"),
                     Global.getSettings().getColor("yellowTextColor"));
 
-            MiscHelper.playUiStaticNoise();
+            UiSounds.playUiStaticNoise();
         }
 
         setFuel(id, amount);
@@ -172,7 +173,7 @@ public class Mothership extends BaseHullMod {
 
         float pad = 12.0f;
         Color y = Misc.getHighlightColor();
-        Color bad = MiscHelper.TT_ORANGE;
+        Color bad = ColorHelper.TT_ORANGE;
 
         tooltip.addSectionHeading("Details", Alignment.MID, pad);
 

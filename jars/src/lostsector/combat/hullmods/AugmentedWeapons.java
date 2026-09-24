@@ -13,7 +13,7 @@ import com.fs.starfarer.api.ui.Alignment;
 import com.fs.starfarer.api.ui.LabelAPI;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import com.fs.starfarer.api.util.Misc;
-import lostsector.helper.MiscHelper;
+import lostsector.rendering.ColorHelper;
 import org.lwjgl.util.vector.Vector2f;
 
 import java.awt.*;
@@ -98,7 +98,7 @@ public class AugmentedWeapons extends BaseHullMod {
 
         Color tc = Misc.getHighlightColor();
         Color y = Misc.getHighlightColor();
-        Color g = MiscHelper.BON_GREEN;
+        Color g = ColorHelper.BON_GREEN;
         Color r = Misc.getNegativeHighlightColor();
         Color eBonusColor = Color.WHITE;
         Color bBonusColor = Color.WHITE;

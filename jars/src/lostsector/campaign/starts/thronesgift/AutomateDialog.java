@@ -13,7 +13,7 @@ import com.fs.starfarer.api.ui.IntelUIAPI;
 import com.fs.starfarer.api.util.Misc;
 import lostsector.campaign.starts.thronesgift.ThronesGiftManager;
 import lostsector.helper.FleetHelper;
-import lostsector.helper.MiscHelper;
+import lostsector.helper.UiSounds;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -112,7 +112,7 @@ public class AutomateDialog implements InteractionDialogPlugin {
             text.addPara("You now have "+ (int)points +" automation points.", g, g, "","");
             text.setFontInsignia();
 
-            MiscHelper.playUiStaticNoise();
+            UiSounds.playUiStaticNoise();
 
             dialog.getOptionPanel().addOption("Continue", Options.LEAVE);
             dialog.getOptionPanel().addOption("Automate another ship", Options.RESELECT);

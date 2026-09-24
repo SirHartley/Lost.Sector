@@ -11,7 +11,7 @@ import com.fs.starfarer.api.combat.ShipAPI;
 import com.fs.starfarer.api.graphics.SpriteAPI;
 import com.fs.starfarer.api.impl.combat.BaseShipSystemScript;
 import com.fs.starfarer.api.util.IntervalUtil;
-import lostsector.helper.MiscHelper;
+import lostsector.helper.ShipHelper;
 import org.lazywizard.lazylib.FastTrig;
 import org.lazywizard.lazylib.MathUtils;
 import org.lwjgl.util.vector.Vector2f;
@@ -73,7 +73,7 @@ public class TimewarpStats extends BaseShipSystemScript {
         }
 
         Color jColor,jUColor,aIColor;
-        if (MiscHelper.protOrEnigma(ship).equals("enigma")){
+        if (ShipHelper.protOrEnigma(ship).equals("enigma")){
             jColor=ENIGMA_JITTER_COLOR;
             jUColor=ENIGMA_JITTER_UNDER_COLOR;
             aIColor=ENIGMA_AFTERIMAGE_COLOR;

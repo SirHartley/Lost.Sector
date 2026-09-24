@@ -6,7 +6,7 @@ import com.fs.starfarer.api.impl.combat.BaseShipSystemScript;
 import com.fs.starfarer.api.util.IntervalUtil;
 import lostsector.rendering.BlastSprite;
 import lostsector.helper.MathHelper;
-import lostsector.helper.MiscHelper;
+import lostsector.rendering.ColorHelper;
 import lostsector.helper.CombatHelper;
 import org.dark.shaders.distortion.DistortionShader;
 import org.dark.shaders.distortion.WaveDistortion;
@@ -160,7 +160,7 @@ public class EMBlastStats extends BaseShipSystemScript {
                 Global.getCombatEngine().addSwirlyNebulaParticle(
                         ship.getLocation(), MathHelper.scaleVector(ship.getVelocity(),0.5f), 400f,
                         1.20f, 0.25f,0.5f,1f,
-                        MiscHelper.setAlpha(EMP_CORE_COLOR, 100),false);
+                        ColorHelper.setAlpha(EMP_CORE_COLOR, 100),false);
 
                 //shockwave visual
                 BlastSprite.blastSpriteListener shockwave = new BlastSprite.blastSpriteListener(ship, ship.getLocation(), 0.33f, 400f, SHOCKWAVE_COLOR);

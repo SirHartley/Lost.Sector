@@ -13,7 +13,7 @@ import com.fs.starfarer.api.campaign.FleetEncounterContextPlugin.FleetMemberData
 import com.fs.starfarer.api.characters.PersonAPI;
 import com.fs.starfarer.api.fleet.FleetMemberAPI;
 import com.fs.starfarer.api.loading.WeaponSpecAPI;
-import lostsector.helper.MiscHelper;
+import lostsector.helper.ShipHelper;
 import org.lazywizard.lazylib.MathUtils;
 
 import java.util.ArrayList;
@@ -50,7 +50,7 @@ public class EnigmaFleetLoot extends BaseCampaignEventListener implements EveryF
 			FleetEncounterContextPlugin.Status status = memberData.getStatus();
 			if (status == FleetEncounterContextPlugin.Status.NORMAL) continue;
 			FleetMemberAPI member = memberData.getMember();
-			if (!MiscHelper.isProtTech(member)) continue;
+			if (!ShipHelper.isProtTech(member)) continue;
 
 			float hull = member.getHullSpec().getHitpoints() + member.getHullSpec().getArmorRating() * 8;
 			if (member.isFighterWing()) hull *= member.getNumFightersInWing();

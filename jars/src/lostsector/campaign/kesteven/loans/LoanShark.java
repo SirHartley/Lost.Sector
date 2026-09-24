@@ -20,7 +20,7 @@ import lostsector.settings.Difficulty;
 import lostsector.persistence.Saved;
 import lostsector.helper.FleetHelper;
 import lostsector.helper.MathHelper;
-import lostsector.helper.MiscHelper;
+import lostsector.helper.SectorLookup;
 import lostsector.helper.PowerLevel;
 import org.lazywizard.lazylib.MathUtils;
 import org.lwjgl.util.vector.Vector2f;
@@ -152,7 +152,7 @@ public class LoanShark extends BaseCampaignEventListener implements EveryFrameSc
             //logic
 
             //spawn one fleet at a time
-            if (fleets.isEmpty() && MiscHelper.kestevenExists() && !collected.val) {
+            if (fleets.isEmpty() && SectorLookup.kestevenExists() && !collected.val) {
                 //can spawn check
                 Random random = nskr_loanSharkDialog.getRandom();
                 if (random.nextFloat()<BASE_CHANCE && pf.isInHyperspace() && pf.getLocation().length()<25000f && hostile && nskr_debt.getDebt()>=250000) {

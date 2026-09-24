@@ -26,7 +26,7 @@ Java paths are relative to `jars/src/lostsector/campaign/`; `dialogue/rules/` an
 
 ## Randomness
 
-Each owner keeps its own `Random` in persistent data. Most are seeded from the sector seed (`MiscHelper.getSeedParsed()`).
+Each owner keeps its own `Random` in persistent data. Most are seeded from the sector seed (`MathHelper.getSeedParsed()`).
 
 | Key | Owner |
 |---|---|
@@ -164,7 +164,7 @@ Stored as `nskr_` + name.
 | `$InterceptPlayerElizaFleet` | Eliza's intercept fleet | `QuestFleets` | `QuestStageManager`, rules, `nskr_elizaInterceptDialog` |
 | `$RevengeanceQuestFleet`, `$RevengeanceJack` | Revenge fleets | `QuestFleets` | `QuestStageManager`, rules |
 | `$CacheGuardianFleet` (`Cache.CACHE_FLEET_KEY`) | Guardian fleet | `Cache` | `QuestStageManager`, `CacheBossTauntPlugin`, rules |
-| `$EnigmaDormantFleet` (`DormantSpawner.DORMANT_KEY`) | Dormant fleets at quest locations | `MiscHelper.addDormant` | `DataSatelliteDialog.makeHostile`, `QuestStageManager` |
+| `$EnigmaDormantFleet` (`DormantSpawner.DORMANT_KEY`) | Dormant fleets at quest locations | `DormantSpawner.addDormant` | `DataSatelliteDialog.makeHostile`, `QuestStageManager` |
 | `$nskr_altEndingDialogLockedToPerson` | The official in either alternative ending | Alternative endings | Alternative endings |
 | `$nskr_interceptManagerMessengerFleet`, `$nskr_interceptManagerMessengerTalked` | Messenger fleet | `InterceptManager`, rules | `InterceptManager` |
 

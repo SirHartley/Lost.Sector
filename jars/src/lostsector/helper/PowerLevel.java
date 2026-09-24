@@ -31,7 +31,7 @@ public class PowerLevel {
             float wepValue = 0f;
             float wingValue = 0f;
             boolean unfit = false;
-            float dMods = MiscHelper.getDMods(ship.getVariant());
+            float dMods = ShipHelper.getDMods(ship.getVariant());
             ShipHullSpecAPI spec = ship.getHullSpec();
             //- for Dmods + for Smods
             value += spec.getBaseValue() * (1f - (dMods * 0.05f) * (1f + (ship.getVariant().getSMods().size()) * 0.05f));
@@ -50,7 +50,7 @@ public class PowerLevel {
                 wingValue += wing.getBaseValue();
             }
             //don't count logistics
-            if (MiscHelper.isLogistics(ship.getHullSpec().getHints())){
+            if (ShipHelper.isLogistics(ship.getHullSpec().getHints())){
                 value = 0f;
             } else {
                 //don't count unfit ships, and ships with basically no weapons since they almost always will be logi, or recovered ships with no combat value

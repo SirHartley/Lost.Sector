@@ -3,7 +3,8 @@ package lostsector.campaign.events.blacksite;
 import lostsector.helper.FleetHelper;
 import lostsector.helper.Ids;
 import lostsector.helper.MathHelper;
-import lostsector.helper.MiscHelper;
+import lostsector.helper.StringHelper;
+import lostsector.helper.SystemHelper;
 import lostsector.helper.PowerLevel;
 
 import com.fs.starfarer.api.EveryFrameScript;
@@ -264,22 +265,22 @@ public class BlacksiteManager extends BaseCampaignEventListener implements Every
         SectorEntityToken entity = null;
         switch (site.faction){
             case Factions.PIRATES:
-                entity = MiscHelper.swapSalvageEntity(site.entity, PIRATE_ENTITY_ID, getRandom());
+                entity = SystemHelper.swapSalvageEntity(site.entity, PIRATE_ENTITY_ID, getRandom());
                 break;
             case Factions.LUDDIC_PATH:
-                entity = MiscHelper.swapSalvageEntity(site.entity, PATHER_ENTITY_ID, getRandom());
+                entity = SystemHelper.swapSalvageEntity(site.entity, PATHER_ENTITY_ID, getRandom());
                 break;
             case Factions.TRITACHYON:
-                entity = MiscHelper.swapSalvageEntity(site.entity, TRITACHYON_ENTITY_ID, getRandom());
+                entity = SystemHelper.swapSalvageEntity(site.entity, TRITACHYON_ENTITY_ID, getRandom());
                 break;
             case Ids.KESTEVEN_FACTION_ID:
-                entity = MiscHelper.swapSalvageEntity(site.entity, KESTEVEN_ENTITY_ID, getRandom());
+                entity = SystemHelper.swapSalvageEntity(site.entity, KESTEVEN_ENTITY_ID, getRandom());
                 break;
             case Ids.ENIGMA_FACTION_ID:
-                entity = MiscHelper.swapSalvageEntity(site.entity, ENIGMA_ENTITY_ID, getRandom());
+                entity = SystemHelper.swapSalvageEntity(site.entity, ENIGMA_ENTITY_ID, getRandom());
                 break;
             case Factions.REMNANTS:
-                entity = MiscHelper.swapSalvageEntity(site.entity, REMNANT_ENTITY_ID, getRandom());
+                entity = SystemHelper.swapSalvageEntity(site.entity, REMNANT_ENTITY_ID, getRandom());
                 break;
         }
         if (entity==null) {
@@ -381,10 +382,10 @@ public class BlacksiteManager extends BaseCampaignEventListener implements Every
                     simpleFleet.name = "Strike Force";
                     break;
                 case Ids.ENIGMA_FACTION_ID:
-                    simpleFleet.name = "Black Ops "+ MiscHelper.getRandomGreekLetter(random, true);
+                    simpleFleet.name = "Black Ops "+ StringHelper.getRandomGreekLetter(random, true);
                     break;
                 case Factions.REMNANTS:
-                    simpleFleet.name = "Sub-Ordo "+ MiscHelper.getRandomGreekLetter(random, true);
+                    simpleFleet.name = "Sub-Ordo "+ StringHelper.getRandomGreekLetter(random, true);
                     simpleFleet.aiFleetProperties = true;
                     break;
             }
@@ -418,7 +419,7 @@ public class BlacksiteManager extends BaseCampaignEventListener implements Every
         SectorEntityToken temp = null;
 
         for (int x = 0; x<500;x++) {
-            temp = MiscHelper.getRandomLocationInSystem(sys, false, true, random);
+            temp = SystemHelper.getRandomLocationInSystem(sys, false, true, random);
             //try to get location away
             if (MathUtils.getDistance(pf, temp.getLocation()) < pf.getSensorStrength() * 1.5f){
                 temp = null;
@@ -427,7 +428,7 @@ public class BlacksiteManager extends BaseCampaignEventListener implements Every
         }
         //backup
         if (temp==null){
-            temp = MiscHelper.getRandomLocationInSystem(sys, false, true, random);
+            temp = SystemHelper.getRandomLocationInSystem(sys, false, true, random);
         }
 
         return temp;

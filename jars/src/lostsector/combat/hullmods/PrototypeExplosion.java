@@ -4,7 +4,7 @@ import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.combat.ShipAPI;
 import com.fs.starfarer.api.combat.listeners.AdvanceableListener;
 import lostsector.helper.MathHelper;
-import lostsector.helper.MiscHelper;
+import lostsector.rendering.ColorHelper;
 import lostsector.rendering.BlastSprite;
 import org.dark.shaders.distortion.DistortionShader;
 import org.dark.shaders.distortion.WaveDistortion;
@@ -80,7 +80,7 @@ public class PrototypeExplosion {
 
             //particle fx
             Vector2f particlePos, particleVel;
-            Color color = MiscHelper.randomiseColor(PARTICLE_COLOR, 50, 25,0,25,false);
+            Color color = ColorHelper.randomiseColor(PARTICLE_COLOR, 50, 25,0,25,false);
             for (int x = 0; x < 200*mag; x++) {
                 particlePos = MathUtils.getRandomPointOnCircumference(ship.getLocation(), (float) Math.random() * (ship.getCollisionRadius() * 1.5f));
                 particleVel = Vector2f.sub(particlePos, ship.getLocation(), null);

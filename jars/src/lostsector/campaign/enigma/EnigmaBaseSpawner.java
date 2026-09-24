@@ -20,7 +20,7 @@ import com.fs.starfarer.api.util.WeightedRandomPicker;
 import lostsector.campaign.kesteven.quest.QuestHelper;
 import lostsector.helper.fleet.SystemPicker;
 import lostsector.helper.Ids;
-import lostsector.helper.MiscHelper;
+import lostsector.helper.SystemHelper;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -119,7 +119,7 @@ public class EnigmaBaseSpawner {
                 return pick;
             } else {
                 log("ERROR no non remnant star systems");
-                return MiscHelper.getRandomNonCoreSystem(new Random());
+                return SystemHelper.getRandomNonCoreSystem(new Random());
             }
         }
     }

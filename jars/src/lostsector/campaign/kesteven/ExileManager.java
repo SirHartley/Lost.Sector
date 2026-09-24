@@ -15,7 +15,8 @@ import lostsector.campaign.kesteven.quest.QuestStageManager;
 import lostsector.campaign.kesteven.quest.QuestHelper;
 import lostsector.ModPlugin;
 import lostsector.persistence.Saved;
-import lostsector.helper.MiscHelper;
+import lostsector.campaign.kesteven.quest.QuestPeople;
+import lostsector.helper.SectorLookup;
 import lostsector.world.SectorGen;
 
 import java.util.Map;
@@ -64,10 +65,10 @@ public class ExileManager extends BaseCampaignEventListener implements EveryFram
             //fix outpost ppl no exile
             if (asteria!=null) {
                 if (!getExiled(EXILE_KEY) && !canExile() && !asteria.getFaction().getId().equals("kesteven")) {
-                    PersonAPI jack = MiscHelper.getJack();
-                    PersonAPI alice = MiscHelper.getAlice();
-                    PersonAPI nick = MiscHelper.getNick();
-                    PersonAPI michael = MiscHelper.getMichael();
+                    PersonAPI jack = QuestPeople.getJack();
+                    PersonAPI alice = QuestPeople.getAlice();
+                    PersonAPI nick = QuestPeople.getNick();
+                    PersonAPI michael = QuestPeople.getMichael();
                     if (nick != null && outpost!=null){
                         outpost.getCommDirectory().removePerson(nick);
                         outpost.removePerson(nick);
@@ -88,10 +89,10 @@ public class ExileManager extends BaseCampaignEventListener implements EveryFram
             }
             //fix outpost ppl exiled
             if (getExiled(EXILE_KEY) && !QuestHelper.outpostExists()){
-                PersonAPI jack = MiscHelper.getJack();
-                PersonAPI alice = MiscHelper.getAlice();
-                PersonAPI nick = MiscHelper.getNick();
-                PersonAPI michael = MiscHelper.getMichael();
+                PersonAPI jack = QuestPeople.getJack();
+                PersonAPI alice = QuestPeople.getAlice();
+                PersonAPI nick = QuestPeople.getNick();
+                PersonAPI michael = QuestPeople.getMichael();
                 if (outpost!=null) {
                     if (nick != null){
                         outpost.getCommDirectory().removePerson(nick);
@@ -153,7 +154,7 @@ public class ExileManager extends BaseCampaignEventListener implements EveryFram
 
     public static boolean canExile(){
         boolean exile = true;
-        SectorEntityToken o = MiscHelper.getOutpost();
+        SectorEntityToken o = SectorLookup.getOutpost();
         if (o==null) return false;
         MarketAPI outpost = o.getMarket();
         if (outpost==null || !outpost.getFaction().getId().equals("kesteven")) return false;
@@ -161,7 +162,7 @@ public class ExileManager extends BaseCampaignEventListener implements EveryFram
     }
 
     public void exile() {
-        MarketAPI outpost = MiscHelper.getOutpost().getMarket();
+        MarketAPI outpost = SectorLookup.getOutpost().getMarket();
         boolean jackGone = QuestHelper.getCompleted(QuestStageManager.JACK_GONE_KEY);
         //add heavy industry item
         if (outpost.getIndustry(Industries.HEAVYINDUSTRY) != null) {
@@ -175,19 +176,19 @@ public class ExileManager extends BaseCampaignEventListener implements EveryFram
         }
 
         //move people
-        PersonAPI michael = MiscHelper.getMichael();
+        PersonAPI michael = QuestPeople.getMichael();
         if (michael==null){
             SectorGen.genMichael(outpost, 0);
         }
-        PersonAPI jack = MiscHelper.getJack();
+        PersonAPI jack = QuestPeople.getJack();
         if (jack==null && !jackGone){
             SectorGen.genJack(outpost, 1);
         }
-        PersonAPI alice = MiscHelper.getAlice();
+        PersonAPI alice = QuestPeople.getAlice();
         if (alice==null){
             SectorGen.genAlice(outpost, 2);
         }
-        PersonAPI nick = MiscHelper.getNick();
+        PersonAPI nick = QuestPeople.getNick();
         if (nick==null){
             SectorGen.genNicholas(outpost, 3);
         }
@@ -231,13 +232,13 @@ public class ExileManager extends BaseCampaignEventListener implements EveryFram
     }
 
     public void unExile() {
-        PersonAPI jack = MiscHelper.getJack();
-        PersonAPI alice = MiscHelper.getAlice();
-        PersonAPI nick = MiscHelper.getNick();
-        PersonAPI michael = MiscHelper.getMichael();
+        PersonAPI jack = QuestPeople.getJack();
+        PersonAPI alice = QuestPeople.getAlice();
+        PersonAPI nick = QuestPeople.getNick();
+        PersonAPI michael = QuestPeople.getMichael();
 
         MarketAPI asteria = Global.getSector().getEconomy().getMarket("nskr_asteria");
-        MarketAPI outpost = MiscHelper.getOutpost().getMarket();
+        MarketAPI outpost = SectorLookup.getOutpost().getMarket();
         boolean jackGone = QuestHelper.getCompleted(QuestStageManager.JACK_GONE_KEY);
         if (outpost!=null){
             //new admin

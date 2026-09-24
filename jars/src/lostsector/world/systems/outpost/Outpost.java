@@ -12,7 +12,7 @@ import com.fs.starfarer.api.util.Misc;
 import com.fs.starfarer.api.util.WeightedRandomPicker;
 import lostsector.helper.fleet.SystemPicker;
 import lostsector.ModPlugin;
-import lostsector.helper.MiscHelper;
+import lostsector.helper.SystemHelper;
 import org.lazywizard.lazylib.MathUtils;
 
 import java.util.*;
@@ -118,7 +118,7 @@ public class Outpost {
 		PlanetAPI star = system.getStar();
 
 		//gate
-		boolean hasGate = MiscHelper.hasGate(system);
+		boolean hasGate = SystemHelper.hasGate(system);
 		if (!hasGate) {
 			SectorEntityToken gate = system.addCustomEntity("nskr_outpost_gate", // unique id
 					star.getName()+ " Gate", // name - if null, defaultName from custom_entities.json will be used
@@ -127,14 +127,14 @@ public class Outpost {
 			gate.setCircularOrbit(star, (float)Math.random()*360f, MathUtils.getRandomNumberInRange(5000f,8000f), 450f);
 		}
 		//relay
-		boolean hasRelay = MiscHelper.hasRelay(system);
+		boolean hasRelay = SystemHelper.hasRelay(system);
 		if (!hasRelay) {
 			SectorEntityToken relay = system.addCustomEntity("nskr_outpost_relay", // unique id
 					null, // name - if null, defaultName from custom_entities.json will be used
 					Entities.COMM_RELAY_MAKESHIFT, // type of object, defined in custom_entities.json
 					"kesteven"); // faction
 			relay.setCircularOrbit(star, (float) Math.random() * 360f, MathUtils.getRandomNumberInRange(5000f, 8000f), 450f);
-		} else MiscHelper.getRelay(system).setFaction("kesteven");
+		} else SystemHelper.getRelay(system).setFaction("kesteven");
 
 		WeightedRandomPicker<BaseThemeGenerator.EntityLocation> locs = BaseThemeGenerator.getLocations(null, system, null, 100f, WEIGHTS);
 		//pick

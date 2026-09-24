@@ -14,7 +14,7 @@ import lostsector.settings.Difficulty;
 import lostsector.helper.FleetHelper;
 import lostsector.helper.Ids;
 import lostsector.helper.MathHelper;
-import lostsector.helper.MiscHelper;
+import lostsector.helper.UiSounds;
 import org.lazywizard.lazylib.MathUtils;
 import org.lwjgl.util.vector.Vector2f;
 
@@ -127,7 +127,7 @@ public class HellSpawnJudgementDialog implements InteractionDialogPlugin {
             //add sp
             Global.getSector().getPlayerStats().setStoryPoints(Global.getSector().getPlayerStats().getStoryPoints() + 8);
 
-            MiscHelper.playUiStaticNoise();
+            UiSounds.playUiStaticNoise();
 
             text.setFontSmallInsignia();
             //acquire text

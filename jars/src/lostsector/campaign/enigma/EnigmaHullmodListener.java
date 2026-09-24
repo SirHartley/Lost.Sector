@@ -7,7 +7,7 @@ import com.fs.starfarer.api.campaign.EngagementResultForFleetAPI;
 import com.fs.starfarer.api.combat.EngagementResultAPI;
 import com.fs.starfarer.api.fleet.FleetMemberAPI;
 import lostsector.helper.MathHelper;
-import lostsector.helper.MiscHelper;
+import lostsector.helper.ShipHelper;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -113,8 +113,8 @@ public class EnigmaHullmodListener extends BaseCampaignEventListener implements 
             for (FleetMemberAPI member : player.getDeployed()){
                 if (member==null) continue;
                 if (member.isFighterWing()) continue;
-                if (!MiscHelper.isProtTech(member)) continue;
-                String type = MiscHelper.protOrEnigma(member);
+                if (!ShipHelper.isProtTech(member)) continue;
+                String type = ShipHelper.protOrEnigma(member);
                 if (type==null || !type.equals("enigma")) continue;
 
                 shipCount++;

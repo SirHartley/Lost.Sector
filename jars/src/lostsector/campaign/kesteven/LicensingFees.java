@@ -8,7 +8,7 @@ import com.fs.starfarer.api.impl.campaign.shared.SharedData;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import com.fs.starfarer.api.ui.TooltipMakerAPI.TooltipCreator;
 import com.fs.starfarer.api.util.Misc;
-import lostsector.helper.MiscHelper;
+import lostsector.helper.SectorLookup;
 
 import java.util.Map;
 
@@ -51,7 +51,7 @@ public class LicensingFees implements EconomyTickListener, TooltipCreator {
 		int lastIterInMonth = (int) Global.getSettings().getFloat("economyIterPerMonth") - 1;
 		if (iterIndex != lastIterInMonth) return;
 
-		if (!MiscHelper.kestevenExists()) return;
+		if (!SectorLookup.kestevenExists()) return;
 
 		MonthlyReport report = SharedData.getData().getCurrentReport();
 		FDNode fleetNode = report.getNode(MonthlyReport.FLEET);

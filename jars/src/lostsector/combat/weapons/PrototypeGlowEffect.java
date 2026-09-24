@@ -7,7 +7,7 @@ import com.fs.starfarer.api.combat.ShipAPI;
 import com.fs.starfarer.api.combat.WeaponAPI;
 import com.fs.starfarer.api.graphics.SpriteAPI;
 import com.fs.starfarer.api.util.IntervalUtil;
-import lostsector.helper.MiscHelper;
+import lostsector.rendering.ColorHelper;
 import org.lazywizard.lazylib.MathUtils;
 import org.lwjgl.util.vector.Vector2f;
 
@@ -35,12 +35,12 @@ public class PrototypeGlowEffect implements EveryFrameWeaponEffectPlugin {
         if (colorInterval.intervalElapsed()) {
             //flux shift
             colorA = new Color(
-                    ((MiscHelper.clamp255(BASE_COLOR.getRed()))),
-                    ((MiscHelper.clamp255(BASE_COLOR.getGreen() - (int)(175 * fluxRatio)))),
-                    ((MiscHelper.clamp255(BASE_COLOR.getBlue() - (int)(160 * fluxRatio)))),
-                    (MiscHelper.clamp255(BASE_COLOR.getAlpha() + (int)(200 * fluxRatio))));
+                    ((ColorHelper.clamp255(BASE_COLOR.getRed()))),
+                    ((ColorHelper.clamp255(BASE_COLOR.getGreen() - (int)(175 * fluxRatio)))),
+                    ((ColorHelper.clamp255(BASE_COLOR.getBlue() - (int)(160 * fluxRatio)))),
+                    (ColorHelper.clamp255(BASE_COLOR.getAlpha() + (int)(200 * fluxRatio))));
             //color jitter
-            colorA = MiscHelper.randomiseColor(colorA,(int)(-30 * fluxRatio), (int)(35 * fluxRatio), (int)(45 * fluxRatio), 0, false);
+            colorA = ColorHelper.randomiseColor(colorA,(int)(-30 * fluxRatio), (int)(35 * fluxRatio), (int)(45 * fluxRatio), 0, false);
         }
         if (colorA!=null) {
             weap.setColor(colorA);

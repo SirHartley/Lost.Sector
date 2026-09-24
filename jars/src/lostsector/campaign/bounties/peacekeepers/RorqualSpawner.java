@@ -28,7 +28,7 @@ import lostsector.settings.Difficulty;
 import lostsector.persistence.Saved;
 import lostsector.helper.FleetHelper;
 import lostsector.helper.MathHelper;
-import lostsector.helper.MiscHelper;
+import lostsector.helper.ShipHelper;
 import org.lazywizard.lazylib.MathUtils;
 import org.lwjgl.util.vector.Vector2f;
 import org.magiclib.util.MagicCampaign;
@@ -369,7 +369,7 @@ public class RorqualSpawner extends BaseCampaignEventListener implements EveryFr
         PersonAPI base = Global.getSector().getFaction(FACTION).createRandomPerson(FullName.Gender.ANY, getRandom());
 
         int level = MathHelper.getSeededRandomNumberInRange(maxLevel-2, maxLevel, getRandom());
-        Map<String, Integer> skills = MiscHelper.createRandomSkills(level, 0.67f, getRandom());
+        Map<String, Integer> skills = ShipHelper.createRandomSkills(level, 0.67f, getRandom());
 
         PersonAPI captain = MagicCampaign.createCaptainBuilder(base.getFaction().getId()).create();
         captain.setId("nskr_"+base.getId());
@@ -379,7 +379,7 @@ public class RorqualSpawner extends BaseCampaignEventListener implements EveryFr
         captain.setRankId(base.getRankId());
         FullName name = new FullName(base.getName().getFirst(), base.getName().getLast(), base.getGender());
         captain.setName(name);
-        MiscHelper.setOfficerSkills(captain, skills);
+        ShipHelper.setOfficerSkills(captain, skills);
 
         return captain;
     }

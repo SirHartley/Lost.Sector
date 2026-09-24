@@ -8,7 +8,6 @@ import com.fs.starfarer.api.impl.campaign.ids.MemFlags;
 import com.fs.starfarer.api.util.Misc;
 import lostsector.campaign.kesteven.quest.QuestHelper;
 import lostsector.helper.MathHelper;
-import lostsector.helper.MiscHelper;
 
 import java.awt.*;
 import java.util.Map;
@@ -227,7 +226,7 @@ public class CacheCoreDialog implements InteractionDialogPlugin {
         Map<String, Object> data = Global.getSector().getPersistentData();
         if (!data.containsKey(PERSISTENT_RANDOM_KEY)) {
 
-            data.put(PERSISTENT_RANDOM_KEY, new Random(MiscHelper.getSeedParsed()));
+            data.put(PERSISTENT_RANDOM_KEY, new Random(MathHelper.getSeedParsed()));
         }
         return (Random) data.get(PERSISTENT_RANDOM_KEY);
     }

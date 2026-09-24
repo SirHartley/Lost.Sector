@@ -69,7 +69,7 @@ import lostsector.campaign.kesteven.quest.QuestStageManager;
 import lostsector.persistence.CampaignTimer;
 import lostsector.helper.FleetHelper;
 import lostsector.helper.Ids;
-import lostsector.helper.MiscHelper;
+import lostsector.helper.SectorLookup;
 import lostsector.combat.weapons.ai.EmpGrenadeAI;
 import lostsector.combat.weapons.ai.TremorAI;
 import lostsector.world.DesertConditionRepair;
@@ -394,7 +394,7 @@ public class ModPlugin extends BaseModPlugin {
         if (IS_INDEVO) {
 
             MarketAPI asteria = Global.getSector().getEconomy().getMarket("nskr_asteria");
-            SectorEntityToken outpost = MiscHelper.getOutpost();
+            SectorEntityToken outpost = SectorLookup.getOutpost();
 
             if (asteria != null && getIndEvoBoolean("IndEvo_Enable_minefields"))
                 asteria.addCondition("IndEvo_mineFieldCondition");

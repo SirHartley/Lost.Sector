@@ -4,7 +4,7 @@ import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.characters.FullName;
 import com.fs.starfarer.api.characters.PersonAPI;
 import com.fs.starfarer.api.impl.campaign.ids.Personalities;
-import lostsector.helper.MiscHelper;
+import lostsector.helper.ShipHelper;
 
 import java.util.Map;
 
@@ -45,7 +45,7 @@ public class SimpleCaptain {
             FullName name = new FullName(firstName, lastName, gender);
             captain.setName(name);
         }
-        MiscHelper.setOfficerSkills(captain, skills);
+        ShipHelper.setOfficerSkills(captain, skills);
 
         return captain;
     }

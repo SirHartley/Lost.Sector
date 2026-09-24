@@ -201,6 +201,24 @@ public class MathHelper {
         return random.nextInt((max - min) + 1) + min;
     }
 
+    public static long getSeedParsed(){
+        String seed = Global.getSector().getSeedString();
+        String prefix = seed.substring(0,2);
+        seed = seed.replace(prefix, "");
+
+        //if (Global.getSector()!=null && Global.getSector().getClock()!=null) {
+        //    String clockSeed = ""+Global.getSector().getClock().getTimestamp();
+        //    clockSeed = clockSeed.replaceAll("-","");
+        //    clockSeed = clockSeed.replaceAll("0","");
+        //    seed = seed + clockSeed;
+        //    //log("TIMESTAMP "+clockSeed);
+        //}
+        //while (seed.length()>18){
+        //    seed = seed.replace(seed.substring(0,1), "");
+        //}
+        return Long.parseLong(seed);
+    }
+
     public static float inverse(Float input) {
         if (input>1f) return 1f;
         if (input<0f) return 0f;

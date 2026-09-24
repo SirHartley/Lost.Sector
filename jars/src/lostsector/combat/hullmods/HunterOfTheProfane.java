@@ -7,7 +7,7 @@ import com.fs.starfarer.api.impl.campaign.ids.HullMods;
 import com.fs.starfarer.api.ui.Alignment;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import com.fs.starfarer.api.util.Misc;
-import lostsector.helper.MiscHelper;
+import lostsector.rendering.ColorHelper;
 import org.lwjgl.util.vector.Vector2f;
 
 import java.awt.*;
@@ -42,7 +42,7 @@ public class HunterOfTheProfane extends BaseHullMod {
         Color tc = Misc.getTextColor();
         Color y = Misc.getHighlightColor();
         Color g = Misc.interpolateColor(Misc.getGrayColor(), tc, 0.5f);
-        Color bad = MiscHelper.TT_ORANGE;
+        Color bad = ColorHelper.TT_ORANGE;
 
         tooltip.addSectionHeading("Stats", Alignment.MID, pad);
         tooltip.addPara("Weapons that deal "+(int)DMG_THRESHOLD+" points of base damage or more have a "+(int)(EMP_CHANCE*100f)+"%%"+" to spawn an EMP arc against automated vessels. " +

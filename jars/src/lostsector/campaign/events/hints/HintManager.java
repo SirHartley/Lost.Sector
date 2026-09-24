@@ -18,7 +18,6 @@ import lostsector.campaign.bounties.eternity.EternitySpawner;
 import lostsector.campaign.bounties.mothership.MothershipSpawner;
 import lostsector.persistence.Saved;
 import lostsector.helper.MathHelper;
-import lostsector.helper.MiscHelper;
 import lostsector.world.systems.frost.Frost;
 
 import java.util.ArrayList;
@@ -167,7 +166,7 @@ public class HintManager extends BaseCampaignEventListener implements EveryFrame
         Map<String, Object> data = Global.getSector().getPersistentData();
         if (!data.containsKey(PERSISTENT_RANDOM_KEY)) {
 
-            data.put(PERSISTENT_RANDOM_KEY, new Random(MiscHelper.getSeedParsed()));
+            data.put(PERSISTENT_RANDOM_KEY, new Random(MathHelper.getSeedParsed()));
         }
         return (Random) data.get(PERSISTENT_RANDOM_KEY);
     }

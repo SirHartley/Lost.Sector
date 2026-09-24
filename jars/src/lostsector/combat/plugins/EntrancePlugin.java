@@ -7,7 +7,7 @@ import com.fs.starfarer.api.combat.ShipAPI;
 import com.fs.starfarer.api.combat.ShipSystemAPI;
 import com.fs.starfarer.api.input.InputEventAPI;
 import com.fs.starfarer.api.util.IntervalUtil;
-import lostsector.helper.MiscHelper;
+import lostsector.helper.ShipHelper;
 import org.dark.shaders.distortion.DistortionShader;
 import org.dark.shaders.distortion.WaveDistortion;
 import org.dark.shaders.light.LightShader;
@@ -49,9 +49,9 @@ public class EntrancePlugin extends BaseEveryFrameCombatPlugin {
         //Iterates through all ships on the map
         for (ShipAPI ship : Global.getCombatEngine().getShips()) {
             if (ship==null) continue;
-            if (MiscHelper.protOrEnigma(ship)==null) continue;
+            if (ShipHelper.protOrEnigma(ship)==null) continue;
 
-            if (MiscHelper.isProtTech(ship)){
+            if (ShipHelper.isProtTech(ship)){
                 ShipSpecificData data = (ShipSpecificData) Global.getCombatEngine().getCustomData().get("ENTRANCE_DATA_KEY" + ship.getId());
                 if (data == null) {
                     data = new ShipSpecificData();
@@ -60,7 +60,7 @@ public class EntrancePlugin extends BaseEveryFrameCombatPlugin {
                 Color afColor;
                 Color nebColor;
                 Color pColor;
-                if (MiscHelper.protOrEnigma(ship).equals("enigma")){
+                if (ShipHelper.protOrEnigma(ship).equals("enigma")){
                     afColor = ENIGMA_COLOR;
                     nebColor = ENIGMA_NEB_COLOR;
                     pColor = ENIGMA_P_COLOR;

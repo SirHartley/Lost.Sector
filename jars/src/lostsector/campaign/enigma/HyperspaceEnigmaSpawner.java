@@ -3,7 +3,8 @@ package lostsector.campaign.enigma;
 import lostsector.helper.FleetHelper;
 import lostsector.helper.Ids;
 import lostsector.helper.MathHelper;
-import lostsector.helper.MiscHelper;
+import lostsector.helper.SectorLookup;
+import lostsector.helper.SystemHelper;
 import lostsector.helper.PowerLevel;
 
 import com.fs.starfarer.api.EveryFrameScript;
@@ -127,7 +128,7 @@ public class HyperspaceEnigmaSpawner extends BaseCampaignEventListener implement
                 float mult = MathHelper.normalize(dist, MIN_DISTANCE_FOR_SPAWNS, DISTANCE_FOR_MAX_SPAWNS);
                 //max chance at max distance
                 chance = MathHelper.lerp(0f, chance, mult);
-                if (!MiscHelper.enigmaExists()){
+                if (!SectorLookup.enigmaExists()){
                     chance *= 0.25f;
                 }
 
@@ -364,7 +365,7 @@ public class HyperspaceEnigmaSpawner extends BaseCampaignEventListener implement
         }
 
         //nerf fleets when gone
-        if (!MiscHelper.enigmaExists()){
+        if (!SectorLookup.enigmaExists()){
             simpleFleet.qualityOverride = MathHelper.getSeededRandomNumberInRange(0.30f, 0.70f, random);
         }
 
@@ -445,7 +446,7 @@ public class HyperspaceEnigmaSpawner extends BaseCampaignEventListener implement
         //pick
         StarSystemAPI system = validSystems.get(MathHelper.getSeededRandomNumberInRange(0, validSystems.size() - 1, random));
         //random loc
-        return MiscHelper.getRandomLocationInSystem(system, false, true, random);
+        return SystemHelper.getRandomLocationInSystem(system, false, true, random);
     }
 
     public static final List<Pair<taskType, Float>> TASKS = new ArrayList<>();

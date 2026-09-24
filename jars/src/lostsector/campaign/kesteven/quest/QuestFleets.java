@@ -17,7 +17,9 @@ import lostsector.dialogue.rules.nskr_ttCollectorDialog;
 import lostsector.settings.Difficulty;
 import lostsector.helper.FleetHelper;
 import lostsector.helper.MathHelper;
-import lostsector.helper.MiscHelper;
+import lostsector.helper.ShipHelper;
+import lostsector.helper.StringHelper;
+import lostsector.helper.SystemHelper;
 import lostsector.helper.PowerLevel;
 import org.lazywizard.lazylib.MathUtils;
 import org.lwjgl.util.vector.Vector2f;
@@ -58,7 +60,7 @@ public class QuestFleets {
         skills.put(Skills.COORDINATED_MANEUVERS,1);
 
         //commander
-        MiscHelper.setOfficerSkills(eliza, skills);
+        ShipHelper.setOfficerSkills(eliza, skills);
         eliza.setPersonality(Personalities.RECKLESS);
 
         //memkeys
@@ -169,7 +171,7 @@ public class QuestFleets {
         simpleFleet.maxShipSize = 3;
         simpleFleet.sMods = 3;
         simpleFleet.ignoreMarketFleetSizeMult = true;
-        simpleFleet.commander = MiscHelper.setOfficerSkills(jack, skills);
+        simpleFleet.commander = ShipHelper.setOfficerSkills(jack, skills);
         simpleFleet.flagshipInfo = flagship;
         simpleFleet.name = "Task Force";
         simpleFleet.assignment = FleetAssignment.ORBIT_PASSIVE;
@@ -240,7 +242,7 @@ public class QuestFleets {
         StarSystemAPI target = QuestHelper.getJob4FriendlyTarget().getStarSystem();
         //don't spawn in the same system as the friendly fleet
         StarSystemAPI origin = QuestHelper.getRandomSystemWithinConstellation(QuestHelper.getJob4FriendlyTarget().getConstellation(), target, 1, random);
-        SectorEntityToken loc = MiscHelper.getRandomLocationInSystem(origin, true, true, random);
+        SectorEntityToken loc = SystemHelper.getRandomLocationInSystem(origin, true, true, random);
 
         float combatPoints = MathHelper.getSeededRandomNumberInRange(8f, 25f, random);
 
@@ -254,7 +256,7 @@ public class QuestFleets {
 
         SimpleFleet simpleFleet = new SimpleFleet(loc, "enigma", combatPoints, keys, random);
         simpleFleet.aiFleetProperties = true;
-        simpleFleet.name = "Splinter"+" "+ MiscHelper.getRandomGreekLetter(random, true);
+        simpleFleet.name = "Splinter"+" "+ StringHelper.getRandomGreekLetter(random, true);
         simpleFleet.assignment = FleetAssignment.PATROL_SYSTEM;
         simpleFleet.assignmentText = "seeking";
         CampaignFleetAPI fleet = simpleFleet.create();
@@ -278,7 +280,7 @@ public class QuestFleets {
         StarSystemAPI target = QuestHelper.getJob4FriendlyTarget().getStarSystem();
         //don't spawn in the same system as the friendly fleet
         StarSystemAPI origin = QuestHelper.getRandomSystemWithinConstellation(target.getConstellation(), target, 2, random);
-        SectorEntityToken loc = MiscHelper.getRandomLocationInSystem(origin, false,false, random);
+        SectorEntityToken loc = SystemHelper.getRandomLocationInSystem(origin, false,false, random);
 
         //save loc to memory IMPORTANT
         QuestHelper.setJob4EnemyTarget(loc);
@@ -322,7 +324,7 @@ public class QuestFleets {
         simpleCaptain.portraitSpritePath = "graphics/lostsector/portraits/nskr_alpha_core1.png";
         simpleCaptain.rankId = Ranks.SPACE_ADMIRAL;
         simpleCaptain.firstName = "Enforcer-Unit";
-        simpleCaptain.lastName = MiscHelper.getRandomGreekLetter(random, true);
+        simpleCaptain.lastName = StringHelper.getRandomGreekLetter(random, true);
 
         //fleet
         SimpleFleet simpleFleet = new SimpleFleet(loc, "enigma", combatPoints, keys, random);
@@ -330,7 +332,7 @@ public class QuestFleets {
         simpleFleet.maxShipSize = 2;
         simpleFleet.commander = simpleCaptain.create();
         simpleFleet.flagshipInfo = flagship;
-        simpleFleet.name = "Strike Group"+" "+ MiscHelper.getRandomGreekLetter(random, true);
+        simpleFleet.name = "Strike Group"+" "+ StringHelper.getRandomGreekLetter(random, true);
         simpleFleet.assignment = FleetAssignment.ORBIT_AGGRESSIVE;
         simpleFleet.assignmentText = "unknown";
         CampaignFleetAPI fleet = simpleFleet.create();

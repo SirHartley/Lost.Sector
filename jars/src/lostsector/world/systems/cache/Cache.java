@@ -33,7 +33,9 @@ import lostsector.campaign.kesteven.quest.CacheCoreDialog;
 import lostsector.dialogue.rules.nskr_kestevenQuest;
 import lostsector.settings.Difficulty;
 import lostsector.helper.FleetHelper;
-import lostsector.helper.MiscHelper;
+import lostsector.campaign.enigma.DormantSpawner;
+import lostsector.helper.ShipHelper;
+import lostsector.helper.SystemHelper;
 import org.lazywizard.lazylib.MathUtils;
 import org.lwjgl.util.vector.Vector2f;
 import org.magiclib.util.MagicCampaign;
@@ -183,7 +185,7 @@ public class Cache {
 
         //DORMANT
         for (int x = 0; x < 2; x++) {
-            SectorEntityToken dormantFleet = MiscHelper.addDormant(center, Factions.DERELICT, 125f, 175f, 1.00f, 0.40f, 0.60f, 0f, 0, 0);
+            SectorEntityToken dormantFleet = DormantSpawner.addDormant(center, Factions.DERELICT, 125f, 175f, 1.00f, 0.40f, 0.60f, 0f, 0, 0);
             dormantFleet.setCircularOrbit(center, (float)Math.random() * 360.0f, MathUtils.getRandomNumberInRange(800f, 1300f), MathUtils.getRandomNumberInRange(90,160));
             dormantFleet.setFacing((float)Math.random() * 360.0f);
             dormantFleet.getMemoryWithoutUpdate().set(MusicPlayerPluginImpl.KEEP_PLAYING_LOCATION_MUSIC_DURING_ENCOUNTER_MEM_KEY, true);
@@ -354,7 +356,7 @@ public class Cache {
 
         //drone tags
         for (FleetMemberAPI m : fleet.getMembersWithFightersCopy()){
-            if (m.isFighterWing() && MiscHelper.isProtTech(m)){
+            if (m.isFighterWing() && ShipHelper.isProtTech(m)){
                 m.getVariant().addTag(Tags.SHIP_LIMITED_TOOLTIP);
             }
         }
@@ -431,7 +433,7 @@ public class Cache {
         boolean hasProt = false;
         // Fleet members lose their tags on save and reload, so check hullmods instead.
         for (FleetMemberAPI m : fleet.getMembersWithFightersCopy()) {
-            if (MiscHelper.isProtTech(m))hasProt = true;
+            if (ShipHelper.isProtTech(m))hasProt = true;
             if (hasProt)break;
         }
         return hasProt;
@@ -461,7 +463,7 @@ public class Cache {
                 if (system.hasTag(Tags.THEME_HIDDEN)) continue;
                 if (system.hasTag(Tags.THEME_CORE)) continue;
                 loc = MathUtils.getPointOnCircumference(system.getHyperspaceAnchor().getLocationInHyperspace(), MathUtils.getRandomNumberInRange(maxDistanceFromNearestSystem/3f,maxDistanceFromNearestSystem), (float)Math.random()*360f);
-                if (loc.length()>minDistanceFromCore && loc.length()<maxDistanceFromCore && MiscHelper.getDistanceFromNearestSystem(loc)<maxDistanceFromNearestSystem){
+                if (loc.length()>minDistanceFromCore && loc.length()<maxDistanceFromCore && SystemHelper.getDistanceFromNearestSystem(loc)<maxDistanceFromNearestSystem){
                     done=true;
                     log("cache generated successfully, dist "+(int)loc.length());
                     break;
@@ -540,7 +542,7 @@ public class Cache {
         commander.setName(name);
         Map<String, Integer> skills = new HashMap<>(OFFICER_SKILLS);
         if (Difficulty.isStarfarer()) skills.put(Skills.POLARIZED_ARMOR,2);
-        MiscHelper.setOfficerSkills(commander, skills);
+        ShipHelper.setOfficerSkills(commander, skills);
 
         return commander;
     }

@@ -14,7 +14,8 @@ import com.fs.starfarer.api.util.Misc;
 import lostsector.campaign.kesteven.quest.QuestStageManager;
 import lostsector.campaign.kesteven.quest.QuestHelper;
 import lostsector.helper.Ids;
-import lostsector.helper.MiscHelper;
+import lostsector.helper.MathHelper;
+import lostsector.helper.UiSounds;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -213,7 +214,7 @@ public class nskr_altEndingDialogTT extends PaginatedOptions {
         }
 
         //sound
-        MiscHelper.playUiRepRaiseNoise();
+        UiSounds.playUiRepRaiseNoise();
 
         //mad
         nskr_altEndingDialogLuddic.makeMad(text, g, r);
@@ -270,7 +271,7 @@ public class nskr_altEndingDialogTT extends PaginatedOptions {
         Map<String, Object> data = Global.getSector().getPersistentData();
         if (!data.containsKey(PERSISTENT_RANDOM_KEY)) {
 
-            data.put(PERSISTENT_RANDOM_KEY, new Random(MiscHelper.getSeedParsed()));
+            data.put(PERSISTENT_RANDOM_KEY, new Random(MathHelper.getSeedParsed()));
         }
         return (Random) data.get(PERSISTENT_RANDOM_KEY);
     }

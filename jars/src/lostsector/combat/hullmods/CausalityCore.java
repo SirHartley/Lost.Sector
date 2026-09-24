@@ -14,7 +14,8 @@ import com.fs.starfarer.api.util.IntervalUtil;
 import com.fs.starfarer.api.util.Pair;
 import lostsector.combat.systems.CausalityStats;
 import lostsector.helper.MathHelper;
-import lostsector.helper.MiscHelper;
+import lostsector.rendering.ColorHelper;
+import lostsector.helper.ShipHelper;
 import lostsector.helper.CombatHelper;
 import org.dark.shaders.post.PostProcessShader;
 import org.lazywizard.lazylib.MathUtils;
@@ -73,7 +74,7 @@ public class CausalityCore extends BaseHullMod {
 
 	public void applyEffectsAfterShipCreation(ShipAPI ship, String id) {
 
-		int dmods = (int) MiscHelper.getDMods(ship.getVariant());
+		int dmods = (int) ShipHelper.getDMods(ship.getVariant());
 		if(dmods>0) {
 			ship.getMutableStats().getFluxDissipation().modifyPercent(id, -DMOD_PENALTY * dmods);
 			ship.getMutableStats().getFluxCapacity().modifyPercent(id, -DMOD_PENALTY * dmods);
@@ -203,31 +204,31 @@ public class CausalityCore extends BaseHullMod {
 
 		tooltip.addSectionHeading("Details", Alignment.MID, pad);
 		TooltipMakerAPI text = tooltip.beginImageWithText("graphics/icons/hullsys/ammo_feeder.png", 36.0f);
-		text.addPara(TEXT1, 0.0f, MiscHelper.NICE_YELLOW, TEXT1);
-		text.addPara("-15%% weapon flux usage.", 2.0f, MiscHelper.BON_GREEN, "15%");
-		text.addPara("+15%% energy weapon damage.", 2.0f, MiscHelper.BON_GREEN, "15%");
-		text.addPara("+15%% ballistic weapon rate of fire (with an additional matching reduction in flux usage).", 2.0f, MiscHelper.BON_GREEN, "15%");
+		text.addPara(TEXT1, 0.0f, ColorHelper.NICE_YELLOW, TEXT1);
+		text.addPara("-15%% weapon flux usage.", 2.0f, ColorHelper.BON_GREEN, "15%");
+		text.addPara("+15%% energy weapon damage.", 2.0f, ColorHelper.BON_GREEN, "15%");
+		text.addPara("+15%% ballistic weapon rate of fire (with an additional matching reduction in flux usage).", 2.0f, ColorHelper.BON_GREEN, "15%");
 		tooltip.addImageWithText(pad);
 
 		text = tooltip.beginImageWithText("graphics/icons/hullsys/damper_field.png", 36.0f);
-		text.addPara(TEXT2, 0.0f, MiscHelper.NICE_YELLOW, TEXT2);
-		if (!codex) text.addPara("-Max energy capacity is " + (int)ship.getMaxFlux(), 2.0f, MiscHelper.BON_GREEN, "" + (int)ship.getMaxFlux());
-		text.addPara("-Maximum safe time dilation is " + maxEnergy, 2.0f, MiscHelper.BON_GREEN, "" + maxEnergy);
-		text.addPara("-Absorbing more energy dramatically increases time dilation.", 2.0f, MiscHelper.NICE_YELLOW, "");
-		text.addPara("-Going above 50%% energy capacity increases the weapons buff.", 2.0f, MiscHelper.NICE_YELLOW, "50%");
-		text.addPara("-Absorbed projectiles grant more energy than missiles.", 2.0f, MiscHelper.BON_GREEN, "");
-		text.addPara("-Absorbed missiles deal 1x the original damage while absorbed projectiles deal 1.5x the damage.", 2.0f, MiscHelper.BON_GREEN, "");
-		text.addPara("-Created bolts counts as an energy weapon for bonuses, while created homing blobs count as a missile weapon for bonuses.", 2.0f, MiscHelper.BON_GREEN, "");
+		text.addPara(TEXT2, 0.0f, ColorHelper.NICE_YELLOW, TEXT2);
+		if (!codex) text.addPara("-Max energy capacity is " + (int)ship.getMaxFlux(), 2.0f, ColorHelper.BON_GREEN, "" + (int)ship.getMaxFlux());
+		text.addPara("-Maximum safe time dilation is " + maxEnergy, 2.0f, ColorHelper.BON_GREEN, "" + maxEnergy);
+		text.addPara("-Absorbing more energy dramatically increases time dilation.", 2.0f, ColorHelper.NICE_YELLOW, "");
+		text.addPara("-Going above 50%% energy capacity increases the weapons buff.", 2.0f, ColorHelper.NICE_YELLOW, "50%");
+		text.addPara("-Absorbed projectiles grant more energy than missiles.", 2.0f, ColorHelper.BON_GREEN, "");
+		text.addPara("-Absorbed missiles deal 1x the original damage while absorbed projectiles deal 1.5x the damage.", 2.0f, ColorHelper.BON_GREEN, "");
+		text.addPara("-Created bolts counts as an energy weapon for bonuses, while created homing blobs count as a missile weapon for bonuses.", 2.0f, ColorHelper.BON_GREEN, "");
 		tooltip.addImageWithText(pad);
 
 		text = tooltip.beginImageWithText("graphics/icons/hullsys/entropy_amplifier.png", 36.0f);
-		text.addPara(TEXT3, 0.0f, MiscHelper.TT_ORANGE, TEXT3);
-		text.addPara("-Going above energy capacity is dangerous.", 2.0f, MiscHelper.TT_ORANGE, "dangerous");
-		text.addPara("-Will cause unpredictable anomalies.", 2.0f, MiscHelper.TT_ORANGE, "");
-		text.addPara("-Ship receives "+(int)BEAM_PENALTY_MULT+"x"+" more damage from beams.", 2.0f, MiscHelper.TT_ORANGE, (int)BEAM_PENALTY_MULT+"x");
-		text.addPara("-Any D-mods on the hull will reduce flux capacity, flux dissipation, and peak performance time by "+(int)DMOD_PENALTY+"%%"+" each.", 2.0f, MiscHelper.TT_ORANGE, (int)DMOD_PENALTY+"%");
-		int dmods = codex ? 0 : (int) MiscHelper.getDMods(ship.getVariant());
-		if(dmods>0)text.addPara("-Current penalty "+(int)(dmods*DMOD_PENALTY)+"%%", 2.0f, MiscHelper.TT_ORANGE, (int)(dmods*DMOD_PENALTY)+"%");
+		text.addPara(TEXT3, 0.0f, ColorHelper.TT_ORANGE, TEXT3);
+		text.addPara("-Going above energy capacity is dangerous.", 2.0f, ColorHelper.TT_ORANGE, "dangerous");
+		text.addPara("-Will cause unpredictable anomalies.", 2.0f, ColorHelper.TT_ORANGE, "");
+		text.addPara("-Ship receives "+(int)BEAM_PENALTY_MULT+"x"+" more damage from beams.", 2.0f, ColorHelper.TT_ORANGE, (int)BEAM_PENALTY_MULT+"x");
+		text.addPara("-Any D-mods on the hull will reduce flux capacity, flux dissipation, and peak performance time by "+(int)DMOD_PENALTY+"%%"+" each.", 2.0f, ColorHelper.TT_ORANGE, (int)DMOD_PENALTY+"%");
+		int dmods = codex ? 0 : (int) ShipHelper.getDMods(ship.getVariant());
+		if(dmods>0)text.addPara("-Current penalty "+(int)(dmods*DMOD_PENALTY)+"%%", 2.0f, ColorHelper.TT_ORANGE, (int)(dmods*DMOD_PENALTY)+"%");
 		tooltip.addImageWithText(pad);
 	}
 
@@ -370,7 +371,7 @@ public class CausalityCore extends BaseHullMod {
 						alpha = MathHelper.smoothStep(MathHelper.lerp(0f, 3f, MathHelper.inverse(target.two)));
 					}
 					Color color = COLOR1;
-					color = MiscHelper.setAlpha(color, (int)(color.getAlpha()*alpha));
+					color = ColorHelper.setAlpha(color, (int)(color.getAlpha()*alpha));
 
 					Vector2f size = new Vector2f(25f, 25f);
 					float damageMult = 1 + proj.getDamageAmount() / 250;

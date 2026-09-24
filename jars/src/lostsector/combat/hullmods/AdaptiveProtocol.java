@@ -7,7 +7,7 @@ import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.combat.*;
 import com.fs.starfarer.api.ui.Alignment;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
-import lostsector.helper.MiscHelper;
+import lostsector.rendering.ColorHelper;
 import org.lazywizard.lazylib.VectorUtils;
 import org.lwjgl.util.vector.Vector2f;
 
@@ -225,26 +225,26 @@ public class AdaptiveProtocol extends BaseHullMod {
         float pad = 10.0f;
         tooltip.addSectionHeading("Details", Alignment.MID, pad);
         TooltipMakerAPI text = tooltip.beginImageWithText("graphics/icons/hullsys/burn_drive.png", 36.0f);
-        text.addPara(CHARGE_MODE_NAME, 0.0f, MiscHelper.NICE_YELLOW, CHARGE_MODE_NAME);
-        text.addPara("+75su/s max speed when moving forwards.", 0.0f, MiscHelper.BON_GREEN, "75su/s");
-        text.addPara("+200%% acceleration.", 0.0f, MiscHelper.BON_GREEN, "200%");
-        text.addPara("-60%% maneuverability otherwise.", 0.0f, MiscHelper.TT_ORANGE, "60%");
+        text.addPara(CHARGE_MODE_NAME, 0.0f, ColorHelper.NICE_YELLOW, CHARGE_MODE_NAME);
+        text.addPara("+75su/s max speed when moving forwards.", 0.0f, ColorHelper.BON_GREEN, "75su/s");
+        text.addPara("+200%% acceleration.", 0.0f, ColorHelper.BON_GREEN, "200%");
+        text.addPara("-60%% maneuverability otherwise.", 0.0f, ColorHelper.TT_ORANGE, "60%");
         tooltip.addImageWithText(pad);
 
         text = tooltip.beginImageWithText("graphics/icons/hullsys/quantum_disruptor.png", 36.0f);
-        text.addPara(PRECISION_MODE_NAME, 0.0f, MiscHelper.NICE_YELLOW, PRECISION_MODE_NAME);
-        text.addPara("+50%% damage for non-missile projectile weapons.", 0.0f, MiscHelper.BON_GREEN, "50%");
-        text.addPara("+25%% damage for beam weapons.", 0.0f, MiscHelper.BON_GREEN, "25%");
-        text.addPara("+150 units non-PD weapon range.", 0.0f, MiscHelper.BON_GREEN, "150");
-        text.addPara("-25%% rate of fire for non-missile weapons.", 0.0f, MiscHelper.TT_ORANGE, "25%");
+        text.addPara(PRECISION_MODE_NAME, 0.0f, ColorHelper.NICE_YELLOW, PRECISION_MODE_NAME);
+        text.addPara("+50%% damage for non-missile projectile weapons.", 0.0f, ColorHelper.BON_GREEN, "50%");
+        text.addPara("+25%% damage for beam weapons.", 0.0f, ColorHelper.BON_GREEN, "25%");
+        text.addPara("+150 units non-PD weapon range.", 0.0f, ColorHelper.BON_GREEN, "150");
+        text.addPara("-25%% rate of fire for non-missile weapons.", 0.0f, ColorHelper.TT_ORANGE, "25%");
         tooltip.addImageWithText(pad);
 
         text = tooltip.beginImageWithText("graphics/icons/hullsys/fortress_shield.png", 36.0f);
-        text.addPara(BULWARK_MODE_NAME, 0.0f, MiscHelper.NICE_YELLOW, BULWARK_MODE_NAME);
-        text.addPara("-33%% shield damage taken.", 0.0f, MiscHelper.BON_GREEN, "33%");
-        text.addPara("+100%% shield rotation and deployment rate.", 0.0f, MiscHelper.BON_GREEN, "100%");
-        text.addPara("+150 units PD weapon range.", 0.0f, MiscHelper.BON_GREEN, "150");
-        text.addPara("+75%% damage to missiles and fighters.", 0.0f, MiscHelper.BON_GREEN, "75%");
+        text.addPara(BULWARK_MODE_NAME, 0.0f, ColorHelper.NICE_YELLOW, BULWARK_MODE_NAME);
+        text.addPara("-33%% shield damage taken.", 0.0f, ColorHelper.BON_GREEN, "33%");
+        text.addPara("+100%% shield rotation and deployment rate.", 0.0f, ColorHelper.BON_GREEN, "100%");
+        text.addPara("+150 units PD weapon range.", 0.0f, ColorHelper.BON_GREEN, "150");
+        text.addPara("+75%% damage to missiles and fighters.", 0.0f, ColorHelper.BON_GREEN, "75%");
         tooltip.addImageWithText(pad);
     }
 

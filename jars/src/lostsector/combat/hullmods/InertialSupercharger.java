@@ -10,7 +10,7 @@ import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import com.fs.starfarer.api.util.IntervalUtil;
 import com.fs.starfarer.api.util.Misc;
 import lostsector.helper.MathHelper;
-import lostsector.helper.MiscHelper;
+import lostsector.rendering.ColorHelper;
 import lostsector.rendering.RenderHelper;
 import org.lwjgl.util.vector.Vector2f;
 
@@ -91,9 +91,9 @@ public class InertialSupercharger extends BaseHullMod {
                 if (spec.getType() == WeaponAPI.WeaponType.BALLISTIC || spec.getType() == WeaponAPI.WeaponType.ENERGY){
                     if (spec.isBeam()) continue;
 
-                    Color glow = MiscHelper.setAlpha(GLOW_COLOR, (int)(180*dmgNormalized));
+                    Color glow = ColorHelper.setAlpha(GLOW_COLOR, (int)(180*dmgNormalized));
                     if (colorInterval.intervalElapsed()) {
-                        glow = MiscHelper.randomiseColor(glow, (int)(20*dmgNormalized), (int)(20*dmgNormalized), (int)(50*dmgNormalized), (int)(50*dmgNormalized), true);
+                        glow = ColorHelper.randomiseColor(glow, (int)(20*dmgNormalized), (int)(20*dmgNormalized), (int)(50*dmgNormalized), (int)(50*dmgNormalized), true);
                     }
 
                     //GLOW
@@ -168,19 +168,19 @@ public class InertialSupercharger extends BaseHullMod {
 
             tooltip.addTable("", 0, opad);
 
-            tooltip.addPara("", 0.0f, MiscHelper.NICE_YELLOW, "");
-            tooltip.addPara("Note there is no cap to this bonus, this is simply for reference.", 0.0f, MiscHelper.NICE_YELLOW, "Note");
+            tooltip.addPara("", 0.0f, ColorHelper.NICE_YELLOW, "");
+            tooltip.addPara("Note there is no cap to this bonus, this is simply for reference.", 0.0f, ColorHelper.NICE_YELLOW, "Note");
 
             if (Global.getCurrentState() == GameState.CAMPAIGN){
                 if (ship.getHullSize()== ShipAPI.HullSize.FRIGATE) {
                     tooltip.addSectionHeading("S-mod penalty", bad, negativeBackground, Alignment.MID, pad);
-                    tooltip.addPara("Increases the damage taken by weapons by " + (int) SMOD_PENALTY + "%%.", pad, MiscHelper.NICE_YELLOW, (int) SMOD_PENALTY + "%");
+                    tooltip.addPara("Increases the damage taken by weapons by " + (int) SMOD_PENALTY + "%%.", pad, ColorHelper.NICE_YELLOW, (int) SMOD_PENALTY + "%");
                     if (!sMod)
                         tooltip.addPara("This effect only applies if this hullmod is built into the hull using a story point. Cheap hullmods have stronger effects.", pad, storyColor, "story point");
                 }
                 if (ship.getHullSize()== ShipAPI.HullSize.CRUISER || ship.getHullSize()== ShipAPI.HullSize.CAPITAL_SHIP) {
                     tooltip.addSectionHeading("S-mod bonus", storyColor, storyBackground, Alignment.MID, pad);
-                    tooltip.addPara("Increases projectile velocity by " + (int) SMOD_BONUS + "%%.", pad, MiscHelper.NICE_YELLOW, (int) SMOD_BONUS + "%");
+                    tooltip.addPara("Increases projectile velocity by " + (int) SMOD_BONUS + "%%.", pad, ColorHelper.NICE_YELLOW, (int) SMOD_BONUS + "%");
                     if (!sMod)
                         tooltip.addPara("This effect only applies if this hullmod is built into the hull using a story point. Cheap hullmods have stronger effects.", pad, storyColor, "story point");
                 }

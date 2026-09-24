@@ -6,7 +6,7 @@ import com.fs.starfarer.api.combat.listeners.DamageTakenModifier;
 import com.fs.starfarer.api.ui.Alignment;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import lostsector.helper.MathHelper;
-import lostsector.helper.MiscHelper;
+import lostsector.rendering.ColorHelper;
 import org.lwjgl.util.vector.Vector2f;
 
 import java.awt.*;
@@ -77,7 +77,7 @@ public class AbsorbSystem extends BaseHullMod {
             stats.getShieldAbsorptionMult().modifyPercent(id, resist);
             stats.getShieldUnfoldRateMult().modifyPercent(id, unfold);
             
-            ship.getShield().setInnerColor(MiscHelper.blendColors(baseColor, SHIELD_COLOR, bonus));
+            ship.getShield().setInnerColor(ColorHelper.blendColors(baseColor, SHIELD_COLOR, bonus));
 
             data.resist = Math.abs(resist);
 
@@ -171,14 +171,14 @@ public class AbsorbSystem extends BaseHullMod {
 
         tooltip.addSectionHeading("Details", Alignment.MID, pad);
         TooltipMakerAPI text = tooltip.beginImageWithText("graphics/icons/hullsys/fortress_shield.png", 36.0f);
-        text.addPara("activating the system greatly boosts shield performance, with the bonus decaying over "+(int)SYS_TIME+" seconds.", 0.0f, MiscHelper.NICE_YELLOW, (int)SYS_TIME+"");
-        text.addPara("-"+(int)Math.abs(DMG_TAKEN)+"%"+"% shield damage taken.", 0.0f, MiscHelper.BON_GREEN, (int)Math.abs(DMG_TAKEN)+"%");
-        text.addPara("+"+(int)SHIELD_SIZE+" shield arc and instant unfolding.", 0.0f, MiscHelper.BON_GREEN, (int)SHIELD_SIZE+"");
+        text.addPara("activating the system greatly boosts shield performance, with the bonus decaying over "+(int)SYS_TIME+" seconds.", 0.0f, ColorHelper.NICE_YELLOW, (int)SYS_TIME+"");
+        text.addPara("-"+(int)Math.abs(DMG_TAKEN)+"%"+"% shield damage taken.", 0.0f, ColorHelper.BON_GREEN, (int)Math.abs(DMG_TAKEN)+"%");
+        text.addPara("+"+(int)SHIELD_SIZE+" shield arc and instant unfolding.", 0.0f, ColorHelper.BON_GREEN, (int)SHIELD_SIZE+"");
         tooltip.addImageWithText(pad);
         text.addPara("",pad);
         TooltipMakerAPI text2 = tooltip.beginImageWithText("graphics/icons/hullsys/ammo_feeder.png", 36.0f);
-        text2.addPara("damage that is blocked by the system is absorbed as energy that decays over time at "+(int)ENERGY_PER_SECOND+" units per second.", 0.0f, MiscHelper.NICE_YELLOW, (int)ENERGY_PER_SECOND+"");
-        text2.addPara("+"+(int)BONUS_ROF_MULT+"%"+"% non missile weapon rate of fire while having more than "+(int)MIN_ENERGY+" energy stored. having less than that scales the bonus down to zero.", 0.0f, MiscHelper.BON_GREEN, (int)BONUS_ROF_MULT+"%");
+        text2.addPara("damage that is blocked by the system is absorbed as energy that decays over time at "+(int)ENERGY_PER_SECOND+" units per second.", 0.0f, ColorHelper.NICE_YELLOW, (int)ENERGY_PER_SECOND+"");
+        text2.addPara("+"+(int)BONUS_ROF_MULT+"%"+"% non missile weapon rate of fire while having more than "+(int)MIN_ENERGY+" energy stored. having less than that scales the bonus down to zero.", 0.0f, ColorHelper.BON_GREEN, (int)BONUS_ROF_MULT+"%");
         tooltip.addImageWithText(pad);
 
 

@@ -10,7 +10,7 @@ import com.fs.starfarer.api.combat.ShipAPI.HullSize;
 import com.fs.starfarer.api.combat.listeners.HullDamageAboutToBeTakenListener;
 import com.fs.starfarer.api.util.IntervalUtil;
 import com.fs.starfarer.api.util.Misc;
-import lostsector.helper.MiscHelper;
+import lostsector.rendering.ColorHelper;
 import org.dark.shaders.distortion.DistortionShader;
 import org.dark.shaders.distortion.RippleDistortion;
 import org.dark.shaders.distortion.WaveDistortion;
@@ -185,8 +185,8 @@ public class RageDummy extends BaseHullMod {
 					Vector2f point1 = MathUtils.getPointOnCircumference(sloc, distance, angle);
 					Vector2f point2 = MathUtils.getPointOnCircumference(sloc, distance2, angle2);
 					if (ship != null) {
-						Color color1 = MiscHelper.randomiseColor(new Color(255, 100, 150, 255), 0, 100, 50, 0, true);
-						Color color3 = MiscHelper.randomiseColor(new Color(255, 100, 150, 155), 0, 100, 50, 0, true);
+						Color color1 = ColorHelper.randomiseColor(new Color(255, 100, 150, 255), 0, 100, 50, 0, true);
+						Color color3 = ColorHelper.randomiseColor(new Color(255, 100, 150, 155), 0, 100, 50, 0, true);
 						Global.getCombatEngine().spawnEmpArcVisual(point1, none, point2, ship,
 								MathUtils.getRandomNumberInRange(5f, 20f), // thickness of the lightning bolt
 								color1, //Central color

@@ -22,7 +22,8 @@ import lostsector.campaign.bounties.abyss.AbyssIntel;
 import lostsector.settings.Difficulty;
 import lostsector.persistence.Saved;
 import lostsector.helper.FleetHelper;
-import lostsector.helper.MiscHelper;
+import lostsector.helper.StringHelper;
+import lostsector.helper.SystemHelper;
 import org.lazywizard.lazylib.MathUtils;
 import org.lwjgl.util.vector.Vector2f;
 
@@ -225,7 +226,7 @@ public class AbyssSpawner extends BaseCampaignEventListener implements EveryFram
         simpleFleet.maxShipSize = 3;
         simpleFleet.sMods = 3;
         simpleFleet.ignoreMarketFleetSizeMult = true;
-        simpleFleet.name = FLEET_NAME+" "+ MiscHelper.getRandomGreekLetter(random, true);
+        simpleFleet.name = FLEET_NAME+" "+ StringHelper.getRandomGreekLetter(random, true);
         simpleFleet.noFactionInName = true;
         simpleFleet.commander = simpleCaptain.create();
         simpleFleet.flagshipInfo = flagship;
@@ -317,7 +318,7 @@ public class AbyssSpawner extends BaseCampaignEventListener implements EveryFram
             return pick;
         }
         log("ERROR no valid system");
-        return MiscHelper.getRandomNonCoreSystem(new Random());
+        return SystemHelper.getRandomNonCoreSystem(new Random());
     }
 
     //check if we recovered any ships
