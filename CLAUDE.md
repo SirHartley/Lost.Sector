@@ -13,11 +13,11 @@ Reviews, explanations, audits, and proposals are read-only unless the user reque
 1. Read the current remote `CLAUDE.md` in full at the start of each new task. Within the same task, reuse the version already read unless the instructions change. Read new or changed instruction files before following them.
 2. Use the `starsector-knowledge` skill before answering or changing anything related to vanilla Starsector. It contains the official API, decompiled internals, and vanilla data for one exact game version. Do not rely on memory.
 3. If the skill is incomplete, inspect the read-only archives under `lib/`. Extract them to a temporary directory, never into the repository.
-   - `starfarer.api.zip` contains the official game API source.
+   - `starfarer.api.zip` contains the official game API source; `starfarer.api.jar` is the compiled API.
    - `GraphicsLib.zip`, `Lazylib_lunalib.zip`, and `MagicLib.zip` contain dependency sources and jars.
-   - Nexerelin, Exotica Technologies and Industrial.Evolution are optional integrations; their archives belong in `lib/` as well.
-   - For GraphicsLib, LazyLib, LunaLib, MagicLib, Nexerelin, Exotica Technologies and Industrial.Evolution, `lib/` is the primary source because the Starsector skill covers vanilla only.
-   - `lib/` is not yet populated in this repository. Until an archive is added, report the missing source instead of guessing its API.
+   - `ExerelinCore.jar` (Nexerelin) and `IndEvo.jar` (Industrial.Evolution) are compiled jars without source. Read their signatures with `javap`; report behavior that needs their source as unverified.
+   - Exotica Technologies is an optional integration without an archive in `lib/`.
+   - For GraphicsLib, LazyLib, LunaLib, MagicLib, Nexerelin and Industrial.Evolution, `lib/` is the primary source because the Starsector skill covers vanilla only.
 4. Select the required guides using [Which guide to read](#which-guide-to-read). Apply every matching row, including for reviews and fixes to existing behavior. Follow required skill reading as well; this table does not waive full-reference reads required by a skill.
 
 ### Which guide to read
@@ -247,18 +247,18 @@ The project uses Java 17; `.idea/misc.xml` sets the language level. IntelliJ com
 
 Required compile dependencies:
 
-- `starfarer.api.jar` and `starfarer_obf.jar` from the game's `starsector-core` directory;
-- `Graphics.jar` from GraphicsLib;
-- `LazyLib.jar` and `Kotlin-Runtime.jar` from LazyLib; the Kotlin runtime supplies the `org.jetbrains.annotations` classes used in `src`;
-- `MagicLib.jar` from MagicLib;
-- `LunaLib.jar` from LunaLib;
-- the Nexerelin jar (`ExerelinCore`), the Exotica Technologies jar and the Industrial.Evolution jar, used only by code behind the optional-integration flags;
+- `lib/starfarer.api.jar`, and `starfarer_obf.jar` from the game's `starsector-core` directory;
+- `Graphics.jar` from `lib/GraphicsLib.zip`;
+- `LazyLib.jar` and `jars/internal/Kotlin-Runtime.jar` from `lib/Lazylib_lunalib.zip`; the Kotlin runtime supplies the `org.jetbrains.annotations` classes used in `src`;
+- `MagicLib.jar` from `lib/MagicLib.zip`;
+- `LunaLib.jar` from `lib/Lazylib_lunalib.zip`;
+- `lib/ExerelinCore.jar` and `lib/IndEvo.jar`, and the Exotica Technologies jar, used only by code behind the optional-integration flags;
 - `lwjgl-2.9.3.jar`;
 - `lwjgl_util-2.9.3.jar`;
 - `json-20140107.jar`;
 - `log4j-1.2.17.jar`.
 
-These dependencies provide `org.lwjgl.util.vector`, `org.lwjgl.opengl`, `org.json`, and `Global.getLogger()`. LazyLib, MagicLib and GraphicsLib are the declared runtime dependencies in `mod_info.json`. LunaLib, Nexerelin, Exotica Technologies and Industrial.Evolution are compile-time requirements for their integration classes; [ARCHITECTURE.md](docs/ARCHITECTURE.md) records how each is gated at runtime.
+The last four ship with the game in `starsector-core`; the same versions from Maven Central compile identically when no game install is available. These dependencies provide `org.lwjgl.util.vector`, `org.lwjgl.opengl`, `org.json`, and `Global.getLogger()`. LazyLib, MagicLib and GraphicsLib are the declared runtime dependencies in `mod_info.json`. LunaLib, Nexerelin, Exotica Technologies and Industrial.Evolution are compile-time requirements for their integration classes; [ARCHITECTURE.md](docs/ARCHITECTURE.md) records how each is gated at runtime.
 
 Reference command:
 
