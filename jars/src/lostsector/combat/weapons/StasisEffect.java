@@ -3,6 +3,7 @@ package lostsector.combat.weapons;
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.combat.*;
 import lostsector.combat.systems.ai.StasisAI;
+import lostsector.settings.Setting;
 import org.lwjgl.input.Keyboard;
 
 public class StasisEffect  implements EveryFrameWeaponEffectPlugin, OnFireEffectPlugin {
@@ -29,14 +30,15 @@ public class StasisEffect  implements EveryFrameWeaponEffectPlugin, OnFireEffect
         if (engine.isPaused()) return;
 
         ShipAPI ship = weapon.getShip();
-        //so F hast to be released and we don't immediately fire
+        //so the fire key has to be released and we don't immediately fire
         if (engine.getPlayerShip()==ship && ship.getSystem().isActive()) {
             wasActive = true;
         }
-        //so we fire when pressing f while system is cooling down
+        //so we fire when pressing the fire key while system is cooling down
         if (engine.getPlayerShip()==ship && ship.getSystem().isCoolingDown()) {
-            //fire when f is pressed
-            if (Keyboard.isKeyDown(Keyboard.getKeyIndex("F"))) {
+            int fireKey = Setting.STASIS_FIRE_KEY.getKeycode();
+            // KEY_NONE means unbound; LWJGL also reports unknown keys as KEY_NONE.
+            if (fireKey != Keyboard.KEY_NONE && Keyboard.isKeyDown(fireKey)) {
                 if (weapon.getCooldownRemaining() <= 0f && !wasActive) {
                     //fire
                     weapon.setForceFireOneFrame(true);

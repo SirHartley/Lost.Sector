@@ -14,7 +14,8 @@ public enum Setting {
     RANDOM_ENIGMA_FLEET_SCALING(FieldType.DOUBLE),
     THRONES_GIFT_UNLOCKED(FieldType.BOOLEAN),
     HELLSPAWN_UNLOCKED(FieldType.BOOLEAN),
-    STORY_SKIP_UNLOCKED(FieldType.BOOLEAN);
+    STORY_SKIP_UNLOCKED(FieldType.BOOLEAN),
+    STASIS_FIRE_KEY(FieldType.KEYCODE);
 
     enum FieldType {
 

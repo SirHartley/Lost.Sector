@@ -8,3 +8,4 @@ unlocksText,Unlocks Note,Text,Finishing the Kesteven questline turns these on fo
 thronesGiftUnlocked,Throne's Gift Start,Boolean,FALSE,,Makes the Throne's Gift background selectable when you start a new game with Nexerelin.,,,Unlocks
 hellspawnUnlocked,Hellspawn Start,Boolean,FALSE,,Makes the Hellspawn background selectable when you start a new game with Nexerelin.,,,Unlocks
 storySkipUnlocked,Story Skip,Boolean,FALSE,,Offers a story point option to skip ahead in the Kesteven questline.,,,Unlocks
+stasisFireKey,Stasis Generator Fire Key,Keycode,33,,"When you pilot a ship with the Stasis Generator system, pressing this key while the system is cooling down fires the charged stasis sphere. Set it to your ship system key to use one key for both.",,,Controls
