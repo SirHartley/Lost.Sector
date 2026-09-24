@@ -40,6 +40,7 @@ Fixed - Refusing Hostile Takeover ("I'm not doing this.") now always asks for co
 Fixed - The Operation Lifesaver map marker now points to the Enigma strike group once you have seen it or the Special Operations fleet has sent its coordinates
 Fixed - Operation Lifesaver no longer gets stuck when another fleet destroys the Special Operations fleet before you find it
 Fixed - Crash when the Enigma fleet woken at a data satellite follows you into hyperspace and loses sight of you
+Fixed - Dialogs no longer recalculate your fleet strength and write it to starsector.log on every option refresh
 
 1.0.b
 Adjusted - Severely nerfed spawn rates for Borealis, Rhea and Kingslayer

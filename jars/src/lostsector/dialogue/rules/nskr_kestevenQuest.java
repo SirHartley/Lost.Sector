@@ -80,8 +80,9 @@ public class nskr_kestevenQuest extends PaginatedOptions {
 
 	private int stage = 0;
 	private int diskCount = 0;
-	private static float relation = 0;
-	private float power = 0f;
+	private float relation = 0;
+	// PowerLevel scans the whole player fleet; only the strength gates and job briefings need it.
+	private Float power = null;
 	private SectorEntityToken job4TargetLoc = null;
 	private boolean job1tip = false;
 	private boolean foughtEnigma = false;
@@ -153,14 +154,14 @@ public class nskr_kestevenQuest extends PaginatedOptions {
 	public boolean execute(String ruleId, InteractionDialogAPI dialog, List<Token> params, Map<String, MemoryAPI> memoryMap) 
 	{
 		String arg = params.get(0).getString(memoryMap);
+		// A PopulateOptions condition, checked on every options refresh; keep it free of setupVars().
+		if (arg.equals("hasOption")) return validMarket(dialog.getInteractionTarget().getMarket());
 		setupVars(dialog, memoryMap);
 
 		switch (arg)
 		{
 			case "init":
 				break;
-			case "hasOption":
-				return validMarket(entity.getMarket());
 			case "getStage":
 				setupDelegateDialog(dialog);
 				showOptions();
@@ -243,7 +244,7 @@ public class nskr_kestevenQuest extends PaginatedOptions {
 		alice = QuestPeople.getAlice();
 		nick = QuestPeople.getNick();
 
-		power = Global.getSettings().isDevMode() ? 2 : PowerLevel.get(0.2f, 0f,2f);
+		power = null;
 		stage = QuestHelper.getStage();
 		relation = Global.getSector().getPlayerFaction().getRelationship("kesteven");
 		foughtEnigma = QuestHelper.getCompleted(QuestStageManager.HAS_FOUGHT_ENIGMA_KEY);
@@ -269,6 +270,11 @@ public class nskr_kestevenQuest extends PaginatedOptions {
 		allDisks = QuestHelper.getDisksRecovered()>=5;
 	}
 	
+	private float getPower() {
+		if (power == null) power = Global.getSettings().isDevMode() ? 2f : PowerLevel.get(0.2f, 0f, 2f);
+		return power;
+	}
+
 	public void updateOptions() {
 		for (String optId : disabledOpts)
 		{
@@ -342,7 +348,7 @@ public class nskr_kestevenQuest extends PaginatedOptions {
 			if (stage == 6) {
 				if (relation < JOB3_REP) {
 					jobText = "\"There is a new job available at the moment, but we require someone more qualified. Come back later when I know you can be trusted.\"";
-				} else if (power > JOB3_POWER) {
+				} else if (getPower() > JOB3_POWER) {
 					desc = "Hostile Takeover";
 					jobText = "\"There is a new job available at the moment, are you interested?\"";
 				} else {
@@ -372,7 +378,7 @@ public class nskr_kestevenQuest extends PaginatedOptions {
 				if (relation < JOB5_REP) {
 					jobText = "\"There is a new job available at the moment, but we require someone more qualified. Come back later when I know you can be trusted.\"";
 					addStorySkipOption();
-				} else if (power > JOB5_POWER) {
+				} else if (getPower() > JOB5_POWER) {
 					desc = "\"I'm listening.\"";
 					jobText = "\"There is something important we need you to work on. We should discuss it in detail.\"";
 				} else {
@@ -443,7 +449,7 @@ public class nskr_kestevenQuest extends PaginatedOptions {
 			if (stage == 11 && job4wait) {
 				if (relation < JOB4_REP) {
 					jobText = "\"There is a new job available at the moment, but we require someone more qualified. Come back later when I know you can be trusted.\"";
-				} else if (QuestHelper.getCompleted(JOB4_SKIP_REQ_KEY) || power > JOB4_POWER) {
+				} else if (QuestHelper.getCompleted(JOB4_SKIP_REQ_KEY) || getPower() > JOB4_POWER) {
 					desc = "Operation Lifesaver";
 					jobText = "\"There is a new job available at the moment, are you interested?\"";
 				} else {
@@ -824,7 +830,7 @@ public class nskr_kestevenQuest extends PaginatedOptions {
 			desc = "\"Of course, my reward will be " + payout + ". Fair warning this mission is time sensitive, you have around 90 days until the fleet has completed its task, and we will have missed our mark. So prepare accordingly before starting this job.\"";
 			text.addPara(desc,tc,h,payout,"this mission is time sensitive, you have around 90 days");
 
-			if(power<JOB3_POWER+0.15f){
+			if(getPower()<JOB3_POWER+0.15f){
 				text.addPara("\"Looking at what you currently have at your disposal. This job could be exceptionally difficult for your current fleet.\" There is a look of doubt on her face.",tc,h,"exceptionally difficult","");
 			}
 
@@ -877,7 +883,7 @@ public class nskr_kestevenQuest extends PaginatedOptions {
 
 			if (QuestHelper.outpostExists())text.addPara("\"Oh, by the way, you should talk to Nicholas Antoine. He works in communications and is currently stationed at "+ SectorLookup.getOutpost().getName()+". He most likely has some more information.\"",tc,h, SectorLookup.getOutpost().getName(),"");
 
-			if(power<JOB4_POWER+0.15f){
+			if(getPower()<JOB4_POWER+0.15f){
 				text.addPara("\"Looking at what you currently have at your disposal. This job could be exceptionally difficult for your current fleet.\" There is a look of doubt on her face.",tc,h,"exceptionally difficult","");
 			}
 
@@ -1676,7 +1682,7 @@ public class nskr_kestevenQuest extends PaginatedOptions {
 	public static boolean validMarket(MarketAPI market)
 	{
 		if (market==null) return false;
-		if (relation<=-0.5f) return false;
+		if (Global.getSector().getPlayerFaction().getRelationship(Ids.KESTEVEN_FACTION_ID)<=-0.5f) return false;
 		if (QuestHelper.getEndMissions()) return false;
 
 		return market.getFaction().getId().equals("kesteven");

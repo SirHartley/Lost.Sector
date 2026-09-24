@@ -21,8 +21,8 @@ nskr_heartFixer",,,
 # RULES BASED SCRIPT DIALOGS,,,,,,
 ,,,,,,
 # kesteven QUEST options,,,,,,
-nskr_kestevenQuest,PopulateOptions,"nskr_kestevenQuest hasOption
-$tag:k_quest
+nskr_kestevenQuest,PopulateOptions,"$tag:k_quest
+nskr_kestevenQuest hasOption
 nskr_isAtMostKStage 19",,,"nskr_kestevenQuestContinue:Chat about operations work",
 nskr_kestevenQuestContinue,DialogOptionSelected,"$option == nskr_kestevenQuestContinue","nskr_kestevenQuest getStage",,"nskr_kestevenQuestStart:Continue",
 nskr_kestevenQuestOptions,DialogOptionSelected,"nskr_optionStartsWith ""nskr_kestevenQuest_pick_""","nskr_kestevenQuest advanceStage

@@ -24,15 +24,15 @@ Java paths are relative to `jars/src/lostsector/campaign/`; `dialogue/rules/` an
 
 The questline runs at `QuestHelper.asteriaOrOutpost()`: Asteria (`nskr_asteria`), or the Outpost (`nskr_outpost`) when Kesteven is exiled or Asteria was never generated. Jack Lapua (`nskr_opguy`), Alice Lumi (`nskr_researcher`) and Michael Roux (`nskr_president`, administrator) live there; Nicholas Antoine (`nskr_intelligence`) works at the Outpost.
 
-The rules row `nskr_kestevenQuest` adds "Chat about operations work" to a person's options when all of these hold:
+The rules row `nskr_kestevenQuest` adds "Chat about operations work" to a person's options when all of these hold, checked in this order:
 
-- `nskr_kestevenQuest hasOption`: the market belongs to Kesteven, the player's Kesteven relationship is above -0.50, and the questline has not ended (`QUEST_END_KEY`);
 - the person has the `k_quest` tag (Jack, Alice, Nicholas);
+- `nskr_kestevenQuest hasOption`: the market belongs to Kesteven, the player's Kesteven relationship is above -0.50, and the questline has not ended (`QUEST_END_KEY`). The verb returns before `setupVars()`, so it computes no fleet strength;
 - `nskr_isAtMostKStage 19`.
 
 At stage 20 and after failure the option disappears.
 
-Each job has a relationship gate and, from job 3 on, a fleet-strength gate. Strength is `PowerLevel.get(0.2f, 0f, 2f)`; dev mode reports 2.
+Each job has a relationship gate and, from job 3 on, a fleet-strength gate. Strength is `PowerLevel.get(0.2f, 0f, 2f)`; dev mode reports 2. `nskr_kestevenQuest.getPower()` computes it once per command call, only when a strength gate or a job 3 or job 4 briefing reads it.
 
 | Job | Offered by | Kesteven relationship | Strength |
 |---|---|---|---|
@@ -271,5 +271,4 @@ These follow from the code and rules as written. None has been checked in game.
 
 1. **"Yes (lie)" to Alice.** It follows the same path as "Yes" and records nothing; no code reads a lie to Alice.
 2. **Missing shortcut target.** Rows call `SetShortcut nskr_kestevenQuestCancel`, but no option has that id. The call does nothing; `updateOptions()` puts Escape on `nskr_kestevenQuestExit`.
-3. **Stale relationship.** `nskr_kestevenQuest.validMarket` reads a static relationship cached by the last `setupVars` call.
-4. **Glacier.** The first screen of `GlacierCommsDialog` has no Leave option. `CorePlugin` opens it only when its one option, "Search for the facility", is available, and the next screen offers Leave.
+3. **Glacier.** The first screen of `GlacierCommsDialog` has no Leave option. `CorePlugin` opens it only when its one option, "Search for the facility", is available, and the next screen offers Leave.

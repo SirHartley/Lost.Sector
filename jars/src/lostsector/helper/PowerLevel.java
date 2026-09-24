@@ -11,8 +11,9 @@ import com.fs.starfarer.api.loading.WeaponSpecAPI;
 
 public class PowerLevel {
 
+    // Called for every fleet spawn and quest offer; keep it out of the default INFO log.
     static void log(final String message) {
-        Global.getLogger(PowerLevel.class).info(message);
+        Global.getLogger(PowerLevel.class).debug(message);
     }
 
     public static float get(float base, float minPower, float maxPower){
