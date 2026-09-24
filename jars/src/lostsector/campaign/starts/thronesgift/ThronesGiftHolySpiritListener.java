@@ -6,6 +6,7 @@ import com.fs.starfarer.api.combat.ShipAPI;
 import com.fs.starfarer.api.combat.listeners.AdvanceableListener;
 import com.fs.starfarer.api.impl.campaign.ids.HullMods;
 import lostsector.helper.MathHelper;
+import lostsector.helper.Music;
 import org.lazywizard.lazylib.MathUtils;
 import org.lwjgl.util.vector.Vector2f;
 
@@ -73,7 +74,7 @@ public class ThronesGiftHolySpiritListener implements AdvanceableListener {
                     1, TEXT_COLOR,"The HOLY SPIRIT has returned");
 
             //stop music
-            if (Global.getSoundPlayer().getCurrentMusicId().equals("HOLY SPIRIT.ogg")) Global.getSoundPlayer().pauseCustomMusic();
+            Music.stopIfPlaying(MUSIC_ID);
 
             //set back og portrait
             if (ship.getCaptain()!=null) {

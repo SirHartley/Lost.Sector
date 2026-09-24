@@ -20,6 +20,7 @@ Added - Mod Settings key for firing a charged Stasis Generator (default F), for 
 Fixed - Hellspawn start: The Descent grants the Gate Conduit ability and the Hellspawn skill again, and the peaceful judgement no longer crashes
 Fixed - Crash when Gate Conduit calls in its swarms
 Fixed - Gate Conduit swarms no longer join battles against you or against other Enigma fleets, and no longer turn on you
+Fixed - The THRN and HOLY SPIRIT music now stops when their scene or fight ends
 
 1.0.b
 Adjusted - Severely nerfed spawn rates for Borealis, Rhea and Kingslayer

@@ -13,6 +13,7 @@ import com.fs.starfarer.api.util.IntervalUtil;
 import com.fs.starfarer.api.util.Misc;
 import lostsector.campaign.starts.hellspawn.HellSpawnJudgementIntel;
 import lostsector.helper.Ids;
+import lostsector.helper.Music;
 
 import java.awt.*;
 import java.util.Map;
@@ -23,6 +24,7 @@ public class HellSpawnJudgementWarning implements InteractionDialogPlugin {
     //
 
     public static final String PERSISTENT_KEY = "hellSpawnJudgementWarningKey";
+    public static final String MUSIC_ID = "nskr_thrn_theme";
 
     private PersonAPI thrn;
     private InteractionDialogAPI dialog;
@@ -141,14 +143,11 @@ public class HellSpawnJudgementWarning implements InteractionDialogPlugin {
     }
 
     public static void stopMusic() {
-        if (Global.getSoundPlayer().getCurrentMusicId().equals("THRN.ogg")){
-            Global.getSoundPlayer().pauseCustomMusic();
-        }
+        Music.stopIfPlaying(MUSIC_ID);
     }
 
     public static void playMusic() {
-        Global.getSoundPlayer().playCustomMusic(0, 12, "nskr_thrn_theme", true);
-
+        Global.getSoundPlayer().playCustomMusic(0, 12, MUSIC_ID, true);
     }
 
     private void genTHRN(){

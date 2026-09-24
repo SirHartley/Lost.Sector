@@ -261,6 +261,7 @@ Prototype weapons (`prot_wp` tag, Unknown Prototype manufacturer) have one `*Eff
 | `rendering/ColorHelper` | Colour utilities and the tooltip colours `TT_ORANGE`, `BON_GREEN`, `NICE_YELLOW` |
 | `StringHelper` | Token substitution helpers adapted from Nexerelin; Greek-letter names |
 | `UiSounds` | UI sound shortcuts |
+| `Music` | Music checks by `data/config/sounds.json` music set id: `isPlaying()`, `stopIfPlaying()`. Java names music sets, never music files. |
 
 ### Settings
 
@@ -296,6 +297,7 @@ Java custom-panel behavior, sprite state and drawing gotchas are in [UI.md](UI.m
 
 - The Starsector script classloader rejects direct references to `java.lang.reflect.Field` and `Method`. Use `MethodHandle` for reflection.
 - Sound IDs are unchecked strings until playback. Validate them against merged sound data. Starsector JSON supports `#` comments and trailing commas, and sound entries may be arrays or objects.
+- `SoundPlayerAPI.getCurrentMusicId()` returns the playing file with its path, not the music set id passed to `playCustomMusic`. Compare through `helper/Music`, which resolves a set's files from the merged `sounds.json`.
 - `playUISound` expects stereo; positional `playSound` requires mono; loops should be mono.
 - GraphicsLib's combat-engine storage and viewport helpers are unavailable in the campaign layer.
 
