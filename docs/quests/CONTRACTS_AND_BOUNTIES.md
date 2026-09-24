@@ -53,7 +53,7 @@ Other pieces:
 - **Hints.** `events/hints/HintManager` rolls 4% when the player enters a new system outside the core. A hit adds a `HintIntel` pointing to the Abyss, Eternity, Mothership or Frost system. A hint source is dropped once that bounty's own intel exists.
 - **Rules conversations.** Comm rows `abyssDialog`, `eternityDialog`, `pkDialog*` and `mothershipDialog*` hold the fleets' voice. The Mothership comm offers "Try to shut down the AI", which fails.
 - **Mothership planets.** `CorePlugin` routes both planets to `MothershipInteractionBlocker` until the fleet has been beaten. The Mothership's fleet-interaction config records `nskr_mothershipKeySpawnedWreck` when its flagship is gone. `nskr_mothershipKeyCompleted` marks the bounty done.
-- **Peacekeepers.** The fleet can be destroyed by someone else; `RorqualIntel` then reports the chance missed. `events/DerelictTeaserSpawner` places a Rorqual derelict as a teaser.
+- **Peacekeepers.** The Rorqual flagship is the bounty (`RorqualSpawner.hasRorqual`, which tracks the ship `SimpleFleet` created as flagship). `BountyLoot` pays when the Rorqual is gone after a battle the player won, even if escorts survive. Once it is gone, the spawner also clears the loot flag at its next daily check and the fleet despawns out of sensor range; if someone else destroyed it, `RorqualIntel` reports the chance missed. `events/DerelictTeaserSpawner` places a Rorqual derelict as a teaser.
 - **ARO strike group.** `events/InterceptManager` can spawn an ARO strike group when the player's fleet contains Abyss bounty ships (`AbyssSpawner.hasBountyShips`).
 
 None of the bounties has stages, dialogue choices that change state, or a failure path beyond another party killing the Peacekeepers.

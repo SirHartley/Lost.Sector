@@ -37,7 +37,7 @@ public class LoanShark extends BaseCampaignEventListener implements EveryFrameSc
     public static final float BASE_CHANCE = 0.01f;
     public static final float DESPAWN_TIMER = 45f;
     public static final String COLLECTOR_KEY = "$debtCollector";
-    public static final String FLEET_NAME = "nskr_debt Collector";
+    public static final String FLEET_NAME = "Debt Collector";
 
     public static final String FLEET_ARRAY_KEY = "$nskr_loanSharkFleets";
     Saved<Float> counter;

@@ -101,6 +101,7 @@ public class SimpleFleet {
 
             if (flagshipInfo.name!=null) flagship.setShipName(flagshipInfo.name);
             flagship.setFlagship(true);
+            flagshipInfo.member = flagship;
             //always recover flagship
             if (flagshipInfo.alwaysRecover) flagship.getVariant().addTag(Tags.VARIANT_ALWAYS_RECOVERABLE);
             if (flagshipInfo.noAutofit) flagship.getVariant().addTag(Tags.TAG_NO_AUTOFIT);

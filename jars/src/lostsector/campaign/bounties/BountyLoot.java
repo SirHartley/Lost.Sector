@@ -89,7 +89,7 @@ public class BountyLoot extends BaseCampaignEventListener implements EveryFrameS
 
 		//rorq "bounty" loot
 		if (loser.getMemoryWithoutUpdate().contains(RorqualSpawner.LOOT_KEY)){
-			if (loser.getFlagship()==null) {
+			if (!RorqualSpawner.hasRorqual(loser)) {
 
 				//completed
 				QuestHelper.setCompleted(true, DEFEATED_RORQ_KEY);

@@ -115,7 +115,7 @@ public class RorqualSpawner extends BaseCampaignEventListener implements EveryFr
             for (FleetInfo f : fleets) {
                 CampaignFleetAPI fleet = f.fleet;
                 //rorq GONE
-                if (fleet.getFlagship()==null || fleet.getFlagship() != fleet.getFlagship()) {
+                if (FleetHelper.getOriginalFlagship(f) == null) {
                     fleet.getMemoryWithoutUpdate().unset(RorqualSpawner.LOOT_KEY);
                 }
 
@@ -324,6 +324,14 @@ public class RorqualSpawner extends BaseCampaignEventListener implements EveryFr
         log(LOG_PREFIX+" SPAWNED, size " + points + " system " + loc.getContainingLocation().getName()+ " loc " + loc.getName());
         log(LOG_PREFIX+" FLEET, loc " + fleet.getStarSystem().getName() +" size "+ fleet.getFleetPoints() + " commander " + fleet.getCommander().getName().getFullName() + " flagship " + fleet.getFlagship().getHullSpec().getBaseHullId());
     }
+    // The Rorqual flagship is the bounty: the Peacekeepers are beaten once it has left the fleet.
+    public static boolean hasRorqual(CampaignFleetAPI fleet){
+        for (FleetInfo f : FleetHelper.getFleets(FLEET_ARRAY_KEY)){
+            if (f.fleet == fleet) return FleetHelper.getOriginalFlagship(f) != null;
+        }
+        return fleet.getFlagship() != null;
+    }
+
     private static CampaignFleetAPI fixRorqCount(CampaignFleetAPI fleet){
         for (FleetMemberAPI m : fleet.getMembersWithFightersCopy()){
             if(m.getCaptain().getId().equals("nskr_pkguy") || m.isFlagship())continue;

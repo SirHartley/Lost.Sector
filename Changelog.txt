@@ -55,6 +55,9 @@ Fixed - Nexerelin random sectors and other sectors without Arcadia now place Ast
 Fixed - Crash when Kesteven's leadership returns to Asteria after the Outpost lost its nanoforge
 Fixed - New-game generation no longer floods the log or hangs while placing the Project Helios bounty
 Fixed - Helios and Polaris are now always placed around a gas giant without moons
+Fixed - The Peacekeepers bounty now pays once you destroy the ISS White Whale, and ends when someone else destroys it
+Fixed - ARO Strike Groups, the Merc Messenger and Hunter Fanatics now react to your movements several times a day instead of once a day
+Fixed - The Kesteven debt collector fleet is named Debt Collector again instead of showing an internal ID
 
 1.0.b
 Adjusted - Severely nerfed spawn rates for Borealis, Rhea and Kingslayer

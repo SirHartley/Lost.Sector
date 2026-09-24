@@ -258,7 +258,7 @@ Prototype weapons (`prot_wp` tag, Unknown Prototype manufacturer) have one `*Eff
 | `ShipHelper` | Prototype/Enigma identity (`isProtTech`, `protOrEnigma`), logistics and D-mod checks, officer skills, hull-size multiplier (`getLinearMod`) |
 | `CombatHelper` | Range queries pinned to LazyLib 2.4b behavior; area damage including station modules |
 | `MathHelper` | Easing, noise, seeded random ranges (modified from LazyLib); sector seed (`getSeedParsed`) |
-| `FleetHelper` | Fleet generation and assignment AI helpers; `hackBrokenVariants()` on load |
+| `FleetHelper` | Fleet generation and assignment AI helpers; `getOriginalFlagship()` for fleets built by `helper/fleet/SimpleFleet` (vanilla `getFlagship()` returns another member once the flagship is lost); `hackBrokenVariants()` on load, which repairs only that original flagship |
 | `PowerLevel` | Player fleet strength for encounter scaling |
 | `rendering/BlastSprite`, `rendering/CampaignBlastSprite` | Timed blast sprites in combat and campaign (`HellSpawnAbility`) |
 | `rendering/ColorHelper` | Colour utilities and the tooltip colours `TT_ORANGE`, `BON_GREEN`, `NICE_YELLOW` |

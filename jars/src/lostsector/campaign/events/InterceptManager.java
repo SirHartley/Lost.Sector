@@ -148,13 +148,13 @@ public class InterceptManager extends BaseCampaignEventListener implements Every
         }
 
         //10x a day
-        if (fleetCounter.val>10f) {
+        if (fleetCounter.val>1f) {
             //FLEET LOGIC
             Random random = getRandom(PERSISTENT_RANDOM_KEY);
             for (FleetInfo f : fleets) {
                 CampaignFleetAPI fleet = f.fleet;
-                //timer
-                f.age+=1f;
+                // Age in days, like the despawn and chase timers.
+                f.age+=0.1f;
 
                 //ARO fleet
                 if (fleet.getMemoryWithoutUpdate().contains(ARO_FLEET_KEY)){

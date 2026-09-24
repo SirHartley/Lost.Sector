@@ -471,8 +471,8 @@ public class FleetHelper {
     public static void hackBrokenVariants(){
         for (String key : FLEET_ARRAY_KEYS) {
             for (FleetInfo f : FleetHelper.getFleets(key)){
-                FleetMemberAPI flagship = f.fleet.getFlagship();
-                if (flagship!=null && f.flagshipSimpleMember!=null){
+                FleetMemberAPI flagship = getOriginalFlagship(f);
+                if (flagship!=null){
                     fix(flagship, f.flagshipSimpleMember);
                 }
                 if (!f.secondaries.isEmpty()){
@@ -485,6 +485,15 @@ public class FleetHelper {
             }
         }
     }
+    // The ship SimpleFleet created as flagship, or null once it has left the fleet. Vanilla
+    // getFlagship() then returns another member.
+    public static FleetMemberAPI getOriginalFlagship(FleetInfo info){
+        SimpleFleetMember flagshipInfo = info.flagshipSimpleMember;
+        if (flagshipInfo==null || flagshipInfo.member==null) return null;
+        if (!info.fleet.getFleetData().getMembersListCopy().contains(flagshipInfo.member)) return null;
+        return flagshipInfo.member;
+    }
+
     private static void fix(FleetMemberAPI original, SimpleFleetMember target){
         log("old tags "+original.getVariant().getTags());
         ShipVariantAPI thisVariant = Global.getSettings().getVariant(target.variant);
