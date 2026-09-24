@@ -22,6 +22,7 @@ Fixed - Crash when Gate Conduit calls in its swarms
 Fixed - Gate Conduit swarms no longer join battles against you or against other Enigma fleets, and no longer turn on you
 Fixed - The THRN and HOLY SPIRIT music now stops when their scene or fight ends
 Fixed - No More Chains (Kingslayer) no longer keeps its energy and missile rate of fire and flux cost bonuses after it switches off
+Fixed - Every Nemesis in a battle now starts in Relocation Protocol and cycles its Adaptive Protocol modes in order, not just the first one
 
 1.0.b
 Adjusted - Severely nerfed spawn rates for Borealis, Rhea and Kingslayer

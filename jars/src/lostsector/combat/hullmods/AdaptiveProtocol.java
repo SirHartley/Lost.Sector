@@ -43,11 +43,16 @@ public class AdaptiveProtocol extends BaseHullMod {
     public static final String id = "nskr_protocol";
     public static final String AS_ICON = "graphics/icons/hullsys/targeting_feed.png";
     public static final String AS_BUFF_ID = "nskr_as1";
-    public static int storedHashCode = 0;
     public static final Vector2f ZERO = new Vector2f();
 
     public void advanceInCombat(ShipAPI ship, float amount) {
         if (Global.getCombatEngine().isPaused() || ship.isHulk()) {
+            return;
+        }
+
+        ShipSystemAPI system = ship.getSystem();
+        MutableShipStatsAPI stats = ship.getMutableStats();
+        if (system == null || stats == null) {
             return;
         }
 
@@ -56,15 +61,10 @@ public class AdaptiveProtocol extends BaseHullMod {
             data = new ShipSpecificData();
         }
 
-        if (Global.getCombatEngine().hashCode()!=storedHashCode) {
-            ship.getSystem().setAmmo(1);
-            storedHashCode = Global.getCombatEngine().hashCode();
-        }
-
-        ShipSystemAPI system = ship.getSystem();
-        MutableShipStatsAPI stats = ship.getMutableStats();
-        if (system == null || stats == null) {
-            return;
+        // ProtocolStats starts each system instance in mode 1; the ammo count is the mode.
+        if (data.syncedSystem != system) {
+            system.setAmmo(1);
+            data.syncedSystem = system;
         }
         AdaptiveMode currentMode = this.getMode(system);
         if (currentMode == null) {
@@ -290,6 +290,7 @@ public class AdaptiveProtocol extends BaseHullMod {
     }
 
     private static class ShipSpecificData {
+        public ShipSystemAPI syncedSystem;
         public float speedEffectLevel = 0.0f;
         public float weaponEffectLevel = 0.0f;
         public float defenseEffectLevel = 0.0f;
