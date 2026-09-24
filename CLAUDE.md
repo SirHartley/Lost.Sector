@@ -49,6 +49,7 @@ The dictionaries distinguish checked recipes from extracted names, expressions a
 - Make one commit per requested change. If one message contains several changes, commit them separately in the requested order.
 - Keep each commit message to one short, plain-English summary. Do not include testing notes, agent or model names, co-author trailers, session metadata, links, formatting, or session URLs.
 - Update the affected documentation in the same commit, following [Documentation upkeep](#documentation-upkeep). Do this without a separate user request.
+- Add a `Changelog.txt` entry for every change players can notice, in the same commit, under the top (next-release) section. Use the existing forms `Added -`, `Adjusted -`, `Fixed -` and `Removed -`, one line per entry, in player terms. Refactors, documentation, tools and build setup get no entry.
 - Work only in the current task checkout. A live mod installation, including any copy under a Starsector `mods` folder, and every unrelated checkout are read-only unless the user explicitly asks you to change them.
 - Do not deploy or synchronize the mod after merge unless the user explicitly requests it.
 - Keep all Java tools and automated checks under `src`, in the normal `Lost.Sector` module. Do not add separate test source trees or duplicate game classes. Tools may read existing game constants and types; do not change runtime classes to support them.
@@ -77,6 +78,7 @@ Update documents automatically as part of each relevant change, not by a backgro
 
 | Document | Owns | Update when / how |
 |---|---|---|
+| `Changelog.txt` | Player-facing change list for each release | Add one entry per user-affecting change in the commit that makes it, under the top (next-release) section. Do not rename released sections. |
 | `AGENTS.md` | Codex discovery | Keep it a short pointer to this file. Do not copy workflow policy into it. |
 | `CLAUDE.md` | Task scope, subagent instructions, tools, commits, PRs, builds, comments, document maintenance | Replace changed policies here and update links. Keep provider-specific instructions explicitly scoped. |
 | `docs/ARCHITECTURE.md` | Technical routing: owners, registrations, data flow, lifecycle and cross-system constraints | Update the affected route or contract; remove obsolete owners. Use exact paths and symbols. No lore, writing advice, release history, or duplicate policy. |
