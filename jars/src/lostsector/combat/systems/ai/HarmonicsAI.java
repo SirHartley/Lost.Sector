@@ -115,6 +115,7 @@ public class HarmonicsAI  implements ShipSystemAIScript {
             totalRange += weapon.getRange();
             totalCount++;
         }
+        if (totalCount == 0f) return 0f;
         averageRange = totalRange/totalCount;
 
         return averageRange;
