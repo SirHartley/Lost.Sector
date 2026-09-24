@@ -262,7 +262,7 @@ public class RealitySplitterStats extends BaseShipSystemScript {
                     float force, damage, emp, mod;
 
                     for (CombatEntityAPI tmp : CombatUtils.getEntitiesWithinRange(ship.getLocation(),EXPLOSION_PUSH_RADIUS)){
-                        if (tmp.getCollisionClass()==CollisionClass.NONE) continue;
+                        if (tmp == ship || tmp.getCollisionClass()==CollisionClass.NONE) continue;
                         boolean friendly = tmp.getOwner() == ship.getOwner();
                         if (friendly && tmp instanceof MissileAPI) continue;
                         if (friendly && tmp instanceof ShipAPI && ((ShipAPI) tmp).isFighter()) continue;
