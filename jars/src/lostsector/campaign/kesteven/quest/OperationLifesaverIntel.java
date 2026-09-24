@@ -174,7 +174,7 @@ public class OperationLifesaverIntel extends BaseIntelPlugin {
         if(stage==13)info.addPara("With both of the fleets taken care of you should report back to Alice Lumi.", initPad, g, h, "report back to Alice Lumi", "");
 
         if(stage>=14 && !failed)info.addPara("You managed to complete the job.", initPad, g, h, "", "");
-        if(stage>=14 && failed)info.addPara("You attacked the Special Operations fleet, job failed. You wont be working with Kesteven anytime soon.", initPad, g, h, "", "");
+        if(stage>=14 && failed)info.addPara("You attacked the Special Operations fleet, job failed. You won't be working with Kesteven anytime soon.", initPad, g, h, "", "");
         unindent(info);
     }
 

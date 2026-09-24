@@ -648,12 +648,12 @@ public class nskr_kestevenQuest extends PaginatedOptions {
 
 		if (person==jack) {
 			text.addParagraph("He looks almost flustered. \"What- How did you...\" He thinks for a moment.");
-			text.addParagraph("\"You know we got his strange lead recently pointing to these coordinates, I think you should investigate.\" " +
+			text.addParagraph("\"You know we got this strange lead recently pointing to these coordinates, I think you should investigate.\" " +
 					"He looks a little worried. \"Huh, I actually don't remember how we got these...\"");
 		}
 		if (person==alice){
 			text.addParagraph("She looks confused for a moment. \"What- How did you...\" She thinks for a moment.");
-			text.addParagraph("\"You know we got his strange lead recently pointing to these coordinates, I think you should investigate.\" " +
+			text.addParagraph("\"You know we got this strange lead recently pointing to these coordinates, I think you should investigate.\" " +
 					"She looks distressed. \"Huh... I actually don't remember how we got these...\"");
 		}
 

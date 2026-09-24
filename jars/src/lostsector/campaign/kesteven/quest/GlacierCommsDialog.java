@@ -151,7 +151,7 @@ public class GlacierCommsDialog implements InteractionDialogPlugin {
             text.setFontInsignia();
 
             options.addOption("Try to find a way around", OptionId.A7);
-            options.addOption("Cut trough it", OptionId.B1);
+            options.addOption("Cut through it", OptionId.B1);
             options.addOption("Blast it", OptionId.C1);
         }
         //a7 walk

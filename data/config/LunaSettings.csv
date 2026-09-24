@@ -1,11 +1,11 @@
 fieldID,fieldName,fieldType,defaultValue,secondaryValue,fieldDescription,minValue,maxValue,tab
-difficultyText,Difficulty Note,Text,Choose a difficulty [before] starting a new game so that it applies to every fleet.,,,,,Difficulty
-difficulty,Difficulty,Radio,Normal,"Normal, Easy, TRUE STARFARER","Normal uses the fleet sizes set in the Fleets tab. Easy makes Enigma and scripted fleets smaller. TRUE STARFARER makes them larger and some special encounters harder. Finish the Kesteven questline on TRUE STARFARER, chosen at the start and never changed, to unlock the Hellspawn start.",,,Difficulty
-fleetsText,Fleets Note,Text,Changes apply only to fleets that spawn afterwards. These sizes are used on Normal difficulty only.,,,,,Fleets
+difficultyText,Difficulty Note,Text,Choose a difficulty [before] starting a new game so it applies to every fleet.,,,,,Difficulty
+difficulty,Difficulty,Radio,Normal,"Normal, Easy, TRUE STARFARER","Normal uses the fleet sizes from the Fleets tab. Easy sets wandering Enigma fleets to 0.6x and scripted fleets to 0.7x. TRUE STARFARER sets wandering Enigma fleets to 1.25x and scripted fleets to 1.2x, and makes some special encounters harder. To unlock the Hellspawn background, start a new game on TRUE STARFARER, keep it for the whole game and finish the Kesteven questline.",,,Difficulty
+fleetsText,Fleets Note,Text,These sizes apply on [Normal] difficulty only and only to fleets that spawn after a change.,,,,,Fleets
 scriptedFleetScaling,Scripted Fleet Size Multiplier,Double,1,,Size multiplier for scripted event and quest fleets. Scales only the randomly generated part of each fleet.,0.1,5,Fleets
 randomEnigmaFleetScaling,Random Enigma Fleet Size Multiplier,Double,1,,Size multiplier for wandering Enigma fleets. Set to 0 to stop them from spawning.,0,5,Fleets
-unlocksText,Unlocks Note,Text,Finishing the Kesteven questline turns these on for all later games. The Hellspawn start also needs TRUE STARFARER difficulty.,,,,,Unlocks
-thronesGiftUnlocked,Throne's Gift Start,Boolean,FALSE,,Makes the Throne's Gift background selectable when you start a new game with Nexerelin.,,,Unlocks
-hellspawnUnlocked,Hellspawn Start,Boolean,FALSE,,Makes the Hellspawn background selectable when you start a new game with Nexerelin.,,,Unlocks
-storySkipUnlocked,Story Skip,Boolean,FALSE,,Offers a story point option to skip ahead in the Kesteven questline.,,,Unlocks
-stasisFireKey,Stasis Generator Fire Key,Keycode,33,,"When you pilot a ship with the Stasis Generator system, pressing this key while the system is cooling down fires the charged stasis sphere. Set it to your ship system key to use one key for both.",,,Controls
+unlocksText,Unlocks Note,Text,Finishing the Kesteven questline turns these on for all later games. You can also switch them on yourself.,,,,,Unlocks
+thronesGiftUnlocked,Throne's Gift Background,Boolean,FALSE,,Makes the Throne's Gift background selectable when you start a new game with Nexerelin. Finishing the Kesteven questline turns this on.,,,Unlocks
+hellspawnUnlocked,Hellspawn Background,Boolean,FALSE,,Makes the Hellspawn background selectable when you start a new game with Nexerelin. Finishing the Kesteven questline on TRUE STARFARER turns this on.,,,Unlocks
+storySkipUnlocked,Story Skip,Boolean,FALSE,,Adds a 5 story point option to Kesteven questline conversations that skips ahead to the last part of the questline. A game that uses it can no longer unlock the Hellspawn background.,,,Unlocks
+stasisFireKey,Stasis Generator Fire Key,Keycode,33,,"Fires the charged stasis sphere of a Stasis Generator ship you pilot while the system is cooling down. Set it to your ship system key to use one key for both.",,,Controls

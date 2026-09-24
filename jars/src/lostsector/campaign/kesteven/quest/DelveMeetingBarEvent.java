@@ -306,7 +306,7 @@ public class DelveMeetingBarEvent extends BaseBarEvent {
         }
         if (optionData==OptionId.Q2){
             options.clearOptions();
-            text.addPara("He gives you a quick smirk. \"You will be more than well compensated for your work, if we pull this off. And it wont only be a big pile of credits, but some seriously unique tech.\"");
+            text.addPara("He gives you a quick smirk. \"You will be more than well compensated for your work, if we pull this off. And it won't only be a big pile of credits, but some seriously unique tech.\"");
             text.addPara("Alice adds to the conversation. \"Of course we don't know exactly that is inside the Cache yet, but we do know that it was important enough for the Domain to hide it well.\"");
 
             options.addOption("Agree to do the job",OptionId.MAIN2);

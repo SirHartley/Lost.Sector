@@ -1,9 +1,9 @@
 {
 	tips:[
 
-	  "[Lost.Sector] Remember to check out Lost.Sector's options in the Mod Settings menu.",
-	  "[Lost.Sector] You can choose Easy difficulty in the Mod Settings menu.",
-	  "[Lost.Sector] You can choose TRUE STARFARER difficulty in the Mod Settings menu. Will you fight? Or will you perish?",
+	  "[Lost.Sector] Lost.Sector's difficulty, fleet size and unlock options are in the Mod Settings menu.",
+	  "[Lost.Sector] You can choose Easy difficulty in the Mod Settings menu before starting a new game.",
+	  "[Lost.Sector] You can choose TRUE STARFARER difficulty in the Mod Settings menu before starting a new game. Will you fight? Or will you perish?",
 	  "[Lost.Sector] You can exchange your Artifact electronics for special equipment at Asteria - after helping certain people.",
 	  "[Lost.Sector] You can take out loans at any Kesteven market by talking to an official.",
 	  "[Lost.Sector] You can get special jobs at Asteria by talking to certain people.",
@@ -24,7 +24,7 @@
 	  "[Lost.Sector] Hit strength is a very powerful stat for overcoming armor and it should not be underestimated.",
 	  "[Lost.Sector] Slower ships should prioritize dissipation and efficiency, while mobile ships should go for capacity and burst damage.",
 	  "[Lost.Sector] You can hit W-Q-W on the refit screen to instantly create weapon groups. Useful when making many load-outs at once.",
-	  "[Lost.Sector] You can quickly refit any one of you ships by hitting F to open the fleet menu and then hitting R while hovering the ship you want to refit.",
+	  "[Lost.Sector] You can quickly refit any one of your ships by hitting F to open the fleet menu and then hitting R while hovering the ship you want to refit.",
 	  "[Lost.Sector] Always max vents on your ships.",
 	  "[Lost.Sector] Missiles on linked is the only true way.",
     ],

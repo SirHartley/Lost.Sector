@@ -40,7 +40,7 @@ public class ThronesGiftBackground extends BaseCharacterBackground {
 
     @Override
     public String getShortDescription(FactionSpecAPI factionSpec, NexFactionConfig factionConfig) {
-        if (!isUnlocked()) return "Complete the Kesteven questline on any difficulty to unlock this background.";
+        if (!isUnlocked()) return "Unlocked by finishing the Kesteven questline on any difficulty, or in Mod Settings.";
         return spec.shortDescription;
     }
 
