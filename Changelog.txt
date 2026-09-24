@@ -34,6 +34,9 @@ Fixed - The Mothership hullmod's codex entry no longer errors, and other hullmod
 Fixed - Prototype, Enigma, Void and Remnant ship systems now unlock in the codex together with their ships
 Fixed - Kesteven fleets no longer include the Buffalo Mk.II
 Added - Descriptions for the Abyssal Phase Cloak and Limited Phase Cloak ship systems
+Fixed - Spending a story point to get past the "proper fleet" requirement for a Kesteven job now works and shows the job briefing
+Fixed - The 5 story point Skip story option in the Kesteven questline now works
+Fixed - Refusing Hostile Takeover ("I'm not doing this.") now always asks for confirmation instead of sometimes doing nothing
 
 1.0.b
 Adjusted - Severely nerfed spawn rates for Borealis, Rhea and Kingslayer

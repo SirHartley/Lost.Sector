@@ -29,10 +29,11 @@ nskr_kestevenQuestOptions,DialogOptionSelected,"nskr_optionStartsWith ""nskr_kes
 SetShortcut nskr_kestevenQuestCancel ""ESCAPE""
 ",,"nskr_kestevenQuestConfirmQuest:Continue
 nskr_kestevenQuestExit:Go back",
-nskr_kestevenQuestOptionsSP,DialogOptionSelected,"nskr_optionStartsWith ""nskr_kestevenQuest_story_pick_""","nskr_kestevenQuest advanceStageStory
+nskr_kestevenQuestOptionsSP,DialogOptionSelected,"nskr_optionStartsWith ""nskr_kestevenQuest_story_pick_""","nskr_kestevenQuest advanceStageReqSkip
 SetShortcut nskr_kestevenQuestCancel ""ESCAPE""
 ",,"nskr_kestevenQuestConfirmQuest:Continue
 nskr_kestevenQuestExit:Go back",
+nskr_kestevenQuestOptionsStorySkip,DialogOptionSelected,"nskr_optionStartsWith ""nskr_kestevenQuest_story_skip_pick_""","nskr_kestevenQuest advanceStageStorySkip",,,
 nskr_kestevenQuestExtraDialogueStart,DialogOptionSelected,"nskr_optionStartsWith ""nskr_kestevenQuest_extraStart_""","nskr_kestevenQuest extraDialogueStart
 SetShortcut nskr_kestevenQuestCancel ""ESCAPE""","""What do you need to know?""",,
 nskr_kestevenQuestExtraDialogue,DialogOptionSelected,"nskr_optionStartsWith ""nskr_kestevenQuest_extra_""","nskr_kestevenQuest extraDialogue
@@ -40,7 +41,7 @@ SetShortcut nskr_kestevenQuestCancel ""ESCAPE""",,,
 nskr_kestevenQuestConfirmQuest,DialogOptionSelected,"nskr_optionStartsWith ""nskr_kestevenQuestConfirmQuest""","nskr_kestevenQuest confirmQuest",,"nskr_kestevenQuestExit:Leave",
 nskr_kestevenQuestExit,DialogOptionSelected,"$option == nskr_kestevenQuestExit","FireAll PopulateOptions",,,
 nskr_kestevenQuestConfirmSkip,DialogOptionSelected,"$option == nskr_kestevenQuestConfirmSkip","nskr_kestevenQuest confirmSkip",,"nskr_kestevenQuestExit:Leave",
-nskr_kestevenQuestJob3Skip,DialogOptionSelected,"$option == nskr_kestevenQuest_extra_3
+nskr_kestevenQuestJob3Skip,DialogOptionSelected,"$option == nskr_kestevenQuest_extra_3 score:10
 nskr_isKStage 7","nskr_kestevenQuest skip",,,
 "#END kesteven QUEST options",,,,,,
 ,,,,,,

@@ -100,7 +100,6 @@ public class nskr_kestevenQuest extends PaginatedOptions {
 	private boolean aliceTip = false;
 	private boolean aliceTip2 = false;
 	private boolean allDisks = false;
-	private boolean storyCompleted = false;
 
 	private PersonAPI jack;
 	private PersonAPI alice;
@@ -268,8 +267,6 @@ public class nskr_kestevenQuest extends PaginatedOptions {
 
 		diskCount = QuestHelper.getDisksRecovered();
 		allDisks = QuestHelper.getDisksRecovered()>=5;
-
-		storyCompleted = Setting.STORY_SKIP_UNLOCKED.getBoolean();
 	}
 	
 	public void updateOptions() {
@@ -300,17 +297,14 @@ public class nskr_kestevenQuest extends PaginatedOptions {
 			//top start text
 			if(jackIntro)text.addPara("\"Hmmm. Let me check around.\"");
 			//job 1
-			if (stage == 0 && relation >= JOB1_REP) {
-				desc = "Enemy Unknown";
-				jobText = "\"There is a new job available at the moment, are you interested?\"";
-				//skip story
-				if (storyCompleted) addStorySkipOption();
-			}
-			//job 1 not enough rep
-			if (stage == 0 && relation < JOB1_REP) {
-				jobText = "\"There is a new job available at the moment, but we require someone more qualified. Come back later when I know you can be trusted.\"";
-				//skip story
-				if (storyCompleted) addStorySkipOption();
+			if (stage == 0) {
+				if (relation < JOB1_REP) {
+					jobText = "\"There is a new job available at the moment, but we require someone more qualified. Come back later when I know you can be trusted.\"";
+				} else {
+					desc = "Enemy Unknown";
+					jobText = "\"There is a new job available at the moment, are you interested?\"";
+				}
+				addStorySkipOption();
 			}
 			//job 1 accepted
 			if (stage == 1 && job1tip) {
@@ -345,25 +339,17 @@ public class nskr_kestevenQuest extends PaginatedOptions {
 				jobText = "\"There's nothing urgent at the moment. Come back later for more work.\"";
 			}
 			//job 3 jack
-			if (stage == 6 && relation >= JOB3_REP && power > JOB3_POWER) {
-				desc = "Hostile Takeover";
-				jobText = "\"There is a new job available at the moment, are you interested?\"";
-				//skip story
-				if (storyCompleted) addStorySkipOption();
-			}
-			//job 3 too weak
-			if (stage == 6 && power < JOB3_POWER) {
-				jobText = "\"There is a new job available at the moment, but we require someone more qualified. Come back later with a proper fleet.\"";
-				//SP skip
-				addSkipOption();
-				//skip story
-				if (storyCompleted) addStorySkipOption();
-			}
-			//job 3 not enough rep
-			if (stage == 6 && relation < JOB3_REP) {
-				jobText = "\"There is a new job available at the moment, but we require someone more qualified. Come back later when I know you can be trusted.\"";
-				//skip story
-				if (storyCompleted) addStorySkipOption();
+			if (stage == 6) {
+				if (relation < JOB3_REP) {
+					jobText = "\"There is a new job available at the moment, but we require someone more qualified. Come back later when I know you can be trusted.\"";
+				} else if (power > JOB3_POWER) {
+					desc = "Hostile Takeover";
+					jobText = "\"There is a new job available at the moment, are you interested?\"";
+				} else {
+					jobText = "\"There is a new job available at the moment, but we require someone more qualified. Come back later with a proper fleet.\"";
+					addSkipOption();
+				}
+				addStorySkipOption();
 			}
 			//job 3 in progress jack
 			if (stage == 7) {
@@ -382,23 +368,18 @@ public class nskr_kestevenQuest extends PaginatedOptions {
 				jobText = "\"You're already working for Alice.\"";
 			}
 			//job 5 start
-			if (stage == 14 && relation >= JOB5_REP && power > JOB5_POWER) {
-				desc = "\"I'm listening.\"";
-				jobText = "\"There is something important we need you to work on. We should discuss it in detail.\"";
-			}
-			//job 5 too weak
-			if (stage == 14 && power < JOB5_POWER) {
-				jobText = "\"There is a new job available at the moment, but we require someone more qualified. Come back later with a proper fleet.\"";
-				//SP skip
-				addSkipOption();
-				//skip story
-				if (storyCompleted) addStorySkipOption();
-			}
-			//job 5 not enough rep
-			if (stage == 14 && relation < JOB5_REP) {
-				jobText = "\"There is a new job available at the moment, but we require someone more qualified. Come back later when I know you can be trusted.\"";
-				//skip story
-				if (storyCompleted) addStorySkipOption();
+			if (stage == 14) {
+				if (relation < JOB5_REP) {
+					jobText = "\"There is a new job available at the moment, but we require someone more qualified. Come back later when I know you can be trusted.\"";
+					addStorySkipOption();
+				} else if (power > JOB5_POWER) {
+					desc = "\"I'm listening.\"";
+					jobText = "\"There is something important we need you to work on. We should discuss it in detail.\"";
+				} else {
+					jobText = "\"There is a new job available at the moment, but we require someone more qualified. Come back later with a proper fleet.\"";
+					addSkipOption();
+					addStorySkipOption();
+				}
 			}
 			//go to bar
 			if (stage == 15) {
@@ -442,8 +423,7 @@ public class nskr_kestevenQuest extends PaginatedOptions {
 			if (stage == 7) {
 				desc = "Hostile Takeover";
 				jobText = "\"So you finally showed up. Jack has already told me all about you. He doesn't just send any spacer goon over to me, so I have high expectations for you "+player.getName().getFullName()+".\"";
-				//skip story
-				if (storyCompleted) addStorySkipOption();
+				addStorySkipOption();
 			}
 			//job 3 in progress alice
 			if (stage == 8 || stage == 9) {
@@ -459,26 +439,18 @@ public class nskr_kestevenQuest extends PaginatedOptions {
 				desc = "Hand over your AAR";
 				jobText = "\"My intel suggests you weren't successful in sabotaging Tri-Tachyon.\"";
 			}
-			//job 4 start
-			if (stage == 11 && relation >= JOB4_REP && power > JOB4_POWER && job4wait || stage == 11 && relation >= JOB4_REP && QuestHelper.getCompleted(JOB4_SKIP_REQ_KEY)) {
-				desc = "Operation Lifesaver";
-				jobText = "\"There is a new job available at the moment, are you interested?\"";
-				//skip story
-				if (storyCompleted) addStorySkipOption();
-			}
-			//job 4 too weak
-			if (stage == 11 && power < JOB4_POWER && job4wait && !QuestHelper.getCompleted(JOB4_SKIP_REQ_KEY)) {
-				jobText = "\"There is a new job available at the moment, but we require someone more qualified. Come back later with a proper fleet.\"";
-				//SP skip
-				addSkipOption();
-				//skip story
-				if (storyCompleted) addStorySkipOption();
-			}
-			//job 4 not enough rep
-			if (stage == 11 && relation < JOB4_REP && job4wait) {
-				jobText = "\"There is a new job available at the moment, but we require someone more qualified. Come back later when I know you can be trusted.\"";
-				//skip story
-				if (storyCompleted) addStorySkipOption();
+			//job 4 start after the wait; JOB4_SKIP_REQ_KEY keeps a story point strength bypass across visits
+			if (stage == 11 && job4wait) {
+				if (relation < JOB4_REP) {
+					jobText = "\"There is a new job available at the moment, but we require someone more qualified. Come back later when I know you can be trusted.\"";
+				} else if (QuestHelper.getCompleted(JOB4_SKIP_REQ_KEY) || power > JOB4_POWER) {
+					desc = "Operation Lifesaver";
+					jobText = "\"There is a new job available at the moment, are you interested?\"";
+				} else {
+					jobText = "\"There is a new job available at the moment, but we require someone more qualified. Come back later with a proper fleet.\"";
+					addSkipOption();
+				}
+				addStorySkipOption();
 			}
 			//job 4 in progress
 			if (stage == 12) {
@@ -633,6 +605,7 @@ public class nskr_kestevenQuest extends PaginatedOptions {
 	}
 
 	protected void addStorySkipOption(){
+		if (!Setting.STORY_SKIP_UNLOCKED.getBoolean()) return;
 
 		dialog.getOptionPanel().addOption("You are looking for the Cache and the UPC, right? I think I can help. (Skip story)", DIALOG_OPTION_PREFIX_STORY_SKIP);
 		dialog.makeStoryOption(DIALOG_OPTION_PREFIX_STORY_SKIP,5,0.00f,"ui_char_spent_story_point");
@@ -678,13 +651,17 @@ public class nskr_kestevenQuest extends PaginatedOptions {
 					"She looks distressed. \"Huh... I actually don't remember how we got these...\"");
 		}
 
-		//job3
-		QuestHelper.spawnArtifact(QuestHelper.getJob3Target(),3);
-		DormantSpawner.addDormant(QuestHelper.getJob3Target(), "enigma", 45f, 50f, 0f, 1f, 1f, 1f, 1, 1);
-		//job4
-		QuestFleets.spawnJob4Target();
-		QuestHelper.spawnArtifact(QuestHelper.getJob4EnemyTarget(),4);
-		QuestStageManager.spawnJob4Wrecks(nskr_kestevenQuest.getRandom());
+		//job 3 objects already exist from stage 8, or after refusing job 3 (stage 11)
+		if (stage <= 7) {
+			QuestHelper.spawnArtifact(QuestHelper.getJob3Target(), 3);
+			DormantSpawner.addDormant(QuestHelper.getJob3Target(), "enigma", 45f, 50f, 0f, 1f, 1f, 1f, 1, 1);
+		}
+		//job 4 objects already exist from stage 12
+		if (stage <= 11) {
+			QuestFleets.spawnJob4Target();
+			QuestHelper.spawnArtifact(QuestHelper.getJob4EnemyTarget(), 4);
+			QuestStageManager.spawnJob4Wrecks(nskr_kestevenQuest.getRandom());
+		}
 		//job5
 		QuestHelper.setCompleted(true, DataSatelliteDialog.RECOVERED_4_KEY);
 		QuestHelper.setCompleted(true, DataSatelliteDialog.RECOVERED_3_KEY);

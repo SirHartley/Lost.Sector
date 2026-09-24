@@ -41,7 +41,11 @@ Each job has a relationship gate and, from job 3 on, a fleet-strength gate. Stre
 | 4 Operation Lifesaver | Alice, after a 30-day wait | at least 0.60 | above 0.80 |
 | 5 The Delve | Jack | at least 0.80 | above 0.95 |
 
-When only the strength gate fails, the offer shows a 1-story-point option, "I believe you'll find me more than capable." See the defects below: this option does not work as intended.
+When the relationship gate passes and only the strength gate fails, the offer shows a 1-story-point option, "I believe you'll find me more than capable." (`nskr_kestevenQuest advanceStageReqSkip`). Spending it bypasses the strength gate and shows the job's briefing:
+
+- job 3 (stage 6): Jack sends the player to Alice, whose offer has no strength gate;
+- job 4 (stage 11): Alice's briefing, and `JOB4_SKIP_REQ_KEY` keeps her offer open on later visits;
+- job 5 (stage 14): Jack's briefing, which sets stage 15.
 
 ## Stages
 
@@ -58,7 +62,7 @@ The stage is one integer in sector persistent data (`nskr_kestevenQuest`). Stage
 | 9 | Expedition target known | `HostileTakeoverBarEvent` |
 | 10 | Job 3 over, success or failure | `QuestStageManager`: target destroyed, timeout, or stealth broken |
 | 11 | Job 4 pending | Alice, job 3 turn-in; also job 3 skip |
-| 12 | Job 4 active | Alice, accept; also the story-point skip, see defects |
+| 12 | Job 4 active | Alice, accept |
 | 13 | Job 4 done | `QuestStageManager`, friendly fleet found and strike group destroyed |
 | 14 | Job 5 offered by Jack | Alice, job 4 turn-in; attacking the friendly fleet also sets 14 |
 | 15 | Go to the bar | Jack, while showing the job 5 briefing |
@@ -107,11 +111,11 @@ The job ends in `QuestStageManager` at stage 10 in one of three ways:
 
 Alice's turn-in at stage 10: on success, a modspec, 50,000 exchange points, 205,000 credits, Kesteven +5 and Alice +10; on failure, Kesteven -5 and Alice -10. Both set stage 11.
 
-Refusing at stage 7 ("I'm not doing this.", then "yes") costs Kesteven -5 and Alice -10 and sets stage 11 and `JOB3_SKIP_KEY`. The derelicts, satellite #3 and the dormant fleet are still placed at the target so job 5 can use them. The refusal row competes with another row; see the defects.
+Refusing at stage 7 ("I'm not doing this.", then "yes") costs Kesteven -5 and Alice -10 and sets stage 11 and `JOB3_SKIP_KEY`. The derelicts, satellite #3 and the dormant fleet are still placed at the target so job 5 can use them. The refusal row `nskr_kestevenQuestJob3Skip` carries `score:10`, so it always wins over the generic question row for the same option.
 
 ## Job 4: Operation Lifesaver (stages 11 to 14)
 
-At stage 11 `QuestStageManager` counts 300 seconds (30 days) and then sets `JOB4_WAIT_KEY`. Alice offers the job when Kesteven relationship is at least 0.60 and either the wait is over and strength is above 0.80, or `JOB4_SKIP_REQ_KEY` is set. Pay is 285,000 credits. Her briefing names the constellation of the friendly fleet's location, a random point in a system far from the core. If the Outpost belongs to Kesteven she also points to Nicholas. Accepting sets stage 12.
+At stage 11 `QuestStageManager` counts 300 seconds (30 days) and then sets `JOB4_WAIT_KEY`. After the wait, Alice offers the job when Kesteven relationship is at least 0.60 and either strength is above 0.80 or `JOB4_SKIP_REQ_KEY` is set. Pay is 285,000 credits. Her briefing names the constellation of the friendly fleet's location, a random point in a system far from the core. If the Outpost belongs to Kesteven she also points to Nicholas. Accepting sets stage 12.
 
 When stage 12 is first seen, `QuestStageManager`:
 
@@ -250,19 +254,18 @@ The questline option then disappears. The Cache can still be found and fought; `
 
 ## Story skip
 
-While the `storySkipUnlocked` setting is on, offers show a 5-story-point "Skip story" option. `SkipStoryOptionPicked` would place all job 3 and job 4 objects, mark every job 5 tip and disk source as done, set the Eliza help flags, generate Eliza, set stage 17 and disable the hard-mode completion flag. No rule reaches it; see the defects.
+While the `storySkipUnlocked` setting is on, `addStorySkipOption()` adds a 5-story-point "Skip story" option at stages 0, 6, 7 and 11 (after the job 4 wait), and at stage 14 while a job 5 gate fails. Its rules row `nskr_kestevenQuestOptionsStorySkip` runs `nskr_kestevenQuest advanceStageStorySkip`, and `SkipStoryOptionPicked()`:
+
+- places the job 3 objects (satellite #3 and the dormant fleet) if the stage is at most 7, and the job 4 objects (strike group, satellite #4 and wrecks) if it is at most 11;
+- marks every job 5 tip and disk source as done and sets the Eliza help flags, generating Eliza if she has no market yet;
+- sets `FOUND_CACHE_KEY` and stage 17;
+- clears `nskr_starfarerFromStart` and sets `SKIPPED_STORY_KEY`.
 
 ## Defects found by reading the source
 
 These follow from the code and rules as written. None has been checked in game.
 
-1. **Strength-gate skip.** The 1-story-point option uses id `nskr_kestevenQuest_story_pick_`. Its rules row runs `nskr_kestevenQuest advanceStageStory`, a verb the command does not have, so nothing runs and the row's own Continue option remains.
-   - Job 3 (stage 6): Continue starts job 3.
-   - Job 4 (stage 11): Continue starts job 4 without a briefing, and `JOB4_SKIP_REQ_KEY` is never set.
-   - Job 5 (stage 14): `quest()` has no stage-14 case, so the story point is spent and nothing happens.
-2. **Story skip.** The 5-story-point option id `nskr_kestevenQuest_story_skip_pick_` matches no rules row, and no row calls `advanceStageStorySkip`. The points are spent and the skip never runs.
-3. **Refusing job 3.** "I'm not doing this." (`nskr_kestevenQuest_extra_3`) matches both `nskr_kestevenQuestJob3Skip` and the generic `_extra_` row at equal score. `FireBest` picks one at random; the generic row does nothing for index 3.
-4. **"Yes (lie)" to Alice.** It follows the same path as "Yes" and records nothing.
-5. **Missing shortcut target.** Rows call `SetShortcut nskr_kestevenQuestCancel`, but no option has that id.
-6. **Stale relationship.** `nskr_kestevenQuest.validMarket` reads a static relationship cached by the last `setupVars` call.
-7. **Glacier.** The first screen of `GlacierCommsDialog` has no Leave option.
+1. **"Yes (lie)" to Alice.** It follows the same path as "Yes" and records nothing; no code reads a lie to Alice.
+2. **Missing shortcut target.** Rows call `SetShortcut nskr_kestevenQuestCancel`, but no option has that id. The call does nothing; `updateOptions()` puts Escape on `nskr_kestevenQuestExit`.
+3. **Stale relationship.** `nskr_kestevenQuest.validMarket` reads a static relationship cached by the last `setupVars` call.
+4. **Glacier.** The first screen of `GlacierCommsDialog` has no Leave option. `CorePlugin` opens it only when its one option, "Search for the facility", is available, and the next screen offers Leave.

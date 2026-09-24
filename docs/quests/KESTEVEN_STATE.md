@@ -56,7 +56,7 @@ Each owner keeps its own `Random` in persistent data. Most are seeded from the s
 |---|---|
 | `nskr_jackIntro`, `nskr_aliceIntro`, `nskr_nickIntro` | One-time introduction text shown |
 | `nskr_kestevenQuestJob4Intelligence` | Nicholas's dialogue stage (int) |
-| `nskr_kestevenQuestJob4SkipRequirement` | Job 4 strength gate skipped; never set in practice, see the questline defects |
+| `nskr_kestevenQuestJob4SkipRequirement` | Job 4 strength gate bypassed with a story point |
 | `nskr_kestevenQuestJob5JackTip`, `nskr_kestevenQuestJob5AliceTip`, `nskr_kestevenQuestJob5AliceTip2` | Job 5 tips given |
 | `KestevenQuestEMessengerTalkedKey`, `KestevenQuestEMessengerTalkedKeyAskAbout` | "LZ" messenger met; question available (cleared after asking Alice) |
 
@@ -177,7 +177,7 @@ The stage has no single owner. These are all the writers:
 | `nskr_kestevenQuest.quest()` | 0→1, 2→6, 6→7, 7→8, 10→11, 11→12, 13→14, 16→17 |
 | `nskr_kestevenQuest.showQuestInfoAndPrepare()` | 14→15 |
 | `nskr_kestevenQuest.confirmSkip()` | 7→11 |
-| `nskr_kestevenQuest.SkipStoryOptionPicked()` | any→17 (unreachable, see defects) |
+| `nskr_kestevenQuest.SkipStoryOptionPicked()` | 0, 6, 7, 11 or 14→17 (story skip) |
 | `QuestStageManager.advance()` | 1→2, 12→13, 16→17, failure→99 |
 | `QuestStageManager.job3TargetLogic()` | 8 or 9→10 |
 | `QuestStageManager.reportEncounterLootGenerated()` | 8 or 9→10 (stealth broken), any→14 (friendly attacked) |

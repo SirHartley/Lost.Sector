@@ -21,11 +21,11 @@ Entry: rules row `nskr_kestevenQuest` adds `nskr_kestevenQuestContinue` ("Chat a
 | Option id or prefix | Rules row | Verb | Java method |
 |---|---|---|---|
 | `nskr_kestevenQuest_pick_` | `nskr_kestevenQuestOptions` | `advanceStage` | `showQuestInfoAndPrepare()`: briefings, hand-ins, job 5 tips; writes flags, and 14→15 |
-| `nskr_kestevenQuest_story_pick_` | `nskr_kestevenQuestOptionsSP` | `advanceStageStory` (missing) | none; see [defects](KESTEVEN_QUESTLINE.md#defects-found-by-reading-the-source) |
-| `nskr_kestevenQuest_story_skip_pick_` | none | — | `SkipStoryOptionPicked()` is unreachable |
+| `nskr_kestevenQuest_story_pick_` | `nskr_kestevenQuestOptionsSP` | `advanceStageReqSkip` | `SPOptionPicked()`, then `showQuestInfoAndPrepare()`: strength-gate bypass |
+| `nskr_kestevenQuest_story_skip_pick_` | `nskr_kestevenQuestOptionsStorySkip` | `advanceStageStorySkip` | `SkipStoryOptionPicked()`: story skip |
 | `nskr_kestevenQuest_extraStart_` | `nskr_kestevenQuestExtraDialogueStart` | `extraDialogueStart` | Question list for the current stage |
 | `nskr_kestevenQuest_extra_<n>` | `nskr_kestevenQuestExtraDialogue` | `extraDialogue` | One answer; the option is disabled after reading |
-| `nskr_kestevenQuest_extra_3` at stage 7 | `nskr_kestevenQuestJob3Skip` (competes with the row above) | `skip` | Refusal prompt |
+| `nskr_kestevenQuest_extra_3` at stage 7 | `nskr_kestevenQuestJob3Skip` (`score:10`, wins over the row above) | `skip` | Refusal prompt |
 | `nskr_kestevenQuestConfirmSkip` | `nskr_kestevenQuestConfirmSkip` | `confirmSkip` | Job 3 refusal penalties, stage 11 |
 | `nskr_kestevenQuestConfirmQuest…` (prefix, includes `…B`) | `nskr_kestevenQuestConfirmQuest` | `confirmQuest` | `quest()`: accept, rewards and stage changes |
 | `nskr_kestevenQuestExit` | `nskr_kestevenQuestExit` | — | `FireAll PopulateOptions` |
