@@ -8,6 +8,9 @@ None
 None
 
 --------------------------- Changelog -----------------------------
+1.0.c
+Removed - Exotica Technologies integration (Temporal Conduits and Space Time Anchor upgrades), as Exotica is no longer updated
+
 1.0.b
 Adjusted - Severely nerfed spawn rates for Borealis, Rhea and Kingslayer
 Fixed - Crash when starting a new game with nexerelin

@@ -13,7 +13,6 @@
     <orderEntry type="library" name="LazyLib" level="application" />
     <orderEntry type="library" name="ExerelinCore" level="application" />
     <orderEntry type="library" name="Graphics" level="application" />
-    <orderEntry type="library" name="exotica" level="application" />
     <orderEntry type="library" name="starfarer_obf" level="application" />
     <orderEntry type="library" name="IndEvo" level="application" />
   </component>

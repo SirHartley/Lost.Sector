@@ -83,10 +83,9 @@ Other registrations: `KestevenTipBarCreator` bar event creator, guarded by `hasE
 | `data/config/custom_entities.json` | Entity specs for Java `addCustomEntity` calls |
 | `data/config/sounds.json` | Music and sound IDs played from Java |
 | `data/world/factions/factions.csv` | `enigma`, `kesteven`, `prot_ops`, `ai_all`; the other `.faction` files add to vanilla factions |
-| `data/config/modSettings.json` | Exotica faction list; an empty MagicLib `bounty_board` |
-| `data/config/upgrades.json` | Exotica upgrades `temporalConduits`/`spaceTimeAnchor` -> `hullmods/exotica/` |
+| `data/config/modSettings.json` | An empty MagicLib `bounty_board`; AdvancedGunneryControl weapon tags |
 | `data/config/exerelin/`, `exerelinFactionConfig/` | Nexerelin backgrounds `HellSpawnBackground`/`ThronesGiftBackground` and faction configs |
-| `data/config/{exoticaFactionConfig,indEvo,BetterColonyConfig,CommissionBonus,ExiledSpace,prism,ruthlesssector,starship_legends}/` | Read only by those mods |
+| `data/config/{indEvo,BetterColonyConfig,CommissionBonus,ExiledSpace,prism,ruthlesssector,starship_legends}/` | Read only by those mods |
 | `data/config/version/version_files.csv` | Registers `lostsector.version` with Version Checker |
 
 IntelliJ compiles to `jars/production` and builds the `jars/Lost.Sector.jar` artifact. Build procedure: [CLAUDE.md](../CLAUDE.md#building).
@@ -99,7 +98,6 @@ IntelliJ compiles to `jars/production` and builds the `jars/Lost.Sector.jar` art
 |---|---|
 | `IS_NEXELERIN` (`nexerelin`) | World generation mode, `HellSpawnNexListener`, diplomacy calls in `QuestStageManager`, `HellSpawnManager`, `ExileManager`, `Gen`. Also cleared in `onGameLoad` when `SectorManager.getManager()` is null. `HellSpawnBackground`/`ThronesGiftBackground` extend Nexerelin's `BaseCharacterBackground` and are reached only through Nexerelin's background CSV. |
 | `IS_INDEVO` (`IndEvo`) | IndEvo features in `onNewGameAfterTimePass`, `Frost`, `Outpost`, `Gen`, `ExileManager`, `EnigmaBlowerUpper`, `ContractInfo`; `getIndEvoBoolean` |
-| `IS_EXOTICA` (`exoticatechnologies`) | `Cache`. `hullmods/exotica/*` extend Exotica's `Upgrade` and are reached only through `upgrades.json`. |
 | `IS_LUNALIB` (`lunalib`) | `ModPlugin` settings getters; otherwise `LOST_SECTOR_OPTIONS.ini` |
 | `IS_TAHLAN` (`tahlan`) | `ContractInfo` reward table |
 | `IS_CC` (`timid_commissioned_hull_mods`) | `ComCrewsBonus` |
@@ -198,7 +196,6 @@ Polling: every `EFS_LIST` manager advances each frame. Most gate their work with
 | `data/hullmods/hull_mods.csv` `script` | `lostsector.hullmods.<Class>` |
 | `data/shipsystems/*.system` `statsScript` / `aiScript` | `lostsector.shipsystems.<X>Stats` / `lostsector.shipsystems.ai.<X>AI` |
 | `data/weapons/*.wpn`, `data/weapons/proj/*.proj` `everyFrameEffect` / `onFireEffect` / `onHitEffect` | `lostsector.weapons.<X>` |
-| `data/config/upgrades.json` `upgradeClass` | `lostsector.hullmods.exotica.<X>` (Exotica `Upgrade`, not `BaseHullMod`) |
 | `data/config/settings.json` `plugins` | `lostsector.plugins.*` global combat plugins |
 | `data/missions/mission_list.csv` | `nskr_test` source is `data/missions/nskr_test/MissionDefinition.java`, outside `src`; `nskr_test_custom` is `src/data/missions/nskr_test_custom/MissionDefinition.java`, extending `missions/BaseRandomBattle` |
 

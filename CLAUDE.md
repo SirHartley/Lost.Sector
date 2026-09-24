@@ -16,7 +16,6 @@ Reviews, explanations, audits, and proposals are read-only unless the user reque
    - `starfarer.api.zip` contains the official game API source; `starfarer.api.jar` is the compiled API.
    - `GraphicsLib.zip`, `Lazylib_lunalib.zip`, and `MagicLib.zip` contain dependency sources and jars.
    - `ExerelinCore.jar` (Nexerelin) and `IndEvo.jar` (Industrial.Evolution) are compiled jars without source. Read their signatures with `javap`; report behavior that needs their source as unverified.
-   - Exotica Technologies is an optional integration without an archive in `lib/`.
    - For GraphicsLib, LazyLib, LunaLib, MagicLib, Nexerelin and Industrial.Evolution, `lib/` is the primary source because the Starsector skill covers vanilla only.
 4. Select the required guides using [Which guide to read](#which-guide-to-read). Apply every matching row, including for reviews and fixes to existing behavior. Follow required skill reading as well; this table does not waive full-reference reads required by a skill.
 
@@ -222,7 +221,7 @@ Subagents perform research and scoping, not shipped code. The UI assignment take
 
 ## Version names
 
-`mod_info.json` `version`, the `modVersion` in `lostsector.version`, the release tag in its `directDownloadURL`, and the top `Changelog.txt` entry all name `1.0.b`. The release version uses a letter patch (`1.0.a`, `1.0.b`).
+`mod_info.json` `version`, the `modVersion` in `lostsector.version` and the release tag in its `directDownloadURL` name the released version, `1.0.b`. The release version uses a letter patch (`1.0.a`, `1.0.b`). The top `Changelog.txt` section, `1.0.c`, collects entries for the next release; the user sets the version files when publishing it.
 
 Version Checker reads `lostsector.version` and `Changelog.txt` from `main` through `masterVersionFile` and `changelogURL`. Merging a change to those files publishes it to players. Do not change version names or release metadata unless the user asks.
 
@@ -252,13 +251,13 @@ Required compile dependencies:
 - `LazyLib.jar` and `jars/internal/Kotlin-Runtime.jar` from `lib/Lazylib_lunalib.zip`; the Kotlin runtime supplies the `org.jetbrains.annotations` classes used in `src`;
 - `MagicLib.jar` from `lib/MagicLib.zip`;
 - `LunaLib.jar` from `lib/Lazylib_lunalib.zip`;
-- `lib/ExerelinCore.jar` and `lib/IndEvo.jar`, and the Exotica Technologies jar, used only by code behind the optional-integration flags;
+- `lib/ExerelinCore.jar` and `lib/IndEvo.jar`, used only by code behind the optional-integration flags;
 - `lwjgl-2.9.3.jar`;
 - `lwjgl_util-2.9.3.jar`;
 - `json-20140107.jar`;
 - `log4j-1.2.17.jar`.
 
-The last four ship with the game in `starsector-core`; the same versions from Maven Central compile identically when no game install is available. These dependencies provide `org.lwjgl.util.vector`, `org.lwjgl.opengl`, `org.json`, and `Global.getLogger()`. LazyLib, MagicLib and GraphicsLib are the declared runtime dependencies in `mod_info.json`. LunaLib, Nexerelin, Exotica Technologies and Industrial.Evolution are compile-time requirements for their integration classes; [ARCHITECTURE.md](docs/ARCHITECTURE.md) records how each is gated at runtime.
+The last four ship with the game in `starsector-core`; the same versions from Maven Central compile identically when no game install is available. These dependencies provide `org.lwjgl.util.vector`, `org.lwjgl.opengl`, `org.json`, and `Global.getLogger()`. LazyLib, MagicLib and GraphicsLib are the declared runtime dependencies in `mod_info.json`. LunaLib, Nexerelin and Industrial.Evolution are compile-time requirements for their integration classes; [ARCHITECTURE.md](docs/ARCHITECTURE.md) records how each is gated at runtime.
 
 Reference command:
 
