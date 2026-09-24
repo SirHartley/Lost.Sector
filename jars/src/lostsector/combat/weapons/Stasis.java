@@ -22,7 +22,7 @@ import java.util.Map;
 
 public class Stasis {
 
-    public static class stasisProjectileVisualListener implements AdvanceableListener {
+    public static class StasisProjectileVisualListener implements AdvanceableListener {
 
         public static final Color NEBULA_COLOR = new Color(43, 103, 255, 70);
         public static final Color NEBULA_FRINGE_COLOR = new Color(43, 142, 255, 30);
@@ -31,7 +31,7 @@ public class Stasis {
         public ShipAPI ship;
         private final IntervalUtil nebulaInterval = new IntervalUtil(0.067f, 0.133f);
 
-        public stasisProjectileVisualListener(DamagingProjectileAPI projectile, ShipAPI ship) {
+        public StasisProjectileVisualListener(DamagingProjectileAPI projectile, ShipAPI ship) {
             this.ship = ship;
             this.projectile = projectile;
         }

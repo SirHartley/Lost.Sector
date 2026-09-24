@@ -130,7 +130,7 @@ public class StalkerSpawner extends BaseCampaignEventListener implements EveryFr
             counter.val += amount;
         }
 
-        if (GameModeManager.getMode() == GameModeManager.gameMode.HELLSPAWN) return;
+        if (GameModeManager.getMode() == GameModeManager.GameMode.HELLSPAWN) return;
 
         if (counter.val>10f) {
             //update threat mult

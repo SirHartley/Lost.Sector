@@ -38,7 +38,7 @@ public class nskr_shipSwap extends PaginatedOptions {
 
 	public static final String POINTS_KEY = "$nskr_shipSwapPoints";
 	public static final String STOCK_ARRAY_KEY = "$nskr_shipSwapStock";
-	public static final String TO_PURCHASE_KEY = "$nskr_shipSwapToPurchasse";
+	public static final String TO_PURCHASE_KEY = "$nskr_shipSwapToPurchase";
 	public static final float STOCK_KEEP_DAYS = 30;
 	public static final int STOCK_COUNT_MIN = 6;
 	public static final int STOCK_COUNT_MAX = 12;

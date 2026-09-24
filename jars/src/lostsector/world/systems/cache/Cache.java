@@ -134,7 +134,7 @@ public class Cache {
 
         //GATE
         //CENTRE OF THE SYSTEM
-        CustomCampaignEntityAPI gate = system.addCustomEntity("nsrk_cacheGate", "Cache Gate", Entities.INACTIVE_GATE, Factions.NEUTRAL);
+        CustomCampaignEntityAPI gate = system.addCustomEntity("nskr_cacheGate", "Cache Gate", Entities.INACTIVE_GATE, Factions.NEUTRAL);
 
         gate.setOrbit(null);
         gate.setLocation(0, 0);

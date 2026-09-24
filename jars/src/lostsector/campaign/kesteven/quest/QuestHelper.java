@@ -342,7 +342,7 @@ public class QuestHelper {
         SectorEntityToken gate = null;
         for (SectorEntityToken e : sys.getAllEntities()){
             if (e.getId()==null)continue;
-            if (e.getId().equals("nsrk_cacheGate")){
+            if (e.getId().equals("nskr_cacheGate")){
                 gate = e;
                 break;
             }

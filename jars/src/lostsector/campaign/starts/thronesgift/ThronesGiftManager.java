@@ -57,7 +57,7 @@ public class ThronesGiftManager extends BaseCampaignEventListener implements Eve
     @Override
     public void advance(float amount) {
 
-        if (GameModeManager.getMode() != GameModeManager.gameMode.THRONESGIFT) return;
+        if (GameModeManager.getMode() != GameModeManager.GameMode.THRONESGIFT) return;
 
         xp = Global.getSector().getPlayerStats().getXP();
         lvl = Global.getSector().getPlayerStats().getLevel();
@@ -88,7 +88,7 @@ public class ThronesGiftManager extends BaseCampaignEventListener implements Eve
     @Override
     public void reportPlayerReputationChange(String faction, float delta) {
 
-        if (GameModeManager.getMode() != GameModeManager.gameMode.THRONESGIFT) return;
+        if (GameModeManager.getMode() != GameModeManager.GameMode.THRONESGIFT) return;
 
         if (faction.equals(Factions.LUDDIC_PATH)) {
             if (Global.getSector().getPlayerFaction().getRelationship(faction) > -0.80f) {

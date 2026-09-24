@@ -44,27 +44,27 @@ public class GameModeManager extends BaseCampaignEventListener implements EveryF
 
     }
 
-    public enum gameMode{
+    public enum GameMode{
         DEFAULT,
         THRONESGIFT,
         HELLSPAWN
     }
 
-    public static void setMode(gameMode mode){
+    public static void setMode(GameMode mode){
 
         Map<String, Object> data = Global.getSector().getPersistentData();
         data.put(MODE_KEY, mode);
 
     }
 
-    public static gameMode getMode(){
+    public static GameMode getMode(){
 
         Map<String, Object> data = Global.getSector().getPersistentData();
         if (data.containsKey(MODE_KEY)){
-            return(gameMode) data.get(MODE_KEY);
+            return(GameMode) data.get(MODE_KEY);
         } else {
-            data.put(MODE_KEY, gameMode.DEFAULT);
-            return (gameMode) data.get(MODE_KEY);
+            data.put(MODE_KEY, GameMode.DEFAULT);
+            return (GameMode) data.get(MODE_KEY);
         }
 
     }

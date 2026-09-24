@@ -59,7 +59,7 @@ public class ThronesGiftBackground extends BaseCharacterBackground {
     @Override
     public void onNewGameAfterEconomyLoad(FactionSpecAPI factionSpec, NexFactionConfig factionConfig) {
         if (!isUnlocked()) return;
-        GameModeManager.setMode(GameModeManager.gameMode.THRONESGIFT);
+        GameModeManager.setMode(GameModeManager.GameMode.THRONESGIFT);
 
     }
 

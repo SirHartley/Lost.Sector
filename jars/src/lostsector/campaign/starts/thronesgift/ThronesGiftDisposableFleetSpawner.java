@@ -68,7 +68,7 @@ public class ThronesGiftDisposableFleetSpawner extends DisposableFleetManager {
 
     @Override
     protected int getDesiredNumFleetsForSpawnLocation() {
-        if (GameModeManager.getMode() != GameModeManager.gameMode.THRONESGIFT) return 0;
+        if (GameModeManager.getMode() != GameModeManager.GameMode.THRONESGIFT) return 0;
         float level = (ThronesGiftManager.getTotalDp() - ThronesGiftManager.DEFAULT_DP);
         level /= 50f;
         //min auto pts unlock before we spawn fleets

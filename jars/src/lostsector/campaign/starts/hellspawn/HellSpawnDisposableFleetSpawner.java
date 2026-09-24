@@ -76,7 +76,7 @@ public class HellSpawnDisposableFleetSpawner extends DisposableFleetManager {
 
     @Override
     protected int getDesiredNumFleetsForSpawnLocation() {
-        if (GameModeManager.getMode() != GameModeManager.gameMode.HELLSPAWN) return 0;
+        if (GameModeManager.getMode() != GameModeManager.GameMode.HELLSPAWN) return 0;
         float level = HellSpawnManager.getLevel();
         if (level<3) return 0;
         return 1;

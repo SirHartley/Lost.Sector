@@ -127,7 +127,7 @@ Each owner keeps its own `Random` in persistent data. Most are seeded from the s
 | `nskr_EndingAltDialogKeyFinished` | Luddic or Tri-Tachyon ending done (shared) | `nskr_altEndingDialogLuddic.makeMad` |
 | `nskr_altEndingDialogSecondTimeLuddic`, `nskr_altEndingDialogSecondTimeTT` | Second conversation reached | Alternative endings |
 | `nskr_altEndingDialogTTPayout` | Tri-Tachyon price, at least 2,000,000 | `nskr_altEndingDialogTT` |
-| `activateCommissionUnFuckerEliza`, `activateCommissionUnFuckerPirates`, `activateCommissionUnFuckerHege`, `activateCommissionUnFuckerKesteven` | Commission fix pending and its saved relationship values | `EndingElizaDialog` |
+| `nskr_elizaEndingRestoreEliza`, `nskr_elizaEndingRestorePirates`, `nskr_elizaEndingRestoreHege`, `nskr_elizaEndingRestoreKesteven` | Commission fix pending and its saved relationship values | `EndingElizaDialog` |
 | `KestevenQuestJob5JackRevengeance` (`JACK_GONE_KEY`) | Jack left for revenge | `QuestStageManager.vengeanceJack` |
 | `RevengeanceElizaBetrayByPlayer` | Player took Eliza's market after her ending | `QuestStageManager` |
 | `nskr_ttCollectorDialogKey` | Collector paid | `nskr_ttCollectorDialog` |

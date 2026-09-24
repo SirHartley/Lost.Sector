@@ -26,10 +26,10 @@ import java.util.Random;
 
 public class EndingElizaDialog implements InteractionDialogPlugin {
     //
-    public static final String COMMISSION_RESTORE_KEY = "activateCommissionUnFuckerEliza";
-    public static final String REP_PIRATES_KEY = "activateCommissionUnFuckerPirates";
-    public static final String REP_HEGE_KEY = "activateCommissionUnFuckerHege";
-    public static final String REP_KESTEVEN_KEY = "activateCommissionUnFuckerKesteven";
+    public static final String COMMISSION_RESTORE_KEY = "nskr_elizaEndingRestoreEliza";
+    public static final String REP_PIRATES_KEY = "nskr_elizaEndingRestorePirates";
+    public static final String REP_HEGE_KEY = "nskr_elizaEndingRestoreHege";
+    public static final String REP_KESTEVEN_KEY = "nskr_elizaEndingRestoreKesteven";
     public static final String DIALOG_FINISHED_KEY = "nskr_ElizaEndingDialogKeyFinished";
     public static final String PERSISTENT_KEY = "nskr_ElizaEndingDialogKey";
     public static final String PERSISTENT_RANDOM_KEY = "nskr_ElizaEndingDialogKeyRandom";
@@ -133,7 +133,7 @@ public class EndingElizaDialog implements InteractionDialogPlugin {
                 }
             }
             //hellspawn
-            if (GameModeManager.getMode() == GameModeManager.gameMode.HELLSPAWN) HellSpawnEventIntel.get().addFactor(
+            if (GameModeManager.getMode() == GameModeManager.GameMode.HELLSPAWN) HellSpawnEventIntel.get().addFactor(
                     new HellSpawnEventFactors(100+ MathHelper.getSeededRandomNumberInRange(3,10, getRandom()),
                     "Gave the UPC to Eliza", "What could possibly go wrong?", ""));
 

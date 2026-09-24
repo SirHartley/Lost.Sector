@@ -44,7 +44,7 @@ public class HellSpawnNexListener extends BaseCampaignEventListener implements E
     @Override
     public void reportAgentAction(CovertActionIntel action) {
         if (action==null) return;
-        if (GameModeManager.getMode() != GameModeManager.gameMode.HELLSPAWN) return;
+        if (GameModeManager.getMode() != GameModeManager.GameMode.HELLSPAWN) return;
 
         if (!action.isPlayerInvolved()) return;
 
@@ -102,7 +102,7 @@ public class HellSpawnNexListener extends BaseCampaignEventListener implements E
     public void reportMarketTransfered(MarketAPI market, FactionAPI newOwner, FactionAPI oldOwner, boolean playerInvolved, boolean isCapture, List<String> factionsToNotify, float repChangeStrength) {
         if (market==null) return;
         if (newOwner==null) return;
-        if (GameModeManager.getMode() != GameModeManager.gameMode.HELLSPAWN) return;
+        if (GameModeManager.getMode() != GameModeManager.GameMode.HELLSPAWN) return;
 
         if (!playerInvolved || !isCapture) return;
 

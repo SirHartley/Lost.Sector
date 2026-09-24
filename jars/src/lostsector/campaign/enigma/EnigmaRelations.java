@@ -41,7 +41,7 @@ public class EnigmaRelations extends BaseCampaignEventListener implements EveryF
         //hard set relations
         if (faction.equals(Ids.ENIGMA_FACTION_ID)){
             //uncap on hellspawn
-            if (GameModeManager.getMode() == GameModeManager.gameMode.HELLSPAWN){
+            if (GameModeManager.getMode() == GameModeManager.GameMode.HELLSPAWN){
                 return;
             }
 

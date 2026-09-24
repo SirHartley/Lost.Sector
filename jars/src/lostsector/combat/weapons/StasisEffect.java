@@ -12,7 +12,7 @@ public class StasisEffect  implements EveryFrameWeaponEffectPlugin, OnFireEffect
     public void onFire(DamagingProjectileAPI projectile, WeaponAPI weapon, CombatEngineAPI engine) {
 
         ShipAPI ship = projectile.getSource();
-        ship.addListener(new Stasis.stasisProjectileVisualListener(projectile, ship));
+        ship.addListener(new Stasis.StasisProjectileVisualListener(projectile, ship));
 
         //Flag for AI
         StasisAI.ShipSpecificData data = (StasisAI.ShipSpecificData) Global.getCombatEngine().getCustomData().get("STASIS_AI_DATA_KEY" + ship.getId());

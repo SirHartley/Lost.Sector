@@ -60,7 +60,7 @@ public class HellSpawnBackground extends BaseCharacterBackground {
     @Override
     public void onNewGameAfterEconomyLoad(FactionSpecAPI factionSpec, NexFactionConfig factionConfig) {
         if (!isUnlocked())  return;
-        GameModeManager.setMode(GameModeManager.gameMode.HELLSPAWN);
+        GameModeManager.setMode(GameModeManager.GameMode.HELLSPAWN);
 
     }
 

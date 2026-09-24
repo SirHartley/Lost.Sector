@@ -267,7 +267,7 @@ public class AdaptiveProtocol extends BaseHullMod {
                 return BULWARK_MODE_NAME;
             }
         }
-        return "damn bitch, you fucked up";
+        return "Unknown";
     }
 
     private AdaptiveMode getMode(ShipSystemAPI system) {

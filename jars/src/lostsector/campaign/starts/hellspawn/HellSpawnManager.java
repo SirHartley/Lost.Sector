@@ -160,7 +160,7 @@ public class HellSpawnManager extends BaseCampaignEventListener implements Every
 
     @Override
     public void advance(float amount) {
-        if (GameModeManager.getMode() != GameModeManager.gameMode.HELLSPAWN) return;
+        if (GameModeManager.getMode() != GameModeManager.GameMode.HELLSPAWN) return;
 
         CampaignFleetAPI pf = Global.getSector().getPlayerFleet();
         level = getLevel();
@@ -342,7 +342,7 @@ public class HellSpawnManager extends BaseCampaignEventListener implements Every
     @Override
     public void reportPlayerReputationChange(String faction, float delta) {
 
-        if (GameModeManager.getMode() != GameModeManager.gameMode.HELLSPAWN) return;
+        if (GameModeManager.getMode() != GameModeManager.GameMode.HELLSPAWN) return;
 
         if (faction.equals(Ids.ENIGMA_FACTION_ID) || faction.equals(Factions.PLAYER)) return;
 
@@ -461,7 +461,7 @@ public class HellSpawnManager extends BaseCampaignEventListener implements Every
     private boolean hadAutomated = true;
     @Override
     public void reportPlayerEngagement(EngagementResultAPI result) {
-        if (GameModeManager.getMode() != GameModeManager.gameMode.HELLSPAWN) return;
+        if (GameModeManager.getMode() != GameModeManager.GameMode.HELLSPAWN) return;
 
         if (level>=3){
             MutableCharacterStatsAPI characterStats = Global.getSector().getPlayerStats();
@@ -528,7 +528,7 @@ public class HellSpawnManager extends BaseCampaignEventListener implements Every
     @Override
     public void reportRaidForValuablesFinishedBeforeCargoShown(InteractionDialogAPI dialog, MarketAPI market, MarketCMD.TempData actionData, CargoAPI cargo) {
         if (market==null) return;
-        if (GameModeManager.getMode() != GameModeManager.gameMode.HELLSPAWN) return;
+        if (GameModeManager.getMode() != GameModeManager.GameMode.HELLSPAWN) return;
 
         float points = (marketSizeMult(market) * RAID_BASE_POINTS) + actionData.marinesLost/10f + MathHelper.getSeededRandomNumberInRange(3,10, getRandom());
 
@@ -539,7 +539,7 @@ public class HellSpawnManager extends BaseCampaignEventListener implements Every
     @Override
     public void reportRaidToDisruptFinished(InteractionDialogAPI dialog, MarketAPI market, MarketCMD.TempData actionData, Industry industry) {
         if (market==null) return;
-        if (GameModeManager.getMode() != GameModeManager.gameMode.HELLSPAWN) return;
+        if (GameModeManager.getMode() != GameModeManager.GameMode.HELLSPAWN) return;
 
         float points = (marketSizeMult(market) * RAID_BASE_POINTS) + actionData.marinesLost/10f + MathHelper.getSeededRandomNumberInRange(3,10, getRandom());
         points /= actionData.objectives.size();
@@ -551,7 +551,7 @@ public class HellSpawnManager extends BaseCampaignEventListener implements Every
     @Override
     public void reportTacticalBombardmentFinished(InteractionDialogAPI dialog, MarketAPI market, MarketCMD.TempData actionData) {
         if (market==null) return;
-        if (GameModeManager.getMode() != GameModeManager.gameMode.HELLSPAWN) return;
+        if (GameModeManager.getMode() != GameModeManager.GameMode.HELLSPAWN) return;
 
         float points = (marketSizeMult(market) * TACBOMB_BASE_POINTS) + MathHelper.getSeededRandomNumberInRange(5,15, getRandom());
 
@@ -562,7 +562,7 @@ public class HellSpawnManager extends BaseCampaignEventListener implements Every
     @Override
     public void reportSaturationBombardmentFinished(InteractionDialogAPI dialog, MarketAPI market, MarketCMD.TempData actionData) {
         if (market==null) return;
-        if (GameModeManager.getMode() != GameModeManager.gameMode.HELLSPAWN) return;
+        if (GameModeManager.getMode() != GameModeManager.GameMode.HELLSPAWN) return;
 
         float points = (marketSizeMult(market) * SATBOMB_BASE_POINTS) + MathHelper.getSeededRandomNumberInRange(15,50, getRandom());
 

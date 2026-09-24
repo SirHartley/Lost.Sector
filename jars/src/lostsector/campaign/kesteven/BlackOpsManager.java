@@ -38,8 +38,8 @@ public class BlackOpsManager extends BaseCampaignEventListener implements EveryF
     public static final float MAX_AGE = 150f;
     public static final int MAX_FLEETS = 12;
 
-    public static final String FLEET_ARRAY_KEY = "$nksr_blackOpsManagerFleets";
-    public static final String PERSISTENT_RANDOM_KEY = "nksr_blackOpsManagerRandom";
+    public static final String FLEET_ARRAY_KEY = "$nskr_blackOpsManagerFleets";
+    public static final String PERSISTENT_RANDOM_KEY = "nskr_blackOpsManagerRandom";
     public static final ArrayList<String> FLEET_NAMES = new ArrayList<>();
     static {
         FLEET_NAMES.add("Black Ops");
@@ -69,7 +69,7 @@ public class BlackOpsManager extends BaseCampaignEventListener implements EveryF
     public BlackOpsManager() {
         super(false);
         //how often we run logic
-        this.counter = new Saved<>("nksr_blackOpsManagerCounter", 0.0f);
+        this.counter = new Saved<>("nskr_blackOpsManagerCounter", 0.0f);
         //init randoms
         getRandom();
     }

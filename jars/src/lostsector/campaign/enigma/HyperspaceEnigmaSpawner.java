@@ -114,7 +114,7 @@ public class HyperspaceEnigmaSpawner extends BaseCampaignEventListener implement
             fleetCounter.val += amount;
         }
 
-        if (GameModeManager.getMode() == GameModeManager.gameMode.HELLSPAWN) return;
+        if (GameModeManager.getMode() == GameModeManager.GameMode.HELLSPAWN) return;
 
         //logic
         if (counter.val > 10f) {

@@ -107,7 +107,7 @@ Keep foreign classes behind these flags or behind the foreign mod's own loader. 
 
 | Mechanism | Stored as | Rename hazard |
 |---|---|---|
-| `persistence/Saved<T>` | Sector persistent data under `persistence/Saved.PREFIX` (`nskr_`) plus the constructor key. `ModPlugin` writes all instances before save and reloads them on load and after save. | Changing a key loses that value. `InterceptManager` and `HyperspaceEnigmaSpawner` keys already contain `nskr_`, so their stored keys start `nskr_nskr_`; `BlackOpsManager` uses `nksr_blackOpsManagerCounter` (stored as `nskr_nksr_...`). Preserve these exact strings or migrate them. |
+| `persistence/Saved<T>` | Sector persistent data under `persistence/Saved.PREFIX` (`nskr_`) plus the constructor key. `ModPlugin` writes all instances before save and reloads them on load and after save. | Changing a key loses that value. `InterceptManager`, `HyperspaceEnigmaSpawner` and `BlackOpsManager` keys already contain `nskr_`, so their stored keys start `nskr_nskr_`. |
 | `CampaignTimer` | The timer object itself, in sector persistent data under the owner's fully qualified class name plus `Timer` | Moving or renaming `GameModeManager`, `ThronesGiftManager` or `HellSpawnManager` silently starts a fresh timer; renaming `CampaignTimer` breaks loading. |
 | Saved scripts and plugins | The objects listed under Saved scripts above | Their class names and fields are serialized. |
 | `ModPlugin.SAVE_KEY` `nskr_enabled`, `STARFARER_MODE_FROM_START_KEY` `nskr_starfarerFromStart` | Sector persistent data | Renaming `SAVE_KEY` reruns world generation on every existing save. |
@@ -122,7 +122,7 @@ World generation is static calls from the `ModPlugin` hooks; `world/SectorGen.ge
 |---|---|
 | `world/systems/arcadia/Arcadia` | Asteria in vanilla Arcadia: `nskr_asteria`, `nskr_asteria_station` |
 | `world/systems/frost/Frost` | New system with a random name from `SYS_NAME_LIST`: planets `nskr_bleak`, `nskr_glacier`, `nskr_siberia`, `nskr_shiver`, `nskr_algor`; `nskr_heart`; `nskr_frost_gate`, `nskr_frost_relay`; debris and derelicts |
-| `world/systems/cache/Cache` | System `Unknown Site`: gate `nsrk_cacheGate` (misspelled prefix; keep for saves), `nskr_cache_derelict1`-`4`, `nskr_cache_core` |
+| `world/systems/cache/Cache` | System `Unknown Site`: gate `nskr_cacheGate`, `nskr_cache_derelict1`-`4`, `nskr_cache_core` |
 | `world/systems/outpost/Outpost` | In a random system near the core: `nskr_outpost`, `nskr_outpost_gate`, `nskr_outpost_relay` |
 | `world/SectorGen` | People at fixed markets through `genPeople()`; `genEliza()` (`nskr_anarchist`) is called from `nskr_kestevenQuest` and `ElizaDialog` |
 | `world/DesertConditionRepair` | Planet-condition fix after time pass |
