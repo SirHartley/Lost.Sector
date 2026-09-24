@@ -456,7 +456,7 @@ public class HostileTakeoverBarEvent extends BaseBarEvent {
 			options.clearOptions();
 			text.addPara("Thinking about what happened, you somehow managed to avoid your own bodyguards on your way out - which is rather impressive. " +
 					"You then realize that your security officer is going to kill you once they realize you were not in fact *kidnapped*, but instead just got black out drunk - it happens.");
-			text.addPara("Thankfully it appears you wrote down the coordinates on your TriPad. In fact it seems the notepad function is the last hing you had open on it. " +
+			text.addPara("Thankfully it appears you wrote down the coordinates on your TriPad. In fact it seems the notepad function is the last thing you had open on it. " +
 					"You wrote an order of synthPizza on it in text last night - it appears to not have worked.");
 			text.addPara("You also remember that you haven't checked how many credits you spent last night.");
 

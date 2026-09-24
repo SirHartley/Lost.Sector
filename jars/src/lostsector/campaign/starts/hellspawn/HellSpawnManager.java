@@ -534,7 +534,7 @@ public class HellSpawnManager extends BaseCampaignEventListener implements Every
         float points = (marketSizeMult(market) * RAID_BASE_POINTS) + actionData.marinesLost/10f + MathHelper.getSeededRandomNumberInRange(3,10, getRandom());
 
         HellSpawnEventIntel.get().addFactor(new HellSpawnEventFactors((int)points, "Raided a market",
-                "Raided "+market.getName()+" a size "+market.getSize()+" market for valuables.", "A hoard worth its weight in blood."));
+                "Raided "+market.getName()+", a size "+market.getSize()+" market for valuables.", "A hoard worth its weight in blood."));
     }
 
     @Override
@@ -557,7 +557,7 @@ public class HellSpawnManager extends BaseCampaignEventListener implements Every
         float points = (marketSizeMult(market) * TACBOMB_BASE_POINTS) + MathHelper.getSeededRandomNumberInRange(5,15, getRandom());
 
         HellSpawnEventIntel.get().addFactor(new HellSpawnEventFactors((int)points, "Tactical bombardment of a market",
-                "Bombarded "+market.getName()+" a size "+market.getSize()+" market.", "Those scarred ruins of humanity might never heal."));
+                "Bombarded "+market.getName()+", a size "+market.getSize()+" market.", "Those scarred ruins of humanity might never heal."));
     }
 
     @Override
@@ -570,10 +570,10 @@ public class HellSpawnManager extends BaseCampaignEventListener implements Every
         int size = Math.max(market.getSize(), 3);
         if (market.getSize()>1) {
             HellSpawnEventIntel.get().addFactor(new HellSpawnEventFactors((int)points, "Saturation bombardment of a market",
-                    "Bombarded "+market.getName()+" a size "+size+" market.", "Its all gone, its only silence not even a faintest hum. There's nothing left - not of you or them."));
+                    "Bombarded "+market.getName()+", a size "+size+" market.", "It's all gone, it's only silence, not even the faintest hum. There's nothing left - not of you or them."));
         } else {
             HellSpawnEventIntel.get().addFactor(new HellSpawnEventFactors((int)points, "Saturation bombardment of a market",
-                    "Destroyed "+market.getName()+".", "Its all gone, its only silence not even a faintest hum. There's nothing left - not of you or them."));
+                    "Destroyed "+market.getName()+".", "It's all gone, it's only silence, not even the faintest hum. There's nothing left - not of you or them."));
         }
     }
 

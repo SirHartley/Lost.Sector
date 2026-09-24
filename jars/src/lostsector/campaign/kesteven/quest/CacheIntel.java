@@ -99,7 +99,7 @@ public class CacheIntel extends BaseIntelPlugin {
         if (salvaged)info.addPara("Next entry sometime later \"No, there's definitely something going with extreme radiation or something on the site. I've never seen parts fail this fast, and these old things are built like a brick.\" "+
                         "Later in this period there are multiple rants about systems that really shouldn't fail failing and what pain in the ass they were to fix.", opad, h, "", "");
         if (salvaged)info.addPara("Over time the logs seem to get more serious in tone as now there has been some issues with the AI itself. " +
-                        "\"There really is something wrong with that cursed site. Now the drones wont even complete their tasks there, totally messing up our logistics. I've never even heard of malfunctions like this, it shouldn't even be possible.\"", opad, h, "", "");
+                        "\"There really is something wrong with that cursed site. Now the drones won't even complete their tasks there, totally messing up our logistics. I've never even heard of malfunctions like this, it shouldn't even be possible.\"", opad, h, "", "");
         if (salvaged)info.addPara("A few months after that entry " +
                 "\"Recently two of the drones managed to destroy each other while in the site. Something more than just intense radiation is going on there, and management never knows to quit while they are ahead. Hopefully I don't get spaced by one those dimwit drones, and they said it couldn't get any worse...\" This is the last entry.", opad, h, "", "");
 

@@ -93,7 +93,7 @@ public class ElizaDialog implements InteractionDialogPlugin {
             options.clearOptions();
             text.addPara("The marine captain, with the help of the black ops team hatch a contingency plan in case things go wrong with Eliza.");
             text.addPara("\"There's going to be a delay of course, and it's going to get ugly - fast.\" The captain says. There is a sour expression, they are not happy about this. " +
-                    "\"Hopefully it wont come down to this.\"");
+                    "\"Hopefully it won't come down to this.\"");
 
             options.addOption("Continue", OptionId.A1);
         }

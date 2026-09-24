@@ -98,7 +98,7 @@ public class EndingElizaDialog implements InteractionDialogPlugin {
             arrived = true;
             options.clearOptions();
             text.addPara("\"Ah, you're here captain. Lets get straight to business, shall we?\" She quickly straightens her posture.");
-            text.addPara("\"I hope you understand that Kesteven wont take this lightly, they'll get the Hegemony involved too for sure. You'll be a wanted "+manOrWoman+", " +
+            text.addPara("\"I hope you understand that Kesteven won't take this lightly, they'll get the Hegemony involved too for sure. You'll be a wanted "+manOrWoman+", " +
                     "but with the Chip secured our victory shall be inevitable.\"");
 
             options.addOption("Continue", OptionId.A2);

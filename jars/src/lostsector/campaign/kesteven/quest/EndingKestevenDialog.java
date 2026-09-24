@@ -115,7 +115,7 @@ public class EndingKestevenDialog implements InteractionDialogPlugin {
             arrived = false;
             aliceLeft = true;
             options.clearOptions();
-            text.addPara("There is a defiant look on Jack's face. \"As you know, this will have some consequences on the wider sector. Relations with Tri-Tachyon will tank, they wont take this lightly. " +
+            text.addPara("There is a defiant look on Jack's face. \"As you know, this will have some consequences on the wider sector. Relations with Tri-Tachyon will tank, they won't take this lightly. " +
                     "This cold war of ours is about to go hot, but we will be ready.\" He regains some confidence.");
             text.addPara("\"I've authorized you to get a share of some of the equipment produced with the Unlimited Production Chip. You will not be disappointed, also there will be some new toys in the artifact exchange.\" He gives you a quick smirk.");
 
