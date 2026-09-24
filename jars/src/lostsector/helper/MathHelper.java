@@ -201,22 +201,15 @@ public class MathHelper {
         return random.nextInt((max - min) + 1) + min;
     }
 
+    // Vanilla seed text is the sector age and size letters, a dash and the number, e.g. "AN-123".
     public static long getSeedParsed(){
         String seed = Global.getSector().getSeedString();
-        String prefix = seed.substring(0,2);
-        seed = seed.replace(prefix, "");
-
-        //if (Global.getSector()!=null && Global.getSector().getClock()!=null) {
-        //    String clockSeed = ""+Global.getSector().getClock().getTimestamp();
-        //    clockSeed = clockSeed.replaceAll("-","");
-        //    clockSeed = clockSeed.replaceAll("0","");
-        //    seed = seed + clockSeed;
-        //    //log("TIMESTAMP "+clockSeed);
-        //}
-        //while (seed.length()>18){
-        //    seed = seed.replace(seed.substring(0,1), "");
-        //}
-        return Long.parseLong(seed);
+        if (seed == null) return 0L;
+        try {
+            return Long.parseLong(seed.substring(seed.indexOf('-') + 1).trim());
+        } catch (NumberFormatException ex) {
+            return seed.hashCode();
+        }
     }
 
     public static float inverse(Float input) {
