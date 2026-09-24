@@ -352,9 +352,9 @@ public class nskr_shipSwap extends PaginatedOptions {
 						List<String> toPurchase = new ArrayList<>();
 						cargo.sort();
 						for (CargoStackAPI stack : cargo.getStacksCopy()) {
-							toPurchase.add(stack.getWeaponSpecIfWeapon().getWeaponId());
-							// Only weapon stacks count; other stacks report a base value of 10 credits.
+							// The picker can return non-weapon stacks; they have no weapon spec and cost nothing.
 							if (!stack.isWeaponStack()) continue;
+							toPurchase.add(stack.getWeaponSpecIfWeapon().getWeaponId());
 							cost+=stack.getBaseValuePerUnit();
 						}
 						//to mem

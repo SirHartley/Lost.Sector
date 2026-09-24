@@ -42,6 +42,7 @@ Fixed - Operation Lifesaver no longer gets stuck when another fleet destroys the
 Fixed - Crash when the Enigma fleet woken at a data satellite follows you into hyperspace and loses sight of you
 Fixed - Dialogs no longer recalculate your fleet strength and write it to starsector.log on every option refresh
 Adjusted - When a Kesteven job needs a better relationship with Kesteven, Jack and Alice now say so instead of asking for someone "more qualified"
+Fixed - Possible crash when buying weapons through the Kesteven artifact exchange
 
 1.0.b
 Adjusted - Severely nerfed spawn rates for Borealis, Rhea and Kingslayer
