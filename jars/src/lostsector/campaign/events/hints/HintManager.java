@@ -9,6 +9,7 @@ import com.fs.starfarer.api.EveryFrameScript;
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.BaseCampaignEventListener;
 import com.fs.starfarer.api.campaign.CampaignFleetAPI;
+import com.fs.starfarer.api.campaign.SectorEntityToken;
 import com.fs.starfarer.api.campaign.StarSystemAPI;
 import com.fs.starfarer.api.campaign.comm.IntelInfoPlugin;
 import com.fs.starfarer.api.campaign.comm.IntelManagerAPI;
@@ -71,7 +72,8 @@ public class HintManager extends BaseCampaignEventListener implements EveryFrame
             //init locations
             sources.val.add(AbyssSpawner.getLoc().getStarSystem());
             sources.val.add(EternitySpawner.getLoc().getStarSystem());
-            sources.val.add(MothershipSpawner.getMothershipBaseLocation().getStarSystem());
+            SectorEntityToken mothershipBase = MothershipSpawner.getMothershipBaseLocation();
+            if (mothershipBase != null) sources.val.add(mothershipBase.getStarSystem());
             sources.val.add(Global.getSector().getStarSystem(Frost.getName()));
             newGame.val = false;
             log("HINT added sources, size "+sources.val.size());

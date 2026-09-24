@@ -25,7 +25,6 @@ import lostsector.settings.Difficulty;
 import lostsector.persistence.Saved;
 import lostsector.helper.FleetHelper;
 import lostsector.helper.MathHelper;
-import lostsector.helper.SystemHelper;
 import lostsector.world.systems.frost.Frost;
 import org.lazywizard.lazylib.MathUtils;
 import org.lwjgl.util.vector.Vector2f;
@@ -134,6 +133,7 @@ public class MothershipSpawner  extends BaseCampaignEventListener implements Eve
     }
 
     public static void spawnPlanets(SectorEntityToken loc, Random random) {
+        if (loc == null) return;
 
         StarSystemAPI system = loc.getStarSystem();
 
@@ -205,6 +205,7 @@ public class MothershipSpawner  extends BaseCampaignEventListener implements Eve
     }
 
     public static void spawnMothershipFleet(SectorEntityToken loc, Random random) {
+        if (loc == null) return;
 
         float points = MathUtils.getRandomNumberInRange(155f, 160f);
 
@@ -301,23 +302,19 @@ public class MothershipSpawner  extends BaseCampaignEventListener implements Eve
         return (SectorEntityToken)data.get(id);
     }
 
+    // Null when no procgen system has a moonless gas giant; the bounty is then skipped.
     private static SectorEntityToken randomGasGiant(Random random) {
         StarSystemAPI sys = getRandomSystemWithBlacklist(random);
-
-        List<PlanetAPI> giants = new ArrayList<>();
-        for (PlanetAPI p : sys.getPlanets()){
-            if (p== null || !p.isGasGiant()) continue;
-            giants.add(p);
-        }
-
-        if (giants.isEmpty()){
-            log("ERROR no gas giants, you done fucked up");
+        if (sys == null) {
+            log("ERROR no system with a moonless gas giant");
             return null;
         }
 
+        List<PlanetAPI> giants = getMoonlessGasGiants(sys);
         return giants.get(MathHelper.getSeededRandomNumberInRange(0,giants.size()-1, random));
     }
 
+    // Helios and Polaris orbit the gas giant closely, so it must have no moons.
     private static StarSystemAPI getRandomSystemWithBlacklist(Random random) {
         //pick tags
         List<String> pickTags = new ArrayList<>();
@@ -339,49 +336,43 @@ public class MothershipSpawner  extends BaseCampaignEventListener implements Eve
         simpleSystem.blacklistSystemTypes = banSystems;
         simpleSystem.pickOnlyInProcgen = true;
 
-        List<StarSystemAPI> systems = new ArrayList<>();
-        List<StarSystemAPI> validSystems = new ArrayList<>();
-        if (!simpleSystem.get().isEmpty()) {
-            systems = simpleSystem.get();
+        List<StarSystemAPI> validSystems = getSystemsWithMoonlessGasGiant(simpleSystem.get());
+        if (validSystems.isEmpty()) {
+            log("no Remnant system with a moonless gas giant, trying other systems");
+            simpleSystem.pickTags = new ArrayList<>();
+            validSystems = getSystemsWithMoonlessGasGiant(simpleSystem.get());
         }
-
-        getSystemsWithGasGiant(systems, validSystems);
-        //add any system as back-up
-        while (validSystems.isEmpty()){
-            systems.add(SystemHelper.getRandomNonCoreSystem(random));
-            getSystemsWithGasGiant(systems, validSystems);
-            log("ERROR no gas giant Remnant systems");
+        if (validSystems.isEmpty()) {
+            SystemPicker anySystem = new SystemPicker(random, 1);
+            anySystem.pickOnlyInProcgen = true;
+            validSystems = getSystemsWithMoonlessGasGiant(anySystem.get());
         }
+        if (validSystems.isEmpty()) return null;
 
         return validSystems.get(MathHelper.getSeededRandomNumberInRange(0,validSystems.size()-1, random));
     }
 
-    private static List<StarSystemAPI> getSystemsWithGasGiant(List<StarSystemAPI> systems, List<StarSystemAPI> validSystems) {
+    private static List<StarSystemAPI> getSystemsWithMoonlessGasGiant(List<StarSystemAPI> systems) {
+        List<StarSystemAPI> validSystems = new ArrayList<>();
         for (StarSystemAPI sys : systems){
-            for (PlanetAPI p : sys.getPlanets()){
-                if (p== null || !p.isGasGiant()) continue;
-
-                //moon check
-                if (hasMoons(sys, p)) continue;
-
-                validSystems.add(sys);
-                break;
-            }
+            if (!getMoonlessGasGiants(sys).isEmpty()) validSystems.add(sys);
         }
         return validSystems;
     }
 
+    private static List<PlanetAPI> getMoonlessGasGiants(StarSystemAPI sys) {
+        List<PlanetAPI> giants = new ArrayList<>();
+        for (PlanetAPI p : sys.getPlanets()){
+            if (p == null || !p.isGasGiant()) continue;
+            if (hasMoons(sys, p)) continue;
+            giants.add(p);
+        }
+        return giants;
+    }
+
     private static boolean hasMoons(StarSystemAPI sys, PlanetAPI p) {
-        for (SectorEntityToken moon : sys.getAllEntities()){
-            if (moon instanceof PlanetAPI) {
-                if (moon.getOrbit() == null || moon.getOrbitFocus() == null) continue;
-                if (moon.getOrbitFocus().isStar()) continue;
-                log(moon.getName() + " orbit focus " + moon.getOrbitFocus().getName());
-                if (moon.getOrbitFocus() == p) {
-                    log(moon.getName() + " is moon of " + moon.getOrbitFocus().getName());
-                    return true;
-                }
-            }
+        for (PlanetAPI moon : sys.getPlanets()){
+            if (moon.getOrbitFocus() == p) return true;
         }
         return false;
     }
