@@ -38,10 +38,7 @@ public class QuestHelper {
     public static SectorEntityToken spawnArtifact(SectorEntityToken loc, int number) {
         Random random = nskr_kestevenQuest.getRandom();
         LocationAPI containing = loc.getContainingLocation();
-        //log(""+containing.getName()+" "+containing.getId());
         BaseThemeGenerator.EntityLocation createLoc = DerelictThemeGenerator.createLocationAtRandomGap(random, loc, 0f);
-        //log(""+createLoc.type.name());
-        //log(""+createLoc.orbit.getFocus().getName());
         SectorEntityToken artifact = DerelictThemeGenerator.addNonSalvageEntity(containing, createLoc, "nskr_artifact", Factions.NEUTRAL).entity;
         artifact.setDiscoverable(true);
         artifact.setSensorProfile(100f);
@@ -78,40 +75,6 @@ public class QuestHelper {
     public static String outpostName(){
         return Global.getSector().getEconomy().getMarket("nskr_outpost").getName();
     }
-
-    //for kesteven quest line
-    //public static SectorEntityToken getRandomTTMarket(Random random, boolean allowHybrasil) {
-    //    List<MarketAPI> validMarkets = new ArrayList<>();
-    //    for (MarketAPI market : Misc.getFactionMarkets(Factions.TRITACHYON)) {
-    //        boolean isValid = true;
-    //        StarSystemAPI system = market.getStarSystem();
-    //        if (system.hasTag(Tags.THEME_HIDDEN) || system.hasTag(Tags.SYSTEM_CUT_OFF_FROM_HYPER) ||
-    //                system.getStar() == null || system.getPlanets().size()<1) {
-    //            isValid = false;
-    //        }
-    //        if (market.isHidden() || market.isPlanetConditionMarketOnly()){
-    //            isValid = false;
-    //        }
-    //        if (!allowHybrasil) {
-    //            //ban hybrasil initially, too hard
-    //            if (system.getName().toLowerCase().startsWith("hybrasil")){
-    //                isValid = false;
-    //            }
-    //        }
-    //        if (isValid) {
-    //            validMarkets.add(market);
-    //        }
-    //    }
-    //    if (validMarkets.isEmpty()){
-    //        if (allowHybrasil){
-    //            log("ERROR no valid TT markets picking random TT market");
-    //            return getRandomFactionMarket(random, Factions.TRITACHYON);
-    //        }
-    //        log("ERROR no valid TT markets try again");
-    //        return getRandomTTMarket(random, true);
-    //    }
-    //    return validMarkets.get(MathUtilLS.getSeededRandomNumberInRange(0,validMarkets.size()-1, random)).getPrimaryEntity();
-    //}
 
     private static StarSystemAPI getRandomSystem(Random random) {
         SystemPicker simpleSystem = new SystemPicker(random, 1);
@@ -183,7 +146,6 @@ public class QuestHelper {
             float dist = MathUtils.getDistance(loc, system.getStar().getLocationInHyperspace());
             if (dist <= maxDistance && dist > minDistance){
                 isValid = true;
-                //log("getRandomSystemNearLocation +1 valid, dist "+dist);
             }
             if (isValid) {
                 validSystems.add(system);
@@ -483,50 +445,11 @@ public class QuestHelper {
                 if (newDist<dist) {
                     dist = newDist;
                     nearest = (PlanetAPI)e;
-                    //log("nearest "+nearest.getName()+" dist "+newDist);
                 }
             }
         }
         return nearest;
     }
-
-    //public static void hackBrokenVariants(){
-    //    //WHY THE FUCK DO I NEED TO DO THIS AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-    //    //nvm this happened because I dind't setIds for custom fleetMembers
-    //    for (StarSystemAPI sys : Global.getSector().getStarSystems()){
-    //        for (SectorEntityToken e : sys.getAllEntities()){
-    //            if (e.getMemoryWithoutUpdate().contains(SimpleFleet.FLEET_TRACKER_KEY)){
-    //                if (e instanceof CampaignFleetAPI) {
-    //                    CampaignFleetAPI f = (CampaignFleetAPI) e;
-    //                    ArrayList<SimpleFleetMember> data = (ArrayList<SimpleFleetMember>) f.getMemoryWithoutUpdate().get(SimpleFleet.FLEET_TRACKER_KEY);
-    //                    if (data.isEmpty())continue;
-    //                    for (FleetMemberAPI m : f.getFleetData().getMembersListWithFightersCopy()){
-    //                        if (m.isFighterWing()) continue;
-    //                        ShipVariantAPI thisVariant = null;
-    //                        for (SimpleFleetMember info : data){
-    //                            if(info.member == m){
-    //                                thisVariant = Global.getSettings().getVariant(info.variant);
-    //                                if (!info.variantTags.isEmpty()){
-    //                                    for (String t : info.variantTags) {
-    //                                        thisVariant.addTag(t);
-    //                                    }
-    //                                }
-    //                                if (info.noAutofit) thisVariant.addTag(Tags.TAG_NO_AUTOFIT);
-    //                                if (info.member.isFlagship()) thisVariant.addTag(Tags.VARIANT_ALWAYS_RECOVERABLE);
-    //                                thisVariant.addTag(Tags.TAG_RETAIN_SMODS_ON_RECOVERY);
-    //                                break;
-    //                            }
-    //                        }
-    //                        if (thisVariant!=null) {
-    //                            m.setVariant(thisVariant, false, true);
-    //                            log("ERROR fixed " + m.getHullSpec().getHullName());
-    //                        }
-    //                    }
-    //                }
-    //            }
-    //        }
-    //    }
-    //}
 
     public static void saveEnding(){
         SettingsManager.set(Setting.THRONES_GIFT_UNLOCKED, true);

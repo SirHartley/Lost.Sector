@@ -32,7 +32,6 @@ public class EnigmaAIConverter extends BaseCampaignEventListener implements Ever
     public void advance(float amount) {
     }
 
-    //ENIGMA officer hacks
     @Override
     public void reportFleetSpawned(CampaignFleetAPI fleet) {
         if (fleet.getFaction().getId().equals(Ids.ENIGMA_FACTION_ID)) {

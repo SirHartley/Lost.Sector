@@ -86,7 +86,6 @@ public class AugmentedWeapons extends BaseHullMod {
             missilePart = 10f;
         } else calculateBonus(ship.getAllWeapons(), ship);
 
-        // it just works
         if (ballisticPart<=1f)ballisticPart *= 10000f;
         if (ballisticPart>=100f)ballisticPart = Math.round(ballisticPart);
         if (ballisticPart>100f)ballisticPart /= 100f;

@@ -105,10 +105,10 @@ public class HellSpawnAbilityInteraction extends FleetInteractionDialogPluginImp
                     if (!config.straightToEngage && config.showPullInText) {
                         if (b.getSide(playerSide) == b.getSideFor(closest)) {
                             textPanel.addParagraph(
-                                    Misc.ucFirst(closest.getNameWithFactionKeepCase()) + ": supporting your forces.");//, FRIEND_COLOR);
+                                    Misc.ucFirst(closest.getNameWithFactionKeepCase()) + ": supporting your forces.");
                         } else {
                             if (hostile) {
-                                textPanel.addParagraph(Misc.ucFirst(closest.getNameWithFactionKeepCase()) + ": supporting the enemy.");//, ENEMY_COLOR);
+                                textPanel.addParagraph(Misc.ucFirst(closest.getNameWithFactionKeepCase()) + ": supporting the enemy.");
                             } else {
                                 textPanel.addParagraph(Misc.ucFirst(closest.getNameWithFactionKeepCase()) + ": supporting the opposing side.");
                             }
@@ -168,10 +168,10 @@ public class HellSpawnAbilityInteraction extends FleetInteractionDialogPluginImp
 
                 if (!config.straightToEngage && config.showPullInText) {
                     if (b.getSide(playerSide) == b.getSideFor(fleet)) {
-                        textPanel.addParagraph(Misc.ucFirst(fleet.getNameWithFactionKeepCase()) + ": supporting your forces.");//, FRIEND_COLOR);
+                        textPanel.addParagraph(Misc.ucFirst(fleet.getNameWithFactionKeepCase()) + ": supporting your forces.");
                     } else {
                         if (hostile) {
-                            textPanel.addParagraph(Misc.ucFirst(fleet.getNameWithFactionKeepCase()) + ": joining the enemy.");//, ENEMY_COLOR);
+                            textPanel.addParagraph(Misc.ucFirst(fleet.getNameWithFactionKeepCase()) + ": joining the enemy.");
                         } else {
                             textPanel.addParagraph(Misc.ucFirst(fleet.getNameWithFactionKeepCase()) + ": supporting the opposing side.");
                         }

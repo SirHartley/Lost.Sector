@@ -43,7 +43,6 @@ public class LoanShark extends BaseCampaignEventListener implements EveryFrameSc
     Saved<Float> counter;
     Saved<Boolean> collected;
     private final List<CampaignFleetAPI> removed = new ArrayList<>();
-    //CampaignFleetAPI pf;
     Random random;
 
     static void log(final String message) {
@@ -185,7 +184,6 @@ public class LoanShark extends BaseCampaignEventListener implements EveryFrameSc
         keys.add(COLLECTOR_KEY);
 
         SimpleFleet simpleFleet = new SimpleFleet(pf.getContainingLocation().createToken(pf.getLocation()), "kesteven", combatPoints, keys, random);
-        //SimpleFleet.type = FleetTypes.PATROL_LARGE;
         simpleFleet.ignoreMarketFleetSizeMult = true;
         simpleFleet.maxShipSize = 3;
         simpleFleet.sMods = MathHelper.getSeededRandomNumberInRange(2,3, random);

@@ -10,8 +10,7 @@ import java.awt.*;
 
 public class EmCore extends BaseHullMod {
 
-	//does nothing lol
-	//script for EM core
+	// Marker hullmod for the EM core; it has no effect.
 
 	Color lol = new Color(255, 20, 145);
 

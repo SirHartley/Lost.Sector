@@ -33,7 +33,7 @@ public class WarpAI implements ShipSystemAIScript {
     private final IntervalUtil timer = new IntervalUtil(0.5f, 0.7f);
 
     // setup
-    public static final float DEGREES = 69f; // (haha nice)
+    public static final float DEGREES = 69f;
 
     // list of flags to check for using TOWARDS target, using AWAY from target, and NOT USING
     public static final ArrayList<AIFlags> TOWARDS = new ArrayList<>();
@@ -111,9 +111,6 @@ public class WarpAI implements ShipSystemAIScript {
                 if (diff<270&&diff>90) backwards = true;
 
             }
-
-            //macgyver debugger
-            //engine.addFloatingText(ship.getLocation(), "nothingCanStopMe", 30f, Color.cyan, ship, 0.5f, 1.0f);
 
             // setup variables
             boolean useMe = false;

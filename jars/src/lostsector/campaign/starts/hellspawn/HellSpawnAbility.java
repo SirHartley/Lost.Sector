@@ -46,8 +46,6 @@ public class HellSpawnAbility extends BaseDurationAbility {
         CampaignFleetAPI fleet = getFleet();
         if (fleet == null) return;
 
-        //Global.getSoundPlayer().playSound("Gate_conduit_activate", 1f,1f, fleet.getLocation(), new Vector2f());
-
         fleet.getStats().getSensorRangeMod().modifyMult(getModId(), 1f + (0.5f - 1f), "Gate Conduit");
         fleet.getStats().getDetectedRangeMod().modifyMult(getModId(), 2f, "Gate Conduit");
         fleet.getStats().getFleetwideMaxBurnMod().modifyFlat(getModId(), (int)(-10f), "Gate Conduit");
@@ -79,7 +77,6 @@ public class HellSpawnAbility extends BaseDurationAbility {
         CampaignFleetAPI pf = getFleet();
         if (pf==null) return;
 
-        //Random random = HellSpawnManager.getRandom();
         int num = MathHelper.getSeededRandomNumberInRange(MIN_FLEETS, MAX_FLEETS, random);
         for (int x = 0; x<num;x++) {
             float combatPoints = pf.getFleetPoints() * FLEET_SIZE_FRACTION;

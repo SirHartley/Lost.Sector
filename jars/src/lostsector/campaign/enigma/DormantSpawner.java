@@ -67,8 +67,7 @@ public class DormantSpawner {
                     WeightedRandomPicker<BaseThemeGenerator.EntityLocation> validPoints = BaseThemeGenerator.getLocations(new Random(), system, 50f, WEIGHTS);
                     placeToSpawn = validPoints.pick();
                 }
-                //dumb null check
-                //randomly needed after working for months
+                // The picked location's orbit or its focus can be null.
                 SectorEntityToken loc = null;
                 if (placeToSpawn.orbit==null || placeToSpawn.orbit.getFocus()==null){
                     loc = MiscHelper.getRandomLocationInSystem(system, true,true, new Random());

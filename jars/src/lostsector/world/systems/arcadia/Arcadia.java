@@ -25,7 +25,7 @@ public class Arcadia {
 
 		EconomyAPI globalEconomy = Global.getSector().getEconomy();
 		String planetID = primaryEntity.getId();
-		String marketID = planetID/* + "_market"*/;
+		String marketID = planetID;
 
 		MarketAPI newMarket = Global.getFactory().createMarket(marketID, name, size);
 		newMarket.setFactionId(factionID);

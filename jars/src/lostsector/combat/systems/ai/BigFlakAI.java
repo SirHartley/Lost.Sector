@@ -64,7 +64,6 @@ public class BigFlakAI implements ShipSystemAIScript {
             if (data.right){
                 decisionLevel = getDecisionLevel(decisionLevel, weaponR);
             }
-            //engine.addFloatingText(ship.getLocation(), "test " + (int)decisionLevel, 60f, Color.cyan, ship, 0.5f, 1.0f);
 
             if (decisionLevel>60f){
                 ship.useSystem();
@@ -80,7 +79,6 @@ public class BigFlakAI implements ShipSystemAIScript {
 
             // ignore everything outside of a y degree cone
             if (Math.abs(MathUtils.getShortestRotation(VectorUtils.getAngle(weapon.getLocation(), c.getLocation()), weapon.getCurrAngle())) > 20f) continue;
-            //engine.addFloatingText(c.getLocation(), "test " + decisionLevel, 60f, Color.cyan, ship, 0.5f, 1.0f);
 
             if (c instanceof ShipAPI) {
                 ShipAPI t = (ShipAPI) c;

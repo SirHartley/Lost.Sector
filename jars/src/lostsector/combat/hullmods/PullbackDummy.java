@@ -40,7 +40,6 @@ public class PullbackDummy extends BaseHullMod {
         if (data == null) {
             data = new ShipSpecificData();
         }
-        //data nonsense
         data.maxAmmo = ship.getSystem().getMaxAmmo();
         data.isOn = ship.getSystem().isOn();
         data.location = new Vector2f(ship.getLocation().getX(), ship.getLocation().getY());
@@ -124,7 +123,6 @@ public class PullbackDummy extends BaseHullMod {
                         data.tPoint3 = p.one;
                     }
                 }
-                //engine.addFloatingText(ship.getLocation(), ""+data.points.size(), 24f, Color.RED, ship, 1f,1f);
             }
         }
 

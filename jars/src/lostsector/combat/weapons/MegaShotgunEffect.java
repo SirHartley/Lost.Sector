@@ -101,7 +101,6 @@ public class MegaShotgunEffect implements EveryFrameWeaponEffectPlugin, OnFireEf
         PARTICLE_COLOR.put("NSKR_FLASH_FRINGE_1", new Color(255, 217, 65));
         PARTICLE_COLOR.put("NSKR_FLASH_CORE_1", new Color(255, 213, 212));
     }
-    //public static Color lol = new Color(255, 164,60);
     //What's the smallest size the particles can have?
     private static final Map<String, Float> PARTICLE_SIZE_MIN = new HashMap<>();
     static {
@@ -223,7 +222,6 @@ public class MegaShotgunEffect implements EveryFrameWeaponEffectPlugin, OnFireEf
             engine.spawnProjectile(weapon.getShip(), wep, SHOTGUN_WEAPON_ID,
                     projectile.getLocation(), weapon.getCurrAngle() + MathUtils.getRandomNumberInRange(-10.0f, 10.0f), drift);
         }
-    //damage fuckery
     float base = projectile.getDamageAmount();
     projectile.setDamageAmount(base*0.5f);
     }

@@ -69,32 +69,11 @@ public class ThronesGiftDisposableFleetSpawner extends DisposableFleetManager {
     @Override
     protected int getDesiredNumFleetsForSpawnLocation() {
         if (GameModeManager.getMode() != GameModeManager.gameMode.THRONESGIFT) return 0;
-        //boolean debug = true;
-        //if (debug) return 20;
         float level = (ThronesGiftManager.getTotalDp() - ThronesGiftManager.DEFAULT_DP);
         level /= 50f;
         //min auto pts unlock before we spawn fleets
         if (level<1f) return 0;
         return 1;
-//
-        //ThronesGiftIntel intel = getIntel();
-        //if (intel == null) return 0;
-//
-        //if (timestamp != null) {
-        //    float daysSince = Global.getSector().getClock().getElapsedDaysSince(timestamp);
-        //    //set maxCount for some days based on lvl, then don't spawn again
-        //    if (daysSince < 14) return maxCount;
-        //}
-
-        //rng check
-        //float chance = (level)/3f;
-        //if (random.nextFloat() < chance) return 1;
-        //else return 0;
-        //maxCount = (int)level;
-        ////UPDATE TIMER
-        //timestamp = Global.getSector().getClock().getTimestamp();
-//
-        //return maxCount;
     }
 
     @Override
@@ -197,7 +176,6 @@ public class ThronesGiftDisposableFleetSpawner extends DisposableFleetManager {
         fleet.getMemoryWithoutUpdate().set(KEY_SPAWN_FP, fleet.getFleetPoints());
         fleet.getMemoryWithoutUpdate().set(TIMESTAMP_KEY, Global.getSector().getClock().getTimestamp());
 
-        //setLocationAndOrders(fleet, 0.75f, 0.75f);
         fleet.addScript(new DisposableAggroAssignmentAI(fleet, system, this, hyperChance));
 
         //HOLY SPIRIT

@@ -60,13 +60,11 @@ public class TeleportDummy extends BaseHullMod {
 				sprite = Global.getSettings().getSprite(SPRITE_PATH);
 			}
 
-			//engine.addFloatingText(sLoc, "test " + (int)vAngle +","+ (int)sAngle +","+ (int)diff +","+ diffMult, 30f, Color.cyan, ship, 0.5f, 1.0f);
-
 			tPoint = WarpStats.teleportPoint(ship);
 
 			//DRAW SPRITE
 				Vector2f size = new Vector2f(ACTIVE_RANGE*2f, ACTIVE_RANGE*2f);
-				//speen
+				//spin
 				angle += amount*40f;
 				if (angle>360) angle = 0f;
 				if (engine.isUIShowingHUD()) {

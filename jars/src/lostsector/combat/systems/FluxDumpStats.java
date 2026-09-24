@@ -48,7 +48,6 @@ public class FluxDumpStats extends BaseShipSystemScript {
 		//SO too op
 		if (ship.getVariant().hasHullMod("safetyoverrides")) so = 0.75f;
 
-		//engine.addFloatingText(ship.getLocation(), "test " + multi, 20f, Color.cyan, ship, 0.5f, 1.0f);
 		stats.getMaxSpeed().modifyFlat(id, SPEED_BONUS * effectLevel);
 		stats.getAcceleration().modifyPercent(id, 3f * MANEUVER_BONUS * effectLevel);
 		stats.getTurnAcceleration().modifyPercent(id, MANEUVER_BONUS * effectLevel);

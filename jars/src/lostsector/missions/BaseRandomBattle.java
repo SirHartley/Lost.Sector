@@ -129,9 +129,6 @@ public class BaseRandomBattle implements MissionDefinitionPlugin {
 
                 flagship = false;
             }
-
-            //member.getCrewComposition().addCrew(member.getMaxCrew() - member.getCrewComposition().getCrew());
-            //member.getRepairTracker().setCR(0.7f);
         }
     }
 

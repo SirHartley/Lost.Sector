@@ -190,8 +190,6 @@ public class HellSpawnJudgementDialog implements InteractionDialogPlugin {
 
         //FIGHT
         if (optionData == OptionId.FIGHT) {
-            //text.addPara("", g, h, "", "");
-
             CampaignFleetAPI fleet = spawnJudgementFleet();
 
             visual.fadeVisualOut();

@@ -52,7 +52,6 @@ public class PowerLevel {
             //don't count logistics
             if (MiscHelper.isLogistics(ship.getHullSpec().getHints())){
                 value = 0f;
-                //log("PowerLevel " + spec.getBaseHullId() +  " LOGISTICS");
             } else {
                 //don't count unfit ships, and ships with basically no weapons since they almost always will be logi, or recovered ships with no combat value
                 if (wepValue + wingValue < 750f && ship.getHullSpec().getHullSize() == ShipAPI.HullSize.FRIGATE) unfit = true;
@@ -61,14 +60,12 @@ public class PowerLevel {
                 if (wepValue + wingValue < 3000f && ship.getHullSpec().getHullSize() == ShipAPI.HullSize.CAPITAL_SHIP) unfit = true;
                 if (unfit) {
                     value = 0f;
-                    //log("PowerLevel " + spec.getBaseHullId() + " UNFIT OR LOGI, not counting, wep " + wepValue + " wing " + wingValue);
                 }
             }
 
             totalValue += wingValue;
             totalValue += wepValue;
             totalValue += value;
-            //log("PowerLevel " + spec.getBaseHullId() + " dmods " + dMods + " smods " + ship.getVariant().getSMods().size() + " weapons " + wepValue + " wings " + wingValue +" ship value " + value);
             //officers
             if (ship.getCaptain()!=Global.getSector().getPlayerPerson() && !ship.getCaptain().isAICore()) {
                 officerValue += ship.getCaptain().getStats().getLevel();
@@ -79,18 +76,15 @@ public class PowerLevel {
         totalValue = MathHelper.normalize(totalValue, 0f, 3000000f);
         totalValue = MathHelper.lerp(0.20f, 1.0f, totalValue);
         power *= totalValue;
-        //log("PowerLevel " + " totalValue " + totalValue);
         //level
         levelValue = MathHelper.normalize(stats.getLevel(), 1f, 15f);
         levelValue = MathHelper.lerp(0.25f, 1.0f, levelValue);
         power *= levelValue;
-        //log("PowerLevel " + " levelValue " + levelValue);
         //officers
         officerValue = Math.min(50f, officerValue);
         officerValue = MathHelper.normalize(officerValue, 0f, 50f);
         officerValue = MathHelper.lerp(0.60f, 1.0f, officerValue);
         power *= officerValue;
-        //log("PowerLevel " + " officerValue " + officerValue);
 
         power = MathHelper.lerp(0f, maxPower, power);
         power += base;

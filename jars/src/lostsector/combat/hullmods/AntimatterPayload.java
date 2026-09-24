@@ -13,7 +13,7 @@ import java.util.Set;
 
 public class AntimatterPayload extends BaseHullMod {
 
-	//some hax to make AED slightly less fucky and Data for FX
+	// Sets AI captains to reckless and stores the per-ship data read by PayloadDetonationPlugin.
 
 	public static final Set<String> BLOCKED_HULLMODS = new HashSet<>();
 	static {

@@ -48,7 +48,6 @@ public class StasisAI implements ShipSystemAIScript {
         if (data.sinceEffected < StasisStats.MAX_DURATION){
             data.sinceEffected += amount;
         }
-        //engine.addFloatingText(ship.getLocation(), "LMAO "+data.sinceEffected, 14f, Color.RED, null,1f,1f);
         Global.getCombatEngine().getCustomData().put("STASIS_AI_DATA_KEY" + ship.getId(), data);
 
         timer.advance(amount);
@@ -73,7 +72,6 @@ public class StasisAI implements ShipSystemAIScript {
                     float angle = VectorUtils.getAngle(ship.getLocation(), t.getLocation());
                     // ignore everything outside of a y degree cone
                     if (Math.abs(MathUtils.getShortestRotation(angle, ship.getFacing())) > 20f) continue;
-                    //engine.addFloatingText(ship.getLocation(), "LMAO ", 14f, Color.RED, null,1f,1f);
                     stop = true;
                     break;
                 }

@@ -306,7 +306,6 @@ Quest defects are listed with their quest: [Kesteven questline](quests/KESTEVEN_
 | `CampaignTimer` | Reads its stored value only in its constructor, once per client session. Loading a second save in the same session keeps the first save's timers, and `CampaignTimer.save()` writes them into the second save. |
 | `ModPlugin.onGameLoad()` | `IS_NEXERELIN` is cleared for the rest of the session if `SectorManager.getManager()` is null on any load. |
 | `data/config/modSettings.json` | `MagicLib.bounty_board` is empty and only `modFiles/magicBounty_data_example.json` exists, so no MagicLib bounty is registered. |
-| `data/weapons/nskr_tremors.wpn` | A commented `everyFrameEffect` names the removed `scripts.kissa.LOST_SECTOR` package. |
 
 ## Dead or dormant
 

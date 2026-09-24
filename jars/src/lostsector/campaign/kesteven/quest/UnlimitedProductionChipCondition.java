@@ -22,7 +22,7 @@ public class UnlimitedProductionChipCondition extends BaseMarketConditionPlugin 
         //decived
         if (market.getFaction()==null) return;
         if (market.isPlanetConditionMarketOnly()) return;
-        //hacks
+        // The condition spec is shared by all markets, so its description is rewritten for this market's faction.
         condition.getSpec().setDesc(
                 "The Unlimited Production Chip allows unprecedented access to high-end ship production, greatly increasing the military presence of "+market.getFaction().getDisplayNameWithArticle()+".");
 
@@ -43,7 +43,7 @@ public class UnlimitedProductionChipCondition extends BaseMarketConditionPlugin 
         //quality
         market.getStats().getDynamic().getMod(Stats.FLEET_QUALITY_MOD).modifyFlat(id,QUALITY_BONUS/100f, Misc.ucFirst(condition.getName().toLowerCase()));
 
-        //so we don't bork eliza market
+        // Extra industry slots so Eliza's pirate market keeps its industries.
         if (market.getFaction().getId().equals(Factions.PIRATES)){
             market.getStats().getDynamic().getMod(Stats.MAX_INDUSTRIES).modifyFlat(id, 2f,Misc.ucFirst(condition.getName().toLowerCase()));
         } else {

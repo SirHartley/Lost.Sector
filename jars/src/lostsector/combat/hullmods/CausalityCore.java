@@ -155,8 +155,6 @@ public class CausalityCore extends BaseHullMod {
 				PostProcessShader.setLightness(false, MathHelper.lerp(1f, 1.25f, effectSqrt));
 				PostProcessShader.setSaturation(false, MathHelper.lerp(1f, 0.5f, effectSqrt));
 
-				//engine.addFloatingText(ship.getLocation(), "test " + effectSqrt, 20f, Color.cyan, ship, 0.5f, 1.0f);
-
 				//SOUND LOOPS
 				float min = 4000f;
 				float max = 8000f;
@@ -247,7 +245,6 @@ public class CausalityCore extends BaseHullMod {
 	}
 
 	//INDICATOR RENDERING
-	//yoinked from swp but mostly new code
 
 	private class IndicatorRenderer implements CombatLayeredRenderingPlugin {
 		private final Color COLOR1 = new Color(255, 20, 50, 255);
@@ -348,12 +345,11 @@ public class CausalityCore extends BaseHullMod {
 				if (target.isExpired() || !Global.getCombatEngine().isEntityInPlay(target)) continue;
 				DamagingProjectileAPI proj = (DamagingProjectileAPI) target;
 				if (proj.didDamage() || proj.isExpired())continue;
-				//Global.getCombatEngine().addFloatingText(target.getLocation(), "NEW", 24, Color.RED, null, 0.5f, 1.0f);
 				newTargets.add(new Pair<>(target, 1f));
 			}
 			float amount = Global.getCombatEngine().getElapsedInLastFrame();
 
-			//speeen
+			//spin
 			if (!Global.getCombatEngine().isPaused()) {
 				angle += ((amount * 40f) * (shipTimeMult + 1f)) * (1f + ((data.energy / FLUXMULT) / 2f));
 			}
@@ -385,7 +381,6 @@ public class CausalityCore extends BaseHullMod {
 					size.setX(finalSize);
 					size.setY(finalSize);
 
-					//Global.getCombatEngine().addFloatingText(target.one.getLocation(), "lol " + sizeMult +" "+(int)finalSize, 24, Color.RED, target.one, 0.5f, 1.0f);
 					//RENDER
 					if (isActive && Global.getCombatEngine().isUIShowingHUD()) {
 						sprite.setAdditiveBlend();

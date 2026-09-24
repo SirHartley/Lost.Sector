@@ -98,9 +98,7 @@ public class TakedownDummy extends BaseHullMod {
 
                     tShip.two = -11f;
                     data.timeOut = true;
-                    //engine.addFloatingText(ship.getLocation(), "ammo " + curAmmo + " takedown " + tShip.one + " timer " + tShip.two, 60, Color.RED, ship, 0.5f, 1.0f);
                 }
-                //engine.addFloatingText(tShip.one.getLocation(), "TAKEDOWN " + Math.round(tShip.two)+ " time " + data.tShips.size() + " size ", 60, Color.RED, tShip.one, 0.5f, 1.0f);
             }
             //only run for dead and timeout ships
             if (data.timeOut) {
@@ -111,7 +109,6 @@ public class TakedownDummy extends BaseHullMod {
                     ShipAPI vShip = (ShipAPI) a.one;
                     if (a.two < 0 || vShip.isHulk()) {
                         removalShip = a.one;
-                        //engine.addFloatingText(ship.getLocation(), "removed" + removalShip + "iter" + iter, 60, Color.RED, ship, 0.5f, 1.0f);
                         iter.remove();
                     }
                 }
@@ -120,7 +117,6 @@ public class TakedownDummy extends BaseHullMod {
                     CombatEntityAPI a = iter.next();
                     ShipAPI vShip = (ShipAPI) a;
                     if (vShip.isHulk() || a == removalShip) {
-                        //engine.addFloatingText(ship.getLocation(), "removed" + iterB, 60, Color.RED, ship, 0.5f, 1.0f);
                         iter.remove();
                     }
                 }
@@ -160,7 +156,6 @@ public class TakedownDummy extends BaseHullMod {
                 data.newHit = true;
             }
             Global.getCombatEngine().getCustomData().put("TAKEDOWN_DATA_KEY" + ship.getId(), data);
-            //engine.addFloatingText(target.getLocation(), "TAKEDOWN " + sShips.toString(), 60, Color.RED , target, 0.5f, 1.0f);
             return null;
         }
     }

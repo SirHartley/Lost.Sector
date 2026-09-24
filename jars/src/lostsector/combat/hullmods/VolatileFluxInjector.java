@@ -68,10 +68,6 @@ public class VolatileFluxInjector extends BaseHullMod {
     @Override
     public void applyEffectsAfterShipCreation(ShipAPI ship, String id) {
 
-        //int capCount = ship.getVariant().getNumFluxCapacitors();
-        //ship.getMutableStats().getFluxCapacity().modifyPercent(id, FLUX_BONUS);
-        //ship.getMutableStats().getFluxCapacity().modifyFlat(id, capCount*(200f*(FLUX_BONUS/100f)));
-
         for (String tmp : BLOCKED_HULLMODS) {
             if (ship.getVariant().getHullMods().contains(tmp)) {
                 //if someone tries to install blocked hullmod, remove it
@@ -82,9 +78,6 @@ public class VolatileFluxInjector extends BaseHullMod {
                 );
             }
         }
-        //smod
-        //boolean sMod = isSMod(ship.getMutableStats());
-        //if (sMod) ship.getMutableStats().getEmpDamageTakenMult().modifyPercent(id, SMOD_PENALTY);
     }
 
     @Override

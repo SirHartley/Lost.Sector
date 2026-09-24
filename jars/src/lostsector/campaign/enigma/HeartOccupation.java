@@ -32,7 +32,6 @@ public class HeartOccupation extends BaseCampaignEventListener implements EveryF
 
     Saved<Boolean> firstTime;
     boolean doOnce = false;
-    //CampaignFleetAPI pf;
     private FrostIntel intel = null;
     private float counter = 0f;
     public static final String HINT_KEY = "HINT_FROST";
@@ -68,7 +67,6 @@ public class HeartOccupation extends BaseCampaignEventListener implements EveryF
                     if (comm == entry) continue;
                     comm.setHidden(true);
                     market.getCommDirectory().removeEntry(comm);
-                    //log("removed "+comm.getId()+" "+ comm.getTitle());
                 }
             }
         }
@@ -107,7 +105,7 @@ public class HeartOccupation extends BaseCampaignEventListener implements EveryF
             counter = 0f;
         }
 
-        //kills frozen heart and spawns the wreckage (slightly hax)
+        //kills frozen heart and spawns the wreckage
         if (market != null) {
             if (market.getFaction().getId().equals("enigma")) {
                 Industry fort = market.getIndustry(Industries.STARFORTRESS);
@@ -132,7 +130,6 @@ public class HeartOccupation extends BaseCampaignEventListener implements EveryF
 
                     StarSystemAPI system = market.getStarSystem();
                     PlanetAPI star = system.getStar();
-                    //explode pls
                     market.getMemoryWithoutUpdate().unset(DecivTracker.NO_DECIV_KEY);
                     market.setAdmin(null);
                     for (SectorEntityToken entity : market.getConnectedEntities()) {
@@ -169,11 +166,9 @@ public class HeartOccupation extends BaseCampaignEventListener implements EveryF
                     heart.setMarket(null);
                     heart.setFaction(Factions.NEUTRAL);
                     heart.setExpired(true);
-                    //that should be enough??
 
                     //wreckage and debris
                     SectorEntityToken heartWreck = BaseThemeGenerator.addSalvageEntity(getRandom(), system.getStar().getContainingLocation(), "nskr_heart_wreckage", Factions.NEUTRAL);
-                    //SectorEntityToken heartWreck = BaseThemeGenerator.addSalvageEntity(new Random(), system.getStar().getContainingLocation(), "Heart_wreckage", Factions.NEUTRAL);
                     //replace
                     heartWreck.setId("nskr_heart_wreckage");
                     heartWreck.setCircularOrbitPointingDown(star, angle, radius, period);

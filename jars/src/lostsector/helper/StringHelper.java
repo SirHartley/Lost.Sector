@@ -16,8 +16,6 @@ import java.util.*;
 
 public class StringHelper {
 
-    //copy pastad from nexelerin
-
     public static final String FLEET_ASSIGNMENT_CATEGORY = "exerelin_fleetAssignments";
 
     public static final String HR = "-----------------------------------------------------------------------------";
@@ -30,7 +28,6 @@ public class StringHelper {
         catch (Exception ex)
         {
             // could be a string not found
-            //str = ex.toString();  // looks really silly
             Global.getLogger(StringHelper.class).warn(ex);
             return "[INVALID]" + id;
         }

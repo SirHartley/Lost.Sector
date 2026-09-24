@@ -14,7 +14,6 @@ public class PayloadAI implements ShipSystemAIScript {
     private CombatEngineAPI engine = null;
     private ShipAPI ship;
     private final IntervalUtil tracker = new IntervalUtil(0.50f, 1.00f);
-    //public static final float DEGREES = 150f;
 
     @Override
     public void advance(float amount, Vector2f missileDangerDir, Vector2f collisionDangerDir, ShipAPI target) {
@@ -71,9 +70,6 @@ public class PayloadAI implements ShipSystemAIScript {
             }
             //don't use when nothing is around
             if (currTargets.isEmpty()) decisionLevel = 0;
-
-            //macgyver debugger
-            //engine.addFloatingText(ship.getLocation(), "weight " +(int)decisionLevel, 24f, Color.cyan, ship, 0.5f, 1.0f);
 
             if (decisionLevel >= 40f) {
                 ship.useSystem();

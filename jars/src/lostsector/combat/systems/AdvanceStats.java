@@ -105,7 +105,6 @@ public class AdvanceStats extends BaseShipSystemScript {
 			}
 
 			ship.addListener(new damageCounter());
-			//engine.addFloatingText(ship.getLocation(), "lol", 600, Color.RED, ship, 0.5f, 1.0f);
 			doOnce=true;
 		}
 
@@ -329,7 +328,6 @@ public class AdvanceStats extends BaseShipSystemScript {
 
 		}
 
-		//engine.addFloatingText(ship.getLocation(), "dmg" + data.damageD, 60, Color.RED, ship, 0.5f, 1.0f);
 		Global.getCombatEngine().getCustomData().put("ADVANCE_DATA_KEY" + ship.getId(), data);
 	}
 

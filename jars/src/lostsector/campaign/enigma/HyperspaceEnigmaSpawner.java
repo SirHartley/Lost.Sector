@@ -81,7 +81,6 @@ public class HyperspaceEnigmaSpawner extends BaseCampaignEventListener implement
     public static final String PERSISTENT_RANDOM_KEY = "nskr_hyperspaceEnigmaSpawnerRandom";
     public static final String PERSISTENT_FLEET_RANDOM_KEY = "nskr_hyperspaceEnigmaSpawnerFleetRandom";
     private final List<CampaignFleetAPI> removed = new ArrayList<>();
-    //CampaignFleetAPI pf;
     Saved<Float> counter;
     Saved<Float> fleetCounter;
 
@@ -131,8 +130,6 @@ public class HyperspaceEnigmaSpawner extends BaseCampaignEventListener implement
                 if (!MiscHelper.enigmaExists()){
                     chance *= 0.25f;
                 }
-
-                //log("chance "+chance);
 
                 //spawning
                 if (FleetHelper.getFleets(FLEET_ARRAY_KEY).size() < MAX_FLEETS) {
@@ -219,18 +216,15 @@ public class HyperspaceEnigmaSpawner extends BaseCampaignEventListener implement
                         FleetHelper.guardTargetAI(fleet, f, FleetHelper.guardMovementBehaviour.HOLD, FleetHelper.guardAttackBehaviour.HOSTILE, 0.04f);
                         break;
                     case DORMANT:
-                        //nothing lol
                         fleet.setTransponderOn(false);
                         continue;
                     case GO_TO_SYSTEM:
                         if (fleet.getContainingLocation()!=f.target.getContainingLocation() && assignment != FleetAssignment.GO_TO_LOCATION){
                             fleet.clearAssignments();
                             fleet.addAssignment(FleetAssignment.GO_TO_LOCATION, f.target, Float.MAX_VALUE, "travelling");
-                            //log("set GO_TO_SYSTEM logic for "+fleet.getName());
                         }
                         if (fleet.getContainingLocation()==f.target.getContainingLocation()){
                             FleetHelper.guardTargetAI(fleet, f, FleetHelper.guardMovementBehaviour.ORBIT, FleetHelper.guardAttackBehaviour.PLAYER, 0.10f);
-                            //log("set GO_TO_SYSTEM logic for "+fleet.getName());
                         }
                         break;
                 }
@@ -387,7 +381,6 @@ public class HyperspaceEnigmaSpawner extends BaseCampaignEventListener implement
         FleetHelper.setFleets(fleets, FLEET_ARRAY_KEY);
 
         log("SPAWNED, size " + points +" power "+power+" bias "+bias);
-        //log("FLEET, loc " + fleet.getContainingLocation() +" size "+ fleet.getFleetPoints() + " commander " + fleet.getCommander().getName().getFullName() + " flagship " + fleet.getFlagship().getHullSpec().getBaseHullId());
     }
 
     @NotNull
@@ -438,7 +431,6 @@ public class HyperspaceEnigmaSpawner extends BaseCampaignEventListener implement
                 float dist = MathUtils.getDistance(pf.getLocationInHyperspace(), system.getStar().getLocationInHyperspace());
                 if (dist <= maxDist && dist > 0f) {
                     isValid = true;
-                    //log("getRandomSystemNearLocation +1 valid, dist "+dist);
                 }
                 if (isValid) {
                     validSystems.add(system);

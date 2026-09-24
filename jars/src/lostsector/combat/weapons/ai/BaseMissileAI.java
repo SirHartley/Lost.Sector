@@ -16,8 +16,6 @@ import java.util.List;
 
 public class BaseMissileAI implements MissileAIPlugin, GuidedMissileAI {
 
-    //more black magic idk whats going on..
-
     private static Vector2f quad(float a, float b, float c) {
         Vector2f solution = null;
         if (Float.compare(Math.abs(a), 0) == 0) {
@@ -81,7 +79,7 @@ public class BaseMissileAI implements MissileAIPlugin, GuidedMissileAI {
 
     @Override
     public void advance(float amount) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override

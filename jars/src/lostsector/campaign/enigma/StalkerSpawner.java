@@ -61,7 +61,6 @@ public class StalkerSpawner extends BaseCampaignEventListener implements EveryFr
     private final List<CampaignFleetAPI> removed = new ArrayList<>();
     private float threatMult = 0f;
     private boolean updated = false;
-    //CampaignFleetAPI pf;
     Random random;
 
     //Weights for the different types of locations we go to
@@ -116,7 +115,6 @@ public class StalkerSpawner extends BaseCampaignEventListener implements EveryFr
             target = defLoc;
             locations.val.add(defLoc);
         }
-        //jank
         //update threat mult
         if (!updated){
             threatMult = getEnigmaThreatScaling(true);
@@ -130,7 +128,6 @@ public class StalkerSpawner extends BaseCampaignEventListener implements EveryFr
             spawnCounter.val += amount * threatMult;
             counter.val += amount;
         }
-        //log("threat "+threatMult);
 
         if (GameModeManager.getMode() == GameModeManager.gameMode.HELLSPAWN) return;
 
@@ -139,7 +136,7 @@ public class StalkerSpawner extends BaseCampaignEventListener implements EveryFr
             threatMult = getEnigmaThreatScaling(true);
 
             //target
-            //no black holes cause AI real dumb with them
+            // Skip black hole systems; fleet AI handles them poorly.
             boolean bh = (pf.getStarSystem() != null && !pf.isInHyperspace() && pf.getStarSystem().getStar() != null && pf.getStarSystem().getStar().getTypeId().equals("black_hole"));
             if (pf.getStarSystem() != null && !pf.isInHyperspace() && !pf.getStarSystem().hasTag(Tags.SYSTEM_CUT_OFF_FROM_HYPER) && !pf.getStarSystem().hasTag(Tags.THEME_HIDDEN) && !bh){
                 locations.val.clear();
@@ -150,7 +147,6 @@ public class StalkerSpawner extends BaseCampaignEventListener implements EveryFr
             if (token.val == null || token.val.getStarSystem()!=locations.val.get(0)){
                 token.val = randomTargetLocation(target);
                 updated = true;
-                //log("StalkerSpawner NEW TARGET " + token.val.getStarSystem().getName());
             }
             List<FleetInfo> fleets = FleetHelper.getFleets(FLEET_ARRAY_KEY);
             for (FleetInfo f : fleets) {
@@ -219,7 +215,7 @@ public class StalkerSpawner extends BaseCampaignEventListener implements EveryFr
                     }
                 }
                 if (sameSystem) {
-                    //intercept logic yoinked from Nex
+                    //intercept logic adapted from Nexerelin
                     //chance to engage player every tick, otherwise just lurk around
                     if (Math.random() < ENGAGE_CHANCE) {
                         if (playerVisible) {
@@ -316,11 +312,9 @@ public class StalkerSpawner extends BaseCampaignEventListener implements EveryFr
         }
         if (stalker){
             if (protDP<=minDP && protOP<=minOP){
-                //log("return 0 "+ " dp "+protDP+ " op "+protOP);
                 return 0f;
             }
         }
-        //log("protDP "+(int)protDP+" protOP "+(int)protOP);
         //dp
         protDP = Math.min(protDP, 150f);
         protDP = MathHelper.normalize(protDP, 0f, 150f);
@@ -331,7 +325,6 @@ public class StalkerSpawner extends BaseCampaignEventListener implements EveryFr
         protOP = MathHelper.lerp(0f,0.40f, protOP);
         //apply
         scale += protDP+protOP;
-        //log("scale "+scale+" protDP "+protDP+" protOP "+protOP);
         return scale;
     }
 
@@ -382,14 +375,11 @@ public class StalkerSpawner extends BaseCampaignEventListener implements EveryFr
                 //passive
                 keys.add(MemFlags.MEMORY_KEY_IGNORE_PLAYER_COMMS);
             }
-            //keys.add(MemFlags.CAN_ONLY_BE_ENGAGED_WHEN_VISIBLE_TO_PLAYER);
-            //keys.add(MemFlags.FLEET_IGNORES_OTHER_FLEETS);
             keys.add(MemFlags.FLEET_FIGHT_TO_THE_LAST);
             keys.add(MemFlags.MEMORY_KEY_FORCE_TRANSPONDER_OFF);
             keys.add(FLEET_KEY);
 
             SimpleFleet simpleFleet = new SimpleFleet(market.getPrimaryEntity(), "enigma", combatPoints, keys, random);
-            //SimpleFleet.type = type;
             simpleFleet.aiFleetProperties = true;
 
             switch (lvl) {
@@ -452,22 +442,6 @@ public class StalkerSpawner extends BaseCampaignEventListener implements EveryFr
             log("StalkerSpawner Fleet destroyed, delayed next spawn, time elapsed " + spawnCounter.val / 10f + " out of " + STALKER_TIMER);
         }
     }
-
-    //@Override
-    //public void reportPlayerEngagement(EngagementResultAPI result) {
-    //    if (result.getLoserResult()==null) return;
-    //    CampaignFleetAPI loser = result.getLoserResult().getFleet();
-    //    if (loser == null) return;
-    //    for (String k : loser.getMemoryWithoutUpdate().getKeys()){
-    //        log("key r "+k);
-    //    }
-    //    if (loser.getMemoryWithoutUpdate().contains(FLEET_KEY)) {
-    //        List<FleetMemberAPI> casualties = result.getLoserResult().getDisabled();
-    //        spawnCounter.val -= 4f * 10f;
-    //
-    //        log("StalkerSpawner Fleet destroyed, delayed next spawn, time elapsed " + spawnCounter.val / 10f + " out of " + STALKER_TIMER);
-    //    }
-    //}
 
     public static Random getRandom(String id) {
         Map<String, Object> data = Global.getSector().getPersistentData();

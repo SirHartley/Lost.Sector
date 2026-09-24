@@ -52,7 +52,6 @@ public class EternitySpawner extends BaseCampaignEventListener implements EveryF
     Saved<Boolean> newGame;
     Saved<Boolean> firstTime;
     private final List<CampaignFleetAPI> removed = new ArrayList<>();
-    //CampaignFleetAPI pf;
     Random random;
 
     //Weights for the different types of locations we can spawn to
@@ -74,8 +73,6 @@ public class EternitySpawner extends BaseCampaignEventListener implements EveryF
         //for intel
         this.firstTime = new Saved<>(SAVED_PREFIX + "FirstTime", true);
         this.random = new Random();
-        //listener
-        //Global.getSector().getListenerManager().addListener(this, true);
     }
 
     @Override
@@ -196,7 +193,6 @@ public class EternitySpawner extends BaseCampaignEventListener implements EveryF
 
         //fleet
         SimpleFleet simpleFleet = new SimpleFleet(loc, FACTION, points, keys, random);
-        //SimpleFleet.type = FleetTypes.PATROL_LARGE;
         simpleFleet.maxShipSize = 2;
         simpleFleet.sMods = 3;
         simpleFleet.name = FLEET_NAME;

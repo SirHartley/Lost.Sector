@@ -111,7 +111,6 @@ public class CombatHelper {
         float range = 1f;
         for (int i = 0; i < 2000; i++) {
             tPoint = MathUtils.getPointOnCircumference(point, range, VectorUtils.getAngle(point, entity.getLocation()));
-            //Global.getCombatEngine().addFloatingText(tPoint, "lol", 20f, Color.cyan, null, 0.5f, 0.5f);
             range += 5f;
             if (range>9999f) break;
             //collision circle check is faster so do that first
@@ -162,7 +161,6 @@ public class CombatHelper {
                 validTargets.add(c);
             }
 
-            //checking for modules isn't a nightmare, why do you ask?
             //for module-ships/stations we only apply damage to a single module or the parent
             if (c instanceof ShipAPI) {
                 ShipAPI station = (ShipAPI)c;
@@ -200,23 +198,16 @@ public class CombatHelper {
                     }
                     //target is closest module shield
 
-                    //String main = "";
-                    //if (mainTarget!=null) {
-                    //    main = mainTarget.toString();
-                    //}
                     if (closest!=null){
                         target = closest;
-                        //engine.addFloatingText(closest.getLocation(), "CLOSEST shield " + closest.getHullSpec().getHullName() + "   " +dist+"   MainTarget "+main, 24f, Color.CYAN, null, 1f,1f);
                         //if a bounds target is closer than the shield, target is the closest bounds one
                         if (hullDist < dist && closestHull!=null){
                             target = closestHull;
-                            //engine.addFloatingText(closestHull.getLocation(), "CLOSEST hull " + closestHull.getHullSpec().getHullName() + "   " +hullDist+"   MainTarget "+main, 24f, Color.CYAN, null, 1f,1f);
                         }
                     }
                     //if there are no shields, target is the closest one
                     if (closest==null && closestHull!=null){
                         target = closestHull;
-                        //engine.addFloatingText(closestHull.getLocation(), "CLOSEST hull no shields " + closestHull.getHullSpec().getHullName() + "   " +hullDist+"   MainTarget "+main, 24f, Color.CYAN, null, 1f,1f);
                     }
                     //default target is the station, if its shield or bounds are closer
                 }
@@ -228,7 +219,6 @@ public class CombatHelper {
             if (c==null) continue;
             if (c==mainTarget) continue;
             applyAOE(source, point, baseDamage, type, expRange, c);
-            //engine.addFloatingText(c.getLocation(), "VALID TARGET", 24f, Color.CYAN, null, 1f,1f);
         }
     }
 
@@ -243,9 +233,6 @@ public class CombatHelper {
                     point))) {
 
                 ((ShipAPI) c).getFluxTracker().increaseFlux(damage * c.getShield().getFluxPerPointOfDamage(), true);
-
-                //engine.addFloatingText(c.getLocation(), "F " + (int)damage + " N " + ((ShipAPI) c).getHullSpec().getHullName(), 32f, Color.cyan, null, 0.5f, 0.5f);
-                //log("F " + (int)damage + " N " + ((ShipAPI) c).getHullSpec().getHullName());
             } else {
                 Vector2f nPoint = getNearestPointOnBounds(point, c);
                 float dist = MathUtils.getDistance(point, nPoint);
@@ -254,12 +241,9 @@ public class CombatHelper {
                 damageB *= 1f - MathHelper.smoothStep(MathHelper.normalize(rangeB, 0f, expRange));
                 if (damageB <= 0f) return;
 
-                //engine.addFloatingText(c.getLocation(), "D " + (int) damageB + " N " + ((ShipAPI) c).getHullSpec().getHullName(), 32f, Color.cyan, null, 0.5f, 0.5f);
-                //log("D " + (int) damageB + " N " + ((ShipAPI) c).getHullSpec().getHullName());
                 engine.applyDamage(c, nPoint, damageB, type, 0f, false, false, source);
             }
         } else {
-            //engine.addFloatingText(c.getLocation(), "E " + (int)damage, 32f, Color.cyan, null, 0.5f, 0.5f);
             engine.applyDamage(c, c.getLocation(), damage, type, 0f, false, false, source);
         }
     }

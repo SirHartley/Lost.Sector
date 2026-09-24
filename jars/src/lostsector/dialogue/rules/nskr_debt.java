@@ -27,8 +27,6 @@ import java.util.Random;
 
 public class nskr_debt extends PaginatedOptions {
 
-	//Hack job of nex code, but it just worksTM
-
 	public static final String DEBT_KEY = "$nskr_debtPoints";
 	public static final String INTEREST_KEY = "$nskr_debtInterest";
 	public static final String PERSISTENT_RANDOM_KEY = "nskr_debtRandom";
@@ -209,9 +207,6 @@ public class nskr_debt extends PaginatedOptions {
 		} else {
 			desc = "Repay " + Misc.getDGSCredits(-1*amount);
 		}
-		//text.setFontSmallInsignia();
-		//text.addPara(desc);
-		//text.setFontInsignia();
 
 		String optId = DIALOG_OPTION_PREFIX + index;
 		String str = desc;

@@ -106,9 +106,6 @@ public class OmniLoadAI implements ShipSystemAIScript {
                 if (t.getFluxTracker().isOverloadedOrVenting()) decisionLevel += 20f;
             }
 
-            //macgyver debugger
-            //engine.addFloatingText(ship.getLocation(), "test " + decisionLevel, 60f, Color.cyan, ship, 0.5f, 1.0f);
-
             if (decisionLevel>70f) {
                 ship.useSystem();
             }

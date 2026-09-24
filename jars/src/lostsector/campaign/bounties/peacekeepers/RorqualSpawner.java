@@ -75,7 +75,6 @@ public class RorqualSpawner extends BaseCampaignEventListener implements EveryFr
     Saved<Boolean> newGame;
     Saved<Boolean> firstTime;
     private final List<CampaignFleetAPI> removed = new ArrayList<>();
-    //CampaignFleetAPI pf;
     Random random;
 
     static void log(final String message) {
@@ -130,13 +129,6 @@ public class RorqualSpawner extends BaseCampaignEventListener implements EveryFr
                 if (fleet.getFleetPoints()<=0f){
                     despawn = true;
                 }
-
-                //for (FleetMemberAPI m : fleet.getMembersWithFightersCopy()){
-                //    if(!m.getHullSpec().getBaseHullId().equals("Rorqual"))continue;
-                //    fleet.removeFleetMemberWithDestructionFlash(m);
-                //    //update
-                //    FleetUtil.update(fleet, new Random());
-                //}
 
                 Vector2f fp = fleet.getLocationInHyperspace();
                 Vector2f pp = pf.getLocationInHyperspace();
@@ -397,7 +389,6 @@ public class RorqualSpawner extends BaseCampaignEventListener implements EveryFr
         Collection<String> validHmods = validHullmods(v.getNonBuiltInHullmods(), v.getSMods(), v.getPermaMods());
         int vCount = count;
         if (validHmods.size()<count) vCount = validHmods.size();
-        //when you just want to spawn some ships and casually start making DynaSector
         //swapping existing to smod
         while(v.getSMods().size()<vCount){
             String mod = null;
@@ -454,7 +445,6 @@ public class RorqualSpawner extends BaseCampaignEventListener implements EveryFr
                 v.addPermaMod("reinforcedhull", true);
             }
         }
-        //naahhh, he actually making DynaSector
 
         //spending unused op
         int unusedOP = v.getUnusedOP(stats);

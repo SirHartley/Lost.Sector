@@ -108,7 +108,7 @@ public class TimewarpStats extends BaseShipSystemScript {
             createWarpFx(ship, aIColor);
         }
 
-        //make fighters go zoom too
+        //apply to fighters too
             Set<ShipAPI> carriedFighters = getFighters(ship);
             for (ShipAPI fighter : carriedFighters) {
                 float atten = 1f;
@@ -132,7 +132,6 @@ public class TimewarpStats extends BaseShipSystemScript {
                 float fighterTimeMult = 1f + (MAX_TIME_MULT - 1f) * fighterEffectLevelSquared;
                 fighter.getMutableStats().getTimeMult().modifyMult(statId, fighterTimeMult);
 
-                //time for HAX
                 fighter.getMutableStats().getBallisticRoFMult().modifyMult(statId, 1f + (-1f * fighterEffectLevelSquared));
                 fighter.getMutableStats().getEnergyRoFMult().modifyMult(statId, 1f + (-1f * fighterEffectLevelSquared));
                 fighter.getMutableStats().getMissileRoFMult().modifyMult(statId, 1f + (-1f * fighterEffectLevelSquared));
@@ -153,7 +152,7 @@ public class TimewarpStats extends BaseShipSystemScript {
                 fighter.getMutableStats().getMissileRoFMult().unmodify(statId);
             }
 
-            //UNAPPLY PLS
+            //unapply
             if (effectLevel < 0.2f) {
                 stats.getMaxSpeed().unmodify(id);
                 stats.getAcceleration().unmodify(id);

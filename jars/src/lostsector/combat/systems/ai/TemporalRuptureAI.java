@@ -57,9 +57,6 @@ public class TemporalRuptureAI implements ShipSystemAIScript {
                 }
             }
 
-                //macgyver debugger
-                //engine.addFloatingText(ship.getLocation(), "test", 1f+decisionLevel, Color.cyan, ship, 0.5f, 1.0f);
-
             }
             if (decisionLevel > 40f) {
                 ship.useSystem();

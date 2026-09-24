@@ -30,7 +30,7 @@ public class RealitySplitterStats extends BaseShipSystemScript {
     public static final float SHIP_ALPHA_MULT = 0.0f;
     public static final float MAX_TIME_MULT = 5f;
 
-    //DMG (for some reason smaller number = more DMG -thanks Cycerin)
+    // Damage is divided by these values, so a smaller value deals more damage.
     public static final float DAMAGE_MOD_VS_CAPITAL = 0.5f;
     public static final float DAMAGE_MOD_VS_CRUISER = 1.0f;
     public static final float DAMAGE_MOD_VS_DESTROYER = 1.0f;
@@ -145,8 +145,6 @@ public class RealitySplitterStats extends BaseShipSystemScript {
 
         } else ship.getSystem().forceState(ShipSystemAPI.SystemState.OUT,0.1f);
 
-
-        //Global.getCombatEngine().addFloatingText(ship.getLocation(), "OOB " + oobCount + " timer " + timer, 32f, Color.cyan, ship, 0.5f, 1.0f);
 
         if (state == State.OUT) {
             if (effectLevel > 0.5f) {
@@ -271,7 +269,6 @@ public class RealitySplitterStats extends BaseShipSystemScript {
                         damage = EXPLOSION_DAMAGE_AMOUNT * mod;
                         emp = EXPLOSION_EMP_DAMAGE_AMOUNT * mod;
 
-                        //fuck missiles
                         if (tmp instanceof MissileAPI) {
                             force = FORCE_VS_MISSILE * mod;
                             engine.applyDamage(tmp, loc, 400, DamageType.FRAGMENTATION, 0, false, false, ship);

@@ -13,7 +13,7 @@ import java.util.Set;
 
 public class CausalityDummyEffect implements EveryFrameWeaponEffectPlugin {
 
-    //ship needs weapon as deco to work (stupid)
+    // Weapon effect plugins run only for mounted weapons, so ships that need this effect carry the weapon as a decorative mount.
 
     public static final Set<String> PROJ_IDS = new HashSet();
     static {

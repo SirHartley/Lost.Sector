@@ -51,7 +51,6 @@ public class CriticalPointProtection extends BaseHullMod {
         BLOCKED_HULLMODS.add(HullMods.HEAVYARMOR);
         BLOCKED_HULLMODS.add("apex_armor");
         BLOCKED_HULLMODS.add("apex_cryo_armor");
-        //BLOCKED_HULLMODS.add("eis_damperhull");
         BLOCKED_HULLMODS.add("tahlan_daemonarmor");
         BLOCKED_HULLMODS.add("tahlan_daemonplating");
         BLOCKED_HULLMODS.add("monjeau_armour");
@@ -59,7 +58,7 @@ public class CriticalPointProtection extends BaseHullMod {
 
     public void applyEffectsBeforeShipCreation(ShipAPI.HullSize hullSize, MutableShipStatsAPI stats, String id) {
         float bonus;
-        //scaling bonus, getting hull-spec before creation is not convoluted t:Alex
+        //scaling bonus
         bonus = getValue(hullSize, stats.getVariant().getHullSpec());
         stats.getArmorBonus().modifyFlat(id, bonus);
 
@@ -96,13 +95,6 @@ public class CriticalPointProtection extends BaseHullMod {
 
     @Override
     public void advanceInCombat(ShipAPI ship, float amount) {
-        //CombatEngineAPI engine = Global.getCombatEngine();
-        //if (engine == null) {
-        //    return;
-        //}
-        //if (engine.isPaused()) {
-        //    return;
-        //}
     }
 
     @Override

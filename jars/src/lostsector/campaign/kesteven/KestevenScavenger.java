@@ -52,7 +52,6 @@ public class KestevenScavenger extends BaseCampaignEventListener implements Ever
     Saved<Float> spawnCounter;
     Saved<Float> counter;
     private final List<CampaignFleetAPI> removed = new ArrayList<>();
-    //CampaignFleetAPI pf;
     Random random;
 
     //Weights for the different types of locations we go to
@@ -154,7 +153,6 @@ public class KestevenScavenger extends BaseCampaignEventListener implements Ever
                 //BETRAYAL BEHAVIOR
                 //cooldown
                 if (getResetTimer(fleet) > 0) setResetTimer(fleet, getResetTimer(fleet)+1);
-                //scuffed reset
                 //set hostile time back to 0, se we can try to betray again
                 if (getResetTimer(fleet) == 1) setHostileTime(fleet, 0);
 
@@ -184,7 +182,6 @@ public class KestevenScavenger extends BaseCampaignEventListener implements Ever
                     boolean strong = false;
                     if (pf.getFleetData().getEffectiveStrength() < fleet.getFleetData().getEffectiveStrength() * 1.20f) {
                         strong = true;
-                        //log("ScavengerSpawner "+pf.getFleetData().getEffectiveStrength()+" VS "+fleet.getFleetData().getEffectiveStrength());
                     }
                     //try
                     if (Math.random() < betrayalChance && away && strong) {

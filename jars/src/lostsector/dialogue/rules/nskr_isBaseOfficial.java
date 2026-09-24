@@ -63,7 +63,7 @@ public class nskr_isBaseOfficial extends BaseCommandPlugin {
 	public boolean execute(String ruleId, InteractionDialogAPI dialog, List<Misc.Token> params, Map<String, MemoryAPI> memoryMap) 
 	{
 		String post;
-		try {	// stupid-ass workaround for unexplained NPE when interacting with Remnant stations while non-hostile
+		try {	// The lookup can throw an NPE when interacting with non-hostile Remnant stations.
 			post = memoryMap.get(MemKeys.LOCAL).getString("$postId");
 		} catch (NullPointerException ex) {
 			return false;

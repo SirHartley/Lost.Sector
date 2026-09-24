@@ -143,8 +143,6 @@ public class KestevenExportManager extends BaseCampaignEventListener implements 
                 //high
                 f.addKnownShip(ship, true);
                 f.addUseWhenImportingShip(ship);
-                //freq
-                //setFreq(ship, 0.1f, fSpec);
             }
         }
 

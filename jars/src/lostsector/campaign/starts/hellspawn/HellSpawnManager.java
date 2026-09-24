@@ -44,7 +44,6 @@ import java.util.Random;
 
 public class HellSpawnManager extends BaseCampaignEventListener implements EveryFrameScript, ColonyPlayerHostileActListener {
 
-    //welcome to hell
     public static final int PEACEFUL_MAX_POINTS = 350;
     public static final int NEUTRAL_MAX_POINTS = 2000;
     public static final float JUDGEMENT_TIMER = 40f;
@@ -216,7 +215,6 @@ public class HellSpawnManager extends BaseCampaignEventListener implements Every
                 }
 
             }
-            //jank ass shit
             if (QuestHelper.getCompleted(JUDGEMENT_DEFEATED_KEY)) {
                 HellSpawnJudgementWarning.stopMusic();
             }
@@ -420,7 +418,7 @@ public class HellSpawnManager extends BaseCampaignEventListener implements Every
             if (m.getVariant().hasHullMod("nskr_hellSpawnStats")) continue;
 
             m.getVariant().addMod("nskr_hellSpawnStats");
-            //if you don't call this the hullmods will exist in some fuckass limbo state
+            // Refresh the fleet, otherwise the added hullmods are left in an inconsistent state.
             FleetHelper.updatePlayerFleet(false);
         }
     }
@@ -516,7 +514,6 @@ public class HellSpawnManager extends BaseCampaignEventListener implements Every
     @Override
     public void reportBattleFinished(CampaignFleetAPI primaryWinner, BattleAPI battle) {
 
-        //NOW we are cooking
         if (level>=3) {
             if (!hadAutomated) {
                 MutableCharacterStatsAPI characterStats = Global.getSector().getPlayerStats();

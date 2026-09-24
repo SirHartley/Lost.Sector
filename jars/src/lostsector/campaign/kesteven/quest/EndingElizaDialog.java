@@ -67,8 +67,6 @@ public class EndingElizaDialog implements InteractionDialogPlugin {
 
         text.setFontInsignia();
 
-        //options.addOption("Leave", OptionId.LEAVE);
-
         int stage = QuestHelper.getStage();
         if (stage >= 19 && !QuestHelper.getCompleted(DIALOG_FINISHED_KEY)) {
             text.addPara("On approach you receiver orders from the port authority to land at a specific dock. You then receive a comms call from Eliza.");
@@ -125,7 +123,6 @@ public class EndingElizaDialog implements InteractionDialogPlugin {
             QuestHelper.setStage(20);
             QuestHelper.saveEnding();
 
-            //commission fuckery
             if((Misc.getCommissionFactionId()!=null)) {
                 if (Misc.getCommissionFactionId().equals("kesteven") || Misc.getCommissionFactionId().equals(Factions.HEGEMONY)) {
                     QuestHelper.setCompleted(true, COMMISSION_RESTORE_KEY);
@@ -145,7 +142,6 @@ public class EndingElizaDialog implements InteractionDialogPlugin {
             CargoAPI playerCargo = Global.getSector().getPlayerFleet().getCargo();
             //BPs
             playerCargo.addSpecial(new SpecialItemData("nskr_prot_wp", null), 1);
-            //playerCargo.addSpecial(new SpecialItemData("Prot_light", null), 1);
             playerCargo.addSpecial(new SpecialItemData("nskr_prot_heavy", null), 1);
             //+rep
             float repPirates = MathHelper.getSeededRandomNumberInRange(0.25f, 0.30f, getRandom());
@@ -169,7 +165,6 @@ public class EndingElizaDialog implements InteractionDialogPlugin {
             text.addPara("Gained 2 Story points",g,s,"2 Story points","");
             //acquire text
             text.addPara("Acquired Prototype Weapons blueprint chip",g,h,"Prototype Weapons","");
-            //text.addPara("Acquired Prototype Light Ships blueprint chip",g,h,"Prototype Light Ships","");
             text.addPara("Acquired Prototype Heavy Ships blueprint chip",g,h,"Prototype Heavy Ships","");
 
             repPirates = Math.round(repPirates*100f);

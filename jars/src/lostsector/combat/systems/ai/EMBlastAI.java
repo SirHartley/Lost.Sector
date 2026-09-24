@@ -45,8 +45,6 @@ public class EMBlastAI implements ShipSystemAIScript {
                 }
 
                 currTargets.add(possibleShip);
-                //macgyver debugger
-                //engine.addFloatingText(ship.getLocation(), "test", 1f+decisionLevel, Color.cyan, ship, 0.5f, 1.0f);
             }
             if (hullRatio < 0.30f) {
                 decisionLevel += 29f;

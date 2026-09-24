@@ -104,7 +104,6 @@ public class InverterEffect implements EveryFrameWeaponEffectPlugin {
         PARTICLE_COLOR.put("NSKR_FLASH_FRINGE_1", new Color(211, 163, 255, 255));
         PARTICLE_COLOR.put("NSKR_FLASH_CORE_1", new Color(228, 105, 255, 255));
     }
-    //Color lol = new Color(255, 27, 69);
 
     //What's the smallest size the particles can have?
     private static final Map<String, Float> PARTICLE_SIZE_MIN = new HashMap<>();

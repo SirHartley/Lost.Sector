@@ -45,12 +45,6 @@ public class KestevenBlueprints implements EveryFrameScript {
         FactionAPI f = Global.getSector().getFaction(Ids.KESTEVEN_FACTION_ID);
         FactionSpecAPI fSpec = f.getFactionSpec();
 
-        //for (String weapon : Global.getSector().getFaction(Factions.INDEPENDENT).getKnownWeapons()) {
-        //    if (!f.knowsWeapon(weapon)) {
-        //        f.addKnownWeapon(weapon, true);
-        //    }
-        //}
-        
         for (String ship : Global.getSector().getFaction(Factions.INDEPENDENT).getKnownShips()) {
             //ignore GH content
             if (Global.getSettings().getHullSpec(ship).hasTag("tahlan_knights")) continue;
@@ -75,35 +69,5 @@ public class KestevenBlueprints implements EveryFrameScript {
             }
         }
 
-
-        //can't remove ships I guess
-
-        //remove banned hulls
-        //List<String> toRemoveShip = new ArrayList<>();
-        //List<String> toRemoveBase = new ArrayList<>();
-        //for (String ship : f.getKnownShips()){
-        //    for (String s : BANNED_SHIPS){
-        //        if (ship.equals(s)){
-        //            toRemoveShip.add(ship);
-        //            break;
-        //        }
-        //    }
-        //}
-        //for (String baseShip : f.getAlwaysKnownShips()) {
-        //    for (String s : BANNED_SHIPS){
-        //        if (baseShip.equals(s)){
-        //            toRemoveBase.add(baseShip);
-        //            break;
-        //        }
-        //    }
-        //}
-        //for (String s : toRemoveShip){
-        //    KestevenExportManager.setFreq(s, 0f, fSpec);
-        //    f.removeKnownShip(s);
-        //}
-        //for (String s : toRemoveBase){
-        //    KestevenExportManager.setFreq(s, 0f, fSpec);
-        //    f.removeUseWhenImportingShip(s);
-        //}
     }
 }

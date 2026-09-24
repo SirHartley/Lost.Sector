@@ -129,16 +129,6 @@ public class nskr_modRemoval extends PaginatedOptions {
         return (FleetMemberAPI) data.get(SHIP_IN_MEMORY_KEY);
     }
 
-    //@Override
-    //public void showOptions() {
-    //    super.showOptions();
-    //    for (String optId : disabledOpts)
-    //    {
-    //        dialog.getOptionPanel().setEnabled(optId, false);
-    //    }
-    //    dialog.getOptionPanel().setShortcut("ModRemovalReturn", Keyboard.KEY_ESCAPE, false, false, false, false);
-    //}
-
     public void updateOptions() {
         for (String optId : disabledOpts)
         {

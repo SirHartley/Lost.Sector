@@ -35,7 +35,7 @@ public class VoidCore extends BaseHullMod {
 
 	}
 
-	//draw for succ system
+	//draw for the pull effect
 	@Override
 	public void advanceInCombat(ShipAPI ship, float amount) {
 		boolean player = false;
@@ -66,7 +66,7 @@ public class VoidCore extends BaseHullMod {
 
 
 	//INDICATOR RENDERING
-	//yoinked from swp but mostly new code
+	// Adapted from Ship and Weapon Pack.
 
 	private static class IndicatorRenderer implements CombatLayeredRenderingPlugin {
 		private final Color COLOR1 = new Color(255, 20, 50, 141);
@@ -166,12 +166,11 @@ public class VoidCore extends BaseHullMod {
 				if (target.isExpired() || !Global.getCombatEngine().isEntityInPlay(target)) continue;
 				DamagingProjectileAPI proj = (DamagingProjectileAPI) target;
 				if (proj.didDamage() || proj.isExpired())continue;
-				//Global.getCombatEngine().addFloatingText(target.getLocation(), "NEW", 24, Color.RED, null, 0.5f, 1.0f);
 				newTargets.add(new Pair<>(target, 1f));
 			}
 			float amount = Global.getCombatEngine().getElapsedInLastFrame();
 
-			//speeen
+			//spin
 			if (!Global.getCombatEngine().isPaused()) {
 				angle += ((amount * 80f));
 			}
@@ -201,7 +200,6 @@ public class VoidCore extends BaseHullMod {
 					size.setX(finalSize);
 					size.setY(finalSize);
 
-					//Global.getCombatEngine().addFloatingText(target.one.getLocation(), "lol " + sizeMult +" "+(int)finalSize, 24, Color.RED, target.one, 0.5f, 1.0f);
 					//RENDER
 					if (isActive && Global.getCombatEngine().isUIShowingHUD()) {
 						sprite.setAdditiveBlend();

@@ -26,7 +26,6 @@ public class ContractManager extends BaseCampaignEventListener implements EveryF
     public static final int MAX_ELIM_CONTRACTS = 1;
     public static final int MAX_SCAV_CONTRACTS = 1;
     public static final String CONTRACT_ARRAY_KEY = "$contractManagerContracts";
-    //private List<ContractInfo> contracts;
 
     Saved<Float> counter;
     Saved<Float> resetCounter;
@@ -194,7 +193,6 @@ public class ContractManager extends BaseCampaignEventListener implements EveryF
                     }
                 }
             }
-            //completed =  Math.max(completed * result.getBattle().getPlayerInvolvementFraction(), 1);
             contract.completedCount += completed;
             //
         }
@@ -209,7 +207,6 @@ public class ContractManager extends BaseCampaignEventListener implements EveryF
         return false;
     }
 
-    //I realized that this is too jank too late
     public static String getTypeString(ContractInfo contract) {
         String typeString = "";
         int remaining = contract.count-contract.completedCount;

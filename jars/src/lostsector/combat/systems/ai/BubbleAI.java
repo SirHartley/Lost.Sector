@@ -85,8 +85,6 @@ public class BubbleAI implements ShipSystemAIScript {
                 //ignore everything outside of a y degree cone
                 if (Math.abs(MathUtils.getShortestRotation(angle, facing)) > DEGREES) continue;
 
-                //engine.addFloatingText(possibleTarget.getLocation(), "HIT", 30f, Color.cyan, null, 0.1f, 0.1f);
-
                 if (possibleTarget.getDamageType() == DamageType.FRAGMENTATION) {
                     damageLevel += 0.25f * possibleTarget.getDamageAmount();
                 }
@@ -102,15 +100,12 @@ public class BubbleAI implements ShipSystemAIScript {
             decisionLevel += damageLevel/mult;
             enemyProj++;
             }
-            //fuck salamanders, all my homies hate salamanders
+            // Heat-seeking missiles such as Salamanders weigh heavily.
             for (MissileAPI m : CombatHelper.getMissilesWithinRange(ship.getLocation(), 250f)){
                 if (m.getOwner() == ship.getOwner() || m.isFading() || m.getCollisionClass() == CollisionClass.NONE) continue;
                 if (m.getWeapon()==null) continue;
                 if (m.getWeapon().hasAIHint(WeaponAPI.AIHints.HEATSEEKER)) decisionLevel += 80f;
             }
-
-            //macgyver debugger
-            //engine.addFloatingText(ship.getLocation(), "test " + (int)decisionLevel, 32f, Color.cyan, ship, 0.5f, 1.0f);
 
             if (decisionLevel >= 110f*MathUtils.getRandomNumberInRange(0.85f,1.15f) && enemyProj>0) {
                 ship.useSystem();

@@ -36,7 +36,7 @@ public class UltracaliberBattery extends BaseHullMod {
         stats.getBallisticWeaponDamageMult().modifyPercent(id, DAMAGE_MULT);
         stats.getEnergyRoFMult().modifyPercent(id, -ROF_MULT);
         stats.getEnergyWeaponDamageMult().modifyPercent(id, DAMAGE_MULT);
-        //beams cringe
+        // Cancels the energy damage bonus for beams.
         stats.getBeamWeaponDamageMult().modifyMult(id, (100f-DAMAGE_MULT/(1f+(DAMAGE_MULT/100f)))/100f);
 
         stats.getWeaponHealthBonus().modifyPercent(id, WEAPON_HEALTH);
@@ -45,10 +45,6 @@ public class UltracaliberBattery extends BaseHullMod {
     }
 
     public void applyEffectsAfterShipCreation(ShipAPI ship, String id) {
-        //log("Ship "+ship.getHullSpec().getHullName());
-        //for (WeaponAPI w: ship.getAllWeapons()) {
-        //    log("H "+w.getMaxHealth() + " N "+w.getDisplayName());
-        //}
     }
 
     public void advanceInCombat(ShipAPI ship, float amount) {
@@ -71,8 +67,6 @@ public class UltracaliberBattery extends BaseHullMod {
 
             float timerNorm = MathHelper.normalize(data.timer,0f, SYS_TIME);
             float bonus = MathHelper.lerp(0f, SYS_ROF_MULT, timerNorm);
-
-            //engine.addFloatingText(ship.getLocation(), ""+timerNorm, 24f, Color.RED, ship, 1f,1f);
 
             ship.getMutableStats().getBallisticRoFMult().modifyPercent(id, bonus);
             ship.getMutableStats().getEnergyRoFMult().modifyPercent(id, bonus);
@@ -104,7 +98,6 @@ public class UltracaliberBattery extends BaseHullMod {
         text.addPara("+"+(int)DAMAGE_MULT+"%"+"% projectile weapon damage.", 0.0f, MiscHelper.BON_GREEN, (int)DAMAGE_MULT+"%");
         text.addPara("+"+(int)WEAPON_HEALTH+"%"+"% to durability of all weapons.", 0.0f, MiscHelper.BON_GREEN, (int)WEAPON_HEALTH+"%");
         text.addPara("+"+(int)SYS_ROF_MULT+"%"+"% weapon rate of fire decaying over five seconds after system use.", 0.0f, MiscHelper.BON_GREEN, (int)SYS_ROF_MULT+"%");
-        //text.addPara("", pad);
         text.addPara("-"+(int)ROF_MULT+"%"+"% weapon rate of fire.", 0.0f, MiscHelper.TT_ORANGE, (int)ROF_MULT+"%");
         text.addPara("-weapon range past "+(int)MAX_RANGE+" units is reduced by one third." , 0.0f, MiscHelper.TT_ORANGE, (int)MAX_RANGE+"");
         tooltip.addImageWithText(pad);

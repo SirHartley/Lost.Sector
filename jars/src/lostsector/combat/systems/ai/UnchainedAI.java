@@ -86,8 +86,6 @@ public class UnchainedAI implements ShipSystemAIScript {
                 //ignore everything outside of a y degree cone
                 if (Math.abs(MathUtils.getShortestRotation(angle, facing)) > DEGREES) continue;
 
-                //engine.addFloatingText(possibleTarget.getLocation(), "HIT", 30f, Color.cyan, null, 0.1f, 0.1f);
-
                 if (possibleTarget.getDamageType() == DamageType.FRAGMENTATION) {
                     decisionLevel += (float) Math.sqrt(0.25f * possibleTarget.getDamageAmount() + possibleTarget.getEmpAmount() * 0.50f);
                 }
@@ -105,7 +103,6 @@ public class UnchainedAI implements ShipSystemAIScript {
             for (ShipAPI possibleShip : ships) {
                 if (possibleShip.getHullLevel()>0.25f) continue;
                 if (possibleShip.getOwner() != ship.getOwner() && possibleShip.getHullSize() != ShipAPI.HullSize.FIGHTER) {
-                    //engine.addFloatingText(possibleShip.getLocation(), "CLOSE", 30f, Color.cyan, possibleShip, 0.1f, 0.1f);
                     if (possibleShip.getHullSize() == ShipAPI.HullSize.FRIGATE || possibleShip.getHullSize() == ShipAPI.HullSize.DESTROYER) {
                         decisionLevel += 25f;
                     } else {
@@ -147,9 +144,6 @@ public class UnchainedAI implements ShipSystemAIScript {
             if (ship.getShield() == null){
                 decisionLevel -= 9999f;
             }
-
-            //macgyver debugger
-            //engine.addFloatingText(ship.getLocation(), "test", 1f+decisionLevel, Color.cyan, ship, 0.5f, 1.0f);
 
             if (!system.isActive()) {
                 if (decisionLevel < 45f && AIUtils.canUseSystemThisFrame(ship)) {

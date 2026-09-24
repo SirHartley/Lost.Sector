@@ -20,7 +20,7 @@ public class LicensingFees implements EconomyTickListener, TooltipCreator {
 	private int payment;
 
 	//Manages license payments for exported kesteven equipment
-	//Kinda jank because there is seemingly no way to get stuff produced ONLY THIS economy tick
+	// The API does not report production for a single economy tick, so fees compare saved production totals between month ends.
 
 	static void log(final String message) {
 		Global.getLogger(LicensingFees.class).info(message);

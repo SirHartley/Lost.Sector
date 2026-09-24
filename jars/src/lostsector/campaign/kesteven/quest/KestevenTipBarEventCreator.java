@@ -34,13 +34,6 @@ public class KestevenTipBarEventCreator extends BaseBarEventCreator {
         return 30f + (float) Math.random() * 30f;
     }
 
-    //debug
-    //
-    //@Override
-    //public float getBarEventFrequencyWeight() {
-    //    return 1000f;
-    //}
-
     public Random getRandom() {
         Map<String, Object> data = Global.getSector().getPersistentData();
         if (!data.containsKey(PERSISTENT_RANDOM_KEY)) {

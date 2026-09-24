@@ -247,17 +247,6 @@ public class MiscHelper {
         return logi;
     }
 
-    //public static boolean hasTag(Set<String> tags, String tag){
-    //    boolean has = false;
-    //    for (String t : tags){
-    //        if (t.equals(tag)){
-    //            has = true;
-    //            break;
-    //        }
-    //    }
-    //    return has;
-    //}
-
 
     //backup for blacklist generation, this one just returns a random non-core system
     public static StarSystemAPI getRandomNonCoreSystem(Random random) {
@@ -380,7 +369,6 @@ public class MiscHelper {
         //apply settings
         combatPoints *= Difficulty.scriptedFleetMult();
 
-        //fine?
         if (combatPoints<=0f) return null;
 
         final FleetParamsV3 params = new FleetParamsV3(
@@ -430,7 +418,7 @@ public class MiscHelper {
         if (allowOuterSystem) {
             weights.put(BaseThemeGenerator.LocationType.OUTER_SYSTEM, 8f);
         }
-        //pls stop spawning stuff into star coronas, im begging
+        // Star orbits only when allowed, to avoid spawning inside star coronas.
         if (allowStar) {
             weights.put(BaseThemeGenerator.LocationType.STAR_ORBIT, 8f);
             weights.put(BaseThemeGenerator.LocationType.NEAR_STAR, 8f);
@@ -438,7 +426,6 @@ public class MiscHelper {
             weights.put(BaseThemeGenerator.LocationType.IN_RING, 8f);
             weights.put(BaseThemeGenerator.LocationType.L_POINT, 8f);
         }
-        //log(system.getName());
 
         SectorEntityToken target = null;
         int maxTries = 200;
@@ -487,7 +474,6 @@ public class MiscHelper {
         //set
         for (String s : skills.keySet()) {
             officer.getStats().setSkillLevel(s, (float)skills.get(s));
-            //log("OFFICER skill "+ s + " lvl " + (float)skills.get(s));
         }
 
         officer.getStats().setLevel(skills.size());
@@ -530,8 +516,7 @@ public class MiscHelper {
         return 2;
     }
 
-    //Really fucking cursed workarounds to get enigma and prot ships
-    //Because, ships lose all tags on save & reload ????????
+    // Identify prototype and Enigma ships by hullmod, because fleet members lose their tags on save and reload.
     public static boolean isProtTech(FleetMemberAPI member){
         if (member.getVariant()==null) return false;
         if (member.getVariant().getHullMods()==null || member.getVariant().getHullMods().isEmpty())  return false;
@@ -613,7 +598,6 @@ public class MiscHelper {
             if (dist>shortestDist) continue;
             shortestDist = dist;
             sys = system;
-            //log("sys "+sys.getName()+" dist "+dist);
         }
         return sys;
     }

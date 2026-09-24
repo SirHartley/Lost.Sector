@@ -62,7 +62,6 @@ public class MassTargetingAI implements ShipSystemAIScript {
             for (ShipAPI fShip : friendlies){
                 if (fShip.getHullSize()== ShipAPI.HullSize.FIGHTER) continue;
                 if (fShip==ship) continue;
-                //fuckery
                 List<ShipAPI> feShips = new ArrayList<>(100);
                 List<ShipAPI> rfeShips = new ArrayList<>(100);
                 feShips.addAll(AIUtils.getNearbyEnemies(fShip, fShip.getCollisionRadius()*5f));
@@ -73,8 +72,6 @@ public class MassTargetingAI implements ShipSystemAIScript {
                 if (rfeShips.size()<1) continue;
                 friendlyCount++;
             }
-            //macgyver debugger
-            //engine.addFloatingText(ship.getLocation(), "friendlyCount " + friendlyCount + " enemyCount " + enemyCount + " enemyFrigCount " + enemyFrigCount + " fighterCount " + fighterCount, 40f, Color.cyan, ship, 0.5f, 1.0f);
 
             if (fighterCount>4){
                 use = true;

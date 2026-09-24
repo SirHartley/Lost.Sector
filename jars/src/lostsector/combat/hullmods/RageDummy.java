@@ -29,8 +29,6 @@ import java.util.List;
 
 public class RageDummy extends BaseHullMod {
 
-	//ABSOLUTE UNIT proceed at your own risk
-
 	//Disappearance cooldown, minimum and maximum
 	//  DOES NOT include the disappearance itself
 	//  do it only once so 999999
@@ -147,7 +145,7 @@ public class RageDummy extends BaseHullMod {
 
 		float HullRatio = (ship.getHitpoints() / ship.getMaxHitpoints());
 		boolean overloadedOrVenting = ship.getFluxTracker().isOverloadedOrVenting();
-		//for hull regen nonsense, so it stays active
+		// Latches, so hull regeneration above the threshold does not end the effect.
 		if (HullRatio <= 0.33 && ship.getCurrentCR()>0f && !overloadedOrVenting) {
 			data.triggered = true;
 		}
@@ -187,7 +185,6 @@ public class RageDummy extends BaseHullMod {
 					Vector2f point1 = MathUtils.getPointOnCircumference(sloc, distance, angle);
 					Vector2f point2 = MathUtils.getPointOnCircumference(sloc, distance2, angle2);
 					if (ship != null) {
-						//color fuckery
 						Color color1 = MiscHelper.randomiseColor(new Color(255, 100, 150, 255), 0, 100, 50, 0, true);
 						Color color3 = MiscHelper.randomiseColor(new Color(255, 100, 150, 155), 0, 100, 50, 0, true);
 						Global.getCombatEngine().spawnEmpArcVisual(point1, none, point2, ship,
@@ -210,7 +207,6 @@ public class RageDummy extends BaseHullMod {
 			float duration = 2f;
 			String rId = "nskr_regenPlugin_" + ship.getId();
 			if (data.toRegen>0.01f) {
-				//Global.getCombatEngine().addFloatingText(ship.getLocation(), "REGEN " + data.toRegen, 48, Color.RED, ship, 0.5f, 1.0f);
 				if (ship.isExpired() || ship.isHulk()) {
 					data.toRegen = 0;
 				} else {
@@ -385,7 +381,6 @@ public class RageDummy extends BaseHullMod {
 					damage = EXPLOSION_DAMAGE_AMOUNT * mod;
 					emp = EXPLOSION_EMP_DAMAGE_AMOUNT * mod;
 
-					//fuck missiles
 					if (tmp instanceof MissileAPI) {
 						force = FORCE_VS_MISSILE * mod;
 						engine.applyDamage(tmp, loc, 400, DamageType.FRAGMENTATION, 0, false, false, ship);
@@ -473,9 +468,7 @@ public class RageDummy extends BaseHullMod {
 		//Then we check all armor grid pieces again to set them to the average
 		for (int ix = 0; ix < maxX; ix++) {
 			for (int iy = 0; iy < maxY; iy++) {
-				//if (ship.getArmorGrid().getArmorValue(ix, iy) < averageArmor) {
 				ship.getArmorGrid().setArmorValue(ix, iy, averageArmor);
-				//}
 			}
 		}
 	}

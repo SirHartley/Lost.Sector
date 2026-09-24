@@ -29,13 +29,6 @@ public class HunterOfTheProfane extends BaseHullMod {
 
     @Override
     public void advanceInCombat(ShipAPI ship, float amount) {
-        //CombatEngineAPI engine = Global.getCombatEngine();
-        //if (engine == null) {
-        //    return;
-        //}
-        //if (engine.isPaused()) {
-        //    return;
-        //}
     }
 
     @Override

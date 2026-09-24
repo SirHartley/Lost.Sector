@@ -78,7 +78,7 @@ public class MassTargetingStats extends BaseShipSystemScript {
         Vector2f size = new Vector2f((range*2.1f)+150f, (range*2.1f)+150f);
         Vector2f size2 = size;
 
-        //speen
+        //spin
         angle += amount;
         if (angle > 360) angle = 0f;
         //grow
@@ -91,7 +91,6 @@ public class MassTargetingStats extends BaseShipSystemScript {
         float nTimer = 0f;
         nTimer = MathHelper.normalize(timer,0f,2f);
 
-        //engine.addFloatingText(ship.getLocation(), "timer " + nTimer, 48f, Color.cyan, ship, 0.5f, 1.0f);
         vSize = MathHelper.lerp(vSize*0.15f, vSize*1.25f, nTimer);
         size2 = new Vector2f(vSize, vSize);
         alpha = MiscHelper.clamp255((int) MathHelper.lerp(alpha*1.0f, alpha*0.3f, nTimer));

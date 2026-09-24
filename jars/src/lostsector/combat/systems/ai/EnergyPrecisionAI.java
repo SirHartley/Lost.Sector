@@ -20,7 +20,7 @@ public class EnergyPrecisionAI implements ShipSystemAIScript {
     private CombatEngineAPI engine = null;
     private ShipAPI ship;
     private final IntervalUtil tracker = new IntervalUtil(0.30f, 0.50f);
-    public static final float DEGREES = 69f; // (haha nice)
+    public static final float DEGREES = 69f;
     private boolean runOnce = false;
     private boolean flagged = false;
     public static final ArrayList<ShipwideAIFlags.AIFlags> PURSUE = new ArrayList<>();
@@ -45,12 +45,10 @@ public class EnergyPrecisionAI implements ShipSystemAIScript {
         if (ship.getSystem().isCoolingDown()){
             if (!ship.getShipAI().getAIFlags().hasFlag(ShipwideAIFlags.AIFlags.BACK_OFF) && !flagged) {
                 ship.getShipAI().getAIFlags().setFlag(ShipwideAIFlags.AIFlags.BACK_OFF, 5f);
-                //engine.addFloatingText(ship.getLocation(), "test " + "added flag", 60f, Color.cyan, ship, 0.5f, 1.0f);
             }
             flagged = true;
         } else if (flagged) {
             ship.getShipAI().getAIFlags().removeFlag(ShipwideAIFlags.AIFlags.BACK_OFF);
-            //engine.addFloatingText(ship.getLocation(), "test " + "removed flag", 60f, Color.cyan, ship, 0.5f, 1.0f);
             flagged = false;
         }
 
@@ -87,9 +85,6 @@ public class EnergyPrecisionAI implements ShipSystemAIScript {
                         useLevel -= 50f;
                 }
             }
-
-            //macgyver debugger
-            //engine.addFloatingText(ship.getLocation(), "use" + Math.round(useLevel) + "range" + Math.round(analysisRange), 32f, Color.cyan, ship, 0.5f, 1.0f);
 
             if (useLevel >= 50f) {
                 this.ship.useSystem();

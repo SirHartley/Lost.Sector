@@ -30,7 +30,7 @@ import java.util.List;
 
 public class PayloadStats extends BaseShipSystemScript {
 
-    //DMG (for some reason smaller number = more DMG -thanks Cycerin)
+    // Damage is divided by these values, so a smaller value deals more damage.
     public static final float DAMAGE_MOD_VS_CAPITAL = 0.50f;
     public static final float DAMAGE_MOD_VS_CRUISER = 0.75f;
     public static final float DAMAGE_MOD_VS_DESTROYER = 1.5f;
@@ -178,7 +178,6 @@ public class PayloadStats extends BaseShipSystemScript {
         //EXPLODE
         if (state == State.ACTIVE) {
             //need to delay explosion by 1 frame to allow protExplosion to remove itself
-            //kinda a hack
             data.remove = true;
 
             //kaboom
@@ -282,7 +281,6 @@ public class PayloadStats extends BaseShipSystemScript {
                     damage = EXPLOSION_DAMAGE_AMOUNT * mod;
                     emp = EXPLOSION_EMP_DAMAGE_AMOUNT * mod;
 
-                    //fuck missiles
                     if (tmp instanceof MissileAPI) {
                         force = FORCE_VS_MISSILE * mod;
                         engine.applyDamage(tmp, loc, 1000, DamageType.FRAGMENTATION, 0, false, false, ship);

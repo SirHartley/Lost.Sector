@@ -68,14 +68,11 @@ public class PrototypeExplosion {
                 return;
             }
 
-            //Global.getCombatEngine().addFloatingText(ship.getLocation(), "LMAO", 64f, Color.RED, null,1f,1f);
             float mag = SIZE_BONUS.get(ship.getHullSize());
             //shockwave
             float size = ((SHOCKWAVE_SIZE+ship.getCollisionRadius())*mag);
             float duration = size/SHOCKWAVE_SPEED;
-            //Global.getCombatEngine().addFloatingText(ship.getLocation(), "Speed "+duration +" size "+ size, 64f, Color.CYAN, null, 1f,1f);
             BlastSprite.blastSpriteListener shockwave = new BlastSprite.blastSpriteListener(ship, ship.getLocation(), duration, size, SHOCKWAVE_COLOR);
-            //shockwave.baseSize = Math.max(ship.getCollisionRadius()-150f, 0f);
             shockwave.customSpritePath = SPRITE_PATH;
             shockwave.sizeEaseOutSine = true;
             shockwave.startSizeMult = 0f;

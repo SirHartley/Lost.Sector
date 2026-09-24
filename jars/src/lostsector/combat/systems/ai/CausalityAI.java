@@ -89,9 +89,6 @@ public class CausalityAI implements ShipSystemAIScript {
                     this.ship.useSystem();
                 }
             }
-
-            //macgyver debugger
-            //engine.addFloatingText(ship.getLocation(), "test" + (int)decisionLevel + "+" + desiredMode, 20f, Color.cyan, ship, 0.5f, 1.0f);
         }
     }
 

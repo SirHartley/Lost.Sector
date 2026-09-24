@@ -64,7 +64,6 @@ public class ArcGeneratorEffect implements EveryFrameWeaponEffectPlugin {
 
         //Chargeup visuals
         if (chargelevel > 0f && !hasFiredThisCharge) {
-            //Global.getSoundPlayer().playLoop(CHARGE_SOUND_ID, weapon, (0.55f + weapon.getChargeLevel()*2f), (0.4f + (weapon.getChargeLevel() * 0.4f)), weapon.getLocation(), new Vector2f(0f, 0f));
             effectInterval.advance(engine.getElapsedInLastFrame());
             if (effectInterval.intervalElapsed()){
                 Vector2f arcPoint = MathUtils.getRandomPointInCone(weaponFirePoint,75f*chargelevel,weapon.getCurrAngle()-45, weapon.getCurrAngle()+45);

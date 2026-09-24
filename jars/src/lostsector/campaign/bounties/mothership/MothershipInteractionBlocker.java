@@ -30,8 +30,6 @@ public class MothershipInteractionBlocker implements InteractionDialogPlugin {
     public void init(InteractionDialogAPI dialog) {
         this.dialog = dialog;
 
-        //dialog.setOptionOnEscape("Leave", OptionId.LEAVE);
-
         text = dialog.getTextPanel();
         options = dialog.getOptionPanel();
         visual = dialog.getVisualPanel();
@@ -47,7 +45,6 @@ public class MothershipInteractionBlocker implements InteractionDialogPlugin {
             fleet = f.fleet;
         }
         if (fleet==null){
-            //options.addOption("Leave", OptionId.LEAVE);
             dialog.dismiss();
             return;
         }
@@ -56,7 +53,6 @@ public class MothershipInteractionBlocker implements InteractionDialogPlugin {
         text.addPara("The fleet appears to be protecting this planet, and maneuvers to prevent your approach.",tc,h,"maneuvers to prevent your approach");
 
         dialog.setInteractionTarget(fleet);
-        //I LOVE DIALOG NONSENSE
         FleetInteractionDialogPluginImpl.FIDConfig params = new MothershipSpawner.mothershipFIDConfig().createConfig();
         FleetInteractionDialogPluginImpl plugin = new FleetInteractionDialogPluginImpl(params);
         plugin.init(dialog);

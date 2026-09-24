@@ -91,7 +91,6 @@ public class QuestFleets {
 
         //fleet
         SimpleFleet simpleFleet = new SimpleFleet(loc, Factions.MERCENARY, points, keys, random);
-        //SimpleFleet.type = FleetTypes.PATROL_LARGE;
         simpleFleet.maxShipSize = 3;
         simpleFleet.sMods = 3;
         simpleFleet.ignoreMarketFleetSizeMult = true;
@@ -167,7 +166,6 @@ public class QuestFleets {
 
         //fleet
         SimpleFleet simpleFleet = new SimpleFleet(loc, "kesteven", points, keys, random);
-        //SimpleFleet.type = FleetTypes.PATROL_LARGE;
         simpleFleet.maxShipSize = 3;
         simpleFleet.sMods = 3;
         simpleFleet.ignoreMarketFleetSizeMult = true;
@@ -217,7 +215,6 @@ public class QuestFleets {
 
         //fleet
         SimpleFleet simpleFleet = new SimpleFleet(loc, Factions.TRITACHYON, combatPoints, keys, random);
-        //SimpleFleet.type = FleetTypes.PATROL_LARGE;
         simpleFleet.ignoreMarketFleetSizeMult = true;
         simpleFleet.sMods = 2;
         simpleFleet.maxShipSize = 3;
@@ -330,7 +327,6 @@ public class QuestFleets {
         //fleet
         SimpleFleet simpleFleet = new SimpleFleet(loc, "enigma", combatPoints, keys, random);
         simpleFleet.aiFleetProperties = true;
-        //SimpleFleet.type = FleetTypes.PATROL_LARGE;
         simpleFleet.maxShipSize = 2;
         simpleFleet.commander = simpleCaptain.create();
         simpleFleet.flagshipInfo = flagship;
@@ -375,7 +371,6 @@ public class QuestFleets {
         keys.add(QuestStageManager.JOB4_FRIENDLY_KEY);
         //fleet
         SimpleFleet simpleFleet = new SimpleFleet(loc, "kesteven", combatPoints, keys, random);
-        //SimpleFleet.type = FleetTypes.PATROL_MEDIUM;
         simpleFleet.freighterPoints = combatPoints/4f;
         simpleFleet.tankerPoints = combatPoints/6f;
         simpleFleet.linerPoints = combatPoints/5f;
@@ -414,14 +409,12 @@ public class QuestFleets {
         keys.add(QuestStageManager.JOB3_TARGET_KEY);
         //fleet
         SimpleFleet simpleFleet = new SimpleFleet(loc, Factions.TRITACHYON, combatPoints, keys, random);
-        //SimpleFleet.type = FleetTypes.PATROL_LARGE;
         simpleFleet.freighterPoints = combatPoints/4f;
         simpleFleet.tankerPoints = combatPoints/4f;
         simpleFleet.linerPoints = combatPoints/8f;
         simpleFleet.utilityPoints = combatPoints/8f;
         simpleFleet.maxShipSize = 3;
         // no avg Smods cause apparently it gets *weird* with civvie ships in fleet
-        // SimpleFleet.sMods = 1;
         simpleFleet.ignoreMarketFleetSizeMult = true;
         simpleFleet.name = "Expedition";
         simpleFleet.assignment = FleetAssignment.ORBIT_PASSIVE;

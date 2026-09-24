@@ -61,7 +61,6 @@ public class BlackOpsManager extends BaseCampaignEventListener implements EveryF
 
     Saved<Float> counter;
     private final List<CampaignFleetAPI> removed = new ArrayList<>();
-    //CampaignFleetAPI pf;
 
     static void log(final String message) {
         Global.getLogger(BlackOpsManager.class).info(message);
@@ -232,7 +231,6 @@ public class BlackOpsManager extends BaseCampaignEventListener implements EveryF
         simpleFleet.name = FLEET_NAMES.get(MathHelper.getSeededRandomNumberInRange(0, FLEET_NAMES.size() - 1, random));
         simpleFleet.assignment = FleetAssignment.ORBIT_PASSIVE;
         simpleFleet.assignmentText = "preparing";
-        //SimpleFleet.noFactionInName = true;
         CampaignFleetAPI fleet = simpleFleet.create();
 
         fleet.setFaction(faction, true);

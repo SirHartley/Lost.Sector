@@ -18,8 +18,6 @@ import java.awt.*;
 
 public class InertialSupercharger extends BaseHullMod {
 
-    //just plain ole hullmod
-
     public static final float BONUS_DAMAGE_MULT = 0.08f;
     public static final float SMOD_PENALTY = 50f;
     public static final float SMOD_BONUS = 10f;
@@ -99,7 +97,7 @@ public class InertialSupercharger extends BaseHullMod {
                     }
 
                     //GLOW
-                    //fucking cursed as fuck, null checking isn't enough?? don't ask me how to detect if weap has no sprite then
+                    // getSprite() can throw for weapons without a sprite, so a null check is not enough.
                     SpriteAPI wSprite = null;
                     try {
                         wSprite = wep.getSprite();
@@ -148,7 +146,7 @@ public class InertialSupercharger extends BaseHullMod {
         }
 
         float bonus, bonusZeroFlux, zFlux, base;
-        //otherwise will crash when hovering a modspec lol
+        // ship is null when the tooltip is shown for the hullmod spec.
         if (ship!=null) {
             zFlux = ship.getMutableStats().getZeroFluxSpeedBoost().getModifiedValue();
             base = ship.getMaxSpeed();

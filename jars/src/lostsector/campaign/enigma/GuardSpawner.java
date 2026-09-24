@@ -40,7 +40,6 @@ public class GuardSpawner extends BaseCampaignEventListener implements EveryFram
     Saved<Float> respawnCounter;
 
     private final List<CampaignFleetAPI> removed = new ArrayList<>();
-    //CampaignFleetAPI pf;
     Random random;
 
     static void log(final String message) {
@@ -151,7 +150,6 @@ public class GuardSpawner extends BaseCampaignEventListener implements EveryFram
         }
         if (market==null) return;
         if (market.getFaction()!=Global.getSector().getFaction("kesteven")) return;
-        //log("guardSpawner RES "+ respawnCounter.val + " S " + this.guardFleets.val.size());
         //logic
         //spawn one fleet at a time
         if (fleets.isEmpty() && respawnCounter.val<=0f && MiscHelper.kestevenExists()) {

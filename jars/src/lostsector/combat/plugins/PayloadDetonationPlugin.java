@@ -40,7 +40,6 @@ public class PayloadDetonationPlugin extends BaseEveryFrameCombatPlugin {
         for (ShipAPI ship : Global.getCombatEngine().getShips()) {
             AntimatterPayload.ShipSpecificData data = (AntimatterPayload.ShipSpecificData) Global.getCombatEngine().getCustomData().get("KABOOM_DATA_KEY" + ship.getId());
             if (data == null) continue;
-            //HACK
             if (ship.getSystem().getState() == ShipSystemAPI.SystemState.ACTIVE){
                 kaboom(data, ship);
             }
@@ -68,8 +67,6 @@ public class PayloadDetonationPlugin extends BaseEveryFrameCombatPlugin {
                     float distance = (float) Math.random() * 250f;
                     Vector2f point = MathUtils.getPointOnCircumference(data.kLoc, distance, angle);
 
-                    //engine.addFloatingText(data.kLoc, "lol " + vel.length(), 48.0f, Color.CYAN, ship, 6.00f, 1.00f);
-
                     engine.addNebulaParticle(point, vel,
                             MathUtils.getRandomNumberInRange(75f, 150f), MathUtils.getRandomNumberInRange(0.5f, 4.0f), 0.5f, 0.5f, MathUtils.getRandomNumberInRange(4f, 8f), color);
                     engine.addNegativeSwirlyNebulaParticle(point, vel,
@@ -90,8 +87,6 @@ public class PayloadDetonationPlugin extends BaseEveryFrameCombatPlugin {
 
             //every frame fx
             for (int x = 0; x < 4; x++) {
-                //engine.addFloatingText(data.kLoc, "lol " + data.timer, 32.0f, Color.CYAN, ship, 6.00f, 1.00f);
-
                 Vector2f particlePos, particleVel;
                 particlePos = MathUtils.getRandomPointOnCircumference(data.kLoc, MathHelper.lerp(200, 600, timeOffset));
                 particleVel = Vector2f.sub(particlePos, data.kLoc, null);
@@ -100,7 +95,6 @@ public class PayloadDetonationPlugin extends BaseEveryFrameCombatPlugin {
                 particleVel.setY(targetLength * particleVel.getY() / particleVel.length());
 
                 color = new Color(255, 31, 57, (int) MathHelper.lerp(200, 150, timeOffset));
-                //engine.addFloatingText(data.kLoc, "lol " + (int) Util.lerp(255, 155, timeOffset), 32.0f, Color.CYAN, ship, 6.00f, 1.00f);
 
                 engine.addNebulaParticle(particlePos, particleVel,
                         MathUtils.getRandomNumberInRange(75f, 125f), MathUtils.getRandomNumberInRange(1.0f, 2.0f), 0.5f, 0.5f, MathUtils.getRandomNumberInRange(2f, 4f), color);

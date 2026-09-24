@@ -172,7 +172,7 @@ public class MathHelper {
 
     public static float getRandomNumberInRangeExcludingRange(float min, float max, float excludeMin, float excludeMax){
         float x = 0f;
-        //fucked up input check
+        //invalid input check
         if (min>excludeMin||max<excludeMax||min>max) return min;
         while (x==0f){
             x = (float)Math.random() * (max - min) + min;

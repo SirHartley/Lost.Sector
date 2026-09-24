@@ -67,7 +67,6 @@ public class BlastSprite {
 
         public void advance(float amount) {
             if (Global.getCombatEngine().isPaused())return;
-            //Global.getCombatEngine().addFloatingText(source.getLocation(), "KEKW", 64f, Color.RED, null,1f,1f);
 
             elapsed -= amount;
             //needs to be a unique spriteAPI per shockwave, or MagicLib does some weirdness
@@ -85,8 +84,6 @@ public class BlastSprite {
             timerNorm = MathHelper.normalize(duration-elapsed, 0f, duration);
             float timerSize = timerNorm;
             float timerAlpha = timerNorm;
-
-            //engine.addFloatingText(ship.getLocation(), "timer " + timerNorm, 48f, Color.cyan, ship, 0.5f, 1.0f);
 
             //easing functions
             if (sizeEaseInCubic) timerSize = MathHelper.easeInCubic(timerSize);

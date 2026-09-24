@@ -207,10 +207,6 @@ public class AugmentedSystems extends BaseHullMod {
 		}
 		// CONVERTED HANGAR
 		if (stats.getVariant().hasHullMod(CONVERTED_HANGAR_ID)) {
-			//stats.getFighterRefitTimeMult().modifyMult(CONVERTED_HANGAR_ID + "_augment", 1 / CH_BONUS);
-			//stats.getDynamic().getStat(Stats.REPLACEMENT_RATE_DECREASE_MULT).modifyMult(CONVERTED_HANGAR_ID + "_augment", CH_BONUS);
-			//stats.getDynamic().getStat(Stats.REPLACEMENT_RATE_INCREASE_MULT).modifyMult(CONVERTED_HANGAR_ID + "_augment", CH_BONUS);
-
 			stats.getDynamic().getMod(Stats.BOMBER_COST_MOD).modifyPercent(CONVERTED_HANGAR_ID +"_augment", -CH_BONUS);
 			stats.getDynamic().getMod(Stats.FIGHTER_COST_MOD).modifyPercent(CONVERTED_HANGAR_ID +"_augment", -CH_BONUS);
 			stats.getDynamic().getMod(Stats.INTERCEPTOR_COST_MOD).modifyPercent(CONVERTED_HANGAR_ID +"_augment", -CH_BONUS);
@@ -494,7 +490,6 @@ public class AugmentedSystems extends BaseHullMod {
 		if (codex || ship.getVariant().hasHullMod(CONVERTED_HANGAR_ID)) {
 			TooltipMakerAPI text = tooltip.beginImageWithText("graphics/icons/hullsys/damper_field.png", 32.0f);
 			text.addPara("CONVERTED HANGAR", 0.0f, tc, "CONVERTED HANGAR");
-			//text.addPara("Removes the penalty to fighter replacement time, and to replacement rate decrease and increase.", 0.0f, y, "Removes");
 			if (!codex && ship.getHullSize()!= HullSize.DESTROYER) {
 				text.addPara("grants an additional fighter bay and reduces all fighter OP costs by " + (int) CH_BONUS + "%%.", 0.0f, y, "additional", (int) CH_BONUS + "%");
 			}else {
@@ -584,13 +579,11 @@ public class AugmentedSystems extends BaseHullMod {
 		}
 		String none = "-none";
 		if (hullmods.isEmpty()) return none;
-		//cursed
 		for (String mod : hullmods){
 			HullModSpecAPI h = Global.getSettings().getHullModSpec(mod);
 
 			textHullmods.add(h.getDisplayName());
 		}
-		//PROGRAMMER
 		String mods = textHullmods.toString();
 		String mods2 = mods.replace("[","-");
 		String mods3 = mods2.replace("]",".");

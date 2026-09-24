@@ -119,8 +119,6 @@ public class MassTargeting {
                     Global.getCombatEngine().maintainStatusForPlayerShip(MOD_BUFFID, MOD_ICON, MOD_NAME, "targeting improved", false);
                 }
 
-                //Global.getCombatEngine().addFloatingText(ship.getLocation(),"BUFFED", 48f, Color.cyan, ship, 0.5f, 1.0f);
-
                 //reset
                 buffData.buffed = false;
             } else {

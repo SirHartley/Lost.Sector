@@ -43,7 +43,6 @@ public class PrototypeGlowEffect implements EveryFrameWeaponEffectPlugin {
             colorA = MiscHelper.randomiseColor(colorA,(int)(-30 * fluxRatio), (int)(35 * fluxRatio), (int)(45 * fluxRatio), 0, false);
         }
         if (colorA!=null) {
-            //engine.addFloatingText(ship.getLocation(), "ALPHA "+colorA.getAlpha(), 24f, Color.CYAN, null, 1f,1f);
             weap.setColor(colorA);
         } else {
             weap.setColor(BASE_COLOR);

@@ -56,7 +56,6 @@ public class MothershipSpawner  extends BaseCampaignEventListener implements Eve
     Saved<Float> counter;
     Saved<Boolean> firstTime;
     private final List<CampaignFleetAPI> removed = new ArrayList<>();
-    //CampaignFleetAPI pf;
     Random random;
 
     static void log(final String message) {
@@ -258,7 +257,6 @@ public class MothershipSpawner  extends BaseCampaignEventListener implements Eve
 
         //fleet
         SimpleFleet simpleFleet = new SimpleFleet(loc, FACTION, points, keys, random);
-        //SimpleFleet.type = FleetTypes.PATROL_LARGE;
         simpleFleet.maxShipSize = 2;
         simpleFleet.sMods = 1;
         simpleFleet.name = FLEET_NAME;
@@ -267,8 +265,6 @@ public class MothershipSpawner  extends BaseCampaignEventListener implements Eve
         simpleFleet.flagshipInfo = flagship;
         simpleFleet.assignment = FleetAssignment.ORBIT_PASSIVE;
         simpleFleet.assignmentText = "error #446, try again?";
-
-        //SimpleFleet.aiFleetProperties = true;
 
         CampaignFleetAPI fleet = simpleFleet.create();
 
@@ -429,8 +425,6 @@ public class MothershipSpawner  extends BaseCampaignEventListener implements Eve
                         RuleBasedInteractionDialogPluginImpl plugin = new RuleBasedInteractionDialogPluginImpl();
                         dialog.setPlugin(plugin);
                         plugin.init(dialog);
-
-                        //dialog.dismiss();
                     } else {
                         dialog.dismiss();
                     }
@@ -478,8 +472,6 @@ public class MothershipSpawner  extends BaseCampaignEventListener implements Eve
 
         entity.setDiscoverable(true);
         entity.setSensorProfile(100f);
-
-        //entity.getMemoryWithoutUpdate().set(MusicPlayerPluginImpl.KEEP_PLAYING_LOCATION_MUSIC_DURING_ENCOUNTER_MEM_KEY, true);
 
         return entity;
     }

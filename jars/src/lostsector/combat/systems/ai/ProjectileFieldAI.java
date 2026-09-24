@@ -63,7 +63,6 @@ public class ProjectileFieldAI implements ShipSystemAIScript {
                     //ignore everything outside of a y degree cone
                     if (Math.abs(MathUtils.getShortestRotation(angle, facing)) > DEGREES) continue;
 
-                    //engine.addFloatingText(possibleTarget.getLocation(), "HIT", 30f, Color.cyan, null, 0.1f, 0.1f);
                     decisionLevel += 2.5f*((float) Math.sqrt(proj.getDamageAmount() + proj.getEmpAmount() * 0.25f));
                 }
                 if (possibleTarget instanceof ShipAPI){
@@ -72,8 +71,6 @@ public class ProjectileFieldAI implements ShipSystemAIScript {
                     decisionLevel += 15f;
                 }
             }
-            //macgyver debugger
-            //engine.addFloatingText(ship.getLocation(), "test" + (int)decisionLevel, 1f+decisionLevel, Color.cyan, ship, 0.5f, 1.0f);
 
             if (decisionLevel >= 90f*MathUtils.getRandomNumberInRange(0.95f,1.10f)) {
                 ship.useSystem();

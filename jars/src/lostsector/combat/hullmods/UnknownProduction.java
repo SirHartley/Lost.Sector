@@ -103,7 +103,6 @@ public class UnknownProduction extends BaseHullMod {
 			tooltip.addPara("More information can be acquired if hulls of this make are deployed in battle, the more hulls you deploy the faster the results will appear.", pad, tc, "");
 		}
 
-		//tooltip.addPara("", 0.0f, tc, "");
 		if (unlocks.size()>0){
 			tooltip.addSectionHeading("Stats", Alignment.MID, pad);
 		}
@@ -121,9 +120,6 @@ public class UnknownProduction extends BaseHullMod {
 			tooltip.addPara("-Top speed is reduced both by "+(int)(SPEED_PENALTY)+"%% " +
 					"and by an additional "+(int)(SPEED_PENALTY)+"su/s flat", 2.0f, bad,  (int)(SPEED_PENALTY)+"%", (int)(SPEED_PENALTY)+"su/s");
 		}
-		//if (unlocks.contains(EnigmaHullmodListener.KEY_BASE+"#4")) {
-		//	tooltip.addPara("-Top speed is reduced by an additional "+(int)(SPEED_PENALTY)+"%"+"%", 2.0f, bad, (int)(SPEED_PENALTY)+"%");
-		//}
 		if (unlocks.contains(EnigmaHullmodListener.KEY_BASE+"#6")) {
 			tooltip.addPara("-Non-missile weapon flux use reduced by "+(int)(FLUX_BONUS)+"%"+"%", 2.0f, y, (int)(FLUX_BONUS)+"%");
 		}

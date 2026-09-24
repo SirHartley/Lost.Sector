@@ -45,8 +45,7 @@ import java.util.Random;
 public class nskr_kestevenQuest extends PaginatedOptions {
 
 	//handles dialogue and rules.csv for the quest line
-	//Hack job of nex code, but it just worksTM
-	//
+	// Adapted from Nexerelin.
 	public static final String PERSISTENT_RANDOM_KEY = "nskr_kestevenQuestRandom";
 	public static final String DIALOG_OPTION_PREFIX = "nskr_kestevenQuest_pick_";
 	public static final String DIALOG_OPTION_PREFIX_REQ_SKIP = "nskr_kestevenQuest_story_pick_";
@@ -87,7 +86,7 @@ public class nskr_kestevenQuest extends PaginatedOptions {
 	private boolean eMessenger = false;
 	private boolean job4wait = false;
 	private boolean helped = false;
-	//dumb work around for ESC shortcut
+	// When set, ESC also selects the DIALOG_OPTION_PREFIX option.
 	private boolean extraEsc = false;
 	private boolean cargo = false;
 	private boolean sensored = false;
@@ -127,9 +126,9 @@ public class nskr_kestevenQuest extends PaginatedOptions {
 	//0 NO QUEST
 	//1 JOB 1 STARTED
 	//2 JOB 1 READY TO COMPLETE
-	//3 unused lol
-	//4 unused lol
-	//5 unused lol
+	//3 unused
+	//4 unused
+	//5 unused
 	//6 JOB 3 AVAILABLE
 	//7 TALK TO ALICE
 	//8 JOB 3 STARTED
@@ -237,7 +236,6 @@ public class nskr_kestevenQuest extends PaginatedOptions {
 
 		player = Global.getSector().getPlayerPerson();
 		person = dialog.getInteractionTarget().getActivePerson();
-		//faction = person.getFaction();
 
 		jack = MiscHelper.getJack();
 		alice = MiscHelper.getAlice();
@@ -271,19 +269,6 @@ public class nskr_kestevenQuest extends PaginatedOptions {
 		storyCompleted = Setting.STORY_SKIP_UNLOCKED.getBoolean();
 	}
 	
-	//@Override
-	//public void showOptions() {
-		//super.showOptions();
-		//for (String optId : disabledOpts)
-		//{
-		//	dialog.getOptionPanel().setEnabled(optId, false);
-		//}
-		//dialog.getOptionPanel().setShortcut("KestevenQuestExit", Keyboard.KEY_ESCAPE, false, false, false, false);
-		//if(extraEsc) {
-		//	dialog.getOptionPanel().setShortcut(DIALOG_OPTION_PREFIX, Keyboard.KEY_ESCAPE, false, false, false, false);
-		//}
-	//}
-
 	public void updateOptions() {
 		for (String optId : disabledOpts)
 		{
@@ -412,7 +397,7 @@ public class nskr_kestevenQuest extends PaginatedOptions {
 				//skip story
 				if (storyCompleted) addStorySkipOption();
 			}
-			//go to bar dumbass
+			//go to bar
 			if (stage == 15) {
 				jobText = "\"I said, head to the bar.\"";
 			}
@@ -510,7 +495,7 @@ public class nskr_kestevenQuest extends PaginatedOptions {
 			if (stage == 14) {
 				jobText = "\"Yes, there is something important. Go talk to Jack about it.\"";
 			}
-			//go to bar dumbass
+			//go to bar
 			if (stage == 15) {
 				jobText = "\"You should be heading to the bar. Do you always struggle with basic instructions?\"";
 			}
@@ -735,7 +720,7 @@ public class nskr_kestevenQuest extends PaginatedOptions {
 		Global.getSoundPlayer().playUISound("ui_noise_static",1f,1f);
 		text.setFontInsignia();
 
-		//WHY THE FUCK DOESN'T THIS WORK FROM RULES FOR THIS???????
+		// Adding the Leave option from rules.csv does not work for this dialog, so it is added here.
 		dialog.getOptionPanel().addOption("Leave", "nskr_kestevenQuestExit");
 
 	}
@@ -772,7 +757,6 @@ public class nskr_kestevenQuest extends PaginatedOptions {
 			//Extra dialog
 			dialog.getOptionPanel().addOption("\"I have some questions.\"", DIALOG_OPTION_EXTRA_START_PREFIX);
 		}
-		//it just works
 		if (stage == 1 && cargo && !delivered && sensored && !deliveredData){
 			text.addParagraph("\"We've been waiting to see some concrete data on this subject. Nice work captain.\" He makes a vaguely congratulatory gesture.");
 

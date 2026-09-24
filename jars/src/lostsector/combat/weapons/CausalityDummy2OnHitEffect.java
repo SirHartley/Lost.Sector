@@ -20,8 +20,6 @@ public class CausalityDummy2OnHitEffect implements OnHitEffectPlugin {
 
         ShipAPI ship = projectile.getSource();
 
-        //Global.getSoundPlayer().playSound("Tremor_impact", 1.0f, 1.0f, point, ZERO);
-
         MagicLensFlare.createSharpFlare(engine, ship, point, 1f, 100f, projectile.getFacing()-90f, FRINGE_COLOR, CORE_COLOR);
     }
 }

@@ -59,8 +59,7 @@ public class HellSpawnPeacefulSkill {
 
     }
 
-    //dummy skill so I can show the fucking tooltip
-    //THIS IS SO DUMB ALEX WHHYYYYY
+    // Empty effect; this level exists only to show its tooltip.
     public static class Level2 extends BaseSkillEffectDescription implements ShipSkillEffect {
 
         @Override

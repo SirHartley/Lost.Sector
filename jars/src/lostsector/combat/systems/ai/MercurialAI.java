@@ -28,7 +28,7 @@ public class MercurialAI implements ShipSystemAIScript {
     private final IntervalUtil timer = new IntervalUtil(0.5f, 1.0f);
 
     // setup
-    public static final float DEGREES = 69f; // (haha nice)
+    public static final float DEGREES = 69f;
 
     private List<WeaponAPI> weapons=new ArrayList<>();
     // list of flags to check for using TOWARDS target, using AWAY from target, and NOT USING
@@ -89,9 +89,6 @@ public class MercurialAI implements ShipSystemAIScript {
             if (!AIUtils.canUseSystemThisFrame(ship)) {
                 return;
             }
-
-            //macgyver debugger
-            //engine.addFloatingText(ship.getLocation(), "nothingCanStopMe", 30f, Color.cyan, ship, 0.5f, 1.0f);
 
             // setup variables
             boolean useMe = false;

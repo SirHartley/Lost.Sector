@@ -176,7 +176,6 @@ public class SystemPicker {
                 }
             }
             if (valid) {
-                //log("valid "+ system.getName());
                 validSystems.add(system);
             }
         }

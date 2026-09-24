@@ -17,8 +17,6 @@ import java.util.List;
 
 public class TremorAI extends BaseMissileAI {
 
-    //more magic idk whats going on..
-
     public static final float FIRE_INACCURACY = 50f;
     public static final float LEAD_GUIDANCE_FACTOR = 0.5f;
     public static final float LEAD_GUIDANCE_FACTOR_FROM_ECCM = 0.25f;

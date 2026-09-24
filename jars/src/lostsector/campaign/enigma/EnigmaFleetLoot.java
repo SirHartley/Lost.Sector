@@ -63,21 +63,18 @@ public class EnigmaFleetLoot extends BaseCampaignEventListener implements EveryF
 			if (aiType!=null) {
 				if (aiType.equals("gamma_core")) {
 					gammaCount++;
-					//log("gamma_count "+gammaCount);
 				}
 				if (aiType.equals("beta_core")) {
 					if (Math.random() < 0.50f) {
 						gammaCount++;
 					} else
 						betaCount++;
-					//log("beta_count "+betaCount);
 				}
 				if (aiType.equals("alpha_core")) {
 					if (Math.random() < 0.50f) {
 						betaCount++;
 					} else
 						alphaCount++;
-					//log("alpha_count "+alphaCount);
 				}
 			}
 		}
@@ -100,7 +97,6 @@ public class EnigmaFleetLoot extends BaseCampaignEventListener implements EveryF
 			if (Math.random()<ALPHA_CHANCE)loot.addCommodity("alpha_core", 1f);
 		}
 
-		//weapon drop fuckery
 		//chance to remove a dropped weapon stack
 		ArrayList<CargoAPI.CargoItemQuantity<String>> weapons = new ArrayList<>(1000);
 		weapons.addAll(loot.getWeapons());

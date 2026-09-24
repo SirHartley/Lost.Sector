@@ -30,7 +30,7 @@ public class RealitySplitterAI implements ShipSystemAIScript {
     private final IntervalUtil timer = new IntervalUtil(0.5f, 0.7f);
 
     // setup
-    public static final float DEGREES = 50.69f; // (haha nice)
+    public static final float DEGREES = 50.69f;
     public static final float SCAN_RANGE = 2000f; // how far ahead of us to scan for (and avoid) targets
 
     // list of flags to check for using TOWARDS target, using AWAY from target, and NOT USING.
@@ -43,8 +43,6 @@ public class RealitySplitterAI implements ShipSystemAIScript {
         AWAY.add(AIFlags.RUN_QUICKLY);
         AWAY.add(AIFlags.TURN_QUICKLY);
         AWAY.add(AIFlags.NEEDS_HELP);
-        //CON.add(AIFlags.BACK_OFF);
-        //CON.add(AIFlags.BACK_OFF_MIN_RANGE);
         CON.add(AIFlags.BACKING_OFF);
         CON.add(AIFlags.DO_NOT_PURSUE);
     }
@@ -90,7 +88,6 @@ public class RealitySplitterAI implements ShipSystemAIScript {
             HullSize size = ship.getHullSize();
             HullSize otherSize = test.getHullSize();
 
-            //log("compareToOther "+test.getName()+" "+otherSize.compareTo(size));
             if (lFlux && otherSize.compareTo(size) >= 1){
                 safe = false;
             }
@@ -106,7 +103,6 @@ public class RealitySplitterAI implements ShipSystemAIScript {
             safe = false;
         }
 
-        //if (!safe) engine.addFloatingText(ship.getLocation(),"unsafe", 24f, Color.red, ship, 1f,1f);
         return safe;
     }
 
@@ -127,7 +123,7 @@ public class RealitySplitterAI implements ShipSystemAIScript {
             }
 
             boolean flanked = false;
-            //if we are surrounded, YOLO it
+            // When flanked, use the system before the safety check.
             List<ShipAPI> ships = new ArrayList<>(100);
             ships.addAll(CombatHelper.getShipsWithinRange(ship.getLocation(), 700f));
             int shipsBehind = 0;
@@ -159,9 +155,6 @@ public class RealitySplitterAI implements ShipSystemAIScript {
             if (!nothingCanStopMe(ship)) {
                 return;
             }
-
-            //macgyver debugger
-            //engine.addFloatingText(ship.getLocation(), "nothingCanStopMe", 30f, Color.cyan, ship, 0.5f, 1.0f);
 
             // setup variables
             boolean useMe = false;

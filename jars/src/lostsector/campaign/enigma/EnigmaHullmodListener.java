@@ -28,7 +28,6 @@ public class EnigmaHullmodListener extends BaseCampaignEventListener implements 
         DEFAULT_KEYS.add(KEY_BASE+"#1");
         DEFAULT_KEYS.add(KEY_BASE+"#2");
         DEFAULT_KEYS.add(KEY_BASE+"#3");
-        //DEFAULT_KEYS.add(KEY_BASE+"#4");
         DEFAULT_KEYS.add(KEY_BASE+"#5");
         DEFAULT_KEYS.add(KEY_BASE+"#6");
         DEFAULT_KEYS.add(KEY_BASE+"#7");
@@ -65,7 +64,6 @@ public class EnigmaHullmodListener extends BaseCampaignEventListener implements 
     public static void update() {
 
         int count = getCount();
-        //log("totalCount "+count);
         ArrayList<String> unlocks = getUnlocks(UNLOCKS_MEM_KEY);
         //everything unlocked
         if (unlocks.size()>=DEFAULT_KEYS.size()) return;
@@ -120,10 +118,8 @@ public class EnigmaHullmodListener extends BaseCampaignEventListener implements 
                 if (type==null || !type.equals("enigma")) continue;
 
                 shipCount++;
-                //log(member.getHullId()+" counted");
             }
         }
-        //log("count "+shipCount);
         //set
         setCount(shipCount);
     }

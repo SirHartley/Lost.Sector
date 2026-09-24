@@ -80,25 +80,6 @@ public class HellSpawnDisposableFleetSpawner extends DisposableFleetManager {
         float level = HellSpawnManager.getLevel();
         if (level<3) return 0;
         return 1;
-
-        //HellSpawnEventIntel intel = getIntel();
-        //if (intel == null) return 0;
-//
-        //if (timestamp != null) {
-        //    float daysSince = Global.getSector().getClock().getElapsedDaysSince(timestamp);
-        //    //set maxCount for some days based on lvl, then don't spawn again
-        //    if (daysSince < 14) return maxCount;
-        //}
-
-        //rng check
-        //float chance = (level)/33f;
-        //if (random.nextFloat() < chance) return 1;
-        //else return 0;
-        //maxCount = (int)level;
-        ////UPDATE TIMER
-        //timestamp = Global.getSector().getClock().getTimestamp();
-//
-        //return maxCount;
     }
 
     @Override
@@ -198,7 +179,6 @@ public class HellSpawnDisposableFleetSpawner extends DisposableFleetManager {
         fleet.getMemoryWithoutUpdate().set(KEY_SPAWN_FP, fleet.getFleetPoints());
         fleet.getMemoryWithoutUpdate().set(TIMESTAMP_KEY, Global.getSector().getClock().getTimestamp());
 
-        //setLocationAndOrders(fleet, 0.50f, 0.50f);
         fleet.addScript(new DisposableAggroAssignmentAI(fleet, system, this, hyperChance));
 
         FleetHelper.update(fleet, random);

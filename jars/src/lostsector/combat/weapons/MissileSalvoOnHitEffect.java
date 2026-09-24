@@ -19,8 +19,6 @@ public class MissileSalvoOnHitEffect implements OnHitEffectPlugin {
     @Override
     public void onHit(DamagingProjectileAPI projectile, CombatEntityAPI target, Vector2f point, boolean shieldHit, ApplyDamageResultAPI damageResult, CombatEngineAPI engine){
 
-        //Global.getSoundPlayer().playSound("Tremor_impact", 1.0f, 1.0f, point, ZERO);
-
         engine.addNegativeSwirlyNebulaParticle(point, ZERO, 15f, 10f, 0.5f, 0.5f, 1f, CORE_COLOR);
     }
 }

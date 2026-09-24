@@ -93,7 +93,6 @@ public class WarpStats extends BaseShipSystemScript {
                     }
 
                     //TELEPORT
-                    //TeleporterPlugin.addTeleportation(ship, tPoint);
                     ship.getLocation().set(tPoint);
 
                     sound = false;
@@ -138,7 +137,6 @@ public class WarpStats extends BaseShipSystemScript {
         dist = ((dist*1.50f)+BASE);
         float diffMult = DIFF_BASE;
 
-        //angle fuckery to go more sideways
         float diff = vAngle - sAngle;
         if (diff<0) diff *= -1f;
         if ((sVel.length()>0f) && (diff > 0)) {

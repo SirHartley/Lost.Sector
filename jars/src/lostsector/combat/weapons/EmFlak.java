@@ -55,7 +55,7 @@ public class EmFlak {
             entitiesFuze.remove(projectile);
             entitiesFuze.remove(projectile.getSource());
 
-            //BYE BYE, remove stuff so we actually have a working fuze
+            //filter the entity lists so the fuze works
             List<CombatEntityAPI> entitiesCopy = new ArrayList<>(entities);
 
             for (CombatEntityAPI removal : entitiesCopy) {
@@ -154,7 +154,6 @@ public class EmFlak {
                     engine.addSmokeParticle(pPoint, newVel, 25f, 1f, MathUtils.getRandomNumberInRange(0.5f,1.5f), SMOKE_COLOR);
                     engine.addNebulaSmokeParticle(pPoint, newVel, 25f, 1f,1f,1f, MathUtils.getRandomNumberInRange(0.5f,1.5f), SMOKE_COLOR);
                 }
-                //LATA
                 Global.getSoundPlayer().playSound("hurricane_mirv_split", 0.8f, 0.75f, ship.getLocation(), ZERO);
                 engine.removeEntity(projectile);
                 ship.removeListener(this);

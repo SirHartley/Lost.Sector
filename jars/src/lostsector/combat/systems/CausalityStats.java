@@ -31,7 +31,7 @@ public class CausalityStats extends BaseShipSystemScript {
     public static final Color COLOR3 = new Color(160, 150, 255);
     public static final Color TEXT_COLOR = new Color(255, 150, 233, 255);
 
-    //succ
+    //pull
     private static final float PULL_RANGE = 600f;
 
     //Explosion effect constants
@@ -161,7 +161,6 @@ public class CausalityStats extends BaseShipSystemScript {
                             if (pt.isHulk() || pt.isPhased() || pt.isFighter() || pt.getOwner() == ship.getOwner()) continue;
                             if (MathUtils.getDistance(proj.getLocation(), pt.getLocation()) == closest){
                                 misDir = (float)Math.toDegrees(Math.atan2(pt.getLocation().getY()-proj.getLocation().getY(), pt.getLocation().getX()-proj.getLocation().getX()));
-                                //engine.addFloatingText(proj.getLocation(), "" + misDir, 36f, TEXT_COLOR, proj, 0, 0);
                             }
                         }
 
@@ -172,7 +171,6 @@ public class CausalityStats extends BaseShipSystemScript {
                         //bolt
                         type2 = proj.getDamageAmount() >= 50 && !(proj instanceof MissileAPI) || proj.getDamageAmount() <= 200 && proj instanceof MissileAPI && proj.getDamageAmount() >= 50;
 
-                            //uno reverse
                         if (type1) {
                             DamagingProjectileAPI p1;
                             p1 = (DamagingProjectileAPI) Global.getCombatEngine().spawnProjectile(ship, wep1, ENERGY_WEAPON1, loca, misDir, ZERO);
@@ -187,7 +185,6 @@ public class CausalityStats extends BaseShipSystemScript {
                         }
                     }
 
-                    //bye bye
                     Global.getCombatEngine().removeEntity(target);
 
                     //total dmg we absorbed (important)
@@ -231,7 +228,6 @@ public class CausalityStats extends BaseShipSystemScript {
                 }
 
                 if (!sideEffect){
-                    //flux you
                     ship.getFluxTracker().increaseFlux((data.energy/2f)*(float)Math.random(), true);
                     ship.getFluxTracker().forceOverload(4f);
 
@@ -252,9 +248,7 @@ public class CausalityStats extends BaseShipSystemScript {
                         doOnce = true;
                     }
                     if (!teleported){
-                        //TeleporterPlugin.addTeleportation(ship, point2);
                         ship.getLocation().set(point2);
-                        // engine.addFloatingText(point2, "test ", 20f, Color.cyan, ship, 0.5f, 1.0f);
                         teleported = true;
                     }
 
@@ -271,9 +265,7 @@ public class CausalityStats extends BaseShipSystemScript {
                         doOnce = true;
                     }
                     if (!teleported){
-                        //TeleporterPlugin.addTeleportation(ship, point3);
                         ship.getLocation().set(point3);
-                        // engine.addFloatingText(point2, "test ", 20f, Color.cyan, ship, 0.5f, 1.0f);
                         teleported = true;
                     }
                     sideEffect = true;
@@ -289,7 +281,7 @@ public class CausalityStats extends BaseShipSystemScript {
                     sideEffect = true;
                 }
 
-                //SPEEN
+                //SPIN
                 if (!sideEffect && rand>0.40f&&rand<0.60f){
 
                     float angle3 = (float) Math.random() * 360f;
@@ -332,7 +324,6 @@ public class CausalityStats extends BaseShipSystemScript {
             DamagingProjectileAPI proj = (DamagingProjectileAPI) target;
             if (proj.getBaseDamageAmount() <= 0) return false;
             if (proj.getOwner() == ship.getOwner() && !(proj instanceof MissileAPI)) return false;
-            //mmmm.... null
             if ((proj.getProjectileSpecId() != null) && proj.getProjectileSpecId().startsWith("nskr_causality") && (proj.getOwner() == ship.getOwner()))
                 return false;
         }

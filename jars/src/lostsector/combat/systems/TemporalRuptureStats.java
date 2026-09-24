@@ -33,7 +33,7 @@ public class TemporalRuptureStats extends BaseShipSystemScript {
     public static final Color COLOR3 = new Color(210, 150, 255);
     public static final Vector2f ZERO = new Vector2f();
 
-    //SUCC
+    //PULL
     private static final float PULL_RANGE = 550f;
     //CHAIN LIGHTNING VARIABLES
     private static final float ZAPRANGE = 1000f;
@@ -329,7 +329,7 @@ public class TemporalRuptureStats extends BaseShipSystemScript {
                     }
                  dmgarc = true;
                 }
-                //extra explosion to kill f*ghters
+                //extra explosion to kill fighters
                 if (!explosions) {
 
                     Vector2f loc = new Vector2f(ship.getLocation());

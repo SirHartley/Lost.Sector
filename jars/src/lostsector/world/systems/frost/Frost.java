@@ -41,8 +41,6 @@ import static lostsector.ModPlugin.getIndEvoBoolean;
 
 public class Frost {
 
-	//very scuffed, but it works
-
 	public static final Color STAR_LIGHT_COLOR = new Color(163, 225, 255, 255);
 	public static final Color GLACIER_COLOR = new Color(116, 201, 255, 255);
 
@@ -125,7 +123,7 @@ public class Frost {
 										   float tariff, boolean freePort) {
 		EconomyAPI globalEconomy = Global.getSector().getEconomy();
 		String planetID = primaryEntity.getId();
-		String marketID = planetID/* + "_market"*/;
+		String marketID = planetID;
 
 		MarketAPI newMarket = Global.getFactory().createMarket(marketID, name, size);
 		newMarket.setFactionId(factionID);
@@ -178,7 +176,6 @@ public class Frost {
 
 		StarSystemAPI system = sector.getStarSystem(getName());
 		SectorEntityToken heart = sector.getEntityById("nskr_heart");
-		//MarketAPI heartmarket = heart.getMarket();
 
 		MarketAPI heartmarket = addMarketplace("enigma", heart,
 				null,
@@ -264,13 +261,10 @@ public class Frost {
 		glacier.applySpecChanges();
 
 		PlanetAPI siberia = system.addPlanet("nskr_siberia", star, "Siberia", "cryovolcanic", 10, 230, 8500, 750);
-		//shiver.applySpecChanges();
 
 		PlanetAPI shiver = system.addPlanet("nskr_shiver", star, "Shiver", "frozen", 80, 150, 11500, 1150);
-		//shiver.applySpecChanges();
 
 		PlanetAPI algor = system.addPlanet("nskr_algor", star, "Algor", "frozen", 300, 60, 15000, 2350);
-		//algor.applySpecChanges();
 
 		system.addAsteroidBelt(star, 150, 3500, 350, 450, 500, Terrain.ASTEROID_BELT, "Frozen Belt");
 		system.addRingBand(star, "misc", "rings_ice0", 256f, 1, GLACIER_COLOR, 256f, 3500, 200f);
@@ -283,8 +277,6 @@ public class Frost {
 		jumpPoint.setStandardWormholeToHyperspaceVisual();
 		system.addEntity(jumpPoint);
 
-		//SectorEntityToken frost_location = system.addCustomEntity(null,null, "stable_location", Factions.NEUTRAL);
-		//rost_location.setCircularOrbitPointingDown( star, 90 + 60, 3000, 200);
 		//gate
 		SectorEntityToken gate = system.addCustomEntity("nskr_frost_gate", // unique id
 				getName() + " Gate", // name - if null, defaultName from custom_entities.json will be used

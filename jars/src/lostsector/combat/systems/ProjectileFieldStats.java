@@ -72,7 +72,7 @@ public class ProjectileFieldStats extends BaseShipSystemScript {
         Vector2f size = new Vector2f((range*2f)+50f, (range*2f)+50f);
         Vector2f size2 = size;
 
-        //speen
+        //spin
         angle += amount;
         if (angle > 360) angle = 0f;
         //grow
@@ -85,7 +85,6 @@ public class ProjectileFieldStats extends BaseShipSystemScript {
         float nTimer = 0f;
         nTimer = MathHelper.normalize(timer,0f,0.5f);
 
-        //engine.addFloatingText(ship.getLocation(), "timer " + nTimer, 48f, Color.cyan, ship, 0.5f, 1.0f);
         vSize = MathHelper.lerp(vSize*0.10f, vSize*1.50f, nTimer);
         size2 = new Vector2f(vSize, vSize);
         alpha = MiscHelper.clamp255((int) MathHelper.lerp(alpha*1.0f, alpha*0.3f, nTimer));
@@ -110,7 +109,6 @@ public class ProjectileFieldStats extends BaseShipSystemScript {
                     if (c.one == ent) {
                         ogVelocity = c.two;
                         isSame = true;
-                        //engine.addFloatingText(ent.getLocation(), "SAME", 24, Color.RED, null, 0.5f, 1.0f);
                         break;
                     }
                 }
@@ -121,11 +119,9 @@ public class ProjectileFieldStats extends BaseShipSystemScript {
 
                 if (!isSame) {
                     affectedEntities.add(new Pair<>(ent, ogVelocity));
-                    //engine.addFloatingText(ent.getLocation(), "ADDED", 24, Color.RED, null, 0.5f, 1.0f);
                 }
                 missile.getVelocity().set(MathHelper.scaleVector(ogVelocity, mult));
                 //fx
-                //engine.addFloatingText(ent.getLocation(), "SLOWED " + ogVelocity.length() + " VEL "+missile.getVelocity().length(), 24, Color.RED, null, 0.5f, 1.0f);
                 continue;
             }
             //proj
@@ -144,12 +140,9 @@ public class ProjectileFieldStats extends BaseShipSystemScript {
                 float angle = Math.abs(MathUtils.getShortestRotation(proj.getFacing(), VectorUtils.getAngle(proj.getLocation(),ship.getLocation())));
                 if (angle<=90f) {
                     proj.setFacing(proj.getFacing() + mult);
-                    //proj.setAngularVelocity(mult);
                 }
-                //engine.addFloatingText(ent.getLocation(), "ANGLE " + angle, 24, Color.RED, null, 0.5f, 1.0f);
 
                 //fx
-                //engine.addFloatingText(ent.getLocation(), "TURNED " + mult, 24, Color.RED, null, 0.5f, 1.0f);
                 continue;
             }
             //fighter
@@ -162,17 +155,14 @@ public class ProjectileFieldStats extends BaseShipSystemScript {
                     if (c.one == ent) {
                         ogVelocity = c.two;
                         isSame = true;
-                        //engine.addFloatingText(ent.getLocation(), "SAME", 24, Color.RED, null, 0.5f, 1.0f);
                         break;
                     }
                 }
                 if (!isSame) {
                     affectedEntities.add(new Pair<>(ent, ogVelocity));
-                    //engine.addFloatingText(ent.getLocation(), "ADDED", 24, Color.RED, null, 0.5f, 1.0f);
                 }
                 target.getVelocity().set(MathHelper.scaleVector(ogVelocity, FIGHTER_SLOWDOWN));
                 //fx
-                //engine.addFloatingText(ent.getLocation(), "SLOWED " + ogVelocity.length() + " VEL "+ target.getVelocity().length(), 24, Color.RED, null, 0.5f, 1.0f);
             }
         }
 
@@ -180,14 +170,12 @@ public class ProjectileFieldStats extends BaseShipSystemScript {
             Pair<CombatEntityAPI, Vector2f> a = iter.next();
             if(a.one==null || a.one.isExpired()){
                 iter.remove();
-                //engine.addFloatingText(a.one.getLocation(), "CLEARED", 32f, Color.RED, null, 0.5f, 1.0f);
                 continue;
             }
             //out of reach, reset velocity
             if (MathUtils.getDistance(ship.getLocation(),a.one.getLocation())>range){
                 a.one.getVelocity().set(a.two);
                 iter.remove();
-                //engine.addFloatingText(a.one.getLocation(), "CLEARED", 32f, Color.RED, null, 0.5f, 1.0f);
             }
         }
     }

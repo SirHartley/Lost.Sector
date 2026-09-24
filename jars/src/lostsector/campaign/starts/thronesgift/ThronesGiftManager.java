@@ -66,7 +66,6 @@ public class ThronesGiftManager extends BaseCampaignEventListener implements Eve
         }
         //wrap around xp once you hit max lvl, 4x1 million xp per wrap
         if (xp<oldXp && lvl==15) {
-            //Global.getSettings().
             reportXpChanged((4000000-oldXp) + xp);
         }
 

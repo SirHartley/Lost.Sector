@@ -61,22 +61,6 @@ public class FleetHelper {
         return (List<FleetInfo>) mem.get(id);
     }
 
-    //don't use, broken
-    //public static FleetInfo getFleet(String id) {
-    //    MemoryAPI mem = Global.getSector().getMemory();
-    //    if (mem.contains(id)){
-    //        return (FleetInfo)mem.get(id);
-    //    } else {
-    //        mem.set(id, new FleetInfo(null,null,null));
-    //    }
-    //    return  (FleetInfo)mem.get(id);
-    //}
-    //public static FleetInfo setFleet(FleetInfo fleet, String id) {
-    //    MemoryAPI mem = Global.getSector().getMemory();
-    //    mem.set(id, fleet);
-    //    return (FleetInfo) mem.get(id);
-    //}
-
     public static void cleanUp(List<CampaignFleetAPI> toRemove, List<FleetInfo> fleets) {
         for (Iterator<FleetInfo> iter = fleets.listIterator(); iter.hasNext();) {
             CampaignFleetAPI a = iter.next().fleet;
@@ -117,10 +101,6 @@ public class FleetHelper {
         fleet.getFleetData().sort();
         fleet.getFleetData().setSyncNeeded();
         fleet.getFleetData().syncIfNeeded();
-
-        //for (FleetMemberAPI m : fleet.getMembersWithFightersCopy()) {
-        //    log(fleet.getName()+" ship "+m.getHullSpec().getHullName()+" tags "+m.getVariant().getTags().toString());
-        //}
     }
 
     public static void updatePlayerFleet(boolean withSort){
@@ -441,17 +421,6 @@ public class FleetHelper {
         if (captain==null) return;
         int aiType = captain.getStats().getLevel();
 
-        //no wait this breaks everything
-        //
-        //just in case
-        //if (aiType==1 || aiType==2){
-        //    //actually just make them level 4
-        //    Map<String, Integer> skills = MiscLS.createRandomSkills(4, 1f, new Random());
-//
-        //    MiscLS.setOfficerSkills(captain, skills);
-//
-        //    aiType = captain.getStats().getLevel();
-        //}
         //gamma
         if (aiType==3 || aiType==4){
             aiId = "gamma_core";
@@ -482,9 +451,7 @@ public class FleetHelper {
         }
     }
 
-    //I really don't know why variants sometimes lose their tags on reload?
-    //by sometimes I mean after stuff like Rules interactions???!
-    //TODO one day I will figure this shit out
+    // Variants of tracked fleets can lose their tags after a reload or a rules interaction; hackBrokenVariants() restores them.
 
     public static final ArrayList<String> FLEET_ARRAY_KEYS = new ArrayList<>();
     static {

@@ -58,7 +58,7 @@ public class Outpost {
 										   float tariff, boolean freePort) {
 		EconomyAPI globalEconomy = Global.getSector().getEconomy();
 		String planetID = primaryEntity.getId();
-		String marketID = planetID/* + "_market"*/;
+		String marketID = planetID;
 
 		MarketAPI newMarket = Global.getFactory().createMarket(marketID, name, size);
 		newMarket.setFactionId(factionID);
@@ -146,14 +146,12 @@ public class Outpost {
 
 		while (loc.orbit==null || loc.orbit.getFocus()==null){
 			loc = locs.pick();
-			//log("ERROR null orbit or focus");
 		}
 		OrbitAPI orb = loc.orbit;
 		outpost.setCircularOrbitPointingDown(orb.getFocus(), (float)Math.random()*360f, MathUtils.getDistance(orb.computeCurrentLocation(),orb.getFocus().getLocation()), orb.getOrbitalPeriod());
 		outpost.setName(name+" Outpost");
 		outpost.setInteractionImage("illustrations", "space_bar");
 		outpost.setCustomDescriptionId("nskr_outpost");
-		//outpost.setId(new Random().nextLong()+"");
 
 		//market
 		MarketAPI outpostMarket = addMarketplace("kesteven", outpost,
@@ -167,9 +165,6 @@ public class Outpost {
 						new ArrayList<>(Arrays.asList(Industries.POPULATION)),
 						new ArrayList<>(Arrays.asList(Industries.SPACEPORT)),
 						new ArrayList<>(Arrays.asList(Industries.PATROLHQ)),
-						//new ArrayList<>(Arrays.asList(Industries.ORBITALWORKS, Items.PRISTINE_NANOFORGE)), // Industry
-						//new ArrayList<>(Arrays.asList(Industries.FUELPROD)),
-						//new ArrayList<>(Arrays.asList(Industries.MINING)),
 						new ArrayList<>(Arrays.asList(Industries.HEAVYINDUSTRY)),
 						new ArrayList<>(Arrays.asList(Industries.GROUNDDEFENSES)),
 						new ArrayList<>(Arrays.asList(Industries.ORBITALSTATION_MID)))),

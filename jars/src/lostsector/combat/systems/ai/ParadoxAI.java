@@ -63,16 +63,12 @@ public class ParadoxAI implements ShipSystemAIScript {
                 //ignore everything outside of a y degree cone
                 if (Math.abs(MathUtils.getShortestRotation(angle, facing)) > DEGREES) continue;
 
-                //engine.addFloatingText(possibleTarget.getLocation(), "HIT", 30f, Color.cyan, null, 0.1f, 0.1f);
-
                 if (possibleTarget.getDamageType() == DamageType.FRAGMENTATION) {
                     decisionLevel += (float) Math.sqrt(0.25f * possibleTarget.getDamageAmount() + possibleTarget.getEmpAmount() * 0.25f);
                 }
                 else {
                     decisionLevel += (float) Math.sqrt(possibleTarget.getDamageAmount() + possibleTarget.getEmpAmount() * 0.25f);
                 }
-                //macgyver debugger
-                //engine.addFloatingText(ship.getLocation(), "test", 1f+decisionLevel, Color.cyan, ship, 0.5f, 1.0f);
             }
             if (decisionLevel >= 125f*MathUtils.getRandomNumberInRange(0.85f,1.15f)) {
                 ship.useSystem();

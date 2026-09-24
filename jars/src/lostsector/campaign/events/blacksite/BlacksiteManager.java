@@ -54,7 +54,6 @@ public class BlacksiteManager extends BaseCampaignEventListener implements Every
     Saved<Float> counter;
     private final List<CampaignFleetAPI> removedFleets = new ArrayList<>();
     private final List<BlacksiteInfo> removedSites = new ArrayList<>();
-    //CampaignFleetAPI pf;
     Random random;
 
     static void log(final String message) {
@@ -355,7 +354,6 @@ public class BlacksiteManager extends BaseCampaignEventListener implements Every
             keys.add(MemFlags.MEMORY_KEY_MAKE_HOSTILE);
             keys.add(MemFlags.MEMORY_KEY_MAKE_HOLD_VS_STRONGER);
             keys.add(MemFlags.MEMORY_KEY_MAKE_PREVENT_DISENGAGE);
-            //memflag nonsense
             keys.add(MemFlags.MEMORY_KEY_AVOID_PLAYER_SLOWLY);
             keys.add(MemFlags.MEMORY_KEY_MAKE_NON_AGGRESSIVE);
             keys.add(MemFlags.MEMORY_KEY_PATROL_ALLOW_TOFF);

@@ -51,11 +51,8 @@ public class CacheCoreDialog implements InteractionDialogPlugin {
 
         text.setFontInsignia();
 
-        //options.addOption("Leave", OptionId.LEAVE);
-
         boolean recovered = QuestHelper.getCompleted(RECOVERED_KEY);
         boolean firstTime = QuestHelper.getCompleted(FIRST_TIME_KEY);
-        //this is a fucking disaster
         if (!firstTime){
             text.addPara("You watch as the system materializes in front of you, gracefully out of thin air. No one aboard the bridge knows how this was possible.");
             text.addPara("The vast structures float unbothered, like they have always been here. Seemingly unknowing to what has just taken effect.");
@@ -72,7 +69,6 @@ public class CacheCoreDialog implements InteractionDialogPlugin {
             }
         } else if (QuestHelper.getStage()>=16 && !QuestHelper.getEndMissions()) {
             arrived = true;
-            //layered elif??
             if (!recovered) {
                 text.addPara("A strange cluster of computer cores are left among the wreckage, further inspection should yield results. Your bridge crew is preparing post battle operations.");
                 text.addPara("For a moment the bridge seems to quiets down, and you notice a quiet hum - a distant instrument. The harder you try to focus on it to more distant it becomes.");

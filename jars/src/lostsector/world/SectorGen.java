@@ -86,11 +86,8 @@ public class SectorGen implements SectorGeneratorPlugin {
         kesteven.setRelationship(pirates.getId(), RepLevel.HOSTILE);
         kesteven.setRelationship(LP.getId(), RepLevel.HOSTILE);
 
-        //brothers!
         kesteven.setRelationship(indies.getId(), 0.20f);
-        //you definitely wouldn't want to kill us right??
         kesteven.setRelationship(hegemony.getId(), 0.35f);
-        //stinky
         kesteven.setRelationship(TT.getId(), -0.35f);
     }
 

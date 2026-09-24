@@ -55,7 +55,6 @@ public class SimpleFleet {
     public boolean goToLocation = false;
     public SectorEntityToken goToLocationTarget = null;
 
-    //dumb hacks
     private final HashMap<FleetMemberAPI, SimpleFleetMember> secondaryMembers = new HashMap<>();
 
     public SimpleFleet(SectorEntityToken loc, String faction, float size, List<String> memKeys, Random random) {
@@ -108,7 +107,6 @@ public class SimpleFleet {
             fleet.getFleetData().addFleetMember(flagship);
 
             for (FleetMemberAPI m : fleet.getMembersWithFightersCopy()) {
-                //flagship fuckery
                 if (m==flagship){
                     if(!m.isFlagship()){
                         m.setFlagship(true);

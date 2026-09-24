@@ -98,7 +98,6 @@ public class AbsorbSystem extends BaseHullMod {
 
             rof = BONUS_ROF_MULT*mult;
             float flux = (100f-rof/(1f+(rof/100f)))/100f;
-            //engine.addFloatingText(ship.getLocation(), ""+flux, 32, Color.RED, ship, 1f,1f);
 
             stats.getBallisticRoFMult().modifyPercent(id, rof);
             stats.getEnergyRoFMult().modifyPercent(id, rof);
@@ -161,8 +160,6 @@ public class AbsorbSystem extends BaseHullMod {
                 rdmg = Math.abs(rdmg);
                 rdmg *= (ship.getShield().getFluxPerPointOfDamage()*ship.getMutableStats().getShieldDamageTakenMult().getModifiedValue())*(100f/(100f-data.resist));
                 data.absorbed += rdmg;
-
-                //engine.addFloatingText(ship.getLocation(), "lol " + data.absorbed + " " + rdmg, 32f, Color.RED, ship, 0.5f, 1.0f);
             }
             Global.getCombatEngine().getCustomData().put("ABSORPTION_DATA_KEY" + ship.getId(), data);
             return null;

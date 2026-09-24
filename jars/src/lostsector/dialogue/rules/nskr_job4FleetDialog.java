@@ -28,7 +28,6 @@ import java.util.Random;
 
 public class nskr_job4FleetDialog extends PaginatedOptions {
 	//
-	//Hack job of nex code, but it just worksTM
 	//
 
 	private int stage = 0;
@@ -126,7 +125,6 @@ public class nskr_job4FleetDialog extends PaginatedOptions {
 
 		player = Global.getSector().getPlayerPerson();
 		person = dialog.getInteractionTarget().getActivePerson();
-		//faction = person.getFaction();
 
 		foundTarget = QuestHelper.getCompleted(QuestStageManager.JOB4_FOUND_TARGET_KEY);
 
@@ -212,7 +210,6 @@ public class nskr_job4FleetDialog extends PaginatedOptions {
 		Global.getSoundPlayer().playUISound("ui_rep_raise",1f,1f);
 
 		text.setFontInsignia();
-		//text.addPara(str);
 	}
 
 	//

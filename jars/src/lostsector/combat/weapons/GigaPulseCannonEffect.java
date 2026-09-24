@@ -62,7 +62,6 @@ public class GigaPulseCannonEffect implements EveryFrameWeaponEffectPlugin {
         //Chargeup visuals
         if (chargelevel > 0f && !hasFiredThisCharge) {
             if (runOnce) {
-                //Global.getSoundPlayer().playSound(CHARGE_SOUND_ID, 1f, 1f, weapon.getLocation(), weapon.getShip().getVelocity());
                 runOnce = false;
             }
         }

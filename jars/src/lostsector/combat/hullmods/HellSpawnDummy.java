@@ -81,11 +81,6 @@ public class HellSpawnDummy extends BaseHullMod {
 
     @Override
     public void advanceInCombat(ShipAPI ship, float amount) {
-
-        // level = HellSpawnManager.getLevel();
-        //MutableShipStatsAPI stats = ship.getMutableStats();
-        //String id = "HellSpawnStats";
-
     }
 
     private float timer = 0f;
@@ -94,7 +89,7 @@ public class HellSpawnDummy extends BaseHullMod {
     public void advanceInCampaign(FleetMemberAPI member, float amount) {
 
         timer += amount;
-        //advance only runs for a few frames when paused??? so just add a second to always run. this is just to make this work in refit
+        // advance() runs only for a few frames while paused, so add a second to keep it running in the refit screen.
         if (Global.getSector().isPaused()) timer += 1f;
 
         if (timer > 1f) {

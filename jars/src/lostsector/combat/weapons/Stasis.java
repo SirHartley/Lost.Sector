@@ -39,9 +39,7 @@ public class Stasis {
         @Override
         public void advance(float amount) {
             CombatEngineAPI engine = Global.getCombatEngine();
-            //engine.addFloatingText(ship.getLocation(), "LMAO", 54f, Color.CYAN, null,1f,1f);
             if (projectile == null){
-                //engine.addFloatingText(ship.getLocation(), "KEKW", 34f, Color.RED, null,1f,1f);
                 ship.removeListener(this);
                 return;
             }
@@ -213,13 +211,6 @@ public class Stasis {
         shockwave1.alphaEaseInSine = true;
         shockwave1.endSizeMult = 1.1f;
         source.addListener(shockwave1);
-
-        //BlastSpriteCreator.blastSpriteListener shockwave2 = new BlastSpriteCreator.blastSpriteListener(source, point, 1.75f, 450f, SHOCKWAVE_COLOR_2);
-        //shockwave2.customSpritePath = SPRITE_PATH_2;
-        //shockwave2.sizeEaseOutSine = true;
-        //shockwave2.alphaEaseInSine = true;
-        //shockwave2.endSizeMult = 1.1f;
-        //source.addListener(shockwave2);
 
         Global.getCombatEngine().addSwirlyNebulaParticle(point, new Vector2f(),
                 300f, 0.80f, 0.1f,0.5f, 1.0f, NEBULA_COLOR, true);

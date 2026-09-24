@@ -79,8 +79,6 @@ public class Harmonics {
 
             float mod = MathHelper.inverse(MathHelper.normalize(timer, 0f, HarmonicsStats.MAX_DURATION));
 
-            //engine.addFloatingText(source.getLocation(), ""+mod, 24f, Color.RED, null, 1f,1f);
-
             sourceStats.getMaxSpeed().modifyFlat(id, MathHelper.lerp(0f, maxSpeedTop, mod));
             sourceStats.getAcceleration().modifyFlat(id, MathHelper.lerp(0f, accelerationTop, mod));
             sourceStats.getDeceleration().modifyFlat(id, MathHelper.lerp(0f, decelerationTop, mod));

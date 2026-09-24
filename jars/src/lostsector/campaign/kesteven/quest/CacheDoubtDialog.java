@@ -67,8 +67,6 @@ public class CacheDoubtDialog implements InteractionDialogPlugin {
 
         text.setFontInsignia();
 
-        //options.addOption("Leave", OptionId.LEAVE);
-
         text.addPara("You've been here for a while, haven't you captain. Maybe it's time to do something.",g,h,"","");
 
         options.addOption("Continue", OptionId.INITIAL);

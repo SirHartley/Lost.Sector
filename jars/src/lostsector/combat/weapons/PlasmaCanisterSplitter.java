@@ -20,8 +20,6 @@ import java.util.*;
 
 public class PlasmaCanisterSplitter extends BaseEveryFrameCombatPlugin {
 
-    //magic don't ask me how this works..
-
     public static final String DATA_KEY = "nskr_SplitterWeapon";
 
     public static final float PBCC_DEFAULT_RANGE = 1200f;
@@ -131,7 +129,7 @@ public class PlasmaCanisterSplitter extends BaseEveryFrameCombatPlugin {
 
             splitDistance *= rangeScalar;
 
-            // This is some bullshit to make the weapon fade sooner than normal
+            // Make the projectile detonate sooner than its normal fade.
             float detonateTime;
             if (proj.getWeapon() != null) {
                 detonateTime = (proj.getWeapon().getRange() - splitDistance) / speed;

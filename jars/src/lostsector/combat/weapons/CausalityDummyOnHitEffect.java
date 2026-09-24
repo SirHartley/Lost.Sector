@@ -21,8 +21,6 @@ public class CausalityDummyOnHitEffect implements OnHitEffectPlugin {
 
         ShipAPI ship = projectile.getSource();
 
-        //Global.getSoundPlayer().playSound("Tremor_impact", 1.0f, 1.0f, point, ZERO);
-
         for (int x = 0; x < 4; x++) {
             float angle = (float) Math.random() * 360f;
             float distance = (float) Math.random() * 50f + 25f;

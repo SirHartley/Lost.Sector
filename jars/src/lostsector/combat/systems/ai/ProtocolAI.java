@@ -15,7 +15,7 @@ import java.util.List;
 
 public class ProtocolAI implements ShipSystemAIScript {
 
-    //long timer so we don't get ADHD
+    //long timer so the AI does not switch modes too often
     private final IntervalUtil timer = new IntervalUtil(1.00f, 2.00f);
 
     private CombatEngineAPI engine = null;
@@ -173,9 +173,6 @@ public class ProtocolAI implements ShipSystemAIScript {
             if (atkLevel > 100f){
                 atkLevel = 100f;
             }
-
-            //macgyver debugger
-            //engine.addFloatingText(ship.getLocation(), "speed" + Math.round(speedLevel) + "atk" + Math.round(atkLevel) + "def" + Math.round(defLevel), 32f, Color.cyan, ship, 0.5f, 1.0f);
 
             if (speedLevel >= atkLevel && speedLevel >= defLevel) {
                 this.desiredMode = 1;

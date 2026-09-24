@@ -134,7 +134,6 @@ public class EntrancePlugin extends BaseEveryFrameCombatPlugin {
                                 volume = 1.1f;
                                 break;
                         }
-                        //Global.getCombatEngine().addFloatingText(ship.getLocation(), "vol "+volume, 40f, Color.cyan, ship, 0.5f, 1.0f);
 
                         //sound
                         Global.getSoundPlayer().playSound(SOUND_ID, 1.0f, 1.0f*volume, ship.getLocation(), ship.getVelocity());

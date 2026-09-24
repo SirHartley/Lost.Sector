@@ -95,9 +95,7 @@ public class EngineBoostAI implements ShipSystemAIScript {
             HullSize size = ship.getHullSize();
             HullSize otherSize = test.getHullSize();
             int diff = otherSize.compareTo(size);
-            //engine.addFloatingText(test.getLocation(),"size diff " + diff, 24f, Color.red, test, 1f,1f);
 
-            //log("compareToOther "+test.getName()+" "+otherSize.compareTo(size));
             if (inRange && diff >= -1){
                 safe = false;
             }
@@ -118,7 +116,6 @@ public class EngineBoostAI implements ShipSystemAIScript {
             safe = false;
         }
 
-        //if (!safe) engine.addFloatingText(ship.getLocation(),"unsafe " + lRange + " , " + enemy, 24f, Color.red, ship, 1f,1f);
         return safe;
     }
 
@@ -148,9 +145,6 @@ public class EngineBoostAI implements ShipSystemAIScript {
             if (!nothingCanStopMe(ship)) {
                 return;
             }
-
-            //macgyver debugger
-            //engine.addFloatingText(ship.getLocation(), "nothingCanStopMe", 30f, Color.cyan, ship, 0.5f, 1.0f);
 
             // setup variables
             boolean useMe = false;

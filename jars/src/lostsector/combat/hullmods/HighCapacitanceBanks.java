@@ -27,7 +27,7 @@ public class HighCapacitanceBanks extends BaseHullMod {
         ShipSystemAPI system = ship.getSystem();
         if (system!=null){
             int uses = system.getSpecAPI().getMaxUses(ship.getMutableStats());
-            //what a hack Alex
+            // Systems without limited uses report Integer.MAX_VALUE.
             if (uses < Integer.MAX_VALUE) {
                 return true;
             }

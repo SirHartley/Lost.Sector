@@ -25,7 +25,6 @@ import java.util.Random;
 
 public class nskr_ttCollectorDialog extends PaginatedOptions {
 	//
-	//Hack job of nex code, but it just worksTM
 	//
 
 	public static final String PERSISTENT_KEY = "nskr_ttCollectorDialogKey";
@@ -122,8 +121,6 @@ public class nskr_ttCollectorDialog extends PaginatedOptions {
 		{
 			dialog.getOptionPanel().setEnabled(optId, false);
 		}
-		//dialog.getOptionPanel().setShortcut("TtCollectorDialogExit", Keyboard.KEY_ESCAPE, false, false, false, false);
-		//dialog.getOptionPanel().setShortcut("TtCollectorDialogExitFight", Keyboard.KEY_ESCAPE, false, false, false, false);
 	}
 
 	protected void canPay(){

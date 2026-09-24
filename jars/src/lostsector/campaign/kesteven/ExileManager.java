@@ -23,8 +23,6 @@ import java.util.Random;
 
 public class ExileManager extends BaseCampaignEventListener implements EveryFrameScript  {
 
-    //welcome to null hell
-
     //how often we run
     public static final float TIMER = 1f;
     public static final String EXILE_KEY = "kestevenExiled";
@@ -114,15 +112,6 @@ public class ExileManager extends BaseCampaignEventListener implements EveryFram
                     }
                 }
             }
-
-            //debug
-            //if (outpost!=null && asteria!=null) {
-            //    if (Math.random() > 0.50f) {
-            //        asteria.setFactionId("kesteven");
-            //    } else {
-            //        asteria.setFactionId(Factions.HEGEMONY);
-            //    }
-            //}
 
             //unExile
             if (getExiled(EXILE_KEY) && outpost!=null && outpost.getFaction().getId().equals("kesteven")) {

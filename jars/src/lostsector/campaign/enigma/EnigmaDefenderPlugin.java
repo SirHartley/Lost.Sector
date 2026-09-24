@@ -17,10 +17,6 @@ import java.util.Random;
 
 public class EnigmaDefenderPlugin extends BaseGenericPlugin implements SalvageGenFromSeed.SalvageDefenderModificationPlugin {
 
-    //
-    //an empty defenderPlugin is now required to spawn defenders from custom factions.
-    //nvm this is fixed now
-
     static void log(final String message) {
         Global.getLogger(EnigmaDefenderPlugin.class).info(message);
     }
@@ -45,12 +41,10 @@ public class EnigmaDefenderPlugin extends BaseGenericPlugin implements SalvageGe
     }
 
     public void modifyFleet(SalvageGenFromSeed.SDMParams p, CampaignFleetAPI fleet, Random random, boolean withOverride) {
-        //might as well do something I guess
         float quality = MathHelper.getSeededRandomNumberInRange(0.60f,1f, random);
         FleetParamsV3 params = new FleetParamsV3(null, new Vector2f(),
                 "enigma", quality, FleetTypes.PATROL_SMALL, fleet.getFleetPoints(),
                 0f,0f, 0f,0f,0f, 0f);
-        //params.qualityOverride = MathUtilLS.getSeededRandomNumberInRange(0.60f,1f, random);
         FleetFactoryV3.addCommanderAndOfficersV2(fleet, params, random);
         //make the officers AI cores
         FleetHelper.setAIOfficers(fleet);

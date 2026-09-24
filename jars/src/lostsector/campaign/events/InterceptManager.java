@@ -61,7 +61,6 @@ public class InterceptManager extends BaseCampaignEventListener implements Every
     Saved<Boolean> aroFleetSpawned;
     Saved<Boolean> messengerFleetSpawned;
     Saved<Boolean> autoHunterFleetSpawned;
-    //CampaignFleetAPI pf;
     public InterceptManager() {
         super(false);
         //logic timer
@@ -211,7 +210,6 @@ public class InterceptManager extends BaseCampaignEventListener implements Every
                     //mem key for other quest dialog
                     if (talked && !QuestHelper.getCompleted(QuestStageManager.E_MESSENGER_TALKED_KEY)){
                         QuestHelper.setCompleted(true , QuestStageManager.E_MESSENGER_TALKED_KEY);
-                        //hack
                         QuestHelper.setCompleted(true , QuestStageManager.E_MESSENGER_TALKED_ASK_ABOUT_KEY);
                     }
 
@@ -307,7 +305,7 @@ public class InterceptManager extends BaseCampaignEventListener implements Every
                     if (f.age<30f){
                         FleetHelper.gotoAndInterceptPlayerAI(fleet, f, FleetHelper.interceptBehaviour.AROUND);
                     } else {
-                        //filthy check to pick new target once
+                        // Pick a new target once if the current one has no market.
                         if (f.target.getMarket()==null){
                             f.target = QuestHelper.getRandomFactionMarket(random, Factions.LUDDIC_PATH);
                         }
@@ -349,7 +347,6 @@ public class InterceptManager extends BaseCampaignEventListener implements Every
         keys.add(ARO_FLEET_KEY);
 
         SimpleFleet simpleFleet = new SimpleFleet(pf.getContainingLocation().createToken(pf.getLocation()), Factions.LUDDIC_CHURCH, combatPoints, keys, random);
-        //SimpleFleet.type = FleetTypes.PATROL_LARGE;
         simpleFleet.maxShipSize = 4;
         simpleFleet.sMods = MathHelper.getSeededRandomNumberInRange(2,3, random);
         simpleFleet.name = ARO_FLEET_NAME;
@@ -395,7 +392,6 @@ public class InterceptManager extends BaseCampaignEventListener implements Every
         keys.add(MESSENGER_FLEET_KEY);
 
         SimpleFleet simpleFleet = new SimpleFleet(pf.getContainingLocation().createToken(pf.getLocation()), Factions.PIRATES, combatPoints, keys, random);
-        //SimpleFleet.type = FleetTypes.PATROL_MEDIUM;
         simpleFleet.maxShipSize = 3;
         simpleFleet.name = MESSENGER_FLEET_NAME;
         simpleFleet.ignoreMarketFleetSizeMult = true;
@@ -469,7 +465,6 @@ public class InterceptManager extends BaseCampaignEventListener implements Every
             }
         }
 
-        //fleet.setFaction(Factions.LUDDIC_PATH, true);
         //update
         FleetHelper.update(fleet, random);
 

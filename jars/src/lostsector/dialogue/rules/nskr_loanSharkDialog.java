@@ -25,7 +25,6 @@ import java.util.Random;
 
 public class nskr_loanSharkDialog extends PaginatedOptions {
 	//
-	//Hack job of nex code, but it just worksTM
 	//
 
 	private static float relation = 0;
@@ -128,8 +127,6 @@ public class nskr_loanSharkDialog extends PaginatedOptions {
 		{
 			dialog.getOptionPanel().setEnabled(optId, false);
 		}
-		//dialog.getOptionPanel().setShortcut("LoanSharkDialogExit", Keyboard.KEY_ESCAPE, false, false, false, false);
-		//dialog.getOptionPanel().setShortcut("LoanSharkDialogExitFight", Keyboard.KEY_ESCAPE, false, false, false, false);
 	}
 
 	protected void canPay(){

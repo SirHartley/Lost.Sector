@@ -49,7 +49,6 @@ public class OmniLoadStats extends BaseShipSystemScript {
                 if (!validWeapon(w)) continue;
                 //reload
                 w.setRemainingCooldownTo(0f);
-                //Global.getCombatEngine().addFloatingText(ship.getLocation(), "test", 60f, Color.cyan, ship, 0.5f, 1.0f);
                 //add ammo
                 if (w.getMaxAmmo()<Integer.MAX_VALUE && w.getAmmo()<w.getMaxAmmo()){
                     int ammo = Math.max(1, (int)(w.getMaxAmmo()/4f)) + w.getAmmo();
@@ -69,7 +68,6 @@ public class OmniLoadStats extends BaseShipSystemScript {
     private boolean canApply(ShipAPI ship) {
         for (WeaponAPI w : ship.getAllWeapons()) {
             if (!validWeapon(w)) continue;
-            //burst hack
             if (w.isInBurst()) return false;
         }
         return true;

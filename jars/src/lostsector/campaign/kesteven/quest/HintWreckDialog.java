@@ -50,8 +50,6 @@ public class HintWreckDialog implements InteractionDialogPlugin {
 
         text.setFontInsignia();
 
-        //options.addOption("Leave", OptionId.LEAVE);
-
         text.addPara("Your sensors team report unusual signals coming from this wreck once you approach.",tc,h,"","");
 
         options.addOption("Continue", OptionId.INITIAL);
@@ -102,17 +100,6 @@ public class HintWreckDialog implements InteractionDialogPlugin {
         //leave
         if (optionData == OptionId.LEAVE) {
             dialog.dismiss();
-            //return to default
-            //Map<String, MemoryAPI> map = dialog.getPlugin().getMemoryMap();
-            //MemoryAPI memory = BaseCommandPlugin.getEntityMemory(map);
-            //Object specialData = memory.get(MemFlags.SALVAGE_SPECIAL_DATA);
-            //SalvageSpecialInteraction.SalvageSpecialPlugin special = null;
-            //if (specialData instanceof SalvageSpecialInteraction.SalvageSpecialData) {
-            //    special = ((SalvageSpecialInteraction.SalvageSpecialData) specialData).createSpecialPlugin();
-            //}
-            //InteractionDialogPlugin plugin = new SalvageSpecialInteraction.SalvageSpecialDialogPlugin(dialog.getPlugin(), special, specialData, map);
-            //dialog.setPlugin(plugin);
-            //plugin.init(dialog);
         }
     }
 

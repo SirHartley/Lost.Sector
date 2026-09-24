@@ -64,8 +64,6 @@ public class GlacierCommsDialog implements InteractionDialogPlugin {
 
         text.addPara("Your fleet approaches the tundra planet Glacier.");
 
-        //options.addOption("Leave", OptionId.LEAVE);
-
         int stage = QuestHelper.getStage();
         boolean aliceTip2 = QuestHelper.getCompleted(nskr_kestevenQuest.JOB5_ALICE_TIP_KEY2);
         if (stage >= 16 && aliceTip2 && !QuestHelper.getCompleted(RECOVERED_KEY)) {
@@ -160,7 +158,6 @@ public class GlacierCommsDialog implements InteractionDialogPlugin {
         if (optionData == OptionId.A7) {
             options.clearOptions();
             text.addPara("The team backtracks through the facility searching for an alternate route. Traversing the labyrinthine structure is quite time consuming, but eventually they discover a secondary route.");
-            //text.addPara("");
 
             text.setFontSmallInsignia();
             time-=30;

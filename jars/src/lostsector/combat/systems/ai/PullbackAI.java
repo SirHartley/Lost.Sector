@@ -31,12 +31,9 @@ public class PullbackAI implements ShipSystemAIScript {
         TOWARDS.add(ShipwideAIFlags.AIFlags.PURSUING);
         TOWARDS.add(ShipwideAIFlags.AIFlags.HARASS_MOVE_IN);
         AWAY.add(ShipwideAIFlags.AIFlags.RUN_QUICKLY);
-        //AWAY.add(ShipwideAIFlags.AIFlags.TURN_QUICKLY);
         AWAY.add(ShipwideAIFlags.AIFlags.NEEDS_HELP);
         CON.add(ShipwideAIFlags.AIFlags.BACK_OFF);
         CON.add(ShipwideAIFlags.AIFlags.BACK_OFF_MIN_RANGE);
-        //CON.add(ShipwideAIFlags.AIFlags.BACKING_OFF);
-        //CON.add(ShipwideAIFlags.AIFlags.DO_NOT_PURSUE);
     }
     private final IntervalUtil tracker = new IntervalUtil(0.40f, 0.60f);
 
@@ -55,11 +52,8 @@ public class PullbackAI implements ShipSystemAIScript {
         if(data.tPoint1!=null)points.add(data.tPoint1);
         if(data.tPoint2!=null)points.add(data.tPoint2);
         if(data.tPoint3!=null)points.add(data.tPoint3);
-        //int x=0;
         if (tracker.intervalElapsed()) {
             for (Vector2f point : points) {
-                //x++;
-                //engine.addFloatingText(point, "X "+x, 30f, Color.cyan, null, 0.1f, 0.1f);
                 boolean use = false;
                 float curDist = CombatHelper.getNearestEnemyShipDistance(ship, ship.getLocation(), ANALYSIS_RANGE);
                 float posDist = CombatHelper.getNearestEnemyShipDistance(ship, point, ANALYSIS_RANGE);
@@ -91,12 +85,10 @@ public class PullbackAI implements ShipSystemAIScript {
                 float diff = curDist - posDist;
                 if (diff < -MIN_DIFF && danger || diff < -MIN_DIFF && dangerF) {
                     use = true;
-                    //engine.addFloatingText(ship.getLocation(), "RUN AWAY", 30f, Color.cyan, null, 0.1f, 0.1f);
                 }
                 //try to engage
                 if (diff > MIN_DIFF && !danger && safeF) {
                     use = true;
-                    //engine.addFloatingText(ship.getLocation(), "ENGAGE", 30f, Color.cyan, null, 0.1f, 0.1f);
                 }
 
                 //damage check
@@ -118,8 +110,6 @@ public class PullbackAI implements ShipSystemAIScript {
                     //ignore everything outside of a y degree cone
                     if (Math.abs(MathUtils.getShortestRotation(angle, facing)) > DEGREES) continue;
 
-                    //engine.addFloatingText(possibleTarget.getLocation(), "HIT", 30f, Color.cyan, null, 0.1f, 0.1f);
-
                     if (possibleTarget.getDamageType() == DamageType.FRAGMENTATION) {
                         dmgLevel += 0.25f * possibleTarget.getDamageAmount() + possibleTarget.getEmpAmount() * 0.25f;
                     } else {
@@ -130,7 +120,6 @@ public class PullbackAI implements ShipSystemAIScript {
                 //try to avoid damage
                 if (distDiff > MIN_DIFF && dmgLevel > 1000f && diff < 100f) {
                     use = true;
-                    //engine.addFloatingText(ship.getLocation(), "AVOID DMG", 30f, Color.cyan, null, 0.1f, 0.1f);
                 }
 
                 if (use){

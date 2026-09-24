@@ -96,8 +96,6 @@ public class Cache {
         system.addTag(Tags.THEME_HIDDEN);
         LocationAPI hyper = Global.getSector().getHyperspace();
 
-        //system.getMemoryWithoutUpdate().set(MusicPlayerPluginImpl.MUSIC_SET_MEM_KEY, "Cache_theme");
-
         system.setBackgroundTextureFilename("graphics/lostsector/backgrounds/nskr_cache.jpg");
         //LOC
         system.getLocation().set(createCacheLoc(50000f, 65000f, 10000f));
@@ -168,11 +166,6 @@ public class Cache {
         derelict4.setDiscoverable(true);
         Misc.setDefenderOverride(derelict4, new DefenderDataOverride(Factions.DERELICT, 1f, 125, 150));
 
-        //SectorEntityToken derelict5 = DerelictThemeGenerator.addSalvageEntity(system, Entities.ORBITAL_HABITAT, Factions.NEUTRAL);
-        //derelict5.setId("Cache_derelict5");
-        //derelict5.setCircularOrbit(center, 150, 1000, 100f);
-        //Misc.setDefenderOverride(derelict5, new DefenderDataOverride(Factions.DERELICT, 1f, 125, 150));
-
         //SATELLITES
         SectorEntityToken satellite1 = DerelictThemeGenerator.addNonSalvageEntity(system, DerelictThemeGenerator.createLocationAtRandomGap(new Random(), gate, 100f), "nskr_artifact", Factions.NEUTRAL).entity;
         satellite1.setDiscoverable(true);
@@ -214,8 +207,6 @@ public class Cache {
                         new Color(127, 0, 255, 255)
                 ));
         field.setCircularOrbit(center, 0f, 0f, 180f);
-        //OUTER TERRAIN
-        //StarCoronaTerrainPlugin.CoronaParams
 
         //DEBRIS
         DebrisFieldTerrainPlugin.DebrisFieldParams params_gate_main = new DebrisFieldTerrainPlugin.DebrisFieldParams(
@@ -348,7 +339,6 @@ public class Cache {
 
         //fleet
         SimpleFleet simpleFleet = new SimpleFleet(loc, Factions.DERELICT, points, keys, random);
-        //SimpleFleet.type = FleetTypes.PATROL_LARGE;
         simpleFleet.maxShipSize = 3;
         simpleFleet.sMods = 3;
         simpleFleet.ignoreMarketFleetSizeMult = true;
@@ -439,7 +429,7 @@ public class Cache {
 
     public static boolean hasPrototypes(CampaignFleetAPI fleet){
         boolean hasProt = false;
-        //note to self, ships lose all tags on save & reload ????????
+        // Fleet members lose their tags on save and reload, so check hullmods instead.
         for (FleetMemberAPI m : fleet.getMembersWithFightersCopy()) {
             if (MiscHelper.isProtTech(m))hasProt = true;
             if (hasProt)break;

@@ -13,8 +13,6 @@ public class FleetInfo {
 
     //base
     public CampaignFleetAPI fleet;
-    //it don't work like this lmao
-    //public FleetMemberAPI flagship;
     public SectorEntityToken target;
     public SectorEntityToken home;
     public float age;
@@ -29,7 +27,6 @@ public class FleetInfo {
 
     public FleetInfo(CampaignFleetAPI fleet, SectorEntityToken target, SectorEntityToken home) {
         this.fleet = fleet;
-        //this.flagship = fleet.getFlagship().;
         this.age = 0f;
         this.strength = fleet.getFleetPoints();
         this.target = target;

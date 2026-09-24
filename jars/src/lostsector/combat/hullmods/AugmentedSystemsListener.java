@@ -147,10 +147,8 @@ public class AugmentedSystemsListener {
             float vAngle = VectorUtils.getFacing(sVel);
             float dist = Objects.requireNonNull(sVel).length();
             if (dist == 0f) vAngle = sAngle;
-            //angle fuckery
             float diff = vAngle - sAngle;
             if (diff < 0) diff *= -1f;
-            //engine.addFloatingText(sLoc, "test " + (int)vAngle +","+ (int)sAngle +","+ (int)diff, 30f, Color.cyan, ship, 0.5f, 1.0f);
             if ((sVel.length() > 0f) && (diff <= 20) || sVel.length() > 0f && (diff >= 340)) {
                 float speed = AugmentedSystems.UNSTABLE_INJECTOR_BONUS;
                 ship.getMutableStats().getMaxSpeed().modifyFlat(AugmentedSystems.UNSTABLE_INJECTOR_ID+"_augment", speed);
@@ -206,7 +204,6 @@ public class AugmentedSystemsListener {
             int navCount = shipsNav.size();
             //cap at max
             if (navCount > AugmentedSystems.NAV_RELAY_MAX) navCount = AugmentedSystems.NAV_RELAY_MAX;
-            //engine.addFloatingText(ship.getLocation(), "test " + (int)navCount, 30f, Color.cyan, ship, 0.5f, 1.0f);
             ship.getMutableStats().getMaxSpeed().modifyFlat(AugmentedSystems.NAV_RELAY_ID+"_augment", navCount * AugmentedSystems.NAV_RELAY_BONUS);
             //tooltip
             if (ship == Global.getCombatEngine().getPlayerShip() && navCount > 0){
@@ -374,8 +371,6 @@ public class AugmentedSystemsListener {
                 buffData.modifiedBy += amount;
                 ship.getMutableStats().getPeakCRDuration().modifyFlat(AugmentedSystems.OPERATIONS_CENTER_ID+"_augment", buffData.modifiedBy);
                 buffData.buffRemaining -= amount;
-
-                //Global.getCombatEngine().addFloatingText(ship.getLocation(),""+buffData.buffRemaining, 48f, Color.cyan, ship, 0.5f, 1.0f);
 
                 //text
                 if (ship==Global.getCombatEngine().getPlayerShip()){

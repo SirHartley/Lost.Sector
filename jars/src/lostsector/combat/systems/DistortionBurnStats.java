@@ -85,8 +85,6 @@ public class DistortionBurnStats extends BaseShipSystemScript {
                 // ignore everything outside of a y degree cone
                 if (Math.abs(MathUtils.getShortestRotation(angle, ship.getFacing())) < rArc) break;
             }
-            //Global.getCombatEngine().addFloatingText(empPos1, "pos1", 20f, Color.RED, null, 1f,1f);
-            //Global.getCombatEngine().addFloatingText(empPos2, "pos2", 20f, Color.RED, null, 1f,1f);
             Global.getCombatEngine().spawnEmpArcVisual(empPos1, new SimpleEntity(empPos1), empPos2, new SimpleEntity(empPos2), 17f, empColorFringe, empColorCore);
         }
         //ENGINE COLOR
@@ -139,7 +137,7 @@ public class DistortionBurnStats extends BaseShipSystemScript {
                 } else if (e instanceof  MissileAPI){
                     //missile hit
                     Global.getCombatEngine().applyDamage(e, point, damage, DamageType.ENERGY, damage * 2f, false, false, ship);
-                    //don't spawn arcs to flares and other nonsense
+                    // Skip arcs to flares and other low-damage missiles.
                     if (((MissileAPI) e).getDamageAmount()>=50f) {
                         Global.getCombatEngine().spawnEmpArcVisual(arcPos, new SimpleEntity(arcPos), point, new SimpleEntity(point), 10f, empColorFringe, empColorCore);
                         Global.getSoundPlayer().playSound("tachyon_lance_emp_impact", 1f, 1f, point, ZERO);

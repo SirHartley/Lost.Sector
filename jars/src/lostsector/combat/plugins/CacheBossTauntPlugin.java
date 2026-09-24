@@ -116,8 +116,6 @@ public class CacheBossTauntPlugin extends BaseEveryFrameCombatPlugin {
         }
         checked = true;
         if(!boss) return;
-        //log("NAME "+fleet.getNameWithFaction());
-        //log("FACTION "+fleet.getFaction().getId());
 
         CombatFleetManagerAPI enemy = engine.getFleetManager(FleetSide.ENEMY);
         if (enemy == null) return;
@@ -149,7 +147,6 @@ public class CacheBossTauntPlugin extends BaseEveryFrameCombatPlugin {
                 Vector2f loc = new Vector2f(0f,0f);
                 if (Global.getCombatEngine().getPlayerShip()!=null){
                     loc = MathUtils.getPointOnCircumference(Global.getCombatEngine().getPlayerShip().getLocation(), 1400f, VectorUtils.getAngle(Global.getCombatEngine().getPlayerShip().getLocation(), new Vector2f(0f,0f)));
-                    //log("CORDS "+loc.getX()+" "+loc.getY());
                 }
                 ShipAPI boss = engine.getFleetManager(fleet.getFlagship().getOwner()).spawnShipOrWing(Cache.SECONDARY_VARIANT_1, loc, 270f, 2f, Cache.createSecondaryCaptain(2));
                 boss.setName(Cache.S1_NAME);

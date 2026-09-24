@@ -66,9 +66,6 @@ public class HellSpawnEventIntel extends BaseEventIntel implements FleetEventLis
 
     @Override
     public void advance(float amount) {
-
-        //addFactor(new HellSpawnEventFactors(25, "freebie", "you got points", "lol"));
-
     }
 
     public void addStageDesc(TooltipMakerAPI info, Object stageId, float initPad, boolean forTooltip) {
@@ -77,9 +74,6 @@ public class HellSpawnEventIntel extends BaseEventIntel implements FleetEventLis
         Color r = Misc.getNegativeHighlightColor();
         Color g = Misc.getGrayColor();
         Color tc = Misc.getTextColor();
-
-        //if (stageId == Stage.BEGINNING) {
-        //    info.addPara("Destruction brings you closer to your goals.", initPad);
 
         if (stageId == Stage.DESCENT_MINOR) {
             info.addPara("+"+(int) HellSpawnManager.BURN_BONUS+" maximum burn level", initPad, h, h, (int) HellSpawnManager.BURN_BONUS+"");
@@ -246,7 +240,6 @@ public class HellSpawnEventIntel extends BaseEventIntel implements FleetEventLis
     @Override
     public Color getBarColor() {
         Color color = BAR_COLOR;
-        //color = Misc.getBasePlayerColor();
         color = Misc.interpolateColor(color, Color.black, 0.25f);
         return color;
     }
@@ -276,9 +269,6 @@ public class HellSpawnEventIntel extends BaseEventIntel implements FleetEventLis
         EventStageData esd = getDataFor(stageId);
         if (esd == null) return null;
 
-        //if (esd.id==Stage.BEGINNING){
-        //    return "graphics/icons/intel/damage.png";
-        //}
         if (esd.id==Stage.DESCENT_MINOR){
             return "graphics/icons/intel/damage.png";
         }

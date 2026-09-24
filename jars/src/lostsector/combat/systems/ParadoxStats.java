@@ -82,7 +82,7 @@ public class ParadoxStats extends BaseShipSystemScript {
 				}
 			}
 			ship.setSprite(newSprite);
-			//required to make jitter work????
+			//required to make jitter work
 			ship.getSpriteAPI().setAngle(ship.getFacing()-90f);
 
 			//weapons

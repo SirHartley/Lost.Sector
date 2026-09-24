@@ -34,9 +34,7 @@ public class BigFlak {
         @Override
         public void advance(float amount) {
             CombatEngineAPI engine = Global.getCombatEngine();
-            //engine.addFloatingText(ship.getLocation(), "LMAO", 54f, Color.CYAN, null,1f,1f);
             if (projectile == null){
-                //engine.addFloatingText(ship.getLocation(), "KEKW", 34f, Color.RED, null,1f,1f);
                 ship.removeListener(this);
                 return;
             }

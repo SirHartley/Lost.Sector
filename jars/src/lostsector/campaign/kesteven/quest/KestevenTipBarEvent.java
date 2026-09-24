@@ -258,7 +258,6 @@ public class KestevenTipBarEvent extends BaseBarEvent {
     public SectorEntityToken getTipLocation(){
         Map<String, Object> data = Global.getSector().getPersistentData();
         if (data.get(PAID_FOR_INFO_LOC+id)==null){
-            //data.put(PAID_FOR_INFO_LOC+id, getRandomSystemWithBlacklist(getRandom()).getCenter());
             return null;
         }
         return (SectorEntityToken) data.get(PAID_FOR_INFO_LOC+id);
@@ -287,9 +286,7 @@ public class KestevenTipBarEvent extends BaseBarEvent {
                 if (e.getTags()==null) continue;
                 if (e.getTags().contains(Tags.BEACON_LOW) || e.getTags().contains(Tags.BEACON_MEDIUM) || e.getTags().contains(Tags.BEACON_HIGH)){
                     if (e.getOrbit()==null || e.getOrbit().getFocus()==null) continue;
-                    //hax
                     pickSystems.add(MiscHelper.getNearestSystem(e.getOrbit().getFocus().getLocation()));
-                    //log("added "+MiscLS.getNearestSystem(e.getOrbit().getFocus().getLocation()).getName());
                 }
             }
             //add

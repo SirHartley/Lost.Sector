@@ -37,7 +37,6 @@ public class BiteCannonOnHitEffect implements OnHitEffectPlugin {
                 float health = station.getMaxHitpoints();
                 if (!tmp.getChildModulesCopy().isEmpty()) health = getHighestHealthModule(tmp);
                 dmg = health*PERCENTAGE_HP_DMG;
-                //engine.addFloatingText(point, ""+health, 24f, Color.CYAN, null,1f,1f);
             }
             //default
             else {

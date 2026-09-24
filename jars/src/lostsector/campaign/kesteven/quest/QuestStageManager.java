@@ -47,7 +47,6 @@ import java.util.Random;
 public class QuestStageManager extends BaseCampaignEventListener implements EveryFrameScript  {
     //
     //manages quest stage changes and mission fleets
-    //1000 line efs? no im fine, this works perfectly.
     public static final String KESTEVEN_QUEST_KEY = "nskr_kestevenQuest";
     public static final String FLEET_ARRAY_KEY = "$kQuestMissionFleets";
     public static final String QUEST_END_KEY = "KestevenQuestEnd";
@@ -186,7 +185,7 @@ public class QuestStageManager extends BaseCampaignEventListener implements Ever
 
         stage = QuestHelper.getStage();
 
-        //both mission markets are fucked failure
+        //both mission markets lost failure
         if (!ExileManager.canExile() && !MiscHelper.asteriaExists() && !QuestHelper.getEndMissions()){
             QuestHelper.setStage(99);
             QuestHelper.setEndMissions(true);
@@ -220,13 +219,6 @@ public class QuestStageManager extends BaseCampaignEventListener implements Ever
         }
         //start job5
         if (stage ==15) {
-            //no longer used, now manually spawn by barEventFixer
-            //BAR EVENT
-            //if (!barStage5.val) {
-                //PortsideBarData.getInstance().addEvent(new KQuest5Bar());
-                //log("Qmanager added bar event for job5");
-                //barStage5.val = true;
-            //}
             //cache found check
             if (!QuestHelper.getCompleted(FOUND_CACHE_KEY) && Global.getSector().getStarSystem("Unknown Site").isEnteredByPlayer()) {
                 QuestHelper.setCompleted(true, FOUND_CACHE_KEY);
@@ -298,49 +290,6 @@ public class QuestStageManager extends BaseCampaignEventListener implements Ever
         }
         //FLEETS
         List<FleetInfo> fleets = FleetHelper.getFleets(FLEET_ARRAY_KEY);
-        //log("FleetInfo size "+fleets.size());
-
-        //DEBUG CODE
-        //TODO
-        // undo
-        //QuestUtil.setCompleted(true, ArtifactDialog.RECOVERED_4_KEY);
-        //QuestUtil.setCompleted(true, ArtifactDialog.RECOVERED_3_KEY);
-        //ArtifactDialog.setRecoveredSatelliteCount(2);
-        //QuestUtil.setCompleted(true, JOB5_FOUND_FROST_KEY);
-        //QuestUtil.setCompleted(true, GlacierCommsDialog.RECOVERED_KEY);
-        //QuestUtil.setCompleted(true, nskr_kestevenQuest.JOB5_ALICE_TIP_KEY);
-        //QuestUtil.setCompleted(true, nskr_kestevenQuest.JOB5_ALICE_TIP_KEY2);
-        //QuestUtil.setCompleted(true, nskr_kestevenQuest.JOB5_JACK_TIP_KEY);
-        //QuestUtil.setCompleted(true, JOB5_FOUND_ELIZA_KEY);
-        //QuestUtil.setCompleted(true, ElizaDialog.DIALOG_FINISHED_KEY);
-        //QuestUtil.setCompleted(true, ElizaDialog.ELIZA_HELP_KEY);
-
-        //if(QuestUtil.getElizaLoc()==null) {
-        //    QuestUtil.setElizaLoc();
-        //    PersonAPI eliza = Gen.genEliza();
-        //    QuestUtil.getElizaLoc().getMarket().getCommDirectory().addPerson(eliza, 1);
-        //    QuestUtil.getElizaLoc().getMarket().addPerson(eliza);
-        //    log("Eliza loc " + QuestUtil.getElizaLoc().getMarket().getName());
-        //}
-
-        //QuestUtil.setCompleted(true, FOUND_CACHE_KEY);
-        //if (QuestUtil.getDisksRecovered()==0) {
-        //    QuestUtil.setDisksRecovered(5);
-        //}
-
-       //int targetStage = 15;
-       //int s = stage;
-       //frameWait2++;
-       //if (frameWait2>50) {
-       //    if (stage < targetStage) {
-       //        frameWait2=0;
-       //        s++;
-       //        QuestUtil.setStage(s);
-       //    }
-       //}
-       //if (Global.getSector().getFaction(Factions.PLAYER).getRelationship("kesteven")<0.9f){
-       //    Global.getSector().getFaction(Factions.PLAYER).setRelationship("kesteven", 1f);
-       //}
 
         //start job 1
         if (stage ==1) {
@@ -505,7 +454,7 @@ public class QuestStageManager extends BaseCampaignEventListener implements Ever
                 } else {
                     pingTimer += amount;
                 }
-                //press X to doubt
+                //cache doubt dialog
                 if (cacheTimer.val > 35f) {
                     if (!cacheLoc.val) {
                         QuestHelper.setCacheFleetLoc();
@@ -550,7 +499,7 @@ public class QuestStageManager extends BaseCampaignEventListener implements Ever
             //cache mote particles
             if (Math.random()<0.004f)MoteParticleScript.spawnMote(pf);
         }
-        //job5 finish commission unfucker Eliza
+        //job5 finish: restore the commission after the Eliza ending
         if (QuestHelper.getCompleted(EndingElizaDialog.COMMISSION_RESTORE_KEY) && !commission.val){
             //have to wait a few frames for the vanilla commission to end
             frameWait++;
@@ -577,7 +526,6 @@ public class QuestStageManager extends BaseCampaignEventListener implements Ever
                     }
                 }
                 commission.val = true;
-                //log("COMMISSION "+repPirates+" "+repKesteven+" "+repHege);
             }
         }
         //player betrays Eliza after completing the mission for her
@@ -646,10 +594,6 @@ public class QuestStageManager extends BaseCampaignEventListener implements Ever
 
             //
             fleetCounter.val = 0f;
-            //log("MANAGING " + fleets.size() + " fleets");
-            //for (FleetInfo f : fleets){
-            //    log(f.fleet.getName());
-            //}
         }
     }
 
@@ -883,8 +827,6 @@ public class QuestStageManager extends BaseCampaignEventListener implements Ever
                     despawn = true;
                     log("Qmanager cache no fleet");
                 }
-                //despawn = true;
-                //cacheGuardian.val = false;
 
                 Vector2f fp = fleet.getLocationInHyperspace();
                 Vector2f pp = pf.getLocationInHyperspace();
@@ -972,11 +914,6 @@ public class QuestStageManager extends BaseCampaignEventListener implements Ever
             //eliza fleet, after recovering UPC
             if (fleet.getMemoryWithoutUpdate().contains(ELIZA_INTERCEPT_FLEET_KEY)){
                 boolean despawn = false;
-
-                //for (FleetMemberAPI m :   fleet.getMembersWithFightersCopy()){
-                //    log("ID "+ m.getId());
-                //    log("TAGS "+ m.getVariant().getTags().toString());
-                //}
 
                 //destroyed
                 if (fleet.getFleetPoints()<=0) {
@@ -1211,8 +1148,6 @@ public class QuestStageManager extends BaseCampaignEventListener implements Ever
 
         //target destroyed check
         if (fleet.getMemoryWithoutUpdate().contains(JOB4_TARGET_KEY)){
-
-            //log("J4T tags "+fleet.getFlagship().getVariant().getTags().toString());
 
             if (fleet.getFleetPoints() < (f.strength * 0.20f)) {
                 despawn = true;

@@ -36,8 +36,6 @@ import java.util.*;
 
 public class nskr_shipSwap extends PaginatedOptions {
 
-	//Copy pasted from Nexelerin you should use the non cursed og
-
 	public static final String POINTS_KEY = "$nskr_shipSwapPoints";
 	public static final String STOCK_ARRAY_KEY = "$nskr_shipSwapStock";
 	public static final String TO_PURCHASE_KEY = "$nskr_shipSwapToPurchasse";
@@ -144,16 +142,6 @@ public class nskr_shipSwap extends PaginatedOptions {
 		memoryMap.get(MemKeys.LOCAL).set("$nskr_shipSwap_pointsStr", Misc.getWithDGS((int)points) + "", 0);
 	}
 	
-	//@Override
-	//public void showOptions() {
-	//	super.showOptions();
-	//	for (String optId : disabledOpts)
-	//	{
-	//		dialog.getOptionPanel().setEnabled(optId, false);
-	//	}
-	//	dialog.getOptionPanel().setShortcut("ShipSwapMenuReturn", Keyboard.KEY_ESCAPE, false, false, false, false);
-	//}
-
 	public void updateOptions() {
 		for (String optId : disabledOpts)
 		{
@@ -365,8 +353,7 @@ public class nskr_shipSwap extends PaginatedOptions {
 						cargo.sort();
 						for (CargoStackAPI stack : cargo.getStacksCopy()) {
 							toPurchase.add(stack.getWeaponSpecIfWeapon().getWeaponId());
-							//empty cargo stacks are worth 10 credits????
-							//add a check I guess
+							// Only weapon stacks count; other stacks report a base value of 10 credits.
 							if (!stack.isWeaponStack()) continue;
 							cost+=stack.getBaseValuePerUnit();
 						}
@@ -379,7 +366,6 @@ public class nskr_shipSwap extends PaginatedOptions {
 							if (!getToPurchase().isEmpty()) {
 								for (String id : getToPurchase()) {
 									if (id.length()<=0) continue;
-									//this is so bad
 									FleetMemberAPI member = null;
 									try {
 										member = Global.getFactory().createFleetMember(FleetMemberType.SHIP, id + "_empty");

@@ -64,8 +64,6 @@ public class EndingKestevenDialog implements InteractionDialogPlugin {
 
         text.setFontInsignia();
 
-        //options.addOption("Leave", OptionId.LEAVE);
-
         int stage = QuestHelper.getStage();
         boolean killEliza = QuestHelper.getCompleted(QuestStageManager.KILLED_ELIZA_KEY);
         if (stage >= 19 && !QuestHelper.getCompleted(DIALOG_FINISHED_KEY)) {
@@ -137,7 +135,6 @@ public class EndingKestevenDialog implements InteractionDialogPlugin {
             //rewards
             CargoAPI playerCargo = Global.getSector().getPlayerFleet().getCargo();
             //BPs
-            //playerCargo.addSpecial(new SpecialItemData("Prot_wp", null), 1);
             playerCargo.addSpecial(new SpecialItemData("nskr_prot_light", null), 1);
             //credits
             playerCargo.getCredits().add(nskr_kestevenQuest.STAGE5_PAYOUT);
@@ -158,7 +155,6 @@ public class EndingKestevenDialog implements InteractionDialogPlugin {
             text.addPara("Gained 1 Story point",g,s,"1 Story point","");
             //acquire text
             text.addPara("Received +" + payout,g,h,"+"+payout,"");
-            //text.addPara("Acquired Prototype Weapons blueprint chip",g,h,"Prototype Weapons","");
             text.addPara("Acquired Prototype Light Ships blueprint chip",g,h,"Prototype Light Ships","");
             //Exchange
             text.addPara("Acquired "+Misc.getWithDGS(REWARD_POINTS)+" exchange points",g,h,Misc.getWithDGS(REWARD_POINTS)+" exchange points","");
@@ -201,7 +197,6 @@ public class EndingKestevenDialog implements InteractionDialogPlugin {
         }
 
         if(arrived){
-            //dialog.getVisualPanel().showPersonInfo(eliza, false);
             dialog.getVisualPanel().showPersonInfo(jack, true);
             dialog.getVisualPanel().showSecondPerson(alice);
         }

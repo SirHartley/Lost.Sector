@@ -88,24 +88,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
-/*
-        ⣿⣿⠏⠁⠄⠄⠄⠄⠄⠄⠤⠤⠤⠄⠄⠄⠄⠄⠄⠄⠄⠐⠶⠄⠉⠻⣿⣿⣿
-        ⠁⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⢀⡀⠄⠄⠄⠄⠄⠄⠄⠄⠄⠢⠄⡀⠄⠸⣿⣿
-        ⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⣰⣾⠿⠶⠂⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠙⠿
-        ⠄⠄⠄⠄⠄⠄⠄⣀⣴⠿⡓⠤⢂⣤⠄⠄⠄⣴⣢⣶⣦⠄⠄⠡⠰⠠⡀⠄⠄
-        ⠄⠄⠄⠄⠄⠄⠾⠋⠄⠄⠄⠐⠋⠄⠄⣠⠾⣿⣿⣿⣿⡧⠄⠄⠉⠁⠄⠄⠄
-        ⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⣠⣤⣶⣾⣿⣿⣿⣿⣿⣄⠄⠄⠄⠄⠄⠄
-        ⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⢺⣿⣿⣿⠟⠛⠛⠉⠉⠭⣭⣷⠄⠄⠄⠄⠄
-        ⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⢀⣼⣿⣿⣷⣶⣿⣶⣶⣿⣶⣾⣿⠄⠄⠄⠄⢀
-        ⠄⠄⠄⠄⠄⠄⣀⣀⣀⣠⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡇⠄⠄⠄⢀⣾
-        ⠄⠄⠄⠄⠄⠄⣿⣿⣿⣿⡿⠛⠻⣿⣿⠿⢿⣿⣿⣿⣿⣿⠟⠃⠄⠄⢠⣿⣿
-        ⣦⠄⠄⠄⠄⠄⠈⢿⣿⣿⣿⣶⣤⣤⣤⣤⣾⣿⣿⣿⣿⡏⠄⠄⠄⠠⣾⣿⣿
-        ⢿⣷⡄⠄⢀⠄⠄⠘⣿⣦⠄⠄⠤⣤⣤⣤⣠⣭⣼⡿⠁⠄⡀⢀⣤⣰⣿⣿⣿
-        ⣿⣿⣇⢠⣼⡇⠄⠄⠘⢿⣷⣶⣦⣤⣤⣶⣿⣿⡿⠁⠄⠄⠁⢸⣿⣿⣿⣿⣿
-        ⠙⢻⣿⣿⡿⠇⠄⠄⠄⠄⠈⠙⠻⠿⠿⠟⠛⠋⠄⣀⣤⠄⠄⠄⠈⠻⣿⣿⣿
-        this mod powered by balls
-*/
-
 public class ModPlugin extends BaseModPlugin {
 
     public static ArrayList<BaseCampaignEventListener> EFS_LIST = new ArrayList<>();
@@ -121,13 +103,8 @@ public class ModPlugin extends BaseModPlugin {
     public static final String EMP_GRENADE_PROJECTILE = "nskr_emglShot_sub";
     public static final String TREMOR_PROJECTILE = "nskr_tremor1";
 
-    //save compat check stuff
+    // A save without this key receives the mod's world generation on load.
     public static final String SAVE_KEY = "nskr_enabled";
-    //public static final String VERSION_KEY = "nskr_0.5.0";
-    //public static final ArrayList<String> incompatibleVersions = new ArrayList<>();
-    //static {
-        //incompatibleVersions.add("nskr_0.5.0");
-    //}
 
     static void log(final String message) {
         Global.getLogger(ModPlugin.class).info(message);
@@ -149,7 +126,7 @@ public class ModPlugin extends BaseModPlugin {
         IS_TAHLAN = Global.getSettings().getModManager().isModEnabled("tahlan");
 
         if (IS_NEXERELIN) {
-            //NEX HACKS
+            // Keep Enigma out of Nexerelin's market transfers.
             try {
                 List<String> bannedFactions = Nex_TransferMarket.NO_TRANSFER_FACTIONS;
                 if (!bannedFactions.contains(Ids.ENIGMA_FACTION_ID)) {
@@ -176,7 +153,7 @@ public class ModPlugin extends BaseModPlugin {
     public void syncNSKRScripts() {
         if (!Global.getSector().hasScript(EnigmaFleetLoot.class)) {
             Global.getSector().addScript(new EnigmaFleetLoot());
-            //dumb but has to be done this way, transient just doesn't work, and neither does check for classes lol
+            // Added behind the EnigmaFleetLoot check: transient registration and listener class checks do not work for these.
             Global.getSector().getListenerManager().addListener(new CrushingDebt());
             Global.getSector().getListenerManager().addListener(new LicensingFees());
             Global.getSector().getListenerManager().addListener(new CommissionedCrewsBonus());
@@ -256,7 +233,7 @@ public class ModPlugin extends BaseModPlugin {
             Global.getSector().addTransientListener(script);
             Global.getSector().getListenerManager().addListener(script, true);
 
-            //reset Throne's gift kludge
+            // EFS_LIST instances carry over between saves, so re-read the loaded save's XP.
             if (script instanceof ThronesGiftManager){
                 ((ThronesGiftManager) script).reset();
             }
@@ -282,8 +259,7 @@ public class ModPlugin extends BaseModPlugin {
             onNewGameAfterEconomyLoad();
             onNewGameAfterTimePass();
 
-            //TODO fix this 4 real
-            //stupid temp hack
+            // Adding the mod to an existing save does not give Asteria a station commander.
             MarketAPI asteriaMarket = Global.getSector().getEconomy().getMarket("nskr_asteria");
             if (asteriaMarket!=null) {
                 PersonAPI commander = Global.getSector().getFaction("kesteven").createRandomPerson(new Random());
@@ -292,18 +268,9 @@ public class ModPlugin extends BaseModPlugin {
                 asteriaMarket.getCommDirectory().addPerson(commander, 3);
                 asteriaMarket.addPerson(commander);
             }
-        } else {
-            //compatible version check
-            //String version = (String)data.get(SAVE_KEY);
-            //if (incompatibleVersions.contains(version)){
-            //    String versionParsed = version.replace("nskr_","");
-            //    throw new IllegalStateException("Incompatible version of LOST_SECTOR detected, revert your install to "+versionParsed+" load this save");
-            //}
         }
 
-        //HACKS
         FleetHelper.hackBrokenVariants();
-
     }
 
     //Thanks to HzDev for just making this for me
@@ -382,7 +349,6 @@ public class ModPlugin extends BaseModPlugin {
         //new save key
         Map<String, Object> data = Global.getSector().getPersistentData();
         if (!data.containsKey(SAVE_KEY)){
-            //data.put(SAVE_KEY, VERSION_KEY);
             data.put(SAVE_KEY, "Installed");
         }
         //hard mode
@@ -395,7 +361,6 @@ public class ModPlugin extends BaseModPlugin {
     public void onNewGameAfterProcGen() {
         if (!IS_NEXERELIN || SectorManager.getManager().isCorvusMode()) {
             Frost.generate(Global.getSector());
-            //for (int x = 0; x<100;x++)
             Outpost.generate(Global.getSector());
         }
         //once per campaign

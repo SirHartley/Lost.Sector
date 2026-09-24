@@ -36,7 +36,6 @@ public class PullbackStats extends BaseShipSystemScript {
         if (state == State.ACTIVE) {
             //TELEPORT
             if (!activated) {
-                //TeleporterPlugin.addTeleportation(ship, data.tPoint1);
                 ship.getLocation().set(data.tPoint1);
                 Vector2f vel = ship.getVelocity();
                 ship.getVelocity().set(MathHelper.scaleVector(vel, 0.2f));

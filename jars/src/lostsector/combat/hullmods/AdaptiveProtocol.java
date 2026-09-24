@@ -70,7 +70,6 @@ public class AdaptiveProtocol extends BaseHullMod {
         if (currentMode == null) {
             return;
         }
-        //i know what a switch is I SWEAR
         if (ship.getFluxTracker().isOverloaded() || ship.getFluxTracker().isVenting()){
             data.speedEffectLevel -= amount / 2.0f;
             data.weaponEffectLevel -= amount / 2.0f;
@@ -116,10 +115,6 @@ public class AdaptiveProtocol extends BaseHullMod {
             data.defenseEffectLevel = 0.0f;
         }
 
-        //Global.getCombatEngine().addFloatingText(ship.getLocation(),
-        //        data.speedEffectLevel +","+ data.weaponEffectLevel +","+ data.defenseEffectLevel,
-        //        40f, Color.cyan, ship, 0.5f, 1.0f);
-
         if (data.speedEffectLevel > 0.0f) {
             //speed only when moving forwards
             //vector time
@@ -129,10 +124,8 @@ public class AdaptiveProtocol extends BaseHullMod {
             float vAngle = VectorUtils.getFacing(sVel);
             float dist = Objects.requireNonNull(sVel).length();
             if (dist == 0f) vAngle = sAngle;
-            //angle fuckery
             float diff = vAngle - sAngle;
             if (diff < 0) diff *= -1f;
-            //engine.addFloatingText(sLoc, "test " + (int)vAngle +","+ (int)sAngle +","+ (int)diff, 30f, Color.cyan, ship, 0.5f, 1.0f);
             if ((sVel.length() > 0f) && (diff <= 30) || sVel.length() > 0f && (diff >= 330)) {
                 ship.getMutableStats().getMaxSpeed().modifyFlat(id, CHARGE_SPEED_FLAT * data.speedEffectLevel);
             } else {

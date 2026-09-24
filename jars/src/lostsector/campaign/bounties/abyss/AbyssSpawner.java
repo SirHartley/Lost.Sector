@@ -57,7 +57,6 @@ public class AbyssSpawner extends BaseCampaignEventListener implements EveryFram
     Saved<Boolean> newGame;
     Saved<Boolean> firstTime;
     private final List<CampaignFleetAPI> removed = new ArrayList<>();
-    //CampaignFleetAPI pf;
     Random random;
 
     //Weights for the different types of locations we can spawn to
@@ -223,7 +222,6 @@ public class AbyssSpawner extends BaseCampaignEventListener implements EveryFram
 
         //fleet
         SimpleFleet simpleFleet = new SimpleFleet(loc, FACTION, points, keys, random);
-        //SimpleFleet.type = FleetTypes.PATROL_LARGE;
         simpleFleet.maxShipSize = 3;
         simpleFleet.sMods = 3;
         simpleFleet.ignoreMarketFleetSizeMult = true;

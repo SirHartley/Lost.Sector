@@ -21,7 +21,6 @@ public class AdvancedShieldProjector extends BaseHullMod {
 	public static final float FOLD_BONUS = 1.00f;
 
 	public static final String INNER_LARGE = "graphics/lostsector/fx/nskr_protShield.png";
-	//public static final String INNER_LARGE = "graphics/fx/shields256.png";
 
 	public static final String MOD_ICON = "graphics/icons/hullsys/fortress_shield.png";
 
@@ -92,8 +91,6 @@ public class AdvancedShieldProjector extends BaseHullMod {
 				255,
 				MiscHelper.clamp255(Math.round(251 - ((250) * (fluxRatio)))),
 				MiscHelper.clamp255(Math.round(251 - ((250) * (fluxRatio)))),
-				//MiscLS.clamp255(Math.round(-50.54f)),
-				//MiscLS.clamp255(Math.round(500.65f)),
 				MiscHelper.clamp255(Math.round(175 + ((75 * fluxRatio)))));
 		ship.getShield().setInnerColor(shieldColor);
 		//tooltip stuff
@@ -101,8 +98,6 @@ public class AdvancedShieldProjector extends BaseHullMod {
 
 		float resBonus = 100f * - ((RESISTANCE_BONUS) * (fluxRatioRes));
 		float foldBonus = 100f * ((FOLD_BONUS) * (fluxRatioRes));
-
-		//Global.getCombatEngine().addFloatingText(ship.getLocation()," size " + (int)sizeBonus + " resBonus " + (int)resBonus + " foldBonus " + (int)foldBonus, 40f, Color.RED, ship, 0.5f, 1.0f);
 
 		ship.getMutableStats().getShieldDamageTakenMult().modifyPercent("nskr_focused_shield2", resBonus);
 		ship.getMutableStats().getShieldTurnRateMult().modifyPercent("nskr_focused_shield2", foldBonus);
@@ -129,9 +124,6 @@ public class AdvancedShieldProjector extends BaseHullMod {
 		} else {
 			tooltip.addPara("-Full resistance and fold bonus achieved at 75%% flux instead, if Stabilized Shields is installed.", pad, MiscHelper.NICE_YELLOW, "");
 		}
-		//tooltip.addPara("", 0.0f, Color.GREEN, new String[]{""});
-		//tooltip.addPara("-Prevents installation of certain hullmods.", 0.0f, Color.GREEN, new String[]{""});
-		//tooltip.addPara("-Shield Conversion - Front, Shield Shunt.", 0.0f, MiscLS.TT_ORANGE, new String[]{"Shield Conversion - Front, Shield Shunt"});
 	}
 
 	public String getDescriptionParam(int index, HullSize hullSize) {

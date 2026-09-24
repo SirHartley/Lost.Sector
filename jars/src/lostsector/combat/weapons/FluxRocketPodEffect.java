@@ -48,10 +48,6 @@ public class FluxRocketPodEffect implements EveryFrameWeaponEffectPlugin {
                     distance += 5f;
                     Vector2f point1 = MathUtils.getPointOnCircumference(point, distance, angle);
                     if (proj != null) {
-                        //MagicLensFlare.createSharpFlare(
-                        //        engine, ship, point,
-                        //        0.1f, MathUtils.getRandomNumberInRange(1f,5f), VectorUtils.getAngle(proj.getLocation(), point),
-                        //        FLARE_FRINGE_COLOR, FLARE_CORE_COLOR);
                         engine.addSmoothParticle(
                                 point1,
                                 proj.getVelocity(),

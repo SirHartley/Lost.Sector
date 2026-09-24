@@ -16,7 +16,7 @@ public class RapidFireAI implements ShipSystemAIScript {
     private CombatEngineAPI engine;
     private ShipAPI ship;
     private ShipwideAIFlags flags;
-    public static final float DEGREES = 69f; // (haha nice)
+    public static final float DEGREES = 69f;
     private final IntervalUtil timer = new IntervalUtil(0.40f, 0.70f);
     private boolean runOnce = false;
     private boolean countOnce = false;
@@ -86,8 +86,6 @@ public class RapidFireAI implements ShipSystemAIScript {
                 targets++;
             }
 
-            //macgyver debugger
-            //engine.addFloatingText(ship.getLocation(), "test " + this.getAverageRange(this.ship), 60f, Color.cyan, ship, 0.5f, 1.0f);
         if (targets>0) {
             ship.useSystem();
         }
