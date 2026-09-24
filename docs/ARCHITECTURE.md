@@ -10,19 +10,20 @@ Technical routing for the current implementation. Java paths below are relative 
 | [RULES.md](RULES.md) | Rules syntax, execution and project routing contracts |
 | [RULES_AUTHORING.md](RULES_AUTHORING.md) | Using and debugging commands, memory and text replacements, including Java integration; vanilla dictionaries and source corrections |
 | [UI.md](UI.md) | Java custom panels, widgets, renderers, sprites, tooltips, layout and input; shared text guidelines in DIALOGUE.md |
+| [Quest implementation](quests/README.md) | Kesteven questline stages, state and dialogue map; contracts and bounties |
 
 ## Start here
 
 | Change / symptom | Route |
 |---|---|
-| Kesteven questline stage or job | `rules.csv -> rulecmd/nskr_kestevenQuest -> quests/util/QuestUtil.getStage/setStage`; automatic transitions in `quests/util/QuestStageManager.advance()`; intel `intel/KQuest*Intel` |
+| Kesteven questline stage or job | `rules.csv -> rulecmd/nskr_kestevenQuest -> quests/util/QuestUtil.getStage/setStage`; automatic transitions in `quests/util/QuestStageManager.advance()`; intel `intel/KQuest*Intel`; [questline walkthrough](quests/KESTEVEN_QUESTLINE.md) |
 | Quest entity opens the wrong dialog | `CorePlugin.pickInteractionDialogPlugin -> quests/*Dialog`, `fleets/events/BlacksiteDialog`, `fleets/bounties/MothershipInteractionBlocker`, custom-start FIDs |
 | Endings and the production chip | `quests/EndingKestevenDialog`, `quests/EndingElizaDialog`, `rulecmd/nskr_altEndingDialogLuddic/TT -> QuestUtil.saveEnding()`; `econ/UnlimitedProductionChipCondition -> fleets/BlackOpsManager.getUPC()` |
-| Named bounties | `fleets/bounties/*Spawner -> intel/HintManager -> intel/*Intel -> loot/BountyLoot` |
+| Named bounties | `fleets/bounties/*Spawner -> intel/HintManager -> intel/*Intel -> loot/BountyLoot`; [bounty structure](quests/CONTRACTS_AND_BOUNTIES.md#named-bounties) |
 | Roaming Enigma fleets | `fleets/HyperspaceEnigmaSpawner`, `fleets/StalkerSpawner`, `procgen/DormantSpawner`, `procgen/EnigmaBaseSpawner` + `EnigmaDefenderPlugin`; officers `EnigmaAIConverter`; loot `loot/EnigmaFleetLootGenerator` |
 | Event fleets | `fleets/events/InterceptManager`, `fleets/events/LoanShark`, quest fleets from `QuestStageManager` via `quests/util/QuestFleets`; dialogue in `rules.csv` or `rulecmd/nskr_ttCollectorDialog`, `nskr_loanSharkDialog`, `nskr_elizaInterceptDialog` |
 | Debt, ship swap, S-mod removal | Official menus in `rules.csv -> rulecmd/nskr_debt`, `nskr_shipSwap`, `nskr_modRemoval`; monthly interest `CrushingDebt` |
-| Contracts | `person_missions.csv -> rulecmd/Contracts -> intel/ContractIntel`; `quests/jobs/ContractManager` |
+| Contracts | `person_missions.csv -> rulecmd/Contracts -> intel/ContractIntel`; `quests/jobs/ContractManager`; [contracts](quests/CONTRACTS_AND_BOUNTIES.md#contracts) |
 | Blacksites | `procgen/BlacksiteSpawner -> fleets/events/BlacksiteManager -> CorePlugin -> BlacksiteDialog` |
 | Custom starts | Nexerelin background -> `customStart/GamemodeManager` -> `HellSpawnManager` or `ThronesGiftManager`; unlocked by `LOST_SECTOR_cfg.json` |
 | New-game content, adding the mod to a save | `ModPlugin.onNewGame*` and the `SAVE_KEY` check in `onGameLoad`; [world generation](#save-identity) |
@@ -168,8 +169,8 @@ Folders contain related effects, AI and helpers; use `rg --files src/lostsector/
 | `quests/util/QuestStageManager` | Kesteven questline state and automatic transitions, quest fleets, failure to stage 99. Runs while paused. |
 | `quests/util/QuestUtil` | Stage and flag accessors over sector persistent data (`getStage`, `getCompleted`, `getFloat`), artifact spawning, `saveEnding()` |
 | `quests/util/QuestFleets`, `SimpleFleet`, `SimpleFleetMember`, `SimpleCaptain`, `SimpleSystem`, `FleetInfo` | Fleet and system builders shared by spawners |
-| `quests/*Dialog`, `quests/Job4HintWreck` | Java `InteractionDialogPlugin`s opened by `CorePlugin` |
-| `quests/KQuest3Bar`, `KQuest5Bar`, `KQuest5ElizaBar*`, `KestevenTipBar`, `KestevenTipBarCreator` | Bar events; `rulecmd/nskr_barEventFixer` adds `KQuest5Bar` and `KestevenTipBarCreator` creates `KestevenTipBar` |
+| `quests/*Dialog`, `quests/Job4HintWreck` | Java `InteractionDialogPlugin`s opened by `CorePlugin`; `CacheDoubtDialog` is opened by `QuestStageManager` |
+| `quests/KQuest3Bar`, `KQuest5Bar`, `KQuest5ElizaBar*`, `KestevenTipBar`, `KestevenTipBarCreator` | Bar events. `QuestStageManager` adds `KQuest3Bar` and the Eliza bars to `PortsideBarData`; `rulecmd/nskr_barEventFixer` adds `KQuest5Bar` on each visit; `KestevenTipBarCreator` creates `KestevenTipBar`. |
 | `quests/jobs/ContractManager`, `ContractInfo` | Contract failure checks; offer reset when its counter reaches 600 seconds (about 60 days) |
 | `graid/ElizaRaid`, `ElizaRaidObjectiveCreator` | Ground-raid objective for Eliza's data disks |
 | `intel/HintManager`, `HintIntel` | System hints for bounties and Frost |
@@ -275,14 +276,14 @@ Java custom-panel behavior, sprite state and drawing gotchas are in [UI.md](UI.m
 
 ## Live hazards
 
+Quest defects are listed with their quest: [Kesteven questline](quests/KESTEVEN_QUESTLINE.md#defects-found-by-reading-the-source), [contracts](quests/CONTRACTS_AND_BOUNTIES.md#contracts) and the [fleet conversations](quests/KESTEVEN_DIALOGUE.md#fleet-conversations).
+
 | Location | Hazard |
 |---|---|
-| `data/campaign/person_missions.csv` | The `Contracts` row names plugin `lostsector.rulecmd.campaign.Contracts`; the class is `lostsector.campaign.rulecmd.Contracts`. Vanilla `PersonMissionSpec.createMission()` instantiates this name. Runtime result not yet confirmed. |
 | `data/config/LunaSettings.csv` | Rows use mod ID `lost_sector`; the `ModPlugin` getters query `IdsLS.LOST_SECTOR_MOD_ID` (`lost.sector`). |
 | `ModPlugin.getRandomEnigmaFleetSizeMult()` | Without LunaLib, Starfarer and easy mode return the scripted-fleet multipliers instead of the Enigma ones. |
 | `CampaignTimer` | Reads its stored value only in its constructor, once per client session. Loading a second save in the same session keeps the first save's timers, and `CampaignTimer.save()` writes them into the second save. |
 | `ModPlugin.onGameLoad()` | `IS_NEXELERIN` is cleared for the rest of the session if `SectorManager.getManager()` is null on any load. |
-| `rulecmd/nskr_loanSharkDialog`, `nskr_ttCollectorDialog` | `case "setPaid"` has no `break` and falls into `canPay`. No row calls `setPaid`. |
 | `data/config/modSettings.json` | `MagicLib.bounty_board` is empty and only `modFiles/magicBounty_data_example.json` exists, so no MagicLib bounty is registered. |
 | `data/weapons/nskr_tremors.wpn` | A commented `everyFrameEffect` names the removed `scripts.kissa.LOST_SECTOR` package. |
 
