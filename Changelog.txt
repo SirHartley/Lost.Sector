@@ -21,6 +21,7 @@ Fixed - Hellspawn start: The Descent grants the Gate Conduit ability and the Hel
 Fixed - Crash when Gate Conduit calls in its swarms
 Fixed - Gate Conduit swarms no longer join battles against you or against other Enigma fleets, and no longer turn on you
 Fixed - The THRN and HOLY SPIRIT music now stops when their scene or fight ends
+Fixed - No More Chains (Kingslayer) no longer keeps its energy and missile rate of fire and flux cost bonuses after it switches off
 
 1.0.b
 Adjusted - Severely nerfed spawn rates for Borealis, Rhea and Kingslayer

@@ -42,7 +42,11 @@ public class UnchainedStats extends BaseShipSystemScript {
 		stats.getAcceleration().unmodify(id);
 		stats.getDeceleration().unmodify(id);
 		stats.getBallisticRoFMult().unmodify(id);
+		stats.getEnergyRoFMult().unmodify(id);
+		stats.getMissileRoFMult().unmodify(id);
 		stats.getBallisticWeaponFluxCostMod().unmodify(id);
+		stats.getEnergyWeaponFluxCostMod().unmodify(id);
+		stats.getMissileWeaponFluxCostMod().unmodify(id);
 	}
 	
 	public StatusData getStatusData(int index, State state, float effectLevel) {
