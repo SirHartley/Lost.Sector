@@ -39,7 +39,7 @@ public class AbyssIntel extends BaseIntelPlugin {
     }
 
     @Override
-    public void advance(float amount) {
+    protected void advanceImpl(float amount) {
         if (!AbyssSpawner.hasBountyShips(fleet)) {
             gone = true;
         }

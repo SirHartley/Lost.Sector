@@ -28,11 +28,6 @@ public class CacheIntel extends BaseIntelPlugin {
     }
 
     @Override
-    public void advance(float amount) {
-
-        }
-
-    @Override
     protected void notifyEnded() {
         super.notifyEnded();
         Global.getSector().removeScript(this);

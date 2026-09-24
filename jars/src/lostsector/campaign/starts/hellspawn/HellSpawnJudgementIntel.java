@@ -35,7 +35,7 @@ public class HellSpawnJudgementIntel extends BaseIntelPlugin {
     }
 
     @Override
-    public void advance(float amount) {
+    protected void advanceImpl(float amount) {
         pf = Global.getSector().getPlayerFleet();
         if (pf == null) return;
 

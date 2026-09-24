@@ -24,11 +24,6 @@ public class FrostIntel extends BaseIntelPlugin {
         Global.getSector().addScript(this);
     }
 
-    @Override
-    public void advance(float amount) {
-
-    }
-
     //updates variables, DO NOT do this in advance
     private void init(){
         if (!SectorLookup.enigmaExists()){

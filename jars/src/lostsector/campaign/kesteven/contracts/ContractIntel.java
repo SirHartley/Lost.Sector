@@ -43,7 +43,7 @@ public class ContractIntel extends BaseIntelPlugin {
     }
 
     @Override
-    public void advance(float amount) {
+    protected void advanceImpl(float amount) {
 
         if (!completed && contract.completedCount>=contract.count){
             Color h = Misc.getHighlightColor();

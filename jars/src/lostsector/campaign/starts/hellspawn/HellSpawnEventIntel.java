@@ -64,10 +64,6 @@ public class HellSpawnEventIntel extends BaseEventIntel implements FleetEventLis
         return (HellSpawnEventIntel) Global.getSector().getMemoryWithoutUpdate().get(MEMORY_KEY);
     }
 
-    @Override
-    public void advance(float amount) {
-    }
-
     public void addStageDesc(TooltipMakerAPI info, Object stageId, float initPad, boolean forTooltip) {
         float opad = 10f;
         Color h = Misc.getHighlightColor();

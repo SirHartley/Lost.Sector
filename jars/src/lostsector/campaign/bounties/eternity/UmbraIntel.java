@@ -35,7 +35,7 @@ public class UmbraIntel extends BaseIntelPlugin {
     }
 
     @Override
-    public void advance(float amount) {
+    protected void advanceImpl(float amount) {
         if (fleet.getFlagship()==null || flagship != fleet.getFlagship()) {
             gone = true;
         }

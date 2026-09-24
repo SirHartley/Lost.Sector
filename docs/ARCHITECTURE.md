@@ -194,7 +194,7 @@ Packages group code by feature. Use `rg --files jars/src/lostsector/<package>` f
 | `kesteven/contracts/*` | `ContractsMission`, `ContractInfo`, `ContractIntel`, `ContractManager` (failure checks; offer reset when its counter reaches 600 seconds, about 60 days) |
 | `events/hints/HintManager`, `HintIntel` | System hints for bounties and Frost |
 
-Intel classes add themselves as scripts.
+Intel classes add themselves as scripts and put their per-frame logic in `advanceImpl()`. Vanilla `BaseIntelPlugin.advance()` runs the `endAfterDelay()` countdown, stops calling `advanceImpl()` once the intel is ending and reports the script done once it has ended; overriding `advance()` disables all of that.
 
 ### Custom starts
 

@@ -48,7 +48,7 @@ public class OperationLifesaverIntel extends BaseIntelPlugin {
     }
 
     @Override
-    public void advance(float amount) {
+    protected void advanceImpl(float amount) {
         this.pf = Global.getSector().getPlayerFleet();
         if (this.pf == null) return;
         if (QuestHelper.getEndMissions()){
