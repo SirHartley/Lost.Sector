@@ -14,6 +14,8 @@ Fixed - The mod jar no longer contains a second copy of all mod files
 Adjusted - LunaLib is now required; all Lost.Sector settings are in its Mod Settings menu
 Removed - LOST_SECTOR_OPTIONS.ini settings file
 Adjusted - Easy and TRUE STARFARER are now choices of a single Difficulty setting; choose your difficulty again after updating
+Added - Mod Settings switches for the Throne's Gift and Hellspawn starts and the story skip; finishing the Kesteven questline turns them on
+Adjusted - Unlocks earned before this version do not carry over; switch them on in Mod Settings
 
 1.0.b
 Adjusted - Severely nerfed spawn rates for Borealis, Rhea and Kingslayer

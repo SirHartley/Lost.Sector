@@ -212,7 +212,7 @@ Salvage reports the UPC, grants one Alpha Core and 50 to 100 Artifact Electronic
 
 ## Stage 19: who receives the Chip
 
-All four endings set stage 20 and call `QuestHelper.saveEnding()`. That writes `completedStory` to `LOST_SECTOR_cfg.json`, and `completedStoryHard` when Starfarer mode was on from the start. These flags unlock the custom-start backgrounds and the story skip in later campaigns.
+All four endings set stage 20 and call `QuestHelper.saveEnding()`. That turns on the `thronesGiftUnlocked` and `storySkipUnlocked` settings, and `hellspawnUnlocked` while `nskr_starfarerFromStart` is true (TRUE STARFARER difficulty since the start). These LunaLib settings unlock the custom-start backgrounds and the story skip in later campaigns; the player can also switch them in LunaLib's menu.
 
 | Ending | How | Main results |
 |---|---|---|
@@ -250,7 +250,7 @@ The questline option then disappears. The Cache can still be found and fought; `
 
 ## Story skip
 
-After a completed questline (`completedStory` in `LOST_SECTOR_cfg.json`), offers show a 5-story-point "Skip story" option. `SkipStoryOptionPicked` would place all job 3 and job 4 objects, mark every job 5 tip and disk source as done, set the Eliza help flags, generate Eliza, set stage 17 and disable the hard-mode completion flag. No rule reaches it; see the defects.
+While the `storySkipUnlocked` setting is on, offers show a 5-story-point "Skip story" option. `SkipStoryOptionPicked` would place all job 3 and job 4 objects, mark every job 5 tip and disk source as done, set the Eliza help flags, generate Eliza, set stage 17 and disable the hard-mode completion flag. No rule reaches it; see the defects.
 
 ## Defects found by reading the source
 

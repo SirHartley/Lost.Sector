@@ -14,7 +14,7 @@ Java paths are relative to `jars/src/lostsector/campaign/`; `dialogue/rules/` an
 | Quest fleet list | Sector memory `$kQuestMissionFleets`, a `List<FleetInfo>` | Read and written by `FleetHelper.getFleets/setFleets`. `FleetInfo.age` is in days. |
 | Fleet, entity and person memory | The owning `MemoryAPI` | Routing flags read by `rules.csv` and `CorePlugin`. |
 | Saved objects | Bar events in `PortsideBarData`, intel in the intel manager, `ElizaRaidObjectiveCreator` as a listener | Their class names and fields are serialized. |
-| Per installation | `LOST_SECTOR_cfg.json` through `ModPlugin.saveToConfig/loadFromConfig` | `completedStory`, `completedStoryHard`; shared by all campaigns |
+| Per installation | LunaLib settings: `settings/SettingsManager.set` and `Setting` reads | `thronesGiftUnlocked`, `hellspawnUnlocked`, `storySkipUnlocked`; shared by all campaigns |
 
 ## Stage and end
 
@@ -131,7 +131,7 @@ Each owner keeps its own `Random` in persistent data. Most are seeded from the s
 | `KestevenQuestJob5JackRevengeance` (`JACK_GONE_KEY`) | Jack left for revenge | `QuestStageManager.vengeanceJack` |
 | `RevengeanceElizaBetrayByPlayer` | Player took Eliza's market after her ending | `QuestStageManager` |
 | `nskr_ttCollectorDialogKey` | Collector paid | `nskr_ttCollectorDialog` |
-| `nskr_starfarerFromStart` | Cleared by the story skip | `nskr_kestevenQuest` |
+| `nskr_starfarerFromStart` | TRUE STARFARER difficulty since the start; `QuestHelper.saveEnding()` reads it for `hellspawnUnlocked` | `ModPlugin.onNewGame`; cleared by `Difficulty.clearStarfarerFromStartUnlessStarfarer()` and the story skip (`nskr_kestevenQuest`) |
 
 ## `persistence/Saved` fields in `QuestStageManager`
 

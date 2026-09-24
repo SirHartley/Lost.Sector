@@ -11,7 +11,10 @@ public enum Setting {
 
     DIFFICULTY(Difficulty.class),
     SCRIPTED_FLEET_SCALING(FieldType.DOUBLE),
-    RANDOM_ENIGMA_FLEET_SCALING(FieldType.DOUBLE);
+    RANDOM_ENIGMA_FLEET_SCALING(FieldType.DOUBLE),
+    THRONES_GIFT_UNLOCKED(FieldType.BOOLEAN),
+    HELLSPAWN_UNLOCKED(FieldType.BOOLEAN),
+    STORY_SKIP_UNLOCKED(FieldType.BOOLEAN);
 
     enum FieldType {
 

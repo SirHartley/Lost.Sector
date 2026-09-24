@@ -27,6 +27,7 @@ import lostsector.campaign.kesteven.quest.QuestFleets;
 import lostsector.campaign.kesteven.quest.QuestStageManager;
 import lostsector.campaign.kesteven.quest.QuestHelper;
 import lostsector.ModPlugin;
+import lostsector.settings.Setting;
 import lostsector.helper.Ids;
 import lostsector.helper.MathHelper;
 import lostsector.helper.MiscHelper;
@@ -267,7 +268,7 @@ public class nskr_kestevenQuest extends PaginatedOptions {
 		diskCount = QuestHelper.getDisksRecovered();
 		allDisks = QuestHelper.getDisksRecovered()>=5;
 
-		storyCompleted = (boolean) ModPlugin.loadFromConfig(ModPlugin.COMPLETED_STORY_KEY);
+		storyCompleted = Setting.STORY_SKIP_UNLOCKED.getBoolean();
 	}
 	
 	//@Override

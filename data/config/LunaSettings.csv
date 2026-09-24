@@ -4,3 +4,7 @@ difficulty,Difficulty,Radio,Normal,"Normal, Easy, TRUE STARFARER","Normal uses t
 fleetsText,Fleets Note,Text,Changes apply only to fleets that spawn afterwards. These sizes are used on Normal difficulty only.,,,,,Fleets
 scriptedFleetScaling,Scripted Fleet Size Multiplier,Double,1,,Size multiplier for scripted event and quest fleets. Scales only the randomly generated part of each fleet.,0.1,5,Fleets
 randomEnigmaFleetScaling,Random Enigma Fleet Size Multiplier,Double,1,,Size multiplier for wandering Enigma fleets. Set to 0 to stop them from spawning.,0,5,Fleets
+unlocksText,Unlocks Note,Text,Finishing the Kesteven questline turns these on for all later games. The Hellspawn start also needs TRUE STARFARER difficulty.,,,,,Unlocks
+thronesGiftUnlocked,Throne's Gift Start,Boolean,FALSE,,Makes the Throne's Gift background selectable when you start a new game with Nexerelin.,,,Unlocks
+hellspawnUnlocked,Hellspawn Start,Boolean,FALSE,,Makes the Hellspawn background selectable when you start a new game with Nexerelin.,,,Unlocks
+storySkipUnlocked,Story Skip,Boolean,FALSE,,Offers a story point option to skip ahead in the Kesteven questline.,,,Unlocks

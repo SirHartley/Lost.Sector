@@ -82,10 +82,7 @@ import lunalib.lunaSettings.LunaSettings;
 import org.dark.shaders.light.LightData;
 import org.dark.shaders.util.ShaderLib;
 import org.dark.shaders.util.TextureData;
-import org.json.JSONException;
-import org.lazywizard.lazylib.JSONUtils;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -114,9 +111,6 @@ public class ModPlugin extends BaseModPlugin {
     public static ArrayList<BaseCampaignEventListener> EFS_LIST = new ArrayList<>();
 
     public static final String STARFARER_MODE_FROM_START_KEY = "nskr_starfarerFromStart";
-
-    public static final String COMPLETED_STORY_KEY = "completedStory";
-    public static final String COMPLETED_STORY_HARD_KEY = "completedStoryHard";
 
     public static boolean IS_NEXERELIN = false;
     public static boolean IS_INDEVO = false;
@@ -166,7 +160,6 @@ public class ModPlugin extends BaseModPlugin {
 
         //CONFIG
         SettingsManager.load();
-        createDefaultConfig();
     }
 
     @Override
@@ -327,72 +320,6 @@ public class ModPlugin extends BaseModPlugin {
             }
         }
         return false;
-    }
-
-    public static void createDefaultConfig(){
-
-        JSONUtils.CommonDataJSONObject config = null;
-        try {
-            config = JSONUtils.loadCommonJSON("LOST_SECTOR_cfg.json", "data/config/LOST_SECTOR_cfg.default");
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        } catch (JSONException e) {
-            throw new RuntimeException(e);
-        }
-
-        try {
-            config.save();
-        } catch (JSONException e) {
-            throw new RuntimeException(e);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-
-    }
-
-    public static void saveToConfig(String id, Object data){
-
-        JSONUtils.CommonDataJSONObject config = null;
-        try {
-            config = JSONUtils.loadCommonJSON("LOST_SECTOR_cfg.json", "data/config/LOST_SECTOR_cfg.default");
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        } catch (JSONException e) {
-            throw new RuntimeException(e);
-        }
-
-        try {
-            config.put(id, data);
-        } catch (JSONException e) {
-            throw new RuntimeException(e);
-        }
-
-        try {
-            config.save();
-        } catch (JSONException e) {
-            throw new RuntimeException(e);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-
-    }
-
-    public static Object loadFromConfig(String id){
-
-        JSONUtils.CommonDataJSONObject config = null;
-        try {
-            config = JSONUtils.loadCommonJSON("LOST_SECTOR_cfg.json", "data/config/LOST_SECTOR_cfg.default");
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        } catch (JSONException e) {
-            throw new RuntimeException(e);
-        }
-
-        try {
-            return config.get(id);
-        } catch (JSONException e) {
-            throw new RuntimeException(e);
-        }
     }
 
     @Override

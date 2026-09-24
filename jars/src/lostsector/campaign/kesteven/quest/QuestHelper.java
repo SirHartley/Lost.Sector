@@ -15,6 +15,8 @@ import lostsector.campaign.kesteven.ExileManager;
 import lostsector.campaign.kesteven.quest.ElizaSearchBarEvent;
 import lostsector.dialogue.rules.nskr_kestevenQuest;
 import lostsector.ModPlugin;
+import lostsector.settings.Setting;
+import lostsector.settings.SettingsManager;
 import lostsector.helper.MathHelper;
 import lostsector.helper.MiscHelper;
 import org.jetbrains.annotations.Nullable;
@@ -527,15 +529,12 @@ public class QuestHelper {
     //}
 
     public static void saveEnding(){
-
-        //default
-        ModPlugin.saveToConfig(ModPlugin.COMPLETED_STORY_KEY, true);
-        //hard
+        SettingsManager.set(Setting.THRONES_GIFT_UNLOCKED, true);
+        SettingsManager.set(Setting.STORY_SKIP_UNLOCKED, true);
         Map<String, Object> data = Global.getSector().getPersistentData();
-        if (data.containsKey(ModPlugin.STARFARER_MODE_FROM_START_KEY)) {
-            if ((boolean) data.get(ModPlugin.STARFARER_MODE_FROM_START_KEY)) ModPlugin.saveToConfig(ModPlugin.COMPLETED_STORY_HARD_KEY, true);
+        if (Boolean.TRUE.equals(data.get(ModPlugin.STARFARER_MODE_FROM_START_KEY))) {
+            SettingsManager.set(Setting.HELLSPAWN_UNLOCKED, true);
         }
-
     }
 
     public static int getStage() {

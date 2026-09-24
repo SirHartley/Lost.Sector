@@ -10,17 +10,11 @@ import com.fs.starfarer.api.util.Misc;
 import exerelin.campaign.backgrounds.BaseCharacterBackground;
 import exerelin.utilities.NexFactionConfig;
 import lostsector.campaign.starts.thronesgift.ThronesGiftIntel;
-import lostsector.ModPlugin;
+import lostsector.settings.Setting;
 
 import java.awt.*;
 
 public class ThronesGiftBackground extends BaseCharacterBackground {
-
-    private final boolean unlocked;
-
-    public ThronesGiftBackground(){
-        unlocked = (boolean) ModPlugin.loadFromConfig(ModPlugin.COMPLETED_STORY_KEY);
-    }
 
     @Override
     public boolean shouldShowInSelection(FactionSpecAPI factionSpec, NexFactionConfig factionConfig) {
@@ -30,48 +24,48 @@ public class ThronesGiftBackground extends BaseCharacterBackground {
 
     @Override
     public boolean canBeSelected(FactionSpecAPI factionSpec, NexFactionConfig factionConfig) {
-        return unlocked;
+        return isUnlocked();
     }
 
     @Override
     public void canNotBeSelectedReason(TooltipMakerAPI tooltip, FactionSpecAPI factionSpec, NexFactionConfig factionConfig) {
-        if (!unlocked) tooltip.addPara("[LOCKED]", 2f);
+        if (!isUnlocked()) tooltip.addPara("[LOCKED]", 2f);
     }
 
     @Override
     public String getTitle(FactionSpecAPI factionSpec, NexFactionConfig factionConfig) {
-        if (!unlocked) return spec.title+" [LOCKED]";
+        if (!isUnlocked()) return spec.title+" [LOCKED]";
         return spec.title;
     }
 
     @Override
     public String getShortDescription(FactionSpecAPI factionSpec, NexFactionConfig factionConfig) {
-        if (!unlocked) return "Complete the Kesteven questline on any difficulty to unlock this background.";
+        if (!isUnlocked()) return "Complete the Kesteven questline on any difficulty to unlock this background.";
         return spec.shortDescription;
     }
 
     @Override
     public String getLongDescription(FactionSpecAPI factionSpec, NexFactionConfig factionConfig) {
-        if (!unlocked) return "Can't be selected.";
+        if (!isUnlocked()) return "Can't be selected.";
         return spec.longDescription;
     }
 
     @Override
     public float getOrder() {
-        if (!unlocked) return Integer.MAX_VALUE-1;
+        if (!isUnlocked()) return Integer.MAX_VALUE-1;
         return spec.order;
     }
 
     @Override
     public void onNewGameAfterEconomyLoad(FactionSpecAPI factionSpec, NexFactionConfig factionConfig) {
-        if (!unlocked) return;
+        if (!isUnlocked()) return;
         GameModeManager.setMode(GameModeManager.gameMode.THRONESGIFT);
 
     }
 
     @Override
     public void onNewGameAfterTimePass(FactionSpecAPI factionSpec, NexFactionConfig factionConfig) {
-        if (!unlocked) return;
+        if (!isUnlocked()) return;
         Global.getSector().getIntelManager().addIntel( new ThronesGiftIntel());
 
         Global.getSector().getPlayerFaction().setRelationship(Factions.LUDDIC_PATH, -0.80f);
@@ -87,7 +81,7 @@ public class ThronesGiftBackground extends BaseCharacterBackground {
         Color tc = Misc.getTextColor();
         float pad = 10.0f;
 
-        if (expanded && unlocked) {
+        if (expanded && isUnlocked()) {
             tooltip.addPara("Start with "+(int) ThronesGiftManager.DEFAULT_DP+" automation points.", pad, tc, hl, (int) ThronesGiftManager.DEFAULT_DP+"");
             tooltip.addPara("Unlock "+(int) ThronesGiftManager.DP_PER_UNLOCK+" more points every "+(int) ThronesGiftManager.XP_PER_UNLOCK+" experience gained.",
                     pad, tc, hl, (int) ThronesGiftManager.DP_PER_UNLOCK+"", (int) ThronesGiftManager.XP_PER_UNLOCK+"");
@@ -105,5 +99,9 @@ public class ThronesGiftBackground extends BaseCharacterBackground {
 
         tooltip.addPara("You started as a "+factionSpec.getPersonNamePrefixAOrAn()+" "+factionSpec.getDisplayName()+" captain, with the Throne's Gift background. Go to the Throne's Gift tab for more information.",
                 pad, tc, hl,"Throne's Gift");
+    }
+
+    private static boolean isUnlocked() {
+        return Setting.THRONES_GIFT_UNLOCKED.getBoolean();
     }
 }
