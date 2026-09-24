@@ -56,7 +56,7 @@ public class AdaptiveProtocol extends BaseHullMod {
             return;
         }
 
-        ShipSpecificData data = (ShipSpecificData) Global.getCombatEngine().getCustomData().get("TRACKER_DATA_KEY" + ship.getId());
+        ShipSpecificData data = (ShipSpecificData) Global.getCombatEngine().getCustomData().get("nskr_adaptiveProtocolData_" + ship.getId());
         if (data == null) {
             data = new ShipSpecificData();
         }
@@ -218,7 +218,7 @@ public class AdaptiveProtocol extends BaseHullMod {
             }
             Global.getCombatEngine().maintainStatusForPlayerShip(AS_BUFF_ID, AS_ICON, modeName, buffText, false);
         }
-        Global.getCombatEngine().getCustomData().put("TRACKER_DATA_KEY" + ship.getId(), data);
+        Global.getCombatEngine().getCustomData().put("nskr_adaptiveProtocolData_" + ship.getId(), data);
     }
 
     public void addPostDescriptionSection(TooltipMakerAPI tooltip, ShipAPI.HullSize hullSize, ShipAPI ship, float width, boolean isForModSpec) {
