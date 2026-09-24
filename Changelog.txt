@@ -11,6 +11,9 @@ None
 1.0.c
 Removed - Exotica Technologies integration (Temporal Conduits and Space Time Anchor upgrades), as Exotica is no longer updated
 Fixed - The mod jar no longer contains a second copy of all mod files
+Adjusted - LunaLib is now required; all Lost.Sector settings are in its Mod Settings menu
+Removed - LOST_SECTOR_OPTIONS.ini settings file
+Adjusted - Easy and TRUE STARFARER are now choices of a single Difficulty setting; choose your difficulty again after updating
 
 1.0.b
 Adjusted - Severely nerfed spawn rates for Borealis, Rhea and Kingslayer

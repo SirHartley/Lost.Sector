@@ -14,7 +14,7 @@ import com.fs.starfarer.api.characters.PersonAPI;
 import com.fs.starfarer.api.impl.campaign.ids.*;
 import lostsector.dialogue.rules.nskr_kestevenQuest;
 import lostsector.dialogue.rules.nskr_ttCollectorDialog;
-import lostsector.ModPlugin;
+import lostsector.settings.Difficulty;
 import lostsector.helper.FleetHelper;
 import lostsector.helper.MathHelper;
 import lostsector.helper.MiscHelper;
@@ -40,7 +40,7 @@ public class QuestFleets {
         float points = MathHelper.getSeededRandomNumberInRange(190f,200f, random);
 
         //apply settings
-        points *= ModPlugin.getScriptedFleetSizeMult();
+        points *= Difficulty.scriptedFleetMult();
 
         //skills
         Map<String, Integer> skills = new HashMap<>();
@@ -128,7 +128,7 @@ public class QuestFleets {
         float points = MathHelper.getSeededRandomNumberInRange(190f,200f, random);
 
         //apply settings
-        points *= ModPlugin.getScriptedFleetSizeMult();
+        points *= Difficulty.scriptedFleetMult();
 
         //skills
         Map<String, Integer> skills = new HashMap<>();
@@ -201,7 +201,7 @@ public class QuestFleets {
         log("tt collector BASE " + combatPoints);
 
         //apply settings
-        combatPoints *= ModPlugin.getScriptedFleetSizeMult();
+        combatPoints *= Difficulty.scriptedFleetMult();
 
         SectorEntityToken loc = pf.getContainingLocation().createToken(pf.getLocation());
 
@@ -248,7 +248,7 @@ public class QuestFleets {
         float combatPoints = MathHelper.getSeededRandomNumberInRange(8f, 25f, random);
 
         //apply settings
-        combatPoints *= ModPlugin.getScriptedFleetSizeMult();
+        combatPoints *= Difficulty.scriptedFleetMult();
 
         ArrayList<String> keys = new ArrayList<>();
         //aggro
@@ -289,7 +289,7 @@ public class QuestFleets {
         float combatPoints = MathHelper.getSeededRandomNumberInRange(40f, 45f, random);
 
         //apply settings
-        combatPoints *= ModPlugin.getScriptedFleetSizeMult();
+        combatPoints *= Difficulty.scriptedFleetMult();
 
         //skills
         Map<String, Integer> skills = new HashMap<>();
@@ -301,7 +301,7 @@ public class QuestFleets {
         skills.put(Skills.BALLISTIC_MASTERY,2);
         skills.put(Skills.IMPACT_MITIGATION,2);
         skills.put("ordnance_expert",2);
-        if (ModPlugin.getStarfarerMode()) skills.put(Skills.POLARIZED_ARMOR,2);
+        if (Difficulty.isStarfarer()) skills.put(Skills.POLARIZED_ARMOR,2);
         //com skills
         skills.put("electronic_warfare",1);
         skills.put("crew_training",1);
@@ -364,7 +364,7 @@ public class QuestFleets {
         float combatPoints = MathHelper.getSeededRandomNumberInRange(45f, 55f, random);
 
         //apply settings
-        combatPoints *= ModPlugin.getScriptedFleetSizeMult();
+        combatPoints *= Difficulty.scriptedFleetMult();
 
         //keys
         ArrayList<String> keys = new ArrayList<>();
@@ -404,7 +404,7 @@ public class QuestFleets {
         float combatPoints = MathHelper.getSeededRandomNumberInRange(130f, 140f, random);
 
         //apply settings
-        combatPoints *= ModPlugin.getScriptedFleetSizeMult();
+        combatPoints *= Difficulty.scriptedFleetMult();
 
         //keys
         ArrayList<String> keys = new ArrayList<>();

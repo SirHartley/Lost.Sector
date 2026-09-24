@@ -20,7 +20,7 @@ import lostsector.helper.fleet.FleetInfo;
 import lostsector.campaign.kesteven.quest.QuestStageManager;
 import lostsector.campaign.kesteven.quest.QuestHelper;
 import lostsector.helper.fleet.SimpleFleet;
-import lostsector.ModPlugin;
+import lostsector.settings.Difficulty;
 import lostsector.persistence.Saved;
 import lostsector.helper.FleetHelper;
 import lostsector.helper.MathHelper;
@@ -338,7 +338,7 @@ public class InterceptManager extends BaseCampaignEventListener implements Every
         combatPoints += combatPoints* PowerLevel.get(0.2f, 0f,2f);
 
         //apply settings
-        combatPoints *= ModPlugin.getScriptedFleetSizeMult();
+        combatPoints *= Difficulty.scriptedFleetMult();
 
         ArrayList<String> keys = new ArrayList<>();
         keys.add(MemFlags.MEMORY_KEY_MAKE_HOSTILE);
@@ -386,7 +386,7 @@ public class InterceptManager extends BaseCampaignEventListener implements Every
         combatPoints += combatPoints* PowerLevel.get(0.2f, 0f,2f);
 
         //apply settings
-        combatPoints *= ModPlugin.getScriptedFleetSizeMult();
+        combatPoints *= Difficulty.scriptedFleetMult();
 
         ArrayList<String> keys = new ArrayList<>();
         keys.add(MemFlags.FLEET_FIGHT_TO_THE_LAST);
@@ -430,7 +430,7 @@ public class InterceptManager extends BaseCampaignEventListener implements Every
         combatPoints += combatPoints * PowerLevel.get(0.2f, 0f,1.5f);
 
         //apply settings
-        combatPoints *= ModPlugin.getScriptedFleetSizeMult();
+        combatPoints *= Difficulty.scriptedFleetMult();
 
         ArrayList<String> keys = new ArrayList<>();
         keys.add(MemFlags.FLEET_IGNORES_OTHER_FLEETS);

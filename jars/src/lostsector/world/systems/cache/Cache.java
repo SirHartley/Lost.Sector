@@ -31,7 +31,7 @@ import com.fs.starfarer.api.util.Misc;
 import lostsector.campaign.kesteven.quest.DataSatelliteDialog;
 import lostsector.campaign.kesteven.quest.CacheCoreDialog;
 import lostsector.dialogue.rules.nskr_kestevenQuest;
-import lostsector.ModPlugin;
+import lostsector.settings.Difficulty;
 import lostsector.helper.FleetHelper;
 import lostsector.helper.MiscHelper;
 import org.lazywizard.lazylib.MathUtils;
@@ -260,7 +260,7 @@ public class Cache {
 
         //skills
         Map<String, Integer> skills = new HashMap<>(OFFICER_SKILLS);
-        if (ModPlugin.getStarfarerMode()) skills.put(Skills.POLARIZED_ARMOR,2);
+        if (Difficulty.isStarfarer()) skills.put(Skills.POLARIZED_ARMOR,2);
         //admiral skills
         skills.put("electronic_warfare",1);
         skills.put("crew_training",1);
@@ -549,7 +549,7 @@ public class Cache {
         FullName name = new FullName(COM_NAME,"#"+number,FullName.Gender.FEMALE);
         commander.setName(name);
         Map<String, Integer> skills = new HashMap<>(OFFICER_SKILLS);
-        if (ModPlugin.getStarfarerMode()) skills.put(Skills.POLARIZED_ARMOR,2);
+        if (Difficulty.isStarfarer()) skills.put(Skills.POLARIZED_ARMOR,2);
         MiscHelper.setOfficerSkills(commander, skills);
 
         return commander;

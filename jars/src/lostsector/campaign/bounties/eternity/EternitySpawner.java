@@ -22,7 +22,7 @@ import com.fs.starfarer.api.impl.campaign.procgen.StarSystemGenerator;
 import com.fs.starfarer.api.impl.campaign.procgen.themes.BaseThemeGenerator;
 import com.fs.starfarer.api.util.WeightedRandomPicker;
 import lostsector.campaign.bounties.eternity.UmbraIntel;
-import lostsector.ModPlugin;
+import lostsector.settings.Difficulty;
 import lostsector.persistence.Saved;
 import lostsector.helper.FleetHelper;
 import lostsector.helper.MiscHelper;
@@ -148,7 +148,7 @@ public class EternitySpawner extends BaseCampaignEventListener implements EveryF
         float points = MathUtils.getRandomNumberInRange(80f,85f);
 
         //apply settings
-        points *= ModPlugin.getScriptedFleetSizeMult();
+        points *= Difficulty.scriptedFleetMult();
 
         Random random = new Random();
 

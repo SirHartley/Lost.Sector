@@ -23,7 +23,7 @@ import com.fs.starfarer.api.util.Misc;
 import lostsector.helper.fleet.FleetInfo;
 import lostsector.campaign.kesteven.quest.QuestHelper;
 import lostsector.helper.fleet.SimpleFleet;
-import lostsector.ModPlugin;
+import lostsector.settings.Difficulty;
 import lostsector.persistence.Saved;
 import org.lazywizard.lazylib.MathUtils;
 import org.lwjgl.util.vector.Vector2f;
@@ -348,7 +348,7 @@ public class BlacksiteManager extends BaseCampaignEventListener implements Every
             log("BASE " + combatPoints);
 
             //apply settings
-            combatPoints *= ModPlugin.getScriptedFleetSizeMult();
+            combatPoints *= Difficulty.scriptedFleetMult();
 
             ArrayList<String> keys = new ArrayList<>();
             keys.add(MemFlags.FLEET_FIGHT_TO_THE_LAST);

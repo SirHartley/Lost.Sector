@@ -19,7 +19,7 @@ import lostsector.campaign.starts.GameModeManager;
 import lostsector.helper.fleet.FleetInfo;
 import lostsector.helper.fleet.SimpleFleet;
 import lostsector.helper.fleet.SystemPicker;
-import lostsector.ModPlugin;
+import lostsector.settings.Difficulty;
 import lostsector.persistence.Saved;
 import org.jetbrains.annotations.NotNull;
 import org.lazywizard.lazylib.MathUtils;
@@ -266,7 +266,7 @@ public class HyperspaceEnigmaSpawner extends BaseCampaignEventListener implement
         points = Math.min(Math.max(points, MIN_STRENGTH), MAX_STRENGTH);
 
         //apply settings
-        points *= ModPlugin.getRandomEnigmaFleetSizeMult();
+        points *= Difficulty.randomEnigmaFleetMult();
 
         //disabled spawn check
         if (points<=0f) return;
@@ -394,7 +394,7 @@ public class HyperspaceEnigmaSpawner extends BaseCampaignEventListener implement
     public static fleetLevel getFleetLevel(float power) {
         fleetLevel lvl;
         //hard mode
-        if (ModPlugin.getStarfarerMode()){
+        if (Difficulty.isStarfarer()){
             if (power < 0.60f) {
                 lvl = FRIGATE;
                 log("lvl FRIGATE");

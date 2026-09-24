@@ -25,7 +25,7 @@ import lostsector.campaign.kesteven.ExileManager;
 import lostsector.campaign.enigma.DormantSpawner;
 import lostsector.campaign.kesteven.quest.QuestHelper;
 import lostsector.helper.fleet.SystemPicker;
-import lostsector.ModPlugin;
+import lostsector.settings.Difficulty;
 import lostsector.world.systems.frost.Frost;
 import org.lazywizard.lazylib.MathUtils;
 import org.lwjgl.util.vector.Vector2f;
@@ -378,7 +378,7 @@ public class MiscHelper {
         }
 
         //apply settings
-        combatPoints *= ModPlugin.getScriptedFleetSizeMult();
+        combatPoints *= Difficulty.scriptedFleetMult();
 
         //fine?
         if (combatPoints<=0f) return null;

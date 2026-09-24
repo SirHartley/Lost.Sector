@@ -5,7 +5,7 @@ import com.fs.starfarer.api.campaign.*;
 import com.fs.starfarer.api.campaign.rules.MemoryAPI;
 import com.fs.starfarer.api.combat.EngagementResultAPI;
 import com.fs.starfarer.api.util.Misc;
-import lostsector.ModPlugin;
+import lostsector.settings.Difficulty;
 import lostsector.helper.PowerLevel;
 
 import java.awt.*;
@@ -89,7 +89,7 @@ public class BlacksiteDialog implements InteractionDialogPlugin {
         CampaignFleetAPI pf = Global.getSector().getPlayerFleet();
 
         points += (points * PowerLevel.get(0.2f, 0f, 1f)) / 2f;
-        points *= ModPlugin.getScriptedFleetSizeMult();
+        points *= Difficulty.scriptedFleetMult();
 
         float ratio = points / pf.getFleetPoints();
 

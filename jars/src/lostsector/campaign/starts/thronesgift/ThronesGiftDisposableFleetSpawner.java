@@ -18,7 +18,7 @@ import com.fs.starfarer.api.impl.campaign.ids.Tags;
 import com.fs.starfarer.api.util.Misc;
 import lostsector.campaign.starts.thronesgift.ThronesGiftIntel;
 import lostsector.helper.fleet.SimpleFleet;
-import lostsector.ModPlugin;
+import lostsector.settings.Difficulty;
 import lostsector.helper.FleetHelper;
 import lostsector.helper.MathHelper;
 import lostsector.helper.PowerLevel;
@@ -164,7 +164,7 @@ public class ThronesGiftDisposableFleetSpawner extends DisposableFleetManager {
         combatPoints += combatPoints * PowerLevel.get(0.2f, 0f,1.0f);
 
         //apply settings
-        combatPoints *= ModPlugin.getScriptedFleetSizeMult();
+        combatPoints *= Difficulty.scriptedFleetMult();
 
         //keys
         ArrayList<String> keys = new ArrayList<>();

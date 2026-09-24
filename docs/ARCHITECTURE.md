@@ -27,7 +27,7 @@ Technical routing for the current implementation. Java paths below are relative 
 | Blacksites | `events/blacksite/BlacksiteSpawner -> events/blacksite/BlacksiteManager -> CorePlugin -> BlacksiteDialog` |
 | Custom starts | Nexerelin background -> `starts/GameModeManager` -> `HellSpawnManager` or `ThronesGiftManager`; unlocked by `LOST_SECTOR_cfg.json` |
 | New-game content, adding the mod to a save | `ModPlugin.onNewGame*` and the `SAVE_KEY` check in `onGameLoad`; [world generation](#save-identity) |
-| Difficulty and fleet scaling | `ModPlugin` getters -> LunaLib or `LOST_SECTOR_OPTIONS.ini` |
+| Difficulty, fleet scaling and other settings | `settings/Difficulty.scriptedFleetMult()`, `randomEnigmaFleetMult()`, `isStarfarer()` -> `settings/Setting` -> `settings/SettingsManager` cache of `data/config/LunaSettings.csv` and LunaLib; [settings](#settings) |
 | Value lost after save/load | [Save identity](#save-identity) |
 | Rules menu, option routing, highlights | [Project routing](RULES.md#project-routing), [shared text presentation](DIALOGUE.md#shared-text-presentation) |
 | Command arguments, mission calls, memory lifetime, missing text replacements | [Rules implementation guide](RULES_AUTHORING.md) and its dictionaries, including for Java-only fixes |
@@ -41,7 +41,7 @@ Technical routing for the current implementation. Java paths below are relative 
 
 | Hook | Owners |
 |---|---|
-| `ModPlugin.onApplicationLoad()` | GraphicsLib shader, texture and light data (skipped if GraphicsLib classes are missing); the `IS_*` optional-mod flags; Nexerelin `Nex_TransferMarket.NO_TRANSFER_FACTIONS` gains `enigma`; `createDefaultConfig()` |
+| `ModPlugin.onApplicationLoad()` | GraphicsLib shader, texture and light data (skipped if GraphicsLib classes are missing); the `IS_*` optional-mod flags; Nexerelin `Nex_TransferMarket.NO_TRANSFER_FACTIONS` gains `enigma`; `settings/SettingsManager.load()`; `createDefaultConfig()` |
 | `ModPlugin.pickMissileAI()` | `nskr_emglShot_sub` -> `EmpGrenadeAI`, `nskr_tremor1` -> `TremorAI`. No ship, weapon or drone AI picker is overridden. |
 | `ModPlugin.onGameLoad()` | Order below. Runs for new games and loaded saves. |
 | `ModPlugin.beforeGameSave()` | `persistence/Saved.updatePersistentData()`, `CampaignTimer.save()`, then removes every `EFS_LIST` script and listener from the sector |
@@ -51,7 +51,7 @@ Technical routing for the current implementation. Java paths below are relative 
 | `ModPlugin.onNewGameAfterEconomyLoad()` | Frost part 2 market (Corvus mode or no Nexerelin), `DerelictTeaserSpawner.spawnRogues()` |
 | `ModPlugin.onNewGameAfterTimePass()` | Frost and Outpost in Nexerelin random-core games, IndEvo features, `SectorGen.genPeople()`, Frost ruins, `DesertConditionRepair.fix()`, blacksites, Mothership fleet, Enigma relations |
 
-`onGameLoad` order: Nexerelin null-manager guard -> `EFS_LIST` construction (once per client session, guarded by the instance field `init`) -> `HellSpawnDisposableFleetSpawner` and `ThronesGiftDisposableFleetSpawner` behind `hasScript` -> `kesteven/KestevenBlueprints.borrowIndieBlueprints()` -> `kesteven/BlackOpsBlueprints.scanWeaponBlueprints()` -> `syncNSKRScripts()` -> `registerPlugin(new CorePlugin())` -> `EFS_LIST` as transient scripts, transient listeners and listener-manager listeners, with `ThronesGiftManager.reset()` -> `persistence/Saved.loadPersistentData()` -> `KestevenTipBarEventCreator` -> Starfarer-mode check -> new-save generation -> `FleetHelper.hackBrokenVariants()`.
+`onGameLoad` order: Nexerelin null-manager guard -> `EFS_LIST` construction (once per client session, guarded by the instance field `init`) -> `HellSpawnDisposableFleetSpawner` and `ThronesGiftDisposableFleetSpawner` behind `hasScript` -> `kesteven/KestevenBlueprints.borrowIndieBlueprints()` -> `kesteven/BlackOpsBlueprints.scanWeaponBlueprints()` -> `syncNSKRScripts()` -> `registerPlugin(new CorePlugin())` -> `EFS_LIST` as transient scripts, transient listeners and listener-manager listeners, with `ThronesGiftManager.reset()` -> `persistence/Saved.loadPersistentData()` -> `KestevenTipBarEventCreator` -> `Difficulty.clearStarfarerFromStartUnlessStarfarer()` -> new-save generation -> `FleetHelper.hackBrokenVariants()`.
 
 A save without `ModPlugin.SAVE_KEY` (`nskr_enabled`) in sector persistent data runs all four `onNewGame*` hooks from `onGameLoad`, then adds a Kesteven station commander to `nskr_asteria`. This is how the mod is added to an existing save.
 
@@ -71,8 +71,8 @@ Other registrations: `KestevenTipBarEventCreator` bar event creator, guarded by 
 | Registry | Owner / consumer |
 |---|---|
 | `data/config/settings.json` | Rule command package `lostsector.dialogue.rules`; combat plugins `nskr_kaboomPlugin` (`PayloadDetonationPlugin`), `nskr_entrancePlugin` (`EntrancePlugin`), `nskr_tauntPlugin` (`CacheBossTauntPlugin`) in `combat/plugins/`, and `nskr_SplitterWeaponPlugin` (`combat/weapons/PlasmaCanisterSplitter`); sprite categories; design-type colours; `bonusXP` for story-point options |
-| `LOST_SECTOR_OPTIONS.ini` | Difficulty and fleet-scaling settings without LunaLib; `ModPlugin.loadSettings()` |
-| `data/config/LunaSettings.csv`, `LunaSettingsConfig.json` | The same settings in LunaLib's menu, read through `ModPlugin` getters when LunaLib is enabled |
+| `data/config/LunaSettings.csv` | Every setting's label, type, default, range, options and tab in LunaLib's menu; read by `settings/SettingsManager` |
+| `data/config/LunaSettingsConfig.json` | LunaLib menu icon |
 | `data/config/LOST_SECTOR_cfg.default` | Default for the per-installation `LOST_SECTOR_cfg.json` (MagicLib `JSONUtils`): `completedStory`/`completedStoryHard`, written by `QuestHelper` and read by the custom-start backgrounds and `nskr_kestevenQuest` |
 | `data/campaign/rules.csv` | Dialogue; see [project routing](RULES.md#project-routing) |
 | `data/campaign/person_missions.csv` | `ContractsMission` mission offer |
@@ -92,13 +92,12 @@ Mod assets live under `graphics/lostsector/` and `sounds/lostsector/`; paths out
 
 ### Optional integrations
 
-`ModPlugin.onApplicationLoad()` sets each flag once from `isModEnabled`. None of these mods is a `mod_info.json` dependency.
+`ModPlugin.onApplicationLoad()` sets each flag once from `isModEnabled`. None of these mods is a `mod_info.json` dependency. LunaLib is a required dependency; see [settings](#settings).
 
 | Flag (mod ID) | Gated owners |
 |---|---|
 | `IS_NEXERELIN` (`nexerelin`) | World generation mode, `HellSpawnNexListener`, diplomacy calls in `QuestStageManager`, `HellSpawnManager`, `kesteven/ExileManager`, `SectorGen`. Also cleared in `onGameLoad` when `SectorManager.getManager()` is null. `HellSpawnBackground`/`ThronesGiftBackground` extend Nexerelin's `BaseCharacterBackground` and are reached only through Nexerelin's background CSV. |
 | `IS_INDEVO` (`IndEvo`) | IndEvo features in `onNewGameAfterTimePass`, `Frost`, `Outpost`, `SectorGen`, `kesteven/ExileManager`, `enigma/HeartOccupation`, `ContractInfo`; `getIndEvoBoolean` |
-| `IS_LUNALIB` (`lunalib`) | `ModPlugin` settings getters; otherwise `LOST_SECTOR_OPTIONS.ini` |
 | `IS_TAHLAN` (`tahlan`) | `ContractInfo` reward table |
 | `IS_CC` (`timid_commissioned_hull_mods`) | `kesteven/CommissionedCrewsBonus` |
 | `IS_IRONSHELL` (`timid_xiv`) | `EndingElizaDialog`, `QuestStageManager` |
@@ -115,6 +114,7 @@ Keep foreign classes behind these flags or behind the foreign mod's own loader. 
 | `ModPlugin.SAVE_KEY` `nskr_enabled`, `STARFARER_MODE_FROM_START_KEY` `nskr_starfarerFromStart` | Sector persistent data | Renaming `SAVE_KEY` reruns world generation on every existing save. |
 | `Frost.NAME_KEY` `$nskr_frostName` | Sector persistent data, not memory, despite the `$` | Holds the generated Frost system name. |
 | `LOST_SECTOR_cfg.json` | Per installation, outside saves | Shared by all campaigns on that machine. |
+| LunaLib `LunaSettings/lost.sector.json` | Per installation, outside saves, keyed by CSV `fieldID` | A `Setting` constant's name is its `fieldID`; renaming either drops the stored value. |
 
 Stable IDs are in `helper/Ids`: factions `kesteven`, `enigma`, `prot_ops`, `ai_all`; people `nskr_opguy`, `nskr_researcher`, `nskr_intelligence`, `nskr_anarchist`, `nskr_president`, `nskr_enigmaAdmin`, `nskr_thrn`; entities and markets `nskr_heart`, `nskr_asteria`, `nskr_outpost`, `nskr_enigmabase`, `nskr_blacksite`, `nskr_anomalous_station`. `addMarketplace` uses the primary entity's ID as the market ID.
 
@@ -138,6 +138,7 @@ Packages group code by feature. Use `rg --files jars/src/lostsector/<package>` f
 | Package | Contents |
 |---|---|
 | `lostsector` | `ModPlugin` |
+| `settings` | LunaLib-backed settings: `Setting`, `SettingsManager`, `Difficulty` |
 | `persistence` | `Saved`, `CampaignTimer` |
 | `helper`, `helper/fleet` | Shared helpers; fleet, captain and system builders |
 | `rendering` | Render helpers and blast sprites |
@@ -257,6 +258,16 @@ Prototype weapons (`prot_wp` tag, Unknown Prototype manufacturer) have one `*Eff
 | `rendering/BlastSprite`, `rendering/CampaignBlastSprite` | Timed blast sprites in combat and campaign (`HellSpawnAbility`) |
 | `StringHelper` | Token substitution helpers adapted from Nexerelin |
 
+### Settings
+
+Every setting is a row in `data/config/LunaSettings.csv`, which owns its label, type, default, range, option text and tab. Java holds no copy of those. To add a setting, add the row and a `Setting` constant.
+
+| File | Owner / connection |
+|---|---|
+| `settings/Setting` | One constant per data row that code reads; the row's `fieldID` is the constant name in lowerCamel case. Typed reads `getBoolean()`, `getFloat()`/`getDouble()`, `getInt()`, `getKeycode()` and `getOption(Class)`, which returns the enum constant whose ordinal is the selected option's position in the row's `secondaryValue` list. |
+| `settings/SettingsManager` | `load()`, from `ModPlugin.onApplicationLoad()`: reads this mod's CSV with `loadCSV(path, Ids.LOST_SECTOR_MOD_ID)`, as LunaLib does (`getMergedSpreadsheetDataForMod` would merge every mod's LunaSettings.csv). Throws when a constant has no row, a different `fieldType`, or a Radio option count that differs from its enum; logs a warning for data rows without a constant. Caches CSV defaults overlaid with LunaLib's stored values, numbers clamped to `minValue`/`maxValue`, unknown Radio labels replaced by the default. Its `Listener` reloads the cache when LunaLib's menu saves this mod. `set()` writes a value to LunaLib's `LunaSettings/lost.sector.json` and to `LunaSettingsLoader.getSettings()`; LunaLib has no public setter and writes its in-memory copy back when its menu is saved. |
+| `settings/Difficulty` | Radio options in CSV order: `NORMAL` uses the two fleet scaling settings, `EASY` and `STARFARER` fixed multipliers. `clearStarfarerFromStartUnlessStarfarer()` clears `ModPlugin.STARFARER_MODE_FROM_START_KEY` on each load and when the menu leaves Starfarer during a campaign. |
+
 
 ## Contracts
 
@@ -294,8 +305,6 @@ Quest defects are listed with their quest: [Kesteven questline](quests/KESTEVEN_
 
 | Location | Hazard |
 |---|---|
-| `data/config/LunaSettings.csv` | Rows use mod ID `lost_sector`; the `ModPlugin` getters query `Ids.LOST_SECTOR_MOD_ID` (`lost.sector`). |
-| `ModPlugin.getRandomEnigmaFleetSizeMult()` | Without LunaLib, Starfarer and easy mode return the scripted-fleet multipliers instead of the Enigma ones. |
 | `CampaignTimer` | Reads its stored value only in its constructor, once per client session. Loading a second save in the same session keeps the first save's timers, and `CampaignTimer.save()` writes them into the second save. |
 | `ModPlugin.onGameLoad()` | `IS_NEXERELIN` is cleared for the rest of the session if `SectorManager.getManager()` is null on any load. |
 | `data/config/modSettings.json` | `MagicLib.bounty_board` is empty and only `modFiles/magicBounty_data_example.json` exists, so no MagicLib bounty is registered. |

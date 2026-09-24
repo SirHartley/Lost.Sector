@@ -15,7 +15,7 @@ import com.fs.starfarer.api.impl.campaign.ids.FleetTypes;
 import com.fs.starfarer.api.impl.campaign.ids.MemFlags;
 import lostsector.helper.fleet.FleetInfo;
 import lostsector.helper.fleet.SimpleFleet;
-import lostsector.ModPlugin;
+import lostsector.settings.Difficulty;
 import lostsector.persistence.Saved;
 import lostsector.helper.FleetHelper;
 import lostsector.helper.MiscHelper;
@@ -172,7 +172,7 @@ public class GuardSpawner extends BaseCampaignEventListener implements EveryFram
         log("guardSpawner BASE " + combatPoints);
 
         //apply settings
-        combatPoints *= ModPlugin.getScriptedFleetSizeMult();
+        combatPoints *= Difficulty.scriptedFleetMult();
 
         ArrayList<String> keys = new ArrayList<>();
         keys.add(MemFlags.FLEET_FIGHT_TO_THE_LAST);

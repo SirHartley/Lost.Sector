@@ -24,7 +24,7 @@ import com.fs.starfarer.api.impl.campaign.ids.*;
 import com.fs.starfarer.api.util.Pair;
 import com.fs.starfarer.api.util.WeightedRandomPicker;
 import lostsector.campaign.bounties.peacekeepers.RorqualIntel;
-import lostsector.ModPlugin;
+import lostsector.settings.Difficulty;
 import lostsector.persistence.Saved;
 import lostsector.helper.FleetHelper;
 import lostsector.helper.MathHelper;
@@ -244,7 +244,7 @@ public class RorqualSpawner extends BaseCampaignEventListener implements EveryFr
         float points = MathUtils.getRandomNumberInRange(180f, 190f);
 
         //apply settings
-        points *= ModPlugin.getScriptedFleetSizeMult();
+        points *= Difficulty.scriptedFleetMult();
 
         Random random = new Random();
 

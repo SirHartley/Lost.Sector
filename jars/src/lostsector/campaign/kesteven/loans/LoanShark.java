@@ -16,7 +16,7 @@ import lostsector.campaign.kesteven.quest.QuestHelper;
 import lostsector.helper.fleet.SimpleFleet;
 import lostsector.dialogue.rules.nskr_debt;
 import lostsector.dialogue.rules.nskr_loanSharkDialog;
-import lostsector.ModPlugin;
+import lostsector.settings.Difficulty;
 import lostsector.persistence.Saved;
 import lostsector.helper.FleetHelper;
 import lostsector.helper.MathHelper;
@@ -176,7 +176,7 @@ public class LoanShark extends BaseCampaignEventListener implements EveryFrameSc
         log("loanShark BASE " + combatPoints);
 
         //apply settings
-        combatPoints *= ModPlugin.getScriptedFleetSizeMult();
+        combatPoints *= Difficulty.scriptedFleetMult();
 
         ArrayList<String> keys = new ArrayList<>();
         keys.add(MemFlags.FLEET_FIGHT_TO_THE_LAST);

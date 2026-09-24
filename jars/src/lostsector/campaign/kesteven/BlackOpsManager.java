@@ -15,7 +15,7 @@ import lostsector.campaign.kesteven.quest.UnlimitedProductionChipCondition;
 import lostsector.helper.fleet.FleetInfo;
 import lostsector.helper.fleet.SimpleFleet;
 import lostsector.helper.fleet.SystemPicker;
-import lostsector.ModPlugin;
+import lostsector.settings.Difficulty;
 import lostsector.persistence.Saved;
 import lostsector.helper.FleetHelper;
 import lostsector.helper.MathHelper;
@@ -220,7 +220,7 @@ public class BlackOpsManager extends BaseCampaignEventListener implements EveryF
         float points = MathHelper.getSeededRandomNumberInRange(50f, 150f, random);
 
         //apply settings
-        points *= ModPlugin.getScriptedFleetSizeMult();
+        points *= Difficulty.scriptedFleetMult();
 
         ArrayList<String> keys = new ArrayList<>();
         keys.add(MemFlags.FLEET_FIGHT_TO_THE_LAST);

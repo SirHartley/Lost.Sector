@@ -21,7 +21,7 @@ import com.fs.starfarer.api.impl.campaign.procgen.themes.RemnantSeededFleetManag
 import com.fs.starfarer.api.impl.campaign.rulecmd.salvage.special.ShipRecoverySpecial;
 import com.fs.starfarer.api.util.Misc;
 import lostsector.campaign.bounties.mothership.MothershipIntel;
-import lostsector.ModPlugin;
+import lostsector.settings.Difficulty;
 import lostsector.persistence.Saved;
 import lostsector.helper.FleetHelper;
 import lostsector.helper.MathHelper;
@@ -210,7 +210,7 @@ public class MothershipSpawner  extends BaseCampaignEventListener implements Eve
         float points = MathUtils.getRandomNumberInRange(155f, 160f);
 
         //apply settings
-        points *= ModPlugin.getScriptedFleetSizeMult();
+        points *= Difficulty.scriptedFleetMult();
 
         //skills
         Map<String, Integer> skills = new HashMap<>();
@@ -223,7 +223,7 @@ public class MothershipSpawner  extends BaseCampaignEventListener implements Eve
         skills.put("energy_weapon_mastery",2);
         skills.put("ordnance_expert",2);
         //skills com
-        if (ModPlugin.getStarfarerMode()) skills.put(Skills.WOLFPACK_TACTICS,1);
+        if (Difficulty.isStarfarer()) skills.put(Skills.WOLFPACK_TACTICS,1);
         skills.put(Skills.ELECTRONIC_WARFARE,1);
         skills.put(Skills.CARRIER_GROUP,1);
         skills.put(Skills.FIGHTER_UPLINK,1);

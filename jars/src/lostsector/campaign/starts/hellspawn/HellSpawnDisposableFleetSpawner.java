@@ -15,7 +15,7 @@ import com.fs.starfarer.api.impl.campaign.ids.MemFlags;
 import com.fs.starfarer.api.util.Misc;
 import lostsector.campaign.starts.hellspawn.HellSpawnEventIntel;
 import lostsector.helper.fleet.SimpleFleet;
-import lostsector.ModPlugin;
+import lostsector.settings.Difficulty;
 import lostsector.helper.FleetHelper;
 import lostsector.helper.Ids;
 import lostsector.helper.MathHelper;
@@ -167,7 +167,7 @@ public class HellSpawnDisposableFleetSpawner extends DisposableFleetManager {
         combatPoints += combatPoints * PowerLevel.get(0.2f, 0f,1.5f);
 
         //apply settings
-        combatPoints *= ModPlugin.getScriptedFleetSizeMult();
+        combatPoints *= Difficulty.scriptedFleetMult();
 
         //keys
         ArrayList<String> keys = new ArrayList<>();

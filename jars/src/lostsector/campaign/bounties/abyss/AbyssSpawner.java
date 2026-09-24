@@ -19,7 +19,7 @@ import com.fs.starfarer.api.impl.campaign.procgen.themes.BaseThemeGenerator;
 import com.fs.starfarer.api.util.Misc;
 import com.fs.starfarer.api.util.WeightedRandomPicker;
 import lostsector.campaign.bounties.abyss.AbyssIntel;
-import lostsector.ModPlugin;
+import lostsector.settings.Difficulty;
 import lostsector.persistence.Saved;
 import lostsector.helper.FleetHelper;
 import lostsector.helper.MiscHelper;
@@ -151,7 +151,7 @@ public class AbyssSpawner extends BaseCampaignEventListener implements EveryFram
         float points = MathUtils.getRandomNumberInRange(135f,145f);
 
         //apply settings
-        points *= ModPlugin.getScriptedFleetSizeMult();
+        points *= Difficulty.scriptedFleetMult();
 
         Random random = new Random();
 
@@ -168,7 +168,7 @@ public class AbyssSpawner extends BaseCampaignEventListener implements EveryFram
         //skills com
         skills.put("electronic_warfare",1);
         skills.put("crew_training",1);
-        if (ModPlugin.getStarfarerMode()) skills.put("wolfpack_tactics",1);
+        if (Difficulty.isStarfarer()) skills.put("wolfpack_tactics",1);
 
         //memkeys
         ArrayList<String> keys = new ArrayList<>();

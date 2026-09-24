@@ -31,6 +31,8 @@ import lostsector.campaign.starts.thronesgift.ThronesGiftDisposableFleetSpawner;
 import lostsector.campaign.starts.thronesgift.ThronesGiftManager;
 
 import lostsector.persistence.Saved;
+import lostsector.settings.Difficulty;
+import lostsector.settings.SettingsManager;
 
 import com.fs.starfarer.api.BaseModPlugin;
 import com.fs.starfarer.api.EveryFrameScript;
@@ -81,7 +83,6 @@ import org.dark.shaders.light.LightData;
 import org.dark.shaders.util.ShaderLib;
 import org.dark.shaders.util.TextureData;
 import org.json.JSONException;
-import org.json.JSONObject;
 import org.lazywizard.lazylib.JSONUtils;
 
 import java.io.IOException;
@@ -112,14 +113,6 @@ public class ModPlugin extends BaseModPlugin {
 
     public static ArrayList<BaseCampaignEventListener> EFS_LIST = new ArrayList<>();
 
-    public static final String SETTINGS_FILE = "LOST_SECTOR_OPTIONS.ini";
-
-    public static final float STARFARER_MODE_SCRIPTED_MULT = 1.2f;
-    public static final float STARFARER_MODE_ENIGMA_MULT = 1.25f;
-
-    public static final float EASY_MODE_SCRIPTED_MULT = 0.7f;
-    public static final float EASY_MODE_ENIGMA_MULT = 0.6f;
-
     public static final String STARFARER_MODE_FROM_START_KEY = "nskr_starfarerFromStart";
 
     public static final String COMPLETED_STORY_KEY = "completedStory";
@@ -129,8 +122,8 @@ public class ModPlugin extends BaseModPlugin {
     public static boolean IS_INDEVO = false;
     public static boolean IS_CC = false;
     public static boolean IS_IRONSHELL = false;
-    public static boolean IS_LUNALIB = false;
     public static boolean IS_TAHLAN = false;
+    private static final String INDEVO_MOD_ID = "IndEvo";
     public static final String EMP_GRENADE_PROJECTILE = "nskr_emglShot_sub";
     public static final String TREMOR_PROJECTILE = "nskr_tremor1";
 
@@ -156,10 +149,9 @@ public class ModPlugin extends BaseModPlugin {
         } catch (ClassNotFoundException ex) { }
 
         IS_NEXERELIN = Global.getSettings().getModManager().isModEnabled("nexerelin");
-        IS_INDEVO = Global.getSettings().getModManager().isModEnabled("IndEvo");
+        IS_INDEVO = Global.getSettings().getModManager().isModEnabled(INDEVO_MOD_ID);
         IS_CC = Global.getSettings().getModManager().isModEnabled("timid_commissioned_hull_mods");
         IS_IRONSHELL = Global.getSettings().getModManager().isModEnabled("timid_xiv");
-        IS_LUNALIB = Global.getSettings().getModManager().isModEnabled("lunalib");
         IS_TAHLAN = Global.getSettings().getModManager().isModEnabled("tahlan");
 
         if (IS_NEXERELIN) {
@@ -173,6 +165,7 @@ public class ModPlugin extends BaseModPlugin {
         }
 
         //CONFIG
+        SettingsManager.load();
         createDefaultConfig();
     }
 
@@ -287,9 +280,7 @@ public class ModPlugin extends BaseModPlugin {
         //DATA
         Map<String, Object> data = Global.getSector().getPersistentData();
         //hard mode
-        if (data.containsKey(STARFARER_MODE_FROM_START_KEY)) {
-            if (!getStarfarerMode()) data.put(STARFARER_MODE_FROM_START_KEY, false);
-        }
+        Difficulty.clearStarfarerFromStartUnlessStarfarer();
         //new save check
         if (!data.containsKey(SAVE_KEY)){
             //spawn stuff
@@ -322,80 +313,20 @@ public class ModPlugin extends BaseModPlugin {
 
     }
 
-    //I HATE JSONS SO MUCH
-
-    public static float getScriptedFleetSizeMult(){
-        if (IS_LUNALIB){
-            if (LunaSettings.getBoolean(Ids.LOST_SECTOR_MOD_ID, "starfarerMode")) return STARFARER_MODE_SCRIPTED_MULT;
-            if (LunaSettings.getBoolean(Ids.LOST_SECTOR_MOD_ID, "easyMode")) return EASY_MODE_SCRIPTED_MULT;
-            return Math.max(LunaSettings.getFloat(Ids.LOST_SECTOR_MOD_ID, "scriptedFleetScaling"), 0.1f);
-        } else {
-            if (getSettingBoolean("starfarerMode")) return STARFARER_MODE_SCRIPTED_MULT;
-            if (getSettingBoolean("easyMode")) return EASY_MODE_SCRIPTED_MULT;
-            return Math.max((float)getSettingDouble("scriptedFleetScaling"), 0.1f);
-        }
-    }
-
-    public static float getRandomEnigmaFleetSizeMult(){
-        if (IS_LUNALIB){
-            if (LunaSettings.getBoolean(Ids.LOST_SECTOR_MOD_ID, "starfarerMode")) return STARFARER_MODE_ENIGMA_MULT;
-            if (LunaSettings.getBoolean(Ids.LOST_SECTOR_MOD_ID, "easyMode")) return EASY_MODE_ENIGMA_MULT;
-            return LunaSettings.getFloat(Ids.LOST_SECTOR_MOD_ID, "randomEnigmaFleetScaling");
-        } else {
-            if (getSettingBoolean("starfarerMode")) return STARFARER_MODE_SCRIPTED_MULT;
-            if (getSettingBoolean("easyMode")) return EASY_MODE_SCRIPTED_MULT;
-            return (float)getSettingDouble("randomEnigmaFleetScaling");
-        }
-    }
-
-    public static boolean getStarfarerMode(){
-        if (IS_LUNALIB){
-            if (LunaSettings.getBoolean(Ids.LOST_SECTOR_MOD_ID, "starfarerMode")) return true;
-        } else {
-            if (getSettingBoolean("starfarerMode")) return true;
-        }
-        return false;
-    }
-
     //Thanks to HzDev for just making this for me
     public static boolean getIndEvoBoolean(String... ids){
-
-        for (String id: ids) {
+        for (String id : ids) {
+            Boolean value = LunaSettings.getBoolean(INDEVO_MOD_ID, id);
+            if (value != null) return value;
+        }
+        for (String id : ids) {
             try {
-                if (IS_LUNALIB){
-                    return LunaSettings.getBoolean("IndEvo", id);
-                } else {
-                    return Global.getSettings().getBoolean(id);
-                }
+                return Global.getSettings().getBoolean(id);
             } catch (RuntimeException ex) {
                 log("ERROR - wrong Ind.Evo version");
             }
         }
         return false;
-    }
-
-    private static JSONObject loadSettings(){
-        try {
-            return Global.getSettings().loadJSON(SETTINGS_FILE);
-        } catch (IOException | JSONException e) {
-            throw new RuntimeException(e);
-        }
-    }
-    private static double getSettingDouble(String id) {
-        JSONObject settings = loadSettings();
-        try {
-            return settings.getDouble(id);
-        } catch (JSONException e) {
-            throw new RuntimeException(e);
-        }
-    }
-    private static boolean getSettingBoolean(String id){
-        JSONObject settings = loadSettings();
-        try {
-            return settings.getBoolean(id);
-        } catch (JSONException e) {
-            throw new RuntimeException(e);
-        }
     }
 
     public static void createDefaultConfig(){
@@ -529,7 +460,7 @@ public class ModPlugin extends BaseModPlugin {
         }
         //hard mode
         if (!data.containsKey(STARFARER_MODE_FROM_START_KEY)) {
-            if (getStarfarerMode()) data.put(STARFARER_MODE_FROM_START_KEY, true);
+            if (Difficulty.isStarfarer()) data.put(STARFARER_MODE_FROM_START_KEY, true);
         }
     }
 

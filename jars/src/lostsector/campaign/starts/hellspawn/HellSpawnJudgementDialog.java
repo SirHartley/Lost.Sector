@@ -10,7 +10,7 @@ import com.fs.starfarer.api.util.IntervalUtil;
 import com.fs.starfarer.api.util.Misc;
 import lostsector.campaign.starts.hellspawn.HellSpawnEventIntel;
 import lostsector.helper.fleet.SimpleFleet;
-import lostsector.ModPlugin;
+import lostsector.settings.Difficulty;
 import lostsector.helper.FleetHelper;
 import lostsector.helper.Ids;
 import lostsector.helper.MathHelper;
@@ -269,7 +269,7 @@ public class HellSpawnJudgementDialog implements InteractionDialogPlugin {
         if (hell) combatPoints*= 1.33f;
 
         //apply settings
-        combatPoints *= ModPlugin.getScriptedFleetSizeMult();
+        combatPoints *= Difficulty.scriptedFleetMult();
 
         ArrayList<String> keys = new ArrayList<>();
         keys.add(MemFlags.MEMORY_KEY_MAKE_HOSTILE);

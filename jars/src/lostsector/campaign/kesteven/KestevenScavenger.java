@@ -15,7 +15,7 @@ import lostsector.helper.fleet.FleetInfo;
 import lostsector.campaign.kesteven.quest.QuestHelper;
 import lostsector.helper.fleet.SimpleFleet;
 import lostsector.helper.fleet.SystemPicker;
-import lostsector.ModPlugin;
+import lostsector.settings.Difficulty;
 import lostsector.persistence.Saved;
 import lostsector.helper.FleetHelper;
 import lostsector.helper.MathHelper;
@@ -311,7 +311,7 @@ public class KestevenScavenger extends BaseCampaignEventListener implements Ever
         if (combatPoints > MAX_STRENGTH) combatPoints = MAX_STRENGTH;
 
         //apply settings
-        combatPoints *= ModPlugin.getScriptedFleetSizeMult();
+        combatPoints *= Difficulty.scriptedFleetMult();
 
         SimpleFleet simpleFleet = new SimpleFleet(market.getPrimaryEntity(), "kesteven", combatPoints, new ArrayList<String>(), random);
         simpleFleet.type = type;

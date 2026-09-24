@@ -19,7 +19,7 @@ import lostsector.campaign.kesteven.quest.GlacierCommsDialog;
 import lostsector.helper.fleet.FleetInfo;
 import lostsector.campaign.kesteven.quest.QuestHelper;
 import lostsector.helper.fleet.SimpleFleet;
-import lostsector.ModPlugin;
+import lostsector.settings.Difficulty;
 import lostsector.persistence.Saved;
 import lostsector.helper.FleetHelper;
 import lostsector.helper.MathHelper;
@@ -365,13 +365,13 @@ public class StalkerSpawner extends BaseCampaignEventListener implements EveryFr
 
             combatPoints *= power;
 
-            if (amount>=2 && !ModPlugin.getStarfarerMode()) combatPoints *= 0.75f;
+            if (amount>=2 && !Difficulty.isStarfarer()) combatPoints *= 0.75f;
 
             if (combatPoints < MIN_STRENGTH) combatPoints = MIN_STRENGTH;
             if (combatPoints > MAX_STRENGTH) combatPoints = MAX_STRENGTH;
 
             //apply settings
-            combatPoints *= ModPlugin.getRandomEnigmaFleetSizeMult();
+            combatPoints *= Difficulty.randomEnigmaFleetMult();
             if (combatPoints<=0f) return;
 
             ArrayList<String> keys = new ArrayList<>();

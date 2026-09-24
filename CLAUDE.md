@@ -259,7 +259,7 @@ Required compile dependencies:
 - `json-20140107.jar`;
 - `log4j-1.2.17.jar`.
 
-The last four ship with the game in `starsector-core`; the same versions from Maven Central compile identically when no game install is available. These dependencies provide `org.lwjgl.util.vector`, `org.lwjgl.opengl`, `org.json`, and `Global.getLogger()`. LazyLib, MagicLib and GraphicsLib are the declared runtime dependencies in `mod_info.json`. LunaLib, Nexerelin and Industrial.Evolution are compile-time requirements for their integration classes; [ARCHITECTURE.md](docs/ARCHITECTURE.md) records how each is gated at runtime.
+The last four ship with the game in `starsector-core`; the same versions from Maven Central compile identically when no game install is available. These dependencies provide `org.lwjgl.util.vector`, `org.lwjgl.opengl`, `org.json`, and `Global.getLogger()`. LazyLib, LunaLib, MagicLib and GraphicsLib are the declared runtime dependencies in `mod_info.json`. Nexerelin and Industrial.Evolution are compile-time requirements for their integration classes; [ARCHITECTURE.md](docs/ARCHITECTURE.md) records how each is gated at runtime.
 
 Reference command:
 

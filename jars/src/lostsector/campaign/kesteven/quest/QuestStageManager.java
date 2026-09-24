@@ -300,8 +300,6 @@ public class QuestStageManager extends BaseCampaignEventListener implements Ever
         List<FleetInfo> fleets = FleetHelper.getFleets(FLEET_ARRAY_KEY);
         //log("FleetInfo size "+fleets.size());
 
-        //log("HARD "+ModPlugin.getStarfarerMode()+" ENIGMA "+ModPlugin.getRandomEnigmaFleetSizeMult()+" SCRIPTED "+ModPlugin.getScriptedFleetSizeMult());
-
         //DEBUG CODE
         //TODO
         // undo
