@@ -114,7 +114,7 @@ public class AdvancedShieldProjector extends BaseHullMod {
 		float pad = 10.0f;
 
 		tooltip.addSectionHeading("Additional Info", Alignment.MID, pad);
-		if (! Global.getSettings().isShowingCodex() && ship.getVariant().hasHullMod("stabilizedshieldemitter")){
+		if (ship != null && !Global.getSettings().isShowingCodex() && ship.getVariant().hasHullMod("stabilizedshieldemitter")){
 			tooltip.addPara("-Stabilized Shields installed.", pad, ColorHelper.NICE_YELLOW, "");
 			tooltip.addPara("-Full resistance and fold bonus achieved at 75%% flux instead.", 0.0f, ColorHelper.NICE_YELLOW, "75%");
 		} else {

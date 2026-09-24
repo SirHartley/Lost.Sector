@@ -30,6 +30,7 @@ Fixed - Booster Overcharge, Distortion Burn and Mercurial Overdrive acceleration
 Fixed - Crash when a fighter-sized strikecraft from another mod carries Volatile Flux Injector
 Adjusted - Volatile Flux Injector's description now says its speed and rate of fire bonuses apply only in combat and change with flux
 Fixed - Reality Splitter's exit blast no longer destroys friendly missiles and fighters
+Fixed - The Mothership hullmod's codex entry no longer errors, and other hullmod descriptions no longer break when shown without a ship
 
 1.0.b
 Adjusted - Severely nerfed spawn rates for Borealis, Rhea and Kingslayer

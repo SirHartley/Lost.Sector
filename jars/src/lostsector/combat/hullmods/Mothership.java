@@ -197,13 +197,15 @@ public class Mothership extends BaseHullMod {
             tooltip.addPara("-Subroutine status INACTIVE", pad, bad, "INACTIVE");
         }
 
-        float fuel = getFuel(FUEL_BASE_KEY + ship.getFleetMember().getId())/10f;
-
         tooltip.addSectionHeading("AI Cores", Alignment.MID, pad);
 
         tooltip.addPara("This ship requires a steady supply of lower level AI Cores to remain at peak performance. Maximum combat readiness is decreased by "+(int)(CR_PENALTY)+"%"+"%"+
                 " and subroutines are deactivated otherwise.", pad, bad, (int)(CR_PENALTY)+"%");
         tooltip.addPara("Gamma cores function for "+(int) (GAMMA_CORE_FUEL/10f)+" days, while beta cores function for "+(int) (BETA_CORE_FUEL/10f)+" days. Gamma core are consumed before Beta cores, this happens automatically.", pad, bad, "");
+
+        FleetMemberAPI member = ship == null ? null : ship.getFleetMember();
+        if (member == null) return;
+        float fuel = getFuel(FUEL_BASE_KEY + member.getId())/10f;
         if (fuel>0f) {
             tooltip.addPara("-Current time remaining until next AI Core is consumed, " + (int) (fuel) + " Days", pad, bad, (int) (fuel) + " Days");
         } else {

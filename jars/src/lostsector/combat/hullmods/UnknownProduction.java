@@ -83,7 +83,7 @@ public class UnknownProduction extends BaseHullMod {
 		Color bad = ColorHelper.TT_ORANGE;
 
 		//SO penalty
-		if (ship.getMutableStats().getVariant().hasHullMod(HullMods.SAFETYOVERRIDES)) {
+		if (ship != null && ship.getMutableStats().getVariant().hasHullMod(HullMods.SAFETYOVERRIDES)) {
 			tooltip.addSectionHeading("Warning", Alignment.MID, pad);
 
 			tooltip.addPara("-Safety Overrides installed, performance decreased", pad, bad, "");

@@ -73,7 +73,7 @@ public class AugmentedWeapons extends BaseHullMod {
     public void addPostDescriptionSection(TooltipMakerAPI tooltip, ShipAPI.HullSize hullSize, ShipAPI ship, float width, boolean isForModSpec) {
         float pad = 10.0f;
         //update
-        if (Global.getSettings().isShowingCodex()) {
+        if (ship == null || Global.getSettings().isShowingCodex()) {
             totalCount = 10f;
             energyCount = 10f;
             ballisticCount = 10f;

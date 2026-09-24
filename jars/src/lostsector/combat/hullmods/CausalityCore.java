@@ -195,12 +195,11 @@ public class CausalityCore extends BaseHullMod {
 
 	public void addPostDescriptionSection(TooltipMakerAPI tooltip, ShipAPI.HullSize hullSize, ShipAPI ship, float width, boolean isForModSpec) {
 		float pad = 10.0f;
-		float maxEnergy = Global.getSettings().isShowingCodex() ? 0 : ((ship.getMaxFlux()/FLUXMULT)*2f)+1f;
+		boolean codex = ship == null || Global.getSettings().isShowingCodex();
+		float maxEnergy = codex ? 0 : ((ship.getMaxFlux()/FLUXMULT)*2f)+1f;
 		maxEnergy *= 100f;
 		maxEnergy = Math.round(maxEnergy);
 		maxEnergy /= 100f;
-
-		boolean codex = Global.getSettings().isShowingCodex();
 
 		tooltip.addSectionHeading("Details", Alignment.MID, pad);
 		TooltipMakerAPI text = tooltip.beginImageWithText("graphics/icons/hullsys/ammo_feeder.png", 36.0f);
