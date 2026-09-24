@@ -26,7 +26,6 @@ public class AdvancedShieldProjector extends BaseHullMod {
 
 	public static final String MOD_BUFFID = "nskr_focused_shield";
 	public static final String MOD_NAME = "Adaptive Shield Projector";
-	private float baseShield = 0f;
 	private boolean loaded = false;
 
 	public static final Set<String> BLOCKED_HULLMODS = new HashSet<>();
@@ -38,9 +37,6 @@ public class AdvancedShieldProjector extends BaseHullMod {
 
 	@Override
 	public void applyEffectsAfterShipCreation(ShipAPI ship, String id) {
-		if (ship.getShield()!=null){
-			baseShield = ship.getShield().getArc();
-		}
 		if (ship.getHullSize()!=HullSize.FIGHTER) {
 			if (!ship.hasListenerOfClass(PrototypeExplosion.ProtExplosionListener.class)) {
 				ship.addListener(new PrototypeExplosion.ProtExplosionListener(ship));
@@ -82,7 +78,7 @@ public class AdvancedShieldProjector extends BaseHullMod {
 			fluxRatioRes = MathHelper.normalize(flux,0f,0.75f);
 		} else fluxRatioRes = ship.getFluxTracker().getFluxLevel();
 
-		int shield = (int)ship.getMutableStats().getShieldArcBonus().computeEffective(ship.getHullSpec().getShieldSpec().getArc());
+		int shield = (int)getBaseArc(ship);
 		float sizeBonus = Math.round(360 - ((360-shield) * (fluxRatio)));
 		sizeBonus = Math.min(360f, sizeBonus);
 		ship.getShield().setArc((int)sizeBonus);
@@ -126,14 +122,19 @@ public class AdvancedShieldProjector extends BaseHullMod {
 		}
 	}
 
-	public String getDescriptionParam(int index, HullSize hullSize) {
+	@Override
+	public String getDescriptionParam(int index, HullSize hullSize, ShipAPI ship) {
 		if (index == 0) return "" + 360;
-		if (index == 1) return "" + (int)baseShield;
+		if (index == 1) return ship == null ? "its base size" : "" + (int)getBaseArc(ship);
 		if (index == 2) return "" + Math.round(100f * RESISTANCE_BONUS) + "%";
 		if (index == 3) return "" + Math.round(100f * FOLD_BONUS) + "%";
 		if (index == 4) return "" + 0;
 
 		return null;
+	}
+
+	private static float getBaseArc(ShipAPI ship) {
+		return ship.getMutableStats().getShieldArcBonus().computeEffective(ship.getHullSpec().getShieldSpec().getArc());
 	}
 
 	@Override
