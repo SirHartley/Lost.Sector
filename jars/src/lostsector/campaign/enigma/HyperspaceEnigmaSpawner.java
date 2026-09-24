@@ -312,8 +312,8 @@ public class HyperspaceEnigmaSpawner extends BaseCampaignEventListener implement
                     //reduce size for intercept
                     points *= 0.75f;
                 } else {
-                    //spawn dormant instead
-                    //copy of dormant
+                    // Without Enigma threat an intercept roll spawns a dormant fleet; the stored task drives its AI.
+                    task = TaskType.DORMANT;
                     keys.add(MemFlags.FLEET_IGNORES_OTHER_FLEETS);
                     keys.add(MemFlags.FLEET_IGNORED_BY_OTHER_FLEETS);
                     keys.add(MemFlags.MEMORY_KEY_MAKE_PREVENT_DISENGAGE);

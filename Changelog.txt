@@ -50,6 +50,7 @@ Fixed - Finished quest, bounty, contract and hint intel now leaves the intel scr
 Fixed - Hellspawn event progress entries now drop off the event's list after 30 days, like vanilla events
 Fixed - Loading another save or starting a new game without restarting the game no longer carries over event, spawner and faction ship data from the previous campaign
 Fixed - Mysterious signal hints no longer stop for good when a new campaign is saved twice without reloading
+Fixed - Dormant Enigma fleets in hyperspace no longer hunt a player who carries little Enigma or prototype tech
 
 1.0.b
 Adjusted - Severely nerfed spawn rates for Borealis, Rhea and Kingslayer
