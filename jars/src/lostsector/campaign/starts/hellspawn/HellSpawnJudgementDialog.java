@@ -122,7 +122,7 @@ public class HellSpawnJudgementDialog implements InteractionDialogPlugin {
             text.addPara("You have the power for change.", g, h, "", "");
 
             //add reward
-            Global.getSector().getPlayerStats().setSkillLevel("HellSpawnPeacefulSkill", 1f);
+            Global.getSector().getPlayerStats().setSkillLevel(HellSpawnPeacefulSkill.ID, 1f);
 
             //add sp
             Global.getSector().getPlayerStats().setStoryPoints(Global.getSector().getPlayerStats().getStoryPoints() + 8);
@@ -135,7 +135,7 @@ public class HellSpawnJudgementDialog implements InteractionDialogPlugin {
             text.addPara("Gained The Peaceful Heart", g, h, "The Peaceful Heart", "");
 
             PersonAPI fake = Global.getFactory().createPerson();
-            fake.getStats().setSkillLevel("HellSpawnPeacefulSkill", 1f);
+            fake.getStats().setSkillLevel(HellSpawnPeacefulSkill.ID, 1f);
 
             text.beginTooltip().addSkillPanel(fake, 10f);
             text.addTooltip();

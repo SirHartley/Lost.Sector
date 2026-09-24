@@ -8,6 +8,8 @@ import lostsector.campaign.starts.hellspawn.HellSpawnManager;
 
 public class HellSpawnSkill {
 
+    public static final String ID = "nskr_hellSpawnSkill";
+
     public static class Level1 implements ShipSkillEffect {
         public void apply(MutableShipStatsAPI stats, ShipAPI.HullSize hullSize, String id, float level) {
 

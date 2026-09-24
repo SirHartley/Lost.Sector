@@ -23,6 +23,8 @@ import java.awt.*;
 
 public class HellSpawnPeacefulSkill {
 
+    public static final String ID = "nskr_hellSpawnPeacefulSkill";
+
     public static class Level1 extends BaseSkillEffectDescription implements ShipSkillEffect, AfterShipCreationSkillEffect {
 
         @Override
@@ -114,7 +116,7 @@ public class HellSpawnPeacefulSkill {
             }
             //safety
             if (Global.getSector()!=null) {
-                if (!Global.getSector().getPlayerStats().hasSkill("HellSpawnPeacefulSkill")) {
+                if (!Global.getSector().getPlayerStats().hasSkill(ID)) {
                     ship.removeListener(this);
                     return;
                 }

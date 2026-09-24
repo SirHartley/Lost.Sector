@@ -26,6 +26,7 @@ import java.util.Random;
 
 public class HellSpawnAbility extends BaseDurationAbility {
 
+    public static final String ID = "nskr_hellSpawnAbility";
     public static final String HELL_FLEET_KEY = "$hellSpawnAbilityFleet";
     public static final String FLEET_ARRAY_KEY = "$hellSpawnAbilityFleetsArray";
 

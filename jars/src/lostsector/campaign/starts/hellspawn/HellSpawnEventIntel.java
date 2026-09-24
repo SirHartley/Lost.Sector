@@ -170,7 +170,7 @@ public class HellSpawnEventIntel extends BaseEventIntel implements FleetEventLis
         }
         if (stage.id == Stage.DESCENT_MID) {
             //ability
-            Global.getSector().getCharacterData().addAbility("HellSpawnAbility");
+            Global.getSector().getCharacterData().addAbility(HellSpawnAbility.ID);
 
             HellSpawnManager.applyCharacterBonus(characterStats);
 
@@ -181,8 +181,8 @@ public class HellSpawnEventIntel extends BaseEventIntel implements FleetEventLis
 
             HellSpawnManager.increaseLevel(1);
 
-            characterStats.setSkillLevel("HellSpawnSkill", 1f);
-            characterStats.decreaseSkill("HellSpawnPeacefulSkill");
+            characterStats.setSkillLevel(HellSpawnSkill.ID, 1f);
+            characterStats.decreaseSkill(HellSpawnPeacefulSkill.ID);
             characterStats.refreshCharacterStatsEffects();
 
         }

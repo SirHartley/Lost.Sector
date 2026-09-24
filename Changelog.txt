@@ -17,6 +17,7 @@ Adjusted - Easy and TRUE STARFARER are now choices of a single Difficulty settin
 Added - Mod Settings switches for the Throne's Gift and Hellspawn starts and the story skip; finishing the Kesteven questline turns them on
 Adjusted - Unlocks earned before this version do not carry over; switch them on in Mod Settings
 Added - Mod Settings key for firing a charged Stasis Generator (default F), for players who moved their ship system key
+Fixed - Hellspawn start: The Descent grants the Gate Conduit ability and the Hellspawn skill again, and the peaceful judgement no longer crashes
 
 1.0.b
 Adjusted - Severely nerfed spawn rates for Borealis, Rhea and Kingslayer
