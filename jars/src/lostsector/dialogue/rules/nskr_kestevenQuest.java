@@ -305,7 +305,7 @@ public class nskr_kestevenQuest extends PaginatedOptions {
 			//job 1
 			if (stage == 0) {
 				if (relation < JOB1_REP) {
-					jobText = "\"There is a new job available at the moment, but we require someone more qualified. Come back later when I know you can be trusted.\"";
+					jobText = "\"There is a new job available at the moment, but it's only for captains in good standing with Kesteven. Build up your reputation with us, and come back when I know you can be trusted.\"";
 				} else {
 					desc = "Enemy Unknown";
 					jobText = "\"There is a new job available at the moment, are you interested?\"";
@@ -347,7 +347,7 @@ public class nskr_kestevenQuest extends PaginatedOptions {
 			//job 3 jack
 			if (stage == 6) {
 				if (relation < JOB3_REP) {
-					jobText = "\"There is a new job available at the moment, but we require someone more qualified. Come back later when I know you can be trusted.\"";
+					jobText = "\"There is a new job available at the moment, but the board wants a captain in better standing with Kesteven. Improve your reputation with us and come back.\"";
 				} else if (getPower() > JOB3_POWER) {
 					desc = "Hostile Takeover";
 					jobText = "\"There is a new job available at the moment, are you interested?\"";
@@ -376,7 +376,7 @@ public class nskr_kestevenQuest extends PaginatedOptions {
 			//job 5 start
 			if (stage == 14) {
 				if (relation < JOB5_REP) {
-					jobText = "\"There is a new job available at the moment, but we require someone more qualified. Come back later when I know you can be trusted.\"";
+					jobText = "\"There is something important we need done, but I can't bring in anyone the board doesn't fully trust. Improve your standing with Kesteven, then we'll talk.\"";
 					addStorySkipOption();
 				} else if (getPower() > JOB5_POWER) {
 					desc = "\"I'm listening.\"";
@@ -448,7 +448,7 @@ public class nskr_kestevenQuest extends PaginatedOptions {
 			//job 4 start after the wait; JOB4_SKIP_REQ_KEY keeps a story point strength bypass across visits
 			if (stage == 11 && job4wait) {
 				if (relation < JOB4_REP) {
-					jobText = "\"There is a new job available at the moment, but we require someone more qualified. Come back later when I know you can be trusted.\"";
+					jobText = "\"There is a new job available at the moment, but not for someone with your standing at Kesteven. Improve it, then come back.\"";
 				} else if (QuestHelper.getCompleted(JOB4_SKIP_REQ_KEY) || getPower() > JOB4_POWER) {
 					desc = "Operation Lifesaver";
 					jobText = "\"There is a new job available at the moment, are you interested?\"";

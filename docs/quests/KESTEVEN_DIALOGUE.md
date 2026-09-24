@@ -34,7 +34,7 @@ Where the text for each stage lives:
 
 | Stage | Speaker | Status line (`addStageOptions`) | Briefing or hand-in (`showQuestInfoAndPrepare`) | Questions (`extraDialogue`) | Confirmation (`quest`) |
 |---|---|---|---|---|---|
-| 0 | Jack | Offer or "not qualified" | Job 1 briefing | Tip, rogue AI, the ships, Artifact Electronics, AI cores, "already fought them" | Accept |
+| 0 | Jack | Offer or relationship gate | Job 1 briefing | Tip, rogue AI, the ships, Artifact Electronics, AI cores, "already fought them" | Accept |
 | 1 | Jack | Progress | Sensor and electronics hand-ins, location tip | — | — |
 | 2 | Jack | "I've done everything." | Wrap-up | Equipment use, Enigma, next job | Rewards |
 | 6 | Jack | Offer or gates | Send to Alice, exchange program | — | Contact, stage 7 |
