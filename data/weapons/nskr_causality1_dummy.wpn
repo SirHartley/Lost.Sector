@@ -1,6 +1,6 @@
 {
 	"id":"nskr_causality1_dummy",  # this id must match what's in the spreadsheet
-	"everyFrameEffect": "lostsector.weapons.Cdummy1Effect",
+	"everyFrameEffect": "lostsector.combat.weapons.CausalityDummyEffect",
 	"specClass":"projectile",
 	"type":"MISSILE",
 	"size":"MEDIUM",

@@ -2,8 +2,8 @@
 	"id":"nskr_powersurge",
 	"type":"ENGINE_MOD",
 	"aiType":"CUSTOM",
-	"aiScript":"lostsector.shipsystems.ai.EngineAI",
-	"statsScript":"lostsector.shipsystems.PowersurgeStats",
+	"aiScript":"lostsector.combat.systems.ai.EngineBoostAI",
+	"statsScript":"lostsector.combat.systems.PowerSurgeStats",
 	
 	"engineGlowColor":[170, 220, 255, 125],
 	"engineGlowLengthMult":2.0,

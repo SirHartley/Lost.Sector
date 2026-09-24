@@ -10,6 +10,7 @@ None
 --------------------------- Changelog -----------------------------
 1.0.c
 Removed - Exotica Technologies integration (Temporal Conduits and Space Time Anchor upgrades), as Exotica is no longer updated
+Fixed - The mod jar no longer contains a second copy of all mod files
 
 1.0.b
 Adjusted - Severely nerfed spawn rates for Borealis, Rhea and Kingslayer

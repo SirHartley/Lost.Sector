@@ -2,8 +2,8 @@
 	"id":"nskr_harmonics",
 	"type":"STAT_MOD",
 	"aiType":"CUSTOM",
-	"aiScript":"lostsector.shipsystems.ai.HarmonicsAI",
-	"statsScript":"lostsector.shipsystems.HarmonicsStats",
+	"aiScript":"lostsector.combat.systems.ai.HarmonicsAI",
+	"statsScript":"lostsector.combat.systems.HarmonicsStats",
 
 	"outOfUsesSound":"gun_out_of_ammo",
 }

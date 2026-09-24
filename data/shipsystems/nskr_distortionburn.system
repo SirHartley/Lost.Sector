@@ -2,8 +2,8 @@
 	"id":"nskr_distortionburn",
 	"type":"ENGINE_MOD",
 	"aiType":"CUSTOM",
-	"aiScript":"lostsector.shipsystems.ai.BurnAI",
-	"statsScript":"lostsector.shipsystems.DistortionBurnStats",
+	"aiScript":"lostsector.combat.systems.ai.DistortionBurnAI",
+	"statsScript":"lostsector.combat.systems.DistortionBurnStats",
 	
 	#"engineGlowColor":[100, 178, 255,255],
 	"engineGlowLengthMult":3.0,

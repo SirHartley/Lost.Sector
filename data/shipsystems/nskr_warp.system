@@ -2,8 +2,8 @@
 	"id":"nskr_warp",
 	"type":"ENGINE_MOD",
 	"aiType":"CUSTOM",
-	"aiScript":"lostsector.shipsystems.ai.WarpAI",
-	"statsScript":"lostsector.shipsystems.WarpStats",
+	"aiScript":"lostsector.combat.systems.ai.WarpAI",
+	"statsScript":"lostsector.combat.systems.WarpStats",
 	
 	"clampMaxSpeedAfter":true,
 	"fadeActivationSoundOnChargedown":true,

@@ -2,7 +2,7 @@
 	"id":"nskr_mfrocket",
 	"specClass":"missile",
 	"missileType":"ROCKET",
-	"onHitEffect": "lostsector.weapons.MfrocketOH",
+	"onHitEffect": "lostsector.combat.weapons.FluxRocketOnHitEffect",
 	"sprite":"graphics/missiles/nskr_mfrocket.png",
 	"size":[6,24],	
 	"center":[3,12],

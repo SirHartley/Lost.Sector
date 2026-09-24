@@ -52,7 +52,7 @@ The dictionaries distinguish checked recipes from extracted names, expressions a
 - Add a `Changelog.txt` entry for every change players can notice, in the same commit, under the top (next-release) section. Use the existing forms `Added -`, `Adjusted -`, `Fixed -` and `Removed -`, one line per entry, in player terms. Refactors, documentation, tools and build setup get no entry.
 - Work only in the current task checkout. A live mod installation, including any copy under a Starsector `mods` folder, and every unrelated checkout are read-only unless the user explicitly asks you to change them.
 - Do not deploy or synchronize the mod after merge unless the user explicitly requests it.
-- Keep all Java tools and automated checks under `src`, in the normal `Lost.Sector` module. Do not add separate test source trees or duplicate game classes. Tools may read existing game constants and types; do not change runtime classes to support them.
+- Keep all Java tools and automated checks under `jars/src`, in the normal `Lost.Sector` module. Do not add separate test source trees or duplicate game classes. Tools may read existing game constants and types; do not change runtime classes to support them.
 - Prefer listeners and existing callbacks over `EveryFrameScript` polling. Before adding or retaining a polling solution for the task, verify against the exact game source that no existing callback covers the requirement. Document the missing coverage and keep the scan scope and frequency to what the behavior needs. Run while paused only when that behavior requires it.
 
 ### Validate and merge
@@ -235,7 +235,7 @@ After the final runtime-affecting commit and before merge:
 
 1. Fetch and build the exact remote task-branch revision.
 2. Use a clean, empty output directory.
-3. Compile every `.java` file under `src` with Java 17 and the complete dependency set below.
+3. Compile every `.java` file under `jars/src` with Java 17 and the complete dependency set below.
 4. Require a successful exit with no compile errors.
 5. Record the command, branch commit, Java version, and result in the pull request. The final reply links the PR and states the result and any untested behavior.
 6. Stop before merge if the build or any dependency is unavailable.
@@ -250,7 +250,7 @@ Required compile dependencies:
 
 - `lib/starfarer.api.jar`, and `starfarer_obf.jar` from the game's `starsector-core` directory;
 - `Graphics.jar` from `lib/GraphicsLib.zip`;
-- `LazyLib.jar` and `jars/internal/Kotlin-Runtime.jar` from `lib/Lazylib_lunalib.zip`; the Kotlin runtime supplies the `org.jetbrains.annotations` classes used in `src`;
+- `LazyLib.jar` and `jars/internal/Kotlin-Runtime.jar` from `lib/Lazylib_lunalib.zip`; the Kotlin runtime supplies the `org.jetbrains.annotations` classes used in `jars/src`;
 - `MagicLib.jar` from `lib/MagicLib.zip`;
 - `LunaLib.jar` from `lib/Lazylib_lunalib.zip`;
 - `lib/ExerelinCore.jar` and `lib/IndEvo.jar`, used only by code behind the optional-integration flags;
@@ -264,7 +264,7 @@ The last four ship with the game in `starsector-core`; the same versions from Ma
 Reference command:
 
 ```sh
-javac --release 17 -cp "<all jars above>" -d <empty-output> $(find src -name '*.java')
+javac --release 17 -cp "<all jars above>" -d <empty-output> $(find jars/src -name '*.java')
 ```
 
 ## Repository navigation

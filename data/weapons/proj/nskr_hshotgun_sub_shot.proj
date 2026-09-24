@@ -1,6 +1,6 @@
 {
 	"id":"nskr_hshotgun_sub_shot",
-	"onHitEffect": "lostsector.weapons.HshotgunOH",
+	"onHitEffect": "lostsector.combat.weapons.MegaShotgunOnHitEffect",
 	"specClass":"projectile",
 	"spawnType":"BALLISTIC",
 	"collisionClass":"PROJECTILE_FF",

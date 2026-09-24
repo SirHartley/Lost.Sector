@@ -4,7 +4,7 @@
   "projectileSpecId": "nskr_plasmal_shot",
   "type": "ENERGY",
   "size": "LARGE",
-  "everyFrameEffect": "lostsector.weapons.PlasmalScript",
+  "everyFrameEffect": "lostsector.combat.weapons.GigaPulseCannonEffect",
   "turretSprite": "graphics/weapons/nskr_plasmal_turret.png",
   "turretGlowSprite": "graphics/weapons/nskr_plasmal_turret_glow.png",
   "hardpointSprite": "graphics/weapons/nskr_plasmal_hardpoint.png",

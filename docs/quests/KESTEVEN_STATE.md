@@ -2,16 +2,16 @@
 
 Every value the questline saves, where it lives and which classes write it. Flow and meaning are in [KESTEVEN_QUESTLINE.md](KESTEVEN_QUESTLINE.md). Save-compatibility rules for the whole mod are in [ARCHITECTURE.md](../ARCHITECTURE.md#save-identity).
 
-Java paths are relative to `src/lostsector/campaign/`.
+Java paths are relative to `jars/src/lostsector/campaign/`; `dialogue/rules/` and `combat/` paths are relative to `jars/src/lostsector/`.
 
 ## Storage mechanisms
 
 | Mechanism | Location | Notes |
 |---|---|---|
-| `QuestUtil.getStage/setStage`, `getCompleted/setCompleted`, `getFailed/setFailed`, `getFloat/setFloat`, `getDialogStage/setDialogStage`, `getLocation/setLocation` | `Global.getSector().getPersistentData()` | Plain keys without `$`, although some constants spell one. Every getter writes its default into the map on first read. `getFailed` and `getCompleted` read the same map; the names are interchangeable. |
+| `QuestHelper.getStage/setStage`, `getCompleted/setCompleted`, `getFailed/setFailed`, `getFloat/setFloat`, `getDialogStage/setDialogStage`, `getLocation/setLocation` | `Global.getSector().getPersistentData()` | Plain keys without `$`, although some constants spell one. Every getter writes its default into the map on first read. `getFailed` and `getCompleted` read the same map; the names are interchangeable. |
 | Lazily picked targets | Persistent data, key prefix `nskr_kestevenQuest` | The first read picks and stores a `SectorEntityToken` or `StarSystemAPI`. The picking context is whichever caller reads first, often a dialog or intel panel. |
-| `Saved<T>` fields in `QuestStageManager` | Persistent data, `nskr_` + name | Reloaded by `ModPlugin` on load and after save. |
-| Quest fleet list | Sector memory `$kQuestMissionFleets`, a `List<FleetInfo>` | Read and written by `FleetUtil.getFleets/setFleets`. `FleetInfo.age` is in days. |
+| `persistence/Saved<T>` fields in `QuestStageManager` | Persistent data, `nskr_` + name | Reloaded by `ModPlugin` on load and after save. |
+| Quest fleet list | Sector memory `$kQuestMissionFleets`, a `List<FleetInfo>` | Read and written by `FleetHelper.getFleets/setFleets`. `FleetInfo.age` is in days. |
 | Fleet, entity and person memory | The owning `MemoryAPI` | Routing flags read by `rules.csv` and `CorePlugin`. |
 | Saved objects | Bar events in `PortsideBarData`, intel in the intel manager, `ElizaRaidObjectiveCreator` as a listener | Their class names and fields are serialized. |
 | Per installation | `LOST_SECTOR_cfg.json` through `ModPlugin.saveToConfig/loadFromConfig` | `completedStory`, `completedStoryHard`; shared by all campaigns |
@@ -20,13 +20,13 @@ Java paths are relative to `src/lostsector/campaign/`.
 
 | Key | Type | Written by |
 |---|---|---|
-| `nskr_kestevenQuest` | int stage | `nskr_kestevenQuest`, `QuestStageManager`, `KQuest3Bar`, `KQuest5Bar`, `Cache.CacheGuardFIDConfig`, `CoreDialog`, ending dialogs, `nskr_altEndingDialogLuddic.makeMad` |
+| `nskr_kestevenQuest` | int stage | `nskr_kestevenQuest`, `QuestStageManager`, `HostileTakeoverBarEvent`, `DelveMeetingBarEvent`, `Cache.CacheGuardFIDConfig`, `CacheCoreDialog`, ending dialogs, `nskr_altEndingDialogLuddic.makeMad` |
 | `KestevenQuestEnd` (`QUEST_END_KEY`) | boolean | `QuestStageManager` failure checks |
 | `nskr_kestevenQuestSkippedStory` | boolean | Story skip |
 
 ## Randomness
 
-Each owner keeps its own `Random` in persistent data. Most are seeded from the sector seed (`MiscLS.getSeedParsed()`).
+Each owner keeps its own `Random` in persistent data. Most are seeded from the sector seed (`MiscHelper.getSeedParsed()`).
 
 | Key | Owner |
 |---|---|
@@ -40,15 +40,15 @@ Each owner keeps its own `Random` in persistent data. Most are seeded from the s
 
 | Key | Picked by | Value |
 |---|---|---|
-| `nskr_kestevenQuestTip1` | `QuestUtil.getJob1Tip()` | System with an Enigma base; the first read also adds a dormant Enigma fleet there |
-| `nskr_kestevenQuestStart3` | `QuestUtil.getJob3Start()` | Random Tri-Tachyon market entity, not `eochu_bres` or `culann` |
-| `nskr_kestevenQuestTarget3` | `QuestUtil.getJob3Target()` | Random location in a system within 27,500 units of the centre |
-| `nskr_kestevenQuestTargetFriendly4` | `QuestUtil.getJob4FriendlyTarget()` | Random location in a system at least 32,500 units from the centre |
-| `nskr_kestevenQuestTargetEnemy4` | `QuestFleets.spawnJob4Target()` via `QuestUtil.setJob4EnemyTarget` | Strike group location |
-| `nskr_kestevenQuestJob5FrostTip` | `QuestUtil.getJob5FrostTip()` | System 7,000 to 12,000 units from Frost, used for Alice's distance hint |
-| `nskr_kestevenQuestElizaJob5` | `QuestUtil.setElizaLoc()` | Eliza's market entity; re-picked on decivilization |
-| `nskr_kestevenQuestCacheFleet` | `QuestUtil.setCacheFleetLoc()` | Guardian spawn point in Unknown Site |
-| `nskr_kQuest5ElizaBarPaidForLocation` | `KQuest5ElizaBarMain.setPaidForInfoTarget()` | Contact market after paying the spacer |
+| `nskr_kestevenQuestTip1` | `QuestHelper.getJob1Tip()` | System with an Enigma base; the first read also adds a dormant Enigma fleet there |
+| `nskr_kestevenQuestStart3` | `QuestHelper.getJob3Start()` | Random Tri-Tachyon market entity, not `eochu_bres` or `culann` |
+| `nskr_kestevenQuestTarget3` | `QuestHelper.getJob3Target()` | Random location in a system within 27,500 units of the centre |
+| `nskr_kestevenQuestTargetFriendly4` | `QuestHelper.getJob4FriendlyTarget()` | Random location in a system at least 32,500 units from the centre |
+| `nskr_kestevenQuestTargetEnemy4` | `QuestFleets.spawnJob4Target()` via `QuestHelper.setJob4EnemyTarget` | Strike group location |
+| `nskr_kestevenQuestJob5FrostTip` | `QuestHelper.getJob5FrostTip()` | System 7,000 to 12,000 units from Frost, used for Alice's distance hint |
+| `nskr_kestevenQuestElizaJob5` | `QuestHelper.setElizaLoc()` | Eliza's market entity; re-picked on decivilization |
+| `nskr_kestevenQuestCacheFleet` | `QuestHelper.setCacheFleetLoc()` | Guardian spawn point in Unknown Site |
+| `nskr_kQuest5ElizaBarPaidForLocation` | `ElizaSearchBarEvent.setPaidForInfoTarget()` | Contact market after paying the spacer |
 
 ## Conversation flags
 
@@ -73,7 +73,7 @@ Each owner keeps its own `Random` in persistent data. Most are seeded from the s
 
 | Key | Meaning | Written by |
 |---|---|---|
-| `KestevenQuestJob3Discovered` | Target coordinates from the bar | `KQuest3Bar` |
+| `KestevenQuestJob3Discovered` | Target coordinates from the bar | `HostileTakeoverBarEvent` |
 | `KestevenQuestJob3Fail` | Timeout or stealth broken | `QuestStageManager` |
 | `KestevenQuestSkip3` | Job refused | `nskr_kestevenQuest.confirmSkip` |
 | `KestevenQuestJob3Timer` | Float countdown from 90, reduced by 0.1 per fleet tick | `QuestStageManager.job3TargetLogic` |
@@ -89,22 +89,22 @@ Each owner keeps its own `Random` in persistent data. Most are seeded from the s
 | `KestevenQuestJob4Help` | Supplies and fuel given | `nskr_job4FleetDialog` |
 | `KestevenQuestJob4Fail` | Player attacked the friendly fleet | `QuestStageManager` |
 | `nskr_job4FleetDialogKey` | Friendly fleet dialogue stage (int) | `nskr_job4FleetDialog` |
-| `job4HintWreckCoordinatesReceived` | Hint wreck read | `Job4HintWreck` |
+| `job4HintWreckCoordinatesReceived` | Hint wreck read | `HintWreckDialog` |
 
 ## Job 5
 
 | Key | Meaning | Written by |
 |---|---|---|
-| `KestevenQuestDiskCount` | Disks recovered (int) | `ArtifactDialog`, `ElizaDialog`, `ElizaRaid`, `GlacierCommsDialog` |
+| `KestevenQuestDiskCount` | Disks recovered (int) | `DataSatelliteDialog`, `ElizaDialog`, `ElizaRaid`, `GlacierCommsDialog` |
 | `KestevenQuestAllDisks` | At least five disks | `QuestStageManager` |
-| `nskr_artifactKeyCount` | Satellites salvaged (int) | `ArtifactDialog`, story skip |
-| `nskr_artifactKey3Recovered`, `nskr_artifactKey4Recovered` | Satellite #3 or #4 salvaged | `ArtifactDialog`, story skip |
+| `nskr_artifactKeyCount` | Satellites salvaged (int) | `DataSatelliteDialog`, story skip |
+| `nskr_artifactKey3Recovered`, `nskr_artifactKey4Recovered` | Satellite #3 or #4 salvaged | `DataSatelliteDialog`, story skip |
 | `nskr_kestevenQuestJob5FoundFrost` | Frost identified | `nskr_kestevenQuest.quest()`, `QuestStageManager` |
 | `nskr_glacierCommsKeyCount` | Disk #5 recovered (boolean despite the name) | `GlacierCommsDialog` |
 | `nskr_kQuest5ElizaBarDialogStage` | Eliza bar chain stage: 0 to 3 | Eliza bar events |
 | `nskr_kQuest5ElizaBarUsedMarket` | `List<String>` of market ids already used | Eliza bar events |
-| `nskr_kQuest5ElizaBarPaidFor` | Paid the spacer | `KQuest5ElizaBarMain` |
-| `KestevenQuestJob5FoundEliza` | Eliza's market known | `KQuest5ElizaBarFinal` |
+| `nskr_kQuest5ElizaBarPaidFor` | Paid the spacer | `ElizaSearchBarEvent` |
+| `KestevenQuestJob5FoundEliza` | Eliza's market known | `ElizaSearchFinalBarEvent` |
 | `nskr_elizaDialogKeyFinished` | `ElizaDialog` completed | `ElizaDialog` |
 | `nskr_elizaDialogKeyHelp` | Disks received by agreement | `ElizaDialog` |
 | `nskr_elizaDialogKeyAgreeToHelp` | Agreed sincerely | `ElizaDialog` |
@@ -112,7 +112,7 @@ Each owner keeps its own `Random` in persistent data. Most are seeded from the s
 | `nskr_elizaDialogKeyFight` | Raid done | `ElizaRaid` |
 | `KestevenQuestKilledEliza` | Eliza dead | `QuestStageManager.runFleetLogic` |
 | `KestevenQuestFoundCache` | Cache coordinates known | `nskr_kestevenQuest`, `QuestStageManager`, story skip |
-| `nskr_coreDialogFirstTimeKey`, `nskr_coreDialogRecoveredKey` | Core seen; UPC salvaged | `CoreDialog` |
+| `nskr_coreDialogFirstTimeKey`, `nskr_coreDialogRecoveredKey` | Core seen; UPC salvaged | `CacheCoreDialog` |
 
 ## Stage 19 and endings
 
@@ -133,7 +133,7 @@ Each owner keeps its own `Random` in persistent data. Most are seeded from the s
 | `nskr_ttCollectorDialogKey` | Collector paid | `nskr_ttCollectorDialog` |
 | `nskr_starfarerFromStart` | Cleared by the story skip | `nskr_kestevenQuest` |
 
-## `Saved` fields in `QuestStageManager`
+## `persistence/Saved` fields in `QuestStageManager`
 
 Stored as `nskr_` + name.
 
@@ -154,8 +154,8 @@ Stored as `nskr_` + name.
 
 | Flag | Owner memory | Set by | Read by |
 |---|---|---|---|
-| `$kQuestArtifact3`, `$kQuestArtifact4` | Satellite entity | `QuestUtil.spawnArtifact` | `CorePlugin` (prefix match) and `ArtifactDialog` |
-| `$nskr_artifactKeyEmpty` | Satellite entity | `ArtifactDialog` | `ArtifactDialog` |
+| `$kQuestArtifact3`, `$kQuestArtifact4` | Satellite entity | `QuestHelper.spawnArtifact` | `CorePlugin` (prefix match) and `DataSatelliteDialog` |
+| `$nskr_artifactKeyEmpty` | Satellite entity | `DataSatelliteDialog` | `DataSatelliteDialog` |
 | `$job4HintWreck` + number | Entity **id** prefix, not memory | `QuestStageManager.spawnJob4Wrecks` | `CorePlugin` |
 | `$KestevenQuestJob3Target` | Expedition fleet | `QuestFleets` | `QuestStageManager` |
 | `$KestevenQuestJob4Target`, `$KestevenQuestJob4Friendly`, `$KestevenQuestJob4Splinter` | Job 4 fleets | `QuestFleets` | `QuestStageManager`, rules |
@@ -163,8 +163,8 @@ Stored as `nskr_` + name.
 | `$ElizaFleet` | Eliza's fleet after the raid | `QuestFleets` | `QuestStageManager`, rules |
 | `$InterceptPlayerElizaFleet` | Eliza's intercept fleet | `QuestFleets` | `QuestStageManager`, rules, `nskr_elizaInterceptDialog` |
 | `$RevengeanceQuestFleet`, `$RevengeanceJack` | Revenge fleets | `QuestFleets` | `QuestStageManager`, rules |
-| `$CacheGuardianFleet` (`Cache.CACHE_FLEET_KEY`) | Guardian fleet | `Cache` | `QuestStageManager`, `TauntPlugin`, rules |
-| `$EnigmaDormantFleet` (`DormantSpawner.DORMANT_KEY`) | Dormant fleets at quest locations | `MiscLS.addDormant` | `ArtifactDialog.makeHostile`, `QuestStageManager` |
+| `$CacheGuardianFleet` (`Cache.CACHE_FLEET_KEY`) | Guardian fleet | `Cache` | `QuestStageManager`, `CacheBossTauntPlugin`, rules |
+| `$EnigmaDormantFleet` (`DormantSpawner.DORMANT_KEY`) | Dormant fleets at quest locations | `MiscHelper.addDormant` | `DataSatelliteDialog.makeHostile`, `QuestStageManager` |
 | `$nskr_altEndingDialogLockedToPerson` | The official in either alternative ending | Alternative endings | Alternative endings |
 | `$nskr_interceptManagerMessengerFleet`, `$nskr_interceptManagerMessengerTalked` | Messenger fleet | `InterceptManager`, rules | `InterceptManager` |
 
@@ -181,8 +181,8 @@ The stage has no single owner. These are all the writers:
 | `QuestStageManager.advance()` | 1→2, 12→13, 16→17, failure→99 |
 | `QuestStageManager.job3TargetLogic()` | 8 or 9→10 |
 | `QuestStageManager.reportEncounterLootGenerated()` | 8 or 9→10 (stealth broken), any→14 (friendly attacked) |
-| `KQuest3Bar` | 8→9 |
-| `KQuest5Bar` | 15→16 |
+| `HostileTakeoverBarEvent` | 8→9 |
+| `DelveMeetingBarEvent` | 15→16 |
 | `Cache.CacheGuardFIDConfig` | 16 or 17→18 |
-| `CoreDialog` | →19 |
+| `CacheCoreDialog` | →19 |
 | `EndingKestevenDialog`, `EndingElizaDialog`, `nskr_altEndingDialogLuddic.makeMad` | 19→20 |

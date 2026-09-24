@@ -67,15 +67,14 @@
 	},
 	
 	"plugins":{
-		"nskr_kaboomPlugin":"lostsector.plugins.KaboomPlugin",
-		"nskr_entrancePlugin":"lostsector.plugins.EntrancePlugin",
-		"nskr_SplitterWeaponPlugin":"lostsector.plugins.SplitterWeaponPlugin",
-		"nskr_teleporterPlugin":"lostsector.plugins.TeleporterPlugin",
-		"nskr_tauntPlugin":"lostsector.plugins.TauntPlugin",
+		"nskr_kaboomPlugin":"lostsector.combat.plugins.PayloadDetonationPlugin",
+		"nskr_entrancePlugin":"lostsector.combat.plugins.EntrancePlugin",
+		"nskr_SplitterWeaponPlugin":"lostsector.combat.weapons.PlasmaCanisterSplitter",
+		"nskr_tauntPlugin":"lostsector.combat.plugins.CacheBossTauntPlugin",
 	},
 	
 	"ruleCommandPackages":[
-		"lostsector.campaign.rulecmd",
+		"lostsector.dialogue.rules",
 	],
 	
 	# Bonus XP values for most story-point-using actions

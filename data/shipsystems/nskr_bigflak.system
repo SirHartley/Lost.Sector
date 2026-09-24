@@ -2,8 +2,8 @@
 	"id":"nskr_bigflak",
 	"type":"STAT_MOD",
 	"aiType":"CUSTOM",
-	"aiScript":"lostsector.shipsystems.ai.BigFlakAI",
-	"statsScript":"lostsector.shipsystems.BigFlakStats",
+	"aiScript":"lostsector.combat.systems.ai.BigFlakAI",
+	"statsScript":"lostsector.combat.systems.BigFlakStats",
 
 	"outOfUsesSound":"gun_out_of_ammo",
 }

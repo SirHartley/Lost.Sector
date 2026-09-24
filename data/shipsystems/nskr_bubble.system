@@ -2,8 +2,8 @@
 	"id":"nskr_bubble",
 	"type":"STAT_MOD",
     "aiType":"CUSTOM",
-    "aiScript":"lostsector.shipsystems.ai.BubbleAI",
-	"statsScript":"lostsector.shipsystems.BubbleStats",
+    "aiScript":"lostsector.combat.systems.ai.BubbleAI",
+	"statsScript":"lostsector.combat.systems.BubbleStats",
 
 	"fadeActivationSoundOnChargedown":true,
 	"outOfUsesSound":"gun_out_of_ammo",

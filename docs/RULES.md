@@ -125,7 +125,7 @@ public class MyRuleCMD extends BaseCommandPlugin {
 }
 ```
 
-Register the class's package in `ruleCommandPackages`, then invoke its exact simple class name in Script: `MyRuleCMD argA "quoted arg"`. The resolver tries registered packages and caches successful class lookups. Lost.Sector's commands live in `src/lostsector/campaign/rulecmd/`, normally one multi-verb class per feature, registered through the `lostsector.campaign.rulecmd` package. Read [custom command integration](RULES_AUTHORING.md#create-a-command-only-when-needed) before adding another class; ordinary mod actions should extend the existing command that owns the feature.
+Register the class's package in `ruleCommandPackages`, then invoke its exact simple class name in Script: `MyRuleCMD argA "quoted arg"`. The resolver tries registered packages and caches successful class lookups. Lost.Sector's commands live in `jars/src/lostsector/dialogue/rules/`, normally one multi-verb class per feature, registered through the `lostsector.dialogue.rules` package. Read [custom command integration](RULES_AUTHORING.md#create-a-command-only-when-needed) before adding another class; ordinary mod actions should extend the existing command that owns the feature.
 
 ### Integration patterns with Java code
 
@@ -133,7 +133,7 @@ Register the class's package in `ruleCommandPackages`, then invoke its exact sim
 Custom commands registered by simple name in the script column: `nskr_debt init`, `nskr_shipSwap sell`. The command class handles all logic; rules invoke it declaratively. See [Project routing](#project-routing).
 
 **Nexerelin style (memory references):**
-`Call $reference <action>` requires an object implementing `CallEvent.CallableEvent`; it delivers action tokens to `callEvent`, not to an arbitrary reflected Java method. Lost.Sector's `Contracts` mission uses the BaseHubMission dispatch through `$nskr_contracts_ref`, set by `setPersonMissionRef`. Persistent referenced objects must remain save-compatible. See [Call integration](RULES_AUTHORING.md#reuse-a-mission-object-through-call).
+`Call $reference <action>` requires an object implementing `CallEvent.CallableEvent`; it delivers action tokens to `callEvent`, not to an arbitrary reflected Java method. Lost.Sector's `ContractsMission` mission uses the BaseHubMission dispatch through `$nskr_contracts_ref`, set by `setPersonMissionRef`. Persistent referenced objects must remain save-compatible. See [Call integration](RULES_AUTHORING.md#reuse-a-mission-object-through-call).
 
 **Rule-driven mission chains:**
 For multi-step missions without timers/map markers:
@@ -174,15 +174,15 @@ Code owners are mapped in [ARCHITECTURE.md](ARCHITECTURE.md). Shared text-presen
 
 | Entry / state | Contract |
 |---|---|
-| `lostsector.campaign.rulecmd` | Registered command package. Commands are multi-verb classes, normally one per feature; the first argument selects the verb. A `hasOption` verb is a Condition that the current target qualifies for that feature's option. Most dialogue commands extend `PaginatedOptions`. |
-| `nskr_kestevenQuest <verb>` | Kesteven questline dialogue. The stage is an int in sector persistent data under `nskr_kestevenQuest`, read and written through `QuestUtil.getStage/setStage`; `QuestStageManager` also advances it. Stage values are listed in the "STAGE CHEAT SHEET" comment in `nskr_kestevenQuest.java`. |
-| `nskr_isKStage N`, `nskr_isAtleastKStage N`, `nskr_isAtmostKStage N` | Condition predicates on the quest stage. |
+| `lostsector.dialogue.rules` | Registered command package. Commands are multi-verb classes, normally one per feature; the first argument selects the verb. A `hasOption` verb is a Condition that the current target qualifies for that feature's option. Most dialogue commands extend `PaginatedOptions`. |
+| `nskr_kestevenQuest <verb>` | Kesteven questline dialogue. The stage is an int in sector persistent data under `nskr_kestevenQuest`, read and written through `QuestHelper.getStage/setStage`; `QuestStageManager` also advances it. Stage values are listed in the "STAGE CHEAT SHEET" comment in `nskr_kestevenQuest.java`. |
+| `nskr_isKStage N`, `nskr_isAtLeastKStage N`, `nskr_isAtMostKStage N` | Condition predicates on the quest stage. |
 | `nskr_isBaseOfficial <post>` | Condition on the active person's post: `command`, `military`, `admin`, `ttadmin`, `trade`/`op`, `research`, `intelligence`, `trader` or `any`. Gates the official menus below. |
 | `nskr_optionStartsWith "<prefix>"` | Condition: `$option` begins with the prefix. Paginated pickers add an index suffix to their option IDs. |
 | `nskr_debtMenu`, `nskr_shipSwapMenu`, `nskr_modRemovalMenu` | Private menus of `nskr_debt`, `nskr_shipSwap` and `nskr_modRemoval`. Entry and return rows fire the menu trigger; exit rows fire `PopulateOptions`. |
 | `nskr_shipSold` | Fired by `nskr_shipSwap` from Java after a sale. |
 | `$nskr_debt_points` / `…Str`, `$nskr_debt_MaxpointsStr`, `$nskr_debtInterest` / `…Str`, `$nskr_shipSwap_points` / `…Str` | Local display values written with expiry `0` by the owning command before its menu text. The saved values are in sector persistent data. |
-| `Call $nskr_contracts_ref showBlurb` / `showContract` | `Contracts` hub mission offer on the `nskr_contracts_blurb` and `nskr_contracts_option` triggers; the start row sets `$missionId = nskr_contracts`. |
+| `Call $nskr_contracts_ref showBlurb` / `showContract` | `ContractsMission` hub mission offer on the `nskr_contracts_blurb` and `nskr_contracts_option` triggers; the start row sets `$missionId = nskr_contracts`. |
 | `$KestevenQuestJob4Target`, `$KestevenQuestJob4Friendly`, `$KestevenQuestTTCollector`, `$ElizaFleet`, `$RevengeanceEliza`, `$RevengeanceJack`, `$BetrayalFleet`, `$InterceptPlayerElizaFleet`, `$nskr_interceptManagerAROfleet`, `$nskr_interceptManagerMessengerFleet`, `$debtCollector`, `$CacheGuardianFleet`, `$EnigmaDormantFleet`, `$AbyssLoot`, `$EternityLoot`, `$mothershipLoot`, `$RorqLoot` | Fleet memory flags set by the spawning Java owner. They select that fleet's `OpenCommLink` and `BeginFleetEncounter` rows. |
 | `job4TargetOptions`, `elizaRevengeanceDialogOptions`, `pkDialogOptions`, `betrayalDialogOptions` | Private option triggers, fired with `FireBest` from the matching greeting row. |
 | `nskr_barEventFixer`, `nskr_heartFixer` | Kesteven questline bar events on `AddBarEvents`; the `nskr_heart` market menu on `MarketPostDock`/`MarketPostOpen`. |
