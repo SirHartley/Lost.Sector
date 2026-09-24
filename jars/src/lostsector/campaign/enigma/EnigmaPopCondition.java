@@ -47,6 +47,11 @@ public class EnigmaPopCondition extends BaseMarketConditionPlugin {
     public void unapply(String id) {
         super.unapply(id);
 
+        for (Industry industry : market.getIndustries()) {
+            for (MutableCommodityQuantity supply : industry.getAllSupply()) {
+                supply.getQuantity().unmodify(getModId());
+            }
+        }
         market.getStats().getDynamic().getMod(Stats.COMBAT_FLEET_SIZE_MULT).unmodify(id);
         market.getStats().getDynamic().getMod(Stats.PATROL_NUM_HEAVY_MOD).unmodify(id);
         market.getStats().getDynamic().getMod(Stats.PATROL_NUM_MEDIUM_MOD).unmodify(id);

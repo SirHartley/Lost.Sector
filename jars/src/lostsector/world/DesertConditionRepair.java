@@ -20,7 +20,7 @@ public class DesertConditionRepair{
             if (system.getPlanets().isEmpty()) continue;
             for (PlanetAPI p : system.getPlanets()){
                 if (!p.getTypeId().equals(FROZEN_TYPE)) continue;
-                if (!p.getMarket().isPlanetConditionMarketOnly() || p.getMarket()==null) continue;
+                if (p.getMarket()==null || !p.getMarket().isPlanetConditionMarketOnly()) continue;
 
                 if (p.hasCondition(Conditions.HOT)){
                     p.getMarket().removeCondition(Conditions.HOT);

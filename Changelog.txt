@@ -58,6 +58,7 @@ Fixed - Helios and Polaris are now always placed around a gas giant without moon
 Fixed - The Peacekeepers bounty now pays once you destroy the ISS White Whale, and ends when someone else destroys it
 Fixed - ARO Strike Groups, the Merc Messenger and Hunter Fanatics now react to your movements several times a day instead of once a day
 Fixed - The Kesteven debt collector fleet is named Debt Collector again instead of showing an internal ID
+Fixed - Markets no longer keep the Enigma population supply bonus or the Unlimited Production Chip production and quality bonuses after losing those conditions
 
 1.0.b
 Adjusted - Severely nerfed spawn rates for Borealis, Rhea and Kingslayer

@@ -64,13 +64,11 @@ public class FleetHelper {
     public static void cleanUp(List<CampaignFleetAPI> toRemove, List<FleetInfo> fleets) {
         for (Iterator<FleetInfo> iter = fleets.listIterator(); iter.hasNext();) {
             CampaignFleetAPI a = iter.next().fleet;
-            for (CampaignFleetAPI remove : toRemove) {
-                if (a == remove) {
-
-                    log("REMOVED " + a.getName());
-                    iter.remove();
-                }
-                if (a==null) iter.remove();
+            if (a == null) {
+                iter.remove();
+            } else if (toRemove.contains(a)) {
+                log("REMOVED " + a.getName());
+                iter.remove();
             }
         }
     }

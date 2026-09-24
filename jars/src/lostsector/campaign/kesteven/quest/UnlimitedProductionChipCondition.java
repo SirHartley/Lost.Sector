@@ -47,7 +47,7 @@ public class UnlimitedProductionChipCondition extends BaseMarketConditionPlugin 
         if (market.getFaction().getId().equals(Factions.PIRATES)){
             market.getStats().getDynamic().getMod(Stats.MAX_INDUSTRIES).modifyFlat(id, 2f,Misc.ucFirst(condition.getName().toLowerCase()));
         } else {
-           market.getStats().getDynamic().getMod(Stats.MAX_INDUSTRIES).unmodify(Misc.ucFirst(condition.getName().toLowerCase()));
+           market.getStats().getDynamic().getMod(Stats.MAX_INDUSTRIES).unmodify(id);
         }
     }
 
@@ -69,11 +69,19 @@ public class UnlimitedProductionChipCondition extends BaseMarketConditionPlugin 
     public void unapply(String id) {
         super.unapply(id);
 
+        for (String industryId : new String[]{Industries.HEAVYINDUSTRY, Industries.ORBITALWORKS}) {
+            Industry industry = market.getIndustry(industryId);
+            if (industry == null) continue;
+            industry.getSupplyBonusFromOther().unmodify(id);
+            industry.getSupplyBonusFromOther().unmodify(id+"extra");
+        }
+
         market.getStats().getDynamic().getMod(Stats.MAX_INDUSTRIES).unmodify(id);
 
         market.getStats().getDynamic().getMod(Stats.COMBAT_FLEET_SIZE_MULT).unmodify(id);
         market.getStats().getDynamic().getMod(Stats.PATROL_NUM_HEAVY_MOD).unmodify(id);
         market.getStats().getDynamic().getMod(Stats.PATROL_NUM_MEDIUM_MOD).unmodify(id);
+        market.getStats().getDynamic().getMod(Stats.FLEET_QUALITY_MOD).unmodify(id);
     }
 
     @Override
