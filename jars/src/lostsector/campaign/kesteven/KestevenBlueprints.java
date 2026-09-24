@@ -2,17 +2,15 @@
 //from Tahlan Shipworks
 package lostsector.campaign.kesteven;
 
-import com.fs.starfarer.api.EveryFrameScript;
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.FactionAPI;
-import com.fs.starfarer.api.campaign.FactionSpecAPI;
 import com.fs.starfarer.api.impl.campaign.ids.Factions;
 import lostsector.helper.Ids;
 
 import java.util.HashSet;
 import java.util.Set;
 
-public class KestevenBlueprints implements EveryFrameScript {
+public class KestevenBlueprints {
 
     public static final Set<String> BANNED_SHIPS = new HashSet<>();
     static {
@@ -26,24 +24,9 @@ public class KestevenBlueprints implements EveryFrameScript {
         BANNED_SHIPS.add("wayfarer");
     }
 
-    @Override
-    public boolean isDone() {
-        return false;
-    }
-
-    @Override
-    public boolean runWhilePaused() {
-        return false;
-    }
-
-    @Override
-    public void advance(float amount) {
-    }
-
     public static void borrowIndieBlueprints() {
 
         FactionAPI f = Global.getSector().getFaction(Ids.KESTEVEN_FACTION_ID);
-        FactionSpecAPI fSpec = f.getFactionSpec();
 
         for (String ship : Global.getSector().getFaction(Factions.INDEPENDENT).getKnownShips()) {
             //ignore GH content
@@ -53,7 +36,7 @@ public class KestevenBlueprints implements EveryFrameScript {
                 f.addKnownShip(ship, true);
             }
         }
-        
+
         for (String baseShip : Global.getSector().getFaction(Factions.INDEPENDENT).getAlwaysKnownShips()) {
             //ignore GH content
             if (Global.getSettings().getHullSpec(baseShip).hasTag("tahlan_knights")) continue;
@@ -68,6 +51,5 @@ public class KestevenBlueprints implements EveryFrameScript {
                 f.addKnownFighter(fighter, true);
             }
         }
-
     }
 }

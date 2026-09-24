@@ -17,7 +17,7 @@ public class BlastSprite {
     //creates "blastwave" and other effects by rendering a sprite for x period
     //
     public static final String SPRITE_PATH = "graphics/fx/shields256.png";
-    public static class blastSpriteListener implements AdvanceableListener {
+    public static class BlastSpriteListener implements AdvanceableListener {
 
         public float duration;
         public float elapsed;
@@ -53,7 +53,7 @@ public class BlastSprite {
         private boolean loaded = false;
         private float angle = 0f;
 
-        public blastSpriteListener(ShipAPI source, Vector2f point, float duration, float size, Color color) {
+        public BlastSpriteListener(ShipAPI source, Vector2f point, float duration, float size, Color color) {
             this.source = source;
             this.duration = duration;
             this.elapsed = duration;

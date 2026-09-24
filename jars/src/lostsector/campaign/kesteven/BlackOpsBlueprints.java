@@ -2,27 +2,13 @@
 //from Tahlan Shipworks
 package lostsector.campaign.kesteven;
 
-import com.fs.starfarer.api.EveryFrameScript;
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.FactionAPI;
 import com.fs.starfarer.api.impl.campaign.ids.Tags;
 
-public class BlackOpsBlueprints implements EveryFrameScript {
+public class BlackOpsBlueprints {
+
     public static final String SPEC_OPS_ID = "prot_ops";
-
-    @Override
-    public boolean isDone() {
-        return false;
-    }
-
-    @Override
-    public boolean runWhilePaused() {
-        return false;
-    }
-
-    @Override
-    public void advance(float amount) {
-    }
 
     public static void scanWeaponBlueprints() {
         for (FactionAPI f : Global.getSector().getAllFactions()) {

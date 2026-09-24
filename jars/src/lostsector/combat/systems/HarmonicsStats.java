@@ -39,8 +39,8 @@ public class HarmonicsStats extends BaseShipSystemScript {
 
         if (!active){
 
-            ship.addListener(new Harmonics.harmonicsSourceListener(ship, target));
-            target.addListener(new Harmonics.harmonicsTargetListener(ship, target));
+            ship.addListener(new Harmonics.HarmonicsSourceListener(ship, target));
+            target.addListener(new Harmonics.HarmonicsTargetListener(ship, target));
 
             //sound
             Global.getSoundPlayer().playSound("nskr_harmonics_activate", 1.0f, 0.70f, ship.getLocation(), new Vector2f());

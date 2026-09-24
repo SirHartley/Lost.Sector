@@ -23,7 +23,7 @@ public class FleetInfo {
 
     //custom
     //used only for HyperspaceEnigmaSpawner
-    public HyperspaceEnigmaSpawner.taskType task = null;
+    public HyperspaceEnigmaSpawner.TaskType task = null;
 
     public FleetInfo(CampaignFleetAPI fleet, SectorEntityToken target, SectorEntityToken home) {
         this.fleet = fleet;

@@ -9,7 +9,7 @@ public class BigFlakEffect  implements EveryFrameWeaponEffectPlugin, OnFireEffec
     public void onFire(DamagingProjectileAPI projectile, WeaponAPI weapon, CombatEngineAPI engine) {
 
         ShipAPI ship = projectile.getSource();
-        ship.addListener(new BigFlak.bigFlakProjectileVisualListener(projectile, ship));
+        ship.addListener(new BigFlak.BigFlakProjectileVisualListener(projectile, ship));
     }
 
     @Override

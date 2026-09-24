@@ -16,13 +16,13 @@ public class nskr_isAtMostKStage extends BaseCommandPlugin {
 	
 	@Override
 	public boolean execute(String ruleId, InteractionDialogAPI dialog, List<Misc.Token> params, Map<String, MemoryAPI> memoryMap) {
-	boolean isAtleast = false;
+	boolean isAtMost = false;
 	String stringArg = params.get(0).getString(memoryMap);
 	int stage = QuestHelper.getStage();
 	int arg = Integer.parseInt(stringArg);
 
-	if (stage<=arg) isAtleast = true;
+	if (stage<=arg) isAtMost = true;
 
-	return isAtleast;
+	return isAtMost;
 	}
 }

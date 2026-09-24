@@ -32,7 +32,7 @@ import org.lwjgl.util.vector.Vector2f;
 
 import java.util.*;
 
-import static lostsector.campaign.enigma.HyperspaceEnigmaSpawner.fleetLevel;
+import static lostsector.campaign.enigma.HyperspaceEnigmaSpawner.FleetLevel;
 import static lostsector.campaign.enigma.HyperspaceEnigmaSpawner.getFleetLevel;
 
 public class StalkerSpawner extends BaseCampaignEventListener implements EveryFrameScript {
@@ -336,7 +336,7 @@ public class StalkerSpawner extends BaseCampaignEventListener implements EveryFr
         if (home == null) return;
 
         //pick level
-        fleetLevel lvl = getFleetLevel(power);
+        FleetLevel lvl = getFleetLevel(power);
         //don't do this
         power = Math.min(1.5f, power);
 

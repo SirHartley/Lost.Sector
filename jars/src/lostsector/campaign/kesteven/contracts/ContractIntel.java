@@ -133,7 +133,7 @@ public class ContractIntel extends BaseIntelPlugin {
         int remaining = contract.count-contract.completedCount;
 
         if (!completed && !failed) {
-            if (contract.type== ContractInfo.contractType.ELIMINATE){
+            if (contract.type== ContractInfo.ContractType.ELIMINATE){
                 String hostileStr = "";
                 if (!contract.isFactionBounty) hostileStr = "enemy";
 
@@ -167,7 +167,7 @@ public class ContractIntel extends BaseIntelPlugin {
         float pad = 3f;
         float opad = 10f;
         if (!completed && !failed){
-            if (contract.type== ContractInfo.contractType.ELIMINATE){
+            if (contract.type== ContractInfo.ContractType.ELIMINATE){
                 info.addPara("You accepted an elimination contract, for the destruction of certain assets belonging to the enemies of Kesteven.", opad,tc, h, "", "");
             } else {
                 info.addPara("You accepted a recovery contract, for the salvaging of certain materials.", opad,tc, h, "", "");
@@ -188,8 +188,8 @@ public class ContractIntel extends BaseIntelPlugin {
 
     @Override
     public String getIcon() {
-        if (contract.type== ContractInfo.contractType.ELIMINATE) return Global.getSettings().getSpriteName("campaignMissions", "pk");
-        if (contract.type== ContractInfo.contractType.SCAVENGE) return Global.getSettings().getSpriteName("campaignMissions", "scav");
+        if (contract.type== ContractInfo.ContractType.ELIMINATE) return Global.getSettings().getSpriteName("campaignMissions", "pk");
+        if (contract.type== ContractInfo.ContractType.SCAVENGE) return Global.getSettings().getSpriteName("campaignMissions", "scav");
         return null;
     }
 
@@ -198,7 +198,7 @@ public class ContractIntel extends BaseIntelPlugin {
         Set<String> tags = super.getIntelTags(map);
         tags.add(Tags.INTEL_ACCEPTED);
         tags.add(Tags.INTEL_MISSIONS);
-        if (contract.type== ContractInfo.contractType.ELIMINATE) tags.add(Tags.INTEL_BOUNTY);
+        if (contract.type== ContractInfo.ContractType.ELIMINATE) tags.add(Tags.INTEL_BOUNTY);
         return tags;
     }
 
@@ -209,15 +209,15 @@ public class ContractIntel extends BaseIntelPlugin {
 
     public String getSortString() {
         String name = "";
-        if (contract.type== ContractInfo.contractType.ELIMINATE) name = "Elimination Contract";
-        if (contract.type== ContractInfo.contractType.SCAVENGE) name = "Recovery Contract";
+        if (contract.type== ContractInfo.ContractType.ELIMINATE) name = "Elimination Contract";
+        if (contract.type== ContractInfo.ContractType.SCAVENGE) name = "Recovery Contract";
         return name;
     }
 
     public String getName() {
         String name = "";
-        if (contract.type== ContractInfo.contractType.ELIMINATE) name = "Elimination Contract";
-        if (contract.type== ContractInfo.contractType.SCAVENGE) name = "Recovery Contract";
+        if (contract.type== ContractInfo.ContractType.ELIMINATE) name = "Elimination Contract";
+        if (contract.type== ContractInfo.ContractType.SCAVENGE) name = "Recovery Contract";
         return name;
     }
 

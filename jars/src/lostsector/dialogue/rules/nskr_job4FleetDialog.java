@@ -75,9 +75,9 @@ public class nskr_job4FleetDialog extends PaginatedOptions {
 				return validEntity(entity);
 			case "isDialogStage":
 				return getDialogStage(id)==intArg;
-			case "isAtmostDialogStage":
+			case "isAtMostDialogStage":
 				return getDialogStage(id)<=intArg;
-			case "isAtleastDialogStage":
+			case "isAtLeastDialogStage":
 				return getDialogStage(id)>=intArg;
 			case "setDialogStage":
 				setDialogStage(intArg, id);

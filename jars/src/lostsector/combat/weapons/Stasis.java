@@ -76,7 +76,7 @@ public class Stasis {
         }
     }
 
-    public static class stasisEffectListener implements AdvanceableListener {
+    public static class StasisEffectListener implements AdvanceableListener {
 
         public static final Color TEXT_COLOR = new Color(55, 95, 255,255);
         public static final Color JITTER_COLOR = new Color(0, 13, 150, 100);
@@ -104,7 +104,7 @@ public class Stasis {
         private float elapsed = 0f;
 
         private boolean newHit;
-        public stasisEffectListener(ShipAPI ship, ShipAPI source) {
+        public StasisEffectListener(ShipAPI ship, ShipAPI source) {
             this.ship = ship;
             this.source = source;
             newHit = true;
@@ -199,13 +199,13 @@ public class Stasis {
             if (ship.getCollisionClass()==CollisionClass.NONE) continue;
             if (MathUtils.getDistance(ship.getLocation(), point) > StasisStats.MAX_ON_HIT_RANGE) continue;
             //add
-            ship.addListener(new stasisEffectListener(ship, source));
+            ship.addListener(new StasisEffectListener(ship, source));
         }
 
         Global.getSoundPlayer().playSound("nskr_stasis_activate", 1.0f, 1.0f, point, new Vector2f());
 
         //FX
-        BlastSprite.blastSpriteListener shockwave1 = new BlastSprite.blastSpriteListener(source, point, 1.25f, 350f, SHOCKWAVE_COLOR_1);
+        BlastSprite.BlastSpriteListener shockwave1 = new BlastSprite.BlastSpriteListener(source, point, 1.25f, 350f, SHOCKWAVE_COLOR_1);
         shockwave1.customSpritePath = SPRITE_PATH_1;
         shockwave1.sizeEaseOutSine = true;
         shockwave1.alphaEaseInSine = true;

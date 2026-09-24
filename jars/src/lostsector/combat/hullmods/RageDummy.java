@@ -122,7 +122,7 @@ public class RageDummy extends BaseHullMod {
 
 	@Override
 	public void applyEffectsAfterShipCreation(ShipAPI ship, String id) {
-		ship.addListener(new preventOneshotScript(ship));
+		ship.addListener(new PreventOneShotListener(ship));
 	}
 
 	@Override
@@ -473,10 +473,10 @@ public class RageDummy extends BaseHullMod {
 		}
 	}
 
-	public static class preventOneshotScript implements HullDamageAboutToBeTakenListener {
+	public static class PreventOneShotListener implements HullDamageAboutToBeTakenListener {
 		public ShipAPI ship;
 
-		public preventOneshotScript(ShipAPI ship) {
+		public PreventOneShotListener(ShipAPI ship) {
 			this.ship = ship;
 		}
 

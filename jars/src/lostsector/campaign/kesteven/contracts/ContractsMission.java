@@ -41,10 +41,10 @@ public class ContractsMission extends BaseHubMission {
 
         //create the contracts
         if (getContract(CONTRACT_KEY_ELIMINATE)==null){
-            setContract(CONTRACT_KEY_ELIMINATE, new ContractInfo(ContractInfo.contractType.ELIMINATE, ContractManager.getRandom(PERSISTENT_RANDOM_KEY_ELIMINATE)));
+            setContract(CONTRACT_KEY_ELIMINATE, new ContractInfo(ContractInfo.ContractType.ELIMINATE, ContractManager.getRandom(PERSISTENT_RANDOM_KEY_ELIMINATE)));
         }
         if (getContract(CONTRACT_KEY_RECOVERY)==null){
-            setContract(CONTRACT_KEY_RECOVERY, new ContractInfo(ContractInfo.contractType.SCAVENGE, ContractManager.getRandom(PERSISTENT_RANDOM_KEY_RECOVERY)));
+            setContract(CONTRACT_KEY_RECOVERY, new ContractInfo(ContractInfo.ContractType.SCAVENGE, ContractManager.getRandom(PERSISTENT_RANDOM_KEY_RECOVERY)));
         }
     }
 
@@ -65,10 +65,10 @@ public class ContractsMission extends BaseHubMission {
 
         if (person.getId().equals("nskr_opguy")){
             contract = getContract(CONTRACT_KEY_ELIMINATE);
-            return !ContractManager.maxContracts(contracts, ContractInfo.contractType.ELIMINATE);
+            return !ContractManager.maxContracts(contracts, ContractInfo.ContractType.ELIMINATE);
         } else {
             contract = getContract(CONTRACT_KEY_RECOVERY);
-            return !ContractManager.maxContracts(contracts, ContractInfo.contractType.SCAVENGE);
+            return !ContractManager.maxContracts(contracts, ContractInfo.ContractType.SCAVENGE);
         }
     }
 
@@ -106,7 +106,7 @@ public class ContractsMission extends BaseHubMission {
 
         TextPanelAPI text = dialog.getTextPanel();
 
-        if (contract.type== ContractInfo.contractType.ELIMINATE){
+        if (contract.type== ContractInfo.ContractType.ELIMINATE){
             String hostileStr = " ";
             if (!contract.isFactionBounty) hostileStr = " hostile ";
 
@@ -141,7 +141,7 @@ public class ContractsMission extends BaseHubMission {
 
         TextPanelAPI text = dialog.getTextPanel();
 
-        if (contract.type== ContractInfo.contractType.ELIMINATE){
+        if (contract.type== ContractInfo.ContractType.ELIMINATE){
             text.addPara("\"The board has authorized an elimination contract on certain enemy vessels. Looks like they want to thin out the competition.\"");
 
         } else {
@@ -164,7 +164,7 @@ public class ContractsMission extends BaseHubMission {
         contracts.add(contract);
         ContractManager.setContracts(contracts, ContractManager.CONTRACT_ARRAY_KEY);
 
-        if (contract.type== ContractInfo.contractType.ELIMINATE) {
+        if (contract.type== ContractInfo.ContractType.ELIMINATE) {
             setContract(CONTRACT_KEY_ELIMINATE, null);
         } else {
             setContract(CONTRACT_KEY_RECOVERY, null);
@@ -178,7 +178,7 @@ public class ContractsMission extends BaseHubMission {
     protected void notifyEnded(){
         super.notifyEnded();
 
-        if (contract.type== ContractInfo.contractType.ELIMINATE) {
+        if (contract.type== ContractInfo.ContractType.ELIMINATE) {
             setContract(CONTRACT_KEY_ELIMINATE, null);
         } else {
             setContract(CONTRACT_KEY_RECOVERY, null);

@@ -19,10 +19,10 @@ public class HighEnergyWeaponSystems extends BaseHullMod {
 
     public void applyEffectsAfterShipCreation(ShipAPI ship, String id) {
 
-        ship.addListener(new aCoilRangeModifier());
+        ship.addListener(new EnergyRangeModifier());
     }
 
-    public static class aCoilRangeModifier implements WeaponBaseRangeModifier {
+    public static class EnergyRangeModifier implements WeaponBaseRangeModifier {
 
         public float getWeaponBaseRangePercentMod(ShipAPI ship, WeaponAPI weapon) {
             return 0;

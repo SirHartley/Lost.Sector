@@ -795,7 +795,7 @@ public class QuestStageManager extends BaseCampaignEventListener implements Ever
                 //AI LOGIC
                 //intercept
                 if (!paid) {
-                    FleetHelper.gotoAndInterceptPlayerAI(fleet, f, FleetHelper.interceptBehaviour.AROUND);
+                    FleetHelper.gotoAndInterceptPlayerAI(fleet, f, FleetHelper.InterceptBehaviour.AROUND);
                 }
                 //leave
                 if (paid) {
@@ -908,7 +908,7 @@ public class QuestStageManager extends BaseCampaignEventListener implements Ever
                 }
                 //logic
 
-                FleetHelper.gotoAndInterceptPlayerAI(fleet, f, FleetHelper.interceptBehaviour.AROUND);
+                FleetHelper.gotoAndInterceptPlayerAI(fleet, f, FleetHelper.InterceptBehaviour.AROUND);
                 continue;
             }
             //eliza fleet, after recovering UPC
@@ -965,7 +965,7 @@ public class QuestStageManager extends BaseCampaignEventListener implements Ever
 
                 //logic
                 if (!QuestHelper.getCompleted(ELIZA_INTERCEPT_HANDED_OVER)) {
-                    FleetHelper.gotoAndInterceptPlayerAI(fleet, f, FleetHelper.interceptBehaviour.DIRECT);
+                    FleetHelper.gotoAndInterceptPlayerAI(fleet, f, FleetHelper.InterceptBehaviour.DIRECT);
                 } else {
                     //assignment logic
                     FleetAssignmentDataAPI curr = fleet.getAI().getCurrentAssignment();
@@ -1019,7 +1019,7 @@ public class QuestStageManager extends BaseCampaignEventListener implements Ever
                 //logic
 
                 //AI LOGIC
-                FleetHelper.gotoAndInterceptPlayerAI(fleet, f, FleetHelper.interceptBehaviour.AROUND);
+                FleetHelper.gotoAndInterceptPlayerAI(fleet, f, FleetHelper.InterceptBehaviour.AROUND);
                 continue;
             }
         }

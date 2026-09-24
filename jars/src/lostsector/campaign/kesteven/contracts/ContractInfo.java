@@ -76,7 +76,7 @@ public class ContractInfo {
     public static final int ARCHDAEMON_BASE = 1;
     public static final int ARCHDAEMON__REWARD = 120000;
 
-    public contractType type;
+    public ContractType type;
     public String subType;
 
     public int count;
@@ -115,7 +115,7 @@ public class ContractInfo {
         SCAV_SUBTYPES.add(new Pair<>("alpha_core", 1f));
     }
 
-    public ContractInfo(contractType type, Random random) {
+    public ContractInfo(ContractType type, Random random) {
         this.type = type;
         this.random = random;
         //add from mods
@@ -138,7 +138,7 @@ public class ContractInfo {
         float minRandom = 0.50f;
         float maxRandom = 1.50f;
 
-        if (type==contractType.ELIMINATE){
+        if (type==ContractType.ELIMINATE){
             subType = randomSubType();
 
             switch (subType) {
@@ -236,7 +236,7 @@ public class ContractInfo {
         count = Math.max(count,1);
         rewardPer = Math.max(rewardPer,1);
         //round off
-        if (type==contractType.ELIMINATE) {
+        if (type==ContractType.ELIMINATE) {
             rewardPer = Math.round(rewardPer / 50f) * 50;
         } else {
             rewardPer = Math.round(rewardPer / 5f) * 5;
@@ -255,7 +255,7 @@ public class ContractInfo {
         WeightedRandomPicker<String> picker = new WeightedRandomPicker<>();
         picker.setRandom(random);
         List<Pair<String, Float>> toPick;
-        if (type==contractType.ELIMINATE){
+        if (type==ContractType.ELIMINATE){
             toPick = COMBAT_SUBTYPES;
         } else {
             toPick = SCAV_SUBTYPES;
@@ -268,7 +268,7 @@ public class ContractInfo {
         return role;
     }
 
-    public enum contractType {
+    public enum ContractType {
         ELIMINATE,
         SCAVENGE
     }

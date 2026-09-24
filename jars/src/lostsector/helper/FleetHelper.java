@@ -161,7 +161,7 @@ public class FleetHelper {
         }
         return false;
     }
-    public static void gotoAndInterceptPlayerAI(CampaignFleetAPI fleet, FleetInfo info, interceptBehaviour behaviour){
+    public static void gotoAndInterceptPlayerAI(CampaignFleetAPI fleet, FleetInfo info, InterceptBehaviour behaviour){
         CampaignFleetAPI pf = Global.getSector().getPlayerFleet();
         boolean playerVisible = false;
         if (fleet.getContainingLocation()==pf.getContainingLocation()) {
@@ -262,13 +262,13 @@ public class FleetHelper {
 
         info.target = pf.getContainingLocation().createToken(aroundPlayer);
     }
-    public enum interceptBehaviour {
+    public enum InterceptBehaviour {
         DIRECT,
         AROUND
     }
 
 
-    public static void guardTargetAI(CampaignFleetAPI fleet, FleetInfo info, guardMovementBehaviour movementBehaviour, guardAttackBehaviour attackBehaviour, float playerInterceptChance) {
+    public static void guardTargetAI(CampaignFleetAPI fleet, FleetInfo info, GuardMovementBehaviour movementBehaviour, GuardAttackBehaviour attackBehaviour, float playerInterceptChance) {
         CampaignFleetAPI pf = Global.getSector().getPlayerFleet();
         boolean playerVisible = false;
         if (fleet.getContainingLocation() == pf.getContainingLocation()) {
@@ -307,7 +307,7 @@ public class FleetHelper {
                 fleet.clearAssignments();
                 fleet.addAssignment(FleetAssignment.INTERCEPT, pf, Float.MAX_VALUE, "intercepting your fleet");
             }
-            else if (attackBehaviour == guardAttackBehaviour.HOSTILE){
+            else if (attackBehaviour == GuardAttackBehaviour.HOSTILE){
                 for (CampaignFleetAPI e : Misc.getVisibleFleets(fleet, false)){
                     if (!fleet.getFaction().isHostileTo(e.getFaction())) continue;
                     //make visible to other fleets
@@ -341,11 +341,11 @@ public class FleetHelper {
 
         info.target = pf.getContainingLocation().createToken(info.fleet.getLocation());
     }
-    public enum guardMovementBehaviour {
+    public enum GuardMovementBehaviour {
         HOLD,
         ORBIT
     }
-    public enum guardAttackBehaviour {
+    public enum GuardAttackBehaviour {
         HOSTILE,
         PLAYER
     }

@@ -27,12 +27,12 @@ public class HellSpawnPeacefulSkill {
 
         @Override
         public void applyEffectsAfterShipCreation(ShipAPI ship, String id) {
-            ship.addListener(new hellSpawnPeacefulSkillListener(ship));
+            ship.addListener(new HellSpawnPeacefulSkillListener(ship));
         }
 
         @Override
         public void unapplyEffectsAfterShipCreation(ShipAPI ship, String id) {
-            ship.removeListenerOfClass(hellSpawnPeacefulSkillListener.class);
+            ship.removeListenerOfClass(HellSpawnPeacefulSkillListener.class);
         }
 
         @Override
@@ -96,13 +96,13 @@ public class HellSpawnPeacefulSkill {
 
     }
 
-    public static class hellSpawnPeacefulSkillListener implements DamageTakenModifier, AdvanceableListener {
+    public static class HellSpawnPeacefulSkillListener implements DamageTakenModifier, AdvanceableListener {
 
         public ShipAPI ship;
         private boolean validFight = false;
         private boolean checked = false;
 
-        public hellSpawnPeacefulSkillListener(ShipAPI ship) {
+        public HellSpawnPeacefulSkillListener(ShipAPI ship) {
             this.ship = ship;
         }
 

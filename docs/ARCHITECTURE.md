@@ -316,5 +316,4 @@ Quest defects are listed with their quest: [Kesteven questline](quests/KESTEVEN_
 
 | Component | State |
 |---|---|
-| `kesteven/KestevenBlueprints`, `kesteven/BlackOpsBlueprints` `EveryFrameScript` methods | Never instantiated as scripts |
 | `GameModeManager` timer branch | Empty. Its `CampaignTimer` timeout is `1f` seconds, like the other `CampaignTimer` owners. |

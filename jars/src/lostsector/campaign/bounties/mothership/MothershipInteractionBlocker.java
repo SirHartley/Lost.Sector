@@ -53,7 +53,7 @@ public class MothershipInteractionBlocker implements InteractionDialogPlugin {
         text.addPara("The fleet appears to be protecting this planet, and maneuvers to prevent your approach.",tc,h,"maneuvers to prevent your approach");
 
         dialog.setInteractionTarget(fleet);
-        FleetInteractionDialogPluginImpl.FIDConfig params = new MothershipSpawner.mothershipFIDConfig().createConfig();
+        FleetInteractionDialogPluginImpl.FIDConfig params = new MothershipSpawner.MothershipInteractionConfig().createConfig();
         FleetInteractionDialogPluginImpl plugin = new FleetInteractionDialogPluginImpl(params);
         plugin.init(dialog);
         dialog.setPlugin(plugin);

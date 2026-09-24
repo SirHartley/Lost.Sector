@@ -163,7 +163,7 @@ public class EMBlastStats extends BaseShipSystemScript {
                         ColorHelper.setAlpha(EMP_CORE_COLOR, 100),false);
 
                 //shockwave visual
-                BlastSprite.blastSpriteListener shockwave = new BlastSprite.blastSpriteListener(ship, ship.getLocation(), 0.33f, 400f, SHOCKWAVE_COLOR);
+                BlastSprite.BlastSpriteListener shockwave = new BlastSprite.BlastSpriteListener(ship, ship.getLocation(), 0.33f, 400f, SHOCKWAVE_COLOR);
                 shockwave.baseSize = 50f;
                 shockwave.startSizeMult = 0f;
                 ship.addListener(shockwave);

@@ -269,7 +269,7 @@ public class MothershipSpawner  extends BaseCampaignEventListener implements Eve
         CampaignFleetAPI fleet = simpleFleet.create();
 
         //custom key
-        fleet.getMemoryWithoutUpdate().set(MemFlags.FLEET_INTERACTION_DIALOG_CONFIG_OVERRIDE_GEN, new mothershipFIDConfig());
+        fleet.getMemoryWithoutUpdate().set(MemFlags.FLEET_INTERACTION_DIALOG_CONFIG_OVERRIDE_GEN, new MothershipInteractionConfig());
 
         //makes sure we are not in a star
         QuestHelper.spawnAwayFromStarFixer(fleet, 2.0f);
@@ -386,7 +386,7 @@ public class MothershipSpawner  extends BaseCampaignEventListener implements Eve
         return false;
     }
 
-    public static class mothershipFIDConfig implements FleetInteractionDialogPluginImpl.FIDConfigGen {
+    public static class MothershipInteractionConfig implements FleetInteractionDialogPluginImpl.FIDConfigGen {
         public FleetInteractionDialogPluginImpl.FIDConfig createConfig() {
             FleetInteractionDialogPluginImpl.FIDConfig config = new FleetInteractionDialogPluginImpl.FIDConfig();
 

@@ -70,7 +70,7 @@ public class GigaPulseCannonOnHitEffect implements OnHitEffectPlugin {
         //shockwave visuals
         //blast 1
         Color shockwave1Color = new Color(199, 244, 255, 12);
-        BlastSprite.blastSpriteListener shockwave1 = new BlastSprite.blastSpriteListener(projectile.getSource(), point, 1.30f, SHOCKWAVE_SIZE, shockwave1Color);
+        BlastSprite.BlastSpriteListener shockwave1 = new BlastSprite.BlastSpriteListener(projectile.getSource(), point, 1.30f, SHOCKWAVE_SIZE, shockwave1Color);
         shockwave1.alphaEaseInCubic = true;
         shockwave1.sizeEaseOutSine = true;
         shockwave1.customSpritePath = SPRITE_PATH;
@@ -78,7 +78,7 @@ public class GigaPulseCannonOnHitEffect implements OnHitEffectPlugin {
         projectile.getSource().addListener(shockwave1);
         //blast 2
         Color shockwave2Color = new Color(190, 222, 255, 18);
-        BlastSprite.blastSpriteListener shockwave2 = new BlastSprite.blastSpriteListener(projectile.getSource(), point, 0.85f, SHOCKWAVE_SIZE*0.80f, shockwave2Color);
+        BlastSprite.BlastSpriteListener shockwave2 = new BlastSprite.BlastSpriteListener(projectile.getSource(), point, 0.85f, SHOCKWAVE_SIZE*0.80f, shockwave2Color);
         shockwave2.alphaEaseInCubic = true;
         shockwave2.sizeEaseOutSine = true;
         shockwave2.customSpritePath = SPRITE_PATH;
@@ -86,7 +86,7 @@ public class GigaPulseCannonOnHitEffect implements OnHitEffectPlugin {
         projectile.getSource().addListener(shockwave2);
         //blast 3
         Color shockwave3Color = new Color(182, 176, 255, 24);
-        BlastSprite.blastSpriteListener shockwave3 = new BlastSprite.blastSpriteListener(projectile.getSource(), point, 0.40f, SHOCKWAVE_SIZE*0.60f, shockwave3Color);
+        BlastSprite.BlastSpriteListener shockwave3 = new BlastSprite.BlastSpriteListener(projectile.getSource(), point, 0.40f, SHOCKWAVE_SIZE*0.60f, shockwave3Color);
         shockwave3.alphaEaseInCubic = true;
         shockwave3.sizeEaseOutSine = true;
         shockwave3.customSpritePath = SPRITE_PATH;

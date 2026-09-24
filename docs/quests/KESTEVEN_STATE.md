@@ -20,7 +20,7 @@ Java paths are relative to `jars/src/lostsector/campaign/`; `dialogue/rules/` an
 
 | Key | Type | Written by |
 |---|---|---|
-| `nskr_kestevenQuest` | int stage | `nskr_kestevenQuest`, `QuestStageManager`, `HostileTakeoverBarEvent`, `DelveMeetingBarEvent`, `Cache.CacheGuardFIDConfig`, `CacheCoreDialog`, ending dialogs, `nskr_altEndingDialogLuddic.makeMad` |
+| `nskr_kestevenQuest` | int stage | `nskr_kestevenQuest`, `QuestStageManager`, `HostileTakeoverBarEvent`, `DelveMeetingBarEvent`, `Cache.CacheGuardInteractionConfig`, `CacheCoreDialog`, ending dialogs, `nskr_altEndingDialogLuddic.makeMad` |
 | `KestevenQuestEnd` (`QUEST_END_KEY`) | boolean | `QuestStageManager` failure checks |
 | `nskr_kestevenQuestSkippedStory` | boolean | Story skip |
 
@@ -183,6 +183,6 @@ The stage has no single owner. These are all the writers:
 | `QuestStageManager.reportEncounterLootGenerated()` | 8 or 9→10 (stealth broken), any→14 (friendly attacked) |
 | `HostileTakeoverBarEvent` | 8→9 |
 | `DelveMeetingBarEvent` | 15→16 |
-| `Cache.CacheGuardFIDConfig` | 16 or 17→18 |
+| `Cache.CacheGuardInteractionConfig` | 16 or 17→18 |
 | `CacheCoreDialog` | →19 |
 | `EndingKestevenDialog`, `EndingElizaDialog`, `nskr_altEndingDialogLuddic.makeMad` | 19→20 |

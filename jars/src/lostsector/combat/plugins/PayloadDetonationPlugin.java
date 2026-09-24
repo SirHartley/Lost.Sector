@@ -73,7 +73,7 @@ public class PayloadDetonationPlugin extends BaseEveryFrameCombatPlugin {
                             MathUtils.getRandomNumberInRange(75f, 150f), MathUtils.getRandomNumberInRange(0.5f, 4.0f), 0.5f, 0.5f, MathUtils.getRandomNumberInRange(4f, 7f), color);
 
                     //blast sprite
-                    BlastSprite.blastSpriteListener shockwave = new BlastSprite.blastSpriteListener(ship, ship.getLocation(), 1.75f, 2250f, SHOCKWAVE_COLOR);
+                    BlastSprite.BlastSpriteListener shockwave = new BlastSprite.BlastSpriteListener(ship, ship.getLocation(), 1.75f, 2250f, SHOCKWAVE_COLOR);
                     shockwave.customSpritePath = SPRITE_PATH;
                     shockwave.alphaEaseOutSine = true;
                     shockwave.sizeEaseOutQuad = true;

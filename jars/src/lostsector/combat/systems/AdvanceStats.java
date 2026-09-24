@@ -104,7 +104,7 @@ public class AdvanceStats extends BaseShipSystemScript {
 				}
 			}
 
-			ship.addListener(new damageCounter());
+			ship.addListener(new DamageCounter());
 			doOnce=true;
 		}
 
@@ -347,7 +347,7 @@ public class AdvanceStats extends BaseShipSystemScript {
 		updated = false;
 	}
 
-	public static class damageCounter implements DamageDealtModifier {
+	public static class DamageCounter implements DamageDealtModifier {
 		public String modifyDamageDealt(Object param, CombatEntityAPI target, DamageAPI damage, Vector2f point, boolean shieldHit) {
 			CombatEngineAPI engine = Global.getCombatEngine();
 			if (engine == null) {

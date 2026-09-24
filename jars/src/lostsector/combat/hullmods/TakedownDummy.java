@@ -24,7 +24,7 @@ public class TakedownDummy extends BaseHullMod {
     }
 
     public void applyEffectsAfterShipCreation(ShipAPI ship, String id) {
-        ship.addListener(new takedownCounter());
+        ship.addListener(new TakedownCounter());
     }
 
     public void advanceInCombat(ShipAPI ship, float amount) {
@@ -129,7 +129,7 @@ public class TakedownDummy extends BaseHullMod {
         Global.getCombatEngine().getCustomData().put("TAKEDOWN_DATA_KEY" + ship.getId(), data);
     }
 
-    public static class takedownCounter implements DamageDealtModifier {
+    public static class TakedownCounter implements DamageDealtModifier {
         private float damageNew = 0f;
         private float damageOld = 0f;
         public String modifyDamageDealt(Object param, CombatEntityAPI target, DamageAPI damage, Vector2f point, boolean shieldHit) {

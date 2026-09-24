@@ -214,14 +214,14 @@ public class RealitySplitterStats extends BaseShipSystemScript {
                     }
 
                     //shockwaves
-                    BlastSprite.blastSpriteListener shockwave1 = new BlastSprite.blastSpriteListener(ship, ship.getLocation(), 2.00f, EXPLOSION_PUSH_RADIUS-175f, SHOCKWAVE_COLOR1);
+                    BlastSprite.BlastSpriteListener shockwave1 = new BlastSprite.BlastSpriteListener(ship, ship.getLocation(), 2.00f, EXPLOSION_PUSH_RADIUS-175f, SHOCKWAVE_COLOR1);
                     shockwave1.customSpritePath = SPRITE_PATH_SHOCKWAVE;
                     shockwave1.sizeEaseOutSine = true;
                     shockwave1.alphaEaseInSine = true;
                     shockwave1.endSizeMult = 1.05f;
                     ship.addListener(shockwave1);
 
-                    BlastSprite.blastSpriteListener shockwave2 = new BlastSprite.blastSpriteListener(ship, ship.getLocation(), 2.50f, EXPLOSION_PUSH_RADIUS, SHOCKWAVE_COLOR2);
+                    BlastSprite.BlastSpriteListener shockwave2 = new BlastSprite.BlastSpriteListener(ship, ship.getLocation(), 2.50f, EXPLOSION_PUSH_RADIUS, SHOCKWAVE_COLOR2);
                     shockwave2.customSpritePath = SPRITE_PATH_SHOCKWAVE;
                     shockwave2.sizeEaseOutSine = true;
                     shockwave2.alphaEaseInSine = true;
@@ -229,7 +229,7 @@ public class RealitySplitterStats extends BaseShipSystemScript {
                     ship.addListener(shockwave2);
 
                     //glow
-                    BlastSprite.blastSpriteListener glow = new BlastSprite.blastSpriteListener(ship, ship.getLocation(), 0.40f, EXPLOSION_PUSH_RADIUS, LENS_FLARE_CORE_COLOR);
+                    BlastSprite.BlastSpriteListener glow = new BlastSprite.BlastSpriteListener(ship, ship.getLocation(), 0.40f, EXPLOSION_PUSH_RADIUS, LENS_FLARE_CORE_COLOR);
                     glow.customSpritePath = SPRITE_PATH_GLOW;
                     glow.sizeEaseOutSine = true;
                     glow.alphaEaseOutSine = true;

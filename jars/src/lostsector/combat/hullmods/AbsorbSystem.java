@@ -56,7 +56,7 @@ public class AbsorbSystem extends BaseHullMod {
         ShipSpecificData data = (ShipSpecificData) Global.getCombatEngine().getCustomData().get("ABSORPTION_DATA_KEY" + ship.getId());
         if (data == null) {
             data = new ShipSpecificData();
-            ship.addListener(new absorptionCounter());
+            ship.addListener(new AbsorptionCounter());
         }
         MutableShipStatsAPI stats = ship.getMutableStats();
 
@@ -131,7 +131,7 @@ public class AbsorbSystem extends BaseHullMod {
     }
 
 
-    public static class absorptionCounter implements DamageTakenModifier {
+    public static class AbsorptionCounter implements DamageTakenModifier {
         public String modifyDamageTaken(Object param, CombatEntityAPI target, DamageAPI damage, Vector2f point, boolean shieldHit) {
             CombatEngineAPI engine = Global.getCombatEngine();
             if (engine == null) {

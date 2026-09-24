@@ -13,7 +13,7 @@ public class Harmonics {
 
     public static final Color JITTER_UNDER_COLOR = new Color(83, 255, 249, 250);
 
-    public static class harmonicsSourceListener implements AdvanceableListener {
+    public static class HarmonicsSourceListener implements AdvanceableListener {
 
         public ShipAPI source;
         public ShipAPI target;
@@ -26,7 +26,7 @@ public class Harmonics {
         private float maxTurnRateTop;
         private float turnAccelerationTop;
 
-        public harmonicsSourceListener(ShipAPI source, ShipAPI target) {
+        public HarmonicsSourceListener(ShipAPI source, ShipAPI target) {
             this.source = source;
             this.target = target;
             this.sourceStats = source.getMutableStats();
@@ -101,14 +101,14 @@ public class Harmonics {
         }
     }
 
-    public static class harmonicsTargetListener implements AdvanceableListener {
+    public static class HarmonicsTargetListener implements AdvanceableListener {
 
         public ShipAPI source;
         public ShipAPI target;
         private MutableShipStatsAPI stats;
         private float timer = 0f;
 
-        public harmonicsTargetListener(ShipAPI source, ShipAPI target) {
+        public HarmonicsTargetListener(ShipAPI source, ShipAPI target) {
             this.source = source;
             this.target = target;
             this.stats = target.getMutableStats();

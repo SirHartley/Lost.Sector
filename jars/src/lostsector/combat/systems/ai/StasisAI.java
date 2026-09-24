@@ -67,7 +67,7 @@ public class StasisAI implements ShipSystemAIScript {
                 for (ShipAPI t : CombatUtils.getShipsWithinRange(ship.getLocation(), 1000f)){
                     if (t.getOwner()==ship.getOwner()) continue;
                     if (t.getHullSize()== ShipAPI.HullSize.FIGHTER) continue;
-                    if (!t.hasListenerOfClass(Stasis.stasisEffectListener.class)) continue;
+                    if (!t.hasListenerOfClass(Stasis.StasisEffectListener.class)) continue;
 
                     float angle = VectorUtils.getAngle(ship.getLocation(), t.getLocation());
                     // ignore everything outside of a y degree cone

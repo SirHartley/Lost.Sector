@@ -81,10 +81,10 @@ public class FluxAnomalyDischarger extends BaseHullMod {
 
 	public void applyEffectsAfterShipCreation(ShipAPI ship, String id) {
 
-		ship.addListener(new rogueRangeModifier());
+		ship.addListener(new RogueRangeModifier());
 	}
 
-	public static class rogueRangeModifier implements WeaponBaseRangeModifier {
+	public static class RogueRangeModifier implements WeaponBaseRangeModifier {
 		public float getWeaponBaseRangePercentMod(ShipAPI ship, WeaponAPI weapon) {
 			return 0;
 		}

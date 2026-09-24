@@ -199,7 +199,7 @@ public class InterceptManager extends BaseCampaignEventListener implements Every
                     //logic
 
                     //intercept
-                    FleetHelper.gotoAndInterceptPlayerAI(fleet, f, FleetHelper.interceptBehaviour.AROUND);
+                    FleetHelper.gotoAndInterceptPlayerAI(fleet, f, FleetHelper.InterceptBehaviour.AROUND);
                 }
                 //MESSENGER fleet
                 if (fleet.getMemoryWithoutUpdate().contains(MESSENGER_FLEET_KEY)){
@@ -251,7 +251,7 @@ public class InterceptManager extends BaseCampaignEventListener implements Every
 
                     //intercept
                     if (!talked) {
-                        FleetHelper.gotoAndInterceptPlayerAI(fleet, f, FleetHelper.interceptBehaviour.DIRECT);
+                        FleetHelper.gotoAndInterceptPlayerAI(fleet, f, FleetHelper.InterceptBehaviour.DIRECT);
                     } // go back
                     else {
                         if (fleet.getAI().getCurrentAssignmentType()!=FleetAssignment.GO_TO_LOCATION_AND_DESPAWN) {
@@ -303,13 +303,13 @@ public class InterceptManager extends BaseCampaignEventListener implements Every
                     //intercept
                     //chase the player for 30 days and if not defeated, then give up and guard a random path market
                     if (f.age<30f){
-                        FleetHelper.gotoAndInterceptPlayerAI(fleet, f, FleetHelper.interceptBehaviour.AROUND);
+                        FleetHelper.gotoAndInterceptPlayerAI(fleet, f, FleetHelper.InterceptBehaviour.AROUND);
                     } else {
                         // Pick a new target once if the current one has no market.
                         if (f.target.getMarket()==null){
                             f.target = QuestHelper.getRandomFactionMarket(random, Factions.LUDDIC_PATH);
                         }
-                        FleetHelper.guardTargetAI(fleet, f, FleetHelper.guardMovementBehaviour.ORBIT, FleetHelper.guardAttackBehaviour.PLAYER, 0.01f);
+                        FleetHelper.guardTargetAI(fleet, f, FleetHelper.GuardMovementBehaviour.ORBIT, FleetHelper.GuardAttackBehaviour.PLAYER, 0.01f);
                     }
 
                 }

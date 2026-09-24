@@ -379,16 +379,16 @@ public class ContractManager extends BaseCampaignEventListener implements EveryF
         return units;
     }
 
-    public static boolean maxContracts(List<ContractInfo> contracts, ContractInfo.contractType type){
+    public static boolean maxContracts(List<ContractInfo> contracts, ContractInfo.ContractType type){
         int elimCount = 0;
         int scavCount = 0;
 
         for (ContractInfo contract : contracts) {
-            if (contract.type == ContractInfo.contractType.ELIMINATE) {
+            if (contract.type == ContractInfo.ContractType.ELIMINATE) {
                 elimCount++;
                 continue;
             }
-            if (contract.type == ContractInfo.contractType.SCAVENGE) {
+            if (contract.type == ContractInfo.ContractType.SCAVENGE) {
                 scavCount++;
             }
         }
@@ -397,8 +397,8 @@ public class ContractManager extends BaseCampaignEventListener implements EveryF
         if (QuestHelper.getCompleted(EndingKestevenDialog.DIALOG_FINISHED_KEY)){
             storyBonus = 2;
         }
-        if (type == ContractInfo.contractType.ELIMINATE && elimCount >= MAX_ELIM_CONTRACTS * storyBonus) return true;
-        if (type == ContractInfo.contractType.SCAVENGE && scavCount >= MAX_SCAV_CONTRACTS * storyBonus) return true;
+        if (type == ContractInfo.ContractType.ELIMINATE && elimCount >= MAX_ELIM_CONTRACTS * storyBonus) return true;
+        if (type == ContractInfo.ContractType.SCAVENGE && scavCount >= MAX_SCAV_CONTRACTS * storyBonus) return true;
 
         return false;
     }

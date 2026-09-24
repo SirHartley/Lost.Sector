@@ -121,7 +121,7 @@ public class LoanShark extends BaseCampaignEventListener implements EveryFrameSc
 
                 //intercept
                 if (hostile && !paid) {
-                    FleetHelper.gotoAndInterceptPlayerAI(fleet, f, FleetHelper.interceptBehaviour.AROUND);
+                    FleetHelper.gotoAndInterceptPlayerAI(fleet, f, FleetHelper.InterceptBehaviour.AROUND);
                 }
                 //leave
                 if (!hostile || paid) {

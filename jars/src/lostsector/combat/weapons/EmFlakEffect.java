@@ -23,7 +23,7 @@ public class EmFlakEffect implements EveryFrameWeaponEffectPlugin, OnFireEffectP
     @Override
     public void onFire(DamagingProjectileAPI projectile, WeaponAPI weapon, CombatEngineAPI engine) {
         ShipAPI ship = projectile.getSource();
-        ship.addListener(new EmFlak.emFlakListener(projectile));
+        ship.addListener(new EmFlak.EmFlakListener(projectile));
     }
 }
 

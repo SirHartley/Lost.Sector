@@ -31,7 +31,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
-import static lostsector.campaign.enigma.HyperspaceEnigmaSpawner.fleetLevel.*;
+import static lostsector.campaign.enigma.HyperspaceEnigmaSpawner.FleetLevel.*;
 
 public class HyperspaceEnigmaSpawner extends BaseCampaignEventListener implements EveryFrameScript {
     //
@@ -208,13 +208,13 @@ public class HyperspaceEnigmaSpawner extends BaseCampaignEventListener implement
                     case INTERCEPT:
                         //try to attack for a while
                         if (f.age<10f || pf.isVisibleToSensorsOf(fleet)){
-                            FleetHelper.gotoAndInterceptPlayerAI(fleet, f, FleetHelper.interceptBehaviour.AROUND);
+                            FleetHelper.gotoAndInterceptPlayerAI(fleet, f, FleetHelper.InterceptBehaviour.AROUND);
                         } else {
-                            FleetHelper.guardTargetAI(fleet, f, FleetHelper.guardMovementBehaviour.HOLD, FleetHelper.guardAttackBehaviour.PLAYER, 0.167f);
+                            FleetHelper.guardTargetAI(fleet, f, FleetHelper.GuardMovementBehaviour.HOLD, FleetHelper.GuardAttackBehaviour.PLAYER, 0.167f);
                         }
                         break;
                     case AMBUSH:
-                        FleetHelper.guardTargetAI(fleet, f, FleetHelper.guardMovementBehaviour.HOLD, FleetHelper.guardAttackBehaviour.HOSTILE, 0.04f);
+                        FleetHelper.guardTargetAI(fleet, f, FleetHelper.GuardMovementBehaviour.HOLD, FleetHelper.GuardAttackBehaviour.HOSTILE, 0.04f);
                         break;
                     case DORMANT:
                         fleet.setTransponderOn(false);
@@ -225,7 +225,7 @@ public class HyperspaceEnigmaSpawner extends BaseCampaignEventListener implement
                             fleet.addAssignment(FleetAssignment.GO_TO_LOCATION, f.target, Float.MAX_VALUE, "travelling");
                         }
                         if (fleet.getContainingLocation()==f.target.getContainingLocation()){
-                            FleetHelper.guardTargetAI(fleet, f, FleetHelper.guardMovementBehaviour.ORBIT, FleetHelper.guardAttackBehaviour.PLAYER, 0.10f);
+                            FleetHelper.guardTargetAI(fleet, f, FleetHelper.GuardMovementBehaviour.ORBIT, FleetHelper.GuardAttackBehaviour.PLAYER, 0.10f);
                         }
                         break;
                 }
@@ -243,13 +243,13 @@ public class HyperspaceEnigmaSpawner extends BaseCampaignEventListener implement
         }
     }
 
-    void spawnEnigmaFleets(Vector2f loc, float power, taskType task) {
+    void spawnEnigmaFleets(Vector2f loc, float power, TaskType task) {
         CampaignFleetAPI pf = Global.getSector().getPlayerFleet();
 
         Random random = getRandom(PERSISTENT_FLEET_RANDOM_KEY);
 
         //pick level
-        fleetLevel lvl = getFleetLevel(power);
+        FleetLevel lvl = getFleetLevel(power);
 
         float points = MathHelper.getSeededRandomNumberInRange(MIN_STRENGTH/2f, MAX_STRENGTH/2f, random);
         //
@@ -385,8 +385,8 @@ public class HyperspaceEnigmaSpawner extends BaseCampaignEventListener implement
     }
 
     @NotNull
-    public static fleetLevel getFleetLevel(float power) {
-        fleetLevel lvl;
+    public static FleetLevel getFleetLevel(float power) {
+        FleetLevel lvl;
         //hard mode
         if (Difficulty.isStarfarer()){
             if (power < 0.60f) {
@@ -449,30 +449,30 @@ public class HyperspaceEnigmaSpawner extends BaseCampaignEventListener implement
         return SystemHelper.getRandomLocationInSystem(system, false, true, random);
     }
 
-    public static final List<Pair<taskType, Float>> TASKS = new ArrayList<>();
+    public static final List<Pair<TaskType, Float>> TASKS = new ArrayList<>();
     static {
-        TASKS.add(new Pair<>(taskType.DORMANT, 5f));
-        TASKS.add(new Pair<>(taskType.INTERCEPT, 10f));
-        TASKS.add(new Pair<>(taskType.AMBUSH, 15f));
-        TASKS.add(new Pair<>(taskType.GO_TO_SYSTEM, 15f));
+        TASKS.add(new Pair<>(TaskType.DORMANT, 5f));
+        TASKS.add(new Pair<>(TaskType.INTERCEPT, 10f));
+        TASKS.add(new Pair<>(TaskType.AMBUSH, 15f));
+        TASKS.add(new Pair<>(TaskType.GO_TO_SYSTEM, 15f));
     }
 
-    public taskType pickTask(){
-        WeightedRandomPicker<taskType> picker = new WeightedRandomPicker<>();
-        for (Pair<taskType,Float> s : TASKS){
+    public TaskType pickTask(){
+        WeightedRandomPicker<TaskType> picker = new WeightedRandomPicker<>();
+        for (Pair<TaskType,Float> s : TASKS){
             picker.add(s.one,s.two);
         }
         return picker.pick(getRandom(PERSISTENT_FLEET_RANDOM_KEY));
     }
 
-    public enum taskType {
+    public enum TaskType {
         DORMANT,
         INTERCEPT,
         AMBUSH,
         GO_TO_SYSTEM
     }
 
-    public enum fleetLevel {
+    public enum FleetLevel {
         FRIGATE,
         DESTROYER,
         CRUISER

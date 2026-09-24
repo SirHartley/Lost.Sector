@@ -6,13 +6,9 @@ import com.fs.starfarer.api.combat.MutableShipStatsAPI;
 import com.fs.starfarer.api.combat.ShipAPI;
 import com.fs.starfarer.api.combat.ShipAPI.HullSize;
 
-import java.awt.*;
-
 public class EmCore extends BaseHullMod {
 
 	// Marker hullmod for the EM core; it has no effect.
-
-	Color lol = new Color(255, 20, 145);
 
 	public void applyEffectsBeforeShipCreation(HullSize hullSize, MutableShipStatsAPI stats, String id) {
 

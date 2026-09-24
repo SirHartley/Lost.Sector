@@ -64,7 +64,7 @@ The stage is one integer in sector persistent data (`nskr_kestevenQuest`). Stage
 | 15 | Go to the bar | Jack, while showing the job 5 briefing |
 | 16 | Job 5 active: data disks | `DelveMeetingBarEvent`, leaving the meeting |
 | 17 | Cache location known | Alice after all disks; `QuestStageManager` on entering the Cache system at stage 16; story skip |
-| 18 | Cache guardian defeated | `Cache.CacheGuardFIDConfig` when no prototypes remain |
+| 18 | Cache guardian defeated | `Cache.CacheGuardInteractionConfig` when no prototypes remain |
 | 19 | Player holds the UPC | `CacheCoreDialog` salvage |
 | 20 | Completed | Any of the four ending dialogs |
 | 99 | Questline ended by failure | `QuestStageManager` failure checks |
@@ -202,7 +202,7 @@ Inside Unknown Site, `QuestStageManager`:
 
 During the battle `combat/plugins/CacheBossTauntPlugin` posts taunts, plays the boss theme and spawns a second boss ship.
 
-When the fight ends with no prototype ships left, `CacheGuardFIDConfig.notifyLeave`:
+When the fight ends with no prototype ships left, `CacheGuardInteractionConfig.notifyLeave`:
 
 - builds the rest of the system (`spawnEverything`) and the wrecks;
 - sets stage 18 if the questline is active;

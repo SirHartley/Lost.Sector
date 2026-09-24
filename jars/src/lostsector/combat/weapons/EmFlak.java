@@ -29,10 +29,10 @@ public class EmFlak {
     public static final Color SMOKE_COLOR = new Color(75, 74, 74, 100);
     public static final String SPRITE_PATH = "graphics/lostsector/fx/nskr_blast1.png";
 
-    public static class emFlakListener implements AdvanceableListener {
+    public static class EmFlakListener implements AdvanceableListener {
         public DamagingProjectileAPI projectile;
 
-        public emFlakListener(DamagingProjectileAPI projectile) {
+        public EmFlakListener(DamagingProjectileAPI projectile) {
             this.projectile = projectile;
         }
 
@@ -125,7 +125,7 @@ public class EmFlak {
                 Global.getSoundPlayer().playSound("prox_charge_explosion", 1.2f, 0.70f, ship.getLocation(), ZERO);
 
                 //blast sprite
-                BlastSprite.blastSpriteListener shockwave = new BlastSprite.blastSpriteListener(ship, projectile.getLocation(), 0.67f, EmFlakEffect.EXPLOSION_RADIUS-50f,
+                BlastSprite.BlastSpriteListener shockwave = new BlastSprite.BlastSpriteListener(ship, projectile.getLocation(), 0.67f, EmFlakEffect.EXPLOSION_RADIUS-50f,
                         Misc.setAlpha(FRINGE_COLOR, 15));
                 shockwave.customSpritePath = SPRITE_PATH;
                 shockwave.alphaEaseInSine = true;

@@ -20,13 +20,13 @@ import java.awt.*;
 
 public class BigFlak {
 
-    public static class bigFlakProjectileVisualListener implements AdvanceableListener {
+    public static class BigFlakProjectileVisualListener implements AdvanceableListener {
 
         public DamagingProjectileAPI projectile;
         public ShipAPI ship;
         private float fuzeTimer;
 
-        public bigFlakProjectileVisualListener(DamagingProjectileAPI projectile, ShipAPI ship) {
+        public BigFlakProjectileVisualListener(DamagingProjectileAPI projectile, ShipAPI ship) {
             this.ship = ship;
             this.projectile = projectile;
         }
@@ -114,7 +114,7 @@ public class BigFlak {
         Global.getSoundPlayer().playSound("nskr_moab_explode", 0.8f, 0.9f, point, new Vector2f());
 
         //FX
-        BlastSprite.blastSpriteListener glow1 = new BlastSprite.blastSpriteListener(source, point, 1.5f, 700f, SHOCKWAVE_COLOR_1);
+        BlastSprite.BlastSpriteListener glow1 = new BlastSprite.BlastSpriteListener(source, point, 1.5f, 700f, SHOCKWAVE_COLOR_1);
         glow1.customSpritePath = SPRITE_PATH_1;
         glow1.sizeEaseOutSine = true;
         glow1.alphaEaseOutSine = true;
@@ -122,7 +122,7 @@ public class BigFlak {
         glow1.additive = true;
         source.addListener(glow1);
 
-        BlastSprite.blastSpriteListener glow2 = new BlastSprite.blastSpriteListener(source, point, 0.75f, 150f, SHOCKWAVE_COLOR_5);
+        BlastSprite.BlastSpriteListener glow2 = new BlastSprite.BlastSpriteListener(source, point, 0.75f, 150f, SHOCKWAVE_COLOR_5);
         glow2.customSpritePath = SPRITE_PATH_1;
         glow2.sizeEaseOutSine = true;
         glow2.alphaEaseOutSine = true;
@@ -130,21 +130,21 @@ public class BigFlak {
         glow2.additive = true;
         source.addListener(glow2);
 
-        BlastSprite.blastSpriteListener blast = new BlastSprite.blastSpriteListener(source, point, 3.0f, 125f, SHOCKWAVE_COLOR_4);
+        BlastSprite.BlastSpriteListener blast = new BlastSprite.BlastSpriteListener(source, point, 3.0f, 125f, SHOCKWAVE_COLOR_4);
         blast.customSpritePath = SPRITE_PATH_4;
         blast.sizeEaseOutSine = true;
         blast.alphaEaseInSine = true;
         blast.endSizeMult = 1.25f;
         source.addListener(blast);
 
-        BlastSprite.blastSpriteListener shockwave1 = new BlastSprite.blastSpriteListener(source, point, 2.00f, 325f, SHOCKWAVE_COLOR_2);
+        BlastSprite.BlastSpriteListener shockwave1 = new BlastSprite.BlastSpriteListener(source, point, 2.00f, 325f, SHOCKWAVE_COLOR_2);
         shockwave1.customSpritePath = SPRITE_PATH_3;
         shockwave1.sizeEaseOutSine = true;
         shockwave1.alphaEaseInSine = true;
         shockwave1.endSizeMult = 1.15f;
         source.addListener(shockwave1);
 
-        BlastSprite.blastSpriteListener shockwave2 = new BlastSprite.blastSpriteListener(source, point, 2.50f, 400f, SHOCKWAVE_COLOR_3);
+        BlastSprite.BlastSpriteListener shockwave2 = new BlastSprite.BlastSpriteListener(source, point, 2.50f, 400f, SHOCKWAVE_COLOR_3);
         shockwave2.customSpritePath = SPRITE_PATH_3;
         shockwave2.sizeEaseOutSine = true;
         shockwave2.alphaEaseInSine = true;

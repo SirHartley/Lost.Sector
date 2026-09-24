@@ -72,7 +72,7 @@ public class PrototypeExplosion {
             //shockwave
             float size = ((SHOCKWAVE_SIZE+ship.getCollisionRadius())*mag);
             float duration = size/SHOCKWAVE_SPEED;
-            BlastSprite.blastSpriteListener shockwave = new BlastSprite.blastSpriteListener(ship, ship.getLocation(), duration, size, SHOCKWAVE_COLOR);
+            BlastSprite.BlastSpriteListener shockwave = new BlastSprite.BlastSpriteListener(ship, ship.getLocation(), duration, size, SHOCKWAVE_COLOR);
             shockwave.customSpritePath = SPRITE_PATH;
             shockwave.sizeEaseOutSine = true;
             shockwave.startSizeMult = 0f;

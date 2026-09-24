@@ -29,7 +29,7 @@ public class UnknownProduction extends BaseHullMod {
 	public static final float COST_REDUCTION_L = 4;
 	public static final float COST_REDUCTION_M = 2;
 	public static final float COST_REDUCTION_S = 1;
-	public static final float FUCK_CAPITALS = 20f;
+	public static final float CAPITAL_DAMAGE_BONUS = 20f;
 	public static final float CR_PENALTY = 15f;
 
 	
@@ -53,7 +53,7 @@ public class UnknownProduction extends BaseHullMod {
 
 		stats.getEmpDamageTakenMult().modifyMult(id, 1f - EMP_REDUCTION * 0.01f);
 
-		stats.getDamageToCapital().modifyMult(id, 1f + FUCK_CAPITALS * 0.01f);
+		stats.getDamageToCapital().modifyMult(id, 1f + CAPITAL_DAMAGE_BONUS * 0.01f);
 
 		stats.getDynamic().getMod(Stats.LARGE_BALLISTIC_MOD).modifyFlat(id, -COST_REDUCTION_L);
 		stats.getDynamic().getMod(Stats.LARGE_MISSILE_MOD).modifyFlat(id, -COST_REDUCTION_L);
@@ -130,7 +130,7 @@ public class UnknownProduction extends BaseHullMod {
 			tooltip.addPara("-EMP damage taken reduced by "+(int)(EMP_REDUCTION)+"%"+"%", 2.0f, y, (int)(EMP_REDUCTION)+"%");
 		}
 		if (unlocks.contains(EnigmaHullmodListener.KEY_BASE+"#9")) {
-			tooltip.addPara("-Damage against Capital-class vessels increased by "+(int)(FUCK_CAPITALS)+"%"+"%", 2.0f, y, (int)(FUCK_CAPITALS)+"%");
+			tooltip.addPara("-Damage against Capital-class vessels increased by "+(int)(CAPITAL_DAMAGE_BONUS)+"%"+"%", 2.0f, y, (int)(CAPITAL_DAMAGE_BONUS)+"%");
 		}
 		if (unlocks.contains(EnigmaHullmodListener.KEY_BASE+"#10")) {
 			tooltip.addPara("-Weapon ordnance point cost reduced by "+"1/2/4"+" points based on size", 2.0f, y, "1/2/4");

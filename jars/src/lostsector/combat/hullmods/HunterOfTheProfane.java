@@ -24,7 +24,7 @@ public class HunterOfTheProfane extends BaseHullMod {
 
     @Override
     public void applyEffectsAfterShipCreation(ShipAPI ship, String id) {
-        ship.addListener(new spawnArcListener());
+        ship.addListener(new SpawnArcListener());
     }
 
     @Override
@@ -53,7 +53,7 @@ public class HunterOfTheProfane extends BaseHullMod {
         tooltip.addPara("\"For those are the most wicked of creations, it has to take the mask off. One has to do it to bear such a great sin against creation.\" Transcript of Pather sermon, location unknown.", pad*2f, g, g, "").italicize();
     }
 
-    public static class spawnArcListener implements DamageDealtModifier {
+    public static class SpawnArcListener implements DamageDealtModifier {
 
         public String modifyDamageDealt(Object param, CombatEntityAPI target, DamageAPI damage, Vector2f point, boolean shieldHit) {
             CombatEngineAPI engine = Global.getCombatEngine();

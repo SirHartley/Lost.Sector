@@ -362,7 +362,7 @@ public class Cache {
         }
 
         //custom key
-        fleet.getMemoryWithoutUpdate().set(MemFlags.FLEET_INTERACTION_DIALOG_CONFIG_OVERRIDE_GEN, new CacheGuardFIDConfig());
+        fleet.getMemoryWithoutUpdate().set(MemFlags.FLEET_INTERACTION_DIALOG_CONFIG_OVERRIDE_GEN, new CacheGuardInteractionConfig());
 
         fleet.setFaction(Factions.DERELICT, true);
 
@@ -379,7 +379,7 @@ public class Cache {
         return fleet;
     }
 
-    public static class CacheGuardFIDConfig implements FleetInteractionDialogPluginImpl.FIDConfigGen {
+    public static class CacheGuardInteractionConfig implements FleetInteractionDialogPluginImpl.FIDConfigGen {
 
         public FleetInteractionDialogPluginImpl.FIDConfig createConfig() {
             FleetInteractionDialogPluginImpl.FIDConfig config = new FleetInteractionDialogPluginImpl.FIDConfig();

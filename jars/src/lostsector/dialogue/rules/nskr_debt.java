@@ -36,7 +36,7 @@ public class nskr_debt extends PaginatedOptions {
 	public static final float MAX_INTEREST = 6f;
 	public static final float MAX_CHANGE = 0.25f;
 
-	protected static loanInfo toLoan = null;
+	protected static LoanInfo toLoan = null;
 	protected CampaignFleetAPI playerFleet;
 	protected SectorEntityToken entity;
 	protected MarketAPI market;
@@ -159,10 +159,10 @@ public class nskr_debt extends PaginatedOptions {
 	{
 		dialog.getOptionPanel().clearOptions();
 
-		List<loanInfo> loans = getLoans();
+		List<LoanInfo> loans = getLoans();
 
 		int index = 0;
-		for (loanInfo loan : loans)
+		for (LoanInfo loan : loans)
 		{
 			addDebtOption(loan, index);
 			index++;
@@ -171,30 +171,30 @@ public class nskr_debt extends PaginatedOptions {
 		addOptionAllPages("Back", "nskr_debtMenuReturn");
 	}
 
-	public static List<loanInfo> getLoans(){
-		List<loanInfo> loans = new ArrayList<>();
+	public static List<LoanInfo> getLoans(){
+		List<LoanInfo> loans = new ArrayList<>();
 
-		loanInfo add10k = new loanInfo(10000);
+		LoanInfo add10k = new LoanInfo(10000);
 		loans.add(add10k);
-		loanInfo add100k = new loanInfo(100000);
+		LoanInfo add100k = new LoanInfo(100000);
 		loans.add(add100k);
 		int all = getMaxDebt()-getDebt();
 		all = Math.max(0,all);
-		loanInfo addAll = new loanInfo(all);
+		LoanInfo addAll = new LoanInfo(all);
 		loans.add(addAll);
-		loanInfo pay10k = new loanInfo(-10000);
+		LoanInfo pay10k = new LoanInfo(-10000);
 		loans.add(pay10k);
-		loanInfo pay100k = new loanInfo(-100000);
+		LoanInfo pay100k = new LoanInfo(-100000);
 		loans.add(pay100k);
 		int debt = getDebt();
 		if (debt!=0) debt*=-1;
-		loanInfo payAll = new loanInfo(debt);
+		LoanInfo payAll = new LoanInfo(debt);
 		loans.add(payAll);
 
 		return loans;
 	}
 
-	protected void addDebtOption(loanInfo info, int index){
+	protected void addDebtOption(LoanInfo info, int index){
 
 		int maxDebt = getMaxDebt();
 		int currDebt = getDebt();
@@ -354,16 +354,16 @@ public class nskr_debt extends PaginatedOptions {
 		return (Random)data.get(PERSISTENT_RANDOM_KEY);
 	}
 
-	public static class loanInfo implements Comparable<loanInfo> {
+	public static class LoanInfo implements Comparable<LoanInfo> {
 		public int amount;
 
-		public loanInfo(int amount)
+		public LoanInfo(int amount)
 		{
 			this.amount = amount;
 		}
 
 		@Override
-		public int compareTo(loanInfo other) {
+		public int compareTo(LoanInfo other) {
 			// descending cost order
 			if (amount != other.amount) return Integer.compare(other.amount, amount);
 
