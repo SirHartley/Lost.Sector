@@ -6,6 +6,7 @@ import com.fs.starfarer.api.campaign.CampaignFleetAPI;
 import com.fs.starfarer.api.campaign.FleetAssignment;
 import com.fs.starfarer.api.campaign.econ.MarketAPI;
 import com.fs.starfarer.api.impl.campaign.abilities.BaseDurationAbility;
+import com.fs.starfarer.api.impl.campaign.ids.Factions;
 import com.fs.starfarer.api.impl.campaign.ids.MemFlags;
 import com.fs.starfarer.api.impl.campaign.ids.Pings;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
@@ -94,6 +95,8 @@ public class HellSpawnAbility extends BaseDurationAbility {
             simpleFleet.assignment = FleetAssignment.PATROL_SYSTEM;
             simpleFleet.assignmentText = "seeking";
             CampaignFleetAPI fleet = simpleFleet.create();
+            // Per-faction, not the blanket non-hostile flag: the swarm stays hostile to everyone Enigma is hostile to.
+            Misc.makeNonHostileToFaction(fleet, Factions.PLAYER, -1f);
 
             //spawning
             final Vector2f loc = new Vector2f(MathUtils.getPointOnCircumference(pf.getLocation(), MathHelper.getSeededRandomNumberInRange(100f, 400f, random), random.nextFloat() * 360.0f));

@@ -19,6 +19,7 @@ Adjusted - Unlocks earned before this version do not carry over; switch them on 
 Added - Mod Settings key for firing a charged Stasis Generator (default F), for players who moved their ship system key
 Fixed - Hellspawn start: The Descent grants the Gate Conduit ability and the Hellspawn skill again, and the peaceful judgement no longer crashes
 Fixed - Crash when Gate Conduit calls in its swarms
+Fixed - Gate Conduit swarms no longer join battles against you or against other Enigma fleets, and no longer turn on you
 
 1.0.b
 Adjusted - Severely nerfed spawn rates for Borealis, Rhea and Kingslayer

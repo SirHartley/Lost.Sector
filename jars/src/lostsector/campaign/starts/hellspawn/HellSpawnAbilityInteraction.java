@@ -29,11 +29,11 @@ public class HellSpawnAbilityInteraction extends FleetInteractionDialogPluginImp
     static {
         HELLSPAWN_AVOID.add(Factions.OMEGA);
     }
-    // factions that Courser will never fight (i.e player fleets)
+    // factions the swarms will never fight
     public static List<String> HELLSPAWN_NEVER_ATTACK = new ArrayList<>();
     static {
-        HELLSPAWN_AVOID.add(Factions.PLAYER);
-        HELLSPAWN_AVOID.add(Ids.ENIGMA_FACTION_ID);
+        HELLSPAWN_NEVER_ATTACK.add(Factions.PLAYER);
+        HELLSPAWN_NEVER_ATTACK.add(Ids.ENIGMA_FACTION_ID);
     }
 
     public HellSpawnAbilityInteraction() {
@@ -141,7 +141,8 @@ public class HellSpawnAbilityInteraction extends FleetInteractionDialogPluginImp
                 joinRange += Global.getSettings().getFloat("battleJoinRangePlayerFactionBonus");
             }
 
-            if (fleet.getMemoryWithoutUpdate().contains(HellSpawnAbility.HELL_FLEET_KEY) && (dist < JOIN_RANGE)
+            boolean swarm = fleet.getMemoryWithoutUpdate().contains(HellSpawnAbility.HELL_FLEET_KEY);
+            if (swarm && (dist < JOIN_RANGE)
                     && !HELLSPAWN_NEVER_ATTACK.contains(actualOther.getFaction().getId())
                     && (!HELLSPAWN_AVOID.contains(actualOther.getFaction().getId()) ||
                     actualOther.getMemoryWithoutUpdate().contains(MemFlags.MEMORY_KEY_LOW_REP_IMPACT) ||
@@ -154,6 +155,9 @@ public class HellSpawnAbilityInteraction extends FleetInteractionDialogPluginImp
                 b.join(fleet);
                 pulledIn.add(fleet);
             }
+            // Swarms join only through the check above. Vanilla's side pick puts a fleet on the side of its own
+            // faction, so the join below would add a swarm to an Enigma fleet's side against the player.
+            if (swarm) continue;
 
             if (dist < joinRange &&
                     (dist < baseSensorRange || (visible && level != SectorEntityToken.VisibilityLevel.SENSOR_CONTACT)) &&

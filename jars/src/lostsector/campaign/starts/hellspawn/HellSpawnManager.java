@@ -238,6 +238,7 @@ public class HellSpawnManager extends BaseCampaignEventListener implements Every
             for (FleetInfo f : fleets){
                 CampaignFleetAPI fleet = f.fleet;
                 f.age += 0.1f;
+                if (fleet.getBattle() != null) continue;
                 boolean despawn = false;
 
                 if (f.age> HellSpawnAbility.MAX_DURATION+7f) {

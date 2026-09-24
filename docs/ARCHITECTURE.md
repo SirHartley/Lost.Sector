@@ -201,7 +201,7 @@ Intel classes add themselves as scripts.
 |---|---|
 | `starts/GameModeManager` | Active mode `DEFAULT`, `THRONESGIFT` or `HELLSPAWN`; checked by most spawners |
 | `starts/hellspawn/HellSpawnManager`, `HellSpawnNexListener`, `HellSpawnEventIntel` | HellSpawn corruption points, stat hullmod level, judgement timer and warning |
-| `starts/hellspawn/HellSpawnJudgement*`, `HellSpawnAbility*` | Judgement encounter and ability; the `*Interaction` classes extend `FleetInteractionDialogPluginImpl` and are picked by `CorePlugin` |
+| `starts/hellspawn/HellSpawnJudgement*`, `HellSpawnAbility*` | Judgement encounter and ability; the `*Interaction` classes extend `FleetInteractionDialogPluginImpl` and are picked by `CorePlugin`. Gate Conduit swarms (`HellSpawnAbility.HELL_FLEET_KEY`) are made non-hostile to the player faction at spawn and join a player battle only through `HellSpawnAbilityInteraction.pullInNearbyFleets`, never against the player or Enigma. `HellSpawnManager` reissues their orders outside battles. |
 | `starts/hellspawn/HellSpawnCondition` | Market condition |
 | `starts/thronesgift/ThronesGiftManager`, `ThronesGiftIntel`, `AutomateDialog` | XP-to-automation points and the automation dialog |
 | `starts/*/*DisposableFleetSpawner` | Vanilla `DisposableFleetManager` subclasses, added in `onGameLoad` behind `hasScript` and saved with the game |
