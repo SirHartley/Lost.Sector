@@ -755,8 +755,12 @@ public class QuestStageManager extends BaseCampaignEventListener implements Ever
                         fleet.addAssignment(FleetAssignment.INTERCEPT, pf, Float.MAX_VALUE, "intercepting your fleet");
                     }
                 } else if (fleet.getAI().getCurrentAssignmentType() != FleetAssignment.PATROL_SYSTEM){
+                    //a fleet that chased the player into hyperspace has no star system
+                    SectorEntityToken patrolCenter = fleet.getStarSystem() != null
+                            ? fleet.getStarSystem().getCenter()
+                            : fleet.getContainingLocation().createToken(fleet.getLocation());
                     fleet.clearAssignments();
-                    fleet.addAssignment(FleetAssignment.PATROL_SYSTEM, fleet.getStarSystem().getCenter(), Float.MAX_VALUE, "patrolling");
+                    fleet.addAssignment(FleetAssignment.PATROL_SYSTEM, patrolCenter, Float.MAX_VALUE, "patrolling");
                 }
                 continue;
             }
