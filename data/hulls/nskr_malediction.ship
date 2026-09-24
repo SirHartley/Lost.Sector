@@ -2,7 +2,7 @@
   "hullName": "Malediction",
   "hullId": "nskr_malediction",
   "hullSize": "FRIGATE",
-  "spriteName": "graphics/ships/nskr_malediction.png",
+  "spriteName": "graphics/lostsector/ships/nskr_malediction.png",
   "style": "HIGH_TECH",
   "height": 110,
   "width": 100,

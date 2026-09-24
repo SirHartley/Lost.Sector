@@ -2,7 +2,7 @@
   "hullName": "reverie",
   "hullId": "nskr_reverie_boss",
   "hullSize": "CRUISER",
-  "spriteName": "graphics/ships/nskr_reverie_boss.png",
+  "spriteName": "graphics/lostsector/ships/nskr_reverie_boss.png",
   "style": "DEMON_TECH",
   "height": 240,
   "width": 204,

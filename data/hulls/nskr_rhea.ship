@@ -2,7 +2,7 @@
   "hullName": "Rhea",
   "hullId": "nskr_rhea",
   "hullSize": "CRUISER",
-  "spriteName": "graphics/ships/nskr_rhea.png",
+  "spriteName": "graphics/lostsector/ships/nskr_rhea.png",
   "style": "MIDLINE",
   "height": 198,
   "width": 206,

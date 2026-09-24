@@ -33,7 +33,7 @@ The mod is set in vanilla Starsector's Persean Sector after the Collapse. Vanill
 Established by descriptions `kesteven` and `nskr_asteria`, the ship descriptions and the questline:
 
 - **Origins.** Kesteven Construction is a pre-Collapse megacorporation that specializes in prefab infrastructure and warship production. The faction is also called the Kesteven Corporation and KCC; its ship prefix is `K-Corp`.
-- **Asteria.** Its home is the factory-world Asteria in the Arcadia system: a cold, metal-rich bunker-planet around a guttered white dwarf, with Domain-era manufacturing complexes still in use. `KQuest5Bar` shows it as an underground mega-city: cooling towers, factories that never stop, graffiti-covered concrete housing blocks, and crystalline skyscrapers rising to the cavern roof. Asteria Station is a fortified customs hub and military outpost.
+- **Asteria.** Its home is the factory-world Asteria in the Arcadia system: a cold, metal-rich bunker-planet around a guttered white dwarf, with Domain-era manufacturing complexes still in use. `DelveMeetingBarEvent` shows it as an underground mega-city: cooling towers, factories that never stop, graffiti-covered concrete housing blocks, and crystalline skyscrapers rising to the cavern roof. Asteria Station is a fortified customs hub and military outpost.
 - **The Republic.** Asteria is nominally governed by the Democratic Republic of Asteria (DRA), "a nominal democracy whose policies reliably align with corporate interests". Real authority lies with the corporation and its Hegemony-aligned handlers. The administrator is President Michael Roux.
 - **The Hegemony.** Kesteven's autonomy "is largely illusory". Its leadership rarely acts without tacit Hegemony approval, and its factories serve Hegemony supply chains; it is "a convenient arm of Hegemonic industry - deniable, but deeply entangled". It hands recovered AI cores to the Hegemony under the AI War treaties (Jack, extra dialogue at stage 0).
 - **The Outpost.** A recently established installation that stages expeditions into the fringes. It gets one of several frontier names (Verge, Fringe, Boundary, Perimeter, Threshold, Land's End, Monitor, Brink). The leadership moves there if Asteria is lost.
@@ -43,7 +43,7 @@ Established by descriptions `kesteven` and `nskr_asteria`, the ship descriptions
 
 ### Project Enigma
 
-Project Enigma was a pre-Collapse Domain research project. Established by the prototype ship descriptions, weapon descriptions, `strings.json`, `ArtifactDialog`, `KQuest5Bar` and `CacheIntel`:
+Project Enigma was a pre-Collapse Domain research project. Established by the prototype ship descriptions, weapon descriptions, `strings.json`, `DataSatelliteDialog`, `DelveMeetingBarEvent` and `CacheIntel`:
 
 - **Research.** It developed advanced autonomous warships, temporal fields and exotic weapons outside Domain core space. "Though autonomous war machines were explicitly banned within Domain core space, advanced AI systems were developed in secrecy beyond incorporated volume."
 - **Staff.** Its staff speak through log and journal quotes in the ship and weapon descriptions:
@@ -65,7 +65,7 @@ Project Enigma was a pre-Collapse Domain research project. Established by the pr
   - dangerous instability (P-space cascade failures, causality interference, "despite past incidents").
 - **Ships.** The project's ships carry the `DSRD` prefix. The prototypes appear as "Unknown Prototype" hulls; their autonomous counterparts as "Project Enigma" hulls.
 - **Satellites.** The project relayed information through its own covert satellites, not the main hyperwave network. Each surviving satellite holds a radiation-shielded data disk marked "Project : Enigma", protected by an anti-tamper device and encrypted with centuries-old Domain encryption.
-- **The Cache.** A hidden Domain storage site in the system Kesteven's data calls "Unknown Site", far from any star and reachable only by a transverse jump. At the Collapse it hosted the Unlimited Production Chip. The maintenance logs say the site was declared unsafe for humans ("P-Space interferences"), so old drones did the storage work. Parts failed at unexplained rates, drones stopped completing tasks, and two drones destroyed each other; the last log entry ends there. The site's cores were found reformatted, not corrupted, and its prototype wrecks show no casualties or escape pods although they were built for crews (`CoreDialog`).
+- **The Cache.** A hidden Domain storage site in the system Kesteven's data calls "Unknown Site", far from any star and reachable only by a transverse jump. At the Collapse it hosted the Unlimited Production Chip. The maintenance logs say the site was declared unsafe for humans ("P-Space interferences"), so old drones did the storage work. Parts failed at unexplained rates, drones stopped completing tasks, and two drones destroyed each other; the last log entry ends there. The site's cores were found reformatted, not corrupted, and its prototype wrecks show no casualties or escape pods although they were built for crews (`CacheCoreDialog`).
 - **Glacier.** A comms facility on the tundra planet Glacier in the Frost system, abandoned for centuries and still powered by a passive decay reactor, holds disk #5. It has hidden anti-ship batteries.
 
 ### The Enigma
@@ -86,7 +86,7 @@ The Enigma is the autonomous force now fielding Project Enigma's ships. Its ship
 
 ### The Unlimited Production Chip
 
-- **What it is.** The UPC is the Cache's prize. Alice calls it "the keys to the old Domain's great secrets, so many technologies in one neat package" (`KQuest5Bar`); Eliza, "the keys to construct the greatest ships ever known to mankind" (`ElizaDialog`). The prototype blueprint packages are "blueprints ripped off the UPC".
+- **What it is.** The UPC is the Cache's prize. Alice calls it "the keys to the old Domain's great secrets, so many technologies in one neat package" (`DelveMeetingBarEvent`); Eliza, "the keys to construct the greatest ships ever known to mankind" (`ElizaDialog`). The prototype blueprint packages are "blueprints ripped off the UPC".
 - **Who wants it.** Kesteven wants it for its own advancement, and Jack frames that as Asteria's progress. Eliza wants it to start a "second collapse". Tri-Tachyon offers two million credits. The Luddic Church and Path call it "a vile creation of mammon" that must be destroyed.
 - **The choice.** The player decides; the mod does not call any recipient correct.
 
@@ -109,9 +109,9 @@ Unlocked by finishing the questline:
 
 ## What characters can know
 
-- **Kesteven's knowledge.** Kesteven works from decrypted fragments. Jack says "Enigma is one of the few words we can decipher from their transmissions". Alice admits "we don't know exactly that is inside the Cache yet". They hold back the Chip's specifications until later: "it's not important for you to know the exact specifications yet" (Jack, `KQuest5Bar`).
+- **Kesteven's knowledge.** Kesteven works from decrypted fragments. Jack says "Enigma is one of the few words we can decipher from their transmissions". Alice admits "we don't know exactly that is inside the Cache yet". They hold back the Chip's specifications until later: "it's not important for you to know the exact specifications yet" (Jack, `DelveMeetingBarEvent`).
 - **Eliza's knowledge.** Eliza has read two disks and knows about the Cache and the UPC ("The plans they had..."). She claims "eyes and ears all across the sector" and knows when the player carries the Chip.
-- **The crew.** Ops, sensors and comms officers report observations and measurements. They do not know what the Enigma is; when they guess, they label it a guess ("Your guess is as good as mine captain.", `ArtifactDialog`).
+- **The crew.** Ops, sensors and comms officers report observations and measurements. They do not know what the Enigma is; when they guess, they label it a guess ("Your guess is as good as mine captain.", `DataSatelliteDialog`).
 - **The Enigma.** Enigma voices never explain themselves. Their lines are fragments, protocols and declarations.
 - **Narration.** Narration describes what the player sees and must not explain the Enigma, the Cache or the UPC beyond what characters have learned.
 
@@ -125,11 +125,11 @@ The player works for the Kesteven Corporation on a questline that uncovers Proje
 
 These instructions describe how the existing mod text is written. They govern player-facing prose, not how this reference explains its own rules.
 
-- **Second person.** Narration addresses the captain as "you" in present tense and follows the bridge crew at work: "Your ops chief oversees the mission by-the-book, staging approach-and-scan to maximize safety..." (`ArtifactDialog`).
+- **Second person.** Narration addresses the captain as "you" in present tense and follows the bridge crew at work: "Your ops chief oversees the mission by-the-book, staging approach-and-scan to maximize safety..." (`DataSatelliteDialog`).
 - **Competent crew.** Crew members are professionals with their own manner: the careful ops chief, the sarcastic sensors officer, the comms officer's "nothing a little elbow grease from our team can't solve".
 - **Gray asides.** Gray narration carries the captain's own reactions and occasional judgment: "Wait, you really agree with her? Oh dear." (`ElizaDialog`), "Hope you made the right choice, captain." (`EndingElizaDialog`). `CacheDoubtDialog` uses the same gray voice as an inner voice that talks back.
 - **Wide tonal range.** Comedy and horror sit side by side.
-  - Comic: the drinking scenes (`KQuest3Bar`, the artisan liqueur in `KQuest5Bar`); the Peacekeepers' commander asking whether "Sam" sent the player to prank him (rules `pkInspired`); the Cache guardian's taunts ("Is this autofit by chance?", "Have it writ upon thy meagre grave : Skill issue.", `TauntPlugin`).
+  - Comic: the drinking scenes (`HostileTakeoverBarEvent`, the artisan liqueur in `DelveMeetingBarEvent`); the Peacekeepers' commander asking whether "Sam" sent the player to prank him (rules `pkInspired`); the Cache guardian's taunts ("Is this autofit by chance?", "Have it writ upon thy meagre grave : Skill issue.", `CacheBossTauntPlugin`).
   - Grave: the Frozen Heart's enslaved thousands and the Enigma doctrine are written without jokes.
 - **Machine voices.** AI and system voices use log formatting: bracketed tokens, lowercase queries, `INTERRUPT` breaks and cut-off protocol text. Example (rules `greetingEnigmaHostile`): `query. blood?. scanning. [BLOOD] collect, amass, gather, stockpile, hoard, reap...`
 - **Lore by quotation.** Prototype hulls, weapons and upgrades carry a quoted project log or journal line with a named author instead of a technical description.
@@ -155,9 +155,9 @@ These instructions describe how the existing mod text is written. They govern pl
 
 Jack is Kesteven's space operations officer at Asteria (`nskr_opguy`), the questline's first contact and later a contact.
 
-**Voice.** Charismatic and corporate: "a charismatic smile ... his manners have that corporate superficiality down to a perfection" (`nskr_kestevenQuest`, introduction). In person he is tall and inviting, with "a big - and mostly genuine smile" (`KQuest5Bar`). He becomes a salesman when the player hesitates, turns commanding when the stakes rise, and enjoys winning.
+**Voice.** Charismatic and corporate: "a charismatic smile ... his manners have that corporate superficiality down to a perfection" (`nskr_kestevenQuest`, introduction). In person he is tall and inviting, with "a big - and mostly genuine smile" (`DelveMeetingBarEvent`). He becomes a salesman when the player hesitates, turns commanding when the stakes rise, and enjoys winning.
 
-- On Kesteven's mission (`KQuest5Bar`): "Think about it, Asteria is one of the last great bastions of equality and democracy. We are very much in a unique position to drive progress in this sector." This shows the sincere-sounding corporate pitch; he believes it, and the setting's own descriptions undercut it.
+- On Kesteven's mission (`DelveMeetingBarEvent`): "Think about it, Asteria is one of the last great bastions of equality and democracy. We are very much in a unique position to drive progress in this sector." This shows the sincere-sounding corporate pitch; he believes it, and the setting's own descriptions undercut it.
 - On Eliza's death (`nskr_kestevenQuest`, job 5 tip): "I hear you managed to already take out Eliza for good, very impressive captain." The narration adds "There is a sinister smile on his face, you seem to have made his day." His warmth has a hard edge.
 - At the Kesteven ending (`EndingKestevenDialog`): "This cold war of ours is about to go hot, but we will be ready." ... "I hope we can again work together in the future, burn bright." Defiance, confidence and a sign-off that belongs to him.
 - Betrayed (rules `jackRevengeanceDialogInitial`): "I can't believe you betrayed us just like that, and to work with some lunatic spacer." He "struggles to maintain his composure".
@@ -174,7 +174,7 @@ Alice is Kesteven's R&D manager (`nskr_researcher`): the job 3 and job 4 contact
 - Failure (job 3): "Let's hope they don't pull ahead in this race thanks to your little fuck up." ... "Just be glad I'm not firing you on the spot."
 - Ambition (job 4, "Why are you so interested in this Enigma AI?"): "Her tone turns unusually passionate. 'You do see how advanced this "Enigma" technology is? With even a fraction of this power unlocked, one could have total supremacy over this sector.'" This is her real motive, stated plainly.
 - On the Enigma (all disks): "Their hatred of anyone with their new technology is peculiar, it's like the collapse made them think anyone else isn't meant to exist at all. They are helplessly trying to maintain some broken status quo." It is her reading, not established fact. It ends with "Hah, relax, I hope I didn't scare you out of the job captain".
-- On Eliza (`KQuest5Bar`): "*do not* listen to her nonsense, it's all lies to poison the mind."
+- On Eliza (`DelveMeetingBarEvent`): "*do not* listen to her nonsense, it's all lies to poison the mind."
 
 **Traits.**
 - A "slight, but devious smile" at sabotaging Tri-Tachyon, whom she suspects of being behind the Enigma.
@@ -198,7 +198,7 @@ Eliza is a revolutionary, and Kesteven calls her a terrorist (`nskr_anarchist`, 
 
 **Established facts.**
 
-- **Identity.** "Eliza, last name unknown, first name definitely not her real name either." Kesteven files her as "a wanted terrorist and a vicious criminal" and "a political extremist", quiet "since her last attack a few years back" (Jack and Alice, `KQuest5Bar`).
+- **Identity.** "Eliza, last name unknown, first name definitely not her real name either." Kesteven files her as "a wanted terrorist and a vicious criminal" and "a political extremist", quiet "since her last attack a few years back" (Jack and Alice, `DelveMeetingBarEvent`).
 - **Her port.** Recently refurbished and makeshift, guarded by rough bodyguards, one scarred and tattooed. She wears "a flashy and ornate looking uniform - dark leather belts loop around and hang off of the blood red uniform, underlined by shiny gold pins and decorations - a fit for a warlord", sits behind a fancy desk in an "exquisite dark leather" chair, and keeps a handcrafted notebook (`ElizaDialog`).
 - **Her fleet.** "Eliza's Merc Armada", flagship "Regicide", which she commands herself.
 - **Her conduct.** She keeps her word. She hands over the disks and later the promised equipment. When the player refuses her, she lets them leave unharmed: "I'm not just gonna stab you in the back on your way out like it would be customary for you corporate bastards." She punishes betrayal with death.
@@ -248,7 +248,7 @@ THRN is the Hellspawn judge. It speaks in short gray lines, sometimes one word a
 
 | Speaker | Source | Voice |
 |---|---|---|
-| Tri-Tachyon employee | `KQuest3Bar` | Friendly heavy drinker who gets the captain into a management party |
+| Tri-Tachyon employee | `HostileTakeoverBarEvent` | Friendly heavy drinker who gets the captain into a management party |
 | Tri-Tachyon collector | rules `nskr_ttCollectorDialog*` | Resentful and businesslike: "We know you are working with those snakes from Kesteven." ... "Pleasure doing business with you captain." |
 | Tri-Tachyon buyer | `nskr_altEndingDialogTT` | Skeptical, then greedy: "Just think of all the things you could buy." (ravenous smile) |
 | Luddic official | `nskr_altEndingDialogLuddic` | Scriptural: "I hear you speak of a vile creation of mammon." ... "you do not *get* your way to providence." |

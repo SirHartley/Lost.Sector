@@ -2,7 +2,7 @@
   "hullName": "Kingslayer",
   "hullId": "nskr_kingslayer",
   "hullSize": "CAPITAL_SHIP",
-  "spriteName": "graphics/ships/nskr_kingslayer.png",
+  "spriteName": "graphics/lostsector/ships/nskr_kingslayer.png",
   "style": "LOW_TECH",
   "height": 360,
   "width": 264,

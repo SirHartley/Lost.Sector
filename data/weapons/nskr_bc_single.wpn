@@ -4,8 +4,8 @@
   "projectileSpecId": "nskr_bc_shot",
   "type": "MISSILE",
   "size": "SMALL",
-  "turretSprite": "graphics/weapons/nskr_bc_turret.png",
-  "hardpointSprite": "graphics/weapons/nskr_bc_hardpoint.png",
+  "turretSprite": "graphics/lostsector/weapons/nskr_bc_turret.png",
+  "hardpointSprite": "graphics/lostsector/weapons/nskr_bc_hardpoint.png",
   "renderAboveAllWeapons": 0,
   "renderHints": [
     RENDER_LOADED_MISSILES

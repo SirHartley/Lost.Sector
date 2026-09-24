@@ -5,8 +5,8 @@
   "type": "MISSILE",
   "size": "MEDIUM",
   "displayArcRadius": 300,
-  "turretSprite": "graphics/weapons/nskr_spikepod_turret.png",
-  "hardpointSprite": "graphics/weapons/nskr_spikepod_hardpoint.png",
+  "turretSprite": "graphics/lostsector/weapons/nskr_spikepod_turret.png",
+  "hardpointSprite": "graphics/lostsector/weapons/nskr_spikepod_hardpoint.png",
   "renderAboveAllWeapons": 0,
   "renderHints": [
     RENDER_LOADED_MISSILES

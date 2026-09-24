@@ -2,7 +2,7 @@
 
 Where each questline conversation is implemented, how it is entered and how control passes between `rules.csv` and Java. Use it to find the text for a change and to plan moving Java-authored dialogue into rules. Rules syntax and project routing are in [RULES.md](../RULES.md); commands and memory in [RULES_AUTHORING.md](../RULES_AUTHORING.md); text standards in [DIALOGUE.md](../DIALOGUE.md).
 
-Java paths are relative to `src/lostsector/campaign/`.
+Java paths are relative to `jars/src/lostsector/campaign/`; `dialogue/rules/` and `combat/` paths are relative to `jars/src/lostsector/`.
 
 ## Three implementation styles
 
@@ -21,11 +21,11 @@ Entry: rules row `nskr_kestevenQuest` adds `nskr_kestevenQuestContinue` ("Chat a
 | Option id or prefix | Rules row | Verb | Java method |
 |---|---|---|---|
 | `nskr_kestevenQuest_pick_` | `nskr_kestevenQuestOptions` | `advanceStage` | `showQuestInfoAndPrepare()`: briefings, hand-ins, job 5 tips; writes flags, and 14→15 |
-| `nskr_kestevenQuest_story_pick_` | `nskr_kestevenQuestOptionsSP` | `advanceStageStory` (missing) | none; see [defects](KESTEVEN_QUESTLINE.md#defects-found-by-reading-the-source) |
-| `nskr_kestevenQuest_story_skip_pick_` | none | — | `SkipStoryOptionPicked()` is unreachable |
+| `nskr_kestevenQuest_story_pick_` | `nskr_kestevenQuestOptionsSP` | `advanceStageReqSkip` | `SPOptionPicked()`, then `showQuestInfoAndPrepare()`: strength-gate bypass |
+| `nskr_kestevenQuest_story_skip_pick_` | `nskr_kestevenQuestOptionsStorySkip` | `advanceStageStorySkip` | `SkipStoryOptionPicked()`: story skip |
 | `nskr_kestevenQuest_extraStart_` | `nskr_kestevenQuestExtraDialogueStart` | `extraDialogueStart` | Question list for the current stage |
 | `nskr_kestevenQuest_extra_<n>` | `nskr_kestevenQuestExtraDialogue` | `extraDialogue` | One answer; the option is disabled after reading |
-| `nskr_kestevenQuest_extra_3` at stage 7 | `nskr_kestevenQuestJob3Skip` (competes with the row above) | `skip` | Refusal prompt |
+| `nskr_kestevenQuest_extra_3` at stage 7 | `nskr_kestevenQuestJob3Skip` (`score:10`, wins over the row above) | `skip` | Refusal prompt |
 | `nskr_kestevenQuestConfirmSkip` | `nskr_kestevenQuestConfirmSkip` | `confirmSkip` | Job 3 refusal penalties, stage 11 |
 | `nskr_kestevenQuestConfirmQuest…` (prefix, includes `…B`) | `nskr_kestevenQuestConfirmQuest` | `confirmQuest` | `quest()`: accept, rewards and stage changes |
 | `nskr_kestevenQuestExit` | `nskr_kestevenQuestExit` | — | `FireAll PopulateOptions` |
@@ -34,7 +34,7 @@ Where the text for each stage lives:
 
 | Stage | Speaker | Status line (`addStageOptions`) | Briefing or hand-in (`showQuestInfoAndPrepare`) | Questions (`extraDialogue`) | Confirmation (`quest`) |
 |---|---|---|---|---|---|
-| 0 | Jack | Offer or "not qualified" | Job 1 briefing | Tip, rogue AI, the ships, Artifact Electronics, AI cores, "already fought them" | Accept |
+| 0 | Jack | Offer or relationship gate | Job 1 briefing | Tip, rogue AI, the ships, Artifact Electronics, AI cores, "already fought them" | Accept |
 | 1 | Jack | Progress | Sensor and electronics hand-ins, location tip | — | — |
 | 2 | Jack | "I've done everything." | Wrap-up | Equipment use, Enigma, next job | Rewards |
 | 6 | Jack | Offer or gates | Send to Alice, exchange program | — | Contact, stage 7 |
@@ -85,20 +85,20 @@ The official who reaches the second conversation is locked to it through `$nskr_
 
 | Class | Opened by | Content | State written |
 |---|---|---|---|
-| `quests/KQuest3Bar` | `PortsideBarData` at the job 3 start market, stages 8–9 | Party with a Tri-Tachyon employee | Stage 9, target discovered |
-| `quests/ArtifactDialog` | `CorePlugin`, satellites #3 and #4 | Disk salvage, ping, keywords | Disk count, satellite flags, wakes the guard |
-| `quests/Job4HintWreck` | `CorePlugin`, hint wreck | Coordinates of the friendly fleet | Hint flag |
-| `quests/KQuest5Bar` | `nskr_barEventFixer` on each bar visit at stage 15 | Meeting with Jack and Alice | Advance credits, stage 16 |
-| `quests/KQuest5ElizaBarMain`, `…Second`, `…Final` | `PortsideBarData` at pirate markets, stage 16 | Search for Eliza | Chain stage, used markets, Eliza's market |
-| `quests/ElizaDialog` | `CorePlugin`, Eliza's market until finished | Meeting Eliza | Disks, help or raid flags |
-| `quests/GlacierCommsDialog` | `CorePlugin`, Glacier after tip 2 | Timed facility raid | Disk #5; possible fleet damage |
-| `quests/CacheDoubtDialog` | `QuestStageManager`, once in Unknown Site | Inner-voice hint | None |
-| `quests/CoreDialog` | `CorePlugin` or the guardian's fleet-interaction config | Cache core salvage | Stage 19, rewards |
-| `quests/EndingKestevenDialog` | `CorePlugin` at stage 19 | Kesteven ending | Stage 20, rewards, relations |
-| `quests/EndingElizaDialog` | `CorePlugin` at stage 19 after the handover | Eliza ending | Stage 20, rewards, relations |
-| `graid/ElizaRaid` | Raid menu at Eliza's market | Raid objective | Disks, Eliza's fleet |
+| `kesteven/quest/HostileTakeoverBarEvent` | `PortsideBarData` at the job 3 start market, stages 8–9 | Party with a Tri-Tachyon employee | Stage 9, target discovered |
+| `kesteven/quest/DataSatelliteDialog` | `CorePlugin`, satellites #3 and #4 | Disk salvage, ping, keywords | Disk count, satellite flags, wakes the guard |
+| `kesteven/quest/HintWreckDialog` | `CorePlugin`, hint wreck | Coordinates of the friendly fleet | Hint flag |
+| `kesteven/quest/DelveMeetingBarEvent` | `nskr_barEventFixer` on each bar visit at stage 15 | Meeting with Jack and Alice | Advance credits, stage 16 |
+| `kesteven/quest/ElizaSearchBarEvent`, `…Second`, `…Final` | `PortsideBarData` at pirate markets, stage 16 | Search for Eliza | Chain stage, used markets, Eliza's market |
+| `kesteven/quest/ElizaDialog` | `CorePlugin`, Eliza's market until finished | Meeting Eliza | Disks, help or raid flags |
+| `kesteven/quest/GlacierCommsDialog` | `CorePlugin`, Glacier after tip 2 | Timed facility raid | Disk #5; possible fleet damage |
+| `kesteven/quest/CacheDoubtDialog` | `QuestStageManager`, once in Unknown Site | Inner-voice hint | None |
+| `kesteven/quest/CacheCoreDialog` | `CorePlugin` or the guardian's fleet-interaction config | Cache core salvage | Stage 19, rewards |
+| `kesteven/quest/EndingKestevenDialog` | `CorePlugin` at stage 19 | Kesteven ending | Stage 20, rewards, relations |
+| `kesteven/quest/EndingElizaDialog` | `CorePlugin` at stage 19 after the handover | Eliza ending | Stage 20, rewards, relations |
+| `kesteven/quest/ElizaRaid` | Raid menu at Eliza's market | Raid objective | Disks, Eliza's fleet |
 
-`CoreDialog`, the endings and `ElizaDialog` show the options they need; their text blocks are sequential `addPara` calls keyed by `OptionId`.
+`CacheCoreDialog`, the endings and `ElizaDialog` show the options they need; their text blocks are sequential `addPara` calls keyed by `OptionId`.
 
 ## Notes for moving dialogue into rules
 
@@ -107,4 +107,4 @@ The official who reaches the second conversation is locked to it through `$nskr_
 - **Values in text:** job 1 electronics, payouts, the job 4 constellation, the Frost distance and target names are computed in Java. They must be prepared as tokens before a row displays them; see [RULES_AUTHORING.md](../RULES_AUTHORING.md#create-a-custom-text-token).
 - **Stage writes:** most stage changes happen inside `quest()` or `showQuestInfoAndPrepare()`. The full list is in [KESTEVEN_STATE.md](KESTEVEN_STATE.md#who-changes-the-stage).
 - **Java-only dialogs:** those opened by `CorePlugin` have no rules entry today. Moving them means adding a rules entry route and removing the `CorePlugin` branch.
-- **Bar events:** `KQuest3Bar` and the Eliza bar events are saved in `PortsideBarData`; renaming or deleting the classes affects existing saves.
+- **Bar events:** `HostileTakeoverBarEvent` and the Eliza bar events are saved in `PortsideBarData`; renaming or deleting the classes affects existing saves.

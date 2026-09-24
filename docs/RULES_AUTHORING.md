@@ -132,13 +132,13 @@ When used in Conditions, a plugin's Boolean result determines eligibility. Condi
 
 `Call` is an alias of `CallEvent`. Its first argument must resolve to an object implementing `CallEvent.CallableEvent`. Remaining tokens are delivered to `callEvent(...)`; they are not reflected into an arbitrary Java method.
 
-`BaseHubMission` implements the dispatch needed by existing hub missions such as `Contracts`. Extend the existing `callAction` path for a genuinely new mission action, delegate shared behavior to the base implementation, and return true when handled. Unknown actions must not silently appear successful. Keep the mission reference in the correct owner and save-compatible; rebuild temporary interaction bindings through the existing framework.
+`BaseHubMission` implements the dispatch needed by existing hub missions such as `ContractsMission`. Extend the existing `callAction` path for a genuinely new mission action, delegate shared behavior to the base implementation, and return true when handled. Unknown actions must not silently appear successful. Keep the mission reference in the correct owner and save-compatible; rebuild temporary interaction bindings through the existing framework.
 
 Use `FireBest`/`FireAll` for trigger routing. `Call someRuleId` does not run that rule.
 
 ### Create a command only when needed
 
-For Lost.Sector, first look for a suitable existing command in [`lostsector.campaign.rulecmd`](../src/lostsector/campaign/rulecmd/). Its package registration already exists in [settings.json](../data/config/settings.json). Do not add a parallel command merely to set a String or call an existing reward helper.
+For Lost.Sector, first look for a suitable existing command in [`lostsector.dialogue.rules`](../jars/src/lostsector/dialogue/rules/). Its package registration already exists in [settings.json](../data/config/settings.json). Do not add a parallel command merely to set a String or call an existing reward helper.
 
 A standalone framework's minimal Java shape is:
 

@@ -2,7 +2,7 @@
 	"id":"nskr_spike1",
 	"specClass":"missile",	
 	"missileType":"MIRV",
-	"sprite":"graphics/missiles/nskr_spike_shot.png",
+	"sprite":"graphics/lostsector/missiles/nskr_spike_shot.png",
 	"size":[8,20],	
 	"center":[4,10],
 	"collisionRadius":30,

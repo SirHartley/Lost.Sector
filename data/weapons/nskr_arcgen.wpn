@@ -4,9 +4,9 @@
   "projectileSpecId": "nskr_arcgen_dummy",
   "type": "ENERGY",
   "size": "SMALL",
-  "everyFrameEffect": "lostsector.weapons.ArcgenScript",
-  "turretSprite": "graphics/weapons/nskr_arcgen_turret.png",
-  "hardpointSprite": "graphics/weapons/nskr_arcgen_hardpoint.png",
+  "everyFrameEffect": "lostsector.combat.weapons.ArcGeneratorEffect",
+  "turretSprite": "graphics/lostsector/weapons/nskr_arcgen_turret.png",
+  "hardpointSprite": "graphics/lostsector/weapons/nskr_arcgen_hardpoint.png",
   "renderAboveAllWeapons": 0,
   "turretOffsets": [
     11,

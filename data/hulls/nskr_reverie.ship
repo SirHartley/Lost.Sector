@@ -2,7 +2,7 @@
   "hullName": "reverie",
   "hullId": "nskr_reverie",
   "hullSize": "CRUISER",
-  "spriteName": "graphics/ships/nskr_reverie.png",
+  "spriteName": "graphics/lostsector/ships/nskr_reverie.png",
   "style": "HIGH_TECH",
   "height": 240,
   "width": 204,

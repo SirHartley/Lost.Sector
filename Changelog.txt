@@ -10,6 +10,57 @@ None
 --------------------------- Changelog -----------------------------
 1.0.c
 Removed - Exotica Technologies integration (Temporal Conduits and Space Time Anchor upgrades), as Exotica is no longer updated
+Fixed - The mod jar no longer contains a second copy of all mod files
+Adjusted - LunaLib is now required; all Lost.Sector settings are in its Mod Settings menu
+Removed - LOST_SECTOR_OPTIONS.ini settings file
+Adjusted - Easy and TRUE STARFARER are now choices of a single Difficulty setting; choose your difficulty again after updating
+Added - Mod Settings switches for the Throne's Gift and Hellspawn starts and the story skip; finishing the Kesteven questline turns them on
+Adjusted - Unlocks earned before this version do not carry over; switch them on in Mod Settings
+Added - Mod Settings key for firing a charged Stasis Generator (default F), for players who moved their ship system key
+Fixed - Hellspawn start: The Descent grants the Gate Conduit ability and the Hellspawn skill again, and the peaceful judgement no longer crashes
+Fixed - Crash when Gate Conduit calls in its swarms
+Fixed - Gate Conduit swarms no longer join battles against you or against other Enigma fleets, and no longer turn on you
+Fixed - The THRN and HOLY SPIRIT music now stops when their scene or fight ends
+Fixed - No More Chains (Kingslayer) no longer keeps its energy and missile rate of fire and flux cost bonuses after it switches off
+Fixed - Every Nemesis in a battle now starts in Relocation Protocol and cycles its Adaptive Protocol modes in order, not just the first one
+Fixed - The Cache guardian's taunts, music and reinforcement no longer go missing when another fleet joins the battle
+Fixed - The Advanced Shield Projector description now shows the base shield size of the ship you are looking at
+Fixed - Causal Interference and Mega Flux Rocket Pod visual effects no longer multiply with every copy in the battle
+Fixed - Booster Overcharge, Distortion Burn and Mercurial Overdrive acceleration and turning bonuses now wind down with the system instead of staying at full strength
+Fixed - Crash when a fighter-sized strikecraft from another mod carries Volatile Flux Injector
+Adjusted - Volatile Flux Injector's description now says its speed and rate of fire bonuses apply only in combat and change with flux
+Fixed - Reality Splitter's exit blast no longer destroys friendly missiles and fighters
+Fixed - The Mothership hullmod's codex entry no longer errors, and other hullmod descriptions no longer break when shown without a ship
+Fixed - Prototype, Enigma, Void and Remnant ship systems now unlock in the codex together with their ships
+Fixed - Kesteven fleets no longer include the Buffalo Mk.II
+Added - Descriptions for the Abyssal Phase Cloak and Limited Phase Cloak ship systems
+Fixed - Spending a story point to get past the "proper fleet" requirement for a Kesteven job now works and shows the job briefing
+Fixed - The 5 story point Skip story option in the Kesteven questline now works
+Fixed - Refusing Hostile Takeover ("I'm not doing this.") now always asks for confirmation instead of sometimes doing nothing
+Fixed - The Operation Lifesaver map marker now points to the Enigma strike group once you have seen it or the Special Operations fleet has sent its coordinates
+Fixed - Operation Lifesaver no longer gets stuck when another fleet destroys the Special Operations fleet before you find it
+Fixed - Crash when the Enigma fleet woken at a data satellite follows you into hyperspace and loses sight of you
+Fixed - Dialogs no longer recalculate your fleet strength and write it to starsector.log on every option refresh
+Adjusted - When a Kesteven job needs a better relationship with Kesteven, Jack and Alice now say so instead of asking for someone "more qualified"
+Fixed - Possible crash when buying weapons through the Kesteven artifact exchange
+Fixed - Asking Jack or Alice for work no longer fails with an error; Kesteven contracts are offered again
+Fixed - Data recovery contracts for Artifact Electronics now count the Artifact Electronics you recover
+Fixed - With Industrial.Evolution or Tahlan Shipworks, their contract types no longer become more common every time a contract is rolled
+Fixed - Finished quest, bounty, contract and hint intel now leaves the intel screen a few days after it ends
+Fixed - Hellspawn event progress entries now drop off the event's list after 30 days, like vanilla events
+Fixed - Loading another save or starting a new game without restarting the game no longer carries over event, spawner and faction ship data from the previous campaign
+Fixed - Mysterious signal hints no longer stop for good when a new campaign is saved twice without reloading
+Fixed - Dormant Enigma fleets in hyperspace no longer hunt a player who carries little Enigma or prototype tech
+Fixed - Nexerelin random sectors and other sectors without Arcadia now place Asteria in a random system, and the Kesteven questline no longer crashes there
+Fixed - Crash when Kesteven's leadership returns to Asteria after the Outpost lost its nanoforge
+Fixed - New-game generation no longer floods the log or hangs while placing the Project Helios bounty
+Fixed - Helios and Polaris are now always placed around a gas giant without moons
+Fixed - The Peacekeepers bounty now pays once you destroy the ISS White Whale, and ends when someone else destroys it
+Fixed - ARO Strike Groups, the Merc Messenger and Hunter Fanatics now react to your movements several times a day instead of once a day
+Fixed - The Kesteven debt collector fleet is named Debt Collector again instead of showing an internal ID
+Fixed - Markets no longer keep the Enigma population supply bonus or the Unlimited Production Chip production and quality bonuses after losing those conditions
+Fixed - Reality Splitter's exit blast no longer hits the ship that uses it
+Fixed - The Temporal Paradox system description is no longer cut off
 
 1.0.b
 Adjusted - Severely nerfed spawn rates for Borealis, Rhea and Kingslayer

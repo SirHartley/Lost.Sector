@@ -2,7 +2,7 @@
   "hullName": "Sunburst",
   "hullId": "nskr_sunburst",
   "hullSize": "CAPITAL_SHIP",
-  "spriteName": "graphics/ships/nskr_sunburst.png",
+  "spriteName": "graphics/lostsector/ships/nskr_sunburst.png",
   "style": "HIGH_TECH",
   "height": 278,
   "width": 704,

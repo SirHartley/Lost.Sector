@@ -1,7 +1,7 @@
 {
 	"id":"nskr_emflak",
 	"specClass":"projectile",
-	 "everyFrameEffect": "lostsector.weapons.EmflakEffect",
+	 "everyFrameEffect": "lostsector.combat.weapons.EmFlakEffect",
 	"type":"SYSTEM",
 	"size":"SMALL",
 	"turretSprite":"",

@@ -40,8 +40,8 @@
 		"contrailColor":[50, 50, 50,50],
 		"contrailCampaignColor":[156, 205, 255,75],
 		"glowAlternateColor":[156, 205, 255,100],
-		"glowSprite":"graphics/fx/nskr_prot_engine_scroll.png",
-		"glowOutline":"graphics/fx/nskr_prot_engine_outline.png",
+		"glowSprite":"graphics/lostsector/fx/nskr_prot_engine_scroll.png",
+		"glowOutline":"graphics/lostsector/fx/nskr_prot_engine_outline.png",
 		"type":"SMOKE" # GLOW or SMOKE
 	},	
 	"NSKR_TECHP2":{
@@ -55,8 +55,8 @@
 		"contrailColor":[96, 125, 196, 60],
 		"contrailCampaignColor":[156, 205, 255,75],
 		"glowAlternateColor":[255, 89, 74, 200],
-		"glowSprite":"graphics/fx/nskr_prot_engine_scroll.png",
-		"glowOutline":"graphics/fx/nskr_prot_engine_outline.png",
+		"glowSprite":"graphics/lostsector/fx/nskr_prot_engine_scroll.png",
+		"glowOutline":"graphics/lostsector/fx/nskr_prot_engine_outline.png",
 		"type":"GLOW" # GLOW or SMOKE
 	},
 	"NSKR_TECHR":{

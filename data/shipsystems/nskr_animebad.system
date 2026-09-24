@@ -3,7 +3,7 @@
 	"type":"STAT_MOD",
 	"aiType":"ENTROPY_AMPLIFIER",
 	
-	"statsScript":"lostsector.shipsystems.AnimebadStats",
+	"statsScript":"lostsector.combat.systems.FateSealedStats",
 
 	"runScriptWhileIdle":true, # unapply() never gets called
 		

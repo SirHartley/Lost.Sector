@@ -1,11 +1,11 @@
 {
 	"id":"nskr_stasis",
-	"everyFrameEffect": "lostsector.weapons.StasisEffect",
+	"everyFrameEffect": "lostsector.combat.weapons.StasisEffect",
 	"specClass":"projectile",
 	"type":"MISSILE",
 	"mountTypeOverride":"UNIVERSAL",
 	"size":"LARGE",
-	"turretSprite":"graphics/weapons/nskr_stasis.png",
+	"turretSprite":"graphics/lostsector/weapons/nskr_stasis.png",
 	"hardpointSprite":"graphics/fx/empty.png",
 	"hardpointOffsets":[20, 0],
 	"turretOffsets":[20, 0],

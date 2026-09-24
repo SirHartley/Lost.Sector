@@ -20,6 +20,6 @@ They do not govern:
 
 Conventions:
 
-- Java paths are relative to `src/lostsector/campaign/` unless stated.
+- Java paths are relative to `jars/src/lostsector/campaign/` unless stated; `dialogue/rules/` and `combat/` paths are relative to `jars/src/lostsector/`.
 - "Persistent data" means `Global.getSector().getPersistentData()`.
 - Times in seconds are frame seconds; vanilla runs 10 seconds per campaign day.

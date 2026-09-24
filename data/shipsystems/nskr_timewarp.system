@@ -2,8 +2,8 @@
 	"id":"nskr_timewarp",
 	"type":"ENGINE_MOD",
 	"aiType":"CUSTOM",
-	"aiScript":"lostsector.shipsystems.ai.TimewarpAI",
-	"statsScript":"lostsector.shipsystems.TimewarpStats",
+	"aiScript":"lostsector.combat.systems.ai.TimewarpAI",
+	"statsScript":"lostsector.combat.systems.TimewarpStats",
 	
 	"clampMaxSpeedAfter":true,
 

@@ -2,8 +2,8 @@
 	"id":"nskr_pullback",
 	"type":"ENGINE_MOD",
 	"aiType":"CUSTOM",
-	"aiScript":"lostsector.shipsystems.ai.PullbackAI",
-	"statsScript":"lostsector.shipsystems.PullbackStats",
+	"aiScript":"lostsector.combat.systems.ai.PullbackAI",
+	"statsScript":"lostsector.combat.systems.PullbackStats",
 	
 	"clampMaxSpeedAfter":true,
 	"fadeActivationSoundOnChargedown":true,

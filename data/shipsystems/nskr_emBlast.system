@@ -2,8 +2,8 @@
 	"id":"nskr_emBlast",
 	"type":"STAT_MOD",
 	"aiType":"CUSTOM",
-	"aiScript":"lostsector.shipsystems.ai.EMBlastAI",
-	"statsScript":"lostsector.shipsystems.EMBlastStats",
+	"aiScript":"lostsector.combat.systems.ai.EMBlastAI",
+	"statsScript":"lostsector.combat.systems.EMBlastStats",
 	
 	"alwaysAccelerate":true,
 	"clampMaxSpeedAfter":true,

@@ -1,0 +1,34 @@
+package lostsector.combat.hullmods;
+
+import com.fs.starfarer.api.Global;
+import com.fs.starfarer.api.combat.BaseHullMod;
+import com.fs.starfarer.api.combat.MutableShipStatsAPI;
+import com.fs.starfarer.api.combat.ShipAPI;
+import com.fs.starfarer.api.combat.ShipAPI.HullSize;
+
+public class EmCore extends BaseHullMod {
+
+	// Marker hullmod for the EM core; it has no effect.
+
+	public void applyEffectsBeforeShipCreation(HullSize hullSize, MutableShipStatsAPI stats, String id) {
+
+	}
+
+	public void applyEffectsAfterShipCreation(ShipAPI ship, String id) {
+
+	}
+
+	@Override
+	public void advanceInCombat(ShipAPI ship, float amount) {
+		if (Global.getCombatEngine().isPaused() || !ship.isAlive()) {
+			return;
+		}
+
+	}
+
+	public String getDescriptionParam(int index, HullSize hullSize) {
+		if (index == 0) return "";
+		return null;
+	}
+
+}

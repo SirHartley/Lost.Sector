@@ -2,8 +2,8 @@
 	"id":"nskr_rapidfire",
 	"type":"STAT_MOD",
 	"aiType":"CUSTOM",
-	"aiScript":"lostsector.shipsystems.ai.RapidFireAI",
-	"statsScript":"lostsector.shipsystems.RapidfireStats",
+	"aiScript":"lostsector.combat.systems.ai.RapidFireAI",
+	"statsScript":"lostsector.combat.systems.RapidFireStats",
 	
 	"weaponGlowColor":[255,30,0,155],
 	"weaponTypes":[BALLISTIC],

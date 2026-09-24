@@ -21,18 +21,19 @@ nskr_heartFixer",,,
 # RULES BASED SCRIPT DIALOGS,,,,,,
 ,,,,,,
 # kesteven QUEST options,,,,,,
-nskr_kestevenQuest,PopulateOptions,"nskr_kestevenQuest hasOption
-$tag:k_quest
-nskr_isAtmostKStage 19",,,"nskr_kestevenQuestContinue:Chat about operations work",
+nskr_kestevenQuest,PopulateOptions,"$tag:k_quest
+nskr_kestevenQuest hasOption
+nskr_isAtMostKStage 19",,,"nskr_kestevenQuestContinue:Chat about operations work",
 nskr_kestevenQuestContinue,DialogOptionSelected,"$option == nskr_kestevenQuestContinue","nskr_kestevenQuest getStage",,"nskr_kestevenQuestStart:Continue",
 nskr_kestevenQuestOptions,DialogOptionSelected,"nskr_optionStartsWith ""nskr_kestevenQuest_pick_""","nskr_kestevenQuest advanceStage
 SetShortcut nskr_kestevenQuestCancel ""ESCAPE""
 ",,"nskr_kestevenQuestConfirmQuest:Continue
 nskr_kestevenQuestExit:Go back",
-nskr_kestevenQuestOptionsSP,DialogOptionSelected,"nskr_optionStartsWith ""nskr_kestevenQuest_story_pick_""","nskr_kestevenQuest advanceStageStory
+nskr_kestevenQuestOptionsSP,DialogOptionSelected,"nskr_optionStartsWith ""nskr_kestevenQuest_story_pick_""","nskr_kestevenQuest advanceStageReqSkip
 SetShortcut nskr_kestevenQuestCancel ""ESCAPE""
 ",,"nskr_kestevenQuestConfirmQuest:Continue
 nskr_kestevenQuestExit:Go back",
+nskr_kestevenQuestOptionsStorySkip,DialogOptionSelected,"nskr_optionStartsWith ""nskr_kestevenQuest_story_skip_pick_""","nskr_kestevenQuest advanceStageStorySkip",,,
 nskr_kestevenQuestExtraDialogueStart,DialogOptionSelected,"nskr_optionStartsWith ""nskr_kestevenQuest_extraStart_""","nskr_kestevenQuest extraDialogueStart
 SetShortcut nskr_kestevenQuestCancel ""ESCAPE""","""What do you need to know?""",,
 nskr_kestevenQuestExtraDialogue,DialogOptionSelected,"nskr_optionStartsWith ""nskr_kestevenQuest_extra_""","nskr_kestevenQuest extraDialogue
@@ -40,14 +41,14 @@ SetShortcut nskr_kestevenQuestCancel ""ESCAPE""",,,
 nskr_kestevenQuestConfirmQuest,DialogOptionSelected,"nskr_optionStartsWith ""nskr_kestevenQuestConfirmQuest""","nskr_kestevenQuest confirmQuest",,"nskr_kestevenQuestExit:Leave",
 nskr_kestevenQuestExit,DialogOptionSelected,"$option == nskr_kestevenQuestExit","FireAll PopulateOptions",,,
 nskr_kestevenQuestConfirmSkip,DialogOptionSelected,"$option == nskr_kestevenQuestConfirmSkip","nskr_kestevenQuest confirmSkip",,"nskr_kestevenQuestExit:Leave",
-nskr_kestevenQuestJob3Skip,DialogOptionSelected,"$option == nskr_kestevenQuest_extra_3
+nskr_kestevenQuestJob3Skip,DialogOptionSelected,"$option == nskr_kestevenQuest_extra_3 score:10
 nskr_isKStage 7","nskr_kestevenQuest skip",,,
 "#END kesteven QUEST options",,,,,,
 ,,,,,,
 # ARTIFACT swap options,,,,,,
 nskr_shipSwapOption,PopulateOptions,"nskr_isBaseOfficial research
 nskr_shipSwap hasOption
-nskr_isAtleastKStage 7",,,"nskr_shipSwapMenu:Exchange artifacts",
+nskr_isAtLeastKStage 7",,,"nskr_shipSwapMenu:Exchange artifacts",
 nskr_shipSwapMenuSel,DialogOptionSelected,"$option == nskr_shipSwapMenu","FireAll nskr_shipSwapMenu","""Ah, good. Looking to buy or sell?""",,
 nskr_shipSwapMenuReturnSel,DialogOptionSelected,"$option == nskr_shipSwapMenuReturn","FireAll nskr_shipSwapMenu",,,
 nskr_shipSwapMenu,nskr_shipSwapMenu,,"AddTextSmall ""You have $nskr_shipSwap_pointsStr points.""
@@ -69,7 +70,7 @@ nskr_shipSwapExit,DialogOptionSelected,"$option == nskr_shipSwapExit","FireAll P
 # MOD REMOVAL,,,,,,
 nskr_modRemovalOption,PopulateOptions,"nskr_isBaseOfficial research
 nskr_modRemoval hasOption
-nskr_isAtleastKStage 14",,,"nskr_modRemovalMenu:Adjust special modifications",
+nskr_isAtLeastKStage 14",,,"nskr_modRemovalMenu:Adjust special modifications",
 nskr_modRemovalMenu,nskr_modRemovalMenu,,"AddText ""We could - with some effort, remove all Special Modifications from one of your vessels captain.""
 SetShortcut nskr_modRemovalExit ""ESCAPE""",,"nskr_modRemovalManage:Select one of your ships
 nskr_modRemovalExit:Go back",

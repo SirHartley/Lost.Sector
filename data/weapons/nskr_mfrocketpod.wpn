@@ -4,9 +4,9 @@
   "projectileSpecId": "nskr_mfrocket",
   "type": "MISSILE",
   "size": "MEDIUM",
-  "everyFrameEffect": "lostsector.weapons.MfrocketEffect",
-  "turretSprite": "graphics/weapons/nskr_mfrocketpod_turret.png",
-  "hardpointSprite": "graphics/weapons/nskr_mfrocketpod_hardpoint.png",
+  "everyFrameEffect": "lostsector.combat.weapons.FluxRocketPodEffect",
+  "turretSprite": "graphics/lostsector/weapons/nskr_mfrocketpod_turret.png",
+  "hardpointSprite": "graphics/lostsector/weapons/nskr_mfrocketpod_hardpoint.png",
   "renderAboveAllWeapons": 0,
   "renderHints": [
     RENDER_LOADED_MISSILES

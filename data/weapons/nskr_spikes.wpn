@@ -10,7 +10,7 @@
     12,
     0
   ],
-  "hardpointSprite": "graphics/weapons/nskr_spikes_hardpoint.png",
+  "hardpointSprite": "graphics/lostsector/weapons/nskr_spikes_hardpoint.png",
   "id": "nskr_spikes",
   "projectileSpecId": "nskr_spike1",
   "renderHints": [
@@ -43,6 +43,6 @@
     9.5,
     0
   ],
-  "turretSprite": "graphics/weapons/nskr_spikes_turret.png",
+  "turretSprite": "graphics/lostsector/weapons/nskr_spikes_turret.png",
   "type": "MISSILE"
 }

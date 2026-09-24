@@ -2,9 +2,9 @@
 	"id":"nskr_causality",
 	"type":"STAT_MOD",
 	"aiType":"CUSTOM",
-	"aiScript":"lostsector.shipsystems.ai.CausalityAI",
+	"aiScript":"lostsector.combat.systems.ai.CausalityAI",
 
-	"statsScript":"lostsector.shipsystems.CausalityStats",
+	"statsScript":"lostsector.combat.systems.CausalityStats",
 
 	"jitterColor":[255,150,200,50],
 	"jitterCopies":5,

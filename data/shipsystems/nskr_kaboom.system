@@ -2,8 +2,8 @@
 	"id":"nskr_kaboom",
 	"type":"STAT_MOD",
 	"aiType":"CUSTOM",
-	"aiScript":"lostsector.shipsystems.ai.KaboomAI",
-	"statsScript":"lostsector.shipsystems.KaboomStats",
+	"aiScript":"lostsector.combat.systems.ai.PayloadAI",
+	"statsScript":"lostsector.combat.systems.PayloadStats",
 	
 	"alwaysAccelerate":true,
 	"clampMaxSpeedAfter":true,

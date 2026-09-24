@@ -6,7 +6,7 @@
 	"descriptionPrefix":"This ship has been given Kesteven markings. Systems modifications are otherwise superficial.",
 	"tags":[""],
 	"tech":"Kesteven",
-	"spriteName":"graphics/ships/buffalo_kesteven.png",
+	"spriteName":"graphics/lostsector/ships/buffalo_kesteven.png",
 	"removeWeaponSlots":[], 		# ids
 	"removeEngineSlots":[], 		# indices, as engine slots have no id in the .ship file
 	"removeBuiltInMods":[], 		# hullmod ids

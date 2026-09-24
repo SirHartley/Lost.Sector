@@ -2,7 +2,7 @@
   "hullName": "AED",
   "hullId": "nskr_aed",
   "hullSize": "FRIGATE",
-  "spriteName": "graphics/ships/nskr_aed.png",
+  "spriteName": "graphics/lostsector/ships/nskr_aed.png",
   "style": "NSKR_PROT",
   "height": 100,
   "width": 134,

@@ -2,7 +2,7 @@
   "hullName": "Widow",
   "hullId": "nskr_widow_e",
   "hullSize": "FRIGATE",
-  "spriteName": "graphics/ships/nskr_widow_e.png",
+  "spriteName": "graphics/lostsector/ships/nskr_widow_e.png",
   "style": "NSKR_PROT",
   "height": 114,
   "width": 168,

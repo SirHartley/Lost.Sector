@@ -4,8 +4,8 @@
   "projectileSpecId": "nskr_garde_shot",
   "type": "ENERGY",
   "size": "MEDIUM",
-  "turretSprite": "graphics/weapons/nskr_huginn_e_arm_right.png",
-  "hardpointSprite": "graphics/weapons/nskr_huginn_e_arm_right.png",
+  "turretSprite": "graphics/lostsector/weapons/nskr_huginn_e_arm_right.png",
+  "hardpointSprite": "graphics/lostsector/weapons/nskr_huginn_e_arm_right.png",
   "renderAboveAllWeapons": 0,
   "glowColor": [
     255,
