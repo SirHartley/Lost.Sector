@@ -125,7 +125,7 @@ public class AdvancedShieldProjector extends BaseHullMod {
 	@Override
 	public String getDescriptionParam(int index, HullSize hullSize, ShipAPI ship) {
 		if (index == 0) return "" + 360;
-		if (index == 1) return ship == null ? "its base size" : "" + (int)getBaseArc(ship);
+		if (index == 1) return ship == null ? "the hull's normal arc" : "" + (int)getBaseArc(ship);
 		if (index == 2) return "" + Math.round(100f * RESISTANCE_BONUS) + "%";
 		if (index == 3) return "" + Math.round(100f * FOLD_BONUS) + "%";
 		if (index == 4) return "" + 0;

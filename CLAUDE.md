@@ -166,7 +166,7 @@ If any check fails, keep local PC checkouts read-only and use the GitHub-app-onl
 
 ### Subagent dispatch template
 
-Use this template for authorized subagent work, including programming support, crawling, audits, questions and research. It applies across models. The main agent fills in the brief and sets the selected model and reasoning effort in the dispatch call. Include relevant user clarifications explicitly; do not assume the subagent received the conversation. Keep the permitted work within the ownership and model assignments above and below.
+Use this template for authorized subagent work, including programming support, crawling, audits, questions and research. It applies across models. The main agent fills in the brief and sets the selected model and reasoning effort in the dispatch call or through the agent definition it selects. Include relevant user clarifications explicitly; do not assume the subagent received the conversation. Keep the permitted work within the ownership and model assignments above and below.
 
 ```text
 Task: <specific question or result, and what counts as complete>
@@ -211,15 +211,16 @@ The main agent checks the cited evidence before using a conclusion to change cod
 
 This section applies to Claude sessions, not ChatGPT.
 
-Opus 5 in the main session owns planning and shipped code. Clear names and structure carry ordinary intent; comments remain limited to hidden constraints.
+The main session owns planning and integration. It reviews every subagent diff, then commits, builds and merges. Clear names and structure carry ordinary intent; comments remain limited to hidden constraints.
 
 | Work | Model |
 |---|---|
-| Planning, architecture, sequencing, and all Java changes | Opus 5 in the main session |
+| Planning, architecture, sequencing, and review and integration of code changes | The main session |
+| Code changes, including Java and data files | Opus 5.5 subagents at high effort, using the `java-implementer` agent (`.claude/agents/java-implementer.md`) |
 | Repository search, call tracing, and reading game sources | Sonnet 5 subagents using `model: sonnet` |
-| UI and UI-adjacent work, including panels, dialogs, tooltips, renderers, shaders, and sprites | Fable 5 subagents using `model: fable` |
+| UI and UI-adjacent research and scoping, including panels, dialogs, tooltips, renderers, shaders, and sprites | Fable 5 subagents using `model: fable` |
 
-Subagents perform research and scoping, not shipped code. The UI assignment takes precedence whenever the player can see the result.
+Code subagents work from a brief written with the [dispatch template](#subagent-dispatch-template) and edit only the checkout it names. They do not commit, push, open pull requests or merge. Parallel code subagents get separate files or separate worktrees. Other subagents perform research and scoping, not shipped code. When the player can see the result, a Fable subagent scopes it before an Opus subagent implements it.
 
 ## Version names
 

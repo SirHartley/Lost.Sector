@@ -169,12 +169,12 @@ public class VolatileFluxInjector extends BaseHullMod {
             tooltip.addPara("Up to +"+(int)frig+"-"+(int)cap+"su/s"+" to top speed, based on hull size.", pad, ColorHelper.BON_GREEN, (int)frig+"-"+(int)cap+"su/s");
         }
         tooltip.addPara("Up to +"+(int)ROF_BONUS+"%%"+" to all weapon rate of fire.", 0.0f, ColorHelper.BON_GREEN, (int)ROF_BONUS+"%");
-        tooltip.addPara("-Combat only. Both bonuses change with current flux: full bonus at zero flux, none at 50%% flux, full penalty at 100%% flux.", 0.0f, ColorHelper.NICE_YELLOW, "");
+        tooltip.addPara("-Scales with flux in combat: full bonus at 0%% flux, none at 50%%, full penalty at 100%%.", 0.0f, ColorHelper.NICE_YELLOW, "");
         if(ship!=null) {
             if (ship.getVariant().hasHullMod("nskr_augmented")) {
-                tooltip.addPara("-Penalty is equal up to 50%% of the bonus, but as a negative.", 0.0f, ColorHelper.TT_ORANGE, "Penalty is equal up to 50% of the bonus");
+                tooltip.addPara("-The full penalty is half as large as the bonus.", 0.0f, ColorHelper.TT_ORANGE, "half as large as the bonus");
             } else {
-                tooltip.addPara("-Penalty is equal up to the bonus, but as a negative.", 0.0f, ColorHelper.TT_ORANGE, "Penalty is equal up to the bonus");
+                tooltip.addPara("-The full penalty is as large as the bonus.", 0.0f, ColorHelper.TT_ORANGE, "as large as the bonus");
             }
         }
         tooltip.addPara("+"+(int)FLUX_BONUS+"%%"+" to flux capacity and the effectiveness of additional capacitors.", 0.0f, ColorHelper.BON_GREEN, (int)FLUX_BONUS+"%");
