@@ -23,6 +23,7 @@ import lostsector.campaign.kesteven.quest.QuestStageManager;
 import lostsector.campaign.kesteven.quest.QuestHelper;
 import lostsector.dialogue.rules.nskr_kestevenQuest;
 import lostsector.helper.SectorLookup;
+import lostsector.quest.QuestDialogs;
 
 import java.util.Collection;
 import java.util.List;
@@ -45,6 +46,10 @@ public class CorePlugin extends BaseCampaignPlugin {
         //HELLSPAWN fleet join logic
         if (interactionTarget instanceof CampaignFleetAPI && HellSpawnAbilityInteraction.hellSpawnInRange()) {
             return new PluginPick<InteractionDialogPlugin>(new HellSpawnAbilityInteraction(), CampaignPlugin.PickPriority.MOD_SET);
+        }
+        String claimedTrigger = QuestDialogs.claimedTrigger(interactionTarget);
+        if (claimedTrigger != null) {
+            return new PluginPick<InteractionDialogPlugin>(QuestDialogs.plugin(claimedTrigger), PickPriority.MOD_GENERAL);
         }
         //blacksite interaction
         List<BlacksiteInfo> sites = BlacksiteManager.getSites(BlacksiteManager.SITE_ARRAY_KEY);

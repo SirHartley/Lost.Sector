@@ -24,7 +24,7 @@ This guide does not govern:
 - [Package layout](#package-layout)
 - [Lifecycle](#lifecycle)
 - [Making a quest](#making-a-quest)
-- [Reference](#reference): [Quest and stages](#quest-and-stages), [QuestState](#queststate), [QuestModule](#questmodule), [Declarations](#declarations), [QuestContext](#questcontext), [Queries from other features](#queries-from-other-features), [Events](#events), [Fleets](#fleets), [People](#people), [Dialog entry points](#dialog-entry-points), [Bar events](#bar-events), [Intel](#intel), [Tokens](#tokens), [Rewards and receipts](#rewards-and-receipts), [Random, timers and marks](#random-timers-and-marks), [The quest command](#the-quest-command), [Dev tools](#dev-tools), [Rules check tool](#rules-check-tool)
+- [Reference](#reference): [Quest and stages](#quest-and-stages), [QuestState](#queststate), [QuestModule](#questmodule), [Declarations](#declarations), [QuestContext](#questcontext), [QuestManager](#questmanager), [Queries from other features](#queries-from-other-features), [Events](#events), [Fleets](#fleets), [People](#people), [Dialog entry points](#dialog-entry-points), [Bar events](#bar-events), [Intel](#intel), [Tokens](#tokens), [Rewards and receipts](#rewards-and-receipts), [Random, timers and marks](#random-timers-and-marks), [The quest command](#the-quest-command), [Dev tools](#dev-tools), [Rules check tool](#rules-check-tool)
 - [Rules contract](#rules-contract)
 - [Shared modules](#shared-modules)
 - [Save compatibility](#save-compatibility)
@@ -40,10 +40,10 @@ The framework is built on branch `quest-overhaul`; the task ids refer to the tra
 
 | Component | Classes | Status | Task |
 |---|---|---|---|
-| Core: definitions, state, store, manager, transitions, marks, claims | `Quest`, `QuestStage`, `QuestState`, `QuestModule`, `Declarations`, `QuestContext`, `QuestManager`, `QuestStore`, `QuestCatalog`, `Quests` | planned | T05 |
+| Core: definitions, state, store, manager, transitions, marks, claims | `Quest`, `QuestStage`, `QuestState`, `QuestModule`, `Declarations`, `QuestContext`, `QuestManager`, `QuestStore`, `QuestCatalog`, `Quests`, `QuestDialogs`, `NoFlags` | implemented | T05 |
 | Events: listeners, daily tick, frame hook | `QuestManager` | planned | T06 |
 | Fleets | `QuestFleets`, `QuestFleet`, `FleetRole`, `FleetOrders` | planned | T07 |
-| Rules command, tokens, people | `nskr_quest`, `QuestTokens`, `QuestPeople` | planned | T08 |
+| Rules command, tokens, people, rewards | `nskr_quest`, `QuestTokens`, `QuestPeople`, `QuestRewards` | planned | T08 |
 | Presentation verbs, if T09 finds gaps vanilla commands leave | `nskr_quest` | planned | T09, T10 |
 | Intel and rules text outside dialogs | `QuestIntel`, `QuestText` | planned | T11 |
 | Rules check tool | `lostsector.quest.dev.RulesCheck` | planned | T12 |
@@ -137,7 +137,7 @@ No other registration exists. A quest never registers scripts, listeners or plug
 
 1. `QuestManager` is constructed in `createManagers()`. Its constructor creates the store handle (`Saved<QuestStore>` under key `quests`, stored as `nskr_quests`) and builds every definition from `QuestCatalog`. Building definitions calls no game API.
 2. `Saved.loadPersistentData()` loads the store.
-3. On the first frame, the manager calls `isAvailable()` on each quest. For an available quest without state it creates the state, puts it in the start stage and starts the start stage's modules. States are never deleted; an unavailable quest keeps its state but receives no events.
+3. On the first unpaused frame, the manager calls `isAvailable()` on each quest. For an available quest without state it creates the state, puts it in the start stage and calls `onStart` on the start stage's modules (not `onStage`). States are never deleted; an unavailable quest keeps its state but receives no events. The manager does not run while paused: `runWhilePaused()` is false, as for vanilla's wait script.
 
 ### A stage change
 
@@ -149,11 +149,13 @@ No other registration exists. A quest never registers scripts, listeners or plug
 4. `onStart` on every module active in `Y` and not in `X`, in module order.
 5. `onStage(ctx, X)` on every module active in `Y`, in module order.
 
-A module that calls `advance` inside any of these hooks queues the change; the manager applies it after the current change completes. More than 20 queued changes in a row is a loop: the manager logs an error and drops the rest.
+A module that calls `advance` inside any of these hooks queues the change; the manager applies it after the current change completes. A queued guarded change is checked again when applied and skipped with an error if the stage has moved. More than 20 queued changes in a row is a loop: the manager logs an error and drops the rest. An `advance` to the current stage logs an error and changes nothing. Exceptions thrown by quest hooks are not caught, so bugs surface; the manager resets its own flags in `finally`.
 
 ### A stage jump
 
-`QuestManager.jump(quest, target)` serves the dev menu and the player's story skip. It walks from the current stage to the target along the `previous()` chain of the target. For each stage on the path except the target it performs a normal stage change, then calls `onSkip(ctx)` on the modules active in that stage, which set what the stage's conversations would have set (default decisions, rewards the story assumes). Then it changes to the target. `ctx.isJump()` is true throughout. A jump to a stage that is not ahead of the current one resets the quest first: every module stops, fleets and people of the quest are removed, and a fresh state starts at the start stage.
+`QuestManager.jump(quest, target)` serves the dev menu and the player's story skip. It walks from the current stage to the target along the `previous()` chain of the target. For the current stage and each stage on the path except the target, it calls `onSkip(ctx)` on the modules active in that stage, which set what the stage's conversations would have set (default decisions, rewards the story assumes), then performs a normal stage change to the next stage on the path. Advances queued by hooks during the walk are dropped and logged, because the jump decides the path; advances queued by the target stage's hooks apply after the jump. `ctx.isJump()` is true during the jump.
+
+A target is ahead when the current stage lies on its `previous()` chain. A jump to any other target, including the current stage, resets the quest first: every module active in the current stage stops in reverse order, marks, claims, pending opens, fleets and people of the quest are removed, and a fresh state starts at the start stage. If the start stage is not on the target's chain (a stage such as `FAILED` whose `previous()` is null), the reset quest changes straight to the target.
 
 ### Save and reload
 
@@ -334,7 +336,8 @@ public abstract class Quest<S, T> {
 - **Stage names.** Upper snake case. Declaration order is story order; the dev menu lists stages in that order. A quest without flags passes `NoFlags.class`, an empty enum in the framework.
 - **Branches.** Endings and other branches are separate stages whose `previous()` names the stage they branch from. `reached` answers "did this happen" across branches; there is no ordinal comparison.
 - **Failure.** A quest that can fail from several stages declares a `FAILED` stage with `previous()` null and moves there. Modules that should stop on failure simply do not list it.
-- **Definitions are pure.** Constructors, `createModules()` and `declare()` must not call `Global` or any game API, because the rules check tool builds the definitions outside the game. Game calls belong in hooks and in the lambdas passed to `declare`, which run only in the game.
+- **Definitions are pure.** Constructors, `createModules()` and `declare()` must not call `Global` or any game API, because the rules check tool builds the definitions outside the game. That includes `Misc`, whose static initializer calls `Global.getSettings()`, and building a `RuleBasedInteractionDialogPluginImpl`, whose static initializer does too. Game calls belong in hooks and in the lambdas passed to `declare`, which run only in the game.
+- **Load checks.** The `Quest` constructor throws unless the id matches `[a-z][a-z0-9]*`, the start stage's `previous()` is null, and every `previous()` chain stays inside the enum without a cycle. `QuestCatalog` throws when a quest id equals or prefixes another, or two quests share a stage enum or a flag enum other than `NoFlags`.
 - **`QuestCatalog`** lists every quest in a fixed order: `static List<Quest<?, ?>> create()`. The manager and the check tool both use it. Adding a quest is one line there.
 
 ### QuestState
@@ -416,7 +419,7 @@ Paused frames: `onFrame` never runs while the game is paused. If a quest needs p
 
 ### Declarations
 
-`declare` registers names that rules and the framework look up. Names are lowerCamel, unique within the quest, and checked at load: a duplicate throws.
+`declare` registers names that rules and the framework look up. Names are lowerCamel and unique per kind within the quest (a check and an action may share a name), and are checked at load: a duplicate, a declaration outside `declare` or a null lambda throws. Triggers are any string without whitespace.
 
 ```java
 public final class Declarations<S, T> {
@@ -486,6 +489,16 @@ public final class QuestContext<S, T> {
 ```
 
 A scope of no stages means the current stage only. `S...` scopes list every stage in which the mark or claim stays.
+
+### QuestManager
+
+```java
+public static QuestManager get();                                          // the instance in ModPlugin.EFS_LIST; null before load
+public void jump(Quest<S, T> quest, S target);                              // see A stage jump
+public QuestContext<?, ?> context(String questId, String ruleId, InteractionDialogAPI dialog, Map<String, MemoryAPI> memoryMap, List<String> args);
+```
+
+`context` builds the context the rules command passes to checks, actions and tokens; it returns null for an unknown or unavailable quest. `QuestDialogs.claimedTrigger(entity)` and `QuestDialogs.plugin(trigger)` serve the `CorePlugin` route. Quest code uses the context, not these.
 
 ### Queries from other features
 
@@ -601,9 +614,9 @@ Each quest person also gets name and pronoun tokens for use while they are not t
 | A bar | `AddBarEvents` rows | None; see [Bar events](#bar-events) |
 | A Java dialog that needs rules text, such as a battle setup screen | `FireBest.fire(null, dialog, memoryMap, trigger)` from the plugin, as vanilla's `HistorianBarEvent` does | Declared trigger |
 
-Claims write the trigger to entity memory under `QuestDialogs.CLAIM_KEY` (`$nskr_questDialog`). `CorePlugin` has one route for all of them: when the target's memory holds that key, it returns `new RuleBasedInteractionDialogPluginImpl(trigger)` at `PickPriority.MOD_GENERAL`. Claims are cleared with their scope like marks. Do not claim a market's entity: that replaces the whole market dialog; add options to its menu instead.
+Claims write the trigger to entity memory under `QuestDialogs.CLAIM_KEY` (`$nskr_questDialog`). `CorePlugin` has one route for all of them: when the target's memory holds that key, it returns `new RuleBasedInteractionDialogPluginImpl(trigger)` at `PickPriority.MOD_GENERAL`. Claims are cleared with their scope like marks. Claiming an entity that already holds another claim logs an error and replaces it; releasing unsets the key only while it still holds that claim's trigger. Do not claim a market's entity: that replaces the whole market dialog; add options to its menu instead.
 
-`ctx.open` builds the same plugin and calls `CampaignUIAPI.showInteractionDialog(plugin, target)`. When the UI is busy the call returns false; the manager keeps the request in the state and retries every frame until it opens, as vanilla's wait command does. The target must not be null: use the entity the scene is about, such as the hailing fleet. For a monologue, use the entity that caused it.
+`ctx.open` builds the same plugin and calls `CampaignUIAPI.showInteractionDialog(plugin, target)`. When the UI is busy the call returns false; the manager keeps the request in the state and retries every frame until it opens, as vanilla's wait command does. The manager tries one pending open per frame and none while a dialog is showing, and drops a pending open whose target is no longer alive, with an error. The target must not be null: use the entity the scene is about, such as the hailing fleet. For a monologue, use the entity that caused it.
 
 Every trigger a quest claims, opens or fires from Java is declared with `d.trigger(...)`.
 

@@ -31,6 +31,7 @@ import lostsector.campaign.starts.thronesgift.ThronesGiftDisposableFleetSpawner;
 import lostsector.campaign.starts.thronesgift.ThronesGiftManager;
 
 import lostsector.persistence.Saved;
+import lostsector.quest.QuestManager;
 import lostsector.settings.Difficulty;
 import lostsector.settings.SettingsManager;
 
@@ -207,6 +208,7 @@ public class ModPlugin extends BaseModPlugin {
         EFS_LIST.add(new GameModeManager());
         EFS_LIST.add(new ThronesGiftManager());
         EFS_LIST.add(new HellSpawnManager());
+        EFS_LIST.add(new QuestManager());
 
         if (IS_NEXERELIN){
             EFS_LIST.add(new HellSpawnNexListener());
