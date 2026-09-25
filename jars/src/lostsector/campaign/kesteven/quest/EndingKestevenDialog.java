@@ -9,7 +9,6 @@ import com.fs.starfarer.api.impl.campaign.ids.Factions;
 import com.fs.starfarer.api.impl.campaign.ids.MemFlags;
 import com.fs.starfarer.api.util.Misc;
 import lostsector.campaign.kesteven.quest.UnlimitedProductionChipCondition;
-import lostsector.campaign.kesteven.quest.QuestStageManager;
 import lostsector.campaign.kesteven.quest.QuestHelper;
 import lostsector.dialogue.rules.nskr_kestevenQuest;
 import lostsector.dialogue.rules.nskr_shipSwap;
@@ -24,9 +23,6 @@ public class EndingKestevenDialog implements InteractionDialogPlugin {
     //
     //
     //
-    public static final String DIALOG_FINISHED_KEY = "nskr_KestevenEndingDialogKeyFinished";
-    public static final String PERSISTENT_KEY = "nskr_KestevenEndingDialogKey";
-    public static final String PERSISTENT_RANDOM_KEY = "nskr_KestevenEndingDialogKeyRandom";
 
     public static final float REWARD_POINTS = 450000f;
 
@@ -65,8 +61,8 @@ public class EndingKestevenDialog implements InteractionDialogPlugin {
         text.setFontInsignia();
 
         int stage = QuestHelper.getStage();
-        boolean killEliza = QuestHelper.getCompleted(QuestStageManager.KILLED_ELIZA_KEY);
-        if (stage >= 19 && !QuestHelper.getCompleted(DIALOG_FINISHED_KEY)) {
+        boolean killEliza = QuestHelper.getCompleted(KestevenFlag.ELIZA_KILLED);
+        if (stage >= 19 && !QuestHelper.getCompleted(KestevenFlag.KESTEVEN_ENDING_DONE)) {
             text.addPara("As you approach "+dialog.getInteractionTarget().getMarket().getName()+", you contemplate whether Kesteven should get the Unlimited Production Chip or not. It would certainly have serious consequences on your reputation and the wider sector too. This is the last chance to change your mind.");
             if(!killEliza)text.addPara("Particularly, this would upset both the Tri-Tachyon Corporation and Eliza.",g,h,"","");
             if(killEliza)text.addPara("Particularly this would upset the Tri-Tachyon Corporation.",g,h,"","");
@@ -128,7 +124,7 @@ public class EndingKestevenDialog implements InteractionDialogPlugin {
             text.addPara("After some waiting around Alice gives the green light to pick up the equipment package.");
             text.addPara("\"Thank you for your service "+Global.getSector().getPlayerPerson().getName().getFullName()+". I hope we can again work together in the future, burn bright.\" He gives you an intense handshake as you try to leave.");
 
-            QuestHelper.setCompleted(true, DIALOG_FINISHED_KEY);
+            QuestHelper.setCompleted(true, KestevenFlag.KESTEVEN_ENDING_DONE);
             QuestHelper.setStage(20);
             QuestHelper.saveEnding();
 
@@ -241,12 +237,7 @@ public class EndingKestevenDialog implements InteractionDialogPlugin {
     }
 
     public static Random getRandom() {
-        Map<String, Object> data = Global.getSector().getPersistentData();
-        if (!data.containsKey(PERSISTENT_RANDOM_KEY)) {
-
-            data.put(PERSISTENT_RANDOM_KEY, new Random(MathHelper.getSeedParsed()));
-        }
-        return (Random) data.get(PERSISTENT_RANDOM_KEY);
+        return KestevenQuest.random(KestevenState.RANDOM_KESTEVEN_ENDING);
     }
 
 }

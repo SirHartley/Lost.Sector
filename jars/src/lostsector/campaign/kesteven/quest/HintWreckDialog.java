@@ -5,10 +5,8 @@ import com.fs.starfarer.api.campaign.*;
 import com.fs.starfarer.api.campaign.rules.MemoryAPI;
 import com.fs.starfarer.api.combat.EngagementResultAPI;
 import com.fs.starfarer.api.util.Misc;
-import lostsector.campaign.kesteven.quest.QuestStageManager;
 import lostsector.campaign.kesteven.quest.QuestHelper;
 import lostsector.dialogue.rules.nskr_kestevenQuest;
-import lostsector.helper.MathHelper;
 
 import java.awt.*;
 import java.util.Map;
@@ -18,9 +16,6 @@ public class HintWreckDialog implements InteractionDialogPlugin {
 
     //
 
-    public static final String HINT_RECEIVED_KEY = "job4HintWreckCoordinatesReceived";
-    public static final String PERSISTENT_KEY = "nskr_job4HintWreckDialogKey";
-    public static final String PERSISTENT_RANDOM_KEY = "nskr_job4HintWreckDialogRandom";
 
     private InteractionDialogAPI dialog;
     private TextPanelAPI text;
@@ -77,7 +72,7 @@ public class HintWreckDialog implements InteractionDialogPlugin {
             text.addPara("Your ops chief reports. \"It seems to be broadcasting some coordinates located in the "+loc+". That part of the broadcast was unencrypted, seems like they were in a hurry.\"");
 
             //already found
-            if (QuestHelper.getCompleted(QuestStageManager.JOB4_FOUND_FRIENDLY_KEY)){
+            if (QuestHelper.getCompleted(KestevenFlag.JOB4_FRIENDLY_FOUND)){
                 text.addPara("\"Ah- but that's where we found the remaining Special Operations fleet, mystery solved.\" They show a quick smirk.");
             }
             //normal
@@ -90,7 +85,7 @@ public class HintWreckDialog implements InteractionDialogPlugin {
             }
 
             //complete
-            QuestHelper.setCompleted(true, HINT_RECEIVED_KEY);
+            QuestHelper.setCompleted(true, KestevenFlag.JOB4_HINT_WRECK_READ);
 
             dialog.setOptionOnEscape("Continue", OptionId.LEAVE);
 
@@ -133,12 +128,7 @@ public class HintWreckDialog implements InteractionDialogPlugin {
     }
 
     public static Random getRandom() {
-        Map<String, Object> data = Global.getSector().getPersistentData();
-        if (!data.containsKey(PERSISTENT_RANDOM_KEY)) {
-
-            data.put(PERSISTENT_RANDOM_KEY, new Random(MathHelper.getSeedParsed()));
-        }
-        return (Random) data.get(PERSISTENT_RANDOM_KEY);
+        return KestevenQuest.random(KestevenState.RANDOM_HINT_WRECK);
     }
 
 }

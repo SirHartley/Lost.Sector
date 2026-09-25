@@ -14,7 +14,6 @@ import com.fs.starfarer.api.impl.campaign.ids.Ranks;
 import com.fs.starfarer.api.impl.campaign.intel.bar.PortsideBarData;
 import com.fs.starfarer.api.impl.campaign.intel.bar.events.BaseBarEvent;
 import com.fs.starfarer.api.util.Misc;
-import lostsector.campaign.kesteven.quest.QuestStageManager;
 import lostsector.campaign.kesteven.quest.QuestHelper;
 import lostsector.helper.SectorLookup;
 import lostsector.helper.UiSounds;
@@ -140,7 +139,7 @@ public class DelveMeetingBarEvent extends BaseBarEvent {
         PersonAPI jack = KestevenPeople.getJack();
         PersonAPI alice = KestevenPeople.getAlice();
         disks = DataSatelliteDialog.getRecoveredSatelliteCount()>0;
-        boolean foundCache = QuestHelper.getCompleted(QuestStageManager.FOUND_CACHE_KEY);
+        boolean foundCache = QuestHelper.getCompleted(KestevenFlag.CACHE_FOUND);
 
         TextPanelAPI text = dialog.getTextPanel();
         options.clearOptions();
@@ -338,7 +337,7 @@ public class DelveMeetingBarEvent extends BaseBarEvent {
             text.addPara("Alice joins in to warn you in a condescending tone. \"By the way captain, if you ever run the her in person. *do not* listen to her nonsense, it's all lies to poison the mind.\"");
 
             options.addOption("\"I'll keep that in mind.\"",OptionId.MAIN3);
-            if (QuestHelper.getCompleted(QuestStageManager.E_MESSENGER_TALKED_ASK_ABOUT_KEY)) options.addOption("\"Ah yes, that \"LZ\" character.\"",OptionId.B7);
+            if (QuestHelper.getCompleted(KestevenFlag.MESSENGER_QUESTION_OPEN)) options.addOption("\"Ah yes, that \"LZ\" character.\"",OptionId.B7);
             options.addOption("\"What kind of terrorist are we talking about?\"",OptionId.B5);
             options.addOption("\"It's never just some regular lowlife...\"",OptionId.B6);
         }

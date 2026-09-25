@@ -13,7 +13,6 @@ import lostsector.helper.fleet.FleetInfo;
 import lostsector.campaign.kesteven.quest.QuestStageManager;
 import lostsector.campaign.kesteven.quest.QuestHelper;
 import lostsector.helper.FleetHelper;
-import lostsector.helper.MathHelper;
 import lostsector.world.systems.frost.Frost;
 
 import java.awt.*;
@@ -26,13 +25,7 @@ public class DataSatelliteDialog implements InteractionDialogPlugin {
 	//
 	//
 	//
-	public static final String RECOVERED_COUNT_KEY = "nskr_artifactKeyCount";
 	public static final String ARTIFACT_EMPTY_KEY = "$nskr_artifactKeyEmpty";
-	public static final String PERSISTENT_KEY = "nskr_artifactKey";
-	public static final String AGGRO_KEY = "nskr_artifactAggroKey";
-	public static final String RECOVERED_3_KEY = "nskr_artifactKey3Recovered";
-	public static final String RECOVERED_4_KEY = "nskr_artifactKey4Recovered";
-	public static final String PERSISTENT_RANDOM_KEY = "nskr_artifactKeyRandom";
 
 	private InteractionDialogAPI dialog;
 	private TextPanelAPI text;
@@ -176,12 +169,12 @@ public class DataSatelliteDialog implements InteractionDialogPlugin {
 				key = DormantSpawner.DORMANT_KEY;
 				number = "3";
 				//complete
-				QuestHelper.setCompleted(true, RECOVERED_3_KEY);
+				QuestHelper.setCompleted(true, KestevenFlag.SATELLITE3_RECOVERED);
 			} else {
 				key = QuestStageManager.JOB4_TARGET_KEY;
 				number = "4";
 				//complete
-				QuestHelper.setCompleted(true, RECOVERED_4_KEY);
+				QuestHelper.setCompleted(true, KestevenFlag.SATELLITE4_RECOVERED);
 			}
 			//remove important
 			if (dialog.getInteractionTarget().getMemoryWithoutUpdate().contains(MemFlags.MEMORY_KEY_MISSION_IMPORTANT)){
@@ -257,12 +250,12 @@ public class DataSatelliteDialog implements InteractionDialogPlugin {
 				key = DormantSpawner.DORMANT_KEY;
 				number = "3";
 				//complete
-				QuestHelper.setCompleted(true, RECOVERED_3_KEY);
+				QuestHelper.setCompleted(true, KestevenFlag.SATELLITE3_RECOVERED);
 			} else {
 				key = QuestStageManager.JOB4_TARGET_KEY;
 				number = "4";
 				//complete
-				QuestHelper.setCompleted(true, RECOVERED_4_KEY);
+				QuestHelper.setCompleted(true, KestevenFlag.SATELLITE4_RECOVERED);
 			}
 			//remove important
 			if (dialog.getInteractionTarget().getMemoryWithoutUpdate().contains(MemFlags.MEMORY_KEY_MISSION_IMPORTANT)){
@@ -368,27 +361,17 @@ public class DataSatelliteDialog implements InteractionDialogPlugin {
 	}
 
 	public static Random getRandom() {
-		Map<String, Object> data = Global.getSector().getPersistentData();
-		if (!data.containsKey(PERSISTENT_RANDOM_KEY)) {
-
-			data.put(PERSISTENT_RANDOM_KEY, new Random(MathHelper.getSeedParsed()));
-		}
-		return (Random) data.get(PERSISTENT_RANDOM_KEY);
+		return KestevenQuest.random(KestevenState.RANDOM_SATELLITE);
 	}
 
 	public static int getRecoveredSatelliteCount() {
-		String id = RECOVERED_COUNT_KEY;
-
-		Map<String, Object> data = Global.getSector().getPersistentData();
-		if (!data.containsKey(id)) data.put(id, 0);
-
-		return (int)data.get(id);
+		KestevenState state = KestevenQuest.state();
+		return state == null ? 0 : state.satellitesRecovered;
 	}
 
 	public static void setRecoveredSatelliteCount(int recovered) {
-
-		Map<String, Object> data = Global.getSector().getPersistentData();
-		data.put(RECOVERED_COUNT_KEY, recovered);
+		KestevenState state = QuestHelper.writableState();
+		if (state != null) state.satellitesRecovered = recovered;
 	}
 
 }

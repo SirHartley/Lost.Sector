@@ -17,7 +17,7 @@ Technical routing for the current implementation. Java paths below are relative 
 
 | Change / symptom | Route |
 |---|---|
-| Kesteven questline stage or job | `rules.csv -> dialogue/rules/nskr_kestevenQuest -> kesteven/quest/QuestHelper.getStage/setStage`; automatic transitions in `kesteven/quest/QuestStageManager.advance()`; intel `kesteven/quest/*Intel`; [questline walkthrough](quests/KESTEVEN_QUESTLINE.md) |
+| Kesteven questline stage or job | `rules.csv -> dialogue/rules/nskr_kestevenQuest -> kesteven/quest/QuestHelper.getStage/setStage -> quest/QuestManager` (quest `kq`, state `kesteven/quest/KestevenState`); automatic transitions in `kesteven/quest/QuestStageManager.advance()`; intel `kesteven/quest/*Intel`; [questline walkthrough](quests/KESTEVEN_QUESTLINE.md), [saved state](quests/KESTEVEN_STATE.md) |
 | Quest entity opens the wrong dialog | `CorePlugin.pickInteractionDialogPlugin -> quests/*Dialog`, `events/blacksite/BlacksiteDialog`, `bounties/mothership/MothershipInteractionBlocker`, custom-start FIDs |
 | Endings and the production chip | `kesteven/quest/EndingKestevenDialog`, `kesteven/quest/EndingElizaDialog`, `dialogue/rules/nskr_altEndingDialogLuddic/TT -> QuestHelper.saveEnding()`; `kesteven/quest/UnlimitedProductionChipCondition -> kesteven/BlackOpsManager.getUPC()` |
 | Named bounties | `bounties/*/*Spawner -> events/hints/HintManager -> intel/*Intel -> bounties/BountyLoot`; [bounty structure](quests/CONTRACTS_AND_BOUNTIES.md#named-bounties) |
@@ -184,8 +184,9 @@ Packages group code by feature. Use `rg --files jars/src/lostsector/<package>` f
 
 | File | Owner / connection |
 |---|---|
-| `kesteven/quest/QuestStageManager` | Kesteven questline state and automatic transitions, quest fleets, failure to stage 99. Runs while paused. |
-| `kesteven/quest/QuestHelper` | Stage and flag accessors over sector persistent data (`getStage`, `getCompleted`, `getFloat`), artifact spawning, `saveEnding()` |
+| `kesteven/quest/KestevenQuest`, `KestevenStage`, `KestevenFlag`, `KestevenState` | Quest `kq` in `quest/QuestCatalog`, with no modules yet. `KestevenState` holds every saved questline value; `QuestManager` is the only stage writer. [State map](quests/KESTEVEN_STATE.md) |
+| `kesteven/quest/QuestStageManager` | Kesteven questline automatic transitions, quest fleets, failure to stage 99, on `KestevenState`. Runs while paused, from the first frame the state exists. |
+| `kesteven/quest/QuestHelper` | Wrappers over `KestevenState` for the old callers (`getStage`/`setStage` with legacy ints, `getCompleted(KestevenFlag)`), target pickers, artifact spawning, `saveEnding()`. `getCompleted(String)`/`setCompleted(boolean, String)` are sector persistent-data flags that bounties, the Mothership and HellSpawn still use. |
 | `kesteven/quest/KestevenPeople` | Quest person lookups: Jack, Alice, Nicholas, Michael and Eliza; the first four return null while their current market is missing |
 | `kesteven/quest/KestevenFleets`; `helper/fleet/SimpleFleet`, `SimpleFleetMember`, `SimpleCaptain`, `SystemPicker`, `FleetInfo` | Quest fleet spawns; fleet and system builders shared by all spawners |
 | `kesteven/quest/*Dialog` | Java `InteractionDialogPlugin`s opened by `CorePlugin`; `CacheDoubtDialog` is opened by `QuestStageManager` |

@@ -11,10 +11,11 @@ import com.fs.starfarer.api.impl.campaign.ids.Factions;
 import com.fs.starfarer.api.impl.campaign.intel.contacts.ContactIntel;
 import com.fs.starfarer.api.impl.campaign.rulecmd.PaginatedOptions;
 import com.fs.starfarer.api.util.Misc;
-import lostsector.campaign.kesteven.quest.QuestStageManager;
 import lostsector.campaign.kesteven.quest.QuestHelper;
+import lostsector.campaign.kesteven.quest.KestevenFlag;
+import lostsector.campaign.kesteven.quest.KestevenQuest;
+import lostsector.campaign.kesteven.quest.KestevenState;
 import lostsector.helper.Ids;
-import lostsector.helper.MathHelper;
 import lostsector.helper.UiSounds;
 
 import java.awt.*;
@@ -25,11 +26,8 @@ import java.util.Random;
 
 public class nskr_altEndingDialogTT extends PaginatedOptions {
 
-    public static final String TT_PAYOUT_KEY = "nskr_altEndingDialogTTPayout";
-    public static final String SECOND_TIME_KEY = "nskr_altEndingDialogSecondTimeTT";
     public static final String PERSON_LOCKED_KEY = "$nskr_altEndingDialogLockedToPerson";
 
-    public static final String PERSISTENT_RANDOM_KEY = "nskr_EndingAltDialogKeyRandom";
     private Color h;
     private Color g;
     private Color gr;
@@ -74,7 +72,7 @@ public class nskr_altEndingDialogTT extends PaginatedOptions {
             case "hasOption":
                 return validEntity(entity);
             case "addOptions":
-                addOptions(QuestHelper.getCompleted(SECOND_TIME_KEY));
+                addOptions(QuestHelper.getCompleted(KestevenFlag.TT_ENDING_SECOND_TALK));
                 showOptions();
                 break;
             case "tachAgree":
@@ -177,7 +175,7 @@ public class nskr_altEndingDialogTT extends PaginatedOptions {
                 addOption("Sell the Chip", "nskr_altEndingTTAgree");
                 addOption("\"Actually, never mind.\"", "nskr_altEndingExit");
             }
-        } else if (!QuestHelper.getCompleted(nskr_altEndingDialogLuddic.DIALOG_FINISHED_KEY)){
+        } else if (!QuestHelper.getCompleted(KestevenFlag.ALT_ENDING_DONE)){
             //person locked, came back to talk
             text.addPara("\"Changed your fickle mind yet "+player.getName().getFullName()+"?\"");
             String cash = Misc.getDGSCredits(2500000f);
@@ -237,19 +235,19 @@ public class nskr_altEndingDialogTT extends PaginatedOptions {
 
     protected void setPrice(float amount){
 
-        QuestHelper.setFloat(amount ,TT_PAYOUT_KEY);
+        QuestHelper.setTtPayout(amount);
     }
 
     protected float getPrice(){
         //init
-        if (QuestHelper.getFloat(TT_PAYOUT_KEY)<2000000f) QuestHelper.setFloat(2000000f,TT_PAYOUT_KEY);
+        if (QuestHelper.getTtPayout()<2000000f) QuestHelper.setTtPayout(2000000f);
 
-        return QuestHelper.getFloat(TT_PAYOUT_KEY);
+        return QuestHelper.getTtPayout();
     }
 
     protected void setSecond(){
 
-        QuestHelper.setCompleted(true, SECOND_TIME_KEY);
+        QuestHelper.setCompleted(true, KestevenFlag.TT_ENDING_SECOND_TALK);
     }
 
     protected boolean validEntity(SectorEntityToken entity) {
@@ -258,21 +256,16 @@ public class nskr_altEndingDialogTT extends PaginatedOptions {
         if (market==null) return false;
         if (market.getFactionId()==null) return false;
         //we don't have it anymore
-        if (QuestHelper.getCompleted(QuestStageManager.ELIZA_INTERCEPT_HANDED_OVER)) return false;
+        if (QuestHelper.getCompleted(KestevenFlag.CHIP_HANDED_TO_ELIZA)) return false;
         //person locked
-        if (QuestHelper.getCompleted(SECOND_TIME_KEY) && !person.getMemory().contains(PERSON_LOCKED_KEY)) return false;
+        if (QuestHelper.getCompleted(KestevenFlag.TT_ENDING_SECOND_TALK) && !person.getMemory().contains(PERSON_LOCKED_KEY)) return false;
         //DONE
-        if (QuestHelper.getCompleted(nskr_altEndingDialogLuddic.DIALOG_FINISHED_KEY)) return false;
+        if (QuestHelper.getCompleted(KestevenFlag.ALT_ENDING_DONE)) return false;
         //pick correct faction market
         return market.getFactionId().equals(Factions.TRITACHYON);
     }
 
     public static Random getRandom() {
-        Map<String, Object> data = Global.getSector().getPersistentData();
-        if (!data.containsKey(PERSISTENT_RANDOM_KEY)) {
-
-            data.put(PERSISTENT_RANDOM_KEY, new Random(MathHelper.getSeedParsed()));
-        }
-        return (Random) data.get(PERSISTENT_RANDOM_KEY);
+        return KestevenQuest.random(KestevenState.RANDOM_ALT_ENDING);
     }
 }

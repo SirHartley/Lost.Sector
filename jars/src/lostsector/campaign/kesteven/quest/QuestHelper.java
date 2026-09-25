@@ -11,7 +11,6 @@ import com.fs.starfarer.api.impl.campaign.procgen.Constellation;
 import com.fs.starfarer.api.impl.campaign.procgen.themes.BaseThemeGenerator;
 import com.fs.starfarer.api.impl.campaign.procgen.themes.DerelictThemeGenerator;
 import com.fs.starfarer.api.util.Misc;
-import lostsector.campaign.kesteven.quest.ElizaSearchBarEvent;
 import lostsector.dialogue.rules.nskr_kestevenQuest;
 import lostsector.ModPlugin;
 import lostsector.settings.Setting;
@@ -20,6 +19,7 @@ import lostsector.helper.MathHelper;
 import lostsector.campaign.enigma.DormantSpawner;
 import lostsector.helper.SectorLookup;
 import lostsector.helper.SystemHelper;
+import lostsector.quest.QuestContext;
 import org.jetbrains.annotations.Nullable;
 import org.lazywizard.lazylib.MathUtils;
 import org.lwjgl.util.vector.Vector2f;
@@ -236,7 +236,7 @@ public class QuestHelper {
                 isValid = false;
             }
             if (!ignoreUsedMarket) {
-                if (ElizaSearchBarEvent.getUsedMarkets(ElizaSearchBarEvent.USED_MARKET_KEY).contains(market.getId())) {
+                if (ElizaSearchBarEvent.getUsedMarkets().contains(market.getId())) {
                     isValid = false;
                 }
             }
@@ -249,7 +249,7 @@ public class QuestHelper {
         if (validMarkets.isEmpty()){
             if (ignoreUsedMarket){
                 log("ERROR no valid Eliza markets picking random pirate market");
-                return SystemHelper.getRandomFactionMarket(random, Factions.PIRATES, ElizaSearchBarEvent.getUsedMarkets(ElizaSearchBarEvent.USED_MARKET_KEY));
+                return SystemHelper.getRandomFactionMarket(random, Factions.PIRATES, ElizaSearchBarEvent.getUsedMarkets());
             }
             log("ERROR no valid Eliza markets try again");
             return pickElizaMarket(random, true);
@@ -317,50 +317,47 @@ public class QuestHelper {
         }
     }
 
+    // Wrappers over KestevenState, kept for the old callers until T15 and later tasks switch them. Reads return the
+    // old defaults while the state does not exist yet; writes then log an error and change nothing.
+
     public static int getStage() {
-        String id = QuestStageManager.KESTEVEN_QUEST_KEY;
-
-        Map<String, Object> data = Global.getSector().getPersistentData();
-        if (!data.containsKey(id)) data.put(id, 0);
-
-        return (int)data.get(id);
+        KestevenState state = KestevenQuest.state();
+        return (state == null ? KestevenStage.NOT_STARTED : state.stage()).toLegacy();
     }
 
+    // The quest manager is the only stage writer. The old int writes were idempotent, while the manager logs an
+    // advance to the current stage as an error, so an unchanged stage is skipped here.
     public static void setStage(int stage) {
-
-        Map<String, Object> data = Global.getSector().getPersistentData();
-        data.put(QuestStageManager.KESTEVEN_QUEST_KEY, stage);
+        KestevenStage to = KestevenStage.fromLegacy(stage);
+        QuestContext<KestevenStage, KestevenState> ctx = KestevenQuest.context();
+        if (ctx != null && ctx.stage() != to) ctx.advance(to);
     }
 
-    public static int getDisksRecovered() {
-        String id = QuestStageManager.DISK_COUNT_KEY;
-
-        Map<String, Object> data = Global.getSector().getPersistentData();
-        if (!data.containsKey(id)) data.put(id, 0);
-
-        return (int)data.get(id);
+    public static boolean getCompleted(KestevenFlag flag) {
+        KestevenState state = KestevenQuest.state();
+        return state != null && state.has(flag);
     }
 
-    public static void setDisksRecovered(int count) {
-
-        Map<String, Object> data = Global.getSector().getPersistentData();
-        data.put(QuestStageManager.DISK_COUNT_KEY, count);
+    public static void setCompleted(boolean completed, KestevenFlag flag) {
+        QuestContext<KestevenStage, KestevenState> ctx = KestevenQuest.context();
+        if (ctx == null) return;
+        if (completed) {
+            ctx.set(flag);
+        } else {
+            ctx.clear(flag);
+        }
     }
 
-    public static boolean getFailed(String id) {
-
-        Map<String, Object> data = Global.getSector().getPersistentData();
-        if (!data.containsKey(id)) data.put(id, false);
-
-        return (boolean)data.get(id);
+    public static boolean getFailed(KestevenFlag flag) {
+        return getCompleted(flag);
     }
 
-    public static void setFailed(boolean failed, String id) {
-
-        Map<String, Object> data = Global.getSector().getPersistentData();
-        data.put(id, failed);
+    public static void setFailed(boolean failed, KestevenFlag flag) {
+        setCompleted(failed, flag);
     }
 
+    // Other features keep their own sector persistent-data flags through these two; questline flags use the
+    // KestevenFlag overloads.
     public static boolean getCompleted(String id) {
 
         Map<String, Object> data = Global.getSector().getPersistentData();
@@ -375,159 +372,151 @@ public class QuestHelper {
         data.put(id, completed);
     }
 
-    public static float getMissionTimerJob3() {
-        String id = QuestStageManager.JOB3_TIMER_KEY;
-
-        Map<String, Object> data = Global.getSector().getPersistentData();
-        if (!data.containsKey(id)) data.put(id, QuestStageManager.JOB3_TIME_LIMIT);
-
-        return (float)data.get(id);
-    }
-
-    public static void setMissionTimerJob3(float timer) {
-
-        Map<String, Object> data = Global.getSector().getPersistentData();
-        data.put(QuestStageManager.JOB3_TIMER_KEY, timer);
-    }
-
     public static boolean getEndMissions() {
-        String id = QuestStageManager.QUEST_END_KEY;
-
-        Map<String, Object> data = Global.getSector().getPersistentData();
-        if (!data.containsKey(id)) data.put(id, false);
-
-        return (boolean)data.get(id);
+        return getCompleted(KestevenFlag.ENDED);
     }
 
     public static void setEndMissions(boolean end) {
-
-        Map<String, Object> data = Global.getSector().getPersistentData();
-        data.put(QuestStageManager.QUEST_END_KEY, end);
+        setCompleted(end, KestevenFlag.ENDED);
     }
 
-    public static float getFloat(String id) {
-
-        Map<String, Object> data = Global.getSector().getPersistentData();
-        if (!data.containsKey(id)) data.put(id, 0.0f);
-
-        return (float)data.get(id);
+    public static int getDisksRecovered() {
+        KestevenState state = KestevenQuest.state();
+        return state == null ? 0 : state.disksRecovered;
     }
 
-    public static void setFloat(float value, String id) {
+    public static void setDisksRecovered(int count) {
+        KestevenState state = writableState();
+        if (state != null) state.disksRecovered = count;
+    }
 
-        Map<String, Object> data = Global.getSector().getPersistentData();
-        data.put(id, value);
+    public static float getMissionTimerJob3() {
+        KestevenState state = KestevenQuest.state();
+        return state == null ? QuestStageManager.JOB3_TIME_LIMIT : state.job3TimeLeft;
+    }
+
+    public static void setMissionTimerJob3(float timer) {
+        KestevenState state = writableState();
+        if (state != null) state.job3TimeLeft = timer;
+    }
+
+    public static int getNicholasDialogStage() {
+        KestevenState state = KestevenQuest.state();
+        return state == null ? 0 : state.nicholasDialogStage;
+    }
+
+    public static void setNicholasDialogStage(int stage) {
+        KestevenState state = writableState();
+        if (state != null) state.nicholasDialogStage = stage;
+    }
+
+    public static int getJob4FleetDialogStage() {
+        KestevenState state = KestevenQuest.state();
+        return state == null ? 0 : state.job4FleetDialogStage;
+    }
+
+    public static void setJob4FleetDialogStage(int stage) {
+        KestevenState state = writableState();
+        if (state != null) state.job4FleetDialogStage = stage;
+    }
+
+    public static float getTtPayout() {
+        KestevenState state = KestevenQuest.state();
+        return state == null ? 0f : state.ttPayout;
+    }
+
+    public static void setTtPayout(float payout) {
+        KestevenState state = writableState();
+        if (state != null) state.ttPayout = payout;
     }
 
     public static StarSystemAPI getJob1Tip(){
-        Map<String, Object> data = Global.getSector().getPersistentData();
-        String id = nskr_kestevenQuest.PERSISTENT_KEY+"Tip1";
-        if (!data.containsKey(id)) {
+        KestevenState state = writableState();
+        if (state == null) return null;
+        if (state.job1TipSystem == null) {
             StarSystemAPI sys = getRandomSystemWithEnigmaBase(nskr_kestevenQuest.getRandom());
             //NO VALID SYSTEMS
             if (sys==null) return null;
 
-            data.put(id, sys);
+            state.job1TipSystem = sys;
             //add dormant
             DormantSpawner.addDormant(SystemHelper.getRandomLocationInSystem(sys ,true,false, nskr_kestevenQuest.getRandom()),
                     "enigma", 20f);
         }
 
-        return (StarSystemAPI) data.get(id);
+        return state.job1TipSystem;
     }
 
     public static SectorEntityToken getJob3Start(){
-        Map<String, Object> data = Global.getSector().getPersistentData();
-        String id = nskr_kestevenQuest.PERSISTENT_KEY+"Start3";
-        if (!data.containsKey(id))
-            data.put(id, SystemHelper.getRandomFactionMarket(nskr_kestevenQuest.getRandom(), Factions.TRITACHYON, QuestStageManager.JOB3_MARKET_BLACKLIST));
+        KestevenState state = writableState();
+        if (state == null) return null;
+        if (state.job3Start == null)
+            state.job3Start = SystemHelper.getRandomFactionMarket(nskr_kestevenQuest.getRandom(), Factions.TRITACHYON, QuestStageManager.JOB3_MARKET_BLACKLIST);
 
-        return (SectorEntityToken) data.get(id);
+        return state.job3Start;
     }
 
     public static SectorEntityToken getJob3Target(){
-        Map<String, Object> data = Global.getSector().getPersistentData();
-        String id = nskr_kestevenQuest.PERSISTENT_KEY+"Target3";
-        if (!data.containsKey(id))
-            data.put(id, SystemHelper.getRandomLocationInSystem(getRandomSystemNearCore(nskr_kestevenQuest.getRandom()), false, false, nskr_kestevenQuest.getRandom()));
+        KestevenState state = writableState();
+        if (state == null) return null;
+        if (state.job3Target == null)
+            state.job3Target = SystemHelper.getRandomLocationInSystem(getRandomSystemNearCore(nskr_kestevenQuest.getRandom()), false, false, nskr_kestevenQuest.getRandom());
 
-        return (SectorEntityToken) data.get(id);
+        return state.job3Target;
     }
 
     public static SectorEntityToken getJob4FriendlyTarget(){
-        Map<String, Object> data = Global.getSector().getPersistentData();
-        String id = nskr_kestevenQuest.PERSISTENT_KEY+"TargetFriendly4";
-        if (!data.containsKey(id))
-            data.put(id, SystemHelper.getRandomLocationInSystem(getRandomSystemFarCore(nskr_kestevenQuest.getRandom()), false, false, nskr_kestevenQuest.getRandom()));
+        KestevenState state = writableState();
+        if (state == null) return null;
+        if (state.job4FriendlyTarget == null)
+            state.job4FriendlyTarget = SystemHelper.getRandomLocationInSystem(getRandomSystemFarCore(nskr_kestevenQuest.getRandom()), false, false, nskr_kestevenQuest.getRandom());
 
-        return (SectorEntityToken) data.get(id);
+        return state.job4FriendlyTarget;
     }
 
     public static SectorEntityToken getJob4EnemyTarget(){
-        Map<String, Object> data = Global.getSector().getPersistentData();
-        String id = nskr_kestevenQuest.PERSISTENT_KEY+"TargetEnemy4";
-        if (data.containsKey(id)){
-            return (SectorEntityToken) data.get(id);
-        }
-        return null;
+        KestevenState state = KestevenQuest.state();
+        return state == null ? null : state.job4EnemyTarget;
     }
 
     public static SectorEntityToken setJob4EnemyTarget(SectorEntityToken loc){
-        Map<String, Object> data = Global.getSector().getPersistentData();
-        String id = nskr_kestevenQuest.PERSISTENT_KEY+"TargetEnemy4";
-
-        data.put(id, loc);
-        return (SectorEntityToken) data.get(id);
+        KestevenState state = writableState();
+        if (state == null) return null;
+        state.job4EnemyTarget = loc;
+        return loc;
     }
 
     public static StarSystemAPI getJob5FrostTip(){
-        Map<String, Object> data = Global.getSector().getPersistentData();
-        String id = nskr_kestevenQuest.PERSISTENT_KEY+"Job5FrostTip";
-        if (!data.containsKey(id))
-            data.put(id, getRandomSystemNearLocation(SectorLookup.getFrost().getStar().getLocationInHyperspace(),7000f,12000f, SectorLookup.getFrost(), nskr_kestevenQuest.getRandom()));
+        KestevenState state = writableState();
+        if (state == null) return null;
+        if (state.job5FrostTipSystem == null)
+            state.job5FrostTipSystem = getRandomSystemNearLocation(SectorLookup.getFrost().getStar().getLocationInHyperspace(),7000f,12000f, SectorLookup.getFrost(), nskr_kestevenQuest.getRandom());
 
-        return (StarSystemAPI) data.get(id);
+        return state.job5FrostTipSystem;
     }
 
     public static SectorEntityToken getElizaLoc(){
-
-        Map<String, Object> data = Global.getSector().getPersistentData();
-        String id = nskr_kestevenQuest.PERSISTENT_KEY+"ElizaJob5";
-
-        return (SectorEntityToken) data.get(id);
+        KestevenState state = KestevenQuest.state();
+        return state == null ? null : state.elizaMarket;
     }
 
     public static void setElizaLoc(){
-        Map<String, Object> data = Global.getSector().getPersistentData();
-        String id = nskr_kestevenQuest.PERSISTENT_KEY+"ElizaJob5";
-        data.put(id, pickElizaMarket(nskr_kestevenQuest.getRandom(), false));
+        KestevenState state = writableState();
+        if (state != null) state.elizaMarket = pickElizaMarket(nskr_kestevenQuest.getRandom(), false);
     }
 
     public static SectorEntityToken getCacheFleetLoc(){
-
-        Map<String, Object> data = Global.getSector().getPersistentData();
-        String id = nskr_kestevenQuest.PERSISTENT_KEY+"CacheFleet";
-
-        return (SectorEntityToken) data.get(id);
+        KestevenState state = KestevenQuest.state();
+        return state == null ? null : state.cacheGuardianSpot;
     }
 
     public static void setCacheFleetLoc(){
-        Map<String, Object> data = Global.getSector().getPersistentData();
-        String id = nskr_kestevenQuest.PERSISTENT_KEY+"CacheFleet";
-        data.put(id, pickCacheFleetLoc());
+        KestevenState state = writableState();
+        if (state != null) state.cacheGuardianSpot = pickCacheFleetLoc();
     }
 
-    public static int getDialogStage(String id) {
-
-        Map<String, Object> data = Global.getSector().getPersistentData();
-        if (!data.containsKey(id)) data.put(id, 0);
-
-        return (int)data.get(id);
-    }
-
-    public static void setDialogStage(int stage, String id) {
-
-        Map<String, Object> data = Global.getSector().getPersistentData();
-        data.put(id, stage);
+    // The state for a write: logs an error through the quest manager and returns null while it does not exist.
+    static KestevenState writableState() {
+        return KestevenQuest.context() == null ? null : KestevenQuest.state();
     }
 }

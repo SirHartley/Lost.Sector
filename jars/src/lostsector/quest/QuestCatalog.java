@@ -1,5 +1,7 @@
 package lostsector.quest;
 
+import lostsector.campaign.kesteven.quest.KestevenQuest;
+
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -11,7 +13,7 @@ public final class QuestCatalog {
     }
 
     public static List<Quest<?, ?>> create() {
-        return build(List.of());
+        return build(List.of(new KestevenQuest()));
     }
 
     // Definition errors throw here, during load, so the first dev run finds them.

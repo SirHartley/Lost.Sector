@@ -36,7 +36,7 @@ public class ElizaSearchSecondBarEvent extends BaseBarEvent {
 
 	public boolean shouldShowAtMarket(MarketAPI market) {
 		//used markets check
-		if (ElizaSearchBarEvent.getUsedMarkets(ElizaSearchBarEvent.USED_MARKET_KEY).contains(market.getId())) return false;
+		if (ElizaSearchBarEvent.getUsedMarkets().contains(market.getId())) return false;
 
 		if (QuestHelper.getStage()<16) return false;
 		return market.getFaction().getId().equals(Factions.PIRATES);
@@ -64,7 +64,7 @@ public class ElizaSearchSecondBarEvent extends BaseBarEvent {
 		person = Global.getSector().getFaction(Factions.PIRATES).createRandomPerson(gender, random);
 		person.setPostId(Ranks.POST_GENERIC_MILITARY);
 
-		count = ElizaSearchBarEvent.getDialogStage(ElizaSearchBarEvent.INTRO_DIALOG_KEY);
+		count = ElizaSearchBarEvent.getDialogStage();
 
 		TextPanelAPI text = dialog.getTextPanel();
 
@@ -168,11 +168,11 @@ public class ElizaSearchSecondBarEvent extends BaseBarEvent {
 			dialog.getVisualPanel().fadeVisualOut();
 
 			if (count==1){
-				List<String> markets = ElizaSearchBarEvent.getUsedMarkets(ElizaSearchBarEvent.USED_MARKET_KEY);
+				List<String> markets = ElizaSearchBarEvent.getUsedMarkets();
 				markets.add(dialog.getInteractionTarget().getMarket().getId());
-				ElizaSearchBarEvent.setUsedMarkets(ElizaSearchBarEvent.USED_MARKET_KEY, markets);
+				ElizaSearchBarEvent.setUsedMarkets(markets);
 
-				ElizaSearchBarEvent.setDialogStage(2, ElizaSearchBarEvent.INTRO_DIALOG_KEY);
+				ElizaSearchBarEvent.setDialogStage(2);
 			}
 
 			done = true;

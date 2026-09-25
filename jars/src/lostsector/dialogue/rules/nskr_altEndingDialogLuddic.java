@@ -12,9 +12,11 @@ import com.fs.starfarer.api.impl.campaign.ids.MemFlags;
 import com.fs.starfarer.api.impl.campaign.intel.contacts.ContactIntel;
 import com.fs.starfarer.api.impl.campaign.rulecmd.PaginatedOptions;
 import com.fs.starfarer.api.util.Misc;
-import lostsector.campaign.kesteven.quest.QuestStageManager;
 import lostsector.campaign.kesteven.quest.QuestHelper;
+import lostsector.campaign.kesteven.quest.KestevenQuest;
+import lostsector.campaign.kesteven.quest.KestevenState;
 import lostsector.helper.MathHelper;
+import lostsector.campaign.kesteven.quest.KestevenFlag;
 import lostsector.campaign.kesteven.quest.KestevenPeople;
 import lostsector.helper.UiSounds;
 import lostsector.helper.SectorLookup;
@@ -27,11 +29,8 @@ import java.util.Random;
 
 public class nskr_altEndingDialogLuddic extends PaginatedOptions {
 
-    public static final String SECOND_TIME_KEY = "nskr_altEndingDialogSecondTimeLuddic";
     public static final String PERSON_LOCKED_KEY = "$nskr_altEndingDialogLockedToPerson";
-    public static final String DIALOG_FINISHED_KEY = "nskr_EndingAltDialogKeyFinished";
 
-    public static final String PERSISTENT_RANDOM_KEY = "nskr_EndingAltDialogKeyRandom";
     private Color h;
     private Color g;
     private Color gr;
@@ -76,7 +75,7 @@ public class nskr_altEndingDialogLuddic extends PaginatedOptions {
             case "hasOption":
                 return validEntity(entity);
             case "addOptions":
-                addOptions(QuestHelper.getCompleted(SECOND_TIME_KEY));
+                addOptions(QuestHelper.getCompleted(KestevenFlag.LUDDIC_ENDING_SECOND_TALK));
                 showOptions();
                 break;
             case "luddicAgree":
@@ -174,7 +173,7 @@ public class nskr_altEndingDialogLuddic extends PaginatedOptions {
                 addOption("Destroy the Chip", "nskr_altEndingLuddicAgree");
                 addOption("\"Actually, never mind.\"", "nskr_altEndingExit");
             }
-        } else if (!QuestHelper.getCompleted(DIALOG_FINISHED_KEY)){
+        } else if (!QuestHelper.getCompleted(KestevenFlag.ALT_ENDING_DONE)){
             //person locked, came back to talk
             text.addPara("\"Have you finally seen the path captain? Or are you here to just waste my time.\"");
             text.addPara("\"You need to destroy the Chip.\" "+ HeOrShe +" commands.", tc, h,"destroy","");
@@ -255,7 +254,7 @@ public class nskr_altEndingDialogLuddic extends PaginatedOptions {
         }
 
         //FINISH
-        QuestHelper.setCompleted(true, DIALOG_FINISHED_KEY);
+        QuestHelper.setCompleted(true, KestevenFlag.ALT_ENDING_DONE);
         QuestHelper.setStage(20);
 
         QuestHelper.saveEnding();
@@ -263,7 +262,7 @@ public class nskr_altEndingDialogLuddic extends PaginatedOptions {
 
     protected void setSecond(){
 
-        QuestHelper.setCompleted(true, SECOND_TIME_KEY);
+        QuestHelper.setCompleted(true, KestevenFlag.LUDDIC_ENDING_SECOND_TALK);
     }
 
     protected boolean validEntity(SectorEntityToken entity) {
@@ -272,21 +271,16 @@ public class nskr_altEndingDialogLuddic extends PaginatedOptions {
         if (market==null) return false;
         if (market.getFactionId()==null) return false;
         //we don't have it anymore
-        if (QuestHelper.getCompleted(QuestStageManager.ELIZA_INTERCEPT_HANDED_OVER)) return false;
+        if (QuestHelper.getCompleted(KestevenFlag.CHIP_HANDED_TO_ELIZA)) return false;
         //person locked
-        if (QuestHelper.getCompleted(SECOND_TIME_KEY) && !person.getMemory().contains(PERSON_LOCKED_KEY)) return false;
+        if (QuestHelper.getCompleted(KestevenFlag.LUDDIC_ENDING_SECOND_TALK) && !person.getMemory().contains(PERSON_LOCKED_KEY)) return false;
         //DONE
-        if (QuestHelper.getCompleted(DIALOG_FINISHED_KEY)) return false;
+        if (QuestHelper.getCompleted(KestevenFlag.ALT_ENDING_DONE)) return false;
         //pick correct faction market
         return market.getFactionId().equals(Factions.LUDDIC_PATH) || market.getFactionId().equals(Factions.LUDDIC_CHURCH);
     }
 
     public static Random getRandom() {
-        Map<String, Object> data = Global.getSector().getPersistentData();
-        if (!data.containsKey(PERSISTENT_RANDOM_KEY)) {
-
-            data.put(PERSISTENT_RANDOM_KEY, new Random(MathHelper.getSeedParsed()));
-        }
-        return (Random) data.get(PERSISTENT_RANDOM_KEY);
+        return KestevenQuest.random(KestevenState.RANDOM_ALT_ENDING);
     }
 }

@@ -27,13 +27,6 @@ import java.util.Random;
 
 public class EndingElizaDialog implements InteractionDialogPlugin {
     //
-    public static final String COMMISSION_RESTORE_KEY = "nskr_elizaEndingRestoreEliza";
-    public static final String REP_PIRATES_KEY = "nskr_elizaEndingRestorePirates";
-    public static final String REP_HEGE_KEY = "nskr_elizaEndingRestoreHege";
-    public static final String REP_KESTEVEN_KEY = "nskr_elizaEndingRestoreKesteven";
-    public static final String DIALOG_FINISHED_KEY = "nskr_ElizaEndingDialogKeyFinished";
-    public static final String PERSISTENT_KEY = "nskr_ElizaEndingDialogKey";
-    public static final String PERSISTENT_RANDOM_KEY = "nskr_ElizaEndingDialogKeyRandom";
 
     private boolean arrived = false;
 
@@ -68,7 +61,7 @@ public class EndingElizaDialog implements InteractionDialogPlugin {
         text.setFontInsignia();
 
         int stage = QuestHelper.getStage();
-        if (stage >= 19 && !QuestHelper.getCompleted(DIALOG_FINISHED_KEY)) {
+        if (stage >= 19 && !QuestHelper.getCompleted(KestevenFlag.ELIZA_ENDING_DONE)) {
             text.addPara("On approach you receiver orders from the port authority to land at a specific dock. You then receive a comms call from Eliza.");
 
             options.addOption("Continue", OptionId.A1);
@@ -119,17 +112,17 @@ public class EndingElizaDialog implements InteractionDialogPlugin {
             text.addPara("Eliza frantically finishes her speech. \"Now go captain.\" She raises her hands and looks towards the roof, in a vaguely fanatic gesture. \"watch the stations burn, empires fall, leaders flee like cowards. It is time to infest the rat's nest. Humanity will be free!\" The grin on her face is bone chilling.");
             text.addPara("Hope you made the right choice, captain.",g,h,"","");
 
-            QuestHelper.setCompleted(true, DIALOG_FINISHED_KEY);
+            QuestHelper.setCompleted(true, KestevenFlag.ELIZA_ENDING_DONE);
             QuestHelper.setStage(20);
             QuestHelper.saveEnding();
 
             if((Misc.getCommissionFactionId()!=null)) {
                 if (Misc.getCommissionFactionId().equals("kesteven") || Misc.getCommissionFactionId().equals(Factions.HEGEMONY)) {
-                    QuestHelper.setCompleted(true, COMMISSION_RESTORE_KEY);
+                    QuestHelper.setCompleted(true, KestevenFlag.COMMISSION_RESTORE_PENDING);
                 }
                 if(ModPlugin.IS_IRONSHELL){
                     if (Misc.getCommissionFactionId().equals("ironshell")){
-                        QuestHelper.setCompleted(true, COMMISSION_RESTORE_KEY);
+                        QuestHelper.setCompleted(true, KestevenFlag.COMMISSION_RESTORE_PENDING);
                     }
                 }
             }
@@ -144,19 +137,18 @@ public class EndingElizaDialog implements InteractionDialogPlugin {
             playerCargo.addSpecial(new SpecialItemData("nskr_prot_wp", null), 1);
             playerCargo.addSpecial(new SpecialItemData("nskr_prot_heavy", null), 1);
             //+rep
+            // QuestStageManager re-applies these values when a commission ends with this ending.
+            KestevenState state = KestevenQuest.state();
             float repPirates = MathHelper.getSeededRandomNumberInRange(0.25f, 0.30f, getRandom());
-            //save to mem
-            QuestHelper.setFloat(repPirates,REP_PIRATES_KEY);
+            state.commissionRepPirates = repPirates;
             //pirate rep
             if(Global.getSector().getFaction(Factions.PIRATES).getRelationship(Factions.PLAYER)<repPirates) Global.getSector().getFaction(Factions.PLAYER).setRelationship(Factions.PIRATES, repPirates);
             eliza.getRelToPlayer().adjustRelationship(0.30f, RepLevel.COOPERATIVE);
             //hege & kesteven war
             float repKesteven = MathHelper.getSeededRandomNumberInRange(-0.90f, -0.80f, getRandom());
-            //save to mem
-            QuestHelper.setFloat(repKesteven,REP_KESTEVEN_KEY);
+            state.commissionRepKesteven = repKesteven;
             float repHege = MathHelper.getSeededRandomNumberInRange(-0.70f, -0.65f, getRandom());
-            //save to mem
-            QuestHelper.setFloat(repHege,REP_HEGE_KEY);
+            state.commissionRepHegemony = repHege;
             //completion text
             text.setFontSmallInsignia();
             //add sp
@@ -283,12 +275,7 @@ public class EndingElizaDialog implements InteractionDialogPlugin {
     }
 
     public static Random getRandom() {
-        Map<String, Object> data = Global.getSector().getPersistentData();
-        if (!data.containsKey(PERSISTENT_RANDOM_KEY)) {
-
-            data.put(PERSISTENT_RANDOM_KEY, new Random(MathHelper.getSeedParsed()));
-        }
-        return (Random) data.get(PERSISTENT_RANDOM_KEY);
+        return KestevenQuest.random(KestevenState.RANDOM_ELIZA_ENDING);
     }
 
 }

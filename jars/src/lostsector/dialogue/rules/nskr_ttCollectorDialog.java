@@ -15,7 +15,10 @@ import com.fs.starfarer.api.impl.campaign.rulecmd.PaginatedOptions;
 import com.fs.starfarer.api.util.Misc;
 import com.fs.starfarer.api.util.Misc.Token;
 import lostsector.campaign.kesteven.quest.QuestStageManager;
-import lostsector.helper.MathHelper;
+import lostsector.campaign.kesteven.quest.KestevenFlag;
+import lostsector.campaign.kesteven.quest.KestevenQuest;
+import lostsector.campaign.kesteven.quest.KestevenState;
+import lostsector.campaign.kesteven.quest.QuestHelper;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -27,11 +30,8 @@ public class nskr_ttCollectorDialog extends PaginatedOptions {
 	//
 	//
 
-	public static final String PERSISTENT_KEY = "nskr_ttCollectorDialogKey";
-	private final String id = PERSISTENT_KEY;
 	private static boolean paid = false;
 	private float cargo = 0f;
-	public static final String PERSISTENT_RANDOM_KEY = "nskr_ttCollectorDialogRandom";
 
 	protected CampaignFleetAPI playerFleet;
 	protected SectorEntityToken entity;
@@ -68,7 +68,7 @@ public class nskr_ttCollectorDialog extends PaginatedOptions {
 			case "hasOption":
 				return validEntity(entity);
 			case "setPaid":
-				setPaid(booleanArg, id);
+				setPaid(booleanArg);
 			case "canPay":
 				canPay();
 				showOptions();
@@ -110,7 +110,7 @@ public class nskr_ttCollectorDialog extends PaginatedOptions {
 		player = Global.getSector().getPlayerPerson();
 		person = dialog.getInteractionTarget().getActivePerson();
 
-		paid = getPaid(PERSISTENT_KEY);
+		paid = getPaid();
 		cargo = playerFleet.getCargo().getCommodityQuantity("nskr_electronics");
 	}
 	
@@ -170,7 +170,7 @@ public class nskr_ttCollectorDialog extends PaginatedOptions {
 		//remove
 		playerCargo.removeCommodity("nskr_electronics", cargo);
 		//paid
-		setPaid(true, PERSISTENT_KEY);
+		setPaid(true);
 		//relation
 		Global.getSector().getFaction(Factions.PLAYER).adjustRelationship(Factions.TRITACHYON,0.05f);
 		person.getRelToPlayer().adjustRelationship(0.10f, RepLevel.COOPERATIVE);
@@ -199,26 +199,15 @@ public class nskr_ttCollectorDialog extends PaginatedOptions {
 	}
 
 	public static Random getRandom() {
-		Map<String, Object> data = Global.getSector().getPersistentData();
-		if (!data.containsKey(PERSISTENT_RANDOM_KEY)) {
-
-			data.put(PERSISTENT_RANDOM_KEY, new Random(MathHelper.getSeedParsed()));
-		}
-		return (Random) data.get(PERSISTENT_RANDOM_KEY);
+		return KestevenQuest.random(KestevenState.RANDOM_COLLECTOR);
 	}
 
-	public static boolean getPaid(String id) {
-
-		Map<String, Object> data = Global.getSector().getPersistentData();
-		if (!data.containsKey(id)) data.put(id, false);
-
-		return (boolean)data.get(id);
+	public static boolean getPaid() {
+		return QuestHelper.getCompleted(KestevenFlag.COLLECTOR_PAID);
 	}
 
-	public static void setPaid(boolean paid, String id) {
-
-		Map<String, Object> data = Global.getSector().getPersistentData();
-		data.put(id, paid);
+	public static void setPaid(boolean paid) {
+		QuestHelper.setCompleted(paid, KestevenFlag.COLLECTOR_PAID);
 	}
 
 }

@@ -21,16 +21,17 @@ import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import com.fs.starfarer.api.util.Misc;
 import com.fs.starfarer.api.util.Misc.Token;
 import lostsector.campaign.kesteven.quest.DataSatelliteDialog;
-import lostsector.campaign.kesteven.quest.ElizaDialog;
-import lostsector.campaign.kesteven.quest.GlacierCommsDialog;
 import lostsector.campaign.kesteven.quest.KestevenFleets;
 import lostsector.campaign.kesteven.quest.QuestStageManager;
 import lostsector.campaign.kesteven.quest.QuestHelper;
+import lostsector.campaign.kesteven.quest.KestevenQuest;
+import lostsector.campaign.kesteven.quest.KestevenState;
 import lostsector.ModPlugin;
 import lostsector.settings.Setting;
 import lostsector.helper.Ids;
 import lostsector.helper.MathHelper;
 import lostsector.campaign.enigma.DormantSpawner;
+import lostsector.campaign.kesteven.quest.KestevenFlag;
 import lostsector.campaign.kesteven.quest.KestevenPeople;
 import lostsector.helper.SectorLookup;
 import lostsector.helper.SystemHelper;
@@ -49,19 +50,11 @@ public class nskr_kestevenQuest extends PaginatedOptions {
 
 	//handles dialogue and rules.csv for the quest line
 	// Adapted from Nexerelin.
-	public static final String PERSISTENT_RANDOM_KEY = "nskr_kestevenQuestRandom";
 	public static final String DIALOG_OPTION_PREFIX = "nskr_kestevenQuest_pick_";
 	public static final String DIALOG_OPTION_PREFIX_REQ_SKIP = "nskr_kestevenQuest_story_pick_";
 	public static final String DIALOG_OPTION_PREFIX_STORY_SKIP = "nskr_kestevenQuest_story_skip_pick_";
 	public static final String DIALOG_OPTION_EXTRA_START_PREFIX = "nskr_kestevenQuest_extraStart_";
 	public static final String DIALOG_OPTION_EXTRA_PREFIX = "nskr_kestevenQuest_extra_";
-	public static final String PERSISTENT_KEY = "nskr_kestevenQuest";
-	public static final String JOB4_INTELLIGENCE_DIALOG_KEY = "nskr_kestevenQuestJob4Intelligence";
-	public static final String JOB4_SKIP_REQ_KEY = "nskr_kestevenQuestJob4SkipRequirement";
-	public static final String JOB5_JACK_TIP_KEY = "nskr_kestevenQuestJob5JackTip";
-	public static final String JOB5_ALICE_TIP_KEY = "nskr_kestevenQuestJob5AliceTip";
-	public static final String JOB5_ALICE_TIP_KEY2 = "nskr_kestevenQuestJob5AliceTip2";
-	public static final String SKIPPED_STORY_KEY = "nskr_kestevenQuestSkippedStory";
 
 	public static final int JOB1_ARTIFACTS = 70;
 	public static final int STAGE1_PAYOUT = 155000;
@@ -247,24 +240,24 @@ public class nskr_kestevenQuest extends PaginatedOptions {
 		power = null;
 		stage = QuestHelper.getStage();
 		relation = Global.getSector().getPlayerFaction().getRelationship("kesteven");
-		foughtEnigma = QuestHelper.getCompleted(QuestStageManager.HAS_FOUGHT_ENIGMA_KEY);
-		job1tip = QuestHelper.getCompleted(QuestStageManager.JOB1_TIP_KEY);
-		failedJob3 = QuestHelper.getFailed(QuestStageManager.JOB3_FAIL_KEY);
-		eMessenger = QuestHelper.getCompleted(QuestStageManager.E_MESSENGER_TALKED_ASK_ABOUT_KEY);
-		job4wait = QuestHelper.getCompleted(QuestStageManager.JOB4_WAIT_KEY);
+		foughtEnigma = QuestHelper.getCompleted(KestevenFlag.FOUGHT_ENIGMA);
+		job1tip = QuestHelper.getCompleted(KestevenFlag.JOB1_TIP_GIVEN);
+		failedJob3 = QuestHelper.getFailed(KestevenFlag.JOB3_FAILED);
+		eMessenger = QuestHelper.getCompleted(KestevenFlag.MESSENGER_QUESTION_OPEN);
+		job4wait = QuestHelper.getCompleted(KestevenFlag.JOB4_WAIT_OVER);
 		job4TargetLoc = QuestHelper.getJob4EnemyTarget();
-		helped = QuestHelper.getCompleted(QuestStageManager.JOB4_HELPED_KEY);
+		helped = QuestHelper.getCompleted(KestevenFlag.JOB4_FRIENDLY_HELPED);
 
 		cargo = playerCargo.getCommodityQuantity("nskr_electronics") >= JOB1_ARTIFACTS;
-		delivered = QuestHelper.getCompleted(QuestStageManager.JOB1_DELIVERED_KEY);
-		deliveredData = QuestHelper.getCompleted(QuestStageManager.JOB1_DELIVERED_DATA_KEY);
-		sensored = QuestHelper.getCompleted(QuestStageManager.JOB1_SENSORS_KEY);
+		delivered = QuestHelper.getCompleted(KestevenFlag.JOB1_ELECTRONICS_DELIVERED);
+		deliveredData = QuestHelper.getCompleted(KestevenFlag.JOB1_DATA_DELIVERED);
+		sensored = QuestHelper.getCompleted(KestevenFlag.JOB1_SENSOR_DATA);
 
-		aliceTip = QuestHelper.getCompleted(nskr_kestevenQuest.JOB5_ALICE_TIP_KEY);
-		aliceTip2 = QuestHelper.getCompleted(nskr_kestevenQuest.JOB5_ALICE_TIP_KEY2);
-		jackTip = QuestHelper.getCompleted(nskr_kestevenQuest.JOB5_JACK_TIP_KEY);
+		aliceTip = QuestHelper.getCompleted(KestevenFlag.JOB5_ALICE_TIP);
+		aliceTip2 = QuestHelper.getCompleted(KestevenFlag.JOB5_ALICE_TIP2);
+		jackTip = QuestHelper.getCompleted(KestevenFlag.JOB5_JACK_TIP);
 
-		foundEliza = QuestHelper.getCompleted(QuestStageManager.JOB5_FOUND_ELIZA_KEY);
+		foundEliza = QuestHelper.getCompleted(KestevenFlag.ELIZA_FOUND);
 
 		diskCount = QuestHelper.getDisksRecovered();
 		allDisks = QuestHelper.getDisksRecovered()>=5;
@@ -295,8 +288,8 @@ public class nskr_kestevenQuest extends PaginatedOptions {
 		String desc = "";
 		String jobText = "\"There are no new jobs available at the moment.\"";
 		String optId = DIALOG_OPTION_PREFIX;
-		boolean aliceIntro = QuestHelper.getCompleted("nskr_aliceIntro");
-		boolean jackIntro = QuestHelper.getCompleted("nskr_jackIntro");
+		boolean aliceIntro = QuestHelper.getCompleted(KestevenFlag.ALICE_INTRODUCED);
+		boolean jackIntro = QuestHelper.getCompleted(KestevenFlag.JACK_INTRODUCED);
 
 		//Jack Lapua dialogue
 		if (person==jack) {
@@ -445,11 +438,11 @@ public class nskr_kestevenQuest extends PaginatedOptions {
 				desc = "Hand over your AAR";
 				jobText = "\"My intel suggests you weren't successful in sabotaging Tri-Tachyon.\"";
 			}
-			//job 4 start after the wait; JOB4_SKIP_REQ_KEY keeps a story point strength bypass across visits
+			//job 4 start after the wait; JOB4_REQUIREMENT_SKIPPED keeps a story point strength bypass across visits
 			if (stage == 11 && job4wait) {
 				if (relation < JOB4_REP) {
 					jobText = "\"There's more work, captain, but the board won't sign off on it with your current standing at Kesteven. Improve it and come back.\"";
-				} else if (QuestHelper.getCompleted(JOB4_SKIP_REQ_KEY) || getPower() > JOB4_POWER) {
+				} else if (QuestHelper.getCompleted(KestevenFlag.JOB4_REQUIREMENT_SKIPPED) || getPower() > JOB4_POWER) {
 					desc = "Operation Lifesaver";
 					jobText = "\"There is a new job available at the moment, are you interested?\"";
 				} else {
@@ -517,7 +510,7 @@ public class nskr_kestevenQuest extends PaginatedOptions {
 			//job4 tip dialogue
 			//make sure target exists
 			if (job4TargetLoc!=null) {
-				if (stage == 12 && QuestHelper.getDialogStage(JOB4_INTELLIGENCE_DIALOG_KEY) == 0) {
+				if (stage == 12 && QuestHelper.getNicholasDialogStage() == 0) {
 					desc = "\"Tell me what you know.\"";
 					jobText = "\"Uhhh. Are you here to talk about the missing Special Operations fleet?\"";
 				}
@@ -527,7 +520,7 @@ public class nskr_kestevenQuest extends PaginatedOptions {
 				jobText = "\"...There is nothing new to report captain.\"";
 			}
 			//already tipped
-			if (stage==12 && QuestHelper.getDialogStage(JOB4_INTELLIGENCE_DIALOG_KEY)>=1) {
+			if (stage==12 && QuestHelper.getNicholasDialogStage()>=1) {
 				jobText = "\"...There is nothing new to report captain.\"";
 			}
 			//no quest
@@ -541,19 +534,19 @@ public class nskr_kestevenQuest extends PaginatedOptions {
 		if (person==jack && stage>=0 && !jackIntro){
 			text.addPara("On the holodisplay you are met with a charismatic smile from officer Lapua. A well groomed man, his manners have that corporate superficiality down to a perfection.");
 			text.addPara("\"What can I do for you captain?\"");
-			QuestHelper.setCompleted(true, "nskr_jackIntro");
+			QuestHelper.setCompleted(true, KestevenFlag.JACK_INTRODUCED);
 		}
 		//alice
 		if (person==alice && stage>=7 && !aliceIntro){
 			text.addPara("A woman is staring at you through the holodisplay, her expression is unchanging. Manager Lumi is intently analyzing every part of your visage.");
 			text.addPara("\"Ahh, yes it's you.\"");
-			QuestHelper.setCompleted(true, "nskr_aliceIntro");
+			QuestHelper.setCompleted(true, KestevenFlag.ALICE_INTRODUCED);
 		}
 		//nick
-		boolean nickIntro = QuestHelper.getCompleted("nskr_nickIntro");
+		boolean nickIntro = QuestHelper.getCompleted(KestevenFlag.NICHOLAS_INTRODUCED);
 		if (person==nick && stage>=12 && !nickIntro){
 			text.addPara("Nicholas is rather reserved when it comes to talking. It is clear he works on the computer side of communications.");
-			QuestHelper.setCompleted(true, "nskr_nickIntro");
+			QuestHelper.setCompleted(true, KestevenFlag.NICHOLAS_INTRODUCED);
 		}
 
 		//adds the text
@@ -606,7 +599,7 @@ public class nskr_kestevenQuest extends PaginatedOptions {
 
 		//save skip to mem, only required for job4
 		if (stage==11){
-			QuestHelper.setCompleted(true, JOB4_SKIP_REQ_KEY);
+			QuestHelper.setCompleted(true, KestevenFlag.JOB4_REQUIREMENT_SKIPPED);
 		}
 	}
 
@@ -669,17 +662,17 @@ public class nskr_kestevenQuest extends PaginatedOptions {
 			QuestStageManager.spawnJob4Wrecks(nskr_kestevenQuest.getRandom());
 		}
 		//job5
-		QuestHelper.setCompleted(true, DataSatelliteDialog.RECOVERED_4_KEY);
-		QuestHelper.setCompleted(true, DataSatelliteDialog.RECOVERED_3_KEY);
+		QuestHelper.setCompleted(true, KestevenFlag.SATELLITE4_RECOVERED);
+		QuestHelper.setCompleted(true, KestevenFlag.SATELLITE3_RECOVERED);
 		DataSatelliteDialog.setRecoveredSatelliteCount(2);
-		QuestHelper.setCompleted(true, QuestStageManager.JOB5_FOUND_FROST_KEY);
-		QuestHelper.setCompleted(true, GlacierCommsDialog.RECOVERED_KEY);
-		QuestHelper.setCompleted(true, nskr_kestevenQuest.JOB5_ALICE_TIP_KEY);
-		QuestHelper.setCompleted(true, nskr_kestevenQuest.JOB5_ALICE_TIP_KEY2);
-		QuestHelper.setCompleted(true, nskr_kestevenQuest.JOB5_JACK_TIP_KEY);
-		QuestHelper.setCompleted(true, QuestStageManager.JOB5_FOUND_ELIZA_KEY);
-		QuestHelper.setCompleted(true, ElizaDialog.DIALOG_FINISHED_KEY);
-		QuestHelper.setCompleted(true, ElizaDialog.ELIZA_HELP_KEY);
+		QuestHelper.setCompleted(true, KestevenFlag.FROST_FOUND);
+		QuestHelper.setCompleted(true, KestevenFlag.GLACIER_DISK_RECOVERED);
+		QuestHelper.setCompleted(true, KestevenFlag.JOB5_ALICE_TIP);
+		QuestHelper.setCompleted(true, KestevenFlag.JOB5_ALICE_TIP2);
+		QuestHelper.setCompleted(true, KestevenFlag.JOB5_JACK_TIP);
+		QuestHelper.setCompleted(true, KestevenFlag.ELIZA_FOUND);
+		QuestHelper.setCompleted(true, KestevenFlag.ELIZA_DIALOG_FINISHED);
+		QuestHelper.setCompleted(true, KestevenFlag.ELIZA_HELPED);
 		if(QuestHelper.getElizaLoc()==null) {
 			QuestHelper.setElizaLoc();
 			PersonAPI eliza = SectorGen.genEliza();
@@ -688,7 +681,7 @@ public class nskr_kestevenQuest extends PaginatedOptions {
 			log("Eliza loc " + QuestHelper.getElizaLoc().getMarket().getName());
 		}
 
-		QuestHelper.setCompleted(true, QuestStageManager.FOUND_CACHE_KEY);
+		QuestHelper.setCompleted(true, KestevenFlag.CACHE_FOUND);
 		QuestHelper.setStage(17);
 
 		//ineligible for hard mode completion
@@ -696,7 +689,7 @@ public class nskr_kestevenQuest extends PaginatedOptions {
 		if (data.containsKey(ModPlugin.STARFARER_MODE_FROM_START_KEY)) {
 			data.put(ModPlugin.STARFARER_MODE_FROM_START_KEY, false);
 		}
-		QuestHelper.setCompleted(true, SKIPPED_STORY_KEY);
+		QuestHelper.setCompleted(true, KestevenFlag.STORY_SKIPPED);
 
 
 		text.setFontSmallInsignia();
@@ -756,8 +749,8 @@ public class nskr_kestevenQuest extends PaginatedOptions {
 			Global.getSoundPlayer().playUISound("ui_rep_raise", 1f, 1f);
 			text.setFontInsignia();
 
-			QuestHelper.setCompleted(true, QuestStageManager.JOB1_DELIVERED_DATA_KEY);
-			QuestHelper.setCompleted(true, QuestStageManager.JOB1_DELIVERED_KEY);
+			QuestHelper.setCompleted(true, KestevenFlag.JOB1_DATA_DELIVERED);
+			QuestHelper.setCompleted(true, KestevenFlag.JOB1_ELECTRONICS_DELIVERED);
 
 			Global.getSoundPlayer().playUISound("ui_rep_raise", 1f, 1f);
 		} else if (stage == 1 && cargo && !delivered) {
@@ -773,7 +766,7 @@ public class nskr_kestevenQuest extends PaginatedOptions {
 			Global.getSoundPlayer().playUISound("ui_rep_raise", 1f, 1f);
 			text.setFontInsignia();
 
-			QuestHelper.setCompleted(true, QuestStageManager.JOB1_DELIVERED_KEY);
+			QuestHelper.setCompleted(true, KestevenFlag.JOB1_ELECTRONICS_DELIVERED);
 		} else if (stage == 1 && sensored && !deliveredData){
 			//complete task1
 			text.addParagraph("\"We've been waiting to see some concrete data on this subject. Nice work captain.\" He makes a vaguely congratulatory gesture.");
@@ -784,7 +777,7 @@ public class nskr_kestevenQuest extends PaginatedOptions {
 			Global.getSoundPlayer().playUISound("ui_rep_raise", 1f, 1f);
 			text.setFontInsignia();
 
-			QuestHelper.setCompleted(true, QuestStageManager.JOB1_DELIVERED_DATA_KEY);
+			QuestHelper.setCompleted(true, KestevenFlag.JOB1_DATA_DELIVERED);
 		} else if (stage == 1 && !deliveredData && !delivered && !job1tip && QuestHelper.getJob1Tip()!=null) {
 			//tip
 			StarSystemAPI loc = QuestHelper.getJob1Tip();
@@ -793,7 +786,7 @@ public class nskr_kestevenQuest extends PaginatedOptions {
 			text.addPara(str,tc,h,hl,"");
 			text.addPara("\"That should give you something to work on captain.\" He nods and shortly cuts the comm link.");
 
-			QuestHelper.setCompleted(true, QuestStageManager.JOB1_TIP_KEY);
+			QuestHelper.setCompleted(true, KestevenFlag.JOB1_TIP_GIVEN);
 		}
 		//job 1 complete
 		if(stage==2) {
@@ -897,7 +890,7 @@ public class nskr_kestevenQuest extends PaginatedOptions {
 		}
 
 		//job4 intelligence dialog nick
-		boolean found = QuestHelper.getCompleted(QuestStageManager.JOB4_FOUND_TARGET_KEY);
+		boolean found = QuestHelper.getCompleted(KestevenFlag.JOB4_TARGET_FOUND);
 		//standard
 		if(stage==12 && !found){
 			String hintLoc = job4TargetLoc.getStarSystem().getName();
@@ -907,7 +900,7 @@ public class nskr_kestevenQuest extends PaginatedOptions {
 					"\"He looks down at something.\" The um- signal was much weaker in magnitude, to the level that we could only decipher its direction...\"",tc,h,hintLoc,"");
 			text.addPara("\"...That's pretty much all I know.\"",tc,h,"","");
 
-			QuestHelper.setDialogStage(1, JOB4_INTELLIGENCE_DIALOG_KEY);
+			QuestHelper.setNicholasDialogStage(1);
 
 			text.setFontSmallInsignia();
 			text.addPara("Updated log entry for Operation Lifesaver",g,h,"Operation Lifesaver","");
@@ -929,7 +922,7 @@ public class nskr_kestevenQuest extends PaginatedOptions {
 					"\"He looks down at something.\" The um- signal was much weaker in magnitude, to the level that we could only decipher its direction...\"",tc,h,hintLoc,"");
 			text.addPara("\"...Ah- but it looks like you've already investigated that location. I'm afraid I can't be of any more help then.\"",tc,h,"","");
 
-			QuestHelper.setDialogStage(1, JOB4_INTELLIGENCE_DIALOG_KEY);
+			QuestHelper.setNicholasDialogStage(1);
 
 			dialog.getOptionPanel().addOption("Leave", "nskr_kestevenQuestExit");
 
@@ -975,8 +968,8 @@ public class nskr_kestevenQuest extends PaginatedOptions {
 		}
 		//job 5 tip jack
 		if(stage==16 && person==jack && !jackTip) {
-			boolean helpEliza = QuestHelper.getCompleted(ElizaDialog.ELIZA_HELP_KEY);
-			boolean killEliza = QuestHelper.getCompleted(QuestStageManager.KILLED_ELIZA_KEY);
+			boolean helpEliza = QuestHelper.getCompleted(KestevenFlag.ELIZA_HELPED);
+			boolean killEliza = QuestHelper.getCompleted(KestevenFlag.ELIZA_KILLED);
 			if (!foundEliza) {
 				text.addPara("\"You'll need to find out where Eliza is hiding. You need to go undercover, and start asking questions from local pirates.\"", tc, h, "Eliza", "");
 				text.addPara("\"That's your best bet on finding her. I'm sure you can get something out of that scum, if you loosen their lips with some free drinks.\" He gives you a quick nod.", tc, h, "", "");
@@ -1002,7 +995,7 @@ public class nskr_kestevenQuest extends PaginatedOptions {
 			Global.getSoundPlayer().playUISound("ui_noise_static",1f,1f);
 			text.setFontInsignia();
 
-			QuestHelper.setCompleted(true, JOB5_JACK_TIP_KEY);
+			QuestHelper.setCompleted(true, KestevenFlag.JOB5_JACK_TIP);
 
 			dialog.getOptionPanel().addOption("Leave", "nskr_kestevenQuestExit");
 			noLeave = true;
@@ -1010,7 +1003,7 @@ public class nskr_kestevenQuest extends PaginatedOptions {
 		//job 5 tip alice
 		if(stage==16 && person==alice && !aliceTip) {
 			int recovered = DataSatelliteDialog.getRecoveredSatelliteCount();
-			boolean discovered3 = QuestHelper.getCompleted(QuestStageManager.JOB3_TARGET_DISCOVERED);
+			boolean discovered3 = QuestHelper.getCompleted(KestevenFlag.JOB3_TARGET_DISCOVERED);
 			SectorEntityToken loc1 = job4TargetLoc;
 			SectorEntityToken artifact1 = QuestHelper.getArtifact(loc1.getStarSystem());
 			SectorEntityToken loc2 = QuestHelper.getJob3Target();
@@ -1021,7 +1014,7 @@ public class nskr_kestevenQuest extends PaginatedOptions {
 				text.addPara("\"Efficient work captain.\"", tc, h, "", "");
 			}
 			//1 not recovered job 3
-			if (recovered==1 && QuestHelper.getCompleted(DataSatelliteDialog.RECOVERED_4_KEY)) {
+			if (recovered==1 && QuestHelper.getCompleted(KestevenFlag.SATELLITE4_RECOVERED)) {
 				text.addParagraph("\"As you know those old comm satellites are the target. \"She pauses to think for a second.\" It must be that Tri-tachyon expedition was going after one, it has to be the one your looking for.\"");
 
 				if(discovered3)text.addPara("\"It was in the "+loc2.getStarSystem().getName()+". Good thing you figured out where they were heading.\"", tc, h, loc2.getStarSystem().getName(), "");
@@ -1031,7 +1024,7 @@ public class nskr_kestevenQuest extends PaginatedOptions {
 				artifact2.getMemoryWithoutUpdate().set(MemFlags.MEMORY_KEY_MISSION_IMPORTANT,true);
 			}
 			//1 not recovered job 4
-			if (recovered==1 && QuestHelper.getCompleted(DataSatelliteDialog.RECOVERED_3_KEY)) {
+			if (recovered==1 && QuestHelper.getCompleted(KestevenFlag.SATELLITE3_RECOVERED)) {
 				text.addParagraph("\"As you know those old comm satellites are the target. The one our Special Operations fleet went after is the one your looking for.\"");
 				text.addPara("\"It was in the "+loc1.getStarSystem().getName()+".\"", tc, h, loc1.getStarSystem().getName(), "");
 				//make important
@@ -1058,7 +1051,7 @@ public class nskr_kestevenQuest extends PaginatedOptions {
 			Global.getSoundPlayer().playUISound("ui_noise_static",1f,1f);
 			text.setFontInsignia();
 
-			QuestHelper.setCompleted(true, JOB5_ALICE_TIP_KEY);
+			QuestHelper.setCompleted(true, KestevenFlag.JOB5_ALICE_TIP);
 
 			dialog.getOptionPanel().addOption("Leave", "nskr_kestevenQuestExit");
 			noLeave = true;
@@ -1088,7 +1081,7 @@ public class nskr_kestevenQuest extends PaginatedOptions {
 			Global.getSoundPlayer().playUISound("ui_noise_static",1f,1f);
 			text.setFontInsignia();
 
-			QuestHelper.setCompleted(true, JOB5_ALICE_TIP_KEY2);
+			QuestHelper.setCompleted(true, KestevenFlag.JOB5_ALICE_TIP2);
 
 			//make important
 			for (SectorEntityToken e : frost.getAllEntities()){
@@ -1116,7 +1109,7 @@ public class nskr_kestevenQuest extends PaginatedOptions {
 			text.addPara("She's not taking *no* as an answer.",g,h,"","");
 
 			dialog.getOptionPanel().addOption("\"Yes\"", "nskr_kestevenQuestConfirmQuest");
-			if(QuestHelper.getCompleted(ElizaDialog.AGREED_TO_HELP_KEY))dialog.getOptionPanel().addOption("\"Yes\" (lie)", "nskr_kestevenQuestConfirmQuest"+"B");
+			if(QuestHelper.getCompleted(KestevenFlag.ELIZA_AGREED_SINCERELY))dialog.getOptionPanel().addOption("\"Yes\" (lie)", "nskr_kestevenQuestConfirmQuest"+"B");
 			noLeave = true;
 		}
 
@@ -1161,7 +1154,7 @@ public class nskr_kestevenQuest extends PaginatedOptions {
 			}
 			//job 3 complete alice
 			if (stage == 10) {
-				if (QuestHelper.getCompleted(QuestStageManager.JOB3_TARGET_DISCOVERED))dialog.getOptionPanel().addOption("\"Know anything about the target?\" (Send over the coordinates)", DIALOG_OPTION_EXTRA_PREFIX + "0");
+				if (QuestHelper.getCompleted(KestevenFlag.JOB3_TARGET_DISCOVERED))dialog.getOptionPanel().addOption("\"Know anything about the target?\" (Send over the coordinates)", DIALOG_OPTION_EXTRA_PREFIX + "0");
 				dialog.getOptionPanel().addOption("\"Next job?\"", DIALOG_OPTION_EXTRA_PREFIX + "1");
 			}
 			//job 4 start alice
@@ -1208,7 +1201,7 @@ public class nskr_kestevenQuest extends PaginatedOptions {
 						StarSystemAPI loc = QuestHelper.getJob1Tip();
 						str = "\"Our best lead is the " + loc.getName() + ". You should start from there.\"";
 						hl = loc.getName();
-						QuestHelper.setCompleted(true, QuestStageManager.JOB1_TIP_KEY);
+						QuestHelper.setCompleted(true, KestevenFlag.JOB1_TIP_GIVEN);
 						dialog.getOptionPanel().setEnabled(DIALOG_OPTION_EXTRA_PREFIX + "0", false);
 					}
 				}
@@ -1310,7 +1303,7 @@ public class nskr_kestevenQuest extends PaginatedOptions {
 					str = "\"Ah yes, of course...\" Her eyes narrow to show disdain. \"No one important, we will deal with this \"LZ\" in time.\"";
 					dialog.getOptionPanel().setEnabled(DIALOG_OPTION_EXTRA_PREFIX+"4", false);
 					//don't show up again
-					QuestHelper.setCompleted(false, QuestStageManager.E_MESSENGER_TALKED_ASK_ABOUT_KEY);
+					QuestHelper.setCompleted(false, KestevenFlag.MESSENGER_QUESTION_OPEN);
 				}
 			}
 			//job 4 complete alice
@@ -1331,7 +1324,7 @@ public class nskr_kestevenQuest extends PaginatedOptions {
 					str = "\"Ah yes, of course...\" Her eyes narrow to show disdain. \"No one important, we will deal with this \"LZ\" in time.\"";
 					dialog.getOptionPanel().setEnabled(DIALOG_OPTION_EXTRA_PREFIX+"3", false);
 					//don't show up again
-					QuestHelper.setCompleted(false, QuestStageManager.E_MESSENGER_TALKED_ASK_ABOUT_KEY);
+					QuestHelper.setCompleted(false, KestevenFlag.MESSENGER_QUESTION_OPEN);
 				}
 			}
 		}
@@ -1393,7 +1386,7 @@ public class nskr_kestevenQuest extends PaginatedOptions {
 			Global.getSoundPlayer().playUISound("ui_rep_drop",1f,1f);
 
 			QuestHelper.setStage(11);
-			QuestHelper.setFailed(true, QuestStageManager.JOB3_SKIP_KEY);
+			QuestHelper.setFailed(true, KestevenFlag.JOB3_REFUSED);
 
 			SectorEntityToken loc = QuestHelper.getJob3Target();
 			spawnEnvironmentalStorytelling();
@@ -1631,7 +1624,7 @@ public class nskr_kestevenQuest extends PaginatedOptions {
 			Global.getSoundPlayer().playUISound("ui_noise_static",1f,1f);
 			text.setFontInsignia();
 
-			QuestHelper.setCompleted(true, QuestStageManager.JOB5_FOUND_FROST_KEY);
+			QuestHelper.setCompleted(true, KestevenFlag.FROST_FOUND);
 		}
 		//job 5 alice decryption pt2
 		if(stage == 16 && allDisks) {
@@ -1645,7 +1638,7 @@ public class nskr_kestevenQuest extends PaginatedOptions {
 
 			Global.getSoundPlayer().playUISound("ui_rep_raise",1f,1f);
 
-			QuestHelper.setCompleted(true, QuestStageManager.FOUND_CACHE_KEY);
+			QuestHelper.setCompleted(true, KestevenFlag.CACHE_FOUND);
 			QuestHelper.setStage(17);
 		}
 
@@ -1689,12 +1682,7 @@ public class nskr_kestevenQuest extends PaginatedOptions {
 	}
 
 	public static Random getRandom() {
-		Map<String, Object> data = Global.getSector().getPersistentData();
-		if (!data.containsKey(PERSISTENT_RANDOM_KEY)) {
-
-			data.put(PERSISTENT_RANDOM_KEY, new Random(MathHelper.getSeedParsed()));
-		}
-		return (Random)data.get(PERSISTENT_RANDOM_KEY);
+		return KestevenQuest.random(KestevenState.RANDOM_QUEST);
 	}
 
 }

@@ -9,7 +9,6 @@ import com.fs.starfarer.api.impl.campaign.intel.BaseIntelPlugin;
 import com.fs.starfarer.api.ui.SectorMapAPI;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import com.fs.starfarer.api.util.Misc;
-import lostsector.campaign.kesteven.quest.CacheCoreDialog;
 import lostsector.campaign.kesteven.quest.QuestHelper;
 
 import java.awt.*;
@@ -59,7 +58,7 @@ public class CacheIntel extends BaseIntelPlugin {
         if (mode == ListInfoMode.IN_DESC) initPad = opad;
 
         bullet(info);
-        boolean salvaged = QuestHelper.getCompleted(CacheCoreDialog.RECOVERED_KEY);
+        boolean salvaged = QuestHelper.getCompleted(KestevenFlag.CHIP_SALVAGED);
 
         if (!salvaged)info.addPara("Explore the location.", initPad, g, h, "", "");
 
@@ -83,7 +82,7 @@ public class CacheIntel extends BaseIntelPlugin {
         float pad = 3f;
         float opad = 10f;
         String sys = system.getName();
-        boolean salvaged = QuestHelper.getCompleted(CacheCoreDialog.RECOVERED_KEY);
+        boolean salvaged = QuestHelper.getCompleted(KestevenFlag.CHIP_SALVAGED);
         if (!salvaged)info.addPara("You discovered coordinates to a hidden Domain site.", opad, tc,h, "", "");
         if (salvaged)info.addPara("The maintenance logs", opad, tc,h, "", "");
 

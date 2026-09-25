@@ -49,7 +49,7 @@ Where the text for each stage lives:
 | 16 | Alice | Leads, then "something new", then all disks | Satellite tip, Frost tip, Cache briefing | — | Frost identified; Cache coordinates |
 | 20 | Both | "Nothing new" | — | — | — |
 
-One-time introductions for each person are in `addStageOptions()` and use the `nskr_*Intro` flags.
+One-time introductions for each person are in `addStageOptions()` and use the `JACK_INTRODUCED`, `ALICE_INTRODUCED` and `NICHOLAS_INTRODUCED` flags of `KestevenState`.
 
 ## Fleet conversations
 

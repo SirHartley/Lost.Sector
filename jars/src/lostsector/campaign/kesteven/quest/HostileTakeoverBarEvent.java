@@ -14,7 +14,6 @@ import com.fs.starfarer.api.impl.campaign.ids.Ranks;
 import com.fs.starfarer.api.impl.campaign.intel.bar.PortsideBarData;
 import com.fs.starfarer.api.impl.campaign.intel.bar.events.BaseBarEvent;
 import com.fs.starfarer.api.util.Misc;
-import lostsector.campaign.kesteven.quest.QuestStageManager;
 import lostsector.campaign.kesteven.quest.QuestHelper;
 import lostsector.helper.MathHelper;
 
@@ -522,7 +521,7 @@ public class HostileTakeoverBarEvent extends BaseBarEvent {
 			dialog.getVisualPanel().fadeVisualOut();
 
 			QuestHelper.setStage(9);
-			QuestHelper.setCompleted(true, QuestStageManager.JOB3_TARGET_DISCOVERED);
+			QuestHelper.setCompleted(true, KestevenFlag.JOB3_TARGET_DISCOVERED);
 
 			text.setFontSmallInsignia();
 			//acquire text
@@ -539,7 +538,7 @@ public class HostileTakeoverBarEvent extends BaseBarEvent {
 			text.addPara("You leave, calmly making your way back to your ship, as you try not upset your headache.");
 
 			QuestHelper.setStage(9);
-			QuestHelper.setCompleted(true, QuestStageManager.JOB3_TARGET_DISCOVERED);
+			QuestHelper.setCompleted(true, KestevenFlag.JOB3_TARGET_DISCOVERED);
 
 			text.setFontSmallInsignia();
 			//acquire text

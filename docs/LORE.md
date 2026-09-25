@@ -226,7 +226,7 @@ Eliza is a revolutionary, and Kesteven calls her a terrorist (`nskr_anarchist`, 
 - She must argue from conviction and must not concede her worldview to win the player over or to make a scene easier.
 - Do not make her secretly reasonable, secretly cruel for its own sake, or a mouthpiece for the author.
 - Keep her hospitality, her honesty on her own terms and her open endorsement of violence together. Existing text shows all three in one conversation.
-- Other characters may call her a terrorist or a lunatic. That is their view, and the mod lets the player agree with her sincerely (`AGREED_TO_HELP_KEY`).
+- Other characters may call her a terrorist or a lunatic. That is their view, and the mod lets the player agree with her sincerely (`KestevenFlag.ELIZA_AGREED_SINCERELY`).
 
 ### The Enigma voices
 

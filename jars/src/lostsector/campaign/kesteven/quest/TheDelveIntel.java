@@ -12,12 +12,8 @@ import com.fs.starfarer.api.ui.SectorMapAPI;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import com.fs.starfarer.api.util.Misc;
 import lostsector.campaign.kesteven.quest.DataSatelliteDialog;
-import lostsector.campaign.kesteven.quest.ElizaDialog;
-import lostsector.campaign.kesteven.quest.GlacierCommsDialog;
 import lostsector.campaign.kesteven.quest.ElizaSearchBarEvent;
-import lostsector.campaign.kesteven.quest.QuestStageManager;
 import lostsector.campaign.kesteven.quest.QuestHelper;
-import lostsector.dialogue.rules.nskr_kestevenQuest;
 import lostsector.helper.SectorLookup;
 
 import java.awt.*;
@@ -81,27 +77,27 @@ public class TheDelveIntel extends BaseIntelPlugin {
 
         recovered = QuestHelper.getDisksRecovered();
 
-        aliceTip = QuestHelper.getCompleted(nskr_kestevenQuest.JOB5_ALICE_TIP_KEY);
-        aliceTip2 = QuestHelper.getCompleted(nskr_kestevenQuest.JOB5_ALICE_TIP_KEY2);
-        jackTip = QuestHelper.getCompleted(nskr_kestevenQuest.JOB5_JACK_TIP_KEY);
+        aliceTip = QuestHelper.getCompleted(KestevenFlag.JOB5_ALICE_TIP);
+        aliceTip2 = QuestHelper.getCompleted(KestevenFlag.JOB5_ALICE_TIP2);
+        jackTip = QuestHelper.getCompleted(KestevenFlag.JOB5_JACK_TIP);
 
-        failed = QuestHelper.getFailed(QuestStageManager.JOB5_FAILED_KEY);
-        paid = QuestHelper.getCompleted(ElizaSearchBarEvent.PAID_FOR_INFO);
-        foundEliza =  QuestHelper.getCompleted(QuestStageManager.JOB5_FOUND_ELIZA_KEY);
-        elizaDialog =  QuestHelper.getCompleted(ElizaDialog.DIALOG_FINISHED_KEY);
-        fightEliza =  QuestHelper.getCompleted(ElizaDialog.ELIZA_FIGHT_KEY);
-        helpEliza =  QuestHelper.getCompleted(ElizaDialog.ELIZA_HELP_KEY);
-        raidEliza = QuestHelper.getCompleted(ElizaDialog.ELIZA_RAID_KEY);
-        killedEliza = QuestHelper.getCompleted(QuestStageManager.KILLED_ELIZA_KEY);
-        agreeEliza = QuestHelper.getCompleted(ElizaDialog.AGREED_TO_HELP_KEY);
-        delivered = QuestHelper.getCompleted(QuestStageManager.ELIZA_INTERCEPT_HANDED_OVER);
+        failed = QuestHelper.getFailed(KestevenFlag.JOB5_FAILED);
+        paid = QuestHelper.getCompleted(KestevenFlag.ELIZA_SPACER_PAID);
+        foundEliza =  QuestHelper.getCompleted(KestevenFlag.ELIZA_FOUND);
+        elizaDialog =  QuestHelper.getCompleted(KestevenFlag.ELIZA_DIALOG_FINISHED);
+        fightEliza =  QuestHelper.getCompleted(KestevenFlag.ELIZA_RAIDED);
+        helpEliza =  QuestHelper.getCompleted(KestevenFlag.ELIZA_HELPED);
+        raidEliza = QuestHelper.getCompleted(KestevenFlag.ELIZA_RAID_ENABLED);
+        killedEliza = QuestHelper.getCompleted(KestevenFlag.ELIZA_KILLED);
+        agreeEliza = QuestHelper.getCompleted(KestevenFlag.ELIZA_AGREED_SINCERELY);
+        delivered = QuestHelper.getCompleted(KestevenFlag.CHIP_HANDED_TO_ELIZA);
 
-        foundFrost = QuestHelper.getCompleted(QuestStageManager.JOB5_FOUND_FROST_KEY);
-        recoveredGlacier = QuestHelper.getCompleted(GlacierCommsDialog.RECOVERED_KEY);
+        foundFrost = QuestHelper.getCompleted(KestevenFlag.FROST_FOUND);
+        recoveredGlacier = QuestHelper.getCompleted(KestevenFlag.GLACIER_DISK_RECOVERED);
 
-        allDisks = QuestHelper.getCompleted(QuestStageManager.ALL_DISKS_RECOVERED_KEY);
+        allDisks = QuestHelper.getCompleted(KestevenFlag.ALL_DISKS_RECOVERED);
 
-        foundCache = QuestHelper.getCompleted(QuestStageManager.FOUND_CACHE_KEY);
+        foundCache = QuestHelper.getCompleted(KestevenFlag.CACHE_FOUND);
     }
 
     @Override
@@ -146,13 +142,13 @@ public class TheDelveIntel extends BaseIntelPlugin {
         //satellites
         int satelliteCount = DataSatelliteDialog.getRecoveredSatelliteCount();
         if (stage == 16 && !aliceTip && satelliteCount<2) info.addPara("Recover disks from the comms satellites.", initPad, g, h, "", "");
-        if (stage == 16 && aliceTip && !QuestHelper.getCompleted(DataSatelliteDialog.RECOVERED_3_KEY)) {
+        if (stage == 16 && aliceTip && !QuestHelper.getCompleted(KestevenFlag.SATELLITE3_RECOVERED)) {
             StarSystemAPI loc = QuestHelper.getJob3Target().getStarSystem();
             String constellation = QuestHelper.parseConstellation(loc.getConstellation().getNameWithType());
             info.addPara("Head to the " + loc.getName() + " in the " + constellation +
                     " and search for the satellite.", initPad, g, h, loc.getName(), constellation);
         }
-        if (stage == 16 && aliceTip && !QuestHelper.getCompleted(DataSatelliteDialog.RECOVERED_4_KEY)) {
+        if (stage == 16 && aliceTip && !QuestHelper.getCompleted(KestevenFlag.SATELLITE4_RECOVERED)) {
             StarSystemAPI loc = QuestHelper.getJob4EnemyTarget().getStarSystem();
             String constellation = QuestHelper.parseConstellation(loc.getConstellation().getNameWithType());
             info.addPara("Head to the " + loc.getName() + " in the " + constellation +
@@ -180,7 +176,7 @@ public class TheDelveIntel extends BaseIntelPlugin {
         //Eliza
         if (stage == 16 && !foundEliza) info.addPara("Figure out where Eliza is hiding.", initPad, g, h, "", "");
         if (stage == 16 && jackTip && !foundEliza) info.addPara("Ask some pirates if they know anything about Eliza.", initPad, g, h, "", "");
-        if (stage == 16 && !foundEliza && paid && ElizaSearchBarEvent.getDialogStage(ElizaSearchBarEvent.INTRO_DIALOG_KEY)==2){
+        if (stage == 16 && !foundEliza && paid && ElizaSearchBarEvent.getDialogStage()==2){
             String loc = ElizaSearchBarEvent.getPaidForInfoTarget().getMarket().getName();
             String locSys = ElizaSearchBarEvent.getPaidForInfoTarget().getStarSystem().getName();
             info.addPara("Go to "+loc+" in "+locSys+" and speak with the contact.", initPad, g, h, loc, "");

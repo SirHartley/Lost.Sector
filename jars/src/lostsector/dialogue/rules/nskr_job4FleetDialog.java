@@ -17,7 +17,9 @@ import com.fs.starfarer.api.util.Misc;
 import com.fs.starfarer.api.util.Misc.Token;
 import lostsector.campaign.kesteven.quest.QuestStageManager;
 import lostsector.campaign.kesteven.quest.QuestHelper;
-import lostsector.helper.MathHelper;
+import lostsector.campaign.kesteven.quest.KestevenFlag;
+import lostsector.campaign.kesteven.quest.KestevenQuest;
+import lostsector.campaign.kesteven.quest.KestevenState;
 import org.lwjgl.input.Keyboard;
 
 import java.awt.*;
@@ -34,9 +36,6 @@ public class nskr_job4FleetDialog extends PaginatedOptions {
 	private boolean helped = false;
 	private boolean foundTarget = false;
 	private static float relation = 0;
-	public static final String PERSISTENT_KEY = "nskr_job4FleetDialogKey";
-	private final String id = PERSISTENT_KEY;
-	public static final String PERSISTENT_RANDOM_KEY = "nskr_job4FleetDialogRandom";
 
 
 	protected CampaignFleetAPI playerFleet;
@@ -74,13 +73,13 @@ public class nskr_job4FleetDialog extends PaginatedOptions {
 			case "hasOption":
 				return validEntity(entity);
 			case "isDialogStage":
-				return getDialogStage(id)==intArg;
+				return getDialogStage()==intArg;
 			case "isAtMostDialogStage":
-				return getDialogStage(id)<=intArg;
+				return getDialogStage()<=intArg;
 			case "isAtLeastDialogStage":
-				return getDialogStage(id)>=intArg;
+				return getDialogStage()>=intArg;
 			case "setDialogStage":
-				setDialogStage(intArg, id);
+				setDialogStage(intArg);
 				break;
 			case "displayDialogInitial":
 				displayDialogInitial();
@@ -126,11 +125,11 @@ public class nskr_job4FleetDialog extends PaginatedOptions {
 		player = Global.getSector().getPlayerPerson();
 		person = dialog.getInteractionTarget().getActivePerson();
 
-		foundTarget = QuestHelper.getCompleted(QuestStageManager.JOB4_FOUND_TARGET_KEY);
+		foundTarget = QuestHelper.getCompleted(KestevenFlag.JOB4_TARGET_FOUND);
 
-		stage = getDialogStage(id);
+		stage = getDialogStage();
 		relation = Global.getSector().getPlayerFaction().getRelationship("kesteven");
-		helped = QuestHelper.getCompleted(QuestStageManager.JOB4_HELPED_KEY);
+		helped = QuestHelper.getCompleted(KestevenFlag.JOB4_FRIENDLY_HELPED);
 	}
 	
 	@Override
@@ -157,7 +156,7 @@ public class nskr_job4FleetDialog extends PaginatedOptions {
 		boolean fuel = playerCargo.getFuel()>=(float) QuestStageManager.JOB4_HELP_FUEL;
 		text.setFontInsignia();
 		//helped check
-		if (!QuestHelper.getCompleted(QuestStageManager.JOB4_HELPED_KEY)) {
+		if (!QuestHelper.getCompleted(KestevenFlag.JOB4_FRIENDLY_HELPED)) {
 			if (!supplies || !fuel) {
 				text.addPara("\"Seems like you don't have enough resources to help us.\"");
 				text.setFontSmallInsignia();
@@ -195,7 +194,7 @@ public class nskr_job4FleetDialog extends PaginatedOptions {
 		playerCargo.removeCommodity(Commodities.SUPPLIES, supplies);
 		playerCargo.removeCommodity(Commodities.FUEL, fuel);
 		//helped
-		QuestHelper.setCompleted(true, QuestStageManager.JOB4_HELPED_KEY);
+		QuestHelper.setCompleted(true, KestevenFlag.JOB4_FRIENDLY_HELPED);
 		//relation
 		Global.getSector().getFaction(Factions.PLAYER).adjustRelationship("kesteven",0.05f);
 		person.getRelToPlayer().adjustRelationship(0.10f, RepLevel.COOPERATIVE);
@@ -255,26 +254,16 @@ public class nskr_job4FleetDialog extends PaginatedOptions {
 	}
 
 	public static Random getRandom() {
-		Map<String, Object> data = Global.getSector().getPersistentData();
-		if (!data.containsKey(PERSISTENT_RANDOM_KEY)) {
-
-			data.put(PERSISTENT_RANDOM_KEY, new Random(MathHelper.getSeedParsed()));
-		}
-		return (Random) data.get(PERSISTENT_RANDOM_KEY);
+		return KestevenQuest.random(KestevenState.RANDOM_JOB4_FLEET);
 	}
 
-	public static int getDialogStage(String id) {
-
-		Map<String, Object> data = Global.getSector().getPersistentData();
-		if (!data.containsKey(id)) data.put(id, 0);
-
-		return (int)data.get(id);
+	// The Special Operations fleet's conversation step, set by rules through the setDialogStage verb.
+	public static int getDialogStage() {
+		return QuestHelper.getJob4FleetDialogStage();
 	}
 
-	public static void setDialogStage(int stage, String id) {
-
-		Map<String, Object> data = Global.getSector().getPersistentData();
-		data.put(id, stage);
+	public static void setDialogStage(int stage) {
+		QuestHelper.setJob4FleetDialogStage(stage);
 	}
 
 }

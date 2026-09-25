@@ -1,154 +1,189 @@
 # Kesteven questline state
 
-Every value the questline saves, where it lives and which classes write it. Flow and meaning are in [KESTEVEN_QUESTLINE.md](KESTEVEN_QUESTLINE.md). Save-compatibility rules for the whole mod are in [ARCHITECTURE.md](../ARCHITECTURE.md#save-identity).
+Every value the questline saves, where it lives and which classes write it. Flow and meaning are in [KESTEVEN_QUESTLINE.md](KESTEVEN_QUESTLINE.md). The quest framework's state contract is in the [framework README](../../jars/src/lostsector/quest/README.md#queststate); save-compatibility rules for the whole mod are in [ARCHITECTURE.md](../ARCHITECTURE.md#save-identity).
 
-Java paths are relative to `jars/src/lostsector/campaign/`; `dialogue/rules/` and `combat/` paths are relative to `jars/src/lostsector/`.
+Java paths are relative to `jars/src/lostsector/campaign/`; `dialogue/rules/`, `quest/` and `combat/` paths are relative to `jars/src/lostsector/`.
 
-## Storage mechanisms
+## Storage
+
+The questline is quest `kq` of the quest framework. `kesteven/quest/KestevenQuest` is its definition, registered in `quest/QuestCatalog`. It has no modules yet: `QuestStageManager` and the Java dialogs, bar events, intel and rules commands still run the questline, reading and writing one saved `kesteven/quest/KestevenState`. `KestevenQuest.isAvailable()` keeps the default `true`, because the old code runs the questline in every campaign and handles a missing Kesteven home as failure.
 
 | Mechanism | Location | Notes |
 |---|---|---|
-| `QuestHelper.getStage/setStage`, `getCompleted/setCompleted`, `getFailed/setFailed`, `getFloat/setFloat`, `getDialogStage/setDialogStage` | `Global.getSector().getPersistentData()` | Plain keys without `$`, although some constants spell one. Every getter writes its default into the map on first read. `getFailed` and `getCompleted` read the same map; the names are interchangeable. |
-| Lazily picked targets | Persistent data, key prefix `nskr_kestevenQuest` | The first read picks and stores a `SectorEntityToken` or `StarSystemAPI`. The picking context is whichever caller reads first, often a dialog or intel panel. |
-| `persistence/Saved<T>` fields in `QuestStageManager` | Persistent data, `nskr_` + name | Reloaded by `ModPlugin` on load and after save. |
+| Stage | `KestevenState.stage()`, a `KestevenStage` | Changed only by `quest/QuestManager`; see [Who changes the stage](#who-changes-the-stage) |
+| Flags | `KestevenFlag` constants set on the state | See [Flags](#flags) |
+| Fields | Package-private fields of `KestevenState` | See [Fields](#fields) |
+| Randoms | One saved `Random` per purpose on the state, from `KestevenQuest.random(purpose)` | See [Randoms](#randoms) |
+| Timers | None | The old counters count frame seconds and stay fields until the modules replace them |
 | Quest fleet list | Sector memory `$kQuestMissionFleets`, a `List<FleetInfo>` | Read and written by `FleetHelper.getFleets/setFleets`. `FleetInfo.age` is in days. |
-| Fleet, entity and person memory | The owning `MemoryAPI` | Routing flags read by `rules.csv` and `CorePlugin`. |
+| Fleet, entity and person memory | The owning `MemoryAPI` | Routing flags read by `rules.csv` and `CorePlugin`; see [Memory flags](#memory-flags) |
 | Saved objects | Bar events in `PortsideBarData`, intel in the intel manager, `ElizaRaidObjectiveCreator` as a listener | Their class names and fields are serialized. |
 | Per installation | LunaLib settings: `settings/SettingsManager.set` and `Setting` reads | `thronesGiftUnlocked`, `hellspawnUnlocked`, `storySkipUnlocked`; shared by all campaigns |
 
-## Stage and end
+The quest manager creates the state on the first unpaused frame of a new campaign and loads it with the save afterwards. Until then:
 
-| Key | Type | Written by |
-|---|---|---|
-| `nskr_kestevenQuest` | int stage | `nskr_kestevenQuest`, `QuestStageManager`, `HostileTakeoverBarEvent`, `DelveMeetingBarEvent`, `Cache.CacheGuardInteractionConfig`, `CacheCoreDialog`, ending dialogs, `nskr_altEndingDialogLuddic.makeMad` |
-| `KestevenQuestEnd` (`QUEST_END_KEY`) | boolean | `QuestStageManager` failure checks |
-| `nskr_kestevenQuestSkippedStory` | boolean | Story skip |
+- `KestevenQuest.state()` returns null, and the `kesteven/quest/QuestHelper` wrappers return the old defaults: stage 0, flags off, counts 0, targets null, the job 3 timer at 90;
+- writes through the wrappers log an error through the quest manager and change nothing;
+- `KestevenQuest.random(purpose)` throws;
+- `QuestStageManager.advance()` returns at once.
 
-## Randomness
+### Access from the old code
 
-Each owner keeps its own `Random` in persistent data. Most are seeded from the sector seed (`MathHelper.getSeedParsed()`).
+The old callers use these accessors until later tasks replace them with modules and `KestevenQuest` queries. Each is a thin wrapper over the state; the quest package's own classes also read and write fields directly where they already hold the state.
 
-| Key | Owner |
+| Accessor | Reads or writes |
 |---|---|
-| `KestevenQuestRandomKey` | `QuestStageManager.getRandom()` (Jack's revenge roll) |
-| `nskr_kestevenQuestRandom` | `nskr_kestevenQuest.getRandom()`: target pickers, fleets, rewards, Eliza bar payment |
-| `nskr_artifactKeyRandom`, `nskr_elizaDialogKeyRandom`, `nskr_glacierCommsKeyRandom`, `nskr_cacheDoubtDialogRandom`, `nskr_coreDialogKeyRandom` | The dialog of the same name |
-| `nskr_KestevenEndingDialogKeyRandom`, `nskr_ElizaEndingDialogKeyRandom`, `nskr_EndingAltDialogKeyRandom` | Ending dialogs; the last is shared by both alternative endings |
-| `nskr_job4FleetDialogRandom`, `nskr_job4HintWreckDialogRandom`, `nskr_ttCollectorDialogRandom`, `nskr_elizaInterceptDialogRandom` | The command or dialog of the same name |
+| `QuestHelper.getStage()`, `setStage(int)` | The stage, as the legacy int; `setStage` calls `QuestContext.advance` and skips a write of the current stage |
+| `QuestHelper.getCompleted(KestevenFlag)`, `setCompleted(boolean, KestevenFlag)`, `getFailed`, `setFailed` | A flag; the failed pair is identical |
+| `QuestHelper.getEndMissions()`, `setEndMissions(boolean)` | `ENDED` |
+| `QuestHelper.getDisksRecovered`, `getMissionTimerJob3`, `getNicholasDialogStage`, `getJob4FleetDialogStage`, `getTtPayout` and their setters | The field of the same meaning |
+| `QuestHelper.getJob1Tip`, `getJob3Start`, `getJob3Target`, `getJob4FriendlyTarget`, `getJob5FrostTip` | The target field; the first read after it is null picks and stores it |
+| `QuestHelper.getJob4EnemyTarget/setJob4EnemyTarget`, `getElizaLoc/setElizaLoc`, `getCacheFleetLoc/setCacheFleetLoc` | The target field; the setters without an argument pick a new value |
+| `DataSatelliteDialog.get/setRecoveredSatelliteCount` | `satellitesRecovered` |
+| `ElizaSearchBarEvent.getDialogStage/setDialogStage`, `getUsedMarkets/setUsedMarkets`, `getPaidForInfoTarget/setPaidForInfoTarget` | `elizaSearchStage`, `elizaSearchUsedMarkets`, `elizaContactMarket` |
+| `dialogue/rules/nskr_job4FleetDialog.getDialogStage/setDialogStage` | `job4FleetDialogStage`, through `QuestHelper` |
+| `dialogue/rules/nskr_ttCollectorDialog.getPaid/setPaid` | `COLLECTOR_PAID` |
+| `getRandom()` on each class in [Randoms](#randoms) | `KestevenQuest.random` with that class's purpose |
 
-## Saved targets
+`QuestHelper.getCompleted(String)` and `setCompleted(boolean, String)` still read and write sector persistent data. The bounties, the Mothership and HellSpawn keep their own flags through them; no questline value uses them.
 
-| Key | Picked by | Value |
+## Stages
+
+`KestevenStage` lists the stages in story order; each names the stage before it. `FAILED` has no previous stage, because the questline fails from several stages. The legacy int is the value `QuestHelper.getStage()` returns and `setStage` accepts, and the argument of the `nskr_isKStage` family in `rules.csv`. `KestevenStage.fromLegacy(int)` and `toLegacy()` translate; they are removed with the last int caller.
+
+| Stage | Legacy | Previous | Meaning |
+|---|---|---|---|
+| `NOT_STARTED` | 0 | none | Not started |
+| `JOB1_ACTIVE` | 1 | `NOT_STARTED` | Job 1 active |
+| `JOB1_DONE` | 2 | `JOB1_ACTIVE` | Job 1 tasks done |
+| `JOB3_OFFERED` | 6 | `JOB1_DONE` | Job 3 offered by Jack |
+| `JOB3_BRIEFING` | 7 | `JOB3_OFFERED` | Talk to Alice |
+| `JOB3_ACTIVE` | 8 | `JOB3_BRIEFING` | Job 3 active |
+| `JOB3_TARGET_KNOWN` | 9 | `JOB3_ACTIVE` | Expedition target known |
+| `JOB3_DONE` | 10 | `JOB3_TARGET_KNOWN` | Job 3 over, success or failure |
+| `JOB4_WAITING` | 11 | `JOB3_DONE` | Job 4 pending |
+| `JOB4_ACTIVE` | 12 | `JOB4_WAITING` | Job 4 active |
+| `JOB4_DONE` | 13 | `JOB4_ACTIVE` | Job 4 done |
+| `JOB5_OFFERED` | 14 | `JOB4_DONE` | Job 5 offered by Jack |
+| `JOB5_MEETING` | 15 | `JOB5_OFFERED` | Go to the bar |
+| `JOB5_DISKS` | 16 | `JOB5_MEETING` | Job 5 active: data disks |
+| `CACHE_KNOWN` | 17 | `JOB5_DISKS` | Cache location known |
+| `CACHE_CLEARED` | 18 | `CACHE_KNOWN` | Cache guardian defeated |
+| `CHIP_RECOVERED` | 19 | `CACHE_CLEARED` | Player holds the UPC |
+| `COMPLETED` | 20 | `CHIP_RECOVERED` | Completed |
+| `FAILED` | 99 | none | Questline ended by failure |
+
+The actual path can skip stages: 8 to 10 without 9, 7 to 11 when job 3 is refused, and the story skip to 17. Stage 14 is also set from any stage when the player attacks the Special Operations fleet.
+
+## Flags
+
+| Flag | Meaning | Written by |
 |---|---|---|
-| `nskr_kestevenQuestTip1` | `QuestHelper.getJob1Tip()` | System with an Enigma base; the first read also adds a dormant Enigma fleet there |
-| `nskr_kestevenQuestStart3` | `QuestHelper.getJob3Start()` | Random Tri-Tachyon market entity, not `eochu_bres` or `culann` |
-| `nskr_kestevenQuestTarget3` | `QuestHelper.getJob3Target()` | Random location in a system within 27,500 units of the centre |
-| `nskr_kestevenQuestTargetFriendly4` | `QuestHelper.getJob4FriendlyTarget()` | Random location in a system at least 32,500 units from the centre |
-| `nskr_kestevenQuestTargetEnemy4` | `KestevenFleets.spawnJob4Target()` via `QuestHelper.setJob4EnemyTarget` | Strike group location |
-| `nskr_kestevenQuestJob5FrostTip` | `QuestHelper.getJob5FrostTip()` | System 7,000 to 12,000 units from Frost, used for Alice's distance hint |
-| `nskr_kestevenQuestElizaJob5` | `QuestHelper.setElizaLoc()` | Eliza's market entity; re-picked on decivilization |
-| `nskr_kestevenQuestCacheFleet` | `QuestHelper.setCacheFleetLoc()` | Guardian spawn point in Unknown Site |
-| `nskr_kQuest5ElizaBarPaidForLocation` | `ElizaSearchBarEvent.setPaidForInfoTarget()` | Contact market after paying the spacer |
+| `ENDED` | Questline permanently failed | `QuestStageManager` failure checks |
+| `STORY_SKIPPED` | Story skip used; nothing reads it | `nskr_kestevenQuest` story skip |
+| `JACK_INTRODUCED`, `ALICE_INTRODUCED`, `NICHOLAS_INTRODUCED` | One-time introduction text shown | `nskr_kestevenQuest` |
+| `FOUGHT_ENIGMA` | Beat Enigma before accepting job 1 | `QuestStageManager.reportEncounterLootGenerated` |
+| `JOB1_SENSOR_DATA` | Sensor task done | Same |
+| `JOB1_DATA_DELIVERED`, `JOB1_ELECTRONICS_DELIVERED` | Sensor package and electronics delivered | `nskr_kestevenQuest` |
+| `JOB1_TIP_GIVEN` | Jack gave the location tip | `nskr_kestevenQuest` |
+| `COLLECTOR_PAID` | Tri-Tachyon collector paid | `nskr_ttCollectorDialog` |
+| `JOB3_REFUSED` | Job 3 refused; nothing reads it | `nskr_kestevenQuest.confirmSkip` |
+| `JOB3_TARGET_DISCOVERED` | Target coordinates from the bar | `HostileTakeoverBarEvent` |
+| `JOB3_FAILED` | Timeout or stealth broken | `QuestStageManager` |
+| `MESSENGER_MET`, `MESSENGER_QUESTION_OPEN` | "LZ" messenger met; question available (cleared after asking Alice) | `events/InterceptManager`; cleared by `nskr_kestevenQuest` |
+| `JOB4_WAIT_OVER` | 30-day wait over | `QuestStageManager` |
+| `JOB4_REQUIREMENT_SKIPPED` | Job 4 strength gate bypassed with a story point | `nskr_kestevenQuest` |
+| `JOB4_HINT_WRECK_READ` | Hint wreck read | `HintWreckDialog` |
+| `JOB4_FRIENDLY_FOUND`, `JOB4_TARGET_FOUND` | Fleets seen | `QuestStageManager` |
+| `JOB4_TARGET_HINT` | Friendly fleet gave the strike group location | `QuestStageManager`, from the friendly fleet's dialogue stage |
+| `JOB4_TARGET_DESTROYED` | Strike group below 20% strength | `QuestStageManager` |
+| `JOB4_FRIENDLY_HELPED` | Supplies and fuel given | `nskr_job4FleetDialog` |
+| `JOB4_FAILED` | Player attacked the friendly fleet | `QuestStageManager` |
+| `JOB5_JACK_TIP`, `JOB5_ALICE_TIP`, `JOB5_ALICE_TIP2` | Job 5 tips given | `nskr_kestevenQuest` |
+| `FROST_FOUND` | Frost identified | `nskr_kestevenQuest.quest()`, `QuestStageManager`, story skip |
+| `SATELLITE3_RECOVERED`, `SATELLITE4_RECOVERED` | Satellite #3 or #4 salvaged | `DataSatelliteDialog`, story skip |
+| `GLACIER_DISK_RECOVERED` | Disk #5 recovered | `GlacierCommsDialog`, story skip |
+| `ALL_DISKS_RECOVERED` | At least five disks | `QuestStageManager` |
+| `ELIZA_SPACER_PAID` | Paid the spacer | `ElizaSearchBarEvent` |
+| `ELIZA_FOUND` | Eliza's market known | `ElizaSearchFinalBarEvent`, story skip |
+| `ELIZA_DIALOG_FINISHED` | `ElizaDialog` completed | `ElizaDialog`, story skip |
+| `ELIZA_HELPED` | Disks received by agreement | `ElizaDialog`, story skip |
+| `ELIZA_AGREED_SINCERELY` | Agreed sincerely | `ElizaDialog` |
+| `ELIZA_RAID_ENABLED` | Refused; raid enabled | `ElizaDialog` |
+| `ELIZA_RAIDED` | Raid done | `ElizaRaid` |
+| `ELIZA_KILLED` | Eliza dead | `QuestStageManager.runFleetLogic` |
+| `CACHE_FOUND` | Cache coordinates known | `nskr_kestevenQuest`, `QuestStageManager`, story skip |
+| `CORE_SEEN`, `CHIP_SALVAGED` | Core seen; UPC salvaged | `CacheCoreDialog` |
+| `ELIZA_INTERCEPT_TALKED` | Eliza's intercept fleet spoke to the player | `nskr_elizaInterceptDialog` |
+| `CHIP_HANDED_TO_ELIZA` | UPC handed to Eliza | `nskr_elizaInterceptDialog` |
+| `ELIZA_RETURNED` | Eliza back at her market | `QuestStageManager.respawnEliza` |
+| `JOB5_FAILED` | Eliza killed after the handover | `QuestStageManager` |
+| `KESTEVEN_ENDING_DONE` | Kesteven ending done | `EndingKestevenDialog` |
+| `ELIZA_ENDING_DONE` | Eliza ending done | `EndingElizaDialog` |
+| `ALT_ENDING_DONE` | Luddic or Tri-Tachyon ending done (shared) | `nskr_altEndingDialogLuddic.makeMad` |
+| `LUDDIC_ENDING_SECOND_TALK`, `TT_ENDING_SECOND_TALK` | Second conversation reached | Alternative endings |
+| `COMMISSION_RESTORE_PENDING` | Commission fix pending | `EndingElizaDialog` |
+| `JACK_GONE` | Jack left for revenge | `QuestStageManager.vengeanceJack` |
+| `ELIZA_BETRAYED` | Player took Eliza's market after her ending | `QuestStageManager` |
 
-## Conversation flags
+`kesteven/ExileManager` reads `JACK_GONE`; `enigma/StalkerSpawner` reads `GLACIER_DISK_RECOVERED`; `kesteven/contracts/ContractManager`, `CorePlugin`, `nskr_debt`, `nskr_shipSwap` and `nskr_modRemoval` read ending flags. `nskr_starfarerFromStart` (`ModPlugin.STARFARER_MODE_FROM_START_KEY`) is not questline state: `ModPlugin.onNewGame` writes it to sector persistent data, `Difficulty.clearStarfarerFromStartUnlessStarfarer()` and the story skip clear it, and `QuestHelper.saveEnding()` reads it for `hellspawnUnlocked`.
 
-| Key | Meaning |
-|---|---|
-| `nskr_jackIntro`, `nskr_aliceIntro`, `nskr_nickIntro` | One-time introduction text shown |
-| `nskr_kestevenQuestJob4Intelligence` | Nicholas's dialogue stage (int) |
-| `nskr_kestevenQuestJob4SkipRequirement` | Job 4 strength gate bypassed with a story point |
-| `nskr_kestevenQuestJob5JackTip`, `nskr_kestevenQuestJob5AliceTip`, `nskr_kestevenQuestJob5AliceTip2` | Job 5 tips given |
-| `KestevenQuestEMessengerTalkedKey`, `KestevenQuestEMessengerTalkedKeyAskAbout` | "LZ" messenger met; question available (cleared after asking Alice) |
+## Fields
 
-## Job 1
+| Field | Type | Meaning | Written by |
+|---|---|---|---|
+| `job1TipSystem` | `StarSystemAPI` | System with an Enigma base; the first pick also adds a dormant Enigma fleet there | `QuestHelper.getJob1Tip()` |
+| `job3Start` | `SectorEntityToken` | Random Tri-Tachyon market entity, not `eochu_bres` or `culann` | `QuestHelper.getJob3Start()` |
+| `job3Target` | `SectorEntityToken` | Random location in a system within 27,500 units of the centre | `QuestHelper.getJob3Target()` |
+| `job4FriendlyTarget` | `SectorEntityToken` | Random location in a system at least 32,500 units from the centre | `QuestHelper.getJob4FriendlyTarget()` |
+| `job4EnemyTarget` | `SectorEntityToken` | Strike group location | `KestevenFleets.spawnJob4Target()` via `QuestHelper.setJob4EnemyTarget` |
+| `job5FrostTipSystem` | `StarSystemAPI` | System 7,000 to 12,000 units from Frost, for Alice's distance hint | `QuestHelper.getJob5FrostTip()` |
+| `elizaMarket` | `SectorEntityToken` | Eliza's market entity; re-picked on decivilization | `QuestHelper.setElizaLoc()` |
+| `elizaContactMarket` | `SectorEntityToken` | Contact market after paying the spacer; re-picked on decivilization | `ElizaSearchBarEvent.setPaidForInfoTarget()` |
+| `cacheGuardianSpot` | `SectorEntityToken` | Guardian spawn point in Unknown Site | `QuestHelper.setCacheFleetLoc()` |
+| `disksRecovered` | `int` | Disks recovered | `DataSatelliteDialog`, `ElizaDialog`, `ElizaRaid`, `GlacierCommsDialog` |
+| `satellitesRecovered` | `int` | Satellites salvaged, 0 to 2 | `DataSatelliteDialog`, story skip |
+| `nicholasDialogStage` | `int` | Nicholas's job 4 dialogue stage | `nskr_kestevenQuest` |
+| `job4FleetDialogStage` | `int` | Special Operations fleet dialogue stage | `nskr_job4FleetDialog setDialogStage`, called from rules |
+| `elizaSearchStage` | `int` | Eliza bar chain stage, 0 to 3 | Eliza bar events |
+| `elizaSearchUsedMarkets` | `List<String>` | Market ids already used by the Eliza bar chain | Eliza bar events |
+| `ttPayout` | `float` | Tri-Tachyon price, at least 2,000,000 | `nskr_altEndingDialogTT` |
+| `commissionRepPirates`, `commissionRepKesteven`, `commissionRepHegemony` | `float` | Relationship values the commission fix re-applies | `EndingElizaDialog` |
+| `dayCounter`, `fleetCounter` | `float` | Daily logic timer (10 s) and fleet timer (1 s), in frame seconds | `QuestStageManager` |
+| `job4WaitCounter` | `float` | Job 4 wait, in frame seconds; the wait ends above 300 | `QuestStageManager` |
+| `cacheSeconds` | `float` | Frame seconds spent in Unknown Site before the guardian | `QuestStageManager` |
+| `job3TimeLeft` | `float` | Starts at 90 and loses 0.1 per quest fleet tick while the expedition exists; `HostileTakeoverIntel` shows it | `QuestStageManager.job3TargetLogic` |
+| `job1IntelAdded`, `job3IntelAdded`, `job4IntelAdded`, `job5IntelAdded`, `cacheIntelAdded` | `boolean` | Intel added once | `QuestStageManager` |
+| `job3FleetSpawned`, `job4FleetsSpawned` | `boolean` | Job fleets and objects placed once | `QuestStageManager` |
+| `collectorSpawned` | `boolean` | Tri-Tachyon collector spawned | `QuestStageManager` |
+| `cacheGuardianSpotPicked`, `cacheDoubtShown`, `cacheGuardianSpawned` | `boolean` | Guardian location picked, Cache hint shown, guardian spawned | `QuestStageManager` |
+| `elizaInterceptSpawned`, `elizaRevengeSpawned`, `jackRevengeSpawned` | `boolean` | Eliza's intercept, Eliza's revenge and Jack's revenge spawned | `QuestStageManager` |
+| `commissionRestored` | `boolean` | Commission fix applied | `QuestStageManager` |
 
-| Key | Meaning | Written by |
+`QuestStageManager` keeps `pingTimer` (seconds between Cache pings) and `frameWait` (30-frame delay before the commission fix) as plain instance fields. They are not saved and restart on every load.
+
+## Randoms
+
+Each purpose is a constant on `KestevenState`, named after the persistent-data key of the saved `Random` it replaces. Every purpose continues its own sequence after a reload; the seeds come from the quest seed, not the sector seed.
+
+| Constant | Purpose | Accessor |
 |---|---|---|
-| `KestevenQuest1HasFoughtEnigma` | Beat Enigma before accepting | `QuestStageManager.reportEncounterLootGenerated` |
-| `KestevenQuest1Sensor` | Sensor task done | Same |
-| `KestevenQuest1DeliverData`, `KestevenQuest1Deliver` | Sensor package and electronics delivered | `nskr_kestevenQuest` |
-| `KestevenQuest1LocTip` | Jack gave the location tip | `nskr_kestevenQuest` |
+| `RANDOM_QUEST` | `kestevenQuestRandom` | `nskr_kestevenQuest.getRandom()`: target pickers, fleets, rewards, Eliza bar payment, Cache guardian and wrecks |
+| `RANDOM_REVENGE` | `kestevenQuestRandomKey` | `QuestStageManager.getRandom()`: Jack's revenge roll |
+| `RANDOM_SATELLITE` | `artifactKeyRandom` | `DataSatelliteDialog.getRandom()` |
+| `RANDOM_GLACIER` | `glacierCommsKeyRandom` | `GlacierCommsDialog.getRandom()` |
+| `RANDOM_HINT_WRECK` | `job4HintWreckDialogRandom` | `HintWreckDialog.getRandom()` |
+| `RANDOM_ELIZA` | `elizaDialogKeyRandom` | `ElizaDialog.getRandom()`, also Eliza's fleets and raid |
+| `RANDOM_CACHE_DOUBT` | `cacheDoubtDialogRandom` | `CacheDoubtDialog.getRandom()` |
+| `RANDOM_CACHE_CORE` | `coreDialogKeyRandom` | `CacheCoreDialog.getRandom()` |
+| `RANDOM_KESTEVEN_ENDING` | `kestevenEndingDialogKeyRandom` | `EndingKestevenDialog.getRandom()` |
+| `RANDOM_ELIZA_ENDING` | `elizaEndingDialogKeyRandom` | `EndingElizaDialog.getRandom()` |
+| `RANDOM_ALT_ENDING` | `endingAltDialogKeyRandom` | `nskr_altEndingDialogLuddic.getRandom()` and `nskr_altEndingDialogTT.getRandom()`, one shared sequence |
+| `RANDOM_JOB4_FLEET` | `job4FleetDialogRandom` | `nskr_job4FleetDialog.getRandom()` |
+| `RANDOM_COLLECTOR` | `ttCollectorDialogRandom` | `nskr_ttCollectorDialog.getRandom()`: the daily collector roll |
+| `RANDOM_ELIZA_INTERCEPT` | `elizaInterceptDialogRandom` | `nskr_elizaInterceptDialog.getRandom()` |
 
-## Job 3
-
-| Key | Meaning | Written by |
-|---|---|---|
-| `KestevenQuestJob3Discovered` | Target coordinates from the bar | `HostileTakeoverBarEvent` |
-| `KestevenQuestJob3Fail` | Timeout or stealth broken | `QuestStageManager` |
-| `KestevenQuestSkip3` | Job refused | `nskr_kestevenQuest.confirmSkip` |
-| `KestevenQuestJob3Timer` | Float countdown from 90, reduced by 0.1 per fleet tick | `QuestStageManager.job3TargetLogic` |
-
-## Job 4
-
-| Key | Meaning | Written by |
-|---|---|---|
-| `KestevenQuestJob4WaitTimer` | 30-day wait over | `QuestStageManager` |
-| `KestevenQuestJob4FoundFriendly`, `KestevenQuestJob4FoundTarget` | Fleets seen | `QuestStageManager` |
-| `KestevenQuestJob4TargetHint` | Friendly fleet gave the strike group location | `QuestStageManager`, from the friendly fleet's dialogue stage |
-| `KestevenQuestJob4Destroy` | Strike group below 20% strength | `QuestStageManager` |
-| `KestevenQuestJob4Help` | Supplies and fuel given | `nskr_job4FleetDialog` |
-| `KestevenQuestJob4Fail` | Player attacked the friendly fleet | `QuestStageManager` |
-| `nskr_job4FleetDialogKey` | Friendly fleet dialogue stage (int) | `nskr_job4FleetDialog` |
-| `job4HintWreckCoordinatesReceived` | Hint wreck read | `HintWreckDialog` |
-
-## Job 5
-
-| Key | Meaning | Written by |
-|---|---|---|
-| `KestevenQuestDiskCount` | Disks recovered (int) | `DataSatelliteDialog`, `ElizaDialog`, `ElizaRaid`, `GlacierCommsDialog` |
-| `KestevenQuestAllDisks` | At least five disks | `QuestStageManager` |
-| `nskr_artifactKeyCount` | Satellites salvaged (int) | `DataSatelliteDialog`, story skip |
-| `nskr_artifactKey3Recovered`, `nskr_artifactKey4Recovered` | Satellite #3 or #4 salvaged | `DataSatelliteDialog`, story skip |
-| `nskr_kestevenQuestJob5FoundFrost` | Frost identified | `nskr_kestevenQuest.quest()`, `QuestStageManager` |
-| `nskr_glacierCommsKeyCount` | Disk #5 recovered (boolean despite the name) | `GlacierCommsDialog` |
-| `nskr_kQuest5ElizaBarDialogStage` | Eliza bar chain stage: 0 to 3 | Eliza bar events |
-| `nskr_kQuest5ElizaBarUsedMarket` | `List<String>` of market ids already used | Eliza bar events |
-| `nskr_kQuest5ElizaBarPaidFor` | Paid the spacer | `ElizaSearchBarEvent` |
-| `KestevenQuestJob5FoundEliza` | Eliza's market known | `ElizaSearchFinalBarEvent` |
-| `nskr_elizaDialogKeyFinished` | `ElizaDialog` completed | `ElizaDialog` |
-| `nskr_elizaDialogKeyHelp` | Disks received by agreement | `ElizaDialog` |
-| `nskr_elizaDialogKeyAgreeToHelp` | Agreed sincerely | `ElizaDialog` |
-| `nskr_elizaDialogKeyRaid` | Refused; raid enabled | `ElizaDialog` |
-| `nskr_elizaDialogKeyFight` | Raid done | `ElizaRaid` |
-| `KestevenQuestKilledEliza` | Eliza dead | `QuestStageManager.runFleetLogic` |
-| `KestevenQuestFoundCache` | Cache coordinates known | `nskr_kestevenQuest`, `QuestStageManager`, story skip |
-| `nskr_coreDialogFirstTimeKey`, `nskr_coreDialogRecoveredKey` | Core seen; UPC salvaged | `CacheCoreDialog` |
-
-## Stage 19 and endings
-
-| Key | Meaning | Written by |
-|---|---|---|
-| `InterceptPlayerElizaTalkedTo` | Eliza's intercept fleet spoke to the player | `nskr_elizaInterceptDialog` |
-| `$InterceptPlayerHandedUPCOver` | UPC handed to Eliza; a persistent-data key despite the `$` | `nskr_elizaInterceptDialog` |
-| `InterceptPlayerElizaReturn` | Eliza back at her market | `QuestStageManager.respawnEliza` |
-| `KestevenQuestJob5Fail` | Eliza killed after the handover | `QuestStageManager` |
-| `nskr_KestevenEndingDialogKeyFinished` | Kesteven ending done | `EndingKestevenDialog` |
-| `nskr_ElizaEndingDialogKeyFinished` | Eliza ending done | `EndingElizaDialog` |
-| `nskr_EndingAltDialogKeyFinished` | Luddic or Tri-Tachyon ending done (shared) | `nskr_altEndingDialogLuddic.makeMad` |
-| `nskr_altEndingDialogSecondTimeLuddic`, `nskr_altEndingDialogSecondTimeTT` | Second conversation reached | Alternative endings |
-| `nskr_altEndingDialogTTPayout` | Tri-Tachyon price, at least 2,000,000 | `nskr_altEndingDialogTT` |
-| `nskr_elizaEndingRestoreEliza`, `nskr_elizaEndingRestorePirates`, `nskr_elizaEndingRestoreHege`, `nskr_elizaEndingRestoreKesteven` | Commission fix pending and its saved relationship values | `EndingElizaDialog` |
-| `KestevenQuestJob5JackRevengeance` (`JACK_GONE_KEY`) | Jack left for revenge | `QuestStageManager.vengeanceJack` |
-| `RevengeanceElizaBetrayByPlayer` | Player took Eliza's market after her ending | `QuestStageManager` |
-| `nskr_ttCollectorDialogKey` | Collector paid | `nskr_ttCollectorDialog` |
-| `nskr_starfarerFromStart` | TRUE STARFARER difficulty since the start; `QuestHelper.saveEnding()` reads it for `hellspawnUnlocked` | `ModPlugin.onNewGame`; cleared by `Difficulty.clearStarfarerFromStartUnlessStarfarer()` and the story skip (`nskr_kestevenQuest`) |
-
-## `persistence/Saved` fields in `QuestStageManager`
-
-Stored as `nskr_` + name.
-
-| Name | Meaning |
-|---|---|
-| `questCounter`, `questFleetCounter` | Daily logic timer (10 s) and fleet timer (1 s) |
-| `questCounterJob` | Job 4 wait counter |
-| `questCacheTimer` | Seconds spent in Unknown Site before the guardian |
-| `questIntelStage1`, `questIntelStage3`, `questIntelStage4`, `questIntelStage5`, `cacheIntelAddStage5` | Intel added once. `questIntelStage2` is declared and unused. |
-| `questBarStage5` | Unused; `nskr_barEventFixer` replaced it |
-| `questJobFleetSpawned3`, `questJobFleetsSpawned4` | Job fleets spawned once |
-| `questJobCollected` | Tri-Tachyon collector spawned |
-| `questJobCacheDoubt`, `questJobCacheLoc`, `questJobCacheGuardian` | Cache hint shown, guardian location picked, guardian spawned |
-| `questJobVengeanced`, `questJobelizaBetray`, `questJobelizadIntercept` | Jack's revenge, Eliza's revenge and Eliza's intercept spawned |
-| `commissionStage5` | Commission fix applied |
+`kesteven/tips/KestevenTipBarEventCreator`, `KestevenTipBarEvent` and `dialogue/rules/nskr_loanSharkDialog` are not questline content and keep their own persistent-data `Random`s.
 
 ## Memory flags
 
@@ -170,9 +205,9 @@ Stored as `nskr_` + name.
 
 ## Who changes the stage
 
-The stage has no single owner. These are all the writers:
+`quest/QuestManager` is the only writer of the stage. Every old writer calls `QuestHelper.setStage(int)`, which translates the int with `KestevenStage.fromLegacy` and calls `advance` on a context from `QuestManager.get().context("kq", ...)`. Each change is logged as `[kq] FROM -> TO (rule null)`.
 
-| Writer | Stage changes |
+| Caller of `setStage` | Stage changes |
 |---|---|
 | `nskr_kestevenQuest.quest()` | 0→1, 2→6, 6→7, 7→8, 10→11, 11→12, 13→14, 16→17 |
 | `nskr_kestevenQuest.showQuestInfoAndPrepare()` | 14→15 |

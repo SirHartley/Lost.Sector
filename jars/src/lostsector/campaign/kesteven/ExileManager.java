@@ -11,10 +11,10 @@ import com.fs.starfarer.api.characters.PersonAPI;
 import com.fs.starfarer.api.impl.campaign.ids.Industries;
 import com.fs.starfarer.api.impl.campaign.ids.Items;
 import com.fs.starfarer.api.impl.campaign.ids.Skills;
-import lostsector.campaign.kesteven.quest.QuestStageManager;
 import lostsector.campaign.kesteven.quest.QuestHelper;
 import lostsector.ModPlugin;
 import lostsector.persistence.Saved;
+import lostsector.campaign.kesteven.quest.KestevenFlag;
 import lostsector.campaign.kesteven.quest.KestevenPeople;
 import lostsector.helper.SectorLookup;
 import lostsector.world.SectorGen;
@@ -163,7 +163,7 @@ public class ExileManager extends BaseCampaignEventListener implements EveryFram
 
     public void exile() {
         MarketAPI outpost = SectorLookup.getOutpost().getMarket();
-        boolean jackGone = QuestHelper.getCompleted(QuestStageManager.JACK_GONE_KEY);
+        boolean jackGone = QuestHelper.getCompleted(KestevenFlag.JACK_GONE);
         //add heavy industry item
         if (outpost.getIndustry(Industries.HEAVYINDUSTRY) != null) {
             if (outpost.getIndustry(Industries.HEAVYINDUSTRY).getSpecialItem() == null) {
@@ -239,7 +239,7 @@ public class ExileManager extends BaseCampaignEventListener implements EveryFram
 
         MarketAPI asteria = Global.getSector().getEconomy().getMarket("nskr_asteria");
         MarketAPI outpost = SectorLookup.getOutpost().getMarket();
-        boolean jackGone = QuestHelper.getCompleted(QuestStageManager.JACK_GONE_KEY);
+        boolean jackGone = QuestHelper.getCompleted(KestevenFlag.JACK_GONE);
         if (outpost!=null){
             //new admin
             PersonAPI admin = Global.getSector().getFaction("kesteven").createRandomPerson(new Random());

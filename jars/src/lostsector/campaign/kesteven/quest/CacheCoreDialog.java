@@ -18,10 +18,6 @@ public class CacheCoreDialog implements InteractionDialogPlugin {
 
     //
 
-    public static final String RECOVERED_KEY = "nskr_coreDialogRecoveredKey";
-    public static final String FIRST_TIME_KEY = "nskr_coreDialogFirstTimeKey";
-    public static final String PERSISTENT_KEY = "nskr_coreDialogKey";
-    public static final String PERSISTENT_RANDOM_KEY = "nskr_coreDialogKeyRandom";
 
     private boolean arrived = false;
     private InteractionDialogAPI dialog;
@@ -51,8 +47,8 @@ public class CacheCoreDialog implements InteractionDialogPlugin {
 
         text.setFontInsignia();
 
-        boolean recovered = QuestHelper.getCompleted(RECOVERED_KEY);
-        boolean firstTime = QuestHelper.getCompleted(FIRST_TIME_KEY);
+        boolean recovered = QuestHelper.getCompleted(KestevenFlag.CHIP_SALVAGED);
+        boolean firstTime = QuestHelper.getCompleted(KestevenFlag.CORE_SEEN);
         if (!firstTime){
             text.addPara("You watch as the system materializes in front of you, gracefully out of thin air. No one aboard the bridge knows how this was possible.");
             text.addPara("The vast structures float unbothered, like they have always been here. Seemingly unknowing to what has just taken effect.");
@@ -60,7 +56,7 @@ public class CacheCoreDialog implements InteractionDialogPlugin {
 
             Global.getSoundPlayer().playUISound("ui_discovered_entity",1f,1f);
 
-            QuestHelper.setCompleted(true, FIRST_TIME_KEY);
+            QuestHelper.setCompleted(true, KestevenFlag.CORE_SEEN);
 
             if (QuestHelper.getStage()>=16 && !QuestHelper.getEndMissions()){
                 options.addOption("Approach the command core", OptionId.INITIALA);
@@ -160,11 +156,11 @@ public class CacheCoreDialog implements InteractionDialogPlugin {
 
             Global.getSoundPlayer().playUISound("ui_rep_raise",1f,1f);
 
-            QuestHelper.setCompleted(true, RECOVERED_KEY);
+            QuestHelper.setCompleted(true, KestevenFlag.CHIP_SALVAGED);
             QuestHelper.setStage(19);
 
             //make return target important
-            if (QuestHelper.getCompleted(ElizaDialog.AGREED_TO_HELP_KEY)){
+            if (QuestHelper.getCompleted(KestevenFlag.ELIZA_AGREED_SINCERELY)){
                 QuestHelper.getElizaLoc().getMemoryWithoutUpdate().set(MemFlags.MEMORY_KEY_MISSION_IMPORTANT,true);
             } else {
                 SectorLookup.asteriaOrOutpost().getMemoryWithoutUpdate().set(MemFlags.MEMORY_KEY_MISSION_IMPORTANT,true);
@@ -224,12 +220,7 @@ public class CacheCoreDialog implements InteractionDialogPlugin {
     }
 
     public static Random getRandom() {
-        Map<String, Object> data = Global.getSector().getPersistentData();
-        if (!data.containsKey(PERSISTENT_RANDOM_KEY)) {
-
-            data.put(PERSISTENT_RANDOM_KEY, new Random(MathHelper.getSeedParsed()));
-        }
-        return (Random) data.get(PERSISTENT_RANDOM_KEY);
+        return KestevenQuest.random(KestevenState.RANDOM_CACHE_CORE);
     }
 
 }

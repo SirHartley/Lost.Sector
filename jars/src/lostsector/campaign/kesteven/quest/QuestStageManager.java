@@ -24,12 +24,10 @@ import exerelin.campaign.DiplomacyManager;
 import lostsector.campaign.kesteven.ExileManager;
 import lostsector.campaign.enigma.DormantSpawner;
 import lostsector.campaign.events.EnvironmentalStorytelling;
-import lostsector.dialogue.rules.nskr_altEndingDialogLuddic;
 import lostsector.dialogue.rules.nskr_job4FleetDialog;
 import lostsector.dialogue.rules.nskr_kestevenQuest;
 import lostsector.dialogue.rules.nskr_ttCollectorDialog;
 import lostsector.ModPlugin;
-import lostsector.persistence.Saved;
 import lostsector.helper.FleetHelper;
 import lostsector.helper.Ids;
 import lostsector.helper.MathHelper;
@@ -42,61 +40,27 @@ import org.lwjgl.util.vector.Vector2f;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Random;
 
 public class QuestStageManager extends BaseCampaignEventListener implements EveryFrameScript  {
     //
     //manages quest stage changes and mission fleets
-    public static final String KESTEVEN_QUEST_KEY = "nskr_kestevenQuest";
     public static final String FLEET_ARRAY_KEY = "$kQuestMissionFleets";
-    public static final String QUEST_END_KEY = "KestevenQuestEnd";
-    public static final String PERSISTENT_RANDOM_KEY = "KestevenQuestRandomKey";
-    public static final String HAS_FOUGHT_ENIGMA_KEY = "KestevenQuest1HasFoughtEnigma";
-    public static final String JOB1_DELIVERED_KEY = "KestevenQuest1Deliver";
-    public static final String JOB1_DELIVERED_DATA_KEY = "KestevenQuest1DeliverData";
-    public static final String JOB1_SENSORS_KEY = "KestevenQuest1Sensor";
-    public static final String JOB1_TIP_KEY = "KestevenQuest1LocTip";
-    public static final String JOB3_SKIP_KEY = "KestevenQuestSkip3";
     public static final String TT_COLLECTOR_KEY = "$KestevenQuestTTCollector";
     public static final String JOB3_TARGET_KEY = "$KestevenQuestJob3Target";
-    public static final String JOB3_FAIL_KEY = "KestevenQuestJob3Fail";
-    public static final String JOB3_TIMER_KEY = "KestevenQuestJob3Timer";
-    public static final String JOB3_TARGET_DISCOVERED = "KestevenQuestJob3Discovered";
     public static final ArrayList<String> JOB3_MARKET_BLACKLIST = new ArrayList<>();
     static {
         JOB3_MARKET_BLACKLIST.add("eochu_bres");
         JOB3_MARKET_BLACKLIST.add("culann");
     }
-    public static final String E_MESSENGER_TALKED_KEY = "KestevenQuestEMessengerTalkedKey";
-    public static final String E_MESSENGER_TALKED_ASK_ABOUT_KEY = "KestevenQuestEMessengerTalkedKeyAskAbout";
-    public static final String JOB4_WAIT_KEY = "KestevenQuestJob4WaitTimer";
     public static final String JOB4_SPLINTER_KEY = "$KestevenQuestJob4Splinter";
     public static final String JOB4_TARGET_KEY = "$KestevenQuestJob4Target";
     public static final String JOB4_FRIENDLY_KEY = "$KestevenQuestJob4Friendly";
-    public static final String JOB4_DESTROYED_KEY = "KestevenQuestJob4Destroy";
-    public static final String JOB4_FOUND_FRIENDLY_KEY = "KestevenQuestJob4FoundFriendly";
-    public static final String JOB4_FOUND_TARGET_KEY = "KestevenQuestJob4FoundTarget";
-    public static final String JOB4_TARGET_HINT_KEY = "KestevenQuestJob4TargetHint";
-    public static final String JOB4_HELPED_KEY = "KestevenQuestJob4Help";
-    public static final String JOB4_FAILED_KEY = "KestevenQuestJob4Fail";
     public static final String ARTIFACT_KEY = "$kQuestArtifact";
     public static final String JOB4_HINT_WRECK_ID_KEY = "$job4HintWreck";
-    public static final String JOB5_FOUND_FROST_KEY = "nskr_kestevenQuestJob5FoundFrost";
-    public static final String JOB5_FOUND_ELIZA_KEY = "KestevenQuestJob5FoundEliza";
-    public static final String JOB5_FAILED_KEY = "KestevenQuestJob5Fail";
-    public static final String KILLED_ELIZA_KEY = "KestevenQuestKilledEliza";
-    public static final String DISK_COUNT_KEY = "KestevenQuestDiskCount";
-    public static final String ALL_DISKS_RECOVERED_KEY = "KestevenQuestAllDisks";
-    public static final String FOUND_CACHE_KEY = "KestevenQuestFoundCache";
     public static final String JACK_REVENGEANCE_FLEET_KEY = "$RevengeanceJack";
     public static final String REVENGEANCE_FLEET_KEY = "$RevengeanceQuestFleet";
-    public static final String JACK_GONE_KEY = "KestevenQuestJob5JackRevengeance";
-    public static final String ELIZA_BETRAY_KEY = "RevengeanceElizaBetrayByPlayer";
     public static final String ELIZA_INTERCEPT_FLEET_KEY = "$InterceptPlayerElizaFleet";
-    public static final String ELIZA_INTERCEPT_HANDED_OVER = "$InterceptPlayerHandedUPCOver";
-    public static final String ELIZA_INTERCEPT_TALKED = "InterceptPlayerElizaTalkedTo";
-    public static final String ELIZA_RETURNED_KEY = "InterceptPlayerElizaReturn";
 
     public static final float JOB3_TIME_LIMIT = 90f;
     public static final int SPLINTER_COUNT = 10;
@@ -114,58 +78,10 @@ public class QuestStageManager extends BaseCampaignEventListener implements Ever
     private int frameWait = 0;
     private int frameWait2 = 0;
 
-    Saved<Boolean> intelStage1;
-    Saved<Boolean> intelStage2;
-    Saved<Boolean> intelStage3;
-    Saved<Boolean> intelStage4;
-    Saved<Boolean> intelStage5;
-    Saved<Boolean> barStage5;
-    Saved<Boolean> jobFleetSpawned3;
-    Saved<Boolean> jobFleetsSpawned4;
-    Saved<Float> counterJob;
-    Saved<Float> counter;
-    Saved<Float> fleetCounter;
-    Saved<Float> cacheTimer;
-    Saved<Boolean> collected;
-    Saved<Boolean> cacheGuardian;
-    Saved<Boolean> cacheIntelAdd;
-    Saved<Boolean> commission;
-    Saved<Boolean> doubted;
-    Saved<Boolean> cacheLoc;
-    Saved<Boolean> revengeFleetSpawned;
-    Saved<Boolean> elizaBetray;
-    Saved<Boolean> elizaInterceptSpawned;
     private final List<CampaignFleetAPI> removed = new ArrayList<>();
 
     public QuestStageManager() {
         super(false);
-        //logic timer
-        this.counter = new Saved<>("questCounter", 0.0f);
-        this.fleetCounter = new Saved<>("questFleetCounter", 0.0f);
-        //one time intel check
-        this.intelStage1 = new Saved<>("questIntelStage1", false);
-        this.intelStage2 = new Saved<>("questIntelStage2", false);
-        this.intelStage3 = new Saved<>("questIntelStage3", false);
-        this.intelStage4 = new Saved<>("questIntelStage4", false);
-        this.intelStage5 = new Saved<>("questIntelStage5", false);
-        this.barStage5 = new Saved<>("questBarStage5", false);
-        this.cacheIntelAdd = new Saved<>("cacheIntelAddStage5", false);
-        //fixes commission rep changes
-        this.commission = new Saved<>("commissionStage5", false);
-        //one time fleet spawn
-        this.jobFleetSpawned3 = new Saved<>("questJobFleetSpawned3", false);
-        this.jobFleetsSpawned4 = new Saved<>("questJobFleetsSpawned4", false);
-        this.collected = new Saved<>("questJobCollected", false);
-        this.doubted = new Saved<>("questJobCacheDoubt", false);
-        this.cacheLoc = new Saved<>("questJobCacheLoc", false);
-        this.cacheGuardian = new Saved<>("questJobCacheGuardian", false);
-        this.revengeFleetSpawned = new Saved<>("questJobVengeanced", false);
-        this.elizaBetray = new Saved<>("questJobelizaBetray", false);
-        this.elizaInterceptSpawned = new Saved<>("questJobelizadIntercept", false);
-        //the one-month wait for job
-        this.counterJob = new Saved<>("questCounterJob", 0.0f);
-        this.cacheTimer = new Saved<>("questCacheTimer", 0.0f);
-
     }
 
     static void log(final String message) {
@@ -183,6 +99,9 @@ public class QuestStageManager extends BaseCampaignEventListener implements Ever
     public void advance(float amount) {
         CampaignFleetAPI pf = Global.getSector().getPlayerFleet();
         if (pf == null) return;
+        // QuestManager creates the state on the first unpaused frame of a new campaign; this script runs while paused.
+        KestevenState state = KestevenQuest.state();
+        if (state == null) return;
 
         stage = QuestHelper.getStage();
 
@@ -193,14 +112,14 @@ public class QuestStageManager extends BaseCampaignEventListener implements Ever
             log("ERROR sector is fucked, ending missions");
         }
         //kill Special Operations fleet failure
-        if (stage == 14 && QuestHelper.getCompleted(JOB4_FAILED_KEY) && !QuestHelper.getEndMissions()) {
+        if (stage == 14 && QuestHelper.getCompleted(KestevenFlag.JOB4_FAILED) && !QuestHelper.getEndMissions()) {
             QuestHelper.setStage(99);
             QuestHelper.setEndMissions(true);
 
         }
         //kill Eliza after handing over failure
-        if (stage == 19 && QuestHelper.getCompleted(ELIZA_INTERCEPT_HANDED_OVER) && QuestHelper.getCompleted(KILLED_ELIZA_KEY) && !QuestHelper.getEndMissions()) {
-            QuestHelper.setCompleted(true, JOB5_FAILED_KEY);
+        if (stage == 19 && QuestHelper.getCompleted(KestevenFlag.CHIP_HANDED_TO_ELIZA) && QuestHelper.getCompleted(KestevenFlag.ELIZA_KILLED) && !QuestHelper.getEndMissions()) {
+            QuestHelper.setCompleted(true, KestevenFlag.JOB5_FAILED);
 
             QuestHelper.setStage(99);
             QuestHelper.setEndMissions(true);
@@ -211,8 +130,8 @@ public class QuestStageManager extends BaseCampaignEventListener implements Ever
         //////////////////
         //finish job1
         if (stage ==1) {
-            boolean delivered = QuestHelper.getCompleted(JOB1_DELIVERED_KEY);
-            boolean deliveredData = QuestHelper.getCompleted(JOB1_DELIVERED_DATA_KEY);
+            boolean delivered = QuestHelper.getCompleted(KestevenFlag.JOB1_ELECTRONICS_DELIVERED);
+            boolean deliveredData = QuestHelper.getCompleted(KestevenFlag.JOB1_DATA_DELIVERED);
             //finished tasks
             if (delivered && deliveredData) {
                 QuestHelper.setStage(2);
@@ -221,12 +140,12 @@ public class QuestStageManager extends BaseCampaignEventListener implements Ever
         //start job5
         if (stage ==15) {
             //cache found check
-            if (!QuestHelper.getCompleted(FOUND_CACHE_KEY) && Global.getSector().getStarSystem("Unknown Site").isEnteredByPlayer()) {
-                QuestHelper.setCompleted(true, FOUND_CACHE_KEY);
+            if (!QuestHelper.getCompleted(KestevenFlag.CACHE_FOUND) && Global.getSector().getStarSystem("Unknown Site").isEnteredByPlayer()) {
+                QuestHelper.setCompleted(true, KestevenFlag.CACHE_FOUND);
             }
         }
         //eliza loc changer
-        if (stage>=16 && QuestHelper.getCompleted(JOB5_FOUND_ELIZA_KEY) && !QuestHelper.getCompleted(KILLED_ELIZA_KEY)) {
+        if (stage>=16 && QuestHelper.getCompleted(KestevenFlag.ELIZA_FOUND) && !QuestHelper.getCompleted(KestevenFlag.ELIZA_KILLED)) {
             if(QuestHelper.getElizaLoc().getMarket().isPlanetConditionMarketOnly()){
                 log("Qmanager eliza loc deciv, changing");
                 PersonAPI eliza = KestevenPeople.getEliza();
@@ -250,7 +169,7 @@ public class QuestStageManager extends BaseCampaignEventListener implements Ever
             }
         }
         //paid for loc changer
-        if (stage==16 && QuestHelper.getCompleted(ElizaSearchBarEvent.PAID_FOR_INFO) && !QuestHelper.getCompleted(QuestStageManager.JOB5_FOUND_ELIZA_KEY) && ElizaSearchBarEvent.getDialogStage(ElizaSearchBarEvent.INTRO_DIALOG_KEY)==2){
+        if (stage==16 && QuestHelper.getCompleted(KestevenFlag.ELIZA_SPACER_PAID) && !QuestHelper.getCompleted(KestevenFlag.ELIZA_FOUND) && ElizaSearchBarEvent.getDialogStage()==2){
             if(ElizaSearchBarEvent.getPaidForInfoTarget().getMarket().isPlanetConditionMarketOnly()){
                 //remove important
                 if (ElizaSearchBarEvent.getPaidForInfoTarget().getMemoryWithoutUpdate().contains(MemFlags.MEMORY_KEY_MISSION_IMPORTANT)){
@@ -273,7 +192,7 @@ public class QuestStageManager extends BaseCampaignEventListener implements Ever
         }
         if (stage==16) {
             //cache found, before mission
-            if (QuestHelper.getCompleted(FOUND_CACHE_KEY)) {
+            if (QuestHelper.getCompleted(KestevenFlag.CACHE_FOUND)) {
                 QuestHelper.setStage(17);
             }
         }
@@ -283,11 +202,11 @@ public class QuestStageManager extends BaseCampaignEventListener implements Ever
         if (Global.getSector().isPaused()) return;
         //timer
         if (Global.getSector().isInFastAdvance()) {
-            counter.val += 2f*amount;
-            fleetCounter.val += 2f*amount;
+            state.dayCounter += 2f*amount;
+            state.fleetCounter += 2f*amount;
         } else{
-            counter.val += amount;
-            fleetCounter.val += amount;
+            state.dayCounter += amount;
+            state.fleetCounter += amount;
         }
         //FLEETS
         List<FleetInfo> fleets = FleetHelper.getFleets(FLEET_ARRAY_KEY);
@@ -295,10 +214,10 @@ public class QuestStageManager extends BaseCampaignEventListener implements Ever
         //start job 1
         if (stage ==1) {
             //Adds our intel
-            if (!intelStage1.val) {
+            if (!state.job1IntelAdded) {
                 EnemyUnknownIntel intel1 = new EnemyUnknownIntel();
                 Global.getSector().getIntelManager().addIntel(intel1, false);
-                intelStage1.val = true;
+                state.job1IntelAdded = true;
                 log("Qmanager added INTEL for " + "Enemy Unknown");
             }
             //logic
@@ -306,23 +225,23 @@ public class QuestStageManager extends BaseCampaignEventListener implements Ever
         //wait for job 4
         if (stage == 11) {
             if (Global.getSector().isInFastAdvance()) {
-                counterJob.val += 2f*amount;
+                state.job4WaitCounter += 2f*amount;
             } else{
-                counterJob.val += amount;
+                state.job4WaitCounter += amount;
             }
             //one day = 10f
-            if (counterJob.val>(300f)){
-                QuestHelper.setCompleted(true, JOB4_WAIT_KEY);
-                counterJob.val = 0f;
+            if (state.job4WaitCounter>(300f)){
+                QuestHelper.setCompleted(true, KestevenFlag.JOB4_WAIT_OVER);
+                state.job4WaitCounter = 0f;
             }
         }
         //start job 3
         if (stage ==8) {
             //Adds our intel
-            if (!intelStage3.val) {
+            if (!state.job3IntelAdded) {
                 HostileTakeoverIntel intel3 = new HostileTakeoverIntel();
                 Global.getSector().getIntelManager().addIntel(intel3, false);
-                intelStage3.val = true;
+                state.job3IntelAdded = true;
                 log("Qmanager added INTEL for " + "Hostile Takeover");
                 //BAR EVENT
                 PortsideBarData.getInstance().addEvent(new HostileTakeoverBarEvent());
@@ -331,25 +250,25 @@ public class QuestStageManager extends BaseCampaignEventListener implements Ever
                 log("Qmanager added dormant to target " + QuestHelper.getJob3Target().getName() +" "+ QuestHelper.getJob3Target().getStarSystem().getName());
             }
             //logic
-            if (!jobFleetSpawned3.val) {
+            if (!state.job3FleetSpawned) {
                 CampaignFleetAPI fleet = KestevenFleets.spawnJob3TargetFleet();
                 fleets.add(new FleetInfo(fleet, QuestHelper.getJob3Target(), QuestHelper.getJob3Start()));
                 QuestHelper.spawnArtifact(QuestHelper.getJob3Target(),3);
                 log("Qmanager spawn job3 target");
-                jobFleetSpawned3.val = true;
+                state.job3FleetSpawned = true;
             }
         }
         //start job 4
         if (stage ==12) {
             //Adds our intel
-            if (!intelStage4.val) {
+            if (!state.job4IntelAdded) {
                 OperationLifesaverIntel intel4 = new OperationLifesaverIntel();
                 Global.getSector().getIntelManager().addIntel(intel4, false);
-                intelStage4.val = true;
+                state.job4IntelAdded = true;
                 log("Qmanager added INTEL for " + "Operation Lifesaver");
             }
             //logic
-            if (!jobFleetsSpawned4.val) {
+            if (!state.job4FleetsSpawned) {
 
                 //this sets job4TargetLoc
                 KestevenFleets.spawnJob4Target();
@@ -365,24 +284,24 @@ public class QuestStageManager extends BaseCampaignEventListener implements Ever
                 spawnJob4Wrecks(nskr_kestevenQuest.getRandom());
 
                 log("Qmanager spawn job4 fleets");
-                jobFleetsSpawned4.val = true;
+                state.job4FleetsSpawned = true;
             }
         }
         //job 4 logic
         //dialog reveal logic
-        if (nskr_job4FleetDialog.getDialogStage(nskr_job4FleetDialog.PERSISTENT_KEY)>=1 && !QuestHelper.getCompleted(JOB4_FOUND_TARGET_KEY) && !QuestHelper.getCompleted(JOB4_DESTROYED_KEY)){
+        if (nskr_job4FleetDialog.getDialogStage()>=1 && !QuestHelper.getCompleted(KestevenFlag.JOB4_TARGET_FOUND) && !QuestHelper.getCompleted(KestevenFlag.JOB4_TARGET_DESTROYED)){
 
-            QuestHelper.setCompleted(true, JOB4_TARGET_HINT_KEY);
+            QuestHelper.setCompleted(true, KestevenFlag.JOB4_TARGET_HINT);
         }
         //job 4
         //found friendly
-        if (nskr_job4FleetDialog.getDialogStage(nskr_job4FleetDialog.PERSISTENT_KEY)>=1 && !QuestHelper.getCompleted(JOB4_FOUND_FRIENDLY_KEY)){
+        if (nskr_job4FleetDialog.getDialogStage()>=1 && !QuestHelper.getCompleted(KestevenFlag.JOB4_FRIENDLY_FOUND)){
 
-            QuestHelper.setCompleted(true, JOB4_FOUND_FRIENDLY_KEY);
+            QuestHelper.setCompleted(true, KestevenFlag.JOB4_FRIENDLY_FOUND);
         }
 
         //job 4 completion
-        if (stage ==12 && QuestHelper.getCompleted(JOB4_FOUND_FRIENDLY_KEY) && QuestHelper.getCompleted(JOB4_DESTROYED_KEY)){
+        if (stage ==12 && QuestHelper.getCompleted(KestevenFlag.JOB4_FRIENDLY_FOUND) && QuestHelper.getCompleted(KestevenFlag.JOB4_TARGET_DESTROYED)){
             //completion text
             Global.getSector().getCampaignUI().addMessage("With the threat eliminated and the Operations fleet located, you can report back to "+ SectorLookup.asteriaOrOutpost().getName()+" to finish the job.",
                     Global.getSettings().getColor("standardTextColor"),
@@ -396,10 +315,10 @@ public class QuestStageManager extends BaseCampaignEventListener implements Ever
         //start job 5
         if (stage==16 || stage==17) {
             //Adds our intel
-            if (!intelStage5.val) {
+            if (!state.job5IntelAdded) {
                 TheDelveIntel intel5 = new TheDelveIntel();
                 Global.getSector().getIntelManager().addIntel(intel5, false);
-                intelStage5.val = true;
+                state.job5IntelAdded = true;
                 log("Qmanager added INTEL for " + "The Delve");
                 //BAR EVENTS
                 if (stage==16) PortsideBarData.getInstance().addEvent(new ElizaSearchBarEvent());
@@ -410,44 +329,44 @@ public class QuestStageManager extends BaseCampaignEventListener implements Ever
         if (stage==16) {
            //job 5 logic
            //found frost check
-           if (!QuestHelper.getCompleted(JOB5_FOUND_FROST_KEY) && QuestHelper.getCompleted(nskr_kestevenQuest.JOB5_ALICE_TIP_KEY2)){
+           if (!QuestHelper.getCompleted(KestevenFlag.FROST_FOUND) && QuestHelper.getCompleted(KestevenFlag.JOB5_ALICE_TIP2)){
                if (pf.getContainingLocation()!=null && pf.getContainingLocation()== SectorLookup.getFrost()){
                    //found
-                   QuestHelper.setCompleted(true, JOB5_FOUND_FROST_KEY);
+                   QuestHelper.setCompleted(true, KestevenFlag.FROST_FOUND);
                }
            }
            //all disks found check
            if (QuestHelper.getDisksRecovered()>=5){
-                QuestHelper.setCompleted(true, ALL_DISKS_RECOVERED_KEY);
+                QuestHelper.setCompleted(true, KestevenFlag.ALL_DISKS_RECOVERED);
            }
             //cache found check
-            if (!QuestHelper.getCompleted(FOUND_CACHE_KEY) && Global.getSector().getStarSystem("Unknown Site").isEnteredByPlayer()) {
-                QuestHelper.setCompleted(true, FOUND_CACHE_KEY);
+            if (!QuestHelper.getCompleted(KestevenFlag.CACHE_FOUND) && Global.getSector().getStarSystem("Unknown Site").isEnteredByPlayer()) {
+                QuestHelper.setCompleted(true, KestevenFlag.CACHE_FOUND);
                 QuestHelper.setStage(17);
             }
         }
         //cache found, no mission
         if (QuestHelper.getEndMissions() && Global.getSector().getStarSystem("Unknown Site").isEnteredByPlayer()){
-            QuestHelper.setCompleted(true, FOUND_CACHE_KEY);
+            QuestHelper.setCompleted(true, KestevenFlag.CACHE_FOUND);
         }
         //add intel for cache
-        if (QuestHelper.getCompleted(FOUND_CACHE_KEY)){
-            if (!cacheIntelAdd.val) {
+        if (QuestHelper.getCompleted(KestevenFlag.CACHE_FOUND)){
+            if (!state.cacheIntelAdded) {
                 CacheIntel cacheIntel = new CacheIntel(Global.getSector().getStarSystem("Unknown Site"));
                 Global.getSector().getIntelManager().addIntel(cacheIntel, false);
-                cacheIntelAdd.val = true;
+                state.cacheIntelAdded = true;
                 log("Qmanager added INTEL for " + "The Cache");
             }
         }
 
         //spawn cache guardian fleet
         if (pf.getStarSystem() != null && pf.getStarSystem()==Global.getSector().getStarSystem("Unknown Site")) {
-            if (!cacheGuardian.val) {
+            if (!state.cacheGuardianSpawned) {
                 //timer for spawn
                 if (Global.getSector().isInFastAdvance()) {
-                    cacheTimer.val += 2f * amount;
+                    state.cacheSeconds += 2f * amount;
                 } else {
-                    cacheTimer.val += amount;
+                    state.cacheSeconds += amount;
                 }
                 //timer for ping
                 if (Global.getSector().isInFastAdvance()) {
@@ -456,37 +375,37 @@ public class QuestStageManager extends BaseCampaignEventListener implements Ever
                     pingTimer += amount;
                 }
                 //cache doubt dialog
-                if (cacheTimer.val > 35f) {
-                    if (!cacheLoc.val) {
+                if (state.cacheSeconds > 35f) {
+                    if (!state.cacheGuardianSpotPicked) {
                         QuestHelper.setCacheFleetLoc();
-                        cacheLoc.val = true;
+                        state.cacheGuardianSpotPicked = true;
                     }
                     CampaignUIAPI ui = Global.getSector().getCampaignUI();
                     //stage check
-                    if (stage>=16 && !QuestHelper.getEndMissions() && !doubted.val) {
+                    if (stage>=16 && !QuestHelper.getEndMissions() && !state.cacheDoubtShown) {
                         //UI check
                         if (!ui.isShowingDialog() && !ui.isShowingMenu()) {
                             Global.getSector().getCampaignUI().showInteractionDialog(new CacheDoubtDialog(), null);
-                            doubted.val = true;
+                            state.cacheDoubtShown = true;
                         }
                     }
                 }
                 //PINGS
                 //slow
-                if (cacheTimer.val > 45f && cacheTimer.val < 75f) {
+                if (state.cacheSeconds > 45f && state.cacheSeconds < 75f) {
                     if (pingTimer>6f) {
                         spawnPing(pf);
                         pingTimer = 0f;
                     }
                 }
                 //fast
-                if (cacheTimer.val >= 75f) {
+                if (state.cacheSeconds >= 75f) {
                     if (pingTimer>3f) {
                         spawnPing(pf);
                         pingTimer = 0f;
                     }
                 }
-                if (cacheTimer.val > 90f) {
+                if (state.cacheSeconds > 90f) {
                     //start music
                     Global.getSector().getStarSystem(Ids.CACHE_SYSTEM_NAME).getMemoryWithoutUpdate().set(MusicPlayerPluginImpl.MUSIC_SET_MEM_KEY, "nskr_cache_theme");
                     //add to mission fleets so we can track it
@@ -494,20 +413,20 @@ public class QuestStageManager extends BaseCampaignEventListener implements Ever
                     Global.getSoundPlayer().playSound("ui_discovered_entity", 1f, 1f, fleet.getLocation(), new Vector2f());
 
                     fleets.add(new FleetInfo(fleet, null, QuestHelper.getCacheFleetLoc()));
-                    cacheGuardian.val = true;
+                    state.cacheGuardianSpawned = true;
                 }
             }
             //cache mote particles
             if (Math.random()<0.004f)MoteParticleScript.spawnMote(pf);
         }
         //job5 finish: restore the commission after the Eliza ending
-        if (QuestHelper.getCompleted(EndingElizaDialog.COMMISSION_RESTORE_KEY) && !commission.val){
+        if (QuestHelper.getCompleted(KestevenFlag.COMMISSION_RESTORE_PENDING) && !state.commissionRestored){
             //have to wait a few frames for the vanilla commission to end
             frameWait++;
             if (frameWait==30) {
-                float repPirates = QuestHelper.getFloat(EndingElizaDialog.REP_PIRATES_KEY);
-                float repKesteven = QuestHelper.getFloat(EndingElizaDialog.REP_KESTEVEN_KEY);
-                float repHege = QuestHelper.getFloat(EndingElizaDialog.REP_HEGE_KEY);
+                float repPirates = state.commissionRepPirates;
+                float repKesteven = state.commissionRepKesteven;
+                float repHege = state.commissionRepHegemony;
                 //pirates
                 if (Global.getSector().getFaction(Factions.PIRATES).getRelationship(Factions.PLAYER) <= repPirates) {
                     Global.getSector().getFaction(Factions.PLAYER).setRelationship(Factions.PIRATES, repPirates);
@@ -526,29 +445,29 @@ public class QuestStageManager extends BaseCampaignEventListener implements Ever
                         Global.getSector().getFaction(Factions.PLAYER).setRelationship("ironshell", repHege);
                     }
                 }
-                commission.val = true;
+                state.commissionRestored = true;
             }
         }
         //player betrays Eliza after completing the mission for her
         if (QuestHelper.getElizaLoc()!=null) {
             if (!QuestHelper.getElizaLoc().getMarket().isPlanetConditionMarketOnly()) {
                 if (QuestHelper.getElizaLoc().getMarket().getFaction().getId().equals(Factions.PLAYER) &&
-                        QuestHelper.getCompleted(ElizaDialog.ELIZA_HELP_KEY) && !QuestHelper.getCompleted(ELIZA_BETRAY_KEY) && QuestHelper.getCompleted(EndingElizaDialog.DIALOG_FINISHED_KEY)) {
-                    QuestHelper.setCompleted(true, ELIZA_BETRAY_KEY);
+                        QuestHelper.getCompleted(KestevenFlag.ELIZA_HELPED) && !QuestHelper.getCompleted(KestevenFlag.ELIZA_BETRAYED) && QuestHelper.getCompleted(KestevenFlag.ELIZA_ENDING_DONE)) {
+                    QuestHelper.setCompleted(true, KestevenFlag.ELIZA_BETRAYED);
                 }
             }
         }
         //mission logic
-        if (counter.val>10f) {
+        if (state.dayCounter>10f) {
             //job 4 cannot finish without finding the Special Operations fleet, so replace it if something else destroyed it first
-            if (stage == 12 && jobFleetsSpawned4.val && !QuestHelper.getCompleted(JOB4_FOUND_FRIENDLY_KEY) && !hasFleetWithKey(fleets, JOB4_FRIENDLY_KEY)) {
+            if (stage == 12 && state.job4FleetsSpawned && !QuestHelper.getCompleted(KestevenFlag.JOB4_FRIENDLY_FOUND) && !hasFleetWithKey(fleets, JOB4_FRIENDLY_KEY)) {
                 CampaignFleetAPI fleet = KestevenFleets.spawnJob4Friendly();
                 fleets.add(new FleetInfo(fleet, null, QuestHelper.getJob4FriendlyTarget()));
                 log("Qmanager respawned job4 friendly");
             }
             //tt vengeance spawner
             //spawn once per campaign
-            if (!collected.val) {
+            if (!state.collectorSpawned) {
                 //can spawn check
                 if (stage>=2 && stage<=15) {
                     boolean cargo = pf.getCargo().getCommodityQuantity("nskr_electronics") >= 50f;
@@ -558,38 +477,38 @@ public class QuestStageManager extends BaseCampaignEventListener implements Ever
                         CampaignFleetAPI fleet = KestevenFleets.spawnCollectorFleet();
                         fleets.add(new FleetInfo(fleet, null, fleet.getContainingLocation().createToken(fleet.getLocation())));
 
-                        collected.val = true;
+                        state.collectorSpawned = true;
                         log("Qmanager SPAWNING");
                     }
                 }
             }
-            if (!elizaInterceptSpawned.val){
+            if (!state.elizaInterceptSpawned){
                 //eliza intercept player for UPC
-                if (stage==19 && QuestHelper.getCompleted(ElizaDialog.ELIZA_HELP_KEY)){
+                if (stage==19 && QuestHelper.getCompleted(KestevenFlag.ELIZA_HELPED)){
                     CampaignFleetAPI fleet = vengeanceEliza(true);
-                    elizaInterceptSpawned.val = true;
+                    state.elizaInterceptSpawned = true;
                     log("Intercepted Eliza");
                 }
             }
             //vengeance Eliza betray by player, after questline
-            if (QuestHelper.getCompleted(ELIZA_BETRAY_KEY) && !elizaBetray.val){
+            if (QuestHelper.getCompleted(KestevenFlag.ELIZA_BETRAYED) && !state.elizaRevengeSpawned){
                 CampaignFleetAPI fleet = vengeanceEliza(false);
-                elizaBetray.val = true;
+                state.elizaRevengeSpawned = true;
             }
             //revengeace fleet spawner
-            if (getRandom().nextFloat()<REVENGEANCE_CHANCE && stage == 20 && !revengeFleetSpawned.val) {
+            if (getRandom().nextFloat()<REVENGEANCE_CHANCE && stage == 20 && !state.jackRevengeSpawned) {
                 //jack
-                if (QuestHelper.getCompleted(EndingElizaDialog.DIALOG_FINISHED_KEY) || QuestHelper.getCompleted(nskr_altEndingDialogLuddic.DIALOG_FINISHED_KEY)){
+                if (QuestHelper.getCompleted(KestevenFlag.ELIZA_ENDING_DONE) || QuestHelper.getCompleted(KestevenFlag.ALT_ENDING_DONE)){
                     CampaignFleetAPI fleet = vengeanceJack();
-                    revengeFleetSpawned.val = true;
+                    state.jackRevengeSpawned = true;
                     log("Revengeanced Jack");
                 }
             }
             //END
-            counter.val = 0f;
+            state.dayCounter = 0f;
         }
         //fleet logic once a seconds (10s is a day)
-        if (fleetCounter.val>1f){
+        if (state.fleetCounter>1f){
             //fleet logic
             runFleetLogic(fleets);
 
@@ -600,7 +519,7 @@ public class QuestStageManager extends BaseCampaignEventListener implements Ever
             FleetHelper.setFleets(fleets, FLEET_ARRAY_KEY);
 
             //
-            fleetCounter.val = 0f;
+            state.fleetCounter = 0f;
         }
     }
 
@@ -611,7 +530,7 @@ public class QuestStageManager extends BaseCampaignEventListener implements Ever
         loc.getMarket().addPerson(eliza);
 
         //check for ending
-        QuestHelper.setCompleted(true, ELIZA_RETURNED_KEY);
+        QuestHelper.setCompleted(true, KestevenFlag.ELIZA_RETURNED);
     }
 
     public static void spawnJob4Wrecks(Random random) {
@@ -809,7 +728,7 @@ public class QuestStageManager extends BaseCampaignEventListener implements Ever
                     }
                 }
                 //logic
-                boolean paid = nskr_ttCollectorDialog.getPaid(nskr_ttCollectorDialog.PERSISTENT_KEY);
+                boolean paid = nskr_ttCollectorDialog.getPaid();
                 //AI LOGIC
                 //intercept
                 if (!paid) {
@@ -907,9 +826,9 @@ public class QuestStageManager extends BaseCampaignEventListener implements Ever
                     }
                     despawn = true;
                 }
-                if (despawn && !QuestHelper.getCompleted(KILLED_ELIZA_KEY)){
+                if (despawn && !QuestHelper.getCompleted(KestevenFlag.ELIZA_KILLED)){
                     //eliza is gone
-                    QuestHelper.setCompleted(true, KILLED_ELIZA_KEY);
+                    QuestHelper.setCompleted(true, KestevenFlag.ELIZA_KILLED);
                     //gone
                     Global.getSector().getImportantPeople().removePerson("nskr_anarchist");
                 }
@@ -946,9 +865,9 @@ public class QuestStageManager extends BaseCampaignEventListener implements Ever
                     }
                     despawn = true;
                 }
-                if (despawn && !QuestHelper.getCompleted(KILLED_ELIZA_KEY)){
+                if (despawn && !QuestHelper.getCompleted(KestevenFlag.ELIZA_KILLED)){
                     //eliza is gone
-                    QuestHelper.setCompleted(true, KILLED_ELIZA_KEY);
+                    QuestHelper.setCompleted(true, KestevenFlag.ELIZA_KILLED);
                     //gone
                     Global.getSector().getImportantPeople().removePerson("nskr_anarchist");
                 }
@@ -958,7 +877,7 @@ public class QuestStageManager extends BaseCampaignEventListener implements Ever
                 Vector2f pp = pf.getLocationInHyperspace();
                 float dist = MathUtils.getDistance(pp, fp);
                 //stop chasing eventually if not handed over
-                if (QuestHelper.getCompleted(ELIZA_INTERCEPT_TALKED) && !QuestHelper.getCompleted(ELIZA_INTERCEPT_HANDED_OVER) && f.age>60f && !despawn){
+                if (QuestHelper.getCompleted(KestevenFlag.ELIZA_INTERCEPT_TALKED) && !QuestHelper.getCompleted(KestevenFlag.CHIP_HANDED_TO_ELIZA) && f.age>60f && !despawn){
                     if (dist > Global.getSettings().getMaxSensorRangeHyper()) {
                         //tracker for cleaning the list
                         removed.add(fleet);
@@ -982,7 +901,7 @@ public class QuestStageManager extends BaseCampaignEventListener implements Ever
                 if (despawn) continue;
 
                 //logic
-                if (!QuestHelper.getCompleted(ELIZA_INTERCEPT_HANDED_OVER)) {
+                if (!QuestHelper.getCompleted(KestevenFlag.CHIP_HANDED_TO_ELIZA)) {
                     FleetHelper.gotoAndInterceptPlayerAI(fleet, f, FleetHelper.InterceptBehaviour.DIRECT);
                 } else {
                     //assignment logic
@@ -1079,7 +998,7 @@ public class QuestStageManager extends BaseCampaignEventListener implements Ever
             despawn = true;
             //stage check
             if (QuestHelper.getStage() <= 9) {
-                QuestHelper.setFailed(true, JOB3_FAIL_KEY);
+                QuestHelper.setFailed(true, KestevenFlag.JOB3_FAILED);
                 QuestHelper.setStage(10);
                 nskr_kestevenQuest.spawnEnvironmentalStorytelling();
                 Global.getSector().getCampaignUI().addMessage("You have ran out of time, mission failed. Report back to "+ SectorLookup.asteriaOrOutpost().getName()+" to finish the job.",
@@ -1156,7 +1075,7 @@ public class QuestStageManager extends BaseCampaignEventListener implements Ever
         boolean despawn = false;
 
         //despawn
-        if (QuestHelper.getStage()>=17 || QuestHelper.getStage()>=14 && QuestHelper.getCompleted(DataSatelliteDialog.RECOVERED_4_KEY)) {
+        if (QuestHelper.getStage()>=17 || QuestHelper.getStage()>=14 && QuestHelper.getCompleted(KestevenFlag.SATELLITE4_RECOVERED)) {
             despawn = true;
         }
         //destroyed
@@ -1169,7 +1088,7 @@ public class QuestStageManager extends BaseCampaignEventListener implements Ever
 
             if (fleet.getFleetPoints() < (f.strength * 0.20f)) {
                 despawn = true;
-                QuestHelper.setCompleted(true, JOB4_DESTROYED_KEY);
+                QuestHelper.setCompleted(true, KestevenFlag.JOB4_TARGET_DESTROYED);
                 //no longer important
                 if (fleet.getMemoryWithoutUpdate().contains(MemFlags.MEMORY_KEY_MISSION_IMPORTANT)){
                     fleet.getMemoryWithoutUpdate().unset(MemFlags.MEMORY_KEY_MISSION_IMPORTANT);
@@ -1179,16 +1098,16 @@ public class QuestStageManager extends BaseCampaignEventListener implements Ever
 
         //friendly found check
         if (fleet.getMemoryWithoutUpdate().contains(JOB4_FRIENDLY_KEY)){
-            if (fleet.isVisibleToPlayerFleet() && !QuestHelper.getCompleted(JOB4_FOUND_FRIENDLY_KEY)){
+            if (fleet.isVisibleToPlayerFleet() && !QuestHelper.getCompleted(KestevenFlag.JOB4_FRIENDLY_FOUND)){
 
-                QuestHelper.setCompleted(true, JOB4_FOUND_FRIENDLY_KEY);
+                QuestHelper.setCompleted(true, KestevenFlag.JOB4_FRIENDLY_FOUND);
             }
         }
         //target found check
         if (fleet.getMemoryWithoutUpdate().contains(JOB4_TARGET_KEY)){
-            if (fleet.isVisibleToPlayerFleet() && !QuestHelper.getCompleted(JOB4_FOUND_TARGET_KEY) && !QuestHelper.getCompleted(JOB4_DESTROYED_KEY)){
+            if (fleet.isVisibleToPlayerFleet() && !QuestHelper.getCompleted(KestevenFlag.JOB4_TARGET_FOUND) && !QuestHelper.getCompleted(KestevenFlag.JOB4_TARGET_DESTROYED)){
 
-                QuestHelper.setCompleted(true, JOB4_FOUND_TARGET_KEY);
+                QuestHelper.setCompleted(true, KestevenFlag.JOB4_TARGET_FOUND);
             }
         }
 
@@ -1228,7 +1147,7 @@ public class QuestStageManager extends BaseCampaignEventListener implements Ever
         }
         //helped friendly fleet
         if (fleet.getMemoryWithoutUpdate().contains(JOB4_FRIENDLY_KEY)) {
-            boolean helped = QuestHelper.getCompleted(JOB4_HELPED_KEY);
+            boolean helped = QuestHelper.getCompleted(KestevenFlag.JOB4_FRIENDLY_HELPED);
             SectorEntityToken target = QuestHelper.getJob4FriendlyTarget();
             //safety check
             if (SectorLookup.asteriaOrOutpost() != null) {
@@ -1274,7 +1193,7 @@ public class QuestStageManager extends BaseCampaignEventListener implements Ever
         loc.getMarket().removePerson(jack);
         //gone
         Global.getSector().getImportantPeople().removePerson("nskr_opguy");
-        QuestHelper.setCompleted(true, JACK_GONE_KEY);
+        QuestHelper.setCompleted(true, KestevenFlag.JACK_GONE);
         return fleet;
     }
 
@@ -1294,12 +1213,12 @@ public class QuestStageManager extends BaseCampaignEventListener implements Ever
             }
             if(kills>=1f){
                 //has fought enigma dialog check key
-                if (stage==0 && !QuestHelper.getCompleted(HAS_FOUGHT_ENIGMA_KEY)) {
-                    QuestHelper.setCompleted(true, HAS_FOUGHT_ENIGMA_KEY);
+                if (stage==0 && !QuestHelper.getCompleted(KestevenFlag.FOUGHT_ENIGMA)) {
+                    QuestHelper.setCompleted(true, KestevenFlag.FOUGHT_ENIGMA);
                 }
                 //job1 sensor check
                 if (stage==1) {
-                    QuestHelper.setCompleted(true, JOB1_SENSORS_KEY);
+                    QuestHelper.setCompleted(true, KestevenFlag.JOB1_SENSOR_DATA);
                     //completion text
                     Global.getSector().getCampaignUI().addMessage("You managed to gather sufficient data in battle for the task. Deliver it back to " + SectorLookup.asteriaOrOutpost().getName() + ".",
                             Global.getSettings().getColor("standardTextColor"),
@@ -1321,7 +1240,7 @@ public class QuestStageManager extends BaseCampaignEventListener implements Ever
                     float contrib = plugin.computePlayerContribFraction();
                     if (QuestHelper.getStage() <= 9 && contrib>0f) {
                         //FAIL
-                        QuestHelper.setFailed(true, JOB3_FAIL_KEY);
+                        QuestHelper.setFailed(true, KestevenFlag.JOB3_FAILED);
                         QuestHelper.setStage(10);
                         Global.getSector().getCampaignUI().addMessage("You failed to neutralize the fleet stealthily. Report back to "+ SectorLookup.asteriaOrOutpost().getName()+" to finish the job.",
                                 Global.getSettings().getColor("standardTextColor"),
@@ -1345,7 +1264,7 @@ public class QuestStageManager extends BaseCampaignEventListener implements Ever
                 if (contrib>0f) {
                     //FAIL
                     QuestHelper.setStage(14);
-                    if (!QuestHelper.getFailed(JOB4_FAILED_KEY)) {
+                    if (!QuestHelper.getFailed(KestevenFlag.JOB4_FAILED)) {
                         Global.getSector().getCampaignUI().addMessage("You attacked the Special Operations fleet. Mission failed, better not to talk to anyone about this.",
                                 Global.getSettings().getColor("standardTextColor"),
                                 "Mission failed",
@@ -1353,7 +1272,7 @@ public class QuestStageManager extends BaseCampaignEventListener implements Ever
                                 Global.getSettings().getColor("yellowTextColor"),
                                 Global.getSettings().getColor("yellowTextColor"));
 
-                        QuestHelper.setFailed(true, JOB4_FAILED_KEY);
+                        QuestHelper.setFailed(true, KestevenFlag.JOB4_FAILED);
                     }
                     break;
                 }
@@ -1365,7 +1284,7 @@ public class QuestStageManager extends BaseCampaignEventListener implements Ever
     public void reportPlayerReputationChange(String faction, float delta) {
 
         //relations capper for Eliza ending
-        if (QuestHelper.getCompleted(EndingElizaDialog.DIALOG_FINISHED_KEY)){
+        if (QuestHelper.getCompleted(KestevenFlag.ELIZA_ENDING_DONE)){
             if (faction.equals(Ids.KESTEVEN_FACTION_ID)){
                 //add Nex rel cap
                 float max;
@@ -1397,12 +1316,7 @@ public class QuestStageManager extends BaseCampaignEventListener implements Ever
     }
 
     public static Random getRandom() {
-        Map<String, Object> data = Global.getSector().getPersistentData();
-        if (!data.containsKey(PERSISTENT_RANDOM_KEY)) {
-
-            data.put(PERSISTENT_RANDOM_KEY, new Random(MathHelper.getSeedParsed()));
-        }
-        return (Random) data.get(PERSISTENT_RANDOM_KEY);
+        return KestevenQuest.random(KestevenState.RANDOM_REVENGE);
     }
 
 }

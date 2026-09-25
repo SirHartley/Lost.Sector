@@ -16,8 +16,8 @@ import com.fs.starfarer.api.impl.campaign.rulecmd.FireBest;
 import com.fs.starfarer.api.loading.HullModSpecAPI;
 import com.fs.starfarer.api.util.Misc;
 import com.fs.starfarer.api.util.Misc.Token;
-import lostsector.campaign.kesteven.quest.QuestStageManager;
 import lostsector.campaign.kesteven.quest.QuestHelper;
+import lostsector.campaign.kesteven.quest.KestevenFlag;
 import lostsector.helper.MathHelper;
 import lostsector.helper.SectorLookup;
 
@@ -195,7 +195,7 @@ public class nskr_modRemoval extends BaseCommandPlugin {
         if (market==null) return false;
         if (Global.getSector().getPlayerFaction().getRelationship("kesteven")<=-0.5f) return false;
         if (SectorLookup.asteriaOrOutpost()==null) return false;
-        if (QuestHelper.getCompleted(QuestStageManager.ELIZA_INTERCEPT_HANDED_OVER) || QuestHelper.getCompleted(nskr_altEndingDialogLuddic.DIALOG_FINISHED_KEY)) return false;
+        if (QuestHelper.getCompleted(KestevenFlag.CHIP_HANDED_TO_ELIZA) || QuestHelper.getCompleted(KestevenFlag.ALT_ENDING_DONE)) return false;
 
         return market== SectorLookup.asteriaOrOutpost();
     }

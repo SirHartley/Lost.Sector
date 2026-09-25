@@ -9,8 +9,8 @@ import com.fs.starfarer.api.combat.ShipAPI;
 import com.fs.starfarer.api.combat.ShipHullSpecAPI;
 import com.fs.starfarer.api.fleet.FleetMemberAPI;
 import com.fs.starfarer.api.impl.campaign.ids.Factions;
-import lostsector.campaign.kesteven.quest.EndingKestevenDialog;
 import lostsector.campaign.kesteven.quest.QuestHelper;
+import lostsector.campaign.kesteven.quest.KestevenFlag;
 import lostsector.persistence.Saved;
 import lostsector.campaign.kesteven.contracts.ContractsMission;
 import lostsector.helper.Ids;
@@ -394,7 +394,7 @@ public class ContractManager extends BaseCampaignEventListener implements EveryF
         }
         //2 max contracts after questline
         int storyBonus = 1;
-        if (QuestHelper.getCompleted(EndingKestevenDialog.DIALOG_FINISHED_KEY)){
+        if (QuestHelper.getCompleted(KestevenFlag.KESTEVEN_ENDING_DONE)){
             storyBonus = 2;
         }
         if (type == ContractInfo.ContractType.ELIMINATE && elimCount >= MAX_ELIM_CONTRACTS * storyBonus) return true;

@@ -10,7 +10,6 @@ import com.fs.starfarer.api.impl.campaign.ids.Factions;
 import com.fs.starfarer.api.impl.campaign.ids.Ranks;
 import com.fs.starfarer.api.util.Misc;
 import lostsector.dialogue.rules.nskr_kestevenQuest;
-import lostsector.helper.MathHelper;
 
 import java.awt.*;
 import java.util.Map;
@@ -20,8 +19,6 @@ public class CacheDoubtDialog implements InteractionDialogPlugin {
 
     //
 
-    public static final String PERSISTENT_KEY = "nskr_cacheDoubtDialogKey";
-    public static final String PERSISTENT_RANDOM_KEY = "nskr_cacheDoubtDialogRandom";
 
     private InteractionDialogAPI dialog;
     private TextPanelAPI text;
@@ -259,12 +256,7 @@ public class CacheDoubtDialog implements InteractionDialogPlugin {
     }
 
     public static Random getRandom() {
-        Map<String, Object> data = Global.getSector().getPersistentData();
-        if (!data.containsKey(PERSISTENT_RANDOM_KEY)) {
-
-            data.put(PERSISTENT_RANDOM_KEY, new Random(MathHelper.getSeedParsed()));
-        }
-        return (Random) data.get(PERSISTENT_RANDOM_KEY);
+        return KestevenQuest.random(KestevenState.RANDOM_CACHE_DOUBT);
     }
 
 }

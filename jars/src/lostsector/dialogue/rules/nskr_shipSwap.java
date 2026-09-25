@@ -22,9 +22,8 @@ import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import com.fs.starfarer.api.util.Misc;
 import com.fs.starfarer.api.util.Misc.Token;
 import com.fs.starfarer.api.util.WeightedRandomPicker;
-import lostsector.campaign.kesteven.quest.EndingKestevenDialog;
-import lostsector.campaign.kesteven.quest.QuestStageManager;
 import lostsector.campaign.kesteven.quest.QuestHelper;
+import lostsector.campaign.kesteven.quest.KestevenFlag;
 import lostsector.helper.StringHelper;
 import lostsector.helper.MathHelper;
 import lostsector.helper.SectorLookup;
@@ -465,7 +464,7 @@ public class nskr_shipSwap extends BaseCommandPlugin {
 		List<PurchaseInfo> ships = new ArrayList<>();
 		Random random = getRandom();
 		WeightedRandomPicker<PurchaseInfo> picker = new WeightedRandomPicker<>(random);
-		boolean questFinished = QuestHelper.getCompleted(EndingKestevenDialog.DIALOG_FINISHED_KEY);
+		boolean questFinished = QuestHelper.getCompleted(KestevenFlag.KESTEVEN_ENDING_DONE);
 		for (ShipHullSpecAPI hull : Global.getSettings().getAllShipHullSpecs()) {
 			//prot hulls
 			if (!hull.hasTag("prot_light") && !hull.hasTag("prot_heavy")) continue;
@@ -578,7 +577,7 @@ public class nskr_shipSwap extends BaseCommandPlugin {
 		if (!market.getFaction().getId().equals("kesteven")) return false;
 		if (Global.getSector().getPlayerFaction().getRelationship("kesteven")<=-0.5f) return false;
 		if (SectorLookup.asteriaOrOutpost()==null) return false;
-		if (QuestHelper.getCompleted(QuestStageManager.ELIZA_INTERCEPT_HANDED_OVER) || QuestHelper.getCompleted(nskr_altEndingDialogLuddic.DIALOG_FINISHED_KEY)) return false;
+		if (QuestHelper.getCompleted(KestevenFlag.CHIP_HANDED_TO_ELIZA) || QuestHelper.getCompleted(KestevenFlag.ALT_ENDING_DONE)) return false;
 		return market.getId().equals(SectorLookup.asteriaOrOutpost().getId());
 	}
 	

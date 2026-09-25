@@ -9,8 +9,6 @@ import com.fs.starfarer.api.fleet.FleetMemberAPI;
 import com.fs.starfarer.api.impl.campaign.ids.MemFlags;
 import com.fs.starfarer.api.util.Misc;
 import lostsector.campaign.kesteven.quest.QuestHelper;
-import lostsector.dialogue.rules.nskr_kestevenQuest;
-import lostsector.helper.MathHelper;
 import org.lazywizard.lazylib.MathUtils;
 
 import java.awt.*;
@@ -23,9 +21,6 @@ public class GlacierCommsDialog implements InteractionDialogPlugin {
     //
     //
 
-    public static final String RECOVERED_KEY = "nskr_glacierCommsKeyCount";
-    public static final String PERSISTENT_KEY = "nskr_glacierCommsKey";
-    public static final String PERSISTENT_RANDOM_KEY = "nskr_glacierCommsKeyRandom";
 
     private int time = 90;
     private final float damagePercent = 50f;
@@ -65,8 +60,8 @@ public class GlacierCommsDialog implements InteractionDialogPlugin {
         text.addPara("Your fleet approaches the tundra planet Glacier.");
 
         int stage = QuestHelper.getStage();
-        boolean aliceTip2 = QuestHelper.getCompleted(nskr_kestevenQuest.JOB5_ALICE_TIP_KEY2);
-        if (stage >= 16 && aliceTip2 && !QuestHelper.getCompleted(RECOVERED_KEY)) {
+        boolean aliceTip2 = QuestHelper.getCompleted(KestevenFlag.JOB5_ALICE_TIP2);
+        if (stage >= 16 && aliceTip2 && !QuestHelper.getCompleted(KestevenFlag.GLACIER_DISK_RECOVERED)) {
             options.addOption("Search for the facility", OptionId.A1);
         }
     }
@@ -328,7 +323,7 @@ public class GlacierCommsDialog implements InteractionDialogPlugin {
                 options.addOption("\"I know, I'm the best.\"", OptionId.LEAVE2);
             }
 
-            QuestHelper.setCompleted(true, RECOVERED_KEY);
+            QuestHelper.setCompleted(true, KestevenFlag.GLACIER_DISK_RECOVERED);
             QuestHelper.setDisksRecovered(QuestHelper.getDisksRecovered()+1);
 
             //remove important
@@ -434,12 +429,7 @@ public class GlacierCommsDialog implements InteractionDialogPlugin {
     }
 
     public static Random getRandom() {
-        Map<String, Object> data = Global.getSector().getPersistentData();
-        if (!data.containsKey(PERSISTENT_RANDOM_KEY)) {
-
-            data.put(PERSISTENT_RANDOM_KEY, new Random(MathHelper.getSeedParsed()));
-        }
-        return (Random) data.get(PERSISTENT_RANDOM_KEY);
+        return KestevenQuest.random(KestevenState.RANDOM_GLACIER);
     }
 
 }

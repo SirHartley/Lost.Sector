@@ -5,7 +5,7 @@ How the quests are implemented today, traced from the Java sources and `data/cam
 | Page | Covers |
 |---|---|
 | [KESTEVEN_QUESTLINE.md](KESTEVEN_QUESTLINE.md) | The main questline: owners, gates, stages, each job, the endings, failure, side events and defects found in the source |
-| [KESTEVEN_STATE.md](KESTEVEN_STATE.md) | Every saved key, target, random and memory flag the questline uses, and every writer of the stage |
+| [KESTEVEN_STATE.md](KESTEVEN_STATE.md) | The questline's saved state: stages and their legacy numbers, flags, fields, random purposes, memory flags, and every caller that changes the stage |
 | [KESTEVEN_DIALOGUE.md](KESTEVEN_DIALOGUE.md) | Where each conversation is implemented, how rules and Java hand off, and what moving dialogue into rules involves |
 | [CONTRACTS_AND_BOUNTIES.md](CONTRACTS_AND_BOUNTIES.md) | The Kesteven contracts and the four named bounty fleets |
 

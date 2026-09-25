@@ -10,7 +10,8 @@ Java paths are relative to `jars/src/lostsector/campaign/`; `dialogue/rules/` an
 |---|---|
 | `dialogue/rules/nskr_kestevenQuest` | Every conversation with Jack, Alice and Nicholas about the questline: offers, briefings, hand-ins, rewards and most player-driven stage changes |
 | `kesteven/quest/QuestStageManager` | `EveryFrameScript` in `EFS_LIST`: automatic stage changes, failure checks, intel, bar events, quest fleets and their AI, the Cache guardian timer, Eliza relocation, post-quest revenge fleets |
-| `kesteven/quest/QuestHelper` | Accessors for the stage and flags in sector persistent data; lazily picked target locations; `saveEnding()` |
+| `kesteven/quest/KestevenQuest`, `KestevenStage`, `KestevenFlag`, `KestevenState` | Framework definition of quest `kq`, with no modules yet; the stage enum, the flags and the saved state ([KESTEVEN_STATE.md](KESTEVEN_STATE.md)) |
+| `kesteven/quest/QuestHelper` | Wrappers over `KestevenState` for the old callers: the stage as a legacy int, flags, fields and lazily picked target locations; `saveEnding()` |
 | `kesteven/quest/KestevenFleets` | Builders for every quest fleet |
 | `CorePlugin` | Opens the Java quest dialogs when the player interacts with a quest entity |
 | `kesteven/quest/*Dialog`, `kesteven/quest/*BarEvent`, `kesteven/quest/HintWreckDialog` | Java dialogs and bar events |
@@ -27,7 +28,7 @@ The questline runs at `helper/SectorLookup.asteriaOrOutpost()`: Asteria (`nskr_a
 The rules row `nskr_kestevenQuest` adds "Chat about operations work" to a person's options when all of these hold, checked in this order:
 
 - the person has the `k_quest` tag (Jack, Alice, Nicholas);
-- `nskr_kestevenQuest hasOption`: the market belongs to Kesteven, the player's Kesteven relationship is above -0.50, and the questline has not ended (`QUEST_END_KEY`). The verb returns before `setupVars()`, so it computes no fleet strength;
+- `nskr_kestevenQuest hasOption`: the market belongs to Kesteven, the player's Kesteven relationship is above -0.50, and the questline has not ended (flag `ENDED`). The verb returns before `setupVars()`, so it computes no fleet strength;
 - `nskr_isAtMostKStage 19`.
 
 At stage 20 and after failure the option disappears.
@@ -44,16 +45,16 @@ Each job has a relationship gate and, from job 3 on, a fleet-strength gate. Stre
 When the relationship gate passes and only the strength gate fails, the offer shows a 1-story-point option, "I believe you'll find me more than capable." (`nskr_kestevenQuest advanceStageReqSkip`). Spending it bypasses the strength gate and shows the job's briefing:
 
 - job 3 (stage 6): Jack sends the player to Alice, whose offer has no strength gate;
-- job 4 (stage 11): Alice's briefing, and `JOB4_SKIP_REQ_KEY` keeps her offer open on later visits;
+- job 4 (stage 11): Alice's briefing, and `JOB4_REQUIREMENT_SKIPPED` keeps her offer open on later visits;
 - job 5 (stage 14): Jack's briefing, which sets stage 15.
 
 ## Stages
 
-The stage is one integer in sector persistent data (`nskr_kestevenQuest`). Stages 3 to 5 are unused. There is no Job 2; the job numbers follow the stage cheat sheet in `nskr_kestevenQuest.java`.
+The stage is a `KestevenStage` on the quest state, changed only by the quest manager. The old code reads and writes it as the legacy integer below through `QuestHelper.getStage/setStage`; [KESTEVEN_STATE.md](KESTEVEN_STATE.md#stages) maps each integer to its constant. Stages 3 to 5 are unused. There is no Job 2; the job numbers follow the stage cheat sheet in `nskr_kestevenQuest.java`.
 
 | Stage | Meaning | Set by |
 |---|---|---|
-| 0 | Not started | Default on first read |
+| 0 | Not started | Start stage; the quest manager creates the state on the first unpaused frame of a new campaign |
 | 1 | Job 1 active | Jack, accept (`quest()`) |
 | 2 | Job 1 tasks done | `QuestStageManager`, when both deliveries are recorded |
 | 6 | Job 3 offered by Jack | Jack, job 1 turn-in |
@@ -77,14 +78,14 @@ The stage is one integer in sector persistent data (`nskr_kestevenQuest`). Stage
 
 Jack offers two tasks for 155,000 credits:
 
-1. Win a battle against an Enigma fleet while destroying at least one ship. `QuestStageManager.reportEncounterLootGenerated` counts Enigma casualties weighted by the player's contribution and sets `JOB1_SENSORED_KEY` when the sum reaches 1.
+1. Win a battle against an Enigma fleet while destroying at least one ship. `QuestStageManager.reportEncounterLootGenerated` counts Enigma casualties weighted by the player's contribution and sets `JOB1_SENSOR_DATA` when the sum reaches 1.
 2. Deliver 70 Artifact Electronics (`nskr_electronics`).
 
 Asking "How am I supposed to find them?" calls `QuestHelper.getJob1Tip()`. On first read it picks a system with an Enigma base and places a dormant Enigma fleet there.
 
-Jack takes each delivery when the player has it (`JOB1_DELIVERED_DATA_KEY`, `JOB1_DELIVERED_KEY`). `QuestStageManager` then moves stage 1 to 2. Turning in at stage 2 grants a Kesteven hullmod modspec (an unknown one of `nskr_inertial`, `nskr_volatile`, `nskr_bigBats`, `nskr_criticalArmor` if possible), 155,000 credits, Kesteven +5 and Jack +10, and sets stage 6.
+Jack takes each delivery when the player has it (`JOB1_DATA_DELIVERED`, `JOB1_ELECTRONICS_DELIVERED`). `QuestStageManager` then moves stage 1 to 2. Turning in at stage 2 grants a Kesteven hullmod modspec (an unknown one of `nskr_inertial`, `nskr_volatile`, `nskr_bigBats`, `nskr_criticalArmor` if possible), 155,000 credits, Kesteven +5 and Jack +10, and sets stage 6.
 
-Winning against Enigma before accepting sets `HAS_FOUGHT_ENIGMA_KEY`, which changes one of Jack's answers. `EnemyUnknownIntel` is added once at stage 1.
+Winning against Enigma before accepting sets `FOUGHT_ENIGMA`, which changes one of Jack's answers. `EnemyUnknownIntel` is added once at stage 1.
 
 ## Job 3: Hostile Takeover (stages 6 to 11)
 
@@ -106,16 +107,16 @@ The expedition prepares at home for 10 days, travels to the target, orbits it un
 The job ends in `QuestStageManager` at stage 10 in one of three ways:
 
 - the expedition falls below 20% of its spawn strength: success;
-- the expedition is older than 90 days: `JOB3_FAIL_KEY`, and derelicts are left at the target;
-- the player contributes to a battle against the expedition while it has seen the player's transponder on: `JOB3_FAIL_KEY` ("failed to neutralize the fleet stealthily").
+- the expedition is older than 90 days: `JOB3_FAILED`, and derelicts are left at the target;
+- the player contributes to a battle against the expedition while it has seen the player's transponder on: `JOB3_FAILED` ("failed to neutralize the fleet stealthily").
 
 Alice's turn-in at stage 10: on success, a modspec, 50,000 exchange points, 205,000 credits, Kesteven +5 and Alice +10; on failure, Kesteven -5 and Alice -10. Both set stage 11.
 
-Refusing at stage 7 ("I'm not doing this.", then "yes") costs Kesteven -5 and Alice -10 and sets stage 11 and `JOB3_SKIP_KEY`. The derelicts, satellite #3 and the dormant fleet are still placed at the target so job 5 can use them. The refusal row `nskr_kestevenQuestJob3Skip` carries `score:10`, so it always wins over the generic question row for the same option.
+Refusing at stage 7 ("I'm not doing this.", then "yes") costs Kesteven -5 and Alice -10 and sets stage 11 and `JOB3_REFUSED`. The derelicts, satellite #3 and the dormant fleet are still placed at the target so job 5 can use them. The refusal row `nskr_kestevenQuestJob3Skip` carries `score:10`, so it always wins over the generic question row for the same option.
 
 ## Job 4: Operation Lifesaver (stages 11 to 14)
 
-At stage 11 `QuestStageManager` counts 300 seconds (30 days) and then sets `JOB4_WAIT_KEY`. After the wait, Alice offers the job when Kesteven relationship is at least 0.60 and either strength is above 0.80 or `JOB4_SKIP_REQ_KEY` is set. Pay is 285,000 credits. Her briefing names the constellation of the friendly fleet's location, a random point in a system far from the core. If the Outpost belongs to Kesteven she also points to Nicholas. Accepting sets stage 12.
+At stage 11 `QuestStageManager` counts 300 seconds (30 days) and then sets `JOB4_WAIT_OVER`. After the wait, Alice offers the job when Kesteven relationship is at least 0.60 and either strength is above 0.80 or `JOB4_REQUIREMENT_SKIPPED` is set. Pay is 285,000 credits. Her briefing names the constellation of the friendly fleet's location, a random point in a system far from the core. If the Outpost belongs to Kesteven she also points to Nicholas. Accepting sets stage 12.
 
 When stage 12 is first seen, `QuestStageManager`:
 
@@ -130,15 +131,15 @@ Three sources lead the player on:
 
 - Nicholas describes a burst of signals from the enemy target system and records his dialogue stage.
 - The hint wreck (`HintWreckDialog`, id prefix `$job4HintWreck`) gives the friendly fleet's system.
-- The Special Operations fleet (`nskr_job4FleetDialog`, transponder must be on) tells its story, sends the strike group coordinates, and asks for 250 supplies and 400 fuel. Giving them sets `JOB4_HELPED_KEY`, and the fleet flies home.
+- The Special Operations fleet (`nskr_job4FleetDialog`, transponder must be on) tells its story, sends the strike group coordinates, and asks for 250 supplies and 400 fuel. Giving them sets `JOB4_FRIENDLY_HELPED`, and the fleet flies home.
 
 `OperationLifesaverIntel` lists each lead the player has. Its map marker points at the most precise one: the strike group once seen or once the Special Operations fleet sent its coordinates; else the friendly fleet's coordinates from the hint wreck while that fleet is not found; else the system Nicholas named; else the found friendly fleet; else the briefing's constellation. The strike group leads apply only until it is destroyed.
 
-Talking to the friendly fleet or seeing it sets `JOB4_FOUND_FRIENDLY_KEY`. Reducing the strike group below 20% of its strength sets `JOB4_DESTROYED_KEY`. With both set, `QuestStageManager` sets stage 13.
+Talking to the friendly fleet or seeing it sets `JOB4_FRIENDLY_FOUND`. Reducing the strike group below 20% of its strength sets `JOB4_TARGET_DESTROYED`. With both set, `QuestStageManager` sets stage 13.
 
 If anything other than the player destroys the Special Operations fleet before it is found, `QuestStageManager` spawns a new one at the friendly target. It checks once a day at stage 12, after the destroyed fleet has left the quest fleet list; that happens once the player is out of hyperspace sensor range of it.
 
-If the player contributes to a battle against the Special Operations fleet, `QuestStageManager` sets stage 14 and `JOB4_FAILED_KEY`. The next advance turns that into stage 99 and ends the questline.
+If the player contributes to a battle against the Special Operations fleet, `QuestStageManager` sets stage 14 and `JOB4_FAILED`. The next advance turns that into stage 99 and ends the questline.
 
 Alice's turn-in at stage 13 grants 1 story point, 285,000 credits, a modspec, Kesteven +5 and Alice +10. If the player helped the fleet it also grants an Epoch-class prototype frigate (`nskr_epoch_empty`). Alice becomes a potential contact, Jack's importance rises to high, and S-mod removal (`nskr_modRemoval`) opens at research officials. Stage becomes 14.
 
@@ -171,35 +172,35 @@ The satellites exist from jobs 3 and 4 and can be salvaged at any time. Each sal
 
 Tips unlock in this order:
 
-1. Jack (`JOB5_JACK_TIP_KEY`): find Eliza through pirates.
-2. Alice (`JOB5_ALICE_TIP_KEY`): where the two satellites are. She marks the one not yet salvaged.
-3. Alice again (`JOB5_ALICE_TIP_KEY2`), after both tips and at least two satellites, while the disks are incomplete: a tundra planet around a red dwarf with a comms facility, within a stated distance of a named constellation. She marks Glacier.
+1. Jack (`JOB5_JACK_TIP`): find Eliza through pirates.
+2. Alice (`JOB5_ALICE_TIP`): where the two satellites are. She marks the one not yet salvaged.
+3. Alice again (`JOB5_ALICE_TIP2`), after both tips and at least two satellites, while the disks are incomplete: a tundra planet around a red dwarf with a comms facility, within a stated distance of a named constellation. She marks Glacier.
 
-If the player has visited Frost, answering "It's the Frost." sets `JOB5_FOUND_FROST_KEY`. `QuestStageManager` also sets it when the player enters Frost after tip 2. `CorePlugin` opens `GlacierCommsDialog` at Glacier from tip 2 on; the timed raid there gives disk #5.
+If the player has visited Frost, answering "It's the Frost." sets `FROST_FOUND`. `QuestStageManager` also sets it when the player enters Frost after tip 2. `CorePlugin` opens `GlacierCommsDialog` at Glacier from tip 2 on; the timed raid there gives disk #5.
 
 ### Finding Eliza
 
-The three bar events appear at pirate markets and share a dialogue stage (`nskr_kQuest5ElizaBarDialogStage`) and a list of used markets:
+The three bar events appear at pirate markets and share a dialogue stage (`KestevenState.elizaSearchStage`) and a list of used markets:
 
 | Event | When | Result |
 |---|---|---|
 | `ElizaSearchBarEvent` | Stage 0, any unused pirate market | A rough spacer. Paying 4,000 to 7,000 credits names a contact market (stage 2, marked). Pressing without paying ends the talk (stage 1). |
 | `ElizaSearchSecondBarEvent` | Stage 1 | A sly spacer who refuses to talk; leads to stage 2 |
-| `ElizaSearchFinalBarEvent` | Stage 2; only at the paid-for market if the player paid | "Eliza herself wants to speak to you." Picks Eliza's market and sets `JOB5_FOUND_ELIZA_KEY`. |
+| `ElizaSearchFinalBarEvent` | Stage 2; only at the paid-for market if the player paid | "Eliza herself wants to speak to you." Picks Eliza's market and sets `ELIZA_FOUND`. |
 
 Eliza's market is a pirate market in Yma, Corvus, Isirah, Thule, Hybrasil, Galatia, Mayasura or Kumari Kandam, excluding Kanta's Den and used markets. If that market or the paid-for market decivilizes, `QuestStageManager` picks another and moves Eliza.
 
 At her market, `CorePlugin` opens `ElizaDialog` until it has finished once. Eliza generates on first contact (`SectorGen.genEliza()`).
 
-- **Agree, sincerely:** disks #1 and #2, `ELIZA_HELP_KEY`, and `AGREED_TO_HELP_KEY`.
-- **Agree while lying:** disks #1 and #2 and `ELIZA_HELP_KEY` only.
-- **Refuse:** `ELIZA_RAID_KEY`. `ElizaRaidObjectiveCreator` then adds an extreme "Data Disks" raid objective at her market. The raid grants disks #1 and #2 and 30,000 to 40,000 credits, removes Eliza from the market, and spawns her "Merc Armada", which hunts the player. Destroying her flagship sets `KILLED_ELIZA_KEY` and removes her from important people.
+- **Agree, sincerely:** disks #1 and #2, `ELIZA_HELPED`, and `ELIZA_AGREED_SINCERELY`.
+- **Agree while lying:** disks #1 and #2 and `ELIZA_HELPED` only.
+- **Refuse:** `ELIZA_RAID_ENABLED`. `ElizaRaidObjectiveCreator` then adds an extreme "Data Disks" raid objective at her market. The raid grants disks #1 and #2 and 30,000 to 40,000 credits, removes Eliza from the market, and spawns her "Merc Armada", which hunts the player. Destroying her flagship sets `ELIZA_KILLED` and removes her from important people.
 
 ### Reaching the Cache
 
-With five disks `QuestStageManager` sets `ALL_DISKS_RECOVERED_KEY`. Alice's all-disks conversation offers "Yes" and, if the player sincerely agreed to help Eliza, "Yes (lie)". Both set `FOUND_CACHE_KEY` and stage 17 and hand over the Cache coordinates. The Cache system "Unknown Site" is reached by a transverse jump.
+With five disks `QuestStageManager` sets `ALL_DISKS_RECOVERED`. Alice's all-disks conversation offers "Yes" and, if the player sincerely agreed to help Eliza, "Yes (lie)". Both set `CACHE_FOUND` and stage 17 and hand over the Cache coordinates. The Cache system "Unknown Site" is reached by a transverse jump.
 
-Entering Unknown Site at stage 15 or 16 sets `FOUND_CACHE_KEY` without any disks, and stage 16 becomes 17. Stage 17 removes the Eliza bar events, so a player who reaches the Cache early can skip Eliza and the remaining disks.
+Entering Unknown Site at stage 15 or 16 sets `CACHE_FOUND` without any disks, and stage 16 becomes 17. Stage 17 removes the Eliza bar events, so a player who reaches the Cache early can skip Eliza and the remaining disks.
 
 Inside Unknown Site, `QuestStageManager`:
 
@@ -225,7 +226,7 @@ All four endings set stage 20 and call `QuestHelper.saveEnding()`. That turns on
 | Ending | How | Main results |
 |---|---|---|
 | Kesteven | `CorePlugin` opens `EndingKestevenDialog` at `asteriaOrOutpost` (or the Asteria station) while the UPC was not handed to Eliza | Prototype Light Ships blueprint package, 565,000 credits, 450,000 exchange points, 1 story point, Kesteven +25, Jack and Alice +20 and very high importance; player and Kesteven relations with Tri-Tachyon set to about -0.65 to -0.70; Eliza -75; `nskr_upChip` on the market |
-| Eliza | Requires `ELIZA_HELP_KEY`. At stage 19 `QuestStageManager` spawns her fleet once to intercept the player. Handing over the UPC (`nskr_elizaInterceptDialog`) sets the handover flag and caps the player's Kesteven relationship at -0.35; her fleet returns home and she reappears (`ELIZA_RETURNED_KEY`). `CorePlugin` then opens `EndingElizaDialog` at her market. | Prototype Weapons and Heavy Ships blueprint packages, 2 story points, pirates at least 0.25 to 0.30, Eliza +30 and contact; Kesteven about -0.80 to -0.90 and Hegemony (and Iron Shell) about -0.65 to -0.70, also between pirates and those factions; Jack and Alice -75 with contacts suspended; `nskr_upChip`, orbital works or a heavy-industry upgrade, and a military base or patrol upgrade on her market |
+| Eliza | Requires `ELIZA_HELPED`. At stage 19 `QuestStageManager` spawns her fleet once to intercept the player. Handing over the UPC (`nskr_elizaInterceptDialog`) sets the handover flag and caps the player's Kesteven relationship at -0.35; her fleet returns home and she reappears (`ELIZA_RETURNED`). `CorePlugin` then opens `EndingElizaDialog` at her market. | Prototype Weapons and Heavy Ships blueprint packages, 2 story points, pirates at least 0.25 to 0.30, Eliza +30 and contact; Kesteven about -0.80 to -0.90 and Hegemony (and Iron Shell) about -0.65 to -0.70, also between pirates and those factions; Jack and Alice -75 with contacts suspended; `nskr_upChip`, orbital works or a heavy-industry upgrade, and a military base or patrol upgrade on her market |
 | Luddic | Admin official at a Luddic Church or Path market (`nskr_altEndingDialogLuddic`): destroy the Chip | 8 story points, that faction +15, the official +10 and contact; `makeMad`: Jack, Alice and Eliza -50 with contacts suspended, Kesteven about -0.55 to -0.65 |
 | Tri-Tachyon | Admin official at a Tri-Tachyon market (`nskr_altEndingDialogTT`): sell the Chip for 2,000,000 credits or a haggled price | Credits, Tri-Tachyon +15, the official +10 and contact, the same `makeMad` fallout; `nskr_upChip` on Culann if Tri-Tachyon holds it, otherwise on this market |
 
@@ -233,18 +234,18 @@ The two alternative endings share one finished flag and are offered only at stag
 
 ## After the questline
 
-- **Jack's revenge:** at stage 20, after the Eliza, Luddic or Tri-Tachyon ending, `QuestStageManager` rolls 1% per day, once, to spawn Jack's "Task Force" (flagship "K-Corp Homewrecker"). Jack is removed from his market and from important people (`JACK_GONE_KEY`).
-- **Eliza's revenge:** after the Eliza ending, if the player's faction takes Eliza's market, `ELIZA_BETRAY_KEY` spawns her fleet to hunt the player.
+- **Jack's revenge:** at stage 20, after the Eliza, Luddic or Tri-Tachyon ending, `QuestStageManager` rolls 1% per day, once, to spawn Jack's "Task Force" (flagship "K-Corp Homewrecker"). Jack is removed from his market and from important people (`JACK_GONE`).
+- **Eliza's revenge:** after the Eliza ending, if the player's faction takes Eliza's market, `ELIZA_BETRAYED` spawns her fleet to hunt the player.
 - **Relationship caps:** after the Eliza ending, `QuestStageManager.reportPlayerReputationChange` keeps Kesteven at or below -0.50 and the Hegemony and Iron Shell at or below -0.35, adjusted for Nexerelin's maximum relationship.
 - **Commission fix:** if the player held a Kesteven, Hegemony or Iron Shell commission at the Eliza ending, `QuestStageManager` waits 30 frames and re-applies the saved relationship values.
 
 ## Failure
 
-`QuestStageManager` sets stage 99 and `QUEST_END_KEY` when:
+`QuestStageManager` sets stage 99 and `ENDED` when:
 
 - the Outpost cannot host Kesteven and Asteria does not exist;
-- stage is 14 and `JOB4_FAILED_KEY` is set (the player attacked the Special Operations fleet);
-- stage is 19, the UPC was handed to Eliza, and Eliza has been killed (`JOB5_FAILED_KEY`).
+- stage is 14 and `JOB4_FAILED` is set (the player attacked the Special Operations fleet);
+- stage is 19, the UPC was handed to Eliza, and Eliza has been killed (`JOB5_FAILED`).
 
 The questline option then disappears. The Cache can still be found and fought; `CacheCoreDialog` gives no questline reward in that state.
 
@@ -262,8 +263,8 @@ While the `storySkipUnlocked` setting is on, `addStorySkipOption()` adds a 5-sto
 
 - places the job 3 objects (satellite #3 and the dormant fleet) if the stage is at most 7, and the job 4 objects (strike group, satellite #4 and wrecks) if it is at most 11;
 - marks every job 5 tip and disk source as done and sets the Eliza help flags, generating Eliza if she has no market yet;
-- sets `FOUND_CACHE_KEY` and stage 17;
-- clears `nskr_starfarerFromStart` and sets `SKIPPED_STORY_KEY`.
+- sets `CACHE_FOUND` and stage 17;
+- clears `nskr_starfarerFromStart` and sets `STORY_SKIPPED`.
 
 ## Defects found by reading the source
 

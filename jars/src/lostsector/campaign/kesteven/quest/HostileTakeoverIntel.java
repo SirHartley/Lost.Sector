@@ -9,7 +9,6 @@ import com.fs.starfarer.api.impl.campaign.intel.BaseIntelPlugin;
 import com.fs.starfarer.api.ui.SectorMapAPI;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import com.fs.starfarer.api.util.Misc;
-import lostsector.campaign.kesteven.quest.QuestStageManager;
 import lostsector.campaign.kesteven.quest.QuestHelper;
 import lostsector.helper.SectorLookup;
 
@@ -55,7 +54,7 @@ public class HostileTakeoverIntel extends BaseIntelPlugin {
         stage = QuestHelper.getStage();
         relation = Global.getSector().getPlayerFaction().getRelationship("kesteven");
         timer = QuestHelper.getMissionTimerJob3();
-        failed = QuestHelper.getFailed(QuestStageManager.JOB3_FAIL_KEY);
+        failed = QuestHelper.getFailed(KestevenFlag.JOB3_FAILED);
         home = QuestHelper.getJob3Start();
         target = QuestHelper.getJob3Target();
     }

@@ -10,7 +10,6 @@ import com.fs.starfarer.api.impl.campaign.ids.MemFlags;
 import com.fs.starfarer.api.util.Misc;
 import lostsector.campaign.kesteven.quest.ElizaRaidObjectiveCreator;
 import lostsector.campaign.kesteven.quest.QuestHelper;
-import lostsector.helper.MathHelper;
 import lostsector.world.SectorGen;
 
 import java.awt.*;
@@ -19,13 +18,6 @@ import java.util.Random;
 
 public class ElizaDialog implements InteractionDialogPlugin {
 
-    public static final String DIALOG_FINISHED_KEY = "nskr_elizaDialogKeyFinished";
-    public static final String ELIZA_FIGHT_KEY = "nskr_elizaDialogKeyFight";
-    public static final String AGREED_TO_HELP_KEY = "nskr_elizaDialogKeyAgreeToHelp";
-    public static final String ELIZA_HELP_KEY = "nskr_elizaDialogKeyHelp";
-    public static final String ELIZA_RAID_KEY = "nskr_elizaDialogKeyRaid";
-    public static final String PERSISTENT_KEY = "nskr_elizaDialogKey";
-    public static final String PERSISTENT_RANDOM_KEY = "nskr_elizaDialogKeyRandom";
 
     private InteractionDialogAPI dialog;
     private TextPanelAPI text;
@@ -237,8 +229,8 @@ public class ElizaDialog implements InteractionDialogPlugin {
             text.addPara("\"But I'll be getting those disks from you soon enough, one way or another.\" Thankfully she finishes.");
             text.addPara("She points towards the door, grabs the notebook on the desk and turns to face away from you. \"Now get out, while you still can!\" The large chair blocks your view of her.");
 
-            QuestHelper.setCompleted(true, DIALOG_FINISHED_KEY);
-            QuestHelper.setCompleted(true, ELIZA_RAID_KEY);
+            QuestHelper.setCompleted(true, KestevenFlag.ELIZA_DIALOG_FINISHED);
+            QuestHelper.setCompleted(true, KestevenFlag.ELIZA_RAID_ENABLED);
 
             //adds the raid itself
             ListenerManagerAPI listeners = Global.getSector().getListenerManager();
@@ -278,15 +270,15 @@ public class ElizaDialog implements InteractionDialogPlugin {
         if (optionData == OptionId.B3 || optionData == OptionId.B4) {
             options.clearOptions();
             if (optionData == OptionId.B3){
-                QuestHelper.setCompleted(true, AGREED_TO_HELP_KEY);
+                QuestHelper.setCompleted(true, KestevenFlag.ELIZA_AGREED_SINCERELY);
                 text.addPara("Wait, you really agree with her? Oh dear.",g,h,"","");
             }
             text.addPara("\"I'll be monitoring your progress from here captain. Good luck.\" She finishes with a sly smile.");
             if (optionData == OptionId.B4)text.addPara("Yes, make her do all the work for you.",g,h,"","");
             text.addPara("As you leave, Eliza's crew helps load the two disks into your cargo shuttle.");
 
-            QuestHelper.setCompleted(true, DIALOG_FINISHED_KEY);
-            QuestHelper.setCompleted(true, ELIZA_HELP_KEY);
+            QuestHelper.setCompleted(true, KestevenFlag.ELIZA_DIALOG_FINISHED);
+            QuestHelper.setCompleted(true, KestevenFlag.ELIZA_HELPED);
             QuestHelper.setDisksRecovered(QuestHelper.getDisksRecovered()+2);
 
             //remove important
@@ -388,12 +380,7 @@ public class ElizaDialog implements InteractionDialogPlugin {
     }
 
     public static Random getRandom() {
-        Map<String, Object> data = Global.getSector().getPersistentData();
-        if (!data.containsKey(PERSISTENT_RANDOM_KEY)) {
-
-            data.put(PERSISTENT_RANDOM_KEY, new Random(MathHelper.getSeedParsed()));
-        }
-        return (Random) data.get(PERSISTENT_RANDOM_KEY);
+        return KestevenQuest.random(KestevenState.RANDOM_ELIZA);
     }
 
 }

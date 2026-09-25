@@ -11,11 +11,12 @@ import com.fs.starfarer.api.impl.campaign.ids.MemFlags;
 import com.fs.starfarer.api.impl.campaign.rulecmd.PaginatedOptions;
 import com.fs.starfarer.api.util.Misc;
 import com.fs.starfarer.api.util.Misc.Token;
-import lostsector.campaign.kesteven.quest.EndingKestevenDialog;
 import lostsector.campaign.kesteven.quest.QuestStageManager;
 import lostsector.campaign.kesteven.quest.QuestHelper;
-import lostsector.helper.MathHelper;
+import lostsector.campaign.kesteven.quest.KestevenFlag;
 import lostsector.campaign.kesteven.quest.KestevenPeople;
+import lostsector.campaign.kesteven.quest.KestevenQuest;
+import lostsector.campaign.kesteven.quest.KestevenState;
 import lostsector.helper.SectorLookup;
 
 import java.awt.*;
@@ -28,8 +29,6 @@ public class nskr_elizaInterceptDialog extends PaginatedOptions {
 
     //
 
-    public static final String PERSISTENT_KEY = "nskr_elizaInterceptDialogKey";
-    public static final String PERSISTENT_RANDOM_KEY = "nskr_elizaInterceptDialogRandom";
 
     private boolean handed = false;
     private boolean finishedKesteven = false;
@@ -116,9 +115,9 @@ public class nskr_elizaInterceptDialog extends PaginatedOptions {
         player = Global.getSector().getPlayerPerson();
         person = dialog.getInteractionTarget().getActivePerson();
 
-        handed = QuestHelper.getCompleted(QuestStageManager.ELIZA_INTERCEPT_HANDED_OVER);
-        finishedKesteven = QuestHelper.getCompleted(EndingKestevenDialog.DIALOG_FINISHED_KEY);
-        finishedAlt = QuestHelper.getCompleted(nskr_altEndingDialogLuddic.DIALOG_FINISHED_KEY);
+        handed = QuestHelper.getCompleted(KestevenFlag.CHIP_HANDED_TO_ELIZA);
+        finishedKesteven = QuestHelper.getCompleted(KestevenFlag.KESTEVEN_ENDING_DONE);
+        finishedAlt = QuestHelper.getCompleted(KestevenFlag.ALT_ENDING_DONE);
     }
 
     @Override
@@ -139,7 +138,7 @@ public class nskr_elizaInterceptDialog extends PaginatedOptions {
         float pad = 3f;
         float opad = 10f;
         //talked to check
-        QuestHelper.setCompleted(true, QuestStageManager.ELIZA_INTERCEPT_TALKED);
+        QuestHelper.setCompleted(true, KestevenFlag.ELIZA_INTERCEPT_TALKED);
 
         text.addPara("\"I can tell you have the UPC captain.\" She says sharply. \"I have eyes and ears all across the sector, tracking every one of your fascinating moves.\"");
         text.addPara("\"Now can you hand the Chip over, like we agreed.\"");
@@ -168,7 +167,7 @@ public class nskr_elizaInterceptDialog extends PaginatedOptions {
         text.addPara("\"Now come visit me at "+ QuestHelper.getElizaLoc().getMarket().getName()+" to reap your reward.\"");
 
         //set completed
-        QuestHelper.setCompleted(true, QuestStageManager.ELIZA_INTERCEPT_HANDED_OVER);
+        QuestHelper.setCompleted(true, KestevenFlag.CHIP_HANDED_TO_ELIZA);
 
         //rep
         KestevenPeople.getEliza().getRelToPlayer().adjustRelationship(0.05f, RepLevel.COOPERATIVE);
@@ -227,12 +226,7 @@ public class nskr_elizaInterceptDialog extends PaginatedOptions {
     }
 
     public static Random getRandom() {
-        Map<String, Object> data = Global.getSector().getPersistentData();
-        if (!data.containsKey(PERSISTENT_RANDOM_KEY)) {
-
-            data.put(PERSISTENT_RANDOM_KEY, new Random(MathHelper.getSeedParsed()));
-        }
-        return (Random) data.get(PERSISTENT_RANDOM_KEY);
+        return KestevenQuest.random(KestevenState.RANDOM_ELIZA_INTERCEPT);
     }
 
 }

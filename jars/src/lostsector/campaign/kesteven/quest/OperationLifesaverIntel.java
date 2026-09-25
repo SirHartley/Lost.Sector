@@ -10,11 +10,8 @@ import com.fs.starfarer.api.impl.campaign.procgen.Constellation;
 import com.fs.starfarer.api.ui.SectorMapAPI;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import com.fs.starfarer.api.util.Misc;
-import lostsector.campaign.kesteven.quest.HintWreckDialog;
-import lostsector.campaign.kesteven.quest.QuestStageManager;
 import lostsector.campaign.kesteven.quest.QuestHelper;
 import lostsector.dialogue.rules.nskr_job4FleetDialog;
-import lostsector.dialogue.rules.nskr_kestevenQuest;
 import lostsector.helper.SectorLookup;
 
 import java.awt.*;
@@ -72,15 +69,15 @@ public class OperationLifesaverIntel extends BaseIntelPlugin {
         constellation = QuestHelper.getJob4FriendlyTarget().getConstellation();
         target = QuestHelper.getJob4FriendlyTarget();
 
-        helped = QuestHelper.getCompleted(QuestStageManager.JOB4_HELPED_KEY);
-        failed = QuestHelper.getFailed(QuestStageManager.JOB4_FAILED_KEY);
-        destroyed = QuestHelper.getCompleted(QuestStageManager.JOB4_DESTROYED_KEY);
-        foundFriendly = QuestHelper.getCompleted(QuestStageManager.JOB4_FOUND_FRIENDLY_KEY);
-        hintTarget = QuestHelper.getCompleted(QuestStageManager.JOB4_TARGET_HINT_KEY);
-        hintFriendly = QuestHelper.getCompleted(HintWreckDialog.HINT_RECEIVED_KEY);
-        foundTarget = QuestHelper.getCompleted(QuestStageManager.JOB4_FOUND_TARGET_KEY);
-        nickInfo = QuestHelper.getDialogStage(nskr_kestevenQuest.JOB4_INTELLIGENCE_DIALOG_KEY);
-        defeatedTarget = QuestHelper.getCompleted(QuestStageManager.JOB4_DESTROYED_KEY);
+        helped = QuestHelper.getCompleted(KestevenFlag.JOB4_FRIENDLY_HELPED);
+        failed = QuestHelper.getFailed(KestevenFlag.JOB4_FAILED);
+        destroyed = QuestHelper.getCompleted(KestevenFlag.JOB4_TARGET_DESTROYED);
+        foundFriendly = QuestHelper.getCompleted(KestevenFlag.JOB4_FRIENDLY_FOUND);
+        hintTarget = QuestHelper.getCompleted(KestevenFlag.JOB4_TARGET_HINT);
+        hintFriendly = QuestHelper.getCompleted(KestevenFlag.JOB4_HINT_WRECK_READ);
+        foundTarget = QuestHelper.getCompleted(KestevenFlag.JOB4_TARGET_FOUND);
+        nickInfo = QuestHelper.getNicholasDialogStage();
+        defeatedTarget = QuestHelper.getCompleted(KestevenFlag.JOB4_TARGET_DESTROYED);
         outpost = QuestHelper.outpostExists();
         //target
         locTarget = QuestHelper.getJob4EnemyTarget();
@@ -119,7 +116,7 @@ public class OperationLifesaverIntel extends BaseIntelPlugin {
         init();
 
         //friendly
-        boolean talked = nskr_job4FleetDialog.getDialogStage(nskr_job4FleetDialog.PERSISTENT_KEY)>=1;
+        boolean talked = nskr_job4FleetDialog.getDialogStage()>=1;
         SectorEntityToken locFr = QuestHelper.getJob4FriendlyTarget();
         String locFriendly = locFr.getStarSystem().getName();
         String locFriendlyOrbit = "";

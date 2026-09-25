@@ -10,7 +10,6 @@ import com.fs.starfarer.api.impl.campaign.intel.BaseIntelPlugin;
 import com.fs.starfarer.api.ui.SectorMapAPI;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import com.fs.starfarer.api.util.Misc;
-import lostsector.campaign.kesteven.quest.QuestStageManager;
 import lostsector.campaign.kesteven.quest.QuestHelper;
 import lostsector.dialogue.rules.nskr_kestevenQuest;
 import lostsector.helper.SectorLookup;
@@ -59,10 +58,10 @@ public class EnemyUnknownIntel extends BaseIntelPlugin {
         stage = QuestHelper.getStage();
         relation = Global.getSector().getPlayerFaction().getRelationship("kesteven");
 
-        delivered = QuestHelper.getCompleted(QuestStageManager.JOB1_DELIVERED_KEY);
-        deliveredData = QuestHelper.getCompleted(QuestStageManager.JOB1_DELIVERED_DATA_KEY);
-        sensored = QuestHelper.getCompleted(QuestStageManager.JOB1_SENSORS_KEY);
-        tipped = QuestHelper.getCompleted(QuestStageManager.JOB1_TIP_KEY);
+        delivered = QuestHelper.getCompleted(KestevenFlag.JOB1_ELECTRONICS_DELIVERED);
+        deliveredData = QuestHelper.getCompleted(KestevenFlag.JOB1_DATA_DELIVERED);
+        sensored = QuestHelper.getCompleted(KestevenFlag.JOB1_SENSOR_DATA);
+        tipped = QuestHelper.getCompleted(KestevenFlag.JOB1_TIP_GIVEN);
         if (QuestHelper.getJob1Tip()!=null) {
             base = QuestHelper.hasEnigmaBase(QuestHelper.getJob1Tip());
         }

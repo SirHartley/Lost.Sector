@@ -17,8 +17,8 @@ import com.fs.starfarer.api.impl.campaign.ids.MemFlags;
 import com.fs.starfarer.api.impl.campaign.ids.Tags;
 import lostsector.campaign.bounties.abyss.AbyssSpawner;
 import lostsector.helper.fleet.FleetInfo;
-import lostsector.campaign.kesteven.quest.QuestStageManager;
 import lostsector.campaign.kesteven.quest.QuestHelper;
+import lostsector.campaign.kesteven.quest.KestevenFlag;
 import lostsector.helper.fleet.SimpleFleet;
 import lostsector.settings.Difficulty;
 import lostsector.persistence.Saved;
@@ -209,9 +209,9 @@ public class InterceptManager extends BaseCampaignEventListener implements Every
 
                     boolean talked = fleet.getMemoryWithoutUpdate().contains(MESSENGER_FLEET_TALKED_KEY);
                     //mem key for other quest dialog
-                    if (talked && !QuestHelper.getCompleted(QuestStageManager.E_MESSENGER_TALKED_KEY)){
-                        QuestHelper.setCompleted(true , QuestStageManager.E_MESSENGER_TALKED_KEY);
-                        QuestHelper.setCompleted(true , QuestStageManager.E_MESSENGER_TALKED_ASK_ABOUT_KEY);
+                    if (talked && !QuestHelper.getCompleted(KestevenFlag.MESSENGER_MET)){
+                        QuestHelper.setCompleted(true , KestevenFlag.MESSENGER_MET);
+                        QuestHelper.setCompleted(true , KestevenFlag.MESSENGER_QUESTION_OPEN);
                     }
 
                     if (fleet.getFleetPoints()*4.0f<f.strength){

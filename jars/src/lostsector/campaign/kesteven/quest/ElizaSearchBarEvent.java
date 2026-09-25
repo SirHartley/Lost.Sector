@@ -14,7 +14,6 @@ import com.fs.starfarer.api.impl.campaign.ids.Ranks;
 import com.fs.starfarer.api.impl.campaign.intel.bar.PortsideBarData;
 import com.fs.starfarer.api.impl.campaign.intel.bar.events.BaseBarEvent;
 import com.fs.starfarer.api.util.Misc;
-import lostsector.campaign.kesteven.quest.QuestHelper;
 import lostsector.dialogue.rules.nskr_kestevenQuest;
 import lostsector.helper.MathHelper;
 
@@ -27,11 +26,6 @@ import java.util.Random;
 public class ElizaSearchBarEvent extends BaseBarEvent {
 
 	//job5 eliza search bar dialog first time
-
-	public static final String INTRO_DIALOG_KEY = "nskr_kQuest5ElizaBarDialogStage";
-	public static final String USED_MARKET_KEY = "nskr_kQuest5ElizaBarUsedMarket";
-	public static final String PAID_FOR_INFO = "nskr_kQuest5ElizaBarPaidFor";
-	public static final String PAID_FOR_INFO_LOC = "nskr_kQuest5ElizaBarPaidForLocation";
 
 	private float money = 0f;
 	protected long seed;
@@ -46,7 +40,7 @@ public class ElizaSearchBarEvent extends BaseBarEvent {
 	}
 
 	public boolean shouldShowAtMarket(MarketAPI market) {
-		if (getUsedMarkets(USED_MARKET_KEY).contains(market.getId())) return false;
+		if (getUsedMarkets().contains(market.getId())) return false;
 		if (QuestHelper.getStage()<16) return false;
 		return market.getFaction().getId().equals(Factions.PIRATES);
 	}
@@ -73,7 +67,7 @@ public class ElizaSearchBarEvent extends BaseBarEvent {
 		person = Global.getSector().getFaction(Factions.PIRATES).createRandomPerson(gender, random);
 		person.setPostId(Ranks.POST_GENERIC_MILITARY);
 
-		count = getDialogStage(INTRO_DIALOG_KEY);
+		count = getDialogStage();
 
 		TextPanelAPI text = dialog.getTextPanel();
 
@@ -155,9 +149,9 @@ public class ElizaSearchBarEvent extends BaseBarEvent {
 		if (optionData==OptionId.B2){
 			options.clearOptions();
 			//add
-			List<String> markets = getUsedMarkets(USED_MARKET_KEY);
+			List<String> markets = getUsedMarkets();
 			markets.add(dialog.getInteractionTarget().getMarket().getId());
-			setUsedMarkets(USED_MARKET_KEY, markets);
+			setUsedMarkets(markets);
 
 			setPaidForInfoTarget();
 			String loc = getPaidForInfoTarget().getMarket().getName();
@@ -165,7 +159,7 @@ public class ElizaSearchBarEvent extends BaseBarEvent {
 			text.addPara("\"You will want to talk the contact at "+loc+". You will have no trouble finding them at the bar, trust me.\"",tc,h,loc,"");
 			text.addPara("The spacer doesn't seem to want to say more, and is quick to distance "+himOrHerSelf+" from you.");
 
-			QuestHelper.setCompleted(true, PAID_FOR_INFO);
+			QuestHelper.setCompleted(true, KestevenFlag.ELIZA_SPACER_PAID);
 
 			//make important
 			getPaidForInfoTarget().getMemoryWithoutUpdate().set(MemFlags.MEMORY_KEY_MISSION_IMPORTANT, true);
@@ -191,15 +185,15 @@ public class ElizaSearchBarEvent extends BaseBarEvent {
 
 			if (optionData==OptionId.LEAVE && count==0){
 				//add
-				List<String> markets = getUsedMarkets(USED_MARKET_KEY);
+				List<String> markets = getUsedMarkets();
 				markets.add(dialog.getInteractionTarget().getMarket().getId());
-				setUsedMarkets(USED_MARKET_KEY, markets);
+				setUsedMarkets(markets);
 
-				setDialogStage(1,INTRO_DIALOG_KEY);
+				setDialogStage(1);
 			}
 
 			if (optionData==OptionId.LEAVE2 && count==0){
-				setDialogStage(2,INTRO_DIALOG_KEY);
+				setDialogStage(2);
 			}
 
 			dialog.getVisualPanel().fadeVisualOut();
@@ -230,41 +224,35 @@ public class ElizaSearchBarEvent extends BaseBarEvent {
 		return false;
 	}
 
-	public static int getDialogStage(String id) {
-
-		Map<String, Object> data = Global.getSector().getPersistentData();
-		if (!data.containsKey(id)) data.put(id, 0);
-
-		return (int)data.get(id);
+	// The search chain's step, shared by the three Eliza search bar events: 0 to 3.
+	public static int getDialogStage() {
+		KestevenState state = KestevenQuest.state();
+		return state == null ? 0 : state.elizaSearchStage;
 	}
 
-	public static void setDialogStage(int stage, String id) {
-
-		Map<String, Object> data = Global.getSector().getPersistentData();
-		data.put(id, stage);
+	public static void setDialogStage(int stage) {
+		KestevenState state = QuestHelper.writableState();
+		if (state != null) state.elizaSearchStage = stage;
 	}
 
-	public static List<String> setUsedMarkets(String id, List<String> marketId) {
-		Map<String, Object> data = Global.getSector().getPersistentData();
-		data.put(id, marketId);
-		return (List<String>)data.get(id);
+	public static List<String> setUsedMarkets(List<String> marketIds) {
+		KestevenState state = QuestHelper.writableState();
+		if (state != null) state.elizaSearchUsedMarkets = marketIds;
+		return marketIds;
 	}
-	public static List<String> getUsedMarkets(String id) {
-		Map<String, Object> data = Global.getSector().getPersistentData();
-		if (!data.containsKey(id)) data.put(id, new ArrayList<String>());
-		return (List<String>)data.get(id);
+
+	public static List<String> getUsedMarkets() {
+		KestevenState state = KestevenQuest.state();
+		return state == null ? new ArrayList<String>() : state.elizaSearchUsedMarkets;
 	}
 
 	public static void setPaidForInfoTarget(){
-		Map<String, Object> data = Global.getSector().getPersistentData();
-		String id = PAID_FOR_INFO_LOC;
-		data.put(id, QuestHelper.pickElizaMarket(nskr_kestevenQuest.getRandom(), false));
+		KestevenState state = QuestHelper.writableState();
+		if (state != null) state.elizaContactMarket = QuestHelper.pickElizaMarket(nskr_kestevenQuest.getRandom(), false);
 	}
 
 	public static SectorEntityToken getPaidForInfoTarget(){
-		Map<String, Object> data = Global.getSector().getPersistentData();
-		String id = PAID_FOR_INFO_LOC;
-
-		return (SectorEntityToken) data.get(id);
+		KestevenState state = KestevenQuest.state();
+		return state == null ? null : state.elizaContactMarket;
 	}
 }

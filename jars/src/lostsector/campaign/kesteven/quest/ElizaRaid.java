@@ -76,7 +76,7 @@ public class ElizaRaid extends AbstractGoalGroundRaidObjectivePluginImpl {
         market.getCommDirectory().removePerson(eliza);
         market.removePerson(eliza);
 
-        QuestHelper.setCompleted(true, ElizaDialog.ELIZA_FIGHT_KEY);
+        QuestHelper.setCompleted(true, KestevenFlag.ELIZA_RAIDED);
         //spawn fleet
         CampaignFleetAPI fleet = KestevenFleets.spawnElizaFleet(market.getPrimaryEntity(), eliza, ElizaDialog.getRandom(), false, false);
 

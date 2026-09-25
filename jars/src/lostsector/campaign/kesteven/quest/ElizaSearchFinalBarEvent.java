@@ -13,7 +13,6 @@ import com.fs.starfarer.api.impl.campaign.ids.Ranks;
 import com.fs.starfarer.api.impl.campaign.intel.bar.PortsideBarData;
 import com.fs.starfarer.api.impl.campaign.intel.bar.events.BaseBarEvent;
 import com.fs.starfarer.api.util.Misc;
-import lostsector.campaign.kesteven.quest.QuestStageManager;
 import lostsector.campaign.kesteven.quest.QuestHelper;
 
 import java.awt.*;
@@ -39,10 +38,10 @@ public class ElizaSearchFinalBarEvent extends BaseBarEvent {
 
 	public boolean shouldShowAtMarket(MarketAPI market) {
 		//used markets check
-		if (ElizaSearchBarEvent.getUsedMarkets(ElizaSearchBarEvent.USED_MARKET_KEY).contains(market.getId())) return false;
+		if (ElizaSearchBarEvent.getUsedMarkets().contains(market.getId())) return false;
 
 		if (QuestHelper.getStage()<16) return false;
-		paid = QuestHelper.getCompleted(ElizaSearchBarEvent.PAID_FOR_INFO);
+		paid = QuestHelper.getCompleted(KestevenFlag.ELIZA_SPACER_PAID);
 		if (paid && market!=ElizaSearchBarEvent.getPaidForInfoTarget().getMarket())return false;
 
 		return market.getFaction().getId().equals(Factions.PIRATES);
@@ -70,7 +69,7 @@ public class ElizaSearchFinalBarEvent extends BaseBarEvent {
 		person = Global.getSector().getFaction(Factions.PIRATES).createRandomPerson(gender, random);
 		person.setPostId(Ranks.POST_GENERIC_MILITARY);
 
-		paid = QuestHelper.getCompleted(ElizaSearchBarEvent.PAID_FOR_INFO);
+		paid = QuestHelper.getCompleted(KestevenFlag.ELIZA_SPACER_PAID);
 
 		String manOrWoman = "man";
 		String himOrHerSelf = "himself";
@@ -85,7 +84,7 @@ public class ElizaSearchFinalBarEvent extends BaseBarEvent {
 			heOrShe = "she";
 		}
 
-		count = ElizaSearchBarEvent.getDialogStage(ElizaSearchBarEvent.INTRO_DIALOG_KEY);
+		count = ElizaSearchBarEvent.getDialogStage();
 
 		TextPanelAPI text = dialog.getTextPanel();
 
@@ -144,9 +143,9 @@ public class ElizaSearchFinalBarEvent extends BaseBarEvent {
 		if (optionData== OptionId.A1){
 			//set early
 			if (count==2){
-				List<String> markets = ElizaSearchBarEvent.getUsedMarkets(ElizaSearchBarEvent.USED_MARKET_KEY);
+				List<String> markets = ElizaSearchBarEvent.getUsedMarkets();
 				markets.add(dialog.getInteractionTarget().getMarket().getId());
-				ElizaSearchBarEvent.setUsedMarkets(ElizaSearchBarEvent.USED_MARKET_KEY, markets);
+				ElizaSearchBarEvent.setUsedMarkets(markets);
 			}
 			options.clearOptions();
 			text.addPara("As you sit down the "+manOrWoman+" pours "+himOrHerSelf+" a drink of dark liquid from an expensive looking bottle.");
@@ -171,8 +170,8 @@ public class ElizaSearchFinalBarEvent extends BaseBarEvent {
 			text.addPara("It's time to leave.");
 
 			if (count==2){
-				QuestHelper.setCompleted(true, QuestStageManager.JOB5_FOUND_ELIZA_KEY);
-				ElizaSearchBarEvent.setDialogStage(3, ElizaSearchBarEvent.INTRO_DIALOG_KEY);
+				QuestHelper.setCompleted(true, KestevenFlag.ELIZA_FOUND);
+				ElizaSearchBarEvent.setDialogStage(3);
 			}
 			//remove old important
 			if (paid){
