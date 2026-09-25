@@ -12,7 +12,6 @@ import com.fs.starfarer.api.impl.campaign.intel.contacts.ContactIntel;
 import com.fs.starfarer.api.util.Misc;
 import lostsector.helper.Ids;
 import lostsector.helper.MathHelper;
-import lostsector.helper.SectorLookup;
 import lostsector.quest.Declarations;
 import lostsector.quest.QuestContext;
 import lostsector.quest.QuestModule;
@@ -74,8 +73,7 @@ final class KestevenAltEndingsModule extends QuestModule<KestevenStage, Kesteven
 
     // Kesteven, Jack, Alice and Eliza turn on the player, and the questline completes.
     private static void fallout(QuestContext<KestevenStage, KestevenState> ctx) {
-        MarketAPI home = SectorLookup.asteriaOrOutpost();
-        if (home != null) home.getMemory().unset(MemFlags.MEMORY_KEY_MISSION_IMPORTANT);
+        // The Cache core's return marker ends with its scope; Eliza's entity may still carry the Eliza search's plain flag.
         if (ctx.state().elizaMarket != null) ctx.state().elizaMarket.getMemory().unset(MemFlags.MEMORY_KEY_MISSION_IMPORTANT);
         turnAway(KestevenPeople.getAlice(), true);
         turnAway(KestevenPeople.getJack(), true);

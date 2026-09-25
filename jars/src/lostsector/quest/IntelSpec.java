@@ -17,6 +17,7 @@ public final class IntelSpec {
     private boolean majorPosting;
     private boolean important;
     private boolean deletable;
+    private String deletableCheck;
     private boolean descriptionBullets;
     private String factionId;
     private boolean frozen;
@@ -59,6 +60,17 @@ public final class IntelSpec {
         return this;
     }
 
+    // The description shows vanilla's delete button while the named check of the quest passes, also while the entry
+    // is active, for an entry the player keeps until deleting it; the check reads the entry's intel memory.
+    public IntelSpec deletableWhen(String check) {
+        requireOpen();
+        if (check == null || check.isBlank()) {
+            throw new IllegalArgumentException("[" + questId + "] intel " + key + " needs a check name");
+        }
+        deletableCheck = check;
+        return this;
+    }
+
     // The description panel shows the bullets, in mode desc, after its paragraphs, as the old Lost.Sector intel
     // classes and vanilla missions do (addBulletPoints with ListInfoMode.IN_DESC).
     public IntelSpec descriptionBullets() {
@@ -91,6 +103,10 @@ public final class IntelSpec {
 
     boolean isDeletable() {
         return deletable;
+    }
+
+    String deletableCheckOrNull() {
+        return deletableCheck;
     }
 
     boolean hasDescriptionBullets() {

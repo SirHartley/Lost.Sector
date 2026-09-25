@@ -1,7 +1,5 @@
 package lostsector.campaign;
 
-import lostsector.campaign.kesteven.quest.CacheCoreDialog;
-
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.PluginPick;
 import com.fs.starfarer.api.campaign.*;
@@ -31,10 +29,6 @@ public class CorePlugin extends BaseCampaignPlugin {
         String claimedTrigger = QuestDialogs.claimedTrigger(interactionTarget);
         if (claimedTrigger != null) {
             return new PluginPick<InteractionDialogPlugin>(QuestDialogs.plugin(claimedTrigger), PickPriority.MOD_GENERAL);
-        }
-        //cache recovery dialog
-        if (interactionTarget.getId().equals("nskr_cache_core")) {
-            return new PluginPick<InteractionDialogPlugin>(new CacheCoreDialog(), PickPriority.MOD_GENERAL);
         }
         return null;
     }

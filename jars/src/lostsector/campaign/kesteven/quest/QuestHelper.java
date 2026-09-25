@@ -327,13 +327,6 @@ public class QuestHelper {
         return constellation;
     }
 
-    public static SectorEntityToken pickCacheFleetLoc() {
-        Random random = KestevenQuest.random(KestevenState.RANDOM_QUEST);
-        StarSystemAPI sys = Global.getSector().getStarSystem("Unknown Site");
-
-        return sys.createToken(new Vector2f(MathHelper.getSeededRandomNumberInRange(-3000f, 3000f, random), MathHelper.getSeededRandomNumberInRange(-3000f, 3000f, random)));
-    }
-
     public static void saveEnding(){
         SettingsManager.set(Setting.THRONES_GIFT_UNLOCKED, true);
         SettingsManager.set(Setting.STORY_SKIP_UNLOCKED, true);
@@ -496,16 +489,6 @@ public class QuestHelper {
     public static void setElizaLoc(){
         KestevenState state = writableState();
         if (state != null) state.elizaMarket = pickElizaMarket(KestevenQuest.random(KestevenState.RANDOM_QUEST), false);
-    }
-
-    public static SectorEntityToken getCacheFleetLoc(){
-        KestevenState state = KestevenQuest.state();
-        return state == null ? null : state.cacheGuardianSpot;
-    }
-
-    public static void setCacheFleetLoc(){
-        KestevenState state = writableState();
-        if (state != null) state.cacheGuardianSpot = pickCacheFleetLoc();
     }
 
     // The state for a write: logs an error through the quest manager and returns null while it does not exist.

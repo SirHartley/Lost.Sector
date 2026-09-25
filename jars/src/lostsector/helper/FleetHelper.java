@@ -562,6 +562,26 @@ public class FleetHelper {
         }
     }
 
+    // Intercepts the player while the player is in the fleet's star system, otherwise orbits the system's center, both
+    // with text; each assignment is issued again only when the fleet has another one. Unlike most AI methods it
+    // continues after the standing-down check, as the old Cache guardian logic did. Nothing is issued outside a star system.
+    public static void defendSystemAI(CampaignFleetAPI fleet, String text) {
+        CampaignFleetAPI pf = Global.getSector().getPlayerFleet();
+        if (pf == null || fleet.getAI() == null || fleet.getStarSystem() == null) return;
+        FleetAssignmentDataAPI curr = fleet.getAI().getCurrentAssignment();
+        safetyCheck(fleet, curr);
+        specManeuversCheck(fleet, pf, curr);
+        if (pf.getStarSystem() != null && pf.getStarSystem() == fleet.getStarSystem()) {
+            if (fleet.getAI().getCurrentAssignmentType() != FleetAssignment.INTERCEPT) {
+                fleet.clearAssignments();
+                fleet.addAssignment(FleetAssignment.INTERCEPT, pf, Float.MAX_VALUE, text);
+            }
+        } else if (fleet.getAI().getCurrentAssignmentType() != FleetAssignment.ORBIT_PASSIVE) {
+            fleet.clearAssignments();
+            fleet.addAssignment(FleetAssignment.ORBIT_PASSIVE, fleet.getStarSystem().getCenter(), Float.MAX_VALUE, text);
+        }
+    }
+
     public static FleetMemberAPI generateShip(String variant, boolean noAutofit, boolean alwaysRecover) {
         return generateShip(variant, noAutofit, alwaysRecover, new ArrayList<String>());
     }

@@ -38,6 +38,7 @@ import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 import java.util.function.Consumer;
+import java.util.function.Predicate;
 
 // Transient: ModPlugin.createManagers() builds it on every load and the EFS_LIST loop registers it.
 // It is the only writer of quest stages (README "Lifecycle").
@@ -335,40 +336,34 @@ public final class QuestManager extends BaseCampaignEventListener
             });
         }
 
-        void mark(SectorEntityToken entity, PersonAPI person, Set<String> scope) {
+        // Exactly one of entity, person and market is not null.
+        void mark(SectorEntityToken entity, PersonAPI person, MarketAPI market, Set<String> scope) {
             T state = state();
-            QuestState.Mark existing = findMark(state, entity, person);
+            QuestState.Mark existing = findMark(state, entity, person, market);
             if (existing != null) {
                 existing.scope = scope;
                 return;
             }
-            if (entity != null) {
-                Misc.makeImportant(entity, markReason());
-            } else {
-                Misc.makeImportant(person, markReason());
-            }
-            state.marks.add(new QuestState.Mark(entity, person, scope));
+            QuestState.Mark mark = new QuestState.Mark(entity, person, market, scope);
+            Misc.makeImportant(mark.memory(), markReason());
+            state.marks.add(mark);
         }
 
-        void unmark(SectorEntityToken entity, PersonAPI person) {
+        void unmark(SectorEntityToken entity, PersonAPI person, MarketAPI market) {
             T state = state();
-            QuestState.Mark mark = findMark(state, entity, person);
+            QuestState.Mark mark = findMark(state, entity, person, market);
             if (mark != null) removeMark(state, mark);
         }
 
-        private QuestState.Mark findMark(T state, SectorEntityToken entity, PersonAPI person) {
+        private QuestState.Mark findMark(T state, SectorEntityToken entity, PersonAPI person, MarketAPI market) {
             for (QuestState.Mark mark : state.marks) {
-                if (entity != null ? mark.entity == entity : mark.person == person) return mark;
+                if (mark.is(entity, person, market)) return mark;
             }
             return null;
         }
 
         private void removeMark(T state, QuestState.Mark mark) {
-            if (mark.entity != null) {
-                Misc.makeUnimportant(mark.entity, markReason());
-            } else {
-                Misc.makeUnimportant(mark.person, markReason());
-            }
+            Misc.makeUnimportant(mark.memory(), markReason());
             state.marks.remove(mark);
         }
 
@@ -666,6 +661,22 @@ public final class QuestManager extends BaseCampaignEventListener
             return;
         }
         run.jump(target);
+    }
+
+    // A declared check evaluated outside rules, with the given memory map and no dialog, such as for an intel entry's
+    // delete button. False when the quest has no state or the check is not declared.
+    boolean check(String questId, String name, Map<String, MemoryAPI> memoryMap) {
+        Run<?, ?> run = runs.get(questId);
+        return run != null && run.state() != null && test(run, name, memoryMap);
+    }
+
+    private static <S extends Enum<S> & QuestStage, T extends QuestState<S>> boolean test(Run<S, T> run, String name, Map<String, MemoryAPI> memoryMap) {
+        Predicate<QuestContext<S, T>> check = run.quest.declarations().checks().get(name);
+        if (check == null) {
+            logError(run.id(), "unknown check " + name);
+            return false;
+        }
+        return check.test(new QuestContext<>(run, "check " + name, null, null, memoryMap, List.of()));
     }
 
     // A context carrying the dialog of a rules call. Null when the quest is unknown or has no state.

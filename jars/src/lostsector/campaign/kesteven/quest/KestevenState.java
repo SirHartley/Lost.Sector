@@ -21,7 +21,6 @@ public final class KestevenState extends QuestState<KestevenStage> implements In
     public static final String RANDOM_REVENGE = "kestevenQuestRandomKey";
     public static final String RANDOM_GLACIER = "glacierCommsKeyRandom";
     public static final String RANDOM_ELIZA = "elizaDialogKeyRandom";
-    public static final String RANDOM_CACHE_DOUBT = "cacheDoubtDialogRandom";
     public static final String RANDOM_CACHE_CORE = "coreDialogKeyRandom";
     public static final String RANDOM_KESTEVEN_ENDING = "kestevenEndingDialogKeyRandom";
     public static final String RANDOM_ELIZA_ENDING = "elizaEndingDialogKeyRandom";

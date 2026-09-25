@@ -3028,3 +3028,127 @@ $entity.nskr_kq_jackRevenge score:100",$entity.ignorePlayerCommRequests = true 1
 The comm link is cut before you have a chance to respond.",nskr_kq_jackRevengeEnd:Cut the comm link,
 nskr_kq_jackRevengeEnd,DialogOptionSelected,$option == nskr_kq_jackRevengeEnd,"EndConversation
 ShowDefaultVisual",the $faction $fleetName powers up their weapons and moves in to engage.,,
+,,,,,,
+# KESTEVEN QUESTLINE: CACHE,,,,,,
+nskr_kq_cacheIntelTitle,nskr_kqIntelTitle,$nskr_intel_key == cache,,The Cache,,
+nskr_kq_cacheIntelExplore,nskr_kqIntelBullets,"$nskr_intel_key == cache
+!nskr_quest kq flag CHIP_SALVAGED",,Explore the location.,,
+nskr_kq_cacheIntelDescFound,nskr_kqIntelDesc,"$nskr_intel_key == cache
+!nskr_quest kq flag CHIP_SALVAGED",,You discovered coordinates to a hidden Domain site.,,
+nskr_kq_cacheIntelDescLogs,nskr_kqIntelDesc,"$nskr_intel_key == cache
+nskr_quest kq flag CHIP_SALVAGED",,The maintenance logs,,
+nskr_kq_cacheIntelLog1,nskr_kqIntelDesc,"$nskr_intel_key == cache
+nskr_quest kq flag CHIP_SALVAGED",,"This is a heavily edited version of the logs. A large part of the early logs are considerably older, and just actual maintenance reports. More recently the drone seems to have been moved to work on ""Project : Enigma"" operations.",,"One paragraph per maintenance log entry, in order"
+nskr_kq_cacheIntelLog2,nskr_kqIntelDesc,"$nskr_intel_key == cache
+nskr_quest kq flag CHIP_SALVAGED",,"One of the early entries ""We have to start using these crummy old drones to store stuff because the project management deemed the site unsafe for humans. Some type of ""P-Space interferences"" or whatever. Just some new cost cutting measure, I'm pretty sure.""",,
+nskr_kq_cacheIntelLog3,nskr_kqIntelDesc,"$nskr_intel_key == cache
+nskr_quest kq flag CHIP_SALVAGED",,"Next entry sometime later ""No, there's definitely something going with extreme radiation or something on the site. I've never seen parts fail this fast, and these old things are built like a brick."" Later in this period there are multiple rants about systems that really shouldn't fail failing and what pain in the ass they were to fix.",,
+nskr_kq_cacheIntelLog4,nskr_kqIntelDesc,"$nskr_intel_key == cache
+nskr_quest kq flag CHIP_SALVAGED",,"Over time the logs seem to get more serious in tone as now there has been some issues with the AI itself. ""There really is something wrong with that cursed site. Now the drones won't even complete their tasks there, totally messing up our logistics. I've never even heard of malfunctions like this, it shouldn't even be possible.""",,
+nskr_kq_cacheIntelLog5,nskr_kqIntelDesc,"$nskr_intel_key == cache
+nskr_quest kq flag CHIP_SALVAGED",,"A few months after that entry ""Recently two of the drones managed to destroy each other while in the site. Something more than just intense radiation is going on there, and management never knows to quit while they are ahead. Hopefully I don't get spaced by one those dimwit drones, and they said it couldn't get any worse..."" This is the last entry.",,
+,,,,,,
+nskr_kq_doubtOpen,nskr_kqCacheDoubt,,"AddText ""You've been here for a while, haven't you captain. Maybe it's time to do something."" gray",,nskr_kq_doubtDrift:Continue,"Opened by KestevenCacheModule on the player fleet 35 seconds into the Unknown Site, once, from stage 16 while the questline runs"
+nskr_kq_doubtDriftSel,DialogOptionSelected,$option == nskr_kq_doubtDrift,"AddText ""You are aimlessly drifting through the void of space. Light-years from the nearest star - a level of nothing you would struggle to comprehend."" gray",,"nskr_kq_doubtTakeNote:Continue
+nskr_kq_doubtFigure:""I'll figure it out.""
+nskr_kq_doubtPuzzling:""It's puzzling.""
+nskr_kq_doubtShutUp:""Shut up, I know what I'm doing.""",
+nskr_kq_doubtFigureSel,DialogOptionSelected,$option == nskr_kq_doubtFigure,"$option = nskr_kq_doubtTakeNote 0
+FireBest DialogOptionSelected",,,Same screen as Continue
+nskr_kq_doubtPuzzlingSel,DialogOptionSelected,$option == nskr_kq_doubtPuzzling,"$option = nskr_kq_doubtTakeNote 0
+FireBest DialogOptionSelected",,,Same screen as Continue
+nskr_kq_doubtShutUpSel,DialogOptionSelected,$option == nskr_kq_doubtShutUp,"AddText ""Woah- calm down captain, I'm just trying to help you understand the gravity of the situation."" gray
+SetShortcut nskr_kq_doubtDismiss ESCAPE",,"nskr_kq_doubtTakeNote:""Okay.""
+nskr_kq_doubtAsk:""What do you want me to do?""
+nskr_kq_doubtDismiss:Dismiss thought",
+nskr_kq_doubtAskSel,DialogOptionSelected,$option == nskr_kq_doubtAsk,"AddText ""You should try talking to your crew, maybe they can come up with a plan."" gray
+SetShortcut nskr_kq_doubtDismiss ESCAPE",,"nskr_kq_doubtTakeNote:""Okay then.""
+nskr_kq_doubtDismiss:Dismiss thought",
+nskr_kq_doubtTakeNoteSel,DialogOptionSelected,$option == nskr_kq_doubtTakeNote,"AddText ""The sensors officer has reported nothing of interest. Your operations chief is struggling to come to any other conclusion than - it's empty.""
+SetShortcut nskr_kq_doubtDismiss ESCAPE",You take note of the current situation and your options.,"nskr_kq_doubtChief:Talk to the operations chief
+nskr_kq_doubtSensors:Talk to the sensors officer
+nskr_kq_doubtDismiss:Dismiss thought",
+,,,,,,
+nskr_kq_doubtChiefSel,DialogOptionSelected,$option == nskr_kq_doubtChief,"AddText ""\""I don't know captain.\"" They seems a little defeated. \""It doesn't add up, the gravity well was right there. Yet all we find is empty space - of course the guys on the science team are busy theorising some one of a kind dark- matter/energy anomaly or whatever. But the center - the well, it has to be the answer...\""""
+ShowPersonVisual true nskr_kq_cacheChief
+$nskr_kq_doubtAskedChief = true 0","There's an open datafeed with countless open entries filled with scribbled notes, some crossed over, and all connected with criss-crossing lines.","nskr_kq_doubtBack:Leave them be
+nskr_kq_doubtSomething:""There must be something to it, I know it.""
+nskr_kq_doubtDoomed:""It's doomed isn't it.""",
+nskr_kq_doubtSomethingSel,DialogOptionSelected,$option == nskr_kq_doubtSomething,$nskr_kq_doubtTip = true 0,"""Oh- you must be right captain. That center anomaly is at the core of this, it has to be answer - somehow."" They start going through the data one more time.","nskr_kq_doubtMatter:Leave them be
+nskr_kq_doubtInteresting:""Interesting.""",
+nskr_kq_doubtSensorsSel,DialogOptionSelected,$option == nskr_kq_doubtSensors,"ShowPersonVisual true nskr_kq_cacheSensors
+$nskr_kq_doubtAskedSensors = true 0","""Captain, we just finished a checkup on all the sensor logs and guess what?"" They say with sarcastic enthusiasm. ""It's nothing - all empty, absolutely nothing - that's all we've seen since our arrival here, but I guess we'll have to keep watch. There must be something to this place, surely it can't just be empty.""","nskr_kq_doubtBack:Leave them be
+nskr_kq_doubtRecheck:Ask them to check again, with extra care",
+nskr_kq_doubtRecheckSel,DialogOptionSelected,$option == nskr_kq_doubtRecheck,"AddText ""They seem annoyed. \""Sorry captain, we crunched all the numbers again - the result is still nothing. There's nothing I can do about that.\"" They shrug.""","You tell them to check again, this time being extra careful of any minute signals that could get lost in the cosmic noise. And after a moderate wait they have a new report ready.",nskr_kq_doubtBack:Leave them be,
+,,,,,,
+nskr_kq_doubtBackSel,DialogOptionSelected,$option == nskr_kq_doubtBack,"HideVisual
+unset $nskr_kq_doubtGaveUp
+FireBest nskr_kqDoubtThought
+FireAll nskr_kqDoubtOptions",,,
+nskr_kq_doubtThought,nskr_kqDoubtThought,,"AddText ""You contemplate the situation."" gray",,,Fallback: the sensors officer not asked yet
+nskr_kq_doubtThoughtSensors,nskr_kqDoubtThought,$nskr_kq_doubtAskedSensors,"AddText ""The situation does not look bright. Not all hope is lost though."" gray",,,
+nskr_kq_doubtMatterSel,DialogOptionSelected,$option == nskr_kq_doubtMatter,"HideVisual
+unset $nskr_kq_doubtGaveUp
+AddText ""Dark matter anomaly at the center? Maybe you should investigate."" gray
+FireAll nskr_kqDoubtOptions",,,
+nskr_kq_doubtInterestingSel,DialogOptionSelected,$option == nskr_kq_doubtInteresting,"$option = nskr_kq_doubtMatter 0
+FireBest DialogOptionSelected",,,Same screen as Leave them be
+nskr_kq_doubtDoomedSel,DialogOptionSelected,$option == nskr_kq_doubtDoomed,"HideVisual
+$nskr_kq_doubtGaveUp = true 0
+AddText ""This is not good, maybe you should- just give up."" gray
+FireAll nskr_kqDoubtOptions",,,
+nskr_kq_doubtOptChief,nskr_kqDoubtOptions,!$nskr_kq_doubtAskedChief,,,nskr_kq_doubtChief:Talk to the operations chief,
+nskr_kq_doubtOptSensors,nskr_kqDoubtOptions,!$nskr_kq_doubtAskedSensors,,,nskr_kq_doubtSensors:Talk to the sensors officer,
+nskr_kq_doubtOptHarder,nskr_kqDoubtOptions,"$nskr_kq_doubtAskedChief
+$nskr_kq_doubtAskedSensors
+!$nskr_kq_doubtGaveUp
+!$nskr_kq_doubtTip",,,"nskr_kq_doubtHarder:""I just need to look harder.""
+nskr_kq_doubtPersist:""I don't give up so easily.""",
+nskr_kq_doubtOptWork,nskr_kqDoubtOptions,$nskr_kq_doubtTip,,,"nskr_kq_doubtWork:""Lets get to work.""",
+nskr_kq_doubtOptGiveUp,nskr_kqDoubtOptions,$nskr_kq_doubtGaveUp,,,"nskr_kq_doubtGiveUp:""I give up.""",
+nskr_kq_doubtOptDismiss,nskr_kqDoubtOptions,,SetShortcut nskr_kq_doubtDismiss ESCAPE,,nskr_kq_doubtDismiss:Dismiss thought,
+nskr_kq_doubtGiveUpSel,DialogOptionSelected,$option == nskr_kq_doubtGiveUp,"AddText ""Yes! Get out of here before it's too late. Whatever is supposed to be here is not worth dying for. Just fly back to the core - forget that this happened, and buy a nice remote farmstead on Mazalot."" gray
+SetShortcut nskr_kq_doubtDismiss ESCAPE",,"nskr_kq_doubtBack:""Maybe it's not that bad.""
+nskr_kq_doubtRight:""You're right.""
+nskr_kq_doubtDismiss:Dismiss thought",
+,,,,,,
+nskr_kq_doubtDismissSel,DialogOptionSelected,$option == nskr_kq_doubtDismiss,"nskr_quest kq do endCacheDoubt
+DismissDialog",,,Every exit releases the two crew members
+nskr_kq_doubtHarderSel,DialogOptionSelected,$option == nskr_kq_doubtHarder,"nskr_quest kq do endCacheDoubt
+DismissDialog",,,
+nskr_kq_doubtPersistSel,DialogOptionSelected,$option == nskr_kq_doubtPersist,"nskr_quest kq do endCacheDoubt
+DismissDialog",,,
+nskr_kq_doubtWorkSel,DialogOptionSelected,$option == nskr_kq_doubtWork,"nskr_quest kq do endCacheDoubt
+DismissDialog",,,
+nskr_kq_doubtRightSel,DialogOptionSelected,$option == nskr_kq_doubtRight,"nskr_quest kq do endCacheDoubt
+DismissDialog",,,
+,,,,,,
+nskr_kq_coreFirst,nskr_kqCacheCore,!nskr_quest kq flag CORE_SEEN,"AddText ""The vast structures float unbothered, like they have always been here. Seemingly unknowing to what has just taken effect.""
+AddText ""As your bridge crew tries to pick through all the new signals they spot a cluster of computer cores in the debris.""
+PlaySound ui_discovered_entity
+nskr_quest kq set CORE_SEEN","You watch as the system materializes in front of you, gracefully out of thin air. No one aboard the bridge knows how this was possible.",nskr_kq_coreApproach:Approach the command core,"Opened by the claim of KestevenCacheModule, first in the guardian encounter's window (KestevenQuest.showCacheCore)"
+nskr_kq_coreQuest,nskr_kqCacheCore,"nskr_quest kq flag CORE_SEEN
+nskr_quest kq check cacheQuestTarget
+!nskr_quest kq flag CHIP_SALVAGED",FireBest nskr_kqCoreSalvage,,,
+nskr_kq_coreSalvaged,nskr_kqCacheCore,"nskr_quest kq flag CORE_SEEN
+nskr_quest kq check cacheQuestTarget
+nskr_quest kq flag CHIP_SALVAGED",ShowDefaultVisual,"The core wreckage is now entirely picked clean, only worthless pieces of space debris remain. Yet you still hear the hum.",defaultLeave:Leave,
+nskr_kq_coreWreckage,nskr_kqCacheCore,nskr_quest kq flag CORE_SEEN,FireBest nskr_kqCoreWreckage,,,Fallback: before stage 16 or after failure
+nskr_kq_coreApproachSel,DialogOptionSelected,"$option == nskr_kq_coreApproach
+nskr_quest kq check cacheQuestTarget",FireBest nskr_kqCoreSalvage,,,
+nskr_kq_coreApproachWreckageSel,DialogOptionSelected,$option == nskr_kq_coreApproach,FireBest nskr_kqCoreWreckage,,,Fallback: before stage 16 or after failure
+nskr_kq_coreSalvageLines,nskr_kqCoreSalvage,,"AddText ""For a moment the bridge seems to quiets down, and you notice a quiet hum - a distant instrument. The harder you try to focus on it to more distant it becomes.""
+AddText ""You're then suddenly brought out of your thought by the ops chief asking you what to do next.""
+ShowDefaultVisual","A strange cluster of computer cores are left among the wreckage, further inspection should yield results. Your bridge crew is preparing post battle operations.","nskr_kq_coreSalvage:Begin salvage operations
+defaultLeave:Leave",Shared by the entry and the first approach
+nskr_kq_coreWreckageLine,nskr_kqCoreWreckage,,ShowDefaultVisual,A strange cluster of computer cores are left among the wreckage.,defaultLeave:Leave,Shared by the entry and the first approach
+nskr_kq_coreSalvageSel,DialogOptionSelected,$option == nskr_kq_coreSalvage,"AddText ""There's no sign of casualties or life pods in the wreckage, yet the prototype hulls were clearly meant to be crewed. For a moment it seems pointless to even try and uncover what happened here.""
+AddText ""Until, the crew stumbles upon a console in one of the derelict wrecks. In it they find a maintenance log, which has been used by an anonymous and disgruntled maintenance worker to journal their frustrations.""
+AddText ""\""I'm sending a transcript of the maintenance logs to your fleet log.\"" Your comms officer reports.""
+ShowDefaultVisual","As the crew picks apart the cores, it becomes clear that almost all the data in them is lost. Instead of being garbled, or otherwise corrupted by radiation the cores are just empty. Like they have been reformatted by someone, there is almost no data left in the whole system.",nskr_kq_coreChip:Continue,
+nskr_kq_coreChipSel,DialogOptionSelected,$option == nskr_kq_coreChip,"AddTextSmall ""Acquired the Unlimited Production Chip"" gray
+SetTextHighlights ""the Unlimited Production Chip""
+AddRemoveCommodity alpha_core 1
+nskr_quest kq do salvageCacheCore
+PlaySound ui_rep_raise
+ShowDefaultVisual","Your ops chief reports that the salvor team managed to find the Unlimited Production Chip, and some other valuable salvage.",defaultLeave:Leave,"salvageCacheCore grants the 50 to 100 Artifact Electronics, sets stage 19 and marks the return target"

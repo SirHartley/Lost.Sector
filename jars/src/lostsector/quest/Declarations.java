@@ -49,6 +49,10 @@ public final class Declarations<S extends Enum<S> & QuestStage, T extends QuestS
         sealed = true;
         for (IntelSpec intel : intels.values()) {
             intel.freeze();
+            String check = intel.deletableCheckOrNull();
+            if (check != null && !checks.containsKey(check)) {
+                throw new IllegalStateException("[" + questId + "] check " + check + " of intel " + intel.key + " is not declared");
+            }
         }
         for (Map.Entry<String, FleetRole> role : roles.entrySet()) {
             String trigger = role.getValue().defeatTriggerName();

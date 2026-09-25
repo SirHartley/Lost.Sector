@@ -17,7 +17,7 @@ Current lore takes precedence over older mod prose. User-supplied lines remain v
 This reference records what the mod's existing text establishes. It was compiled from `data/campaign/rules.csv`, Java dialogue strings, `data/strings/descriptions.csv`, the hullmod, item and condition CSVs, faction files, `tips.json`, `strings.json` and the Nexerelin background CSV. Every quoted excerpt names its source:
 
 - a rules row id, such as rules `cacheDialogInitial`;
-- a Java class, such as `CacheCoreDialog`;
+- a Java class, such as `CacheBossTauntPlugin`;
 - a data row, such as descriptions `kesteven`.
 
 Nothing here is new canon. Where existing text is silent or contradicts itself, [Open questions](#open-questions) lists the gap. Writers must ask the author instead of filling it. Section order: setting foundations, knowledge limits, premise, writing style, characters, faction voices, terminology.
@@ -43,7 +43,7 @@ Established by descriptions `kesteven` and `nskr_asteria`, the ship descriptions
 
 ### Project Enigma
 
-Project Enigma was a pre-Collapse Domain research project. Established by the prototype ship descriptions, weapon descriptions, `strings.json`, the data-disk satellite rows (`nskr_kq_satellite…`), the Delve meeting rows (`nskr_kq_delve…`) and `CacheIntel`:
+Project Enigma was a pre-Collapse Domain research project. Established by the prototype ship descriptions, weapon descriptions, `strings.json`, the data-disk satellite rows (`nskr_kq_satellite…`), the Delve meeting rows (`nskr_kq_delve…`) and the Cache intel rows (`nskr_kq_cacheIntel…`):
 
 - **Research.** It developed advanced autonomous warships, temporal fields and exotic weapons outside Domain core space. "Though autonomous war machines were explicitly banned within Domain core space, advanced AI systems were developed in secrecy beyond incorporated volume."
 - **Staff.** Its staff speak through log and journal quotes in the ship and weapon descriptions:
@@ -65,7 +65,7 @@ Project Enigma was a pre-Collapse Domain research project. Established by the pr
   - dangerous instability (P-space cascade failures, causality interference, "despite past incidents").
 - **Ships.** The project's ships carry the `DSRD` prefix. The prototypes appear as "Unknown Prototype" hulls; their autonomous counterparts as "Project Enigma" hulls.
 - **Satellites.** The project relayed information through its own covert satellites, not the main hyperwave network. Each surviving satellite holds a radiation-shielded data disk marked "Project : Enigma", protected by an anti-tamper device and encrypted with centuries-old Domain encryption.
-- **The Cache.** A hidden Domain storage site in the system Kesteven's data calls "Unknown Site", far from any star and reachable only by a transverse jump. At the Collapse it hosted the Unlimited Production Chip. The maintenance logs say the site was declared unsafe for humans ("P-Space interferences"), so old drones did the storage work. Parts failed at unexplained rates, drones stopped completing tasks, and two drones destroyed each other; the last log entry ends there. The site's cores were found reformatted, not corrupted, and its prototype wrecks show no casualties or escape pods although they were built for crews (`CacheCoreDialog`).
+- **The Cache.** A hidden Domain storage site in the system Kesteven's data calls "Unknown Site", far from any star and reachable only by a transverse jump. At the Collapse it hosted the Unlimited Production Chip. The maintenance logs say the site was declared unsafe for humans ("P-Space interferences"), so old drones did the storage work. Parts failed at unexplained rates, drones stopped completing tasks, and two drones destroyed each other; the last log entry ends there. The site's cores were found reformatted, not corrupted, and its prototype wrecks show no casualties or escape pods although they were built for crews (the command core rows `nskr_kq_core…`).
 - **Glacier.** A comms facility on the tundra planet Glacier in the Frost system, abandoned for centuries and still powered by a passive decay reactor, holds disk #5. It has hidden anti-ship batteries.
 
 ### The Enigma
@@ -127,7 +127,7 @@ These instructions describe how the existing mod text is written. They govern pl
 
 - **Second person.** Narration addresses the captain as "you" in present tense and follows the bridge crew at work: "Your ops chief oversees the mission by-the-book, staging approach-and-scan to maximize safety..." (rule `nskr_kq_satelliteSendSel`).
 - **Competent crew.** Crew members are professionals with their own manner: the careful ops chief, the sarcastic sensors officer, the comms officer's "nothing a little elbow grease from our team can't solve".
-- **Gray asides.** Gray narration carries the captain's own reactions and occasional judgment: "Wait, you really agree with her? Oh dear." (`ElizaDialog`), "Hope you made the right choice, captain." (rules `nskr_kq_elizaEndingDone`). `CacheDoubtDialog` uses the same gray voice as an inner voice that talks back.
+- **Gray asides.** Gray narration carries the captain's own reactions and occasional judgment: "Wait, you really agree with her? Oh dear." (`ElizaDialog`), "Hope you made the right choice, captain." (rules `nskr_kq_elizaEndingDone`). The Cache's inner voice (rules `nskr_kq_doubt…`) uses the same gray voice as an inner voice that talks back.
 - **Wide tonal range.** Comedy and horror sit side by side.
   - Comic: the drinking scenes (the job 3 party, rules `nskr_kq_party…`; the artisan liqueur in the Delve meeting, rules `nskr_kq_delveDrink`); the Peacekeepers' commander asking whether "Sam" sent the player to prank him (rules `pkInspired`); the Cache guardian's taunts ("Is this autofit by chance?", "Have it writ upon thy meagre grave : Skill issue.", `CacheBossTauntPlugin`).
   - Grave: the Frozen Heart's enslaved thousands and the Enigma doctrine are written without jokes.

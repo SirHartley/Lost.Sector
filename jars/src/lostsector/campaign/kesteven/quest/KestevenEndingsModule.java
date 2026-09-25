@@ -170,9 +170,8 @@ final class KestevenEndingsModule extends QuestModule<KestevenStage, KestevenSta
         if (alice != null) alice.setImportance(PersonImportance.VERY_HIGH);
         PersonAPI eliza = KestevenPeople.getEliza();
         if (eliza != null) eliza.getRelToPlayer().adjustRelationship(-0.75f, RepLevel.VENGEFUL);
-        // Set by CacheCoreDialog on the market memory and Eliza's entity; unset as the old ending did.
-        MarketAPI home = SectorLookup.asteriaOrOutpost();
-        if (home != null) home.getMemory().unset(MemFlags.MEMORY_KEY_MISSION_IMPORTANT);
+        // The Cache core's return marker ends with its scope; Eliza's entity also carries plain flags of the Eliza search
+        // and the hand-over, which the old ending cleared here.
         if (ctx.state().elizaMarket != null) ctx.state().elizaMarket.getMemory().unset(MemFlags.MEMORY_KEY_MISSION_IMPORTANT);
         MarketAPI market = targetMarket(ctx);
         if (market != null) market.addCondition(UnlimitedProductionChipCondition.ID);
@@ -205,9 +204,8 @@ final class KestevenEndingsModule extends QuestModule<KestevenStage, KestevenSta
             setRelationship(Factions.PIRATES, IRONSHELL_FACTION_ID, s.commissionRepHegemony);
         }
 
+        // The Cache core's return marker ends with its scope; the hand-over set Eliza's entity's flag directly.
         if (s.elizaMarket != null) s.elizaMarket.getMemory().unset(MemFlags.MEMORY_KEY_MISSION_IMPORTANT);
-        MarketAPI home = SectorLookup.asteriaOrOutpost();
-        if (home != null) home.getMemory().unset(MemFlags.MEMORY_KEY_MISSION_IMPORTANT);
 
         abandon(KestevenPeople.getAlice());
         abandon(KestevenPeople.getJack());

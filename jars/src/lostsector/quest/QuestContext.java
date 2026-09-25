@@ -2,6 +2,7 @@ package lostsector.quest;
 
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.InteractionDialogAPI;
+import com.fs.starfarer.api.campaign.InteractionDialogPlugin;
 import com.fs.starfarer.api.campaign.SectorEntityToken;
 import com.fs.starfarer.api.campaign.TextPanelAPI;
 import com.fs.starfarer.api.campaign.econ.MarketAPI;
@@ -134,7 +135,7 @@ public final class QuestContext<S extends Enum<S> & QuestStage, T extends QuestS
             error("mark of a null entity refused");
             return;
         }
-        run.mark(entity, null, scope(scope));
+        run.mark(entity, null, null, scope(scope));
     }
 
     @SafeVarargs
@@ -143,15 +144,30 @@ public final class QuestContext<S extends Enum<S> & QuestStage, T extends QuestS
             error("mark of a null person refused");
             return;
         }
-        run.mark(null, person, scope(scope));
+        run.mark(null, person, null, scope(scope));
+    }
+
+    // Marks the market's own memory; Misc.doesMarketHaveMissionImportantPeopleOrIsMarketMissionImportant reads it for
+    // the market's primary entity.
+    @SafeVarargs
+    public final void mark(MarketAPI market, S... scope) {
+        if (market == null) {
+            error("mark of a null market refused");
+            return;
+        }
+        run.mark(null, null, market, scope(scope));
     }
 
     public void unmark(SectorEntityToken entity) {
-        if (entity != null) run.unmark(entity, null);
+        if (entity != null) run.unmark(entity, null, null);
     }
 
     public void unmark(PersonAPI person) {
-        if (person != null) run.unmark(null, person);
+        if (person != null) run.unmark(null, person, null);
+    }
+
+    public void unmark(MarketAPI market) {
+        if (market != null) run.unmark(null, null, market);
     }
 
     @SafeVarargs
@@ -175,6 +191,22 @@ public final class QuestContext<S extends Enum<S> & QuestStage, T extends QuestS
         }
         if (!isDeclaredTrigger(trigger)) return;
         QuestDialogs.open(state(), target, trigger);
+    }
+
+    // Hands the open dialog to a rules dialog on the target that fires the trigger, as the engage verb hands it to a
+    // fleet encounter: the target and plugin are replaced and the new plugin's init fires the trigger at once. For a
+    // Java dialog, such as a fleet encounter delegate, that continues with a quest scene without closing the window.
+    public void continueDialog(SectorEntityToken target, String trigger) {
+        if (dialog == null || target == null) {
+            error("continue with " + trigger + " refused: no dialog or no target");
+            return;
+        }
+        if (!isDeclaredTrigger(trigger)) return;
+        InteractionDialogPlugin plugin = QuestDialogs.plugin(trigger);
+        dialog.setInteractionTarget(target);
+        dialog.setPlugin(plugin);
+        plugin.init(dialog);
+        QuestManager.logInfo(run.id(), "continued the dialog with " + trigger + " on " + target.getId());
     }
 
     private boolean isDeclaredTrigger(String trigger) {

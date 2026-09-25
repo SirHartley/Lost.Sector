@@ -1,5 +1,6 @@
 package lostsector.campaign.kesteven.quest;
 
+import com.fs.starfarer.api.campaign.InteractionDialogAPI;
 import com.fs.starfarer.api.campaign.SectorEntityToken;
 import lostsector.quest.Quest;
 import lostsector.quest.QuestContext;
@@ -15,9 +16,9 @@ import java.util.Random;
 // and intel, KestevenGlacierModule the Glacier facility, KestevenElizaSearchModule the Eliza search at pirate bars,
 // KestevenSatelliteModule the data-disk satellites, KestevenElizaModule Eliza's port, KestevenCollector's shared
 // modules the Tri-Tachyon collector, KestevenElizaFleetsModule Eliza's fleets, KestevenEndingsModule the Kesteven and
-// Eliza endings, KestevenAltEndingsModule the Luddic and Tri-Tachyon endings and KestevenAftermathModule Jack's revenge
-// and the failure for losing both mission markets; QuestStageManager and the old dialog classes still run the rest of
-// the questline on this state (T19 to T35).
+// Eliza endings, KestevenAltEndingsModule the Luddic and Tri-Tachyon endings, KestevenAftermathModule Jack's revenge
+// and the failure for losing both mission markets, and KestevenCacheModule the Cache; QuestStageManager and the old
+// dialog classes still run the rest of the questline on this state (T19 to T35).
 // isAvailable() keeps the default: the old code runs the questline in every campaign and treats a missing
 // Kesteven home as failure (stage 99), so the state must always exist.
 public final class KestevenQuest extends Quest<KestevenStage, KestevenState> {
@@ -39,7 +40,7 @@ public final class KestevenQuest extends Quest<KestevenStage, KestevenState> {
                 new KestevenJob4Module(), new KestevenJob5Module(), new KestevenGlacierModule(), new KestevenElizaSearchModule(),
                 new KestevenSatelliteModule(), new KestevenElizaModule(), KestevenCollector.encounter(), KestevenCollector.demand(),
                 new KestevenElizaFleetsModule(), new KestevenEndingsModule(), new KestevenAltEndingsModule(),
-                new KestevenAftermathModule());
+                new KestevenAftermathModule(), new KestevenCacheModule());
     }
 
     // Null before QuestManager.startQuests() at the end of ModPlugin.onGameLoad, which includes new-campaign generation.
@@ -100,10 +101,6 @@ public final class KestevenQuest extends Quest<KestevenStage, KestevenState> {
         return stage >= 10 && stage <= 14;
     }
 
-    public static boolean cacheIsQuestTarget() {
-        return stage().toLegacy() >= 16;
-    }
-
     // Places of the questline, for the rows that take over their dialogs.
 
     // Eliza's market entity, or any entity of a market connected to it.
@@ -128,6 +125,16 @@ public final class KestevenQuest extends Quest<KestevenStage, KestevenState> {
 
     public static void reportCacheGuardianDefeated() {
         if (!isFailed() && stage().toLegacy() >= 16) QuestHelper.setStage(KestevenStage.CACHE_CLEARED.toLegacy());
+    }
+
+    // Cache.CacheGuardInteractionConfig.notifyLeave, once the guardian has no prototypes left: the command core's rules
+    // dialog continues in the encounter's window.
+    public static void showCacheCore(InteractionDialogAPI dialog, SectorEntityToken core) {
+        QuestManager manager = QuestManager.get();
+        @SuppressWarnings("unchecked")
+        QuestContext<KestevenStage, KestevenState> ctx = manager == null ? null
+                : (QuestContext<KestevenStage, KestevenState>) manager.context(ID, "cacheGuardian", dialog, null, List.of());
+        if (ctx != null) KestevenCacheModule.revealCore(ctx, core);
     }
 
     // World generation of the Cache: satellites with nothing left to salvage. KestevenSatelliteModule claims their

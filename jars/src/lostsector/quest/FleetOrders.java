@@ -21,7 +21,8 @@ public final class FleetOrders {
         WITHDRAW,
         PATROL,
         EXPEDITION,
-        HUNT
+        HUNT,
+        DEFEND_SYSTEM
     }
 
     private Kind kind;
@@ -32,6 +33,7 @@ public final class FleetOrders {
     private String orbitText;
     private String leaveText;
     private String patrolHomeText;
+    private String defendText;
     private boolean withdrawHome;
     private float prepareDays;
     private float returnAfterDays;
@@ -59,6 +61,7 @@ public final class FleetOrders {
         copy.orbitText = orbitText;
         copy.leaveText = leaveText;
         copy.patrolHomeText = patrolHomeText;
+        copy.defendText = defendText;
         copy.withdrawHome = withdrawHome;
         copy.prepareDays = prepareDays;
         copy.returnAfterDays = returnAfterDays;
@@ -146,6 +149,14 @@ public final class FleetOrders {
     // Intercepts the player while it sees them, otherwise patrols its own star system.
     public static FleetOrders huntInSystem() {
         return new FleetOrders(Kind.HUNT);
+    }
+
+    // Intercepts the player while the player is in the fleet's star system, otherwise orbits the system's center, with text.
+    public static FleetOrders defendSystem(String text) {
+        if (text == null) throw new IllegalArgumentException("defend text must not be null");
+        FleetOrders orders = new FleetOrders(Kind.DEFEND_SYSTEM);
+        orders.defendText = text;
+        return orders;
     }
 
     // Keeps its last assignment and despawns once out of the player's sight, for a fleet whose part is over.
@@ -242,6 +253,9 @@ public final class FleetOrders {
                 break;
             case HUNT:
                 FleetHelper.huntInSystemAI(info.fleet);
+                break;
+            case DEFEND_SYSTEM:
+                FleetHelper.defendSystemAI(info.fleet, defendText);
                 break;
             default:
                 break;

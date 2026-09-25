@@ -168,7 +168,8 @@ public final class QuestIntel extends BaseIntelPlugin {
     }
 
     // Paragraphs, then the bullets of an entry declared with descriptionBullets(), then the delete button of a
-    // deletable entry that is completed, failed or closed (ending with its status unchanged).
+    // deletable entry that is completed, failed or closed (ending with its status unchanged), or whose deletableWhen
+    // check passes.
     // BaseIntelPlugin.buttonPressConfirmed handles the button (endImmediately, recreateIntelUI) after its confirmation prompt.
     @Override
     public void createSmallDescription(TooltipMakerAPI info, float width, float height) {
@@ -178,7 +179,13 @@ public final class QuestIntel extends BaseIntelPlugin {
         IntelSpec spec = spec();
         if (spec == null) return;
         if (spec.hasDescriptionBullets()) addBulletPoints(info, ListInfoMode.IN_DESC);
-        if (spec.isDeletable() && (status != Status.ACTIVE || isEnding())) addDeleteButton(info, width);
+        if (spec.isDeletable() && (status != Status.ACTIVE || isEnding()) || deletableNow(spec)) addDeleteButton(info, width);
+    }
+
+    private boolean deletableNow(IntelSpec spec) {
+        QuestManager manager = QuestManager.get();
+        String check = spec.deletableCheckOrNull();
+        return check != null && manager != null && manager.check(questId, check, memory(QuestText.MODE_DESC));
     }
 
     // addPara with highlight arguments runs String.format on the text; this overload does not, so a '%' in a row

@@ -8,8 +8,7 @@ Java paths are relative to `jars/src/lostsector/campaign/`; `dialogue/rules/` an
 
 | Style | Used by | How it runs |
 |---|---|---|
-| Rules rows only | Every conversation with Jack, Alice and Nicholas (gates, values and game actions from `KestevenHubModule`); the job 3 party, a rules bar event (guests, drink count and bill from `KestevenPartyModule`); the Glacier facility (`KestevenGlacierModule`); the Eliza search at pirate bars (`KestevenElizaSearchModule`); the data-disk satellites (`KestevenSatelliteModule`); the Luddic and Tri-Tachyon endings (`KestevenAltEndingsModule`); the Delve meeting at the bar (`KestevenJob5Module`); the meeting at Eliza's port (`KestevenElizaModule`); the Kesteven and Eliza endings (`KestevenEndingsModule`); Eliza's fleets (`KestevenElizaFleetsModule`); job 4: the Special Operations fleet, the Enigma strike group and the hint wreck (checks, actions and tokens from `KestevenJob4Module`, [below](#job-4-rows)); the Tri-Tachyon collector ([below](#tri-tachyon-collector-rows)); Jack's revenge fleet (`KestevenAftermathModule`); fleet greetings and threats: the Cache guardian, the "LZ" messenger, generic Enigma comms | Text, options and scripts live in `data/campaign/rules.csv`. |
-| Java `InteractionDialogPlugin` or `BaseBarEvent` | Cache hint, Cache core | `CorePlugin.pickInteractionDialogPlugin` or `PortsideBarData` opens the class. All text, options and state changes are in the Java class, using a nested `OptionId` enum. |
+| Rules rows only | Every conversation with Jack, Alice and Nicholas (gates, values and game actions from `KestevenHubModule`); the job 3 party, a rules bar event (guests, drink count and bill from `KestevenPartyModule`); the Glacier facility (`KestevenGlacierModule`); the Eliza search at pirate bars (`KestevenElizaSearchModule`); the data-disk satellites (`KestevenSatelliteModule`); the Luddic and Tri-Tachyon endings (`KestevenAltEndingsModule`); the Delve meeting at the bar (`KestevenJob5Module`); the Cache's inner voice and command core (`KestevenCacheModule`); the meeting at Eliza's port (`KestevenElizaModule`); the Kesteven and Eliza endings (`KestevenEndingsModule`); Eliza's fleets (`KestevenElizaFleetsModule`); job 4: the Special Operations fleet, the Enigma strike group and the hint wreck (checks, actions and tokens from `KestevenJob4Module`, [below](#job-4-rows)); the Tri-Tachyon collector ([below](#tri-tachyon-collector-rows)); Jack's revenge fleet (`KestevenAftermathModule`); fleet greetings and threats: the Cache guardian, the "LZ" messenger, generic Enigma comms | Text, options and scripts live in `data/campaign/rules.csv`. |
 
 ## Jack, Alice and Nicholas
 
@@ -269,6 +268,22 @@ The in-person meeting of job 5 is a rules bar event in the `# Meeting` part of t
 | Cache already found | Plain chain | `nskr_kq_delveFound` (action `markCacheCore`), `nskr_kq_delveFoundMore`. |
 | Leave | Exit row with a `FireBest` pick | `nskr_kq_delveLeave`: the log line and its sound, the departure from `nskr_kqDelveDeparture` (`nskr_kq_delveDepartureAsteria` or `nskr_kq_delveDeparture`), `HideSecondPerson`, `ShowPic nskr_crib`, `advance JOB5_MEETING JOB5_DISKS`, `BarCMD returnFromEvent true`. |
 
+## The Cache
+
+The `# KESTEVEN QUESTLINE: CACHE` block of `data/campaign/rules.csv` holds the Cache intel text, the inner voice and the command core; `KestevenCacheModule` declares their triggers, checks, actions and people ([flow](KESTEVEN_QUESTLINE.md#reaching-the-cache)).
+
+| Part | Structure | Rows |
+|---|---|---|
+| Intel entry `cache` | Intel rows | `nskr_kq_cacheIntelTitle`, `…IntelExplore` (bullet until `CHIP_SALVAGED`), `…IntelDescFound` before the salvage, `…IntelDescLogs` and `…IntelLog1` to `5` after it |
+| Inner voice, entry | Plain chain | `nskr_kq_doubtOpen` on `nskr_kqCacheDoubt`, which `KestevenCacheModule` opens on the player fleet. The voice's lines are gray `AddText`. "I'll figure it out." and "It's puzzling." (`…FigureSel`, `…PuzzlingSel`) set `$option` to `nskr_kq_doubtTakeNote` and fire `DialogOptionSelected`; "Shut up" leads to `…ShutUpSel` and `…AskSel` |
+| Talking to the crew | Plain chain | `…TakeNoteSel`, `…ChiefSel` and `…SensorsSel` (`ShowPersonVisual true nskr_kq_cacheChief` or `nskr_kq_cacheSensors`; they set `$nskr_kq_doubtAskedChief` or `$nskr_kq_doubtAskedSensors`), `…SomethingSel` (`$nskr_kq_doubtTip`), `…RecheckSel` |
+| Back to the thought | Handlers with `HideVisual`, then a `FireAll` menu | `…BackSel` (with the `FireBest` pick `nskr_kqDoubtThought`), `…MatterSel` (`…InterestingSel` chains to it), `…DoomedSel` (sets `$nskr_kq_doubtGaveUp`, which the other two unset) fire `nskr_kqDoubtOptions`: the crew member not asked yet, "I just need to look harder." and "I don't give up so easily." once both were asked without the tip or giving up, "Lets get to work." with the tip, "I give up." after "It's doomed", and "Dismiss thought". `…GiveUpSel` offers "Maybe it's not that bad." back to the menu |
+| Exits | Handlers | `…DismissSel`, `…HarderSel`, `…PersistSel`, `…WorkSel`, `…RightSel` run `do endCacheDoubt`, which releases the two crew members, and `DismissDialog`. Escape takes "Dismiss thought" on every screen that offers it |
+| Command core, entry | `FireBest` pick on `nskr_kqCacheCore` | `nskr_kq_coreFirst` (the first visit: `CORE_SEEN`, "Approach the command core"), `…coreQuest` (`check cacheQuestTarget`, not salvaged), `…coreSalvaged`, `…coreWreckage` (fallback) |
+| Core screens | Shared inserts and a plain chain | `nskr_kqCoreSalvage` (the salvage offer and Leave) and `nskr_kqCoreWreckage` (one line and Leave), fired by the entry rows and by `…coreApproachSel` or `…coreApproachWreckageSel`; `…coreSalvageSel`, then `…coreChipSel`: the chip line, `AddRemoveCommodity alpha_core 1`, `do salvageCacheCore` (Artifact Electronics with the vanilla receipt, `CHIP_SALVAGED`, stage 19, the markers) and `ui_rep_raise`. The screens after the first run `ShowDefaultVisual`, the core's image |
+
+`KestevenCacheModule` declarations used by the rows: the triggers `nskr_kqCacheCore` and `nskr_kqCacheDoubt`; the checks `cacheQuestTarget` (legacy stage 16 or later while the questline runs) and `cacheIntelDeletable` (the intel's delete button); the actions `endCacheDoubt` and `salvageCacheCore`; the people `cacheChief` and `cacheSensors`.
+
 ## Fleet conversations
 
 | Fleet | Rows | Command verbs |
@@ -389,20 +404,10 @@ Both endings are rows in the `# KESTEVEN QUESTLINE: ENDINGS` block that take ove
 
 The insert rows' checks read a relationship before their own action lowers it, because a `FireAll` matches all its rows before it runs their scripts ([FireAll and FireBest](../RULES.md#fireall-and-firebest)). The "reduced to" and "improved to" values are tokens (`endingTriTachyonRep`, `elizaEndingPiratesRep`, `elizaEndingKestevenRep`, `elizaEndingHegemonyRep`), rounded as the old lines were.
 
-## Java dialogs and bar events
-
-| Class | Opened by | Content | State written |
-|---|---|---|---|
-| `kesteven/quest/CacheDoubtDialog` | `QuestStageManager`, once in Unknown Site | Inner-voice hint | None |
-| `kesteven/quest/CacheCoreDialog` | `CorePlugin` or the guardian's fleet-interaction config | Cache core salvage | Stage 19, rewards |
-
-`CacheCoreDialog` shows the options it needs; their text blocks are sequential `addPara` calls keyed by `OptionId`.
-
 ## Notes for moving dialogue into rules
 
 - **Speaker branching:** a Java branch on the active person and on flags becomes a row keyed on the person (`$id`) and the conditions it tests, as the hub rows above do.
 - **Highlights:** Java highlights use `addPara(text, color, highlight, …)`. The highlighted phrases and colours move with the text.
 - **Values in text:** job 1 electronics, payouts, the job 4 constellation, the Frost distance and target names are computed in Java. They must be prepared as tokens before a row displays them; see [RULES_AUTHORING.md](../RULES_AUTHORING.md#create-a-custom-text-token).
 - **Stage writes:** the full list is in [KESTEVEN_STATE.md](KESTEVEN_STATE.md#who-changes-the-stage).
-- **Java-only dialogs:** those opened by `CorePlugin` have no rules entry today. Moving them means adding a rules entry route and removing the `CorePlugin` branch.
 - **Bar events:** every questline bar event is a rules bar event, which saves nothing of its own; the job 3 party, the Eliza search and the Delve meeting are examples.

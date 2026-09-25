@@ -28,7 +28,7 @@ final class KestevenJob5Module extends QuestModule<KestevenStage, KestevenState>
     static final int ADVANCE_CREDITS = 150000;
 
     private static final String CACHE_CORE_ID = "nskr_cache_core";
-    // The old meeting set the core's important flag for good; the core salvage (CacheCoreDialog) unsets it.
+    // The old meeting set the core's important flag for good; the core salvage (KestevenCacheModule) unmarks it.
     private static final KestevenStage[] CACHE_CORE_MARK = {
             KestevenStage.JOB5_MEETING, KestevenStage.JOB5_DISKS, KestevenStage.CACHE_KNOWN, KestevenStage.CACHE_CLEARED,
             KestevenStage.CHIP_RECOVERED, KestevenStage.COMPLETED, KestevenStage.FAILED};

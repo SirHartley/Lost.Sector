@@ -9,8 +9,8 @@ Java paths are relative to `jars/src/lostsector/campaign/`; `dialogue/rules/` an
 | Owner | Role |
 |---|---|
 | `# KESTEVEN QUESTLINE` rows in `data/campaign/rules.csv`, `kesteven/quest/KestevenHubModule` | Every conversation with Jack, Alice and Nicholas: offers, briefings, hand-ins, rewards, questions, the job 3 refusal, the story skip and most player-driven stage changes; the job gates and payouts ([dialogue map](KESTEVEN_DIALOGUE.md#jack-alice-and-nicholas)) |
-| `kesteven/quest/QuestStageManager` | `EveryFrameScript` in `EFS_LIST`: automatic stage changes, intel, bar events, quest fleets and their AI, the Cache guardian timer |
-| `kesteven/quest/KestevenQuest`, `KestevenStage`, `KestevenFlag`, `KestevenState` | Framework definition of quest `kq`, with the modules `KestevenHubModule`, `KestevenJob1Module`, `KestevenJob3Module`, `KestevenJob4Module`, `KestevenJob5Module`, `KestevenGlacierModule`, `KestevenElizaSearchModule`, `KestevenSatelliteModule`, `KestevenElizaModule`, `KestevenElizaFleetsModule`, `KestevenEndingsModule`, `KestevenAltEndingsModule`, `KestevenAftermathModule` and the Tri-Tachyon collector's shared modules (`KestevenCollector`); the stage enum, the flags and the saved state ([KESTEVEN_STATE.md](KESTEVEN_STATE.md)) |
+| `kesteven/quest/QuestStageManager` | `EveryFrameScript` in `EFS_LIST`: no quest logic left; it only reads and saves back its legacy fleet list `$kQuestMissionFleets`, which nothing fills |
+| `kesteven/quest/KestevenQuest`, `KestevenStage`, `KestevenFlag`, `KestevenState` | Framework definition of quest `kq`, with the modules `KestevenHubModule`, `KestevenJob1Module`, `KestevenJob3Module`, `KestevenJob4Module`, `KestevenJob5Module`, `KestevenGlacierModule`, `KestevenElizaSearchModule`, `KestevenSatelliteModule`, `KestevenElizaModule`, `KestevenElizaFleetsModule`, `KestevenEndingsModule`, `KestevenAltEndingsModule`, `KestevenAftermathModule`, `KestevenCacheModule` and the Tri-Tachyon collector's shared modules (`KestevenCollector`); the stage enum, the flags and the saved state ([KESTEVEN_STATE.md](KESTEVEN_STATE.md)) |
 | `kesteven/quest/KestevenJob1Module`, `# KESTEVEN QUESTLINE: JOB 1` rows in `data/campaign/rules.csv` | Job 1 world logic: the intel entry and its text rows, the tip system's dormant fleet, the move to stage 2 ([Job 1](#job-1-enemy-unknown-stages-0-to-6)) |
 | `kesteven/quest/KestevenAftermathModule`, `# KESTEVEN QUESTLINE: AFTERMATH` rows | Jack's revenge fleet and its conversation; the failure when Kesteven has lost both mission markets ([After the questline](#after-the-questline), [Failure](#failure)) |
 | `kesteven/quest/KestevenElizaFleetsModule`, `# KESTEVEN QUESTLINE: ELIZA FLEETS` rows | Eliza's fleets after the raid, for the chip and for revenge, their conversations and `ELIZA_KILLED` ([Eliza's fleets](#elizas-fleets)) |
@@ -20,16 +20,15 @@ Java paths are relative to `jars/src/lostsector/campaign/`; `dialogue/rules/` an
 | `kesteven/quest/KestevenJob5Module`, `# KESTEVEN QUESTLINE: JOB 5` rows | The Delve meeting at the bar, its escort guard, and the job 5 intel entry and its text rows ([Briefing and meeting](#briefing-and-meeting)) |
 | `kesteven/quest/KestevenGlacierModule`, `# KESTEVEN QUESTLINE: GLACIER` rows | The Glacier comms facility: its map marker and dialog claim, the timed raid, the barrage's fleet damage and disk #5 ([Glacier](#glacier-disk-5)) |
 | `kesteven/quest/KestevenSatelliteModule`, `# KESTEVEN QUESTLINE: SATELLITES` rows | The data-disk satellites' dialog, salvage and woken guards, `ALL_DISKS_RECOVERED`, and `FROST_FOUND` on entering Frost ([The five data disks](#the-five-data-disks)) |
+| `kesteven/quest/KestevenCacheModule`, `# KESTEVEN QUESTLINE: CACHE` rows | The Cache: finding it, its intel entry and text rows, the arrival sequence and inner voice, the guardian's orders and the command core ([Reaching the Cache](#reaching-the-cache)) |
 | `kesteven/quest/KestevenCollector`, `# KESTEVEN QUESTLINE: COLLECTOR` rows | The Tri-Tachyon collector: an `InterceptEncounter` and a `PayOffEncounter` of quest `kq` ([Tri-Tachyon collector](#tri-tachyon-collector)) |
 | `kesteven/quest/KestevenAltEndingsModule`, `# KESTEVEN QUESTLINE: ALTERNATIVE ENDINGS` rows | The Luddic and Tri-Tachyon endings ([Stage 19](#stage-19-who-receives-the-chip)) |
 | `kesteven/quest/QuestHelper` | Wrappers over `KestevenState` for the old callers: the stage as a legacy int, flags, fields and lazily picked target locations; `saveEnding()` |
 | `kesteven/quest/KestevenFleets` | Builders for every quest fleet |
 | `kesteven/quest/KestevenElizaModule`, `# KESTEVEN QUESTLINE: ELIZA` rows | The meeting at Eliza's port, the raid for her disks and her move after decivilization ([Eliza's port](#elizas-port)) |
 | `kesteven/quest/KestevenEndingsModule`, `# KESTEVEN QUESTLINE: ENDINGS` rows | The Kesteven and Eliza endings: their checks, rewards and relationship changes, and the commission restore after the Eliza ending ([endings](#the-kesteven-and-eliza-endings)) |
-| `CorePlugin` | Opens the Java quest dialogs when the player interacts with a quest entity, deciding through `KestevenQuest` queries |
-| `kesteven/quest/*Dialog`, `kesteven/quest/*BarEvent` | Java dialogs and bar events |
-| `world/systems/cache/Cache` | The Cache system, guardian fleet and its fleet-interaction config |
-| `kesteven/quest/CacheIntel` | Intel entry of the Cache; they read the stage and flags and never write the stage |
+| `CorePlugin` | Opens the rules dialog of an entity a module claimed (`quest/QuestDialogs`) |
+| `world/systems/cache/Cache` | The Cache system, the guardian fleet's builder and its fleet-interaction config, the core and the wrecks |
 | `kesteven/ExileManager` | Moves the quest people between Asteria and the Outpost |
 
 ## Where the quest is offered
@@ -80,11 +79,11 @@ The stage is a `KestevenStage` on the quest state, changed only by the quest man
 | 14 | Job 5 offered by Jack | Alice, job 4 turn-in; attacking the friendly fleet also sets 14 |
 | 15 | Go to the bar | Jack, while showing the job 5 briefing |
 | 16 | Job 5 active: data disks | Leaving the Delve meeting (row `nskr_kq_delveLeave`) |
-| 17 | Cache location known | Alice after all disks; `QuestStageManager` on entering the Cache system at stage 16; story skip |
+| 17 | Cache location known | Alice after all disks; `KestevenCacheModule` when the Cache is found at stage 16; story skip |
 | 18 | Cache guardian defeated | `Cache.CacheGuardInteractionConfig` when no prototypes remain |
-| 19 | Player holds the UPC | `CacheCoreDialog` salvage |
+| 19 | Player holds the UPC | The command core's salvage (`KestevenCacheModule` action `salvageCacheCore`) |
 | 20 | Completed | Any of the four endings: rows `nskr_kq_kestevenEndingDone` and `nskr_kq_elizaEndingDone`, `nskr_altEndingDialogLuddic.makeMad` |
-| 99 | Questline ended by failure | `QuestStageManager` failure checks |
+| 99 | Questline ended by failure | `KestevenAftermathModule` when both mission markets are lost; `KestevenJob4Module` when the Special Operations fleet is attacked |
 
 ## Job 1: Enemy Unknown (stages 0 to 6)
 
@@ -208,7 +207,7 @@ At stage 15 the rules row `nskr_kq_delveBar` adds the bar event "Give the signal
 - if the player hesitates ("I'm not so sure about this."), Jack offers a 150,000-credit advance, paid with the vanilla credits receipt when the player agrees;
 - Eliza is introduced as the holder of one disk; "Ah yes, that "LZ" character." appears while `MESSENGER_QUESTION_OPEN` is set.
 
-Leaving prints "Acquired log entry for The Delve", sets stage 16 and returns to the bar with a Continue option. If the player had already entered the Cache system (`CACHE_FOUND`), the meeting offers only "I think I already found that place.", a shorter branch that marks the Cache command core when the guardian is already beaten and still sets stage 16; `QuestStageManager` then moves to 17.
+Leaving prints "Acquired log entry for The Delve", sets stage 16 and returns to the bar with a Continue option. If the player had already entered the Cache system (`CACHE_FOUND`), the meeting offers only "I think I already found that place.", a shorter branch that marks the Cache command core when the guardian is already beaten and still sets stage 16; `KestevenCacheModule` then moves to 17.
 
 The guard is the quest person `delveGuard` (`nskr_kq_delveGuard`: Kesteven, male, military post, portrait `nskr_guard`), created when stage 15 starts and released when it ends. Jack becomes the speaker when the meeting starts (`BeginConversation nskr_opguy true false`), with Alice as the second portrait; the answered questions and the advance offer are expiry-0 keys in Jack's memory ([memory flags](KESTEVEN_STATE.md#memory-flags)). The rows are the `# Meeting` part of the `# KESTEVEN QUESTLINE: JOB 5` block ([dialogue map](KESTEVEN_DIALOGUE.md#the-delve-meeting)).
 
@@ -287,12 +286,12 @@ At stage 16 the disk count sets `ALL_DISKS_RECOVERED` once it reaches five: `Kes
 
 Entering Unknown Site at stage 15 or 16 sets `CACHE_FOUND` without any disks, and stage 16 becomes 17. The Eliza search runs only at stage 16, so a player who reaches the Cache early can skip Eliza and the remaining disks.
 
-Inside Unknown Site, `QuestStageManager`:
+`KestevenCacheModule` is active in every stage, because the guardian appears and the core can be salvaged whatever the questline's progress.
 
-- adds `CacheIntel` once the Cache is found;
-- after 35 seconds, picks the guardian's location and shows `CacheDoubtDialog` once (a hint, stage 16 or later);
-- sends sensor-burst pings toward that location from 45 seconds on;
-- at 90 seconds starts the Cache music and spawns the guardian fleet (commander "Enigma Fragment #1", flagship "DSRD Epicenter") through `Cache.spawnGuardianFleet`.
+- **Finding the Cache.** When the player arrives in Unknown Site (`onLocationChanged`) and on every stage change (`onStage`, for a system entered earlier), the find is recorded at stage 15 or 16 or after failure; stage 16 then moves to 17. Once `CACHE_FOUND` is set by any path (this module, Alice, the story skip), the intel entry `cache` is shown once, with the system's center as its map location. A stage jump past stage 16 sets `CACHE_FOUND` (`onSkip`).
+- **Intel.** Title "The Cache", sort tier 2, the major posting sound, fleet log and exploration tags. Until the Chip is salvaged: the bullet "Explore the location." and the find; afterwards the five maintenance log entries. From stage 19 on, or after failure, the description has a delete button (`deletableWhen`); the entry never ends by itself.
+- **Arrival sequence.** While the player is in Unknown Site the module takes frames (`wantsFrames`, `onFrame`, unpaused only) and counts `cacheSeconds`, twice as fast during fast advance. After 35 seconds it picks the guardian's location once and opens the inner voice once (stage 16 or later while the questline runs, when no dialog or menu is showing). From 45 seconds it sends a sensor-burst ping toward that location every 6 seconds, from 75 seconds every 3 seconds. After 90 seconds it starts the Cache music (`nskr_cache_theme` on the system's memory) and spawns the guardian fleet (commander "Enigma Fragment #1", flagship "DSRD Epicenter"; role `cacheGuardian`, built by `Cache.guardianFleet`). Whenever the player is in the system, each frame has a 0.4% chance of a cache mote (`MoteParticleScript`).
+- **Guardian.** Role `cacheGuardian` with `FleetOrders.defendSystem("error #406, try again?")` and the `Cache.CacheGuardInteractionConfig` encounter: it intercepts the player in the system and orbits the center otherwise. Without prototypes or fleet points (`withdrawWhen`) it gets no more orders and despawns once out of the player's sight.
 
 During the battle `combat/plugins/CacheBossTauntPlugin` posts taunts, plays the boss theme and spawns a second boss ship.
 
@@ -300,9 +299,9 @@ When the fight ends with no prototype ships left, `CacheGuardInteractionConfig.n
 
 - builds the rest of the system (`spawnEverything`) and the wrecks;
 - sets stage 18 if the questline is active;
-- creates the command core `nskr_cache_core` and switches to `CacheCoreDialog`.
+- creates the command core `nskr_cache_core` and calls `KestevenQuest.showCacheCore`, which claims the core's dialog for every stage (trigger `nskr_kqCacheCore`), marks it from stage 16 on, and continues the encounter's window with the core's rows (`continueDialog`).
 
-Salvage reports the UPC, grants one Alpha Core and 50 to 100 Artifact Electronics, and sets stage 19. The UPC is not a cargo item; the stage and flags stand for it. The return target is marked: Eliza's market if the player sincerely agreed to help her, otherwise `asteriaOrOutpost`.
+The core's first screen reveals the system and offers "Approach the command core". From stage 16 while the questline runs it offers the salvage; otherwise, and after the salvage, only a line and Leave. Salvage reports the UPC, grants one Alpha Core and 50 to 100 Artifact Electronics (random purpose `coreDialogKeyRandom`), and sets stage 19. The UPC is not a cargo item; the stage and flags stand for it. It removes the core's marker, also the one the Delve meeting sets. The return target is marked, scoped to stages 19, 20 and failure, so it stays until an ending clears the marker: Eliza's market entity if the player sincerely agreed to help her, otherwise the market of `asteriaOrOutpost`. A stage jump past stage 18 sets `CORE_SEEN` and `CHIP_SALVAGED`.
 
 ## Stage 19: who receives the Chip
 
@@ -361,7 +360,7 @@ The conversations are the `# KESTEVEN QUESTLINE: ELIZA FLEETS` rows ([dialogue m
 
 `KestevenJob4Module` sets stage 99 and `ENDED` when the player attacks the Special Operations fleet ([Job 4](#job-4-operation-lifesaver-stages-11-to-14)).
 
-The questline option then disappears. The Cache can still be found and fought; `CacheCoreDialog` gives no questline reward in that state.
+The questline option then disappears. The Cache can still be found and fought; the command core gives no questline reward in that state.
 
 ## Side events
 
@@ -396,7 +395,7 @@ These follow from the code and rules as written. None has been checked in game.
 1. **"Yes (lie)" to Alice.** It follows the same path as "Yes" and records nothing; no code reads a lie to Alice.
 2. **Operation Lifesaver system fallbacks.** `KestevenFleets.job4StrikeGroup` picks the strike group's system inside the friendly target's constellation. When no other system there has two planets, `QuestHelper.getRandomSystemWithinConstellation` retries without excluding the friendly system, so both fleets can share one system; with no candidate at all it returns null and the spawn fails. `getRandomSystemFarCore`'s fallback can return a system outside any constellation, which the old `OperationLifesaverIntel` did not expect; the `job4` entry then has no constellation marker and an empty search area. Kept as is by the maintainer.
 3. **Cache guardian report can move the stage back.** `KestevenQuest.reportCacheGuardianDefeated()` sets stage 18 whenever the questline has not ended and the stage is 16 or later, so a guardian defeat reported at stage 19 or 20 would return the questline to 18. Normal play defeats the guardian before stage 19.
-4. **Failure counts as late stages.** The Glacier claim keeps the old route's `stage >= 16` on legacy numbers, so its scope includes `FAILED`, and `cacheIsQuestTarget()` keeps the comparison itself; both hold after failure (legacy stage 99).
+4. **Failure counts as late stages.** The Glacier claim keeps the old route's `stage >= 16` on legacy numbers, so its scope includes `FAILED`, and the command core's marker (`KestevenCacheModule.revealCore`) keeps the comparison itself; both hold after failure (legacy stage 99).
 5. **Frost guess with all disks.** Alice's confirmations at stage 16 test the disks, not the screen that offered the option. With all five disks, a Frost tip screen (both tips given, tip 2 not yet) offers "It's the <Frost>.", and choosing it gives the Cache coordinates and stage 17 (`nskr_kq_aliceCacheFound`).
 6. **Empty screen at stage 16.** Alice's "Continue" with all disks leads to her Cache briefing only when both tips and tip 2 are recorded. With all disks and her tip given but Jack's missing, the briefing option shows only Back (`nskr_kq_hubBrief`).
 7. **Highlight without its phrase.** Jack's job 5 briefing highlights "Go to the bar", which its text does not contain, so nothing is highlighted.
@@ -404,3 +403,4 @@ These follow from the code and rules as written. None has been checked in game.
 9. **Repeated sensor message.** Every Enigma win that counts for the sensor task at stage 1 sends the `sensorData` update again, also after the package was delivered (`KestevenJob1Module.onEncounterLoot`, as the old `QuestStageManager` check did).
 10. **Story-skip strike group.** The story skip spawns the strike group, satellite #4 and the wrecks, then sets stage 17, where every job 4 fleet withdraws; the strike group despawns as soon as the player is out of its sight, so satellite #4 is unguarded.
 11. **Silent satellite after the story skip.** The story skip counts two satellites without emptying the placed ones, so their dialog shows no text and only Leave (`nskr_kq_satelliteSilent`); the old dialog showed no option at all and left on Escape.
+12. **No Leave on the command core's first screen.** The first visit offers only "Approach the command core"; Leave comes on the next screen.

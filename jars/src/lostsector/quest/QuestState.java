@@ -2,6 +2,8 @@ package lostsector.quest;
 
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.SectorEntityToken;
+import com.fs.starfarer.api.campaign.econ.MarketAPI;
+import com.fs.starfarer.api.campaign.rules.MemoryAPI;
 import com.fs.starfarer.api.characters.PersonAPI;
 
 import java.util.ArrayList;
@@ -30,17 +32,29 @@ public abstract class QuestState<S extends Enum<S> & QuestStage> {
     List<PendingOpen> pendingOpens = new ArrayList<>();
     Map<String, PersonAPI> people = new LinkedHashMap<>();
 
-    // Exactly one of entity and person is set. Scopes hold stage names.
+    // Exactly one of entity, person and market is set. Scopes hold stage names.
     static final class Mark {
 
         SectorEntityToken entity;
         PersonAPI person;
+        MarketAPI market;
         Set<String> scope;
 
-        Mark(SectorEntityToken entity, PersonAPI person, Set<String> scope) {
+        Mark(SectorEntityToken entity, PersonAPI person, MarketAPI market, Set<String> scope) {
             this.entity = entity;
             this.person = person;
+            this.market = market;
             this.scope = scope;
+        }
+
+        MemoryAPI memory() {
+            if (entity != null) return entity.getMemoryWithoutUpdate();
+            return person != null ? person.getMemoryWithoutUpdate() : market.getMemoryWithoutUpdate();
+        }
+
+        boolean is(SectorEntityToken entity, PersonAPI person, MarketAPI market) {
+            if (entity != null) return this.entity == entity;
+            return person != null ? this.person == person : this.market == market;
         }
     }
 
