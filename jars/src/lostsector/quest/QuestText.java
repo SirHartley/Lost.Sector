@@ -26,10 +26,11 @@ public final class QuestText {
 
     // Scratch keys written into the local memory before matching.
     public static final String KEY = "$nskr_intel_key";
+    public static final String RECORD = "$nskr_intel_record";
     public static final String STATUS = "$nskr_intel_status";
     public static final String UPDATE = "$nskr_intel_update";
     public static final String MODE = "$nskr_intel_mode";
-    public static final List<String> SCRATCH_KEYS = List.of(KEY, STATUS, UPDATE, MODE);
+    public static final List<String> SCRATCH_KEYS = List.of(KEY, RECORD, STATUS, UPDATE, MODE);
 
     // Intel triggers are nskr_<q> followed by one of these suffixes.
     public static final String TITLE = "IntelTitle";
@@ -86,9 +87,11 @@ public final class QuestText {
 
     // The memory map intel rows are matched with. Local is a fresh scratch memory holding the intel keys. Player and
     // global memory are read without the campaign plugins' fact refresh that getMemory() runs.
-    public static Map<String, MemoryAPI> intelMemory(String key, String status, String update, String mode) {
+    // The record is empty for an entry shown without one.
+    public static Map<String, MemoryAPI> intelMemory(String key, String record, String status, String update, String mode) {
         MemoryAPI local = Global.getFactory().createMemory();
         local.set(KEY, key);
+        local.set(RECORD, record == null ? "" : record);
         local.set(STATUS, status);
         local.set(UPDATE, update == null ? "" : update);
         local.set(MODE, mode);

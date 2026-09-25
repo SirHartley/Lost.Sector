@@ -34,6 +34,7 @@ public final class QuestIntel extends BaseIntelPlugin {
 
     private final String questId;
     private final String key;
+    private final String record;
     private final String icon;
     private final List<String> tags;
     private Status status = Status.ACTIVE;
@@ -51,9 +52,10 @@ public final class QuestIntel extends BaseIntelPlugin {
     private transient boolean reportedMissingTitle;
     private transient boolean reportedMissingFaction;
 
-    QuestIntel(String questId, String key, String icon, List<String> tags) {
+    QuestIntel(String questId, String key, String record, String icon, List<String> tags) {
         this.questId = questId;
         this.key = key;
+        this.record = record;
         this.icon = icon;
         this.tags = new ArrayList<>(tags);
     }
@@ -64,6 +66,11 @@ public final class QuestIntel extends BaseIntelPlugin {
 
     String key() {
         return key;
+    }
+
+    // Null for an entry shown without a record.
+    String record() {
+        return record;
     }
 
     Status status() {
@@ -161,8 +168,8 @@ public final class QuestIntel extends BaseIntelPlugin {
     }
 
     // Paragraphs, then the bullets of an entry declared with descriptionBullets(), then the delete button of a
-    // deletable entry that is completed or failed. BaseIntelPlugin.buttonPressConfirmed handles the button
-    // (endImmediately, recreateIntelUI) after its confirmation prompt.
+    // deletable entry that is completed, failed or closed (ending with its status unchanged).
+    // BaseIntelPlugin.buttonPressConfirmed handles the button (endImmediately, recreateIntelUI) after its confirmation prompt.
     @Override
     public void createSmallDescription(TooltipMakerAPI info, float width, float height) {
         for (QuestText.Line line : lines(QuestText.DESC, QuestText.MODE_DESC)) {
@@ -171,7 +178,7 @@ public final class QuestIntel extends BaseIntelPlugin {
         IntelSpec spec = spec();
         if (spec == null) return;
         if (spec.hasDescriptionBullets()) addBulletPoints(info, ListInfoMode.IN_DESC);
-        if (spec.isDeletable() && status != Status.ACTIVE) addDeleteButton(info, width);
+        if (spec.isDeletable() && (status != Status.ACTIVE || isEnding())) addDeleteButton(info, width);
     }
 
     // addPara with highlight arguments runs String.format on the text; this overload does not, so a '%' in a row
@@ -184,14 +191,14 @@ public final class QuestIntel extends BaseIntelPlugin {
     }
 
     private String title(String mode) {
-        if (!hasState()) return key;
+        if (!hasState()) return label();
         String title = QuestText.title(QuestText.trigger(questId, QuestText.TITLE), memory(mode));
         if (title != null) return title;
         if (!reportedMissingTitle) {
             reportedMissingTitle = true;
-            QuestManager.logError(questId, "intel " + key + ": no " + QuestText.trigger(questId, QuestText.TITLE) + " row matches");
+            QuestManager.logError(questId, "intel " + label() + ": no " + QuestText.trigger(questId, QuestText.TITLE) + " row matches");
         }
-        return key;
+        return label();
     }
 
     private List<QuestText.Line> lines(String suffix, String mode) {
@@ -205,14 +212,18 @@ public final class QuestIntel extends BaseIntelPlugin {
         if (manager != null && manager.state(questId) != null) return true;
         if (!reportedMissingState) {
             reportedMissingState = true;
-            QuestManager.logError(questId, "intel " + key + " shown without quest state; showing its key only");
+            QuestManager.logError(questId, "intel " + label() + " shown without quest state; showing its key only");
         }
         return false;
     }
 
+    String label() {
+        return record == null ? key : key + ":" + record;
+    }
+
     private Map<String, MemoryAPI> memory(String mode) {
         Object update = getListInfoParam();
-        return QuestText.intelMemory(key, status.name().toLowerCase(Locale.ROOT), update instanceof String ? (String) update : "", mode);
+        return QuestText.intelMemory(key, record, status.name().toLowerCase(Locale.ROOT), update instanceof String ? (String) update : "", mode);
     }
 
     // MESSAGES covers a campaign message the UI builds again later; IN_DESC is the description's bullets.

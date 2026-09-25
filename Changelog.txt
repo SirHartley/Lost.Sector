@@ -73,6 +73,12 @@ Adjusted - The Hellspawn judgement's story point and Peaceful Heart rewards show
 Fixed - Paying the Kesteven debt collector now shows "Debt reduced to" instead of an internal name
 Adjusted - Paying the Kesteven debt collector shows the standard credits lost and relationship receipts
 Adjusted - The Abyss, Eternity, Project Helios and Peacekeepers bounties report their first sighting and their end, including payments and the Independent relationship loss, as updates of their intel entries
+Fixed - Mysterious signals hints now get their chance on every first visit to a system outside the core worlds; most visits used to be skipped
+Adjusted - The Kesteven officer selling system tips appears at every Kesteven bar while the offer lasts, as the same officer each visit
+Adjusted - The Frost intel entry and its sensor report appear as soon as you arrive in the system
+Adjusted - The Frost intel entry closes three days after the Frozen Heart falls instead of when you next open it
+Removed - The delete button on the Frost intel entry while the Frozen Heart stands
+Fixed - Typo in the Kesteven officer's system tip conversation
 
 1.0.b
 Adjusted - Severely nerfed spawn rates for Borealis, Rhea and Kingslayer

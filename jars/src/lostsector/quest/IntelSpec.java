@@ -52,7 +52,7 @@ public final class IntelSpec {
         return this;
     }
 
-    // The description shows vanilla's delete button once the entry is completed or failed.
+    // The description shows vanilla's delete button once the entry is completed, failed or closed.
     public IntelSpec deletable() {
         requireOpen();
         deletable = true;

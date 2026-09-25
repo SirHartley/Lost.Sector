@@ -47,7 +47,6 @@ import com.fs.starfarer.api.combat.MissileAIPlugin;
 import com.fs.starfarer.api.combat.MissileAPI;
 import com.fs.starfarer.api.combat.ShipAPI;
 import com.fs.starfarer.api.impl.campaign.ids.Ranks;
-import com.fs.starfarer.api.impl.campaign.intel.bar.events.BarEventManager;
 import com.fs.starfarer.api.impl.campaign.procgen.ProcgenUsedNames;
 import com.fs.starfarer.api.impl.campaign.rulecmd.Nex_TransferMarket;
 import com.fs.starfarer.api.impl.campaign.shared.SharedData;
@@ -56,10 +55,8 @@ import indevo.industries.artillery.conditions.ArtilleryStationCondition;
 import indevo.industries.artillery.scripts.ArtilleryStationScript;
 import indevo.industries.artillery.utils.ArtilleryStationPlacer;
 import lostsector.campaign.bounties.HeliosSite;
-import lostsector.campaign.events.hints.HintManager;
 import lostsector.campaign.enigma.EnigmaFleetLoot;
 import lostsector.campaign.kesteven.contracts.ContractManager;
-import lostsector.campaign.kesteven.tips.KestevenTipBarEventCreator;
 import lostsector.campaign.kesteven.quest.QuestStageManager;
 import lostsector.persistence.CampaignTimer;
 import lostsector.helper.FleetHelper;
@@ -175,7 +172,6 @@ public class ModPlugin extends BaseModPlugin {
         EFS_LIST.clear();
 
         EFS_LIST.add(new HyperspaceEnigmaSpawner());
-        EFS_LIST.add(new HintManager());
         EFS_LIST.add(new HeartOccupation());
         EFS_LIST.add(new StalkerSpawner());
         EFS_LIST.add(new EnigmaRelations());
@@ -230,12 +226,6 @@ public class ModPlugin extends BaseModPlugin {
         }
 
         Saved.loadPersistentData();
-
-        //BAR
-        BarEventManager bar = BarEventManager.getInstance();
-        if (!bar.hasEventCreator(KestevenTipBarEventCreator.class)) {
-            bar.addEventCreator(new KestevenTipBarEventCreator());
-        }
 
         //DATA
         Map<String, Object> data = Global.getSector().getPersistentData();

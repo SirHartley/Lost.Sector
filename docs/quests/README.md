@@ -10,6 +10,7 @@ How the quests are implemented today, traced from the Java sources and `data/cam
 | [CONTRACTS_AND_BOUNTIES.md](CONTRACTS_AND_BOUNTIES.md) | The Kesteven contracts, the four named bounty fleets of quest `bounty` and the intercept fleets of quest `ic` |
 | [HELLSPAWN.md](HELLSPAWN.md) | The Hellspawn judgement (quest `hs`): stages, THRN's scenes, the Final Judgement encounter and what stays in Java |
 | [BLACKSITES.md](BLACKSITES.md) | The blacksite record quest `bs`: sites, statuses, defenders, timing, dialog rows and defects |
+| [HINTS.md](HINTS.md) | Exploration intel (record quest `hint`): signal hints toward the bounty systems and Frost, the Kesteven officer's bar tip, the Frost entry |
 
 These pages describe current behavior, including behavior that looks unintended. Defects are listed where they were found; they come from reading the source and have not been reproduced in game.
 

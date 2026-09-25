@@ -19,9 +19,7 @@ import com.fs.starfarer.api.util.Misc;
 import indevo.industries.artillery.scripts.ArtilleryStationScript;
 import indevo.industries.artillery.scripts.CampaignAttackScript;
 import lostsector.ModPlugin;
-import lostsector.persistence.Saved;
 import lostsector.helper.MathHelper;
-import lostsector.world.systems.frost.Frost;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -29,19 +27,10 @@ import java.util.Random;
 
 public class HeartOccupation extends BaseCampaignEventListener implements EveryFrameScript  {
 
-    Saved<Boolean> firstTime;
     boolean doOnce = false;
-    private FrostIntel intel = null;
-    private float counter = 0f;
-    public static final String HINT_KEY = "HINT_FROST";
     public static final String PERSISTENT_RANDOM_KEY = "nskr_enigmaBlowerUpperRandom";
     public HeartOccupation() {
         super(false);
-        //for intel
-        this.firstTime = new Saved<>("frostFirstTime", true);
-    }
-    static void log(final String message) {
-        Global.getLogger(HeartOccupation.class).info(message);
     }
 
     public boolean isDone() {
@@ -72,37 +61,6 @@ public class HeartOccupation extends BaseCampaignEventListener implements EveryF
 
         //PAUSE CHECK
         if (Global.getSector().isPaused()) return;
-
-        if (Global.getSector().isInFastAdvance()) {
-            counter += 2f*amount;
-        } else{
-            counter += amount;
-        }
-        //a slight delay just feels better than an EFS trigger
-        if (counter>4f) {
-            //INTEL LOGIC
-            CampaignFleetAPI pf = Global.getSector().getPlayerFleet();
-            if (pf == null) return;
-            final Saved<Boolean> firstTime = this.firstTime;
-
-            boolean visibleToPlayer = pf.getContainingLocation() == Global.getSector().getStarSystem(Frost.getName());
-            if (visibleToPlayer && firstTime.val) {
-                FrostIntel intel = new FrostIntel();
-                //Adds our intel
-                this.intel = intel;
-                Global.getSector().getIntelManager().addIntel(intel, true);
-                log("Frost added INTEL");
-
-                Global.getSector().getCampaignUI().addMessage("Your sensors officer is overwhelmed by the amount of active signals in this system, many of which are hostile. Further exploration will certainly yield results.",
-                        Global.getSettings().getColor("standardTextColor"),
-                        "hostile",
-                        "",
-                        Global.getSettings().getColor("yellowTextColor"),
-                        Global.getSettings().getColor("yellowTextColor"));
-                firstTime.val = false;
-            }
-            counter = 0f;
-        }
 
         //kills frozen heart and spawns the wreckage
         if (market != null) {

@@ -4,6 +4,7 @@ import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.InteractionDialogAPI;
 import com.fs.starfarer.api.campaign.SectorEntityToken;
 import com.fs.starfarer.api.campaign.TextPanelAPI;
+import com.fs.starfarer.api.campaign.rules.MemKeys;
 import com.fs.starfarer.api.campaign.rules.MemoryAPI;
 import com.fs.starfarer.api.characters.PersonAPI;
 import com.fs.starfarer.api.util.Misc;
@@ -226,6 +227,14 @@ public final class QuestContext<S extends Enum<S> & QuestStage, T extends QuestS
 
     public TextPanelAPI textPanel() {
         return dialog == null ? null : dialog.getTextPanel();
+    }
+
+    // The record of the intel entry whose rows are being matched or replaced (QuestText.RECORD in the scratch local
+    // memory); null for an entry without a record and outside intel text.
+    public String intelRecord() {
+        MemoryAPI local = memoryMap == null ? null : memoryMap.get(MemKeys.LOCAL);
+        String record = local == null ? null : local.getString(QuestText.RECORD);
+        return record == null || record.isEmpty() ? null : record;
     }
 
     // Extra rules arguments; empty from Java.

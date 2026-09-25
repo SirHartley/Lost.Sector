@@ -6,7 +6,7 @@ import com.fs.starfarer.api.campaign.SectorEntityToken;
 import com.fs.starfarer.api.campaign.comm.IntelInfoPlugin.IntelSortTier;
 import com.fs.starfarer.api.impl.campaign.ids.Commodities;
 import com.fs.starfarer.api.impl.campaign.ids.Factions;
-import lostsector.campaign.events.hints.HintManager;
+import lostsector.campaign.events.hints.HintsQuest;
 import lostsector.helper.SystemHelper;
 import lostsector.quest.FleetOrders;
 import lostsector.quest.FleetRole;
@@ -63,7 +63,7 @@ public final class BountiesQuest extends Quest<BountiesStage, BountiesState> {
                 .finish(BountiesFleets::finishAbyss)
                 .reward((ctx, loot, plugin) -> loot.addCommodity(Commodities.ALPHA_CORE, 1))
                 .payout(ABYSS_PAYOUT, (amount, plugin) -> carriesAbyssShips(Global.getSector().getPlayerFleet()) ? 0 : amount)
-                .onSighted(ctx -> HintManager.removeHintIntel())
+                .onSighted(ctx -> HintsQuest.reportBountySighted())
                 .intel(BountiesQuest::oldBountyIntel)
                 .completionSound(record -> record.paid() > 0 ? SOUND_PAID : SOUND_UNPAID)
                 .revealOnRecovery(BountiesFleets.ABYSS_FLAGSHIP_HULL, BountiesFleets.ABYSS_CHASM_HULL, BountiesFleets.ABYSS_FISSURE_HULL);
@@ -77,7 +77,7 @@ public final class BountiesQuest extends Quest<BountiesStage, BountiesState> {
                     loot.addCommodity(Commodities.ALPHA_CORE, 2);
                     loot.addCommodity("nskr_electronics", 500);
                 })
-                .onSighted(ctx -> HintManager.removeHintIntel())
+                .onSighted(ctx -> HintsQuest.reportBountySighted())
                 .intel(BountiesQuest::oldBountyIntel)
                 .revealOnRecovery(BountiesFleets.ETERNITY_HULL);
     }
@@ -94,7 +94,7 @@ public final class BountiesQuest extends Quest<BountiesStage, BountiesState> {
                     ctx.state().mothershipWreck = BountiesFleets.mothershipWreck(Global.getSector().getPlayerFleet(), ctx.random("mothershipWreck"));
                 })
                 .guards(TRIGGER_GUARD, HeliosSite::planets)
-                .onSighted(ctx -> HintManager.removeHintIntel())
+                .onSighted(ctx -> HintsQuest.reportBountySighted())
                 .intel(BountiesQuest::oldBountyIntel);
     }
 

@@ -1801,3 +1801,61 @@ nskr_kq_job3IntelDescActive,nskr_kqIntelDesc,"$nskr_intel_key == job3
 nskr_quest kq is JOB3_ACTIVE",,Figure out the target and neutralize the fleet.,,
 nskr_kq_job3IntelDescKnown,nskr_kqIntelDesc,"$nskr_intel_key == job3
 nskr_quest kq is JOB3_TARGET_KNOWN",,Neutralize the fleet.,,
+,,,,,,
+# HINTS,,,,,,
+# Kesteven tip,,,,,,
+nskr_hint_tipBar,AddBarEvents,nskr_quest hint check tipHere,"AddBarEvent nskr_hint_tipApproach ""Approach the Kesteven officer"" ""A Kesteven officer is busy with their datapad at one of the more secluded tables.""",,,HintsTipModule keeps one offer open at a time; tipHere also requires a Kesteven market
+nskr_hint_tipApproach,DialogOptionSelected,$option == nskr_hint_tipApproach,BeginConversation nskr_hint_officer true false,The officer is scrolling through various datafeeds - marking down important information while dismissing others. $nskr_hint_officer_HeOrShe is sipping on a moderately priced drink while you approach.,nskr_hint_tipDrinks:Offer to buy a round of drinks,"The Text shows before BeginConversation runs, so it uses the quest person token"
+nskr_hint_tipDrinks,DialogOptionSelected,$option == nskr_hint_tipDrinks,"AddText ""$HeOrShe takes a long drink from the glass. \""Ahh, but captain - you can solve my problem now. For a modest fee I could share a star system of interest to you.\""""
+AddText ""$HeOrShe looks directly at you. \""Are you interested?\""""","""So much data, so little time."" $heOrShe sighs. ""There's no way we can check out all these leads on our next expedition.""","nskr_hint_tipYes:""Yes.""
+nskr_hint_tipMaybe:""Maybe.""
+nskr_hint_tipDecline:Politely decline",
+nskr_hint_tipYes,DialogOptionSelected,$option == nskr_hint_tipYes,"FireBest nskr_hintTipOfferText
+AddText ""\""Of course you will have to pay for this information captain, my price is a measly $nskr_hint_offerPrice.\"" $HeOrShe takes a quick look around the room \""There are people that uh- need to be convinced of this transaction, it's a fair price.\""""
+SetTextHighlights ""$nskr_hint_offerPrice""
+FireAll nskr_hintTipOfferOptions",,,
+nskr_hint_tipMaybe,DialogOptionSelected,$option == nskr_hint_tipMaybe,"$option = nskr_hint_tipYes 0
+FireBest DialogOptionSelected",,,"Same screen as ""Yes."""
+nskr_hint_tipOfferText,nskr_hintTipOfferText,,"SetTextHighlights ""$nskr_hint_offerDistance""","""The system is located $nskr_hint_offerDistance light-years away, and is reported to be a hotspot of  activity."" $heOrShe looks up from the datapad and eyes your response.",,Fallback: a system with neither theme tag leaves the threat word empty
+nskr_hint_tipOfferTextDerelict,nskr_hintTipOfferText,nskr_quest hint check offerDerelict,"SetTextHighlights ""$nskr_hint_offerDistance"" Derelict","""The system is located $nskr_hint_offerDistance light-years away, and is reported to be a hotspot of Derelict activity."" $heOrShe looks up from the datapad and eyes your response.",,
+nskr_hint_tipOfferTextRemnant,nskr_hintTipOfferText,nskr_quest hint check offerRemnant,"SetTextHighlights ""$nskr_hint_offerDistance"" Remnant","""The system is located $nskr_hint_offerDistance light-years away, and is reported to be a hotspot of Remnant activity."" $heOrShe looks up from the datapad and eyes your response.",,offerRemnant is false for a system that is also derelict-themed
+nskr_hint_tipOptBuy,nskr_hintTipOfferOptions,nskr_quest hint check canAffordTip,,,nskr_hint_tipBuy:Buy the information for $nskr_hint_offerPrice,Only while the player has more credits than the price
+nskr_hint_tipOptDecline,nskr_hintTipOfferOptions,,,,nskr_hint_tipDecline:Politely decline,
+nskr_hint_tipBuy,DialogOptionSelected,$option == nskr_hint_tipBuy,"nskr_quest hint do buyTip
+AddTextSmall ""Added log entry for the $nskr_hint_offerSystem"" gray
+SetTextHighlights ""$nskr_hint_offerSystem""
+PlaySound ui_noise_static","""The pleasure is mine captain.""",nskr_hint_tipLeaveBought:Leave,buyTip takes the credits and prints the receipt
+nskr_hint_tipLeaveBought,DialogOptionSelected,$option == nskr_hint_tipLeaveBought,"HideVisual
+nskr_quest hint do leaveTip
+BarCMD returnFromEvent true","With the transaction complete, you leave the officer to their work.",,leaveTip shows the tip intel and ends the offer
+nskr_hint_tipDecline,DialogOptionSelected,$option == nskr_hint_tipDecline,"HideVisual
+nskr_quest hint do leaveTip
+BarCMD returnFromEvent true",You decide it's best to leave.,,Declining ends the offer too
+,,,,,,
+# Intel,,,,,,
+nskr_hint_signalTitle,nskr_hintIntelTitle,$nskr_intel_key == signal,,Mysterious signals,,
+nskr_hint_tipTitle,nskr_hintIntelTitle,$nskr_intel_key == tip,,Purchased Intel,,
+nskr_hint_frostTitle,nskr_hintIntelTitle,$nskr_intel_key == frost,,The $nskr_hint_frostSystem,,
+nskr_hint_signalBullet,nskr_hintIntelBullets,$nskr_intel_key == signal,,Explore the $nskr_hint_recordSystem.,,
+nskr_hint_tipBullet,nskr_hintIntelBullets,"$nskr_intel_key == tip
+!nskr_quest hint check tipDerelict
+!nskr_quest hint check tipRemnant",,"Explore the $nskr_hint_recordSystem, it was said to contain a  threat.",,A system with neither theme tag leaves the threat word empty
+nskr_hint_tipBulletDerelict,nskr_hintIntelBullets,"$nskr_intel_key == tip
+nskr_quest hint check tipDerelict",SetTextHighlights Derelict,"Explore the $nskr_hint_recordSystem, it was said to contain a Derelict threat.",,
+nskr_hint_tipBulletRemnant,nskr_hintIntelBullets,"$nskr_intel_key == tip
+nskr_quest hint check tipRemnant",SetTextHighlights Remnant,"Explore the $nskr_hint_recordSystem, it was said to contain a Remnant threat.",,
+nskr_hint_frostBullet,nskr_hintIntelBullets,"$nskr_intel_key == frost
+$nskr_intel_mode == update",SetTextHighlights hostile,"Your sensors officer is overwhelmed by the amount of active signals in this system, many of which are hostile. Further exploration will certainly yield results.",,The message on the first visit to Frost
+nskr_hint_signalDesc,nskr_hintIntelDesc,"$nskr_intel_key == signal
+!nskr_quest hint check recordVisited",,Your comms team reported a strange burst of signals coming from the $nskr_hint_recordSystem. Exploration of the location should yield more answers.,,
+nskr_hint_signalDescVisited,nskr_hintIntelDesc,"$nskr_intel_key == signal
+nskr_quest hint check recordVisited",SetTextHighlights source,"You've reached the origin of the signals, now to just find the source.",,
+nskr_hint_tipDesc,nskr_hintIntelDesc,"$nskr_intel_key == tip
+!nskr_quest hint check recordVisited",,You purchased coordinates for the $nskr_hint_recordSystem from a Kesteven officer.,,
+nskr_hint_tipDescVisited,nskr_hintIntelDesc,"$nskr_intel_key == tip
+nskr_quest hint check recordVisited",,Time to see if the officer was true to their word.,,
+nskr_hint_frostDesc,nskr_hintIntelDesc,$nskr_intel_key == frost,"SetTextHighlights ""The $nskr_hint_frostSystem""",The $nskr_hint_frostSystem,,The whole line is highlighted
+nskr_hint_frostDescSignals,nskr_hintIntelDesc,"$nskr_intel_key == frost
+!nskr_quest hint check frostGone",SetTextHighlights hostile,You found a strange forgotten system brimming with signals and sensor contacts. The hostile conditions make thorough exploration difficult.,,
+nskr_hint_frostDescQuiet,nskr_hintIntelDesc,"$nskr_intel_key == frost
+nskr_quest hint check frostGone","SetTextHighlights ""Frozen Heart""",With the destruction of Frozen Heart the system falls quiet for the first time in centuries.,,
