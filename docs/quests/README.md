@@ -8,6 +8,7 @@ How the quests are implemented today, traced from the Java sources and `data/cam
 | [KESTEVEN_STATE.md](KESTEVEN_STATE.md) | The questline's saved state: stages and their legacy numbers, flags, fields, random purposes, memory flags, and every caller that changes the stage |
 | [KESTEVEN_DIALOGUE.md](KESTEVEN_DIALOGUE.md) | Where each conversation is implemented, how rules and Java hand off, and what moving dialogue into rules involves |
 | [CONTRACTS_AND_BOUNTIES.md](CONTRACTS_AND_BOUNTIES.md) | The Kesteven contracts, the four named bounty fleets and the intercept fleets of quest `ic` |
+| [HELLSPAWN.md](HELLSPAWN.md) | The Hellspawn judgement (quest `hs`): stages, THRN's scenes, the Final Judgement encounter and what stays in Java |
 
 These pages describe current behavior, including behavior that looks unintended. Defects are listed where they were found; they come from reading the source and have not been reproduced in game.
 

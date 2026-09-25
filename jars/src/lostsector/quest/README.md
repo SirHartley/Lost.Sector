@@ -45,7 +45,7 @@ The framework is built on branch `quest-overhaul`; the task ids refer to the tra
 | Fleets | `QuestFleets`, `QuestFleet`, `FleetRole`, `FleetOrders` | implemented | T07 |
 | Rules command, tokens, people, rewards | `nskr_quest`, `QuestVerbs`, `QuestTokens`, `QuestPeople`, `QuestRewards` | implemented | T08 |
 | Presentation spec (vanilla commands per effect) | [DIALOGUE.md](../../../../docs/DIALOGUE.md#presentation-in-rules) | implemented | T09 |
-| Gap verbs: `confirm`, `engage` | `nskr_quest` | planned | T10 |
+| Gap verbs: `confirm`, `engage` | `nskr_quest` | implemented | T10 |
 | Intel and rules text outside dialogs | `QuestIntel`, `QuestIntels`, `QuestText` | implemented | T11 |
 | Rules check tool | `lostsector.quest.dev.RulesCheck` | implemented | T12 |
 | Dev menu and stage jumps | `nskr_questDev`, `QuestDevTools` | implemented | T13 |
@@ -81,6 +81,8 @@ These apply to the main session and to every subagent.
    | Grant a computed reward | `ctx.rewards()` inside an action | Hand-written receipt text |
    | Player-facing text | Rules rows | Java string literals, `strings.json`, `addPara` with prose |
    | Behavior two quests share | A [shared module](#shared-modules) | Copying a module |
+
+   One exception is recorded: a visual effect bound to one open dialog, which must run while the game is paused, may use a transient script that stops when that dialog closes (`HellSpawnThrnAnimation`, the animated THRN portrait). Anything else that needs paused frames extends the framework first.
 
 2. **Extend, never work around.** When the framework lacks something a quest needs, add it to the framework package following [Extending the framework](#extending-the-framework) and document it here in the same commit. A quest-local helper that duplicates or bypasses a framework job is not allowed.
 
@@ -648,7 +650,7 @@ Each quest person also gets name and pronoun tokens for use while they are not t
 
 Claims write the trigger to entity memory under `QuestDialogs.CLAIM_KEY` (`$nskr_questDialog`). `CorePlugin` has one route for all of them: when the target's memory holds that key, it returns `new RuleBasedInteractionDialogPluginImpl(trigger)` at `PickPriority.MOD_GENERAL`. Claims are cleared with their scope like marks. Claiming an entity that already holds another claim logs an error and replaces it; releasing unsets the key only while it still holds that claim's trigger. Do not claim a market's entity: that replaces the whole market dialog; add options to its menu instead.
 
-`ctx.open` builds the same plugin and calls `CampaignUIAPI.showInteractionDialog(plugin, target)`. When the UI is busy the call returns false; the manager keeps the request in the state and retries every frame until it opens, as vanilla's wait command does. The manager tries one pending open per frame and none while a dialog is showing, and drops a pending open whose target is no longer alive, with an error. The target must not be null: use the entity the scene is about, such as the hailing fleet. For a monologue, use the entity that caused it.
+`ctx.open` builds the same plugin and calls `CampaignUIAPI.showInteractionDialog(plugin, target)`. When the UI is busy the call returns false; the manager keeps the request in the state and retries every frame until it opens, as vanilla's wait command does. The manager tries one pending open per frame and none while a dialog is showing, and drops a pending open whose target is no longer alive, with an error. The target must not be null: use the entity the scene is about, such as the hailing fleet. For a monologue, use the entity that caused it. `CampaignState.showInteractionDialog` (0.98a-RC8) switches to the encounter music of a target with a market or a faction unless the target's or its market's memory holds `$playLocationMusicDuringEnc` (`MusicPlayerPluginImpl.KEEP_PLAYING_LOCATION_MUSIC_DURING_ENCOUNTER_MEM_KEY`); a scene that plays its own music or none sets that flag on its target first, as the Hellspawn scenes do on the player fleet.
 
 Every trigger a quest claims, opens or fires from Java is declared with `d.trigger(...)`.
 
@@ -756,10 +758,11 @@ public final class QuestRewards {
     public void commodity(String commodityId, int quantity);
     public void item(SpecialItemData item, int quantity);
     public void storyPoints(int points);                   // MutableCharacterStatsAPI.addStoryPoints(points, textPanel, false)
+    public void skill(String skillId, float level);        // MutableCharacterStatsAPI.setSkillLevel; receipt with the skill panel
 }
 ```
 
-Each applies the grant the way `AddRemoveCommodity` and `AddRemoveAnyItem` do and prints the vanilla receipt when the context has a dialog. `credits`, `takeCredits` and `storyPoints` need a positive amount (otherwise an error is logged and nothing happens); credits never drop below zero; a negative `commodity` or `item` quantity removes, and `commodity` refreshes `$supplies`-style player memory through `AddRemoveCommodity.updatePlayerMemoryQuantity`. Without a dialog, `storyPoints` uses `addStoryPoints(points)`. Outside a dialog the quest reports the grant through an intel update instead. Reputation changes stay in rows (`AdjustRep`) unless no dialog exists; add a method here when a quest needs one.
+Each applies the grant the way `AddRemoveCommodity` and `AddRemoveAnyItem` do and prints the vanilla receipt when the context has a dialog. `credits`, `takeCredits` and `storyPoints` need a positive amount (otherwise an error is logged and nothing happens); credits never drop below zero; a negative `commodity` or `item` quantity removes, and `commodity` refreshes `$supplies`-style player memory through `AddRemoveCommodity.updatePlayerMemoryQuantity`. Without a dialog, `storyPoints` uses `addStoryPoints(points)`. `skill` sets the player's skill level; no vanilla command grants a player skill (`NGCSetSkill` is new-game only) and no vanilla helper prints its receipt, so it prints "Gained <skill name>" in small gray text with the name highlighted, then the skill's panel (`TextPanelAPI.beginTooltip().addSkillPanel(person, 10f)` for a person holding only that skill). An unknown skill id or a level of 0 or less logs an error and grants nothing. Outside a dialog the quest reports the grant through an intel update instead. Reputation changes stay in rows (`AdjustRep`) unless no dialog exists; add a method here when a quest needs one.
 
 ### Random, timers and marks
 

@@ -68,6 +68,7 @@ Fixed - Enigma ambush fleets in hyperspace no longer follow you into a star syst
 Adjusted - The Kesteven loan menu lists every loan and repayment amount on one page
 Adjusted - Taking or repaying a Kesteven loan shows the standard credits gained or lost receipt
 Adjusted - Questions you have already asked Jack and Alice no longer return to their question lists
+Adjusted - The Hellspawn judgement's story point and Peaceful Heart rewards show the standard receipts
 
 1.0.b
 Adjusted - Severely nerfed spawn rates for Borealis, Rhea and Kingslayer

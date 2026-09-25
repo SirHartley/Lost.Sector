@@ -1210,3 +1210,80 @@ nskr_questDev_pickTimerSel,DialogOptionSelected,"nskr_optionStartsWith ""nskr_qu
 nskr_questDev timers",,,
 nskr_questDev_pickTriggerSel,DialogOptionSelected,"nskr_optionStartsWith ""nskr_questDev_pickTrigger_""",nskr_questDev open,,,
 nskr_questDev_questMenuSel,DialogOptionSelected,$option == nskr_questDev_questMenu,FireAll nskr_questDevQuest,,,
+,,,,,,
+# HELLSPAWN,,,,,,
+nskr_hs_warningOpen,nskr_hsWarning,,"ShowPersonVisual false nskr_hs_thrn
+nskr_quest hs do musicStart
+nskr_quest hs do thrnAnimate
+AddText ""Hello captain."" gray
+AddText ""Soon you will be judged."" gray",,nskr_hs_warning1:Continue,Opened by HellSpawnWarningModule once the player reaches level 15
+nskr_hs_warning1,DialogOptionSelected,$option == nskr_hs_warning1,"AddText ""The time for it is approaching rapidly."" gray
+AddText ""Hope your actions were righteous."" gray
+AddText ""Be ready."" gray",,nskr_hs_warning2:Continue,
+nskr_hs_warning2,DialogOptionSelected,$option == nskr_hs_warning2,"AddText ""Be."" gray
+AddText ""Ready."" gray
+nskr_quest hs advance WARNING COUNTDOWN",,nskr_hs_warningLeave:Continue,COUNTDOWN starts the 40-day timer and adds HellSpawnJudgementIntel
+nskr_hs_warningLeave,DialogOptionSelected,$option == nskr_hs_warningLeave,"nskr_quest hs do musicStop
+DismissDialog",,,
+,,,,,,
+nskr_hs_judgementOpen,nskr_hsJudgement,,"ShowPersonVisual false nskr_hs_thrn
+nskr_quest hs do musicStart
+nskr_quest hs do thrnAnimate
+AddText ""Hello captain."" gray
+AddText ""The day has come."" gray",,nskr_hs_judgement1:Continue,Opened by HellSpawnJudgementModule 40 days after the warning
+nskr_hs_judgement1,DialogOptionSelected,$option == nskr_hs_judgement1,"AddText ""There is no path."" gray
+AddText ""Beyond the scope of justice."" gray
+SetTextHighlightColors 218,16,52,255
+SetTextHighlights justice
+FireBest nskr_hsJudgementPath",,,
+nskr_hs_pathPeaceful,nskr_hsJudgementPath,,,,nskr_hs_peaceful1:Continue,Fallback: Descent progress below 350
+nskr_hs_pathNeutral,nskr_hsJudgementPath,nskr_quest hs check neutral,,,nskr_hs_neutral1:Continue,Descent progress 350 to 1999
+nskr_hs_pathHell,nskr_hsJudgementPath,nskr_quest hs check hell,,,nskr_hs_hell1:Continue,Descent progress 2000 or more
+,,,,,,
+nskr_hs_peaceful1,DialogOptionSelected,$option == nskr_hs_peaceful1,"AddText ""What?"" gray
+AddText ""...This is most unusual."" gray",,nskr_hs_peaceful2:Continue,
+nskr_hs_peaceful2,DialogOptionSelected,$option == nskr_hs_peaceful2,"AddText ""You tried your best to maintain peace."" gray
+AddText ""Despite your calling."" gray",,nskr_hs_peaceful3:Continue,
+nskr_hs_peaceful3,DialogOptionSelected,$option == nskr_hs_peaceful3,"AddText ""Maybe there is hope for this sector after all..."" gray",,nskr_hs_peaceful4:Continue,
+nskr_hs_peaceful4,DialogOptionSelected,$option == nskr_hs_peaceful4,"AddText ""Have this."" gray
+AddText ""You have the power for change."" gray
+AddStoryPoints 8
+PlaySound ui_noise_static
+nskr_quest hs do grantPeacefulHeart
+AddText ""Do not waste it."" gray
+nskr_quest hs advance JUDGEMENT SPARED",,nskr_hs_peacefulLeave:Continue,"grantPeacefulHeart runs only in JUDGEMENT, so it comes before the advance"
+nskr_hs_peacefulLeave,DialogOptionSelected,$option == nskr_hs_peacefulLeave,"nskr_quest hs do musicFarewell
+DismissDialog",,,
+,,,,,,
+nskr_hs_neutral1,DialogOptionSelected,$option == nskr_hs_neutral1,"AddText ""For everyone you've killed."" gray
+AddText ""For every ship you've wrecked."" gray
+AddText ""For every station you've burned."" gray",,nskr_hs_neutral2:Continue,
+nskr_hs_neutral2,DialogOptionSelected,$option == nskr_hs_neutral2,"AddText ""What were you trying to achieve?"" gray
+AddText ""...It doesn't matter."" gray",,nskr_hs_neutral3:Continue,
+nskr_hs_neutral3,DialogOptionSelected,$option == nskr_hs_neutral3,"AddText ""It's time to pick on someone your own size."" gray
+AddText ""Die."" gray",,nskr_hs_fight:Continue,
+,,,,,,
+nskr_hs_hell1,DialogOptionSelected,$option == nskr_hs_hell1,"AddText ""Oh yes."" gray
+AddText ""Let the blood run as a river."" gray
+AddText ""The sky filled with radioactive smog."" gray
+AddText ""The sector firmly under your boot."" gray",,nskr_hs_hell2:Continue,
+nskr_hs_hell2,DialogOptionSelected,$option == nskr_hs_hell2,"AddText ""Your empire of ash."" gray
+AddText ""WELCOME"" 218,16,52,255
+AddText ""TO"" 218,16,52,255
+AddText ""HELL"" 218,16,52,255
+nskr_quest hs set HELL",,nskr_hs_fight:Continue,HELL makes the judgement fleet larger
+,,,,,,
+nskr_hs_fight,DialogOptionSelected,$option == nskr_hs_fight,"HideVisual
+nskr_quest hs advance JUDGEMENT FIGHT
+nskr_quest hs do engageJudge",,,"FIGHT spawns the judgement fleet; engageJudge hands the dialog to HellSpawnJudgementInteraction, so it is the last line"
+,,,,,,
+nskr_hs_fightComms,nskr_hsFightComms,,"AddText ""What? The chance to talk your way out is long gone."" gray
+AddText ""You attempt to open comms but nothing happens.""",,,Fired by HellSpawnJudgementInteraction
+nskr_hs_fightDisengage,nskr_hsFightDisengage,,"AddText ""Ha ha ha."" gray
+AddText ""Not so fast captain."" gray
+AddText ""Your attempt was quickly blocked by the opposing fleet.""",,,Fired by HellSpawnJudgementInteraction
+nskr_hs_fightStoryDisengage,nskr_hsFightStoryDisengage,,"AddText ""Pathetic."" gray
+AddText ""There is no escape."" gray
+AddText ""Despite your best efforts the opposing fleet remains one step ahead of you.""",,,Fired by HellSpawnJudgementInteraction
+nskr_hs_fightBattleDisengage,nskr_hsFightBattleDisengage,,"AddText ""You have to finish this."" gray
+AddText ""The opposing fleet doesn't seem to be effected by the damage you caused.""",,,Fired by HellSpawnJudgementInteraction

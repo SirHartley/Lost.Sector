@@ -4,7 +4,10 @@ import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.CargoAPI;
 import com.fs.starfarer.api.campaign.SpecialItemData;
 import com.fs.starfarer.api.campaign.TextPanelAPI;
+import com.fs.starfarer.api.characters.PersonAPI;
+import com.fs.starfarer.api.characters.SkillSpecAPI;
 import com.fs.starfarer.api.impl.campaign.rulecmd.AddRemoveCommodity;
+import com.fs.starfarer.api.util.Misc;
 import com.fs.starfarer.api.util.MutableValue;
 
 // Grants with computed amounts. Each applies the grant the way the vanilla command does and prints the vanilla
@@ -74,6 +77,29 @@ public final class QuestRewards {
             Global.getSector().getPlayerStats().addStoryPoints(points);
         }
         ctx.log("story points +" + points);
+    }
+
+    // No vanilla command or receipt helper grants a player skill. The receipt is a small gray line with the skill's
+    // name highlighted, followed by the skill's panel (DIALOGUE.md "Receipts").
+    public void skill(String skillId, float level) {
+        SkillSpecAPI spec = Global.getSettings().getSkillSpec(skillId);
+        if (spec == null || level <= 0f) {
+            ctx.error("skill refused: " + skillId + " at level " + level);
+            return;
+        }
+        Global.getSector().getPlayerStats().setSkillLevel(skillId, level);
+        TextPanelAPI text = ctx.textPanel();
+        if (text != null) {
+            text.setFontSmallInsignia();
+            text.addParagraph("Gained " + spec.getName(), Misc.getGrayColor());
+            text.highlightInLastPara(Misc.getHighlightColor(), spec.getName());
+            PersonAPI shown = Global.getFactory().createPerson();
+            shown.getStats().setSkillLevel(skillId, level);
+            text.beginTooltip().addSkillPanel(shown, 10f);
+            text.addTooltip();
+            text.setFontInsignia();
+        }
+        ctx.log("skill " + skillId + " " + level);
     }
 
     private boolean positive(String grant, int amount) {

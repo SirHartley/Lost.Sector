@@ -47,7 +47,7 @@ The questline's own old classes use these accessors until later tasks replace th
 | `dialogue/rules/nskr_ttCollectorDialog.getPaid/setPaid` | `COLLECTOR_PAID` |
 | `getRandom()` on each class in [Randoms](#randoms) | `KestevenQuest.random` with that class's purpose |
 
-`QuestHelper.getCompleted(String)` and `setCompleted(boolean, String)` still read and write sector persistent data. The bounties, the Mothership and HellSpawn keep their own flags through them; no questline value uses them.
+`QuestHelper.getCompleted(String)` and `setCompleted(boolean, String)` still read and write sector persistent data. The bounties and the Mothership keep their own flags through them; no questline value uses them.
 
 ### Queries for other features
 

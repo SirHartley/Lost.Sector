@@ -17,7 +17,6 @@ public class Ids {
     public static final String ELIZA_PERSON_ID = "nskr_anarchist";
     public static final String PRESIDENT_PERSON_ID = "nskr_president";
     public static final String ENIGMA_PERSON_ID = "nskr_enigmaAdmin";
-    public static final String THRN_PERSON_ID = "nskr_thrn";
 
     public static final String HEART_ENTITY_ID = "nskr_heart";
     public static final String ASTERIA_ENTITY_ID = "nskr_asteria";

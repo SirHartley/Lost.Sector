@@ -12,7 +12,6 @@ import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.PluginPick;
 import com.fs.starfarer.api.campaign.*;
 import lostsector.campaign.starts.hellspawn.HellSpawnAbilityInteraction;
-import lostsector.campaign.starts.hellspawn.HellSpawnJudgementDialog;
 import lostsector.campaign.starts.hellspawn.HellSpawnJudgementInteraction;
 import lostsector.campaign.bounties.mothership.MothershipInteractionBlocker;
 import lostsector.campaign.bounties.mothership.MothershipSpawner;
@@ -36,7 +35,7 @@ public class CorePlugin extends BaseCampaignPlugin {
     @Override
     public PluginPick<InteractionDialogPlugin> pickInteractionDialogPlugin(SectorEntityToken interactionTarget) {
         //HELLSPAWN judgement fleet
-        if (interactionTarget instanceof CampaignFleetAPI && interactionTarget.getMemoryWithoutUpdate().contains(HellSpawnJudgementDialog.JUDGEMENT_FLEET_KEY)) {
+        if (interactionTarget instanceof CampaignFleetAPI && interactionTarget.getMemoryWithoutUpdate().contains(HellSpawnJudgementInteraction.JUDGEMENT_FLEET_KEY)) {
             if (Global.getSector().getCampaignUI().getCurrentInteractionDialog()!=null) {
                 return new PluginPick<InteractionDialogPlugin>(
                         new HellSpawnJudgementInteraction((CampaignFleetAPI) interactionTarget, Global.getSector().getCampaignUI().getCurrentInteractionDialog()), CampaignPlugin.PickPriority.MOD_SET);

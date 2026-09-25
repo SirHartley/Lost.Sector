@@ -238,8 +238,8 @@ Eliza is a revolutionary, and Kesteven calls her a terrorist (`nskr_anarchist`, 
 
 THRN is the Hellspawn judge. It speaks in short gray lines, sometimes one word at a time:
 
-- the warning (`HellSpawnJudgementWarning`): "Soon you will be judged." ... "Be ready." "Be." "Ready.";
-- the judgement (`HellSpawnJudgementDialog`), in three outcomes:
+- the warning (rules `nskr_hs_warningOpen` to `nskr_hs_warning2`): "Soon you will be judged." ... "Be ready." "Be." "Ready.";
+- the judgement (rules `nskr_hs_judgement1` and the `nskr_hs_peaceful`, `nskr_hs_neutral` and `nskr_hs_hell` rows), in three outcomes:
   - for a peaceful captain, mercy ("You tried your best to maintain peace. Despite your calling. Maybe there is hope for this sector after all...");
   - for a violent one, a sentence ("For everyone you've killed. For every ship you've wrecked. For every station you've burned. ... Die.");
   - for the worst, approval ("Let the blood run as a river. ... Your empire of ash." then "WELCOME TO HELL").

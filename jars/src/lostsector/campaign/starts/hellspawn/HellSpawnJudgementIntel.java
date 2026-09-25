@@ -9,7 +9,6 @@ import com.fs.starfarer.api.ui.IntelUIAPI;
 import com.fs.starfarer.api.ui.SectorMapAPI;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import com.fs.starfarer.api.util.Misc;
-import lostsector.campaign.starts.hellspawn.HellSpawnManager;
 
 import java.awt.*;
 import java.util.Set;
@@ -93,7 +92,7 @@ public class HellSpawnJudgementIntel extends BaseIntelPlugin {
 
         bullet(info);
 
-        if (days < HellSpawnManager.JUDGEMENT_TIMER-7f) info.addPara("You will be judged soon.", opad, g, h, "soon");
+        if (days < HellSpawnCountdownModule.JUDGEMENT_DAYS-7f) info.addPara("You will be judged soon.", opad, g, h, "soon");
         else info.addPara("You will be judged very soon.", opad, g, h, "very soon");
         info.addPara("Prepare accordingly.", 2f, g, h, "soon");
 
