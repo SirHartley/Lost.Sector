@@ -6,7 +6,7 @@ Java paths are relative to `jars/src/lostsector/campaign/`; `dialogue/rules/`, `
 
 ## Storage
 
-The questline is quest `kq` of the quest framework. `kesteven/quest/KestevenQuest` is its definition, registered in `quest/QuestCatalog`. `KestevenHubModule` declares the checks, actions and tokens of the rows for every conversation with Jack, Alice and Nicholas ([dialogue map](KESTEVEN_DIALOGUE.md#jack-alice-and-nicholas)); `KestevenJob1Module` runs job 1's intel, dormant fleet and move to `JOB1_DONE` ([Job 1](KESTEVEN_QUESTLINE.md#job-1-enemy-unknown-stages-0-to-6)); `KestevenJob3Module` runs job 3's intel and the objects placed at acceptance ([Job 3](KESTEVEN_QUESTLINE.md#job-3-hostile-takeover-stages-6-to-11)); `KestevenPartyModule` runs the job 3 party's guests, drink count and hangover bill ([The party](KESTEVEN_QUESTLINE.md#the-party)); `KestevenGlacierModule` runs the Glacier facility ([Glacier](KESTEVEN_QUESTLINE.md#glacier-disk-5)). `KestevenElizaSearchModule` runs the search for Eliza at pirate bars ([Finding Eliza](KESTEVEN_QUESTLINE.md#finding-eliza)). `QuestStageManager` and the Java dialogs, bar events, intel and rules commands still run the rest of the questline, reading and writing one saved `kesteven/quest/KestevenState`. `KestevenQuest.isAvailable()` keeps the default `true`, because the old code runs the questline in every campaign and handles a missing Kesteven home as failure.
+The questline is quest `kq` of the quest framework. `kesteven/quest/KestevenQuest` is its definition, registered in `quest/QuestCatalog`. `KestevenHubModule` declares the checks, actions and tokens of the rows for every conversation with Jack, Alice and Nicholas ([dialogue map](KESTEVEN_DIALOGUE.md#jack-alice-and-nicholas)); `KestevenJob1Module` runs job 1's intel, dormant fleet and move to `JOB1_DONE` ([Job 1](KESTEVEN_QUESTLINE.md#job-1-enemy-unknown-stages-0-to-6)); `KestevenJob3Module` runs job 3's intel and the objects placed at acceptance ([Job 3](KESTEVEN_QUESTLINE.md#job-3-hostile-takeover-stages-6-to-11)); `KestevenPartyModule` runs the job 3 party's guests, drink count and hangover bill ([The party](KESTEVEN_QUESTLINE.md#the-party)); `KestevenJob5Module` runs the Delve meeting's checks, its guard and the job 5 intel ([Job 5](KESTEVEN_QUESTLINE.md#briefing-and-meeting)); `KestevenGlacierModule` runs the Glacier facility ([Glacier](KESTEVEN_QUESTLINE.md#glacier-disk-5)). `KestevenElizaSearchModule` runs the search for Eliza at pirate bars ([Finding Eliza](KESTEVEN_QUESTLINE.md#finding-eliza)). `QuestStageManager` and the Java dialogs, bar events, intel and rules commands still run the rest of the questline, reading and writing one saved `kesteven/quest/KestevenState`. `KestevenQuest.isAvailable()` keeps the default `true`, because the old code runs the questline in every campaign and handles a missing Kesteven home as failure.
 
 | Mechanism | Location | Notes |
 |---|---|---|
@@ -17,7 +17,7 @@ The questline is quest `kq` of the quest framework. `kesteven/quest/KestevenQues
 | Timers | `KestevenState.TIMER_JOB3` | Started when the job 3 expedition spawns; the other old counters count frame seconds and stay fields until the modules replace them |
 | Quest fleet list | Sector memory `$kQuestMissionFleets`, a `List<FleetInfo>` | Read and written by `FleetHelper.getFleets/setFleets`. `FleetInfo.age` is in days. |
 | Framework fleets | The framework's `QuestFleets.KEY` list | The job 1 tip system's dormant fleet, role `job1Dormant`; the job 3 expedition, roles `job3Expedition` and `job3ExpeditionOver` |
-| Quest people | The state's person map, registered with the important people | The seven job 3 party guests of `KestevenPartyModule`, keys `party…`, ids `nskr_kq_party…` |
+| Quest people | The state's person map, registered with the important people | The seven job 3 party guests of `KestevenPartyModule`, keys `party…`, ids `nskr_kq_party…`; the Delve meeting's escort `delveGuard` (`nskr_kq_delveGuard`) of `KestevenJob5Module`, during `JOB5_MEETING` |
 | Fleet, entity and person memory | The owning `MemoryAPI` | Routing flags read by `rules.csv` and `CorePlugin`, and the conversation flags of Jack, Alice, Nicholas and the party employee; see [Memory flags](#memory-flags) |
 | Saved objects | Bar events in `PortsideBarData`, intel in the intel manager, `ElizaRaidObjectiveCreator` as a listener | Their class names and fields are serialized. |
 | Per installation | LunaLib settings: `settings/SettingsManager.set` and `Setting` reads | `thronesGiftUnlocked`, `hellspawnUnlocked`, `storySkipUnlocked`; shared by all campaigns |
@@ -44,7 +44,7 @@ The questline's own old classes use these accessors until later tasks replace th
 | `QuestHelper.getJob1Tip`, `getJob3Start`, `getJob3Target`, `getJob4FriendlyTarget`, `getJob5FrostTip` | The target field; the first read after it is null picks and stores it |
 | `QuestHelper.getJob4EnemyTarget/setJob4EnemyTarget`, `getElizaLoc/setElizaLoc`, `getCacheFleetLoc/setCacheFleetLoc` | The target field; the setters without an argument pick a new value |
 | `DataSatelliteDialog.get/setRecoveredSatelliteCount` | `satellitesRecovered` |
-| `KestevenElizaSearchModule.searchStage()`, `usedMarkets()`, `contactMarket()` (read only; `TheDelveIntel`, `QuestHelper.pickElizaMarket`) | `elizaSearchStage`, `elizaSearchUsedMarkets`, `elizaContactMarket` |
+| `KestevenElizaSearchModule.searchStage()`, `usedMarkets()`, `contactMarket()` (read only; `QuestHelper.pickElizaMarket`) | `elizaSearchStage`, `elizaSearchUsedMarkets`, `elizaContactMarket` |
 | `dialogue/rules/nskr_job4FleetDialog.getDialogStage/setDialogStage` | `job4FleetDialogStage`, through `QuestHelper` |
 | `dialogue/rules/nskr_ttCollectorDialog.getPaid/setPaid` | `COLLECTOR_PAID` |
 | `getRandom()` on each class in [Randoms](#randoms) | `KestevenQuest.random` with that class's purpose |
@@ -65,7 +65,6 @@ Classes outside the quest package and the questline dialog commands read and cha
 | `isJackGone()` | `JACK_GONE` | `kesteven/ExileManager` (Jack is not moved) |
 | `glacierDiskRecovered()` | `GLACIER_DISK_RECOVERED` | `enigma/StalkerSpawner` (three stalker fleets, once) |
 | `inMessengerWindow()` | Stage 10 to 14 | `events/intercepts/InterceptsQuest` (the "LZ" messenger may spawn) |
-| `delveMeetingDue()` | Stage 15 | `dialogue/rules/nskr_barEventFixer` (adds `DelveMeetingBarEvent`) |
 | `cacheIsQuestTarget()` | Stage 16 or later | `world/systems/cache/Cache` (marks the command core important) |
 | `isUnreadHintWreck(entity)` | The entity id starts with `$job4HintWreck` and `JOB4_HINT_WRECK_READ` is unset | `CorePlugin` (`HintWreckDialog`) |
 | `isDataSatellite(entity)` | The entity has a memory key starting with `$kQuestArtifact` | `CorePlugin` (`DataSatelliteDialog`) |
@@ -189,7 +188,7 @@ Other features read flags through the [queries](#queries-for-other-features). `n
 | `dayCounter`, `fleetCounter` | `float` | Daily logic timer (10 s) and fleet timer (1 s), in frame seconds | `QuestStageManager` |
 | `job4WaitCounter` | `float` | Job 4 wait, in frame seconds; the wait ends above 300 | `QuestStageManager` |
 | `cacheSeconds` | `float` | Frame seconds spent in Unknown Site before the guardian | `QuestStageManager` |
-| `job4IntelAdded`, `job5IntelAdded`, `cacheIntelAdded` | `boolean` | Intel added once | `QuestStageManager` |
+| `job4IntelAdded`, `cacheIntelAdded` | `boolean` | Intel added once | `QuestStageManager` |
 | `job4FleetsSpawned` | `boolean` | Job fleets and objects placed once | `QuestStageManager` |
 | `collectorSpawned` | `boolean` | Tri-Tachyon collector spawned | `QuestStageManager` |
 | `cacheGuardianSpotPicked`, `cacheDoubtShown`, `cacheGuardianSpawned` | `boolean` | Guardian location picked, Cache hint shown, guardian spawned | `QuestStageManager` |
@@ -243,11 +242,13 @@ The Kesteven bar tip is not questline content; it is quest `hint` ([Exploration 
 | `$nskr_altEndingDialogLockedToPerson` | The official in either alternative ending | Alternative endings | Alternative endings |
 | `$nskr_ic_messenger`, `$nskr_ic_messengerLeaving` | Messenger fleet role flags of quest `ic` | `QuestFleets` | Rules `# INTERCEPTS` |
 | `$missionImportant` with reason `nskr_kq` | Satellite #3, satellite #4, Glacier; the Eliza contact market (`KestevenElizaSearchModule`, scope `JOB5_DISKS`) | Hub actions `markJob3Satellite`, `markJob4Satellite`; `KestevenGlacierModule` action `markGlacier` (`ctx.mark`, scope `JOB5_DISKS` on) | Map markers; `DataSatelliteDialog` unsets the key on salvage, `recoverGlacierDisk` calls `ctx.unmark` |
+| `$missionImportant` with reason `nskr_kq` | The Cache command core `nskr_cache_core`, when it exists | `KestevenJob5Module` action `markCacheCore`, from the Delve meeting's "I think I already found that place." (`ctx.mark`, scope `JOB5_MEETING` on) | Map marker; `CacheCoreDialog` unsets the key on salvage |
 | `$nskr_questDialog` (`quest/QuestDialogs.CLAIM_KEY`) = `nskr_kqGlacier` | Glacier | `markGlacier` (`ctx.claimDialog`, scope `JOB5_DISKS` on); released by `recoverGlacierDisk` | `CorePlugin`, which opens the `# KESTEVEN QUESTLINE: GLACIER` rows |
 | `$nskr_kq_glacierPath` (`walk`, `cut`, `blast`), `$nskr_kq_glacierShutdown`, `$nskr_kq_glacierLate` | Glacier; expiry 0, so they end with the dialog | Glacier rows: the door choice, the shutdown choice, the countdown reaching 0 | Glacier rows: countdown lines, way back, barrage and congratulations |
 | `$nskr_kq_introduced` | Jack, Alice or Nicholas, each their own; no expiry | Hub introduction rows `nskr_kq_jackIntro`, `nskr_kq_aliceIntro`, `nskr_kq_nicholasIntro` | Hub greeting rows |
 | `$nskr_kq_partyTechiesDone`, `$nskr_kq_partyCrowdDone`, `$nskr_kq_partyOfficersDone` | The party employee (`nskr_kq_partyEmployee`); no expiry | Party rows `nskr_kq_partyPitchDecline`, `nskr_kq_partyPitchListen`, `nskr_kq_partyToastLeave`, `nskr_kq_partyTarget` | Party group menu `nskr_kqPartyGroups` and `nskr_kqPartyLookText` |
 | `$nskr_kq_asked<Topic>` (`askedRogueAi`, `askedShips`, `askedElectronics`, `askedCores`, `askedFought`, `askedEquipment`, `askedEnigma`, `askedNextJob` on Jack; `askedWhere`, `askedAlone`, `askedNecessary`, `askedTarget`, `askedNextJob`, `askedSpecOps`, `askedThreats`, `askedSupplies`, `askedNicholas`, `askedGoal`, `askedInterest`, `askedArtifact` on Alice) | The speaker; no expiry | Hub answer rows `nskr_kq_<speaker>Ask<Topic>Sel` | Hub question rows, which hide an asked question |
+| `$nskr_kq_delveAsked`, `$nskr_kq_delveAskedEnigma`, `…Comms`, `…Cache`, `…Chip`; `$nskr_kq_delveAdvanceOffered` | Jack, expiry `0` (the meeting has no way out before its end) | Delve meeting answer rows `nskr_kq_delveAsk…`; `nskr_kq_delveDoubt` | The meeting's question menu `nskr_kqDelveQuestions`; the advance payment `nskr_kq_delveAdvancePaid` |
 
 ## Who changes the stage
 
@@ -264,7 +265,7 @@ The Kesteven bar tip is not questline content; it is quest `hint` ([Exploration 
 | `KestevenJob3Module` (expedition beaten, timer over, stealth broken) | 8 or 9→10 |
 | `QuestStageManager.reportEncounterLootGenerated()` | any→14 (friendly attacked) |
 | Party row `nskr_kq_partyCoordinates` (`nskr_quest kq advance`) | 8→9 |
-| `DelveMeetingBarEvent` | 15→16 |
+| Row `nskr_kq_delveLeave` (Delve meeting), `nskr_quest kq advance` | 15→16 |
 | `Cache.CacheGuardInteractionConfig`, through `KestevenQuest.reportCacheGuardianDefeated()` | 16 or 17→18 |
 | `CacheCoreDialog` | →19 |
 | `EndingKestevenDialog`, `EndingElizaDialog`, `nskr_altEndingDialogLuddic.makeMad` | 19→20 |

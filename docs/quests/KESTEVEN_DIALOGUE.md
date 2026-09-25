@@ -9,8 +9,8 @@ Java paths are relative to `jars/src/lostsector/campaign/`; `dialogue/rules/` an
 | Style | Used by | How it runs |
 |---|---|---|
 | Rules rows with a multi-verb command | The Special Operations fleet (`nskr_job4FleetDialog`); the collector (`nskr_ttCollectorDialog`); Eliza's intercept (`nskr_elizaInterceptDialog`); both alternative endings | Rows select the conversation and call a verb. The verb writes most text and options from Java strings. Several commands extend `PaginatedOptions` and take over the dialog plugin (`setupDelegateDialog`). Every non-paging option then returns to rules through `FireBest DialogOptionSelected`. |
-| Rules rows only | Every conversation with Jack, Alice and Nicholas (gates, values and game actions from `KestevenHubModule`); the job 3 party, a rules bar event (guests, drink count and bill from `KestevenPartyModule`); the Glacier facility (`KestevenGlacierModule`); the Eliza search at pirate bars (`KestevenElizaSearchModule`); fleet greetings and threats: Enigma strike group, Eliza's raided and revenge fleets, Jack's revenge fleet, the Cache guardian, the "LZ" messenger, generic Enigma comms | Text, options and scripts live in `data/campaign/rules.csv`. |
-| Java `InteractionDialogPlugin` or `BaseBarEvent` | Satellites, Cache hint, Cache core, Eliza's port, both final ending dialogs, the Delve meeting, the job 4 hint wreck | `CorePlugin.pickInteractionDialogPlugin` or `PortsideBarData` opens the class. All text, options and state changes are in the Java class, using a nested `OptionId` enum. |
+| Rules rows only | Every conversation with Jack, Alice and Nicholas (gates, values and game actions from `KestevenHubModule`); the job 3 party, a rules bar event (guests, drink count and bill from `KestevenPartyModule`); the Glacier facility (`KestevenGlacierModule`); the Eliza search at pirate bars (`KestevenElizaSearchModule`); the Delve meeting at the bar (`KestevenJob5Module`); fleet greetings and threats: Enigma strike group, Eliza's raided and revenge fleets, Jack's revenge fleet, the Cache guardian, the "LZ" messenger, generic Enigma comms | Text, options and scripts live in `data/campaign/rules.csv`. |
+| Java `InteractionDialogPlugin` or `BaseBarEvent` | Satellites, Cache hint, Cache core, Eliza's port, both final ending dialogs, the job 4 hint wreck | `CorePlugin.pickInteractionDialogPlugin` or `PortsideBarData` opens the class. All text, options and state changes are in the Java class, using a nested `OptionId` enum. |
 
 ## Jack, Alice and Nicholas
 
@@ -229,6 +229,22 @@ Block `# KESTEVEN QUESTLINE: ELIZA SEARCH` of `data/campaign/rules.csv`, with `k
 
 The blurb of the contact uses the person tokens `$nskr_kq_pirateContact_manOrWoman` and `_hisOrHer`, because no person is active while the bar lists its events; the conversations use the vanilla pronoun tokens of the active speaker. Every exit runs `HideVisual` and `BarCMD returnFromEvent true`. The intel row `nskr_kq_elizaContactMovedBullet` is the Delve update `contactMoved`.
 
+## The Delve meeting
+
+The in-person meeting of job 5 is a rules bar event in the `# Meeting` part of the `# KESTEVEN QUESTLINE: JOB 5` block; [the questline page](KESTEVEN_QUESTLINE.md#briefing-and-meeting) describes what it does. `KestevenJob5Module` declares its checks, its action, its token and the guard.
+
+| Screen | Structure | Rows |
+|---|---|---|
+| Bar entry | `AddBarEvents` row | `nskr_kq_delveBar`: stage `JOB5_MEETING` and `check delveMeetingHere` (the bar's market is `asteriaOrOutpost`); `AddBarEvent nskr_kq_delveSignal` with the option in the highlight colour. No person is active when the option is clicked. |
+| The escort | Plain chain with a `FireBest` pick | `nskr_kq_delveSignal` fires `nskr_kqDelveEscort`: `nskr_kq_delveEscortAsteria` (`check asteriaGenerated`: `ShowLargePlanet`, the city) or the fallback `nskr_kq_delveEscort` (the guard's card, `ShowPersonVisual true nskr_kq_delveGuard`). |
+| Arrival | Plain chain with a `FireBest` pick | `nskr_kq_delveArrive`: `HideSecondPerson`, `ShowPic nskr_crib`, the room from `nskr_kqDelveRoom` (`nskr_kq_delveRoomAsteria` or `nskr_kq_delveRoom`), then Jack and Alice. |
+| The drink | Plain chain | `nskr_kq_delveGreet` makes Jack the speaker (`BeginConversation nskr_opguy true false`) and shows Alice (`ShowSecondPerson nskr_researcher`); `nskr_kq_delveDrink`, `nskr_kq_delveDrinkIt`, `nskr_kq_delveGreat` (`nskr_kq_delveHate` continues into it), `nskr_kq_delveNoDrink`. |
+| Business and questions | `FireAll` menu | `nskr_kq_delveBusiness` fires `nskr_kqDelveQuestions`: "Keep listening" (`nskr_kq_delveOptListen`; "Continue" after a question, `nskr_kq_delveOptContinue`), the four questions while unasked and `CACHE_FOUND` unset, or only "I think I already found that place." (`nskr_kq_delveOptFound`) with `CACHE_FOUND`. The answers `nskr_kq_delveAsk…` set `$nskr_kq_delveAsked…` in Jack's memory with expiry `0` and fire the menu again. `nskr_kq_delveOptEnigma` sets its label with `SetOptionText`, because the Options column cannot hold its colon. |
+| The job | Plain chains; a gate row removes one option | `nskr_kq_delveListen` (its gate `nskr_kqDelveListenGate` removes "I already have some of those disks." while `check noSatellite`), `nskr_kq_delveDoubt` (the advance offer: token `delveAdvanceCredits`, key `$nskr_kq_delveAdvanceOffered`), `nskr_kq_delvePrizes`, `nskr_kq_delveHaveDisks`. |
+| Eliza | Plain chain with a text insert and a gate row | `nskr_kq_delveAgree` fires `nskr_kqDelveAdvance` first (`nskr_kq_delveAdvancePaid`: `AddCredits 150000` and `ui_noise_static` after the offer), then its lines in `AddText`; its gate `nskr_kqDelveElizaGate` removes the "LZ" option unless `MESSENGER_QUESTION_OPEN`. `nskr_kq_delveTerrorist` answers; `nskr_kq_delveLowlife` and `nskr_kq_delveLz` continue into it. `nskr_kq_delveElizaNoted` closes the talk. |
+| Cache already found | Plain chain | `nskr_kq_delveFound` (action `markCacheCore`), `nskr_kq_delveFoundMore`. |
+| Leave | Exit row with a `FireBest` pick | `nskr_kq_delveLeave`: the log line and its sound, the departure from `nskr_kqDelveDeparture` (`nskr_kq_delveDepartureAsteria` or `nskr_kq_delveDeparture`), `HideSecondPerson`, `ShowPic nskr_crib`, `advance JOB5_MEETING JOB5_DISKS`, `BarCMD returnFromEvent true`. |
+
 ## Fleet conversations
 
 | Fleet | Rows | Command verbs |
@@ -282,7 +298,6 @@ The party at the job 3 start market is in the `# KESTEVEN QUESTLINE: JOB 3 PARTY
 |---|---|---|---|
 | `kesteven/quest/DataSatelliteDialog` | `CorePlugin`, satellites #3 and #4 | Disk salvage, ping, keywords | Disk count, satellite flags, wakes the guard |
 | `kesteven/quest/HintWreckDialog` | `CorePlugin`, hint wreck | Coordinates of the friendly fleet | Hint flag |
-| `kesteven/quest/DelveMeetingBarEvent` | `nskr_barEventFixer` on each bar visit at stage 15 | Meeting with Jack and Alice | Advance credits, stage 16 |
 | `kesteven/quest/ElizaDialog` | `CorePlugin`, Eliza's market until finished | Meeting Eliza | Disks, help or raid flags |
 | `kesteven/quest/CacheDoubtDialog` | `QuestStageManager`, once in Unknown Site | Inner-voice hint | None |
 | `kesteven/quest/CacheCoreDialog` | `CorePlugin` or the guardian's fleet-interaction config | Cache core salvage | Stage 19, rewards |
@@ -299,4 +314,4 @@ The party at the job 3 start market is in the `# KESTEVEN QUESTLINE: JOB 3 PARTY
 - **Values in text:** job 1 electronics, payouts, the job 4 constellation, the Frost distance and target names are computed in Java. They must be prepared as tokens before a row displays them; see [RULES_AUTHORING.md](../RULES_AUTHORING.md#create-a-custom-text-token).
 - **Stage writes:** the full list is in [KESTEVEN_STATE.md](KESTEVEN_STATE.md#who-changes-the-stage).
 - **Java-only dialogs:** those opened by `CorePlugin` have no rules entry today. Moving them means adding a rules entry route and removing the `CorePlugin` branch.
-- **Bar events:** `DelveMeetingBarEvent` is the last questline Java bar event in `PortsideBarData`; renaming or deleting the class affects existing saves. A rules bar event saves nothing of its own; the job 3 party and the Eliza search are examples.
+- **Bar events:** every questline bar event is a rules bar event, which saves nothing of its own; the job 3 party, the Eliza search and the Delve meeting are examples.

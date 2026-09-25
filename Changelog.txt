@@ -84,6 +84,8 @@ Adjusted - The Hostile Takeover intel entry reports the expedition's defeat, the
 Adjusted - The hangover after the Hostile Takeover party shows the standard credits lost receipt
 Fixed - The comms facility on Glacier now offers Leave on its first screen
 Adjusted - Paying the spacer in the search for Eliza shows the standard credits lost receipt
+Adjusted - The Delve intel entry reports the end of the questline and stays for three days once finished
+Adjusted - Jack's advance at the Delve meeting shows the standard credits gained receipt
 
 1.0.b
 Adjusted - Severely nerfed spawn rates for Borealis, Rhea and Kingslayer

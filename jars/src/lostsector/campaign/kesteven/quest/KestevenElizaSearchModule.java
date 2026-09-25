@@ -26,8 +26,7 @@ final class KestevenElizaSearchModule extends QuestModule<KestevenStage, Kesteve
     static final String PERSON_CONTACT = "pirateContact";
 
     // The Delve entry of the job 5 module receives the message when the contact moves.
-    // TODO T24: match the key KestevenJob5Module declares for the Delve intel.
-    static final String DELVE_INTEL = "job5";
+    static final String DELVE_INTEL = KestevenJob5Module.INTEL;
     static final String UPDATE_CONTACT_MOVED = "contactMoved";
 
     KestevenElizaSearchModule() {

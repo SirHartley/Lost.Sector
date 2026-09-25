@@ -10,19 +10,20 @@ Java paths are relative to `jars/src/lostsector/campaign/`; `dialogue/rules/` an
 |---|---|
 | `# KESTEVEN QUESTLINE` rows in `data/campaign/rules.csv`, `kesteven/quest/KestevenHubModule` | Every conversation with Jack, Alice and Nicholas: offers, briefings, hand-ins, rewards, questions, the job 3 refusal, the story skip and most player-driven stage changes; the job gates and payouts ([dialogue map](KESTEVEN_DIALOGUE.md#jack-alice-and-nicholas)) |
 | `kesteven/quest/QuestStageManager` | `EveryFrameScript` in `EFS_LIST`: automatic stage changes, failure checks, intel, bar events, quest fleets and their AI, the Cache guardian timer, Eliza relocation, post-quest revenge fleets |
-| `kesteven/quest/KestevenQuest`, `KestevenStage`, `KestevenFlag`, `KestevenState` | Framework definition of quest `kq`, with the modules `KestevenHubModule`, `KestevenJob1Module`, `KestevenJob3Module`, `KestevenGlacierModule` and `KestevenElizaSearchModule`; the stage enum, the flags and the saved state ([KESTEVEN_STATE.md](KESTEVEN_STATE.md)) |
+| `kesteven/quest/KestevenQuest`, `KestevenStage`, `KestevenFlag`, `KestevenState` | Framework definition of quest `kq`, with the modules `KestevenHubModule`, `KestevenJob1Module`, `KestevenJob3Module`, `KestevenJob5Module`, `KestevenGlacierModule` and `KestevenElizaSearchModule`; the stage enum, the flags and the saved state ([KESTEVEN_STATE.md](KESTEVEN_STATE.md)) |
 | `kesteven/quest/KestevenJob1Module`, `# KESTEVEN QUESTLINE: JOB 1` rows in `data/campaign/rules.csv` | Job 1 world logic: the intel entry and its text rows, the tip system's dormant fleet, the move to stage 2 ([Job 1](#job-1-enemy-unknown-stages-0-to-6)) |
 | `kesteven/quest/KestevenElizaSearchModule`, `# KESTEVEN QUESTLINE: ELIZA SEARCH` rows | The search for Eliza at pirate bars during stage 16 ([Finding Eliza](#finding-eliza)) |
 | `kesteven/quest/KestevenJob3Module`, `# KESTEVEN QUESTLINE: JOB 3` rows | Job 3 world logic: the expedition and its outcome, the intel entry and its text rows, and the objects placed when the job is accepted ([Job 3](#job-3-hostile-takeover-stages-6-to-11)) |
+| `kesteven/quest/KestevenJob5Module`, `# KESTEVEN QUESTLINE: JOB 5` rows | The Delve meeting at the bar, its escort guard, and the job 5 intel entry and its text rows ([Briefing and meeting](#briefing-and-meeting)) |
 | `kesteven/quest/KestevenGlacierModule`, `# KESTEVEN QUESTLINE: GLACIER` rows | The Glacier comms facility: its map marker and dialog claim, the timed raid, the barrage's fleet damage and disk #5 ([Glacier](#glacier-disk-5)) |
 | `kesteven/quest/QuestHelper` | Wrappers over `KestevenState` for the old callers: the stage as a legacy int, flags, fields and lazily picked target locations; `saveEnding()` |
 | `kesteven/quest/KestevenFleets` | Builders for every quest fleet |
 | `CorePlugin` | Opens the Java quest dialogs when the player interacts with a quest entity, deciding through `KestevenQuest` queries |
 | `kesteven/quest/*Dialog`, `kesteven/quest/*BarEvent`, `kesteven/quest/HintWreckDialog` | Java dialogs and bar events |
-| `dialogue/rules/nskr_job4FleetDialog`, `nskr_ttCollectorDialog`, `nskr_elizaInterceptDialog`, `nskr_altEndingDialogLuddic`, `nskr_altEndingDialogTT`, `nskr_barEventFixer`, `nskr_isKStage`, `nskr_isAtLeastKStage` | Rules commands for the fleet conversations, endings and stage predicates |
+| `dialogue/rules/nskr_job4FleetDialog`, `nskr_ttCollectorDialog`, `nskr_elizaInterceptDialog`, `nskr_altEndingDialogLuddic`, `nskr_altEndingDialogTT`, `nskr_isKStage`, `nskr_isAtLeastKStage` | Rules commands for the fleet conversations, endings and stage predicates |
 | `kesteven/quest/ElizaRaid`, `ElizaRaidObjectiveCreator` | Ground raid for Eliza's disks |
 | `world/systems/cache/Cache` | The Cache system, guardian fleet and its fleet-interaction config |
-| `kesteven/quest/OperationLifesaverIntel`, `TheDelveIntel`, `CacheIntel` | Intel entries of jobs 4 and 5 and the Cache; they read the stage and flags and never write the stage |
+| `kesteven/quest/OperationLifesaverIntel`, `CacheIntel` | Intel entries of job 4 and the Cache; they read the stage and flags and never write the stage |
 | `kesteven/ExileManager` | Moves the quest people between Asteria and the Outpost |
 
 ## Where the quest is offered
@@ -72,7 +73,7 @@ The stage is a `KestevenStage` on the quest state, changed only by the quest man
 | 13 | Job 4 done | `QuestStageManager`, friendly fleet found and strike group destroyed |
 | 14 | Job 5 offered by Jack | Alice, job 4 turn-in; attacking the friendly fleet also sets 14 |
 | 15 | Go to the bar | Jack, while showing the job 5 briefing |
-| 16 | Job 5 active: data disks | `DelveMeetingBarEvent`, leaving the meeting |
+| 16 | Job 5 active: data disks | Leaving the Delve meeting (row `nskr_kq_delveLeave`) |
 | 17 | Cache location known | Alice after all disks; `QuestStageManager` on entering the Cache system at stage 16; story skip |
 | 18 | Cache guardian defeated | `Cache.CacheGuardInteractionConfig` when no prototypes remain |
 | 19 | Player holds the UPC | `CacheCoreDialog` salvage |
@@ -181,15 +182,24 @@ Alice's turn-in at stage 13 grants 1 story point, 285,000 credits, a modspec, Ke
 
 At stage 14 Jack's briefing tells the player to go to the bar; showing the briefing sets stage 15 directly.
 
-At stage 15 the rules row `BarFixerEntered` runs `nskr_barEventFixer` on every bar visit at `asteriaOrOutpost`. It adds `DelveMeetingBarEvent`, the in-person meeting with Jack and Alice:
+At stage 15 the rules row `nskr_kq_delveBar` adds the bar event "Give the signal to the guard to take you to the meeting" (in the highlight colour) at every visit to the bar of `asteriaOrOutpost` (`KestevenJob5Module` check `delveMeetingHere`). It is the in-person meeting with Jack and Alice:
 
-- they explain the pre-collapse satellite network, the data disks and the Cache;
-- if the player hesitates, Jack pays a 150,000-credit advance;
-- Eliza is introduced as the holder of one disk.
+- the guard escorts the player; with Asteria in the sector the scenes are Asteria's (the planet, the underground city, a skyscraper), otherwise the Outpost's (the guard's card, the office modules);
+- Jack offers a drink; either answer leads on;
+- they explain the pre-collapse satellite network, the data disks and the Cache, with four optional questions;
+- "I already have some of those disks." appears once a satellite was salvaged;
+- if the player hesitates ("I'm not so sure about this."), Jack offers a 150,000-credit advance, paid with the vanilla credits receipt when the player agrees;
+- Eliza is introduced as the holder of one disk; "Ah yes, that "LZ" character." appears while `MESSENGER_QUESTION_OPEN` is set.
 
-Leaving sets stage 16. If the player had already entered the Cache system, the meeting takes a shorter branch and still sets stage 16; `QuestStageManager` then moves to 17.
+Leaving prints "Acquired log entry for The Delve", sets stage 16 and returns to the bar with a Continue option. If the player had already entered the Cache system (`CACHE_FOUND`), the meeting offers only "I think I already found that place.", a shorter branch that marks the Cache command core when the guardian is already beaten and still sets stage 16; `QuestStageManager` then moves to 17.
 
-When stage 16 is first seen, `QuestStageManager` adds `TheDelveIntel`.
+The guard is the quest person `delveGuard` (`nskr_kq_delveGuard`: Kesteven, male, military post, portrait `nskr_guard`), created when stage 15 starts and released when it ends. Jack becomes the speaker when the meeting starts (`BeginConversation nskr_opguy true false`), with Alice as the second portrait; the answered questions and the advance offer are expiry-0 keys in Jack's memory ([memory flags](KESTEVEN_STATE.md#memory-flags)). The rows are the `# Meeting` part of the `# KESTEVEN QUESTLINE: JOB 5` block ([dialogue map](KESTEVEN_DIALOGUE.md#the-delve-meeting)).
+
+### Intel
+
+`KestevenJob5Module` is active from stage 15 to 20. When stage 16 starts, or 17 after the story skip, it shows the `QuestIntel` entry `job5` (icon `job2`; tags story, important, accepted, missions; sort tier 2, major posting sound, Kesteven UI colours, delete button once completed) as a campaign message. At stage 20 it completes the entry, which sends a completion update and stays for the vanilla end delay of three days; on failure or a jump out of stages 15 to 20 it ends the entry at once. The map marker is `asteriaOrOutpost` at stage 16, the centre of Unknown Site at 17 and 18, and at 19 Eliza's market after `ELIZA_AGREED_SINCERELY`, otherwise `asteriaOrOutpost`; the module sets it at each stage and once a day, because the home and Eliza's market move without a callback.
+
+The text is in the `# Intel` part of the `# KESTEVEN QUESTLINE: JOB 5` block, selected by `$nskr_intel_key == job5`: the title "The Delve", one bullet per open step, and a description line per stage ("Keep searching.", "Head to the Cache.", "Recover the Chip.", "Mission complete"), followed by the bullets (`descriptionBullets()`). The bullets read the tips, the satellites, the Frost and Glacier flags, the Eliza search (`delveContactKnown`: search step 2 with a contact market), Eliza's market (`delveElizaLocated`), the disks and the Cache flags; the tokens are `KestevenJob5Module`'s `delveDisks`, `delveJob3Constellation`, `delveJob4Constellation`, `delveContactMarket`, `delveContactSystem`, `delveElizaMarket`, `delveElizaEntity` and `delveElizaSystem`, the hub's `job3TargetSystem`, `job4TargetSystem`, `frostName`, `frostTipConstellation` and `frostTipDistance`, and job 1's `homeName`. The step bullets stay out of the Eliza search's `contactMoved` update (`$nskr_intel_update != contactMoved`). Token values are highlighted, so the systems after the contact market and Eliza's market, the home in the stage 19 turn-in line and the disk count are highlighted too, which the old entry did not do.
 
 ### The five data disks
 
@@ -304,7 +314,7 @@ The questline option then disappears. The Cache can still be found and fought; `
 | Event | Owner | When | What |
 |---|---|---|---|
 | Tri-Tachyon collector | `QuestStageManager`, `KestevenFleets.spawnCollectorFleet`, `nskr_ttCollectorDialog` | Once; stages 2 to 15; the player carries at least 50 Artifact Electronics, is in hyperspace within 25,000 units of the centre; 3% per day | "Black Ops" demands all Artifact Electronics; paying sends it home |
-| "LZ" messenger | Quest `ic` ([intercept fleets](CONTRACTS_AND_BOUNTIES.md#intercept-fleets)), rules `nskr_ic_messenger*` in `# INTERCEPTS` | Once; stages 10 to 14 (`KestevenQuest.inMessengerWindow()`); hyperspace near the core; 4% per day | Anonymous warning signed "LZ"; opening its comm link calls `KestevenQuest.reportMessengerMet()`, which unlocks "LZ" questions for Alice and in `DelveMeetingBarEvent` |
+| "LZ" messenger | Quest `ic` ([intercept fleets](CONTRACTS_AND_BOUNTIES.md#intercept-fleets)), rules `nskr_ic_messenger*` in `# INTERCEPTS` | Once; stages 10 to 14 (`KestevenQuest.inMessengerWindow()`); hyperspace near the core; 4% per day | Anonymous warning signed "LZ"; opening its comm link calls `KestevenQuest.reportMessengerMet()`, which unlocks "LZ" questions for Alice and in the Delve meeting |
 | Exile | `kesteven/ExileManager` | Daily | If Asteria is lost while the Outpost is Kesteven's, the quest people move to the Outpost and back when Asteria returns |
 
 ## Story skip
@@ -327,4 +337,5 @@ These follow from the code and rules as written. None has been checked in game.
 5. **Frost guess with all disks.** Alice's confirmations at stage 16 test the disks, not the screen that offered the option. With all five disks, a Frost tip screen (both tips given, tip 2 not yet) offers "It's the <Frost>.", and choosing it gives the Cache coordinates and stage 17 (`nskr_kq_aliceCacheFound`).
 6. **Empty screen at stage 16.** Alice's "Continue" with all disks leads to her Cache briefing only when both tips and tip 2 are recorded. With all disks and her tip given but Jack's missing, the briefing option shows only Back (`nskr_kq_hubBrief`).
 7. **Highlight without its phrase.** Jack's job 5 briefing highlights "Go to the bar", which its text does not contain, so nothing is highlighted.
-8. **Repeated sensor message.** Every Enigma win that counts for the sensor task at stage 1 sends the `sensorData` update again, also after the package was delivered (`KestevenJob1Module.onEncounterLoot`, as the old `QuestStageManager` check did).
+8. **Asteria scenes at the Outpost.** The Delve meeting picks its Asteria texts whenever Asteria exists (`asteriaGenerated`), not where the questline is, so after Kesteven's exile the meeting at the Outpost describes Asteria's underground city. The old `DelveMeetingBarEvent` also showed Asteria's planet there; the escort row's `ShowLargePlanet` shows the planet of the dialog target's market instead, if it has one.
+9. **Repeated sensor message.** Every Enigma win that counts for the sensor task at stage 1 sends the `sensorData` update again, also after the package was delivered (`KestevenJob1Module.onEncounterLoot`, as the old `QuestStageManager` check did).

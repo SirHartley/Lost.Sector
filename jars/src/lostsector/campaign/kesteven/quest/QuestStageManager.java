@@ -243,16 +243,6 @@ public class QuestStageManager extends BaseCampaignEventListener implements Ever
 
             QuestHelper.setStage(13);
         }
-        //start job 5
-        if (stage==16 || stage==17) {
-            //Adds our intel
-            if (!state.job5IntelAdded) {
-                TheDelveIntel intel5 = new TheDelveIntel();
-                Global.getSector().getIntelManager().addIntel(intel5, false);
-                state.job5IntelAdded = true;
-                log("Qmanager added INTEL for " + "The Delve");
-            }
-        }
         if (stage==16) {
            //job 5 logic
            //found frost check

@@ -71,7 +71,7 @@ Quest dialogue is written in `rules.csv`, and its presentation uses vanilla comm
 
 ### Images and planets
 
-`ShowDefaultVisual` restores the target's own image, planet or fleet view. `ShowImageVisual <key>` shows an illustration from `settings.json`; `HideVisual` fades the panel out for a scene with no picture; `ShowLargePlanet` shows the planet the player is at. Hide extra portraits before switching to an image.
+`ShowDefaultVisual` restores the target's own image, planet or fleet view. `ShowImageVisual <key>` shows an illustration from `settings.json`; `HideVisual` fades the panel out for a scene with no picture; `ShowLargePlanet` shows the planet of the dialog target's market (`MarketAPI.getPlanetEntity`), and nothing for a target without one or while the `3dPlanetBGInInteractionDialog` setting is on (0.98a-RC8 `rulecmd/ShowLargePlanet.java`). Hide extra portraits before switching to an image.
 
 ### Map markers
 

@@ -72,7 +72,6 @@ public final class KestevenState extends QuestState<KestevenStage> {
     // One-time actions of QuestStageManager.
     boolean job4IntelAdded;
     boolean job4FleetsSpawned;
-    boolean job5IntelAdded;
     boolean cacheIntelAdded;
     boolean cacheGuardianSpotPicked;
     boolean cacheDoubtShown;
