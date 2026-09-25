@@ -89,6 +89,7 @@ Adjusted - Jack's advance at the Delve meeting shows the standard credits gained
 Adjusted - The Operation Lifesaver intel entry reports finding both fleets and the attack on the Special Operations fleet as updates and stays for three days once finished
 Adjusted - Handing supplies and fuel to the Special Operations fleet shows the standard cargo and relationship receipts
 Fixed - Attacking the Special Operations fleet after Operation Lifesaver is over no longer sets the questline back
+Fixed - After the Kesteven story skip, the data-disk satellites' empty dialog has a Leave option
 
 1.0.b
 Adjusted - Severely nerfed spawn rates for Borealis, Rhea and Kingslayer

@@ -252,7 +252,7 @@ final class KestevenHubModule extends QuestModule<KestevenStage, KestevenState> 
         }
         ctx.set(KestevenFlag.SATELLITE4_RECOVERED);
         ctx.set(KestevenFlag.SATELLITE3_RECOVERED);
-        DataSatelliteDialog.setRecoveredSatelliteCount(2);
+        ctx.state().satellitesRecovered = 2;
         ctx.set(KestevenFlag.FROST_FOUND);
         ctx.set(KestevenFlag.GLACIER_DISK_RECOVERED);
         ctx.set(KestevenFlag.JOB5_ALICE_TIP);

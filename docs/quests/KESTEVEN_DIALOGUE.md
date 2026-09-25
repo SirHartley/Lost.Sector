@@ -9,8 +9,8 @@ Java paths are relative to `jars/src/lostsector/campaign/`; `dialogue/rules/` an
 | Style | Used by | How it runs |
 |---|---|---|
 | Rules rows with a multi-verb command | The collector (`nskr_ttCollectorDialog`); Eliza's intercept (`nskr_elizaInterceptDialog`); both alternative endings | Rows select the conversation and call a verb. The verb writes most text and options from Java strings. Several commands extend `PaginatedOptions` and take over the dialog plugin (`setupDelegateDialog`). Every non-paging option then returns to rules through `FireBest DialogOptionSelected`. |
-| Rules rows only | Every conversation with Jack, Alice and Nicholas (gates, values and game actions from `KestevenHubModule`); the job 3 party, a rules bar event (guests, drink count and bill from `KestevenPartyModule`); the Glacier facility (`KestevenGlacierModule`); the Eliza search at pirate bars (`KestevenElizaSearchModule`); the Delve meeting at the bar (`KestevenJob5Module`); job 4: the Special Operations fleet, the Enigma strike group and the hint wreck (checks, actions and tokens from `KestevenJob4Module`, [below](#job-4-rows)); fleet greetings and threats: Eliza's raided and revenge fleets, Jack's revenge fleet, the Cache guardian, the "LZ" messenger, generic Enigma comms | Text, options and scripts live in `data/campaign/rules.csv`. |
-| Java `InteractionDialogPlugin` or `BaseBarEvent` | Satellites, Cache hint, Cache core, Eliza's port, both final ending dialogs | `CorePlugin.pickInteractionDialogPlugin` or `PortsideBarData` opens the class. All text, options and state changes are in the Java class, using a nested `OptionId` enum. |
+| Rules rows only | Every conversation with Jack, Alice and Nicholas (gates, values and game actions from `KestevenHubModule`); the job 3 party, a rules bar event (guests, drink count and bill from `KestevenPartyModule`); the Glacier facility (`KestevenGlacierModule`); the Eliza search at pirate bars (`KestevenElizaSearchModule`); the data-disk satellites (`KestevenSatelliteModule`); the Delve meeting at the bar (`KestevenJob5Module`); job 4: the Special Operations fleet, the Enigma strike group and the hint wreck (checks, actions and tokens from `KestevenJob4Module`, [below](#job-4-rows)); fleet greetings and threats: Eliza's raided and revenge fleets, Jack's revenge fleet, the Cache guardian, the "LZ" messenger, generic Enigma comms | Text, options and scripts live in `data/campaign/rules.csv`. |
+| Java `InteractionDialogPlugin` or `BaseBarEvent` | Cache hint, Cache core, Eliza's port, both final ending dialogs | `CorePlugin.pickInteractionDialogPlugin` or `PortsideBarData` opens the class. All text, options and state changes are in the Java class, using a nested `OptionId` enum. |
 
 ## Jack, Alice and Nicholas
 
@@ -200,6 +200,31 @@ Every question list ends with Back (`nskr_kq_brief`, Escape), which shows the br
 
 The two `JOB5_DISKS` confirmations test the disks, not which screen offered the option: "It's the <Frost>." on the Frost tip screen with all five disks gives the Cache coordinates, as the old `quest()` did.
 
+## Data-disk satellites
+
+The dialog of every satellite is the `# KESTEVEN QUESTLINE: SATELLITES` block of `data/campaign/rules.csv`, opened through the claim `KestevenSatelliteModule` places on each satellite (trigger `nskr_kqSatellite`). Behavior is in [The five data disks](KESTEVEN_QUESTLINE.md#the-five-data-disks).
+
+| Screen | Structure | Trigger and rows |
+|---|---|---|
+| Opening | `FireBest` pick on `nskr_kqSatellite`; each row shows the satellite's image (`ShowDefaultVisual`) | `nskr_kq_satelliteEmpty` (check `satelliteEmpty`): "cold and dead", Leave. `nskr_kq_satelliteFirst` (not empty, hub check `noSatellite`): Leave, "Take a closer look". `nskr_kq_satelliteSecond` (not empty, hub check `oneSatellite`): "See if this one also has a disk to recover", Leave. `nskr_kq_satelliteSilent`, the fallback: Leave only |
+| First satellite | Plain chain | `nskr_kq_satelliteLookSel`, `…SendSel`, `…InspectSel`, `…PrepareSel`, `…ProceedSel`, `…UnplugSel`, `…ReportSel`. The report paragraph is a `FireBest` pick on `nskr_kqSatelliteDiskReport`: `nskr_kq_satelliteDiskReportJob5` from `JOB5_DISKS` on and at `FAILED`, `nskr_kq_satelliteDiskReport` before |
+| Second satellite | Plain chain | `nskr_kq_satelliteSearchSel`, `…ScanSel`, `…RetrieveSel`, `…BroadcastSel`. The last runs the hub action `pickJob5FrostTip` before the keyword line, which uses the tokens `keywordFrost` and `keywordConstellation` |
+| Salvage | Shared insert on `nskr_kqSatelliteSalvaged`, fired with `FireBest` by both last screens | `nskr_kq_satelliteSalvaged`: actions `salvageSatellite` and `wakeSatelliteGuard`, `Ping sensor_burst` and `Ping interdict`, the receipt "Acquired Data Disk #<n>" (token `satelliteDisk`), `ui_rep_raise`; adds Leave with Escape |
+| Leave after the salvage | `DialogOptionSelected` | `nskr_kq_satelliteLeaveSel`: `ui_sensor_burst_on`, `DismissDialog` |
+
+Every other Leave is vanilla's `defaultLeave`, which also takes Escape. Paragraphs after the first use `AddText`, as the Java dialog printed one paragraph per call; grey paragraphs use `AddText … gray`. The Java dialog called `setFontInsignia` once at the start; the rows need no equivalent, because vanilla's `AddTextSmall` also switches back to the insignia font after its line (0.98a-RC8 `AddTextSmall.execute`).
+
+`KestevenSatelliteModule` declarations used by the rows:
+
+| Kind | Name | Meaning |
+|---|---|---|
+| trigger | `nskr_kqSatellite` | Fired by the claimed satellite's dialog when it opens |
+| check | `satelliteEmpty` | The dialog target holds `$nskr_artifactKeyEmpty` |
+| action | `salvageSatellite` | Counts the satellite and one disk (then `checkAllDisks`), marks the target empty, sets `SATELLITE3_RECOVERED` or `SATELLITE4_RECOVERED`, removes its map marker |
+| action | `wakeSatelliteGuard` | Satellite #3: wakes and adopts the location's Enigma dormant fleets as role `satelliteGuard`; #4: the strike group. Both then intercept the player |
+| token | `satelliteDisk` | `3` when the target holds `$kQuestArtifact3`, otherwise `4` |
+| token | `keywordFrost`, `keywordConstellation` | `Frost.getName()`; the constellation name of `job5FrostTipSystem`, empty without one |
+
 ## Glacier
 
 The comms facility raid for disk #5 is the `# KESTEVEN QUESTLINE: GLACIER` block of `data/campaign/rules.csv`. Alice's Frost tip row runs `do markGlacier`, which `KestevenGlacierModule` declares: it marks Glacier and claims its dialog with `nskr_kqGlacier`, so `CorePlugin` opens a rules dialog that fires that trigger ([flow and countdown](KESTEVEN_QUESTLINE.md#glacier-disk-5)). The speaker is the player's own crew; no person is shown.
@@ -316,7 +341,6 @@ The party at the job 3 start market is in the `# KESTEVEN QUESTLINE: JOB 3 PARTY
 
 | Class | Opened by | Content | State written |
 |---|---|---|---|
-| `kesteven/quest/DataSatelliteDialog` | `CorePlugin`, satellites #3 and #4 | Disk salvage, ping, keywords | Disk count, satellite flags, wakes the guard |
 | `kesteven/quest/ElizaDialog` | `CorePlugin`, Eliza's market until finished | Meeting Eliza | Disks, help or raid flags |
 | `kesteven/quest/CacheDoubtDialog` | `QuestStageManager`, once in Unknown Site | Inner-voice hint | None |
 | `kesteven/quest/CacheCoreDialog` | `CorePlugin` or the guardian's fleet-interaction config | Cache core salvage | Stage 19, rewards |

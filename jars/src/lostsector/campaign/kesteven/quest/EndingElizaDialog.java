@@ -36,7 +36,7 @@ public class EndingElizaDialog implements InteractionDialogPlugin {
     private VisualPanelAPI visual;
 
     static void log(final String message) {
-        Global.getLogger(DataSatelliteDialog.class).info(message);
+        Global.getLogger(EndingElizaDialog.class).info(message);
     }
 
     @Override

@@ -1,7 +1,6 @@
 package lostsector.campaign.kesteven.quest;
 
 import com.fs.starfarer.api.campaign.SectorEntityToken;
-import lostsector.campaign.CorePlugin;
 import lostsector.quest.Quest;
 import lostsector.quest.QuestContext;
 import lostsector.quest.QuestManager;
@@ -13,7 +12,8 @@ import java.util.Random;
 
 // KestevenHubModule serves every conversation with Jack, Alice and Nicholas, KestevenJob1Module runs job 1,
 // KestevenJob3Module and KestevenPartyModule run job 3, KestevenJob4Module job 4, KestevenJob5Module the job 5 meeting
-// and intel, KestevenGlacierModule the Glacier facility and KestevenElizaSearchModule the Eliza search at pirate bars;
+// and intel, KestevenGlacierModule the Glacier facility, KestevenElizaSearchModule the Eliza search at pirate bars and
+// KestevenSatelliteModule the data-disk satellites;
 // QuestStageManager and the old dialog classes still run the rest of the questline on this state (T19 to T35).
 // isAvailable() keeps the default: the old code runs the questline in every campaign and treats a missing
 // Kesteven home as failure (stage 99), so the state must always exist.
@@ -33,7 +33,8 @@ public final class KestevenQuest extends Quest<KestevenStage, KestevenState> {
     @Override
     protected List<QuestModule<KestevenStage, KestevenState>> createModules() {
         return List.of(new KestevenHubModule(), new KestevenJob1Module(), new KestevenJob3Module(), new KestevenPartyModule(),
-                new KestevenJob4Module(), new KestevenJob5Module(), new KestevenGlacierModule(), new KestevenElizaSearchModule());
+                new KestevenJob4Module(), new KestevenJob5Module(), new KestevenGlacierModule(), new KestevenElizaSearchModule(),
+                new KestevenSatelliteModule());
     }
 
     // Null before QuestManager.startQuests() at the end of ModPlugin.onGameLoad, which includes new-campaign generation.
@@ -100,10 +101,6 @@ public final class KestevenQuest extends Quest<KestevenStage, KestevenState> {
 
     // Dialog routes of CorePlugin, until the questline claims these entities itself.
 
-    public static boolean isDataSatellite(SectorEntityToken entity) {
-        return CorePlugin.hasMemoryKeyStartsWith(QuestStageManager.ARTIFACT_KEY, entity);
-    }
-
     public static boolean elizaMeetingDone() {
         return Quests.has(KestevenFlag.ELIZA_DIALOG_FINISHED);
     }
@@ -144,9 +141,10 @@ public final class KestevenQuest extends Quest<KestevenStage, KestevenState> {
         if (!isFailed() && stage().toLegacy() >= 16) QuestHelper.setStage(KestevenStage.CACHE_CLEARED.toLegacy());
     }
 
-    // World generation of the Cache: satellites that open DataSatelliteDialog with nothing left to salvage.
+    // World generation of the Cache: satellites with nothing left to salvage. KestevenSatelliteModule claims their
+    // dialog when the quest state is created.
     public static void markEmptyDataSatellite(SectorEntityToken satellite, int number) {
-        satellite.getMemory().set(QuestStageManager.ARTIFACT_KEY + number, true);
-        satellite.getMemory().set(DataSatelliteDialog.ARTIFACT_EMPTY_KEY, true);
+        satellite.getMemory().set(KestevenSatelliteModule.ARTIFACT_KEY + number, true);
+        satellite.getMemory().set(KestevenSatelliteModule.EMPTY_KEY, true);
     }
 }

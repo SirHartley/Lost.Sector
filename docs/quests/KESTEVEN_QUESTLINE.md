@@ -10,13 +10,14 @@ Java paths are relative to `jars/src/lostsector/campaign/`; `dialogue/rules/` an
 |---|---|
 | `# KESTEVEN QUESTLINE` rows in `data/campaign/rules.csv`, `kesteven/quest/KestevenHubModule` | Every conversation with Jack, Alice and Nicholas: offers, briefings, hand-ins, rewards, questions, the job 3 refusal, the story skip and most player-driven stage changes; the job gates and payouts ([dialogue map](KESTEVEN_DIALOGUE.md#jack-alice-and-nicholas)) |
 | `kesteven/quest/QuestStageManager` | `EveryFrameScript` in `EFS_LIST`: automatic stage changes, failure checks, intel, bar events, quest fleets and their AI, the Cache guardian timer, Eliza relocation, post-quest revenge fleets |
-| `kesteven/quest/KestevenQuest`, `KestevenStage`, `KestevenFlag`, `KestevenState` | Framework definition of quest `kq`, with the modules `KestevenHubModule`, `KestevenJob1Module`, `KestevenJob3Module`, `KestevenJob4Module`, `KestevenJob5Module`, `KestevenGlacierModule` and `KestevenElizaSearchModule`; the stage enum, the flags and the saved state ([KESTEVEN_STATE.md](KESTEVEN_STATE.md)) |
+| `kesteven/quest/KestevenQuest`, `KestevenStage`, `KestevenFlag`, `KestevenState` | Framework definition of quest `kq`, with the modules `KestevenHubModule`, `KestevenJob1Module`, `KestevenJob3Module`, `KestevenJob4Module`, `KestevenJob5Module`, `KestevenGlacierModule`, `KestevenElizaSearchModule` and `KestevenSatelliteModule`; the stage enum, the flags and the saved state ([KESTEVEN_STATE.md](KESTEVEN_STATE.md)) |
 | `kesteven/quest/KestevenJob1Module`, `# KESTEVEN QUESTLINE: JOB 1` rows in `data/campaign/rules.csv` | Job 1 world logic: the intel entry and its text rows, the tip system's dormant fleet, the move to stage 2 ([Job 1](#job-1-enemy-unknown-stages-0-to-6)) |
 | `kesteven/quest/KestevenElizaSearchModule`, `# KESTEVEN QUESTLINE: ELIZA SEARCH` rows | The search for Eliza at pirate bars during stage 16 ([Finding Eliza](#finding-eliza)) |
 | `kesteven/quest/KestevenJob3Module`, `# KESTEVEN QUESTLINE: JOB 3` rows | Job 3 world logic: the expedition and its outcome, the intel entry and its text rows, and the objects placed when the job is accepted ([Job 3](#job-3-hostile-takeover-stages-6-to-11)) |
 | `kesteven/quest/KestevenJob4Module`, `# KESTEVEN QUESTLINE: JOB 4` rows | Job 4 world logic: the wait, the intel entry and its text rows, the strike group, the Special Operations fleet and its conversation, the splinter patrols, the hint wreck, completion and failure ([Job 4](#job-4-operation-lifesaver-stages-11-to-14)) |
 | `kesteven/quest/KestevenJob5Module`, `# KESTEVEN QUESTLINE: JOB 5` rows | The Delve meeting at the bar, its escort guard, and the job 5 intel entry and its text rows ([Briefing and meeting](#briefing-and-meeting)) |
 | `kesteven/quest/KestevenGlacierModule`, `# KESTEVEN QUESTLINE: GLACIER` rows | The Glacier comms facility: its map marker and dialog claim, the timed raid, the barrage's fleet damage and disk #5 ([Glacier](#glacier-disk-5)) |
+| `kesteven/quest/KestevenSatelliteModule`, `# KESTEVEN QUESTLINE: SATELLITES` rows | The data-disk satellites' dialog, salvage and woken guards, `ALL_DISKS_RECOVERED`, and `FROST_FOUND` on entering Frost ([The five data disks](#the-five-data-disks)) |
 | `kesteven/quest/QuestHelper` | Wrappers over `KestevenState` for the old callers: the stage as a legacy int, flags, fields and lazily picked target locations; `saveEnding()` |
 | `kesteven/quest/KestevenFleets` | Builders for every quest fleet |
 | `CorePlugin` | Opens the Java quest dialogs when the player interacts with a quest entity, deciding through `KestevenQuest` queries |
@@ -110,7 +111,7 @@ When stage 8 starts, `KestevenJob3Module` (active at stages 8, 9 and 10), in thi
 
 - picks the start market and the job 3 target, a random location in a system near the core, if they are not picked yet;
 - shows the intel entry `job3`;
-- places a dormant Enigma fleet at the target. It is not a quest fleet: `DataSatelliteDialog.makeHostile` moves it to `QuestStageManager`'s fleet list when satellite #3 is salvaged;
+- places a dormant Enigma fleet at the target. It is not a quest fleet until satellite #3 is salvaged, when `KestevenSatelliteModule` adopts it ([The five data disks](#the-five-data-disks));
 - spawns the "Expedition" fleet (Tri-Tachyon, `KestevenFleets.job3Expedition`) at the start market as role `job3Expedition`, with the target as `FleetInfo.target`;
 - places data-disk satellite #3 at the target;
 - starts the timer `KestevenState.TIMER_JOB3`.
@@ -164,7 +165,7 @@ When stage 12 starts, `KestevenJob4Module`, in the order the old code used, whic
 The builders are `KestevenFleets.job4StrikeGroup`, `job4SpecialOps` and `job4Splinter`. Every job 4 role is persistent and has `FleetOrders.withdrawWhen`: from stage 17 on (failure included), or from stage 14 on once satellite #4 is salvaged, the fleet keeps its last assignment and despawns once out of the player's sight. Until then:
 
 - the splinters and the Special Operations fleet keep their spawn assignment (`FleetOrders.keep()`);
-- the strike group also keeps it, and after chasing the player out of the player's location it stays aggressive to the player and patrols its home system again ("unknown", `FleetOrders.patrolHomeAfterChase`). Salvaging satellite #4 sends it after the player (`DataSatelliteDialog.makeHostile`, by its role flag `$nskr_kq_job4StrikeGroup`). Below 20% of its spawn strength it withdraws.
+- the strike group also keeps it, and after chasing the player out of the player's location it stays aggressive to the player and patrols its home system again ("unknown", `FleetOrders.patrolHomeAfterChase`). Salvaging satellite #4 sends it after the player (`KestevenSatelliteModule` action `wakeSatelliteGuard`, which finds it by its role). Below 20% of its spawn strength it withdraws.
 
 Three sources lead the player on:
 
@@ -218,11 +219,15 @@ The text is in the `# Intel` part of the `# KESTEVEN QUESTLINE: JOB 5` block, se
 | Disk | Source |
 |---|---|
 | #1 and #2 | Eliza: given if the player agrees to help her, or taken by raiding her market |
-| #3 | Satellite at the job 3 target system (`DataSatelliteDialog`) |
-| #4 | Satellite at the job 4 enemy target system (`DataSatelliteDialog`) |
+| #3 | Satellite at the job 3 target system (`# KESTEVEN QUESTLINE: SATELLITES` rows) |
+| #4 | Satellite at the job 4 enemy target system (the same rows) |
 | #5 | Comms facility on Glacier in the Frost system ([Glacier](#glacier-disk-5)) |
 
-The satellites exist from jobs 3 and 4 and can be salvaged at any time. Each salvage fires a hyperwave ping and wakes the nearby guard: the dormant Enigma fleet at #3, the strike group at #4. The second satellite also yields the keywords that point to the Frost system.
+The satellites exist from jobs 3 and 4 and can be salvaged at any time, also after the questline. `KestevenSatelliteModule` is active in every stage. `QuestHelper.spawnArtifact` claims each satellite it places for the trigger `nskr_kqSatellite` in every stage; the module's `onStart` claims the satellites that already exist when the quest state is created, which are the two empty ones in Unknown Site (`Cache.generate` marks them through `KestevenQuest.markEmptyDataSatellite`).
+
+The first satellite salvaged, whichever it is, runs the long scene: approach, salvor crew, hidden compartment, anti-tampering device, the disk marked "Project : Enigma", and the comms officer's report, which from stage 16 on (and after failure) calls it the disk they are looking for. The second runs a short scene in which the satellite broadcasts on a loop; its keywords are "Enigma, Glacier, Frozen", Frost's name, "Heart" and the constellation of the system in Alice's distance hint, which the scene picks if Alice has not yet (hub action `pickJob5FrostTip`). A salvaged satellite, and the two in Unknown Site, only say that it is cold and dead. Either salvage (module action `salvageSatellite`) counts the satellite and one disk, marks the satellite empty (`$nskr_artifactKeyEmpty`), sets `SATELLITE3_RECOVERED` or `SATELLITE4_RECOVERED` and removes Alice's map marker; the rows fire a sensor-burst and an interdict ping from the satellite, print "Acquired Data Disk #3" or "#4", and play `ui_rep_raise`, and Leave plays `ui_sensor_burst_on`. Escape leaves every screen except those between the order to take the disk and the disk being taken.
+
+The action `wakeSatelliteGuard` then turns the guard on the player. At #3 it wakes every Enigma dormant fleet in the satellite's location: gives it Emergency Burn, Sensor Burst and Go Dark, a new fleet AI, clears its memory except the dormant flag and `MemFlags.MEMORY_KEY_MAKE_PREVENT_DISENGAGE` (`QuestFleets.clearMemory`, which keeps the quest keys of a fleet that is already a quest fleet), makes it role `satelliteGuard` (`adopt`, or `reassign` for a quest fleet such as the job 1 tip system's `job1Dormant`, whose age then restarts) and orders it to intercept the player. The role's `FleetOrders.huntInSystem().withdrawAfter(30)` keeps it intercepting while it sees the player and patrolling its system otherwise; after 30 days it despawns once out of the player's sight. At #4 it orders the job 4 strike group (role `job4StrikeGroup` of `KestevenJob4Module`) to intercept the player when it is in the satellite's location. Its role's `patrolHomeAfterChase` keeps the intercept while it shares the player's location and sends it back to patrol its home system after that; from stage 14 on the salvage also meets the role's `withdrawWhen`, so it keeps the intercept and despawns once out of the player's sight, as the old strike group logic did.
 
 Tips unlock in this order:
 
@@ -230,7 +235,7 @@ Tips unlock in this order:
 2. Alice (`JOB5_ALICE_TIP`): where the two satellites are. She marks the one not yet salvaged.
 3. Alice again (`JOB5_ALICE_TIP2`), after both tips and at least two satellites, while the disks are incomplete: a tundra planet around a red dwarf with a comms facility, within a stated distance of a named constellation. She marks Glacier.
 
-If the player has visited Frost, answering "It's the Frost." sets `FROST_FOUND`. `QuestStageManager` also sets it when the player enters Frost after tip 2. Tip 2 marks Glacier and claims its dialog; the timed raid there gives disk #5.
+If the player has visited Frost, answering "It's the Frost." sets `FROST_FOUND`. `KestevenSatelliteModule` also sets it at stage 16 after tip 2 when the player enters Frost (`onLocationChanged`), or when stage 16 starts with the player in Frost. Tip 2 marks Glacier and claims its dialog; the timed raid there gives disk #5.
 
 ### Glacier (disk #5)
 
@@ -270,7 +275,7 @@ At her market, `CorePlugin` opens `ElizaDialog` until it has finished once. Eliz
 
 ### Reaching the Cache
 
-With five disks `QuestStageManager` sets `ALL_DISKS_RECOVERED`. Alice's all-disks conversation offers "Yes" and, if the player sincerely agreed to help Eliza, "Yes (lie)". Both set `CACHE_FOUND` and stage 17 and hand over the Cache coordinates. The Cache system "Unknown Site" is reached by a transverse jump.
+At stage 16 the disk count sets `ALL_DISKS_RECOVERED` once it reaches five: `KestevenSatelliteModule.checkAllDisks` runs where the count changes (the satellite salvage, the Glacier disk, and `QuestHelper.setDisksRecovered` for Eliza and her raid) and when stage 16 starts. Alice's all-disks conversation offers "Yes" and, if the player sincerely agreed to help Eliza, "Yes (lie)". Both set `CACHE_FOUND` and stage 17 and hand over the Cache coordinates. The Cache system "Unknown Site" is reached by a transverse jump.
 
 Entering Unknown Site at stage 15 or 16 sets `CACHE_FOUND` without any disks, and stage 16 becomes 17. The Eliza search runs only at stage 16, so a player who reaches the Cache early can skip Eliza and the remaining disks.
 
@@ -353,3 +358,4 @@ These follow from the code and rules as written. None has been checked in game.
 8. **Asteria scenes at the Outpost.** The Delve meeting picks its Asteria texts whenever Asteria exists (`asteriaGenerated`), not where the questline is, so after Kesteven's exile the meeting at the Outpost describes Asteria's underground city. The old `DelveMeetingBarEvent` also showed Asteria's planet there; the escort row's `ShowLargePlanet` shows the planet of the dialog target's market instead, if it has one.
 9. **Repeated sensor message.** Every Enigma win that counts for the sensor task at stage 1 sends the `sensorData` update again, also after the package was delivered (`KestevenJob1Module.onEncounterLoot`, as the old `QuestStageManager` check did).
 10. **Story-skip strike group.** The story skip spawns the strike group, satellite #4 and the wrecks, then sets stage 17, where every job 4 fleet withdraws; the strike group despawns as soon as the player is out of its sight, so satellite #4 is unguarded.
+11. **Silent satellite after the story skip.** The story skip counts two satellites without emptying the placed ones, so their dialog shows no text and only Leave (`nskr_kq_satelliteSilent`); the old dialog showed no option at all and left on Escape.

@@ -30,7 +30,7 @@ public class CacheDoubtDialog implements InteractionDialogPlugin {
     private boolean tip = false;
 
     static void log(final String message) {
-        Global.getLogger(DataSatelliteDialog.class).info(message);
+        Global.getLogger(CacheDoubtDialog.class).info(message);
     }
 
     @Override

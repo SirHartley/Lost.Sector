@@ -520,6 +520,43 @@ public class FleetHelper {
         }
     }
 
+    // Intercepts the player while the player is visible to the fleet's sensors, otherwise patrols the centre of the
+    // fleet's star system (in hyperspace, the point where the fleet is). A fleet with no fleet points left gets no
+    // orders and despawns once out of the player's sight. Unlike the other AI methods, a STANDING_DOWN fleet gets the
+    // do-not-attack handling and still takes the intercept or patrol in the same call, as the old woken dormant
+    // guards of the Kesteven questline did.
+    public static void huntInSystemAI(CampaignFleetAPI fleet) {
+        CampaignFleetAPI pf = Global.getSector().getPlayerFleet();
+        if (pf == null || fleet.getAI() == null) return;
+        if (fleet.getFleetPoints() <= 0) {
+            despawnOutOfSight(fleet);
+            return;
+        }
+        FleetAssignmentDataAPI curr = fleet.getAI().getCurrentAssignment();
+        safetyCheck(fleet, curr);
+        if (curr != null && curr.getAssignment() == FleetAssignment.STANDING_DOWN) {
+            CampaignFleetAIAPI ai = fleet.getAI();
+            if (ai instanceof ModularFleetAIAPI) {
+                // needed to interrupt an in-progress pursuit
+                ModularFleetAIAPI m = (ModularFleetAIAPI) ai;
+                m.getStrategicModule().getDoNotAttack().add(pf, 1f);
+                m.getTacticalModule().setTarget(null);
+            }
+        }
+        if (pf.isVisibleToSensorsOf(fleet)) {
+            if (fleet.getAI().getCurrentAssignmentType() != FleetAssignment.INTERCEPT) {
+                fleet.clearAssignments();
+                fleet.addAssignment(FleetAssignment.INTERCEPT, pf, Float.MAX_VALUE, "intercepting your fleet");
+            }
+        } else if (fleet.getAI().getCurrentAssignmentType() != FleetAssignment.PATROL_SYSTEM) {
+            SectorEntityToken patrolCenter = fleet.getStarSystem() != null
+                    ? fleet.getStarSystem().getCenter()
+                    : fleet.getContainingLocation().createToken(fleet.getLocation());
+            fleet.clearAssignments();
+            fleet.addAssignment(FleetAssignment.PATROL_SYSTEM, patrolCenter, Float.MAX_VALUE, "patrolling");
+        }
+    }
+
     public static FleetMemberAPI generateShip(String variant, boolean noAutofit, boolean alwaysRecover) {
         return generateShip(variant, noAutofit, alwaysRecover, new ArrayList<String>());
     }

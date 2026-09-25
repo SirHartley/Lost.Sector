@@ -28,7 +28,7 @@ public class ElizaDialog implements InteractionDialogPlugin {
     private boolean stand = false;
 
     static void log(final String message) {
-        Global.getLogger(DataSatelliteDialog.class).info(message);
+        Global.getLogger(ElizaDialog.class).info(message);
     }
 
     @Override

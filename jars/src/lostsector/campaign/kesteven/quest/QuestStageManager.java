@@ -18,7 +18,6 @@ import com.fs.starfarer.api.impl.campaign.intel.contacts.ContactIntel;
 import com.fs.starfarer.api.impl.campaign.world.MoteParticleScript;
 import exerelin.campaign.DiplomacyManager;
 import lostsector.campaign.kesteven.ExileManager;
-import lostsector.campaign.enigma.DormantSpawner;
 import lostsector.dialogue.rules.nskr_ttCollectorDialog;
 import lostsector.ModPlugin;
 import lostsector.helper.FleetHelper;
@@ -44,7 +43,6 @@ public class QuestStageManager extends BaseCampaignEventListener implements Ever
         JOB3_MARKET_BLACKLIST.add("eochu_bres");
         JOB3_MARKET_BLACKLIST.add("culann");
     }
-    public static final String ARTIFACT_KEY = "$kQuestArtifact";
     public static final String JACK_REVENGEANCE_FLEET_KEY = "$RevengeanceJack";
     public static final String REVENGEANCE_FLEET_KEY = "$RevengeanceQuestFleet";
     public static final String ELIZA_INTERCEPT_FLEET_KEY = "$InterceptPlayerElizaFleet";
@@ -158,18 +156,6 @@ public class QuestStageManager extends BaseCampaignEventListener implements Ever
         List<FleetInfo> fleets = FleetHelper.getFleets(FLEET_ARRAY_KEY);
 
         if (stage==16) {
-           //job 5 logic
-           //found frost check
-           if (!QuestHelper.getCompleted(KestevenFlag.FROST_FOUND) && QuestHelper.getCompleted(KestevenFlag.JOB5_ALICE_TIP2)){
-               if (pf.getContainingLocation()!=null && pf.getContainingLocation()== SectorLookup.getFrost()){
-                   //found
-                   QuestHelper.setCompleted(true, KestevenFlag.FROST_FOUND);
-               }
-           }
-           //all disks found check
-           if (QuestHelper.getDisksRecovered()>=5){
-                QuestHelper.setCompleted(true, KestevenFlag.ALL_DISKS_RECOVERED);
-           }
             //cache found check
             if (!QuestHelper.getCompleted(KestevenFlag.CACHE_FOUND) && Global.getSector().getStarSystem("Unknown Site").isEnteredByPlayer()) {
                 QuestHelper.setCompleted(true, KestevenFlag.CACHE_FOUND);
@@ -378,64 +364,6 @@ public class QuestStageManager extends BaseCampaignEventListener implements Ever
             //age update
             f.age+=0.1f;
 
-
-            //aggro dormant manager
-            if (fleet.getMemoryWithoutUpdate().contains(DormantSpawner.DORMANT_KEY)){
-                boolean despawn = false;
-
-                //time despawn
-                if (f.age>30f) {
-                    despawn = true;
-                }
-                //destroyed
-                if (fleet.getFleetPoints()<=0) {
-                    despawn = true;
-                }
-
-                Vector2f fp = fleet.getLocationInHyperspace();
-                Vector2f pp = pf.getLocationInHyperspace();
-                float dist = MathUtils.getDistance(pp, fp);
-                if (despawn) {
-                    if (dist > Global.getSettings().getMaxSensorRangeHyper()) {
-                        //tracker for cleaning the list
-                        removed.add(fleet);
-                        fleet.despawn();
-                    }
-                }
-                if (despawn) continue;
-                //assignment logic
-                FleetAssignmentDataAPI curr = fleet.getAI().getCurrentAssignment();
-                if (curr == null) {
-                    fleet.clearAssignments();
-                    fleet.addAssignment(FleetAssignment.HOLD, fleet.getContainingLocation().createToken(fleet.getLocation()), Float.MAX_VALUE, "holding");
-                    log("null assignment");
-                }
-                //used special maneuvers
-                if (curr!=null && curr.getAssignment()==FleetAssignment.STANDING_DOWN) {
-                    CampaignFleetAIAPI ai = fleet.getAI();
-                    if (ai instanceof ModularFleetAIAPI) {
-                        // needed to interrupt an in-progress pursuit
-                        ModularFleetAIAPI m = (ModularFleetAIAPI) ai;
-                        m.getStrategicModule().getDoNotAttack().add(pf, 1f);
-                        m.getTacticalModule().setTarget(null);
-                    }
-                }
-                //logic
-                if (pf.isVisibleToSensorsOf(fleet)){
-                    if (fleet.getAI().getCurrentAssignmentType() != FleetAssignment.INTERCEPT) {
-                        fleet.clearAssignments();
-                        fleet.addAssignment(FleetAssignment.INTERCEPT, pf, Float.MAX_VALUE, "intercepting your fleet");
-                    }
-                } else if (fleet.getAI().getCurrentAssignmentType() != FleetAssignment.PATROL_SYSTEM){
-                    //a fleet that chased the player into hyperspace has no star system
-                    SectorEntityToken patrolCenter = fleet.getStarSystem() != null
-                            ? fleet.getStarSystem().getCenter()
-                            : fleet.getContainingLocation().createToken(fleet.getLocation());
-                    fleet.clearAssignments();
-                    fleet.addAssignment(FleetAssignment.PATROL_SYSTEM, patrolCenter, Float.MAX_VALUE, "patrolling");
-                }
-                continue;
-            }
 
             //tt collector logic
             if (fleet.getMemoryWithoutUpdate().contains(TT_COLLECTOR_KEY)){

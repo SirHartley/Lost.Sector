@@ -43,7 +43,7 @@ Established by descriptions `kesteven` and `nskr_asteria`, the ship descriptions
 
 ### Project Enigma
 
-Project Enigma was a pre-Collapse Domain research project. Established by the prototype ship descriptions, weapon descriptions, `strings.json`, `DataSatelliteDialog`, the Delve meeting rows (`nskr_kq_delve…`) and `CacheIntel`:
+Project Enigma was a pre-Collapse Domain research project. Established by the prototype ship descriptions, weapon descriptions, `strings.json`, the data-disk satellite rows (`nskr_kq_satellite…`), the Delve meeting rows (`nskr_kq_delve…`) and `CacheIntel`:
 
 - **Research.** It developed advanced autonomous warships, temporal fields and exotic weapons outside Domain core space. "Though autonomous war machines were explicitly banned within Domain core space, advanced AI systems were developed in secrecy beyond incorporated volume."
 - **Staff.** Its staff speak through log and journal quotes in the ship and weapon descriptions:
@@ -111,7 +111,7 @@ Unlocked by finishing the questline:
 
 - **Kesteven's knowledge.** Kesteven works from decrypted fragments. Jack says "Enigma is one of the few words we can decipher from their transmissions". Alice admits "we don't know exactly that is inside the Cache yet". They hold back the Chip's specifications until later: "it's not important for you to know the exact specifications yet" (Jack, rules `nskr_kq_delveAskChip`).
 - **Eliza's knowledge.** Eliza has read two disks and knows about the Cache and the UPC ("The plans they had..."). She claims "eyes and ears all across the sector" and knows when the player carries the Chip.
-- **The crew.** Ops, sensors and comms officers report observations and measurements. They do not know what the Enigma is; when they guess, they label it a guess ("Your guess is as good as mine captain.", `DataSatelliteDialog`).
+- **The crew.** Ops, sensors and comms officers report observations and measurements. They do not know what the Enigma is; when they guess, they label it a guess ("Your guess is as good as mine captain.", rule `nskr_kq_satelliteBroadcastSel`).
 - **The Enigma.** Enigma voices never explain themselves. Their lines are fragments, protocols and declarations.
 - **Narration.** Narration describes what the player sees and must not explain the Enigma, the Cache or the UPC beyond what characters have learned.
 
@@ -125,7 +125,7 @@ The player works for the Kesteven Corporation on a questline that uncovers Proje
 
 These instructions describe how the existing mod text is written. They govern player-facing prose, not how this reference explains its own rules.
 
-- **Second person.** Narration addresses the captain as "you" in present tense and follows the bridge crew at work: "Your ops chief oversees the mission by-the-book, staging approach-and-scan to maximize safety..." (`DataSatelliteDialog`).
+- **Second person.** Narration addresses the captain as "you" in present tense and follows the bridge crew at work: "Your ops chief oversees the mission by-the-book, staging approach-and-scan to maximize safety..." (rule `nskr_kq_satelliteSendSel`).
 - **Competent crew.** Crew members are professionals with their own manner: the careful ops chief, the sarcastic sensors officer, the comms officer's "nothing a little elbow grease from our team can't solve".
 - **Gray asides.** Gray narration carries the captain's own reactions and occasional judgment: "Wait, you really agree with her? Oh dear." (`ElizaDialog`), "Hope you made the right choice, captain." (`EndingElizaDialog`). `CacheDoubtDialog` uses the same gray voice as an inner voice that talks back.
 - **Wide tonal range.** Comedy and horror sit side by side.

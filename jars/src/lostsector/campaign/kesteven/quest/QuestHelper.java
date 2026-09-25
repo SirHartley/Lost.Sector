@@ -48,7 +48,8 @@ public class QuestHelper {
 
         artifact.setCircularOrbitPointingDown(loc, random.nextFloat()*360f, MathUtils.getDistance(artifact.getLocation(), loc.getLocation()), MathHelper.getSeededRandomNumberInRange(30f,60f, random));
 
-        artifact.getMemory().set(QuestStageManager.ARTIFACT_KEY+number, true);
+        artifact.getMemory().set(KestevenSatelliteModule.ARTIFACT_KEY+number, true);
+        KestevenSatelliteModule.claim(KestevenQuest.context(), artifact);
 
         //makes sure we are not in a star
         SystemHelper.spawnAwayFromStarFixer(artifact, 2.0f);
@@ -412,7 +413,9 @@ public class QuestHelper {
 
     public static void setDisksRecovered(int count) {
         KestevenState state = writableState();
-        if (state != null) state.disksRecovered = count;
+        if (state == null) return;
+        state.disksRecovered = count;
+        KestevenSatelliteModule.checkAllDisks(KestevenQuest.context());
     }
 
     public static int getNicholasDialogStage() {

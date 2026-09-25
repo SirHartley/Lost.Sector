@@ -26,7 +26,7 @@ public class CacheCoreDialog implements InteractionDialogPlugin {
     private VisualPanelAPI visual;
 
     static void log(final String message) {
-        Global.getLogger(DataSatelliteDialog.class).info(message);
+        Global.getLogger(CacheCoreDialog.class).info(message);
     }
 
     @Override

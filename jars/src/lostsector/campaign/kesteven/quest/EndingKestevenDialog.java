@@ -33,7 +33,7 @@ public class EndingKestevenDialog implements InteractionDialogPlugin {
     private VisualPanelAPI visual;
 
     static void log(final String message) {
-        Global.getLogger(DataSatelliteDialog.class).info(message);
+        Global.getLogger(EndingKestevenDialog.class).info(message);
     }
 
     @Override

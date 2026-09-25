@@ -48,9 +48,8 @@ import java.util.Set;
 final class KestevenJob4Module extends QuestModule<KestevenStage, KestevenState> {
 
     static final String INTEL = "job4";
-    // Satellite #4's salvage wakes the strike group by this role (DataSatelliteDialog).
+    // Satellite #4's salvage wakes the strike group by this role (KestevenSatelliteModule.wakeGuard).
     static final String ROLE_STRIKE_GROUP = "job4StrikeGroup";
-    static final String STRIKE_GROUP_FLAG = "$nskr_kq_" + ROLE_STRIKE_GROUP;
     static final String ROLE_SPECIAL_OPS = "job4SpecialOps";
     static final String ROLE_SPECIAL_OPS_LEAVING = "job4SpecialOpsLeaving";
     static final String ROLE_SPLINTER = "job4Splinter";

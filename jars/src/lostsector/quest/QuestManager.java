@@ -444,6 +444,12 @@ public final class QuestManager extends BaseCampaignEventListener
         return state == null ? Misc.random : QuestContext.random(state, "fleetOrders");
     }
 
+    // Null when the quest or the role is unknown.
+    FleetRole declaredRole(String questId, String role) {
+        Run<?, ?> run = runs.get(questId);
+        return run == null ? null : run.quest.declarations().roles().get(role);
+    }
+
     // The declared role of a registered fleet; logs once per fleet when its quest or role is unknown.
     private FleetRole declaredRole(QuestFleet fleet) {
         Run<?, ?> run = runs.get(fleet.owner());

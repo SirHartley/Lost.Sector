@@ -102,6 +102,7 @@ final class KestevenGlacierModule extends QuestModule<KestevenStage, KestevenSta
     private static void recover(QuestContext<KestevenStage, KestevenState> ctx) {
         ctx.set(KestevenFlag.GLACIER_DISK_RECOVERED);
         ctx.state().disksRecovered++;
+        KestevenSatelliteModule.checkAllDisks(ctx);
         SectorEntityToken glacier = glacier();
         ctx.unmark(glacier);
         ctx.releaseDialog(glacier);

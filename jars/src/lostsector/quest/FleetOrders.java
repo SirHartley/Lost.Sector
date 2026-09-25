@@ -20,7 +20,8 @@ public final class FleetOrders {
         RAID,
         WITHDRAW,
         PATROL,
-        EXPEDITION
+        EXPEDITION,
+        HUNT
     }
 
     private Kind kind;
@@ -142,6 +143,11 @@ public final class FleetOrders {
         return orders;
     }
 
+    // Intercepts the player while it sees them, otherwise patrols its own star system.
+    public static FleetOrders huntInSystem() {
+        return new FleetOrders(Kind.HUNT);
+    }
+
     // Keeps its last assignment and despawns once out of the player's sight, for a fleet whose part is over.
     public static FleetOrders withdraw() {
         return new FleetOrders(Kind.WITHDRAW);
@@ -233,6 +239,9 @@ public final class FleetOrders {
                 break;
             case EXPEDITION:
                 FleetHelper.expeditionAI(info.fleet, info, prepareDays, returnAfterDays);
+                break;
+            case HUNT:
+                FleetHelper.huntInSystemAI(info.fleet);
                 break;
             default:
                 break;

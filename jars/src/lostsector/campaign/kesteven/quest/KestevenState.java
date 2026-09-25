@@ -15,7 +15,6 @@ public final class KestevenState extends QuestState<KestevenStage> {
     // Purposes for KestevenQuest.random, one per getRandom() accessor; the two alternative endings share one.
     public static final String RANDOM_QUEST = "kestevenQuestRandom";
     public static final String RANDOM_REVENGE = "kestevenQuestRandomKey";
-    public static final String RANDOM_SATELLITE = "artifactKeyRandom";
     public static final String RANDOM_GLACIER = "glacierCommsKeyRandom";
     public static final String RANDOM_ELIZA = "elizaDialogKeyRandom";
     public static final String RANDOM_CACHE_DOUBT = "cacheDoubtDialogRandom";

@@ -69,6 +69,26 @@ public final class QuestFleets {
         return fleet;
     }
 
+    // The registered fleet of any quest, or null.
+    public QuestFleet registered(CampaignFleetAPI fleet) {
+        FleetInfo info = find(fleet);
+        return info == null ? null : new QuestFleet(info);
+    }
+
+    // Clears the fleet's whole memory, as waking a dormant fleet does, and writes back what registration keeps there
+    // for a registered fleet of any quest: owner, role, record, role flag, config and defeat trigger. The FleetInfo
+    // stays in the list, so the fleet keeps its orders. A fleet that is not registered is only cleared.
+    public void clearMemory(CampaignFleetAPI fleet) {
+        MemoryAPI memory = fleet.getMemoryWithoutUpdate();
+        String owner = memory.getString(OWNER_KEY);
+        String role = memory.getString(ROLE_KEY);
+        String record = memory.getString(RECORD_KEY);
+        fleet.getMemory().clear();
+        if (owner == null || role == null || find(fleet) == null) return;
+        QuestManager manager = QuestManager.get();
+        writeKeys(fleet, owner, role, record, manager == null ? null : manager.declaredRole(owner, role));
+    }
+
     public List<QuestFleet> get(String role) {
         List<QuestFleet> result = new ArrayList<>();
         for (FleetInfo info : list()) {
@@ -143,18 +163,24 @@ public final class QuestFleets {
 
     private void register(FleetInfo info, String role, String record, FleetRole declared) {
         CampaignFleetAPI fleet = info.fleet;
-        MemoryAPI memory = fleet.getMemoryWithoutUpdate();
-        memory.set(OWNER_KEY, run.id());
-        memory.set(ROLE_KEY, role);
-        if (record != null) memory.set(RECORD_KEY, record);
-        memory.set(roleFlag(run.id(), role), true);
-        if (declared.configGen() != null) memory.set(MemFlags.FLEET_INTERACTION_DIALOG_CONFIG_OVERRIDE_GEN, declared.configGen());
-        if (declared.defeatTriggerName() != null) Misc.addDefeatTrigger(fleet, declared.defeatTriggerName());
+        writeKeys(fleet, run.id(), role, record, declared);
 
         List<FleetInfo> fleets = list();
         fleets.add(info);
         FleetHelper.setFleets(fleets, KEY);
         QuestManager.logInfo(run.id(), "spawn " + role + (record == null ? "" : " [" + record + "]") + ": " + fleet.getName());
+    }
+
+    // The fleet memory of a registered fleet; declared is null when the owning quest or role is unknown.
+    private static void writeKeys(CampaignFleetAPI fleet, String owner, String role, String record, FleetRole declared) {
+        MemoryAPI memory = fleet.getMemoryWithoutUpdate();
+        memory.set(OWNER_KEY, owner);
+        memory.set(ROLE_KEY, role);
+        if (record != null) memory.set(RECORD_KEY, record);
+        memory.set(roleFlag(owner, role), true);
+        if (declared == null) return;
+        if (declared.configGen() != null) memory.set(MemFlags.FLEET_INTERACTION_DIALOG_CONFIG_OVERRIDE_GEN, declared.configGen());
+        if (declared.defeatTriggerName() != null) Misc.addDefeatTrigger(fleet, declared.defeatTriggerName());
     }
 
     // Removes matching fleets of this quest from the list first, so the despawn report does not reach onFleetGone.
