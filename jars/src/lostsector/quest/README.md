@@ -47,7 +47,7 @@ The framework is built on branch `quest-overhaul`; the task ids refer to the tra
 | Presentation spec (vanilla commands per effect) | [DIALOGUE.md](../../../../docs/DIALOGUE.md#presentation-in-rules) | implemented | T09 |
 | Gap verbs: `confirm`, `engage` | `nskr_quest` | planned | T10 |
 | Intel and rules text outside dialogs | `QuestIntel`, `QuestText` | planned | T11 |
-| Rules check tool | `lostsector.quest.dev.RulesCheck` | planned | T12 |
+| Rules check tool | `lostsector.quest.dev.RulesCheck` | implemented | T12 |
 | Dev menu and stage jumps | `nskr_questDev` | planned | T13 |
 | Shared modules | `lostsector.quest.modules` | planned | T37 to T41 |
 
@@ -739,26 +739,72 @@ The player's story skip calls the same `QuestManager.jump`. Quests add nothing t
 
 ### Rules check tool
 
-`lostsector.quest.dev.RulesCheck` reads `data/campaign/rules.csv` and the quest definitions from `QuestCatalog`, and reports:
+`lostsector.quest.dev.RulesCheck` reads `data/campaign/rules.csv` and the quest definitions from `QuestCatalog.create()`, and reports problems in the mod's rows. It runs outside the game and touches no game class that needs `Global`.
 
-- rows with the wrong column count, duplicate ids, whitespace-only lines, carriage returns in Text, colons in option text;
-- unknown quest ids, stages, flags, checks, actions and tokens in `nskr_quest` calls and `$nskr_<q>_` tokens, and tokens used outside their quest's rows;
-- `advance` with the same stage twice;
-- `FireAll` or `FireBest` in Conditions;
-- triggers fired by `FireAll` or `FireBest` that no row uses; rows on triggers nothing fires, other than triggers the engine or vanilla fires and declared triggers;
-- options without a handler row;
-- keys and triggers that differ only by case;
-- `$nskr_` memory keys that rows read but no row writes, other than keys the framework writes and keys the tool lists as written by Java;
-- rows on the same trigger with identical conditions, unless their notes column says `variant`;
-- token names that are prefixes of other token names, and rows that assign a token's name.
-
-Run it after every change to `rules.csv`, with the build output and the compile jars on the class path:
+Run it after every change to `rules.csv`, with the build output and the compile jars from [Building](../../../../CLAUDE.md#building) on the class path:
 
 ```sh
-java -cp "<build output>:<compile jars>" lostsector.quest.dev.RulesCheck <repository root>
+java -cp "<build output>:<compile jars>" lostsector.quest.dev.RulesCheck <repository root> [<vanilla rules.csv>]
 ```
 
-It exits with status 1 when it finds an error. The list of engine-fired triggers lives in the tool's source with a source reference for each.
+It prints one line per finding, sorted by CSV line, then a summary with counts per check:
+
+```
+ERROR data/campaign/rules.csv:27 nskr_kestevenQuestContinue [handler] option nskr_kestevenQuestStart has no DialogOptionSelected row with $option == nskr_kestevenQuestStart
+```
+
+Findings about definitions rather than rows show `-` as the line and `(quest <q>)` as the id. The exit status is 1 when there is an error, 0 when there are only warnings or none, and 2 for a usage or input problem.
+
+**Parsing.** Records are read as RFC 4180 CSV; the line number is the physical line where the record starts. Rows with an empty id and rows whose id starts with `#` are skipped, as the loader does. Conditions, Script and Options cells are split into lines the way the 0.98a-RC8 `Rules` loader does, and each Conditions or Script line is parsed with a port of `Misc.tokenize` and the rule expression constructor (`RuleExpression`). Running the tool on vanilla `rules.csv` gives no load, command or option-format error, which matches the game loading that file. The engine's `LoadingUtils` CSV reader is not in the `starsector-knowledge` sources, so the record parsing itself is standard CSV, not a port.
+
+**Checks.** An error is something that stops the file loading, breaks a quest contract or leaves the player stuck; a warning is likely wrong but can be deliberate or caused by legacy Java.
+
+| Check | Severity | Reports |
+|---|---|---|
+| `columns` | error | A header other than `id,trigger,conditions,script,text,options,notes`, or a row without exactly seven columns |
+| `csv` | error | An unterminated quote |
+| `empty-id` | warning | A row with content but an empty id, which the loader skips |
+| `duplicate-id` | error / warning | An id used twice under the same trigger (the file fails to load) / under different triggers |
+| `whitespace` | error | A Conditions, Script or Options line that holds only spaces |
+| `load` | error | A line the engine rejects at load: unmatched quotes, several operators, an operator in a command line, a bad `score:`, `=` in Conditions, `==` in Script |
+| `command` | error | A command that is not a class in the vanilla `ruleCommandPackages` or the mod's `data/config/settings.json` list. Only the class file is looked up; no class is loaded |
+| `option-format` | error | A colon in an option label (load failure for `id:text`, cut label for `order:id:text`), a line that is neither form, an option id starting with `$` |
+| `text-cr` | warning | A carriage return in Text, which stops `OR` variants from splitting |
+| `fire-in-conditions` | error | `FireAll` or `FireBest` in Conditions |
+| `quest-call` | error | In `nskr_quest` calls: an unknown quest id, verb, stage, flag, check or action; a verb in the wrong column; the wrong number of arguments. A `$variable` argument is a warning, because it is not checked |
+| `advance` | error | `advance` from a stage to itself |
+| `token` | error | An unknown `$nskr_<q>_<name>` token in Text, option labels or Script literals; a token in a row whose id does not start with `nskr_<q>_`; a token name read in Conditions or Script, where it is not memory |
+| `token-assign` | error | A Script line that assigns a token's name |
+| `token-prefix` | error | A token name that is a prefix of another token name of the same quest |
+| `declared-trigger` | error | A trigger declared with `d.trigger(...)` that no row uses |
+| `fire-target` | error | A literal `FireAll` or `FireBest` target that no mod or vanilla row uses |
+| `unreachable` | error / warning | A trigger with mod rows that nothing fires, reported once at its first row. An error for a quest's trigger (`nskr_<q>` followed by an upper-case letter or `_`), a warning otherwise |
+| `handler` | error | An option id from the Options column, an `AddBarEvent` call or a `$option = <id>` line without a `DialogOptionSelected` or `NewGameOptionSelected` row testing `$option == <id>`, in the mod or vanilla, or a `nskr_optionStartsWith` handler whose prefix matches |
+| `case` | warning | A trigger or memory key of a mod row that differs only by case from another trigger or key in the mod, vanilla or the engine list |
+| `unwritten` | warning | A `$nskr_` key read in Conditions, Script, Text or option labels that no mod row writes, that no Java string literal under `jars/src` names, and that is not an intel scratch key or a quest token |
+| `identical` | warning | Two rows on one trigger with the same condition lines in any order, unless both notes contain `variant`. Triggers fired with `FireAll` by a row, by vanilla rows or by the engine, and the `IntelBullets` and `IntelDesc` triggers, are skipped, because every match runs there |
+| `intel` | error / warning | A command other than `nskr_quest` in the Conditions of an intel row / Script or Options in an intel row, which are ignored |
+| `naming` | error / warning | In quest rows (id `nskr_<q>_`): a `$global.` write / a `$nskr_` write other than `$nskr_<q>_<name>` on local memory or `$player.nskr_<name>`; a row on a quest's trigger whose id does not start with `nskr_<q>_` |
+| `definitions` | error | `QuestCatalog.create()` throws, including when a definition calls the game ([Definitions are pure](#quest-and-stages)) |
+
+Quest checks use only the quests `QuestCatalog` returns. A `$nskr_<x>_` name whose `<x>` is not a quest id is treated as an ordinary memory key, because legacy keys share that shape, so the tool cannot report an unknown quest id inside a token.
+
+**What counts as fired.** A trigger is fired when a mod row fires it with `FireAll` or `FireBest`; when the engine list in `VanillaRules.ENGINE` names it; when it ends with a hub mission suffix (`_blurb`, `_option`, `_blurbBar`, `_optionBar`, `_startBar`); when vanilla rows use or fire it; when a quest declares it; when it is an [intel trigger](#intel) of a quest; or, for triggers that do not belong to a quest, when a Java string literal under `jars/src` equals it, which covers legacy code that fires its own triggers. A quest's own trigger counts only when declared.
+
+**Vanilla lists.** `VanillaRules.ENGINE` lists every trigger the 0.98a-RC8 game code fires or opens with a literal name (`FireBest.fire`, `FireAll.fire`, the dialog plugins' `fireBest` and `fireAll`, `getBestMatching`, `RuleBasedInteractionDialogPluginImpl`), each with its bundle file and line in the `starsector-knowledge` sources; triggers vanilla fires from variables, such as defeat triggers, are covered because vanilla rows use them. `VanillaRules.COMMAND_PACKAGES` is vanilla's `ruleCommandPackages`. `vanilla-rules-index.txt`, next to the tool, lists the triggers vanilla rows use, the literal `FireAll` and `FireBest` targets in vanilla rows, the option ids vanilla rows handle and the memory keys vanilla rows use. The tool reads it from the repository at run time. Regenerate it from a game version's `starsector-core/data/campaign/rules.csv`:
+
+```sh
+java -cp "<build output>:<compile jars>" lostsector.quest.dev.RulesCheck --index <vanilla rules.csv> <game version> > jars/src/lostsector/quest/dev/vanilla-rules-index.txt
+```
+
+Passing a vanilla `rules.csv` as the second argument of a check builds the same lists from that file instead of the index.
+
+**Limits.**
+
+- Quest people are created in hooks, not declared, so a person token `$nskr_<q>_<key>_<suffix>` is checked for its shape only.
+- `Declarations` has no roles yet ([Fleets](#fleets), planned), so a row that reads a role flag `$nskr_<q>_<role>` gets an `unwritten` warning, and rows on a role's defeat trigger count as fired only when the trigger is declared.
+- Other mods' rule command packages are not known, so rows that call another mod's command get a `command` error.
+- A mod row whose id equals a vanilla row id is not reported; the index holds no vanilla ids.
 
 ## Rules contract
 
