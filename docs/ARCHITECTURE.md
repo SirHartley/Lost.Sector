@@ -26,7 +26,7 @@ Technical routing for the current implementation. Java paths below are relative 
 | Debt, ship swap, S-mod removal | Official menus in `rules.csv -> dialogue/rules/nskr_debt`, `nskr_shipSwap`, `nskr_modRemoval`; monthly interest `kesteven/loans/CrushingDebt` |
 | Contracts | `person_missions.csv -> kesteven/contracts/ContractsMission -> kesteven/contracts/ContractIntel`; `kesteven/contracts/ContractManager`; [contracts](quests/CONTRACTS_AND_BOUNTIES.md#contracts) |
 | Blacksites | `events/blacksite/BlacksiteSpawner -> events/blacksite/BlacksiteManager -> CorePlugin -> BlacksiteDialog` |
-| Custom starts | Nexerelin background -> `starts/GameModeManager` -> `HellSpawnManager` or `ThronesGiftManager`; unlocked by the `Setting.THRONES_GIFT_UNLOCKED` and `HELLSPAWN_UNLOCKED` [settings](#settings) |
+| Custom starts | Nexerelin background -> `starts/GameModeManager` -> `HellSpawnManager` or `ThronesGiftManager`; unlocked by the `Setting.THRONES_GIFT_UNLOCKED` and `HELLSPAWN_UNLOCKED` [settings](#settings). Throne's Gift automation: `ThronesGiftIntel` button -> `rules.csv` `# THRONES GIFT` -> `dialogue/rules/nskr_thronesGift` -> `ThronesGiftManager.automate()` |
 | New-game content, adding the mod to a save | `ModPlugin.onNewGame*` and the `SAVE_KEY` check in `onGameLoad`; [world generation](#save-identity) |
 | Difficulty, fleet scaling and other settings | `settings/Difficulty.scriptedFleetMult()`, `randomEnigmaFleetMult()`, `isStarfarer()` -> `settings/Setting` -> `settings/SettingsManager` cache of `data/config/LunaSettings.csv` and LunaLib; [settings](#settings) |
 | Value lost after save/load | [Save identity](#save-identity) |
@@ -111,7 +111,7 @@ Keep foreign classes behind these flags or behind the foreign mod's own loader. 
 | Mechanism | Stored as | Rename hazard |
 |---|---|---|
 | `persistence/Saved<T>` | Sector persistent data under `persistence/Saved.PREFIX` (`nskr_`) plus the constructor key. `ModPlugin` writes all instances before save and reloads them on load and after save. | Changing a key loses that value. `InterceptManager`, `HyperspaceEnigmaSpawner` and `BlackOpsManager` keys already contain `nskr_`, so their stored keys start `nskr_nskr_`. |
-| `CampaignTimer` | The timer object itself, in sector persistent data under the owner's fully qualified class name plus `Timer` | Moving or renaming `GameModeManager`, `ThronesGiftManager` or `HellSpawnManager` silently starts a fresh timer; renaming `CampaignTimer` breaks loading. |
+| `CampaignTimer` | The timer object itself, in sector persistent data under the owner's fully qualified class name plus `Timer` | Moving or renaming `GameModeManager` or `HellSpawnManager` silently starts a fresh timer; renaming `CampaignTimer` breaks loading. |
 | Saved scripts and plugins | The objects listed under Saved scripts above | Their class names and fields are serialized. |
 | `ModPlugin.SAVE_KEY` `nskr_enabled`, `STARFARER_MODE_FROM_START_KEY` `nskr_starfarerFromStart` | Sector persistent data | Renaming `SAVE_KEY` reruns world generation on every existing save. |
 | `Frost.NAME_KEY` `$nskr_frostName` | Sector persistent data, not memory, despite the `$` | Holds the generated Frost system name. |
@@ -207,11 +207,11 @@ Intel classes add themselves as scripts and put their per-frame logic in `advanc
 | `starts/hellspawn/HellSpawnManager`, `HellSpawnNexListener`, `HellSpawnEventIntel` | HellSpawn corruption points, stat hullmod level, judgement timer and warning |
 | `starts/hellspawn/HellSpawnJudgement*`, `HellSpawnAbility*` | Judgement encounter and ability; the `*Interaction` classes extend `FleetInteractionDialogPluginImpl` and are picked by `CorePlugin`. Gate Conduit swarms (`HellSpawnAbility.HELL_FLEET_KEY`) are made non-hostile to the player faction at spawn and join a player battle only through `HellSpawnAbilityInteraction.pullInNearbyFleets`, never against the player or Enigma. `HellSpawnManager` reissues their orders outside battles. |
 | `starts/hellspawn/HellSpawnCondition` | Market condition |
-| `starts/thronesgift/ThronesGiftManager`, `ThronesGiftIntel`, `AutomateDialog` | XP-to-automation points and the automation dialog |
+| `starts/thronesgift/ThronesGiftManager`, `ThronesGiftIntel` | XP-to-automation points, the ship list and the automation itself (`getAutomatableShips`, `getAutomationCost`, `automate`). The intel's button opens a rules dialog on `nskr_thronesGiftPick` with a null target; `dialogue/rules/nskr_thronesGift` shows the ship picker and runs the automation; see [project routing](RULES.md#project-routing). |
 | `starts/*/*DisposableFleetSpawner` | Vanilla `DisposableFleetManager` subclasses, added in `onGameLoad` behind `hasScript` and saved with the game |
 | `starts/*/*Background` | Nexerelin backgrounds; each reads its unlock setting (`THRONES_GIFT_UNLOCKED`, `HELLSPAWN_UNLOCKED`) whenever Nexerelin asks |
 
-Polling: every `EFS_LIST` manager advances each frame. Most gate their work with a `persistence/Saved<Float>` counter and return while paused. Counters add the frame `amount` in seconds, and vanilla `SECONDS_PER_GAME_DAY` is 10, so a threshold of `10f` is one campaign day. Many managers add `2 * amount` while the campaign is in fast advance. `QuestStageManager`, `enigma/HeartOccupation`, `HellSpawnManager` and `ThronesGiftManager` also do work while paused; `CampaignTimer.advance()` does not count paused time.
+Polling: every `EFS_LIST` manager advances each frame. Most gate their work with a `persistence/Saved<Float>` counter and return while paused. Counters add the frame `amount` in seconds, and vanilla `SECONDS_PER_GAME_DAY` is 10, so a threshold of `10f` is one campaign day. Many managers add `2 * amount` while the campaign is in fast advance. `QuestStageManager`, `enigma/HeartOccupation`, `HellSpawnManager` and `ThronesGiftManager` also do work while paused; `CampaignTimer.advance()` does not count paused time. `ThronesGiftManager` compares the player's XP each frame, including while paused, because XP gain has no callback: `CharacterStats.addXP` changes the stored XP and levels up without notifying any listener, and XP is often granted in dialogs, which pause the campaign.
 
 ### Combat data bindings
 

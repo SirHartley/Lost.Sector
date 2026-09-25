@@ -5,9 +5,16 @@ import lostsector.campaign.starts.GameModeManager;
 import com.fs.starfarer.api.EveryFrameScript;
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.BaseCampaignEventListener;
+import com.fs.starfarer.api.campaign.CargoAPI;
+import com.fs.starfarer.api.fleet.FleetMemberAPI;
 import com.fs.starfarer.api.impl.campaign.ids.Factions;
-import lostsector.persistence.CampaignTimer;
+import com.fs.starfarer.api.impl.campaign.ids.HullMods;
+import com.fs.starfarer.api.impl.campaign.ids.Tags;
+import com.fs.starfarer.api.loading.FighterWingSpecAPI;
+import lostsector.helper.FleetHelper;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 public class ThronesGiftManager extends BaseCampaignEventListener implements EveryFrameScript {
@@ -19,20 +26,15 @@ public class ThronesGiftManager extends BaseCampaignEventListener implements Eve
     public static final String DP_KEY = "thronesGiftManagerDp";
     public static final String TOTAL_DP_KEY = "thronesGiftManagerTotalDp";
 
-    private CampaignTimer timer;
     private long xp = 0;
     private long oldXp = 0;
     private long lvl = 0;
-    private long oldLvl = 0;
 
     public ThronesGiftManager() {
         super(false);
-        this.timer = new CampaignTimer(this.getClass().getName(), 1f);
-        //init
         xp = Global.getSector().getPlayerStats().getXP();
         oldXp = xp;
         lvl = Global.getSector().getPlayerStats().getLevel();
-        oldLvl = lvl;
     }
 
     @Override
@@ -40,6 +42,9 @@ public class ThronesGiftManager extends BaseCampaignEventListener implements Eve
         return false;
     }
 
+    // XP gain has no callback: CharacterStats.addXP only changes the stored XP and levels up, notifying no listener.
+    // XP is often granted in dialogs, which pause the campaign, so the comparison also runs while paused and the
+    // points do not wait for the player to unpause.
     @Override
     public boolean runWhilePaused() {
         return true;
@@ -60,20 +65,7 @@ public class ThronesGiftManager extends BaseCampaignEventListener implements Eve
             reportXpChanged((4000000-oldXp) + xp);
         }
 
-        //update
         oldXp = xp;
-        oldLvl = lvl;
-
-        //PAUSE CHECK
-        if (Global.getSector().isPaused()) return;
-
-        timer.advance(amount);
-        if (timer.onTimeout()){
-
-
-
-        }
-
     }
 
     @Override
@@ -171,6 +163,52 @@ public class ThronesGiftManager extends BaseCampaignEventListener implements Eve
             return (float) data.get(TOTAL_DP_KEY);
         }
 
+    }
+
+    // Automation
+
+    public static List<FleetMemberAPI> getAutomatableShips() {
+        List<FleetMemberAPI> validShips = new ArrayList<>();
+        for (FleetMemberAPI f : Global.getSector().getPlayerFleet().getMembersWithFightersCopy()){
+            if (f.isFighterWing())continue;
+            if (f.getVariant()==null)continue;
+            if (f.getVariant().getHullMods().contains(HullMods.AUTOMATED) || f.getVariant().getHullMods().contains("sotf_sierrasconcord"))continue;
+            validShips.add(f);
+        }
+        //can't automate last ship
+        if (validShips.size()==1) return new ArrayList<>();
+
+        return validShips;
+    }
+
+    public static float getAutomationCost(FleetMemberAPI member) {
+        return member.getHullSpec().getSuppliesToRecover();
+    }
+
+    public static void automate(FleetMemberAPI member) {
+        if (member.getCaptain()!=null){
+            member.setCaptain(null);
+        }
+        //non-automated fighters go back to cargo
+        int x = -1;
+        for (String s : member.getVariant().getNonBuiltInWings()) {
+            x++;
+            FighterWingSpecAPI wing = member.getVariant().getWing(x);
+            if (wing == null) continue;
+            if (!wing.hasTag(Tags.AUTOMATED_FIGHTER)){
+                Global.getSector().getPlayerFleet().getCargo().addItems(CargoAPI.CargoItemType.FIGHTER_CHIP, wing.getId(), 1);
+
+                member.getVariant().setWingId(x, null);
+            }
+        }
+
+        member.getVariant().addPermaMod(HullMods.AUTOMATED);
+        member.getVariant().addTag(Tags.TAG_AUTOMATED_NO_PENALTY);
+
+        //update the fleet IMPORTANT
+        FleetHelper.updatePlayerFleet(true);
+
+        setDpAvailable(getDpAvailable() - getAutomationCost(member));
     }
 
 }

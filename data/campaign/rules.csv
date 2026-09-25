@@ -725,3 +725,50 @@ nskr_contracts_recovery4,nskr_contractsOfferText,"$nskr_contracts_type == SCAVEN
 nskr_contracts_recovery5,nskr_contractsOfferText,"$nskr_contracts_type == SCAVENGE",,"""Are you willing to do this?""",,
 "#END CONTRACTS",,,,,,
 
+,,,,,,
+# THRONES GIFT,,,,,,
+nskr_thronesGift_pickShip,nskr_thronesGiftPick,nskr_thronesGift hasShips,"nskr_thronesGift pick ""Pick from your fleet"" Confirm Cancel",,,Opened by ThronesGiftIntel; the picker result fires nskr_thronesGiftPicked or nskr_thronesGiftPickCancelled
+nskr_thronesGift_pickNoShips,nskr_thronesGiftPick,!nskr_thronesGift hasShips,SetShortcut nskr_thronesGift_leave ESCAPE,You can not automate your only ship.,nskr_thronesGift_leave:Go back,
+,,,,,,
+nskr_thronesGift_pickCancelled,nskr_thronesGiftPickCancelled,,SetShortcut nskr_thronesGift_leave ESCAPE,You selected nothing.,"nskr_thronesGift_another:Automate another ship
+nskr_thronesGift_leave:Go back",
+,,,,,,
+nskr_thronesGift_picked,nskr_thronesGiftPicked,,"AddTextSmall ""This will cost $nskr_thronesGift_cost automation points."" standardTextColor
+SetTextHighlights ""$nskr_thronesGift_cost""
+SetTextHighlightColors highlight
+AddTextSmall ""You have $nskr_thronesGift_points automation points available."" standardTextColor
+SetTextHighlights ""$nskr_thronesGift_points""
+SetTextHighlightColors highlight
+AddTextSmall ""Selected $nskr_thronesGift_shipName $nskr_thronesGift_hullName-Class"" gray
+SetTextHighlights ""$nskr_thronesGift_hullName""
+SetTextHighlightColors highlight
+FireBest nskr_thronesGiftPickedOptions",,,
+nskr_thronesGift_pickedAfford,nskr_thronesGiftPickedOptions,nskr_thronesGift canAfford,"SetOptionColor nskr_thronesGift_automate highlight
+SetTooltip nskr_thronesGift_automate ""This will cost $nskr_thronesGift_cost automation points.""
+nskr_thronesGift confirm nskr_thronesGift_automate ""Are you sure? This cannot be reversed. It will cost $nskr_thronesGift_cost automation points."" Confirm Cancel
+SetShortcut nskr_thronesGift_leave ESCAPE",,"nskr_thronesGift_automate:Automate $nskr_thronesGift_hullName-Class
+nskr_thronesGift_another:Automate another ship
+nskr_thronesGift_leave:Go back",
+nskr_thronesGift_pickedPoor,nskr_thronesGiftPickedOptions,!nskr_thronesGift canAfford,"SetTextHighlights ""can not afford""
+SetTextHighlightColors bad
+SetShortcut nskr_thronesGift_leave ESCAPE",You can not afford to automate this ship.,"nskr_thronesGift_another:Automate another ship
+nskr_thronesGift_leave:Go back",
+,,,,,,
+nskr_thronesGift_automateSel,DialogOptionSelected,"$option == nskr_thronesGift_automate
+nskr_thronesGift hasPicked","nskr_thronesGift automate
+AddTextSmall ""Automated $nskr_thronesGift_shipName $nskr_thronesGift_hullName-Class"" gray
+SetTextHighlights ""$nskr_thronesGift_hullName""
+SetTextHighlightColors highlight
+AddTextSmall ""Lost $nskr_thronesGift_cost automation points."" gray
+SetTextHighlights ""$nskr_thronesGift_cost""
+SetTextHighlightColors bad
+AddTextSmall ""You now have $nskr_thronesGift_points automation points."" gray
+PlaySound ui_noise_static
+SetShortcut nskr_thronesGift_leave ESCAPE",,"nskr_thronesGift_leave:Continue
+nskr_thronesGift_another:Automate another ship",
+nskr_thronesGift_automateGone,DialogOptionSelected,"$option == nskr_thronesGift_automate
+!nskr_thronesGift hasPicked",DismissDialog,,,The picked ship is no longer in the fleet
+nskr_thronesGift_anotherSel,DialogOptionSelected,$option == nskr_thronesGift_another,FireBest nskr_thronesGiftPick,,,
+nskr_thronesGift_leaveSel,DialogOptionSelected,$option == nskr_thronesGift_leave,"DismissDialog
+nskr_thronesGift refreshIntel",,,
+
