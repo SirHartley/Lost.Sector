@@ -32,6 +32,7 @@ import lostsector.campaign.starts.thronesgift.ThronesGiftManager;
 
 import lostsector.persistence.Saved;
 import lostsector.quest.QuestManager;
+import lostsector.quest.QuestTokens;
 import lostsector.settings.Difficulty;
 import lostsector.settings.SettingsManager;
 
@@ -238,6 +239,7 @@ public class ModPlugin extends BaseModPlugin {
         syncNSKRScripts();
 
         Global.getSector().registerPlugin(new CorePlugin());
+        Global.getSector().getRules().addTokenReplacementGenerator(new QuestTokens());
 
         for (BaseCampaignEventListener script : EFS_LIST){
             Global.getSector().addTransientScript((EveryFrameScript) script);

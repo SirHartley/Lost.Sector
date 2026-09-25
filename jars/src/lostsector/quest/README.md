@@ -43,7 +43,7 @@ The framework is built on branch `quest-overhaul`; the task ids refer to the tra
 | Core: definitions, state, store, manager, transitions, marks, claims | `Quest`, `QuestStage`, `QuestState`, `QuestModule`, `Declarations`, `QuestContext`, `QuestManager`, `QuestStore`, `QuestCatalog`, `Quests`, `QuestDialogs`, `NoFlags` | implemented | T05 |
 | Events: listeners, daily tick, frame hook | `QuestManager` | implemented | T06 |
 | Fleets | `QuestFleets`, `QuestFleet`, `FleetRole`, `FleetOrders` | implemented | T07 |
-| Rules command, tokens, people, rewards | `nskr_quest`, `QuestTokens`, `QuestPeople`, `QuestRewards` | planned | T08 |
+| Rules command, tokens, people, rewards | `nskr_quest`, `QuestVerbs`, `QuestTokens`, `QuestPeople`, `QuestRewards` | implemented | T08 |
 | Presentation spec (vanilla commands per effect) | [DIALOGUE.md](../../../../docs/DIALOGUE.md#presentation-in-rules) | implemented | T09 |
 | Gap verbs: `confirm`, `engage` | `nskr_quest` | planned | T10 |
 | Intel and rules text outside dialogs | `QuestIntel`, `QuestText` | planned | T11 |
@@ -338,7 +338,7 @@ public abstract class Quest<S, T> {
 - **Branches.** Endings and other branches are separate stages whose `previous()` names the stage they branch from. `reached` answers "did this happen" across branches; there is no ordinal comparison.
 - **Failure.** A quest that can fail from several stages declares a `FAILED` stage with `previous()` null and moves there. Modules that should stop on failure simply do not list it.
 - **Definitions are pure.** Constructors, `createModules()` and `declare()` must not call `Global` or any game API, because the rules check tool builds the definitions outside the game. That includes `Misc`, whose static initializer calls `Global.getSettings()`, and building a `RuleBasedInteractionDialogPluginImpl`, whose static initializer does too. Game calls belong in hooks and in the lambdas passed to `declare`, which run only in the game.
-- **Load checks.** The `Quest` constructor throws unless the id matches `[a-z][a-z0-9]*`, the start stage's `previous()` is null, and every `previous()` chain stays inside the enum without a cycle. `QuestCatalog` throws when a quest id equals or prefixes another, or two quests share a stage enum or a flag enum other than `NoFlags`.
+- **Load checks.** The `Quest` constructor throws unless the id matches `[a-z][a-z0-9]*`, the start stage's `previous()` is null, and every `previous()` chain stays inside the enum without a cycle. `QuestCatalog` throws when a quest id equals or prefixes another, equals a quest-independent verb of the [quest command](#the-quest-command) (`confirm`, `engage`), or two quests share a stage enum or a flag enum other than `NoFlags`.
 - **`QuestCatalog`** lists every quest in a fixed order: `static List<Quest<?, ?>> create()`. The manager and the check tool both use it. Adding a quest is one line there.
 
 ### QuestState
@@ -611,11 +611,14 @@ public final class QuestPeople {
 
 Every key passed to `create` is declared first with `d.person(key)` in the `declare` of a module; the key follows the declaration name rules (lowerCamel, unique within the quest). `QuestPeople` refuses a key that is not declared. The declaration lets the [rules check tool](#rules-check-tool) check person tokens and their clashes with token names.
 
-`create` makes the person with `FactionAPI.createRandomPerson(ctx.random("person:" + key))`, sets the id `nskr_<q>_<key>`, runs `setup` for portrait, name, rank, post and gender, registers the person with `ImportantPeopleAPI.addPerson` and stores it in the state. Registration is what lets the vanilla presentation commands find generated people: `BeginConversation nskr_kq_host` makes the person the active speaker (their memory becomes `$local`), and `ShowSecondPerson` and `ShowThirdPerson` add portraits. `release` removes the person from the important people and the state; call it in `onStop` for people the quest no longer needs.
+`create` makes the person with `FactionAPI.createRandomPerson(ctx.random("person:" + key))`, sets the id `nskr_<q>_<key>`, runs `setup` for portrait, name, rank, post and gender, registers the person with `ImportantPeopleAPI.addPerson` and stores it in the state. Registration is what lets the vanilla presentation commands find generated people: `BeginConversation nskr_kq_host` makes the person the active speaker (their memory becomes `$local`), and `ShowSecondPerson` and `ShowThirdPerson` add portraits. `release` removes the person from the important people and the state; call it in `onStop` for people the quest no longer needs. A quest reset releases all of its people.
+
+- **Keys** are lowerCamel, like declared names. An invalid key or an unknown faction id logs an error and `create` returns null.
+- **Ids.** `ImportantPeople.addPerson` files the person under `getId()` at the time of the call, so the id is set before registering and must not change afterwards. `BeginConversation <id>` looks the id up with `getImportantPeople().getData(id)`, then among the target market's people, or `POST:<postId>` in its comm directory; `ShowSecondPerson` and `ShowThirdPerson` use `getData(id)` only and do nothing for an unknown id.
 
 Fixed characters (Alice, Jack, Nicholas, Eliza) are created by world generation with ids in `helper/Ids`; quests look them up and never create them.
 
-Each quest person also gets name and pronoun tokens for use while they are not the active speaker: `$nskr_<q>_<key>_name`, `_heOrShe`, `_HeOrShe`, `_himOrHer`, `_HimOrHer`, `_hisOrHer`, `_HisOrHer`. The active speaker uses the vanilla tokens ([Tokens in text](../../../../docs/RULES_WRITING.md#tokens-in-text)).
+Each quest person also gets name and pronoun tokens for use while they are not the active speaker: `$nskr_<q>_<key>_name`, `_heOrShe`, `_HeOrShe`, `_himOrHer`, `_HimOrHer`, `_hisOrHer`, `_HisOrHer`. They follow vanilla's `CoreRuleTokenReplacementGeneratorImpl`: the name is `getName().getFullName()`, and `isMale()` picks the male forms, anything else the female forms. The active speaker uses the vanilla tokens ([Tokens in text](../../../../docs/RULES_WRITING.md#tokens-in-text)).
 
 ### Dialog entry points
 
@@ -680,7 +683,24 @@ Before matching, `QuestText` writes these keys into a scratch local memory: `$ns
 
 `QuestTokens` is a `RuleTokenReplacementGeneratorPlugin`. For a rule whose id starts with `nskr_<q>_`, it returns every token declared by quest `<q>` as `$nskr_<q>_<name>`, plus the person tokens of that quest's people. It returns nothing for other rule ids, so tokens work only in the quest's own rows.
 
-- Tokens are computed when text is shown, so no row has to prepare them first, and they work in Text, option text and `AddText`. T08 verifies which vanilla paths pass the rule id and records exceptions here.
+- Tokens are computed when text is shown, so no row has to prepare them first. `QuestTokens` is registered once per load in `ModPlugin.onGameLoad`; the engine keeps generators in a transient list (`CampaignEngine.ruleTokenGenerators`).
+- **Format.** Keys include the `$`. `performTokenReplacement` collects every generator's map, then replaces keys longest first with `text.replaceAll("(?s)\\" + key, value)`, then runs the memory pass. The value reaches `replaceAll` unescaped, so `QuestTokens` passes every value through `Matcher.quoteReplacement`; a player-chosen name with `$` or `\` shows as written.
+- **Failures.** A token lambda that throws shows as empty text; the error is logged once per token per load. A null value shows as empty text.
+- **Context.** Token lambdas get a context with no dialog and the memory map of the replacement, which may be null.
+
+Which rule id reaches the generator, verified in the 0.98a-RC8 source:
+
+| Text | Rule id passed | Quest tokens |
+|---|---|---|
+| Text column | The row's own id (`FireBest`/`FireAll.addText(rule.getId(), ...)`) | Yes |
+| Script commands that replace tokens in their arguments: `AddText`, `AddTextSmall`, `SetTextHighlights`, `SetTooltip`, `SetTooltipHighlights`, `AddBarEvent` (option and blurb), `AddSelector`, `BeginConversation` | The row's own id (a rule runs its script with its own id) | Yes |
+| Options column, and options from option-adding commands | The id of the rule that fired the trigger: a row's `FireAll` or `FireBest` passes that row's id to the options it collects | Only when the firing row is a row of the same quest |
+| Options of a row that the dialog applies itself: the dialog's initial trigger and every option click (`RuleBasedInteractionDialogPluginImpl` fires `DialogOptionSelected` with `FireBest.fire(null, ...)`), and triggers Java fires with a null rule id | null | No |
+| Options of rows collected by a vanilla row's `FireAll`, such as `PopulateOptions` from `marketDock` | The vanilla row's id | No |
+| `SetStoryOption` log text, `AddRaidObjective` tooltip | The text itself (vanilla passes the argument as the rule id) | No |
+| `SetOptionText` | Reads its text literally | No |
+
+So an option label with a quest token belongs in a row that a quest row reaches with `FireAll` or `FireBest`, as in the [example](#making-a-quest) (`nskr_ex_captainOpen` fires `nskr_exCaptainOptions`). A plain-chain handler row whose own Options column needs a token fires a private option trigger instead.
 - A token cannot be a command argument: commands read memory, not tokens. A computed amount is granted by an action ([Rewards](#rewards-and-receipts)).
 - No token name may be a prefix of another token name in the same quest (`pay` and `payout`); the check tool reports it.
 - Rows never assign a key with a token's name.
@@ -699,7 +719,7 @@ public final class QuestRewards {
 }
 ```
 
-Each applies the grant and prints the vanilla receipt when a dialog is open. Outside a dialog the quest reports the grant through an intel update instead. Reputation changes stay in rows (`AdjustRep`) unless no dialog exists; add a method here when a quest needs one.
+Each applies the grant the way `AddRemoveCommodity` and `AddRemoveAnyItem` do and prints the vanilla receipt when the context has a dialog. `credits`, `takeCredits` and `storyPoints` need a positive amount (otherwise an error is logged and nothing happens); credits never drop below zero; a negative `commodity` or `item` quantity removes, and `commodity` refreshes `$supplies`-style player memory through `AddRemoveCommodity.updatePlayerMemoryQuantity`. Without a dialog, `storyPoints` uses `addStoryPoints(points)`. Outside a dialog the quest reports the grant through an intel update instead. Reputation changes stay in rows (`AdjustRep`) unless no dialog exists; add a method here when a quest needs one.
 
 ### Random, timers and marks
 
@@ -724,7 +744,11 @@ Each applies the grant and prints the vanilla receipt when a dialog is open. Out
 - Negate a condition with `!`: `!nskr_quest kq reached JOB3_ACTIVE` ([Operators](../../../../docs/RULES.md#operators-verified-against-decompiled-source)).
 - Condition verbs never change state and never touch the dialog, so they work in intel rows.
 - `advance` names both stages so the row states which change it makes and cannot fire twice.
-- The command adds no options and prints no text.
+- The command adds no options and prints no text; `doesCommandAddOptions()` is false. The class `nskr_quest` resolves its tokens (memory variables included) and hands them to `QuestVerbs`, which runs the verbs with the framework's package access.
+- **Errors.** Unknown quest ids, stages, flags, checks and actions, a quest without state, a missing argument and an action whose declaring module is not active log an error with the quest id and the rule id and return false; in dev mode the line is also printed in the dialog's text panel, condition verbs included. Exceptions thrown by a check or action lambda are not caught, as for module hooks.
+- **Rule ids.** Condition commands receive the id of the row being matched, Script commands the id of their own row.
+- **Arguments.** For `check` and `do`, `ctx.args()` holds the words after the name.
+- `confirm` (in the quest id position) and `engage` (as a verb) are reserved: until T10 adds them, the command logs that they are not implemented and returns false.
 - Presentation (portraits, speaker changes, map markers, highlights, small text, images, sounds) uses vanilla commands; [Presentation in rules](../../../../docs/DIALOGUE.md#presentation-in-rules) names the command for each effect. T09 found two gaps, which T10 adds as verbs:
   - `nskr_quest confirm <optionId> "<text>" "<yes>" "<no>"`: a plain yes/no prompt on an option that already exists, through `OptionPanelAPI.addOptionConfirmation(optionId, text, yes, no)`. Quest-independent: the second token is the verb, so no quest id may be `confirm` or `engage`.
   - `nskr_quest <q> engage <role>`: start the fleet encounter with the quest's fleet of that role from an entity dialog (a guarded planet, a blacksite, a cache), using the role's `FleetRole.config`. T10 specifies the exact behavior after verifying vanilla's entity-to-fleet hand-off.

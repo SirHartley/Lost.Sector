@@ -53,7 +53,7 @@ Technical routing for the current implementation. Java paths below are relative 
 | `ModPlugin.onNewGameAfterEconomyLoad()` | Frost part 2 market (Corvus mode or no Nexerelin), `DerelictTeaserSpawner.spawnRogues()` |
 | `ModPlugin.onNewGameAfterTimePass()` | Frost, Outpost and Asteria in a random system in Nexerelin random-core games, IndEvo features, `SectorGen.genPeople()`, Frost ruins, `DesertConditionRepair.fix()`, blacksites, Mothership fleet, Enigma relations |
 
-`onGameLoad` order: Nexerelin null-manager guard -> `createManagers()`: clears the `persistence/Saved` registry and `CampaignTimer` instances and builds new `EFS_LIST` instances -> `HellSpawnDisposableFleetSpawner` and `ThronesGiftDisposableFleetSpawner` behind `hasScript` -> `kesteven/KestevenBlueprints.borrowIndieBlueprints()` -> `kesteven/BlackOpsBlueprints.scanWeaponBlueprints()` -> `syncNSKRScripts()` -> `registerPlugin(new CorePlugin())` -> `EFS_LIST` as transient scripts, transient listeners and listener-manager listeners -> `persistence/Saved.loadPersistentData()` -> `kesteven/tips/KestevenTipBarEventCreator` -> `Difficulty.clearStarfarerFromStartUnlessStarfarer()` -> new-save generation -> `FleetHelper.hackBrokenVariants()`.
+`onGameLoad` order: Nexerelin null-manager guard -> `createManagers()`: clears the `persistence/Saved` registry and `CampaignTimer` instances and builds new `EFS_LIST` instances -> `HellSpawnDisposableFleetSpawner` and `ThronesGiftDisposableFleetSpawner` behind `hasScript` -> `kesteven/KestevenBlueprints.borrowIndieBlueprints()` -> `kesteven/BlackOpsBlueprints.scanWeaponBlueprints()` -> `syncNSKRScripts()` -> `registerPlugin(new CorePlugin())` -> `addTokenReplacementGenerator(new quest/QuestTokens())` -> `EFS_LIST` as transient scripts, transient listeners and listener-manager listeners -> `persistence/Saved.loadPersistentData()` -> `kesteven/tips/KestevenTipBarEventCreator` -> `Difficulty.clearStarfarerFromStartUnlessStarfarer()` -> new-save generation -> `FleetHelper.hackBrokenVariants()`.
 
 A save without `ModPlugin.SAVE_KEY` (`nskr_enabled`) in sector persistent data runs all four `onNewGame*` hooks from `onGameLoad`, then adds a Kesteven station commander to `nskr_asteria`. This is how the mod is added to an existing save.
 
@@ -141,10 +141,10 @@ Packages group code by feature. Use `rg --files jars/src/lostsector/<package>` f
 | `lostsector` | `ModPlugin` |
 | `settings` | LunaLib-backed settings: `Setting`, `SettingsManager`, `Difficulty` |
 | `persistence` | `Saved`, `CampaignTimer` |
-| `quest` | Quest framework: definitions, saved quest state, `QuestManager` (stage changes, daily tick, frame hook, event routing to modules and quest fleet orders), quest fleets (`QuestFleets`, one `FleetHelper` list), dialog claims; specification and status in [`quest/README.md`](../jars/src/lostsector/quest/README.md) |
+| `quest` | Quest framework: definitions, saved quest state, `QuestManager` (stage changes, daily tick, frame hook, event routing to modules and quest fleet orders), quest fleets (`QuestFleets`, one `FleetHelper` list), dialog claims, the `nskr_quest` verbs (`QuestVerbs`), quest tokens (`QuestTokens`), generated people (`QuestPeople`) and receipts (`QuestRewards`); specification and status in [`quest/README.md`](../jars/src/lostsector/quest/README.md) |
 | `helper`, `helper/fleet` | Shared helpers; fleet, captain and system builders |
 | `rendering` | Render helpers and blast sprites |
-| `dialogue/rules` | Rule commands (`nskr_*`) |
+| `dialogue/rules` | Rule commands (`nskr_*`); `nskr_quest` hands its verbs to `quest/QuestVerbs` |
 | `campaign` | `CorePlugin`; feature packages below |
 | `campaign/enigma` | Enigma fleets, bases, relations, officers, loot, the Heart occupation and Frost intel, `EnigmaPopCondition` |
 | `campaign/kesteven` | Kesteven economy, exports, blueprints, black ops, exile; `loans/`, `contracts/`, bar tips in `tips/`, and the questline in `quest/` |

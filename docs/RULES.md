@@ -198,6 +198,7 @@ Code owners are mapped in [ARCHITECTURE.md](ARCHITECTURE.md). Shared text-presen
 | Entry / state | Contract |
 |---|---|
 | `lostsector.dialogue.rules` | Registered command package. Commands are multi-verb classes, normally one per feature; the first argument selects the verb. A `hasOption` verb is a Condition that the current target qualifies for that feature's option. Most dialogue commands extend `PaginatedOptions`. |
+| `nskr_quest <q> <verb> [args]`, `$nskr_<q>_<name>` | The quest framework's command and tokens: verbs, errors and reserved words in [The quest command](../jars/src/lostsector/quest/README.md#the-quest-command); token format and the rows whose text receives quest tokens in [Tokens](../jars/src/lostsector/quest/README.md#tokens). |
 | `nskr_kestevenQuest <verb>` | Kesteven questline dialogue. The stage is a `KestevenStage` on the quest state of quest `kq`, read and written as a legacy int through `QuestHelper.getStage/setStage`; `QuestStageManager` also advances it. Stage values are listed in the "STAGE CHEAT SHEET" comment in `nskr_kestevenQuest.java` and mapped in [KESTEVEN_STATE.md](quests/KESTEVEN_STATE.md#stages). |
 | `nskr_isKStage N`, `nskr_isAtLeastKStage N`, `nskr_isAtMostKStage N` | Condition predicates on the quest stage. |
 | `nskr_isBaseOfficial <post>` | Condition on the active person's post: `command`, `military`, `admin`, `ttadmin`, `trade`/`op`, `research`, `intelligence`, `trader` or `any`. Gates the official menus below. |

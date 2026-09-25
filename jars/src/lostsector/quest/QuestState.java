@@ -28,6 +28,7 @@ public abstract class QuestState<S extends Enum<S> & QuestStage> {
     List<Mark> marks = new ArrayList<>();
     List<Claim> claims = new ArrayList<>();
     List<PendingOpen> pendingOpens = new ArrayList<>();
+    Map<String, PersonAPI> people = new LinkedHashMap<>();
 
     // Exactly one of entity and person is set. Scopes hold stage names.
     static final class Mark {

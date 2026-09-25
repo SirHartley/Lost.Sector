@@ -95,6 +95,7 @@ public final class QuestManager extends BaseCampaignEventListener
         private final List<Change<S>> queue = new ArrayList<>();
         private final Map<QuestModule<S, T>, QuestContext<S, T>> contexts = new IdentityHashMap<>();
         final QuestFleets fleets = new QuestFleets(this);
+        final QuestPeople people = new QuestPeople(this);
 
         Run(Quest<S, T> quest) {
             this.quest = quest;
@@ -292,6 +293,7 @@ public final class QuestManager extends BaseCampaignEventListener
             }
             clearScoped(state, null);
             fleets.despawnWhere(role -> true);
+            people.releaseAll();
             logInfo(id(), "reset from " + state.stage);
             start();
         }
@@ -596,6 +598,10 @@ public final class QuestManager extends BaseCampaignEventListener
     private <S extends Enum<S> & QuestStage, T extends QuestState<S>> Run<S, T> run(Quest<S, T> quest) {
         Run<?, ?> run = runs.get(quest.id());
         return run != null && run.quest.stages() == quest.stages() ? (Run<S, T>) run : null;
+    }
+
+    Run<?, ?> run(String questId) {
+        return runs.get(questId);
     }
 
     Quest<?, ?> quest(String questId) {

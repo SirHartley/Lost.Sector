@@ -26,6 +26,7 @@ public final class QuestContext<S extends Enum<S> & QuestStage, T extends QuestS
     private final InteractionDialogAPI dialog;
     private final Map<String, MemoryAPI> memoryMap;
     private final List<String> args;
+    private QuestRewards rewards;
 
     QuestContext(QuestManager.Run<S, T> run, String source, String ruleId, InteractionDialogAPI dialog,
                  Map<String, MemoryAPI> memoryMap, List<String> args) {
@@ -87,7 +88,10 @@ public final class QuestContext<S extends Enum<S> & QuestStage, T extends QuestS
 
     // One saved sequence per purpose, so a reload continues it instead of rerolling.
     public Random random(String purpose) {
-        T state = state();
+        return random(state(), purpose);
+    }
+
+    static Random random(QuestState<?> state, String purpose) {
         return state.randoms.computeIfAbsent(purpose, key -> new Random(state.seed + key.hashCode() * SEED_MULT));
     }
 
@@ -181,6 +185,16 @@ public final class QuestContext<S extends Enum<S> & QuestStage, T extends QuestS
         return run.fleets;
     }
 
+    public QuestPeople people() {
+        return run.people;
+    }
+
+    // Bound to this context's dialog, which decides whether receipts are printed.
+    public QuestRewards rewards() {
+        if (rewards == null) rewards = new QuestRewards(this);
+        return rewards;
+    }
+
     public InteractionDialogAPI dialog() {
         return dialog;
     }
@@ -208,11 +222,15 @@ public final class QuestContext<S extends Enum<S> & QuestStage, T extends QuestS
 
     // Errors from rules or state never throw (README "Errors and logging").
     void error(String message) {
+        report(run.id(), ruleId, dialog, message);
+    }
+
+    static void report(String questId, String ruleId, InteractionDialogAPI dialog, String message) {
         String line = ruleId == null ? message : message + " (rule " + ruleId + ")";
-        QuestManager.logError(run.id(), line);
-        TextPanelAPI panel = textPanel();
+        QuestManager.logError(questId, line);
+        TextPanelAPI panel = dialog == null ? null : dialog.getTextPanel();
         if (panel != null && Global.getSettings().isDevMode()) {
-            panel.addPara("[" + run.id() + "] " + line, Misc.getNegativeHighlightColor());
+            panel.addPara("[" + questId + "] " + line, Misc.getNegativeHighlightColor());
         }
     }
 }
