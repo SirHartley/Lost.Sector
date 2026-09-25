@@ -106,6 +106,8 @@ None of the bounties has dialogue choices that change quest state, or a failure 
 
 Record quest `ic` (`events/intercepts/InterceptsQuest`) sends four fleets after the player in hyperspace. It has one stage, `RUNNING`, no flags, and one [`InterceptEncounter`](../../jars/src/lostsector/quest/README.md#interceptencounter) module per fleet, plus a [`PayOffEncounter`](../../jars/src/lostsector/quest/README.md#payoffencounter) for the debt collector's demand. Each record in `InterceptsState.intercepts` counts its spawns; all four encounters are one-shot, so a record with a spawn never rolls again. `InterceptsState.payOffs` counts the collector's payments.
 
+The Kesteven questline's Tri-Tachyon collector uses the same two modules in quest `kq` ([Tri-Tachyon collector](KESTEVEN_QUESTLINE.md#tri-tachyon-collector)).
+
 | Record and role | Daily roll, once per campaign | Fleet | Orders |
 |---|---|---|---|
 | `aro` | 1% while the player is in hyperspace within 25,000 of the center and carries Abyss bounty ships (`BountiesQuest.carriesAbyssShips`) | "ARO Strike Group": Luddic Church doctrine, 110 to 130 points, flies as mercenaries, hostile, no reputation impact | Intercept around the player; withdraws when beaten or after 45 days |

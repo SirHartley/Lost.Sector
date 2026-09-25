@@ -873,31 +873,6 @@ nskr_debtExit,DialogOptionSelected,"$option == nskr_debtExit","FireAll PopulateO
 ,,,,,,
 # KESTEVEN QUEST,,,,,,
 ,,,,,,
-# TT Collector Dialog,,,,,,
-nskr_ttCollectorDialogInit,BeginFleetEncounter,"$faction.id == tritachyon score:1000
-!$ignorePlayerCommRequests
-$isHostile
-$KestevenQuestTTCollector","HailPlayer",,,
-nskr_ttCollectorDialogInitial,OpenCommLink,"$faction.id == tritachyon score:100
-$entity.isHostile
-!$ignorePlayerCommRequests
-nskr_ttCollectorDialog hasOption",,"""You have something we need $playerName. We know you are working with those snakes from Kesteven."" $HeOrShe shakes $hisOrHer head in disapproval.
-""Don't think you just own the whole sector like that, it's time we even the score. Hand over those Artifact Electronics you have and we can call it even captain.""","nskr_ttCollectorDialogInitialText:Continue",
-nskr_ttCollectorDialogInitialText,DialogOptionSelected,"$option == nskr_ttCollectorDialogInitialText","nskr_ttCollectorDialog canPay
-$entity.ignorePlayerCommRequests = true 10",,,
-nskr_ttCollectorDialogPayAll,DialogOptionSelected,"$option ==nskr_ttCollectorDialogPayAll","nskr_ttCollectorDialog pay
-MakeOtherFleetAllowDisengage true
-MakeOtherFleetNonAggressive true","$personName smirks. ""Pleasure doing business with you captain.""","nskr_ttCollectorDialogExit:Leave",
-nskr_ttCollectorDialogExit,DialogOptionSelected,"$option ==nskr_ttCollectorDialogExit","EndConversation
-ShowDefaultVisual","You cut the comm link.",,
-nskr_ttCollectorDialogNoPay,DialogOptionSelected,"$option ==nskr_ttCollectorDialogNoPay",,"""Looks like it's time to use *other* means."" $HeOrShe has a ruthless grin.","nskr_ttCollectorDialogExitFight:Cut the comm link",
-nskr_ttCollectorDialogExitFight,DialogOptionSelected,"$option ==nskr_ttCollectorDialogExitFight","
-","""Looks like it's time to use *other* means."" $HeOrShe has a ruthless grin.
-The comm link is cut before you can respond.
-
-the $faction $fleetName powers up their weapons and moves in to engage.","nskr_ttCollectorDialogExit:Cut the comm link",
-"#END TT Collector Dialog",,,,,,
-,,,,,,
 # ELIZA fight dialog,,,,,,
 elizaDialogInit,BeginFleetEncounter,"$faction.id == mercenary score:1000
 !$ignorePlayerCommRequests
@@ -2858,3 +2833,35 @@ nskr_quest kq do elizaToPort","As you leave, Eliza's crew helps load the two dis
 nskr_kq_elizaMovedBullet,nskr_kqIntelBullets,"$nskr_intel_key == job5
 $nskr_intel_update == elizaMoved","SetTextHighlightColors 255,0,0,255
 SetTextHighlights Eliza","With the conditions deteriorating on $nskr_kq_elizaFormer, Eliza has moved her operations to $nskr_kq_delveElizaMarket.",,The Delve update KestevenElizaModule sends when her market is decivilized; the color is the pirate faction's color
+,,,,,,
+# KESTEVEN QUESTLINE: COLLECTOR,,,,,,
+nskr_kq_ttCollectorHail,BeginFleetEncounter,"$faction.id == tritachyon score:1000
+!$ignorePlayerCommRequests
+$isHostile
+$nskr_kq_ttCollector",HailPlayer,,,
+nskr_kq_ttCollectorOpen,OpenCommLink,"$faction.id == tritachyon score:100
+$entity.isHostile
+!$ignorePlayerCommRequests
+$entity.nskr_kq_ttCollector
+!nskr_quest kq flag COLLECTOR_PAID",,"""You have something we need $playerName. We know you are working with those snakes from Kesteven."" $HeOrShe shakes $hisOrHer head in disapproval.
+""Don't think you just own the whole sector like that, it's time we even the score. Hand over those Artifact Electronics you have and we can call it even captain.""",nskr_kq_ttCollectorDemand:Continue,
+nskr_kq_ttCollectorDemand,DialogOptionSelected,$option == nskr_kq_ttCollectorDemand,"FireBest nskr_kqTtCollectorDemand
+$entity.ignorePlayerCommRequests = true 10",,,
+nskr_kq_ttCollectorDemandNone,nskr_kqTtCollectorDemand,,,"""Seems like you don't have enough cargo to give us anything.""","nskr_kq_ttCollectorNoPay:""Yeah, uhhh... I Don't have any of that stuff.""",Fallback: no Artifact Electronics
+nskr_kq_ttCollectorDemandSome,nskr_kqTtCollectorDemand,nskr_quest kq check ttCollectorCanPaySome,"AddText ""\""Just give us all the cargo, and we can stay civilized about this.\""""","""Our scans show you have $nskr_kq_ttCollectorPayment units of Artifact Electronics.""","nskr_kq_ttCollectorPay:Hand over the $nskr_kq_ttCollectorPayment units of Artifact Electronics
+nskr_kq_ttCollectorFight:""No, I don't think I will.""","The demand is everything held, so ttCollectorCanPayAll never passes"
+nskr_kq_ttCollectorPay,DialogOptionSelected,$option == nskr_kq_ttCollectorPay,"nskr_quest kq do ttCollectorPay
+AdjustRep tritachyon 5
+AdjustRepActivePerson COOPERATIVE 10
+PlaySound ui_rep_raise
+unset $entity.ignorePlayerCommRequests
+nskr_quest kq do ttCollectorLeave
+MakeOtherFleetAllowDisengage true
+MakeOtherFleetNonAggressive true","$personName smirks. ""Pleasure doing business with you captain.""",nskr_kq_ttCollectorExit:Leave,"ttCollectorPay takes every unit with the vanilla receipt, sets COLLECTOR_PAID and removes the fleet's hostile flags; ttCollectorLeave sends it to a Tri-Tachyon market"
+nskr_kq_ttCollectorExit,DialogOptionSelected,$option == nskr_kq_ttCollectorExit,"EndConversation
+ShowDefaultVisual",You cut the comm link.,,
+nskr_kq_ttCollectorNoPay,DialogOptionSelected,$option == nskr_kq_ttCollectorNoPay,,"""Looks like it's time to use *other* means."" $HeOrShe has a ruthless grin.",nskr_kq_ttCollectorFight:Cut the comm link,
+nskr_kq_ttCollectorFight,DialogOptionSelected,$option == nskr_kq_ttCollectorFight,,"""Looks like it's time to use *other* means."" $HeOrShe has a ruthless grin.
+The comm link is cut before you can respond.
+
+the $faction $fleetName powers up their weapons and moves in to engage.",nskr_kq_ttCollectorExit:Cut the comm link,

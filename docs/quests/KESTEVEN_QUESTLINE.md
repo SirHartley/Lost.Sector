@@ -10,7 +10,7 @@ Java paths are relative to `jars/src/lostsector/campaign/`; `dialogue/rules/` an
 |---|---|
 | `# KESTEVEN QUESTLINE` rows in `data/campaign/rules.csv`, `kesteven/quest/KestevenHubModule` | Every conversation with Jack, Alice and Nicholas: offers, briefings, hand-ins, rewards, questions, the job 3 refusal, the story skip and most player-driven stage changes; the job gates and payouts ([dialogue map](KESTEVEN_DIALOGUE.md#jack-alice-and-nicholas)) |
 | `kesteven/quest/QuestStageManager` | `EveryFrameScript` in `EFS_LIST`: automatic stage changes, failure checks, intel, bar events, quest fleets and their AI, the Cache guardian timer, Eliza relocation, post-quest revenge fleets |
-| `kesteven/quest/KestevenQuest`, `KestevenStage`, `KestevenFlag`, `KestevenState` | Framework definition of quest `kq`, with the modules `KestevenHubModule`, `KestevenJob1Module`, `KestevenJob3Module`, `KestevenJob4Module`, `KestevenJob5Module`, `KestevenGlacierModule`, `KestevenElizaSearchModule` and `KestevenSatelliteModule`; the stage enum, the flags and the saved state ([KESTEVEN_STATE.md](KESTEVEN_STATE.md)) |
+| `kesteven/quest/KestevenQuest`, `KestevenStage`, `KestevenFlag`, `KestevenState` | Framework definition of quest `kq`, with the modules `KestevenHubModule`, `KestevenJob1Module`, `KestevenJob3Module`, `KestevenJob4Module`, `KestevenJob5Module`, `KestevenGlacierModule`, `KestevenElizaSearchModule`, `KestevenSatelliteModule` and the Tri-Tachyon collector's shared modules (`KestevenCollector`); the stage enum, the flags and the saved state ([KESTEVEN_STATE.md](KESTEVEN_STATE.md)) |
 | `kesteven/quest/KestevenJob1Module`, `# KESTEVEN QUESTLINE: JOB 1` rows in `data/campaign/rules.csv` | Job 1 world logic: the intel entry and its text rows, the tip system's dormant fleet, the move to stage 2 ([Job 1](#job-1-enemy-unknown-stages-0-to-6)) |
 | `kesteven/quest/KestevenElizaSearchModule`, `# KESTEVEN QUESTLINE: ELIZA SEARCH` rows | The search for Eliza at pirate bars during stage 16 ([Finding Eliza](#finding-eliza)) |
 | `kesteven/quest/KestevenJob3Module`, `# KESTEVEN QUESTLINE: JOB 3` rows | Job 3 world logic: the expedition and its outcome, the intel entry and its text rows, and the objects placed when the job is accepted ([Job 3](#job-3-hostile-takeover-stages-6-to-11)) |
@@ -18,12 +18,13 @@ Java paths are relative to `jars/src/lostsector/campaign/`; `dialogue/rules/` an
 | `kesteven/quest/KestevenJob5Module`, `# KESTEVEN QUESTLINE: JOB 5` rows | The Delve meeting at the bar, its escort guard, and the job 5 intel entry and its text rows ([Briefing and meeting](#briefing-and-meeting)) |
 | `kesteven/quest/KestevenGlacierModule`, `# KESTEVEN QUESTLINE: GLACIER` rows | The Glacier comms facility: its map marker and dialog claim, the timed raid, the barrage's fleet damage and disk #5 ([Glacier](#glacier-disk-5)) |
 | `kesteven/quest/KestevenSatelliteModule`, `# KESTEVEN QUESTLINE: SATELLITES` rows | The data-disk satellites' dialog, salvage and woken guards, `ALL_DISKS_RECOVERED`, and `FROST_FOUND` on entering Frost ([The five data disks](#the-five-data-disks)) |
+| `kesteven/quest/KestevenCollector`, `# KESTEVEN QUESTLINE: COLLECTOR` rows | The Tri-Tachyon collector: an `InterceptEncounter` and a `PayOffEncounter` of quest `kq` ([Tri-Tachyon collector](#tri-tachyon-collector)) |
 | `kesteven/quest/QuestHelper` | Wrappers over `KestevenState` for the old callers: the stage as a legacy int, flags, fields and lazily picked target locations; `saveEnding()` |
 | `kesteven/quest/KestevenFleets` | Builders for every quest fleet |
 | `kesteven/quest/KestevenElizaModule`, `# KESTEVEN QUESTLINE: ELIZA` rows | The meeting at Eliza's port ([Eliza's port](#elizas-port)) |
 | `CorePlugin` | Opens the Java quest dialogs when the player interacts with a quest entity, deciding through `KestevenQuest` queries |
 | `kesteven/quest/*Dialog`, `kesteven/quest/*BarEvent` | Java dialogs and bar events |
-| `dialogue/rules/nskr_ttCollectorDialog`, `nskr_elizaInterceptDialog`, `nskr_altEndingDialogLuddic`, `nskr_altEndingDialogTT`, `nskr_isKStage`, `nskr_isAtLeastKStage` | Rules commands for the fleet conversations, endings and stage predicates |
+| `dialogue/rules/nskr_elizaInterceptDialog`, `nskr_altEndingDialogLuddic`, `nskr_altEndingDialogTT`, `nskr_isKStage`, `nskr_isAtLeastKStage` | Rules commands for the fleet conversations, endings and stage predicates |
 | `kesteven/quest/ElizaRaid`, `ElizaRaidObjectiveCreator` | Ground raid for Eliza's disks |
 | `world/systems/cache/Cache` | The Cache system, guardian fleet and its fleet-interaction config |
 | `kesteven/quest/CacheIntel` | Intel entry of the Cache; they read the stage and flags and never write the stage |
@@ -336,9 +337,18 @@ The questline option then disappears. The Cache can still be found and fought; `
 
 | Event | Owner | When | What |
 |---|---|---|---|
-| Tri-Tachyon collector | `QuestStageManager`, `KestevenFleets.spawnCollectorFleet`, `nskr_ttCollectorDialog` | Once; stages 2 to 15; the player carries at least 50 Artifact Electronics, is in hyperspace within 25,000 units of the centre; 3% per day | "Black Ops" demands all Artifact Electronics; paying sends it home |
+| Tri-Tachyon collector | `KestevenCollector` ([below](#tri-tachyon-collector)) | Once; stages 2 to 15; the player carries at least 50 Artifact Electronics, is in hyperspace within 25,000 units of the centre; 3% per day | "Black Ops" demands all Artifact Electronics; paying sends it home |
 | "LZ" messenger | Quest `ic` ([intercept fleets](CONTRACTS_AND_BOUNTIES.md#intercept-fleets)), rules `nskr_ic_messenger*` in `# INTERCEPTS` | Once; stages 10 to 14 (`KestevenQuest.inMessengerWindow()`); hyperspace near the core; 4% per day | Anonymous warning signed "LZ"; opening its comm link calls `KestevenQuest.reportMessengerMet()`, which unlocks "LZ" questions for Alice and in the Delve meeting |
 | Exile | `kesteven/ExileManager` | Daily | If Asteria is lost while the Outpost is Kesteven's, the quest people move to the Outpost and back when Asteria returns |
+
+### Tri-Tachyon collector
+
+`KestevenCollector` builds two [shared modules](../../jars/src/lostsector/quest/README.md#shared-modules) of quest `kq`, both active in every stage, with the id `ttCollector`; `KestevenState` keeps their records (`intercepts`, `payOffs`).
+
+- **Spawn** ([`InterceptEncounter`](../../jars/src/lostsector/quest/README.md#interceptencounter), `Repeat.ONCE`). Each day, while the stage is between `JOB1_DONE` and `JOB5_MEETING` (legacy 2 to 15), the player is in hyperspace within 25,000 units of the centre and carries at least 50 Artifact Electronics (`nskr_electronics`), a 3% roll (random `roll:ttCollector`) spawns "Black Ops" (`KestevenFleets.ttCollector`: Tri-Tachyon, 100 to 120 points plus `PowerLevel.get(0.2, 0, 1)`, ships up to size 3, 2 S-mods, transponder off, hostile, low reputation impact, fights to the last) at the edge of the player's sensor range. The roll is drawn only on days the conditions hold, from the encounter's own saved random.
+- **Orders.** Role `ttCollector`: intercepts around the player (`FleetOrders.intercept(AROUND)`). Paying moves it to role `ttCollectorLeaving` (action `ttCollectorLeave`): it ignores other fleets and leaves for a random Tri-Tachyon market (`SystemHelper.getRandomFactionMarket`, random `target:ttCollector`), despawning there ("returning to <market>"). In either role it despawns out of the player's sight once older than 60 days.
+- **Demand** ([`PayOffEncounter`](../../jars/src/lostsector/quest/README.md#payoffencounter)). Currency `nskr_electronics`, owed `EVERYTHING`, part minimum 1: every payment hands over all the Artifact Electronics the player holds. The action `ttCollectorPay` takes them with the vanilla receipt, sets `COLLECTOR_PAID` and removes the builder's memory flags from the fleet (hostile, low reputation impact, fight to the last, saw the transponder on, hold against stronger, never avoid the player), so it is no longer hostile.
+- **Conversation.** Rows in `# KESTEVEN QUESTLINE: COLLECTOR` ([dialogue map](KESTEVEN_DIALOGUE.md#tri-tachyon-collector-rows)).
 
 ## Story skip
 

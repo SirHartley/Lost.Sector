@@ -13,8 +13,9 @@ import java.util.Random;
 // KestevenHubModule serves every conversation with Jack, Alice and Nicholas, KestevenJob1Module runs job 1,
 // KestevenJob3Module and KestevenPartyModule run job 3, KestevenJob4Module job 4, KestevenJob5Module the job 5 meeting
 // and intel, KestevenGlacierModule the Glacier facility, KestevenElizaSearchModule the Eliza search at pirate bars,
-// KestevenSatelliteModule the data-disk satellites and KestevenElizaModule Eliza's port; QuestStageManager and the old
-// dialog classes still run the rest of the questline on this state (T19 to T35).
+// KestevenSatelliteModule the data-disk satellites, KestevenElizaModule Eliza's port and KestevenCollector's shared
+// modules the Tri-Tachyon collector; QuestStageManager and the old dialog classes still run the rest of the questline
+// on this state (T19 to T35).
 // isAvailable() keeps the default: the old code runs the questline in every campaign and treats a missing
 // Kesteven home as failure (stage 99), so the state must always exist.
 public final class KestevenQuest extends Quest<KestevenStage, KestevenState> {
@@ -34,7 +35,7 @@ public final class KestevenQuest extends Quest<KestevenStage, KestevenState> {
     protected List<QuestModule<KestevenStage, KestevenState>> createModules() {
         return List.of(new KestevenHubModule(), new KestevenJob1Module(), new KestevenJob3Module(), new KestevenPartyModule(),
                 new KestevenJob4Module(), new KestevenJob5Module(), new KestevenGlacierModule(), new KestevenElizaSearchModule(),
-                new KestevenSatelliteModule(), new KestevenElizaModule());
+                new KestevenSatelliteModule(), new KestevenElizaModule(), KestevenCollector.encounter(), KestevenCollector.demand());
     }
 
     // Null before QuestManager.startQuests() at the end of ModPlugin.onGameLoad, which includes new-campaign generation.

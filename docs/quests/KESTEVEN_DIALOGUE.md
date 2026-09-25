@@ -8,8 +8,8 @@ Java paths are relative to `jars/src/lostsector/campaign/`; `dialogue/rules/` an
 
 | Style | Used by | How it runs |
 |---|---|---|
-| Rules rows with a multi-verb command | The collector (`nskr_ttCollectorDialog`); Eliza's intercept (`nskr_elizaInterceptDialog`); both alternative endings | Rows select the conversation and call a verb. The verb writes most text and options from Java strings. Several commands extend `PaginatedOptions` and take over the dialog plugin (`setupDelegateDialog`). Every non-paging option then returns to rules through `FireBest DialogOptionSelected`. |
-| Rules rows only | Every conversation with Jack, Alice and Nicholas (gates, values and game actions from `KestevenHubModule`); the job 3 party, a rules bar event (guests, drink count and bill from `KestevenPartyModule`); the Glacier facility (`KestevenGlacierModule`); the Eliza search at pirate bars (`KestevenElizaSearchModule`); the data-disk satellites (`KestevenSatelliteModule`); the Delve meeting at the bar (`KestevenJob5Module`); the meeting at Eliza's port (`KestevenElizaModule`); job 4: the Special Operations fleet, the Enigma strike group and the hint wreck (checks, actions and tokens from `KestevenJob4Module`, [below](#job-4-rows)); fleet greetings and threats: Eliza's raided and revenge fleets, Jack's revenge fleet, the Cache guardian, the "LZ" messenger, generic Enigma comms | Text, options and scripts live in `data/campaign/rules.csv`. |
+| Rules rows with a multi-verb command | Eliza's intercept (`nskr_elizaInterceptDialog`); both alternative endings | Rows select the conversation and call a verb. The verb writes most text and options from Java strings. Several commands extend `PaginatedOptions` and take over the dialog plugin (`setupDelegateDialog`). Every non-paging option then returns to rules through `FireBest DialogOptionSelected`. |
+| Rules rows only | Every conversation with Jack, Alice and Nicholas (gates, values and game actions from `KestevenHubModule`); the job 3 party, a rules bar event (guests, drink count and bill from `KestevenPartyModule`); the Glacier facility (`KestevenGlacierModule`); the Eliza search at pirate bars (`KestevenElizaSearchModule`); the data-disk satellites (`KestevenSatelliteModule`); the Delve meeting at the bar (`KestevenJob5Module`); the meeting at Eliza's port (`KestevenElizaModule`); job 4: the Special Operations fleet, the Enigma strike group and the hint wreck (checks, actions and tokens from `KestevenJob4Module`, [below](#job-4-rows)); the Tri-Tachyon collector ([below](#tri-tachyon-collector-rows)); fleet greetings and threats: Eliza's raided and revenge fleets, Jack's revenge fleet, the Cache guardian, the "LZ" messenger, generic Enigma comms | Text, options and scripts live in `data/campaign/rules.csv`. |
 | Java `InteractionDialogPlugin` or `BaseBarEvent` | Cache hint, Cache core, both final ending dialogs | `CorePlugin.pickInteractionDialogPlugin` or `PortsideBarData` opens the class. All text, options and state changes are in the Java class, using a nested `OptionId` enum. |
 
 ## Jack, Alice and Nicholas
@@ -275,15 +275,13 @@ The in-person meeting of job 5 is a rules bar event in the `# Meeting` part of t
 | Fleet | Rows | Command verbs |
 |---|---|---|
 | Special Operations and strike group (job 4) | `# KESTEVEN QUESTLINE: JOB 4`; see [Job 4 rows](#job-4-rows) | `nskr_quest kq` |
-| Tri-Tachyon collector | `nskr_ttCollectorDialogInit`, `…Initial`, `…InitialText`, `…PayAll`, `…NoPay`, `…ExitFight`, `…Exit` | `hasOption`, `canPay`, `pay` |
+| Tri-Tachyon collector | `# KESTEVEN QUESTLINE: COLLECTOR`; see [Tri-Tachyon collector rows](#tri-tachyon-collector-rows) | `nskr_quest kq` |
 | Eliza after the raid | `elizaDialogInit`, `elizaDialogInitial`, `elizaDialogEnd` | none |
 | Eliza's intercept (stage 19) | `nskr_elizaInterceptDialogInit`, `…Initial`, `…InitialText`, `…HandOver`, `…ExitFightDialog`, `…ExitFightNoChip`, `nskr_elizaIntercetpDialogExit` (sic) | `aggro`, `hasOption`, `addOptions`, `handOver`, `hostile` |
 | Eliza's revenge | `elizaRevengeanceDialogInit`, `…Initial`, `…Options`, `…Continue*`, `…End` | none |
 | Jack's revenge | `jackRevengeanceDialogInit`, `…Initial`, `…End` | none |
 | Cache guardian | `cacheDialogInit`, `cacheDialogInitial`, `cacheDialogEnd` | none |
 | "LZ" messenger | `MessengerFleetDialogInit`, `…Initial`, `…End` | none |
-
-Rows for `nskr_ttCollectorDialog` never pass the `setPaid` verb; its `case` falls through into `canPay`.
 
 ### Job 4 rows
 
@@ -305,6 +303,22 @@ The `# KESTEVEN QUESTLINE: JOB 4` block holds the job's conversations and intel 
 | token | `job4FriendlySystem`, `job4FriendlyEntity`, `job4TargetEntity`, `job4OutpostSystem`, `job4SearchArea`, `job4Supplies`, `job4Fuel` | Names from the job 4 targets and the Outpost; the constellation with its type (`QuestHelper.parseConstellation`); the player's supplies and fuel in whole units |
 
 The hand-over uses `AddRemoveCommodity`, `AdjustRep kesteven 5` and `AdjustRepActivePerson COOPERATIVE 10`, whose vanilla receipts replace the old custom receipt lines. The rows also use the hub's `outpostExists`, `nicholasTipGiven` and `job4TargetKnown`, the job 1 module's `kestevenHostile` and `homeName`, and the hub token `job4TargetSystem`.
+
+### Tri-Tachyon collector rows
+
+The `# KESTEVEN QUESTLINE: COLLECTOR` block holds the collector's conversation; its checks, action and token come from the shared modules `KestevenCollector` configures ([Tri-Tachyon collector](KESTEVEN_QUESTLINE.md#tri-tachyon-collector)).
+
+| Row | Entry or condition | Does |
+|---|---|---|
+| `nskr_kq_ttCollectorHail` | `BeginFleetEncounter`: Tri-Tachyon, hostile, role flag `$nskr_kq_ttCollector`, no `$ignorePlayerCommRequests` | Hails the player |
+| `nskr_kq_ttCollectorOpen` | `OpenCommLink`: Tri-Tachyon, hostile, `$entity.nskr_kq_ttCollector`, `COLLECTOR_PAID` unset | The demand; Continue |
+| `nskr_kq_ttCollectorDemand` | Continue | Fires the `FireBest` pick `nskr_kqTtCollectorDemand`, then sets `$entity.ignorePlayerCommRequests` for 10 days |
+| `nskr_kq_ttCollectorDemandSome` | `check ttCollectorCanPaySome`: at least one unit held | "Hand over the $nskr_kq_ttCollectorPayment units …" or refuse |
+| `nskr_kq_ttCollectorDemandNone` | Fallback | Admit it, which leads to the fight exit |
+| `nskr_kq_ttCollectorPay` | Hand over | `do ttCollectorPay` (vanilla receipt, `COLLECTOR_PAID`, hostile flags removed), `AdjustRep tritachyon 5`, `AdjustRepActivePerson COOPERATIVE 10`, `ui_rep_raise`, removes `$entity.ignorePlayerCommRequests`, `do ttCollectorLeave`, then allows disengaging and makes the fleet non-aggressive; Leave |
+| `nskr_kq_ttCollectorNoPay`, `nskr_kq_ttCollectorFight`, `nskr_kq_ttCollectorExit` | Admit, refuse, cut | The fight line; the fight exit repeats it and ends with "Cut the comm link"; the exit ends the conversation |
+
+The demand's `ttCollectorCanPayAll` never passes, because the demand is everything held. The comm link row tests `!$ignorePlayerCommRequests` on the speaker's memory, while the Continue row sets the key on the fleet (`$entity`), so the test never fails.
 
 ## Alternative endings
 

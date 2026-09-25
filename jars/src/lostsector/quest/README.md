@@ -975,9 +975,9 @@ Behavior used by more than one quest lives once in `lostsector.quest.modules`, c
 
 | Module | Used by | Does | Status |
 |---|---|---|---|
-| [`PayOffEncounter`](#payoffencounter) | Loan collector (quest `ic`); planned for the Tri-Tachyon collector | A hostile fleet that demands payment in credits or cargo; pay, part pay or fight | implemented, T37 |
+| [`PayOffEncounter`](#payoffencounter) | Loan collector (quest `ic`), Tri-Tachyon collector (quest `kq`, `KestevenCollector`) | A hostile fleet that demands payment in credits or cargo; pay, part pay or fight | implemented, T37 |
 | [`BountyEncounter`](#bountyencounter) | Abyss, Eternity, Mothership, Peacekeepers (quest `bounty`) | Placement, first sighting, intel, defeat, reward, completion, guarded entities, shared intel text slots | implemented, T39 and T40 |
-| [`InterceptEncounter`](#interceptencounter) | ARO strike, "LZ" messenger, Auto-Hunter, loan collector (quest `ic`); planned for the Tri-Tachyon collector | Daily roll, spawn near the player, the orders of its role, an optional second role | implemented, T41 |
+| [`InterceptEncounter`](#interceptencounter) | ARO strike, "LZ" messenger, Auto-Hunter, loan collector (quest `ic`); Tri-Tachyon collector (quest `kq`, `KestevenCollector`) | Daily roll, spawn near the player, the orders of its role, an optional second role | implemented, T41 |
 
 The task that builds a shared module documents its constructor and behavior here. A shared module that keeps data defines a saved record class and an interface the quest's state implements to hold the records.
 
@@ -1128,8 +1128,8 @@ Do not add a framework feature that only one quest could ever use; keep that in 
 | Duplicate today | Replaced by |
 |---|---|
 | `QuestHelper.getFailed`/`setFailed` and `getCompleted`/`setCompleted`, identical bodies | Flags on the state |
-| Nine hand-written seeded `Random` accessors (`ElizaDialog`, `CacheDoubtDialog`, `CacheCoreDialog`, `EndingKestevenDialog`, `EndingElizaDialog`, `nskr_altEndingDialogLuddic`, `nskr_altEndingDialogTT`, `nskr_ttCollectorDialog`, `nskr_elizaInterceptDialog`) | `ctx.random(purpose)` |
-| `nskr_ttCollectorDialog`, the second copy of the loan collector's encounter | `PayOffEncounter` and rows |
+| Eight hand-written seeded `Random` accessors (`ElizaDialog`, `CacheDoubtDialog`, `CacheCoreDialog`, `EndingKestevenDialog`, `EndingElizaDialog`, `nskr_altEndingDialogLuddic`, `nskr_altEndingDialogTT`, `nskr_elizaInterceptDialog`) | `ctx.random(purpose)` |
+| `nskr_ttCollectorDialog`, the second copy of the loan collector's encounter | `PayOffEncounter` and rows (done in T32: `KestevenCollector` in quest `kq`) |
 | Intel classes that register themselves and poll in `advanceImpl` | `QuestIntel` and intel rows |
 | The spawn-and-register tail repeated across `KestevenFleets` spawners | `ctx.fleets().spawn` |
 | `QuestStageManager.runFleetLogic`, per-fleet AI | `FleetOrders` on `FleetHelper` |

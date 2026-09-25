@@ -12,18 +12,15 @@ import com.fs.starfarer.api.characters.PersonAPI;
 import com.fs.starfarer.api.fleet.FleetMemberAPI;
 import com.fs.starfarer.api.impl.MusicPlayerPluginImpl;
 import com.fs.starfarer.api.impl.campaign.ids.Factions;
-import com.fs.starfarer.api.impl.campaign.ids.MemFlags;
 import com.fs.starfarer.api.impl.campaign.ids.Pings;
 import com.fs.starfarer.api.impl.campaign.world.MoteParticleScript;
 import exerelin.campaign.DiplomacyManager;
 import lostsector.campaign.kesteven.ExileManager;
-import lostsector.dialogue.rules.nskr_ttCollectorDialog;
 import lostsector.ModPlugin;
 import lostsector.helper.FleetHelper;
 import lostsector.helper.Ids;
 import lostsector.helper.SectorLookup;
 import lostsector.world.systems.cache.Cache;
-import lostsector.helper.SystemHelper;
 import org.lazywizard.lazylib.MathUtils;
 import org.lazywizard.lazylib.VectorUtils;
 import org.lwjgl.util.vector.Vector2f;
@@ -36,7 +33,6 @@ public class QuestStageManager extends BaseCampaignEventListener implements Ever
     //
     //manages quest stage changes and mission fleets
     public static final String FLEET_ARRAY_KEY = "$kQuestMissionFleets";
-    public static final String TT_COLLECTOR_KEY = "$KestevenQuestTTCollector";
     public static final ArrayList<String> JOB3_MARKET_BLACKLIST = new ArrayList<>();
     static {
         JOB3_MARKET_BLACKLIST.add("eochu_bres");
@@ -48,8 +44,6 @@ public class QuestStageManager extends BaseCampaignEventListener implements Ever
 
     //chance per day
     public static final float REVENGEANCE_CHANCE = 0.01f;
-    public static final float BASE_TT_COLLECT_CHANCE = 0.03f;
-    public static final float TT_COLLECTOR_DESPAWN_TIMER = 60f;
     public static final float ELIZA_MAX_RELATION_KESTEVEN = -0.50f;
     public static final float ELIZA_MAX_RELATION_HEGEMONY = -0.35f;
     private float pingTimer = 0;
@@ -251,23 +245,6 @@ public class QuestStageManager extends BaseCampaignEventListener implements Ever
         }
         //mission logic
         if (state.dayCounter>10f) {
-            //tt vengeance spawner
-            //spawn once per campaign
-            if (!state.collectorSpawned) {
-                //can spawn check
-                if (stage>=2 && stage<=15) {
-                    boolean cargo = pf.getCargo().getCommodityQuantity("nskr_electronics") >= 50f;
-                    Random random = nskr_ttCollectorDialog.getRandom();
-                    if (random.nextFloat() < BASE_TT_COLLECT_CHANCE && pf.isInHyperspace() && pf.getLocation().length() < 25000f && cargo) {
-
-                        CampaignFleetAPI fleet = KestevenFleets.spawnCollectorFleet();
-                        fleets.add(new FleetInfo(fleet, null, fleet.getContainingLocation().createToken(fleet.getLocation())));
-
-                        state.collectorSpawned = true;
-                        log("Qmanager SPAWNING");
-                    }
-                }
-            }
             if (!state.elizaInterceptSpawned){
                 //eliza intercept player for UPC
                 if (stage==19 && QuestHelper.getCompleted(KestevenFlag.ELIZA_HELPED)){
@@ -340,71 +317,6 @@ public class QuestStageManager extends BaseCampaignEventListener implements Ever
             f.age+=0.1f;
 
 
-            //tt collector logic
-            if (fleet.getMemoryWithoutUpdate().contains(TT_COLLECTOR_KEY)){
-                boolean despawn = false;
-
-                if (fleet.getFleetPoints()<=0f){
-                    despawn = true;
-                    log("Qmanager despawn defeated");
-                }
-                if (f.age>TT_COLLECTOR_DESPAWN_TIMER){
-                    despawn = true;
-                    log("Qmanager despawn time");
-                }
-
-                Vector2f fp = fleet.getLocationInHyperspace();
-                Vector2f pp = pf.getLocationInHyperspace();
-                float dist = MathUtils.getDistance(pp, fp);
-                if (despawn) {
-                    if (dist > Global.getSettings().getMaxSensorRangeHyper()) {
-                        //tracker for cleaning the list
-                        removed.add(fleet);
-                        fleet.despawn();
-                    }
-                }
-                //stop here when defeated
-                if (despawn) continue;
-                //assignment logic
-                FleetAssignmentDataAPI curr = fleet.getAI().getCurrentAssignment();
-                if (curr == null) {
-                    fleet.clearAssignments();
-                    fleet.addAssignment(FleetAssignment.HOLD, fleet.getContainingLocation().createToken(fleet.getLocation()), Float.MAX_VALUE, "holding");
-                    log("null assignment");
-                }
-                //used special maneuvers
-                if (curr!=null && curr.getAssignment()==FleetAssignment.STANDING_DOWN) {
-                    CampaignFleetAIAPI ai = fleet.getAI();
-                    if (ai instanceof ModularFleetAIAPI) {
-                        // needed to interrupt an in-progress pursuit
-                        ModularFleetAIAPI m = (ModularFleetAIAPI) ai;
-                        m.getStrategicModule().getDoNotAttack().add(pf, 1f);
-                        m.getTacticalModule().setTarget(null);
-                    }
-                }
-                //logic
-                boolean paid = nskr_ttCollectorDialog.getPaid();
-                //AI LOGIC
-                //intercept
-                if (!paid) {
-                    FleetHelper.gotoAndInterceptPlayerAI(fleet, f, FleetHelper.InterceptBehaviour.AROUND);
-                }
-                //leave
-                if (paid) {
-                    if (fleet.getAI().getCurrentAssignmentType() != FleetAssignment.GO_TO_LOCATION_AND_DESPAWN) {
-                        fleet.clearAssignments();
-                        fleet.getMemoryWithoutUpdate().clear();
-                        fleet.getMemoryWithoutUpdate().set(MemFlags.FLEET_IGNORES_OTHER_FLEETS, true);
-
-                        SectorEntityToken loc = SystemHelper.getRandomFactionMarket(new Random(), Factions.TRITACHYON);
-                        if (loc != null && loc.getMarket() != null) {
-                            fleet.addAssignment(FleetAssignment.GO_TO_LOCATION_AND_DESPAWN, loc, Float.MAX_VALUE, "returning to " + loc.getName());
-                            log("Qmanager " + fleet.getName() + " RETURNING ");
-                        }
-                    }
-                }
-                continue;
-            }
             //cache guardian fleet
             if (fleet.getMemoryWithoutUpdate().contains(Cache.CACHE_FLEET_KEY)){
                 boolean despawn = false;

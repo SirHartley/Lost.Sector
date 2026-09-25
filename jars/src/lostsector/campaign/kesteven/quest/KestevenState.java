@@ -4,13 +4,17 @@ import com.fs.starfarer.api.campaign.SectorEntityToken;
 import com.fs.starfarer.api.campaign.StarSystemAPI;
 import com.fs.starfarer.api.fleet.FleetMemberAPI;
 import lostsector.quest.QuestState;
+import lostsector.quest.modules.InterceptEncounter;
+import lostsector.quest.modules.PayOffEncounter;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 // Saved by XStream in the quest store; renaming or removing a field breaks saves once 1.0.c ships.
 // Until T35 the old questline classes read and write these fields through QuestHelper and QuestStageManager.
-public final class KestevenState extends QuestState<KestevenStage> {
+public final class KestevenState extends QuestState<KestevenStage> implements InterceptEncounter.Host, PayOffEncounter.Host {
 
     // Purposes for KestevenQuest.random, one per getRandom() accessor; the two alternative endings share one.
     public static final String RANDOM_QUEST = "kestevenQuestRandom";
@@ -22,7 +26,6 @@ public final class KestevenState extends QuestState<KestevenStage> {
     public static final String RANDOM_KESTEVEN_ENDING = "kestevenEndingDialogKeyRandom";
     public static final String RANDOM_ELIZA_ENDING = "elizaEndingDialogKeyRandom";
     public static final String RANDOM_ALT_ENDING = "endingAltDialogKeyRandom";
-    public static final String RANDOM_COLLECTOR = "ttCollectorDialogRandom";
     public static final String RANDOM_ELIZA_INTERCEPT = "elizaInterceptDialogRandom";
 
     // Started when the job 3 expedition spawns; the job fails when it passes KestevenJob3Module.TIME_LIMIT days.
@@ -73,9 +76,22 @@ public final class KestevenState extends QuestState<KestevenStage> {
     boolean cacheGuardianSpotPicked;
     boolean cacheDoubtShown;
     boolean cacheGuardianSpawned;
-    boolean collectorSpawned;
     boolean elizaInterceptSpawned;
     boolean elizaRevengeSpawned;
     boolean jackRevengeSpawned;
     boolean commissionRestored;
+
+    // The Tri-Tachyon collector's shared modules (KestevenCollector).
+    Map<String, InterceptEncounter.Record> intercepts = new LinkedHashMap<>();
+    Map<String, PayOffEncounter.Record> payOffs = new LinkedHashMap<>();
+
+    @Override
+    public Map<String, InterceptEncounter.Record> intercepts() {
+        return intercepts;
+    }
+
+    @Override
+    public Map<String, PayOffEncounter.Record> payOffs() {
+        return payOffs;
+    }
 }

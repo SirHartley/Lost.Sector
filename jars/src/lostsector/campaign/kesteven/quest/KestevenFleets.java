@@ -12,7 +12,6 @@ import com.fs.starfarer.api.campaign.SectorEntityToken;
 import com.fs.starfarer.api.campaign.StarSystemAPI;
 import com.fs.starfarer.api.characters.PersonAPI;
 import com.fs.starfarer.api.impl.campaign.ids.*;
-import lostsector.dialogue.rules.nskr_ttCollectorDialog;
 import lostsector.settings.Difficulty;
 import lostsector.helper.FleetHelper;
 import lostsector.helper.MathHelper;
@@ -20,8 +19,6 @@ import lostsector.helper.ShipHelper;
 import lostsector.helper.StringHelper;
 import lostsector.helper.SystemHelper;
 import lostsector.helper.PowerLevel;
-import org.lazywizard.lazylib.MathUtils;
-import org.lwjgl.util.vector.Vector2f;
 
 import java.util.*;
 
@@ -190,32 +187,26 @@ public class KestevenFleets {
         return fleet;
     }
 
-    //tt collector fleet
-    public static CampaignFleetAPI spawnCollectorFleet() {
-        Random random = nskr_ttCollectorDialog.getRandom();
-        CampaignFleetAPI pf = Global.getSector().getPlayerFleet();
+    // Memory flags of the Tri-Tachyon collector; KestevenCollector removes them once the player pays.
+    static final List<String> TT_COLLECTOR_FLAGS = List.of(
+            MemFlags.MEMORY_KEY_MAKE_HOSTILE,
+            MemFlags.MEMORY_KEY_LOW_REP_IMPACT,
+            MemFlags.FLEET_FIGHT_TO_THE_LAST,
+            MemFlags.MEMORY_KEY_SAW_PLAYER_WITH_TRANSPONDER_ON,
+            MemFlags.MEMORY_KEY_MAKE_HOLD_VS_STRONGER,
+            MemFlags.MEMORY_KEY_NEVER_AVOID_PLAYER_SLOWLY);
+
+    // The Tri-Tachyon collector "Black Ops", unbuilt, at the player's position; InterceptEncounter moves it away.
+    static SimpleFleet ttCollector(SectorEntityToken at, Random random) {
         float combatPoints = MathHelper.getSeededRandomNumberInRange(100f, 120f, random);
         //power scaling
         combatPoints += combatPoints * PowerLevel.get(0.2f, 0f,1f);
-        log("tt collector BASE " + combatPoints);
 
         //apply settings
         combatPoints *= Difficulty.scriptedFleetMult();
 
-        SectorEntityToken loc = pf.getContainingLocation().createToken(pf.getLocation());
-
-        //keys
-        ArrayList<String> keys = new ArrayList<>();
-        keys.add(MemFlags.MEMORY_KEY_MAKE_HOSTILE);
-        keys.add(MemFlags.MEMORY_KEY_LOW_REP_IMPACT);
-        keys.add(MemFlags.FLEET_FIGHT_TO_THE_LAST);
-        keys.add(MemFlags.MEMORY_KEY_SAW_PLAYER_WITH_TRANSPONDER_ON);
-        keys.add(MemFlags.MEMORY_KEY_MAKE_HOLD_VS_STRONGER);
-        keys.add(MemFlags.MEMORY_KEY_NEVER_AVOID_PLAYER_SLOWLY);
-        keys.add(QuestStageManager.TT_COLLECTOR_KEY);
-
         //fleet
-        SimpleFleet simpleFleet = new SimpleFleet(loc, Factions.TRITACHYON, combatPoints, keys, random);
+        SimpleFleet simpleFleet = new SimpleFleet(at, Factions.TRITACHYON, combatPoints, new ArrayList<>(TT_COLLECTOR_FLAGS), random);
         simpleFleet.ignoreMarketFleetSizeMult = true;
         simpleFleet.sMods = 2;
         simpleFleet.maxShipSize = 3;
@@ -224,15 +215,7 @@ public class KestevenFleets {
         simpleFleet.assignmentText = "intercepting your fleet";
         simpleFleet.interceptPlayer = true;
         simpleFleet.noTransponder = true;
-        CampaignFleetAPI fleet = simpleFleet.create();
-
-        //custom spawning
-        final Vector2f fleetLoc = new Vector2f(MathUtils.getPointOnCircumference(pf.getLocation(), (pf.getSensorStrength()*0.90f)+(fleet.getSensorProfile()*0.90f), random.nextFloat() * 360.0f));
-        fleet.setLocation(fleetLoc.x, fleetLoc.y);
-        fleet.setFacing(random.nextFloat() * 360.0f);
-
-        log("tt collector SPAWNED " + fleet.getName() + " size " + combatPoints);
-        return fleet;
+        return simpleFleet;
     }
 
     // The job 4 builders return the fleets unbuilt; KestevenJob4Module spawns them in the old order and moves each one out
