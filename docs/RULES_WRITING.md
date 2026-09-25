@@ -107,10 +107,10 @@ A private trigger holds several versions of one thing; `FireBest` shows exactly 
 id: nskr_ex_greet             trigger: nskr_exGreeting
 text:    (general greeting)
 
-id: nskr_ex_greetOffered      trigger: nskr_exGreeting   conditions: nskr_ex stage OFFERED
+id: nskr_ex_greetOffered      trigger: nskr_exGreeting   conditions: nskr_quest ex is OFFERED
 text:    (greeting while the offer is open)
 
-id: nskr_ex_greetFailed       trigger: nskr_exGreeting   conditions: nskr_ex failed score:100
+id: nskr_ex_greetFailed       trigger: nskr_exGreeting   conditions: nskr_quest ex is FAILED score:100
 text:    (greeting after a failure, overrides the others)
 ```
 
@@ -337,6 +337,7 @@ A hub mission is its own command target: `Call $<ref> <action>`. Every hub missi
 - **One block per feature.** A `# FEATURE NAME` row opens it and blank rows end it, as in SotF and vanilla; rows whose id starts with `#` are skipped by the loader. Existing Lost.Sector blocks also carry `#END` rows; new blocks do not need them. Long quests get sub-headers along their stages, as SotF's `# THE HAUNTED` block does.
 - **Play order.** Within a block, the entry row first, then each beat in the order the player meets it. A menu's option rows sit together, directly above their handler rows, in the same order.
 - **Blank rows** separate conversations and menus.
+- **Moving rows.** Where a block sits in the file matters only for rows of one trigger that can match together, such as `FireAll` menus, `AddBarEvents` entries and intel text. Check them before moving a block ([Editing and validation](RULES.md#editing-and-validation)).
 - **Rule ids** `nskr_<feature>_<purpose>`: sequential numbers for a strictly linear scene (`..._brief1`, `..._brief2`), short names for branches. The loader only rejects a duplicate id under the same trigger, so keep every id unique yourself.
 - **Private triggers** `nskr_<feature><Purpose>`: `...Options` for menus, `...Greeting` or `...Text` for picks and inserts, and a plain descriptive name for a shared insert or side effect, as SotF's `sotfLearnAboutDustkeepers`.
 - **Comments.** A `#` line inside Conditions, Script or Options is skipped; use it for a non-obvious line, as SotF's `# removes map` explains a bare `ShowPersonVisual`. The notes column can say why a score exists or which rows are deliberate random variants; SotF leaves it empty, so this is a Lost.Sector addition. Keep jokes and history out.

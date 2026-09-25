@@ -68,7 +68,7 @@ Fixed - Enigma ambush fleets in hyperspace no longer follow you into a star syst
 Adjusted - The Kesteven loan menu lists every loan and repayment amount on one page
 Adjusted - Taking or repaying a Kesteven loan shows the standard credits gained or lost receipt
 Adjusted - Questions you have already asked Jack and Alice no longer return to their question lists
-Adjusted - Kesteven job rewards and penalties now show the game's standard receipt lines
+Adjusted - Kesteven questline rewards, payments and penalties show the game's standard receipts: job rewards, the Hostile Takeover party's hangover, the spacer in the search for Eliza, Jack's advance at the Delve meeting, the supplies for the Special Operations fleet, the Tri-Tachyon collector, the Cache's command core and all four endings
 Adjusted - The Hellspawn judgement's story point and Peaceful Heart rewards show the standard receipts
 Fixed - Paying the Kesteven debt collector now shows "Debt reduced to" instead of an internal name
 Adjusted - Paying the Kesteven debt collector shows the standard credits lost and relationship receipts
@@ -79,22 +79,11 @@ Adjusted - The Frost intel entry and its sensor report appear as soon as you arr
 Adjusted - The Frost intel entry closes three days after the Frozen Heart falls instead of when you next open it
 Removed - The delete button on the Frost intel entry while the Frozen Heart stands
 Fixed - Typo in the Kesteven officer's system tip conversation
-Adjusted - The Enemy Unknown intel entry reports the recovered sensor data as an update and stays for three days once finished
-Adjusted - The Hostile Takeover intel entry reports the expedition's defeat, the timeout or being discovered as updates and stays for three days once finished
-Adjusted - The hangover after the Hostile Takeover party shows the standard credits lost receipt
+Adjusted - The Enemy Unknown, Hostile Takeover, Operation Lifesaver and Delve intel entries report their progress and outcome as updates: the recovered sensor data, the expedition's defeat, the timeout or being discovered, finding both fleets or attacking the Special Operations fleet, and the end of the questline
 Fixed - The comms facility on Glacier now offers Leave on its first screen
-Adjusted - Paying the spacer in the search for Eliza shows the standard credits lost receipt
-Adjusted - The Delve intel entry reports the end of the questline and stays for three days once finished
-Adjusted - Jack's advance at the Delve meeting shows the standard credits gained receipt
-Adjusted - The Operation Lifesaver intel entry reports finding both fleets and the attack on the Special Operations fleet as updates and stays for three days once finished
-Adjusted - Handing supplies and fuel to the Special Operations fleet shows the standard cargo and relationship receipts
 Fixed - Attacking the Special Operations fleet after Operation Lifesaver is over no longer sets the questline back
 Fixed - After the Kesteven story skip, the data-disk satellites' empty dialog has a Leave option
-Adjusted - Handing Artifact Electronics to the Tri-Tachyon collector shows the standard cargo lost and relationship receipts
 Fixed - Eliza's revenge fleet now opens its own conversation when you meet it
-Adjusted - The Luddic and Tri-Tachyon endings of the Kesteven questline show the standard story point, credits and relationship receipts
-Adjusted - The Kesteven and Eliza endings show the standard receipts for story points, credits, blueprints and relationship changes
-Adjusted - Salvaging the Cache's command core shows the standard receipts for the Alpha Core and the Artifact Electronics
 
 1.0.b
 Adjusted - Severely nerfed spawn rates for Borealis, Rhea and Kingslayer

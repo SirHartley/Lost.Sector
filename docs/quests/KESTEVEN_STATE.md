@@ -18,10 +18,10 @@ The questline is quest `kq` of the quest framework. `kesteven/quest/KestevenQues
 | Framework fleets | The framework's `QuestFleets.KEY` list | The job 1 tip system's dormant fleet, role `job1Dormant`; the job 3 expedition, roles `job3Expedition` and `job3ExpeditionOver`; the job 4 fleets, roles `job4StrikeGroup`, `job4SpecialOps`, `job4SpecialOpsLeaving` and `job4Splinter`; the Enigma dormant fleets woken at satellite #3, role `satelliteGuard`; the Cache guardian, role `cacheGuardian`; the Tri-Tachyon collector, roles `ttCollector` and `ttCollectorLeaving` (record `ttCollector`) |
 | Quest people | The state's person map, registered with the important people | The seven job 3 party guests of `KestevenPartyModule`, keys `party…`, ids `nskr_kq_party…`; the Delve meeting's escort `delveGuard` (`nskr_kq_delveGuard`) of `KestevenJob5Module`, during `JOB5_MEETING`; the operations chief and sensors officer of the Cache's inner voice, keys `cacheChief` and `cacheSensors`, created when it opens and released when it closes |
 | Fleet, entity and person memory | The owning `MemoryAPI` | Routing flags read by `rules.csv` and `CorePlugin`, and the conversation flags of Jack, Alice, Nicholas and the party employee; see [Memory flags](#memory-flags) |
-| Saved objects | Bar events in `PortsideBarData`, intel in the intel manager | Their class names and fields are serialized. |
+| Saved objects | The intel entries (`quest/QuestIntel`) in the intel manager and the sector's script list | They save only the quest id, key, record, icon, tags, status and map entity ([Intel](../../jars/src/lostsector/quest/README.md#intel)) |
 | Per installation | LunaLib settings: `settings/SettingsManager.set` and `Setting` reads | `thronesGiftUnlocked`, `hellspawnUnlocked`, `storySkipUnlocked`; shared by all campaigns |
 
-The quest manager creates the state on the first unpaused frame of a new campaign and loads it with the save afterwards. Until then:
+The quest manager creates the state when a campaign without it loads (`QuestManager.startQuests`, the last step of `ModPlugin.onGameLoad`) and loads it with the save afterwards. Before that:
 
 - `KestevenQuest.state()` returns null;
 - the [queries for other features](#queries-for-other-features) read every flag as unset and the stage as `NOT_STARTED`;
@@ -173,7 +173,7 @@ Other features read flags through the [queries](#queries-for-other-features). `n
 
 ## Randoms
 
-Each purpose is a constant on `KestevenState`, named after the persistent-data key of the saved `Random` it replaces. Every purpose continues its own sequence after a reload; the seeds come from the quest seed, not the sector seed.
+Each purpose is a constant on `KestevenState`. Every purpose continues its own sequence after a reload; the seeds come from the quest seed, not the sector seed.
 
 | Constant | Purpose | Accessor |
 |---|---|---|
@@ -182,7 +182,7 @@ Each purpose is a constant on `KestevenState`, named after the persistent-data k
 | `RANDOM_GLACIER` | `glacierCommsKeyRandom` | `KestevenGlacierModule` action `damageFleet`: which ships the barrage hits and how hard |
 | `RANDOM_ELIZA` | `elizaDialogKeyRandom` | `KestevenQuest.random(KestevenState.RANDOM_ELIZA)`: Eliza's fleets and raid |
 | `RANDOM_CACHE_CORE` | `coreDialogKeyRandom` | `KestevenCacheModule` action `salvageCacheCore`: the Artifact Electronics roll |
-| (module constants) | `cachePings`, `cacheMotes` | `KestevenCacheModule`: the direction spread of the Cache pings and the mote roll, which the old code drew unseeded |
+| (module constants) | `cachePings`, `cacheMotes` | `KestevenCacheModule`: the direction spread of the Cache pings and the mote roll |
 | `RANDOM_KESTEVEN_ENDING` | `kestevenEndingDialogKeyRandom` | `KestevenEndingsModule` action `kestevenEnding` |
 | `RANDOM_ELIZA_ENDING` | `elizaEndingDialogKeyRandom` | `KestevenEndingsModule` action `elizaEnding` |
 | `RANDOM_ALT_ENDING` | `endingAltDialogKeyRandom` | `KestevenAltEndingsModule` action `altEndingFallout`, for both alternative endings |
@@ -210,10 +210,10 @@ The Kesteven bar tip is not questline content; it is quest `hint` ([Exploration 
 | `$nskr_kq_elizaStood` | Local memory of the market entity during the port meeting; expiry `0` | Row `nskr_kq_elizaStand` | Row `nskr_kq_elizaStoodLine` |
 | `$nskr_kq_jackRevenge` | Jack's revenge fleet: role flag of quest `kq` | `QuestFleets` | Rules `# KESTEVEN QUESTLINE: AFTERMATH` |
 | `$CacheGuardianFleet` (`Cache.CACHE_FLEET_KEY`) | Guardian fleet | `Cache` | `CacheBossTauntPlugin`, rules |
-| `$nskr_kq_cacheGuardian` | Guardian fleet: role flag of quest `kq` | `QuestFleets` | Nothing reads it yet |
+| `$nskr_kq_cacheGuardian` | Guardian fleet: role flag of quest `kq` | `QuestFleets` | Nothing reads it |
 | `$EnigmaDormantFleet` (`DormantSpawner.DORMANT_KEY`) | Dormant fleets at quest locations | `DormantSpawner.addDormant` | Action `wakeSatelliteGuard`, which keeps the flag on the fleets it wakes; rules `dormantDialog` |
 | `$nskr_kq_satelliteGuard` | A dormant fleet woken at satellite #3: role flag of quest `kq` | `QuestFleets.adopt`, from action `wakeSatelliteGuard` | Nothing reads it |
-| `$nskr_kq_job1Dormant` | The job 1 tip system's dormant fleet: role flag of quest `kq` | `QuestFleets.adopt`, from `KestevenJob1Module.pickTip` | Nothing reads it yet |
+| `$nskr_kq_job1Dormant` | The job 1 tip system's dormant fleet: role flag of quest `kq` | `QuestFleets.adopt`, from `KestevenJob1Module.pickTip` | Nothing reads it |
 | `$nskr_kq_altEndingLocked` | The official who had the second talk of either alternative ending; no expiry | Rules `nskr_kq_altEndingLuddicDoubtSel`, `nskr_kq_altEndingTtIncreaseSel` | Alternative ending entry and greeting rows |
 | `$nskr_ic_messenger`, `$nskr_ic_messengerLeaving` | Messenger fleet role flags of quest `ic` | `QuestFleets` | Rules `# INTERCEPTS` |
 | `$missionImportant` with reason `nskr_kq` | Satellite #3, satellite #4, Glacier; the Eliza contact market (`KestevenElizaSearchModule`, scope `JOB5_DISKS`) | Hub actions `markJob3Satellite`, `markJob4Satellite`; `KestevenGlacierModule` action `markGlacier` (`ctx.mark`, scope `JOB5_DISKS` on) | Map markers; `salvageSatellite` and `recoverGlacierDisk` call `ctx.unmark` |
@@ -282,19 +282,19 @@ A module the jump passes whole, because the target is not one of its stages (`ct
 | Module | Passed whole | Target in its stages |
 |---|---|---|
 | `KestevenJob1Module` | No tip system, intel or map update | Tip picked, intel shown, completed at `JOB3_OFFERED` |
-| `KestevenJob3Module` | The target, satellite #3 and the dormant fleet there, in the old story skip's order; no start market, intel, expedition or countdown | As in play |
+| `KestevenJob3Module` | The target, satellite #3 and the dormant fleet there, in the order of the story skip's draws; no start market, intel, expedition or countdown | As in play |
 | `KestevenPartyModule`, `KestevenElizaSearchModule` | No quest people | People created |
-| `KestevenJob4Module` | The strike group with satellite #4, then the wrecks, in the old story skip's order; no intel, Special Operations fleet or splinters | As in play |
+| `KestevenJob4Module` | The strike group with satellite #4, then the wrecks, in the order of the story skip's draws; no intel, Special Operations fleet or splinters | As in play |
 
 `KestevenJob5Module` and `KestevenCacheModule` act in `onStage` only in the jump's target stage (`ctx.stage() != ctx.jumpTarget()` returns): a passed meeting gets no guard, and the Delve and `cache` entries are shown once, with the text of the target stage.
 
 ### Story skip
 
-The hub action `storySkip` jumps to `CACHE_KNOWN`, then clears `nskr_starfarerFromStart` and sets `STORY_SKIPPED`. Compared with the old skip, a single stage change to 17, the end state has:
+The hub action `storySkip` jumps to `CACHE_KNOWN`, then clears `nskr_starfarerFromStart` and sets `STORY_SKIPPED`. The end state has:
 
-- the same flags the old skip set (`CACHE_FOUND` now from `KestevenCacheModule.onSkip`), the Delve and `cache` entries shown once at `CACHE_KNOWN` in that order, and Eliza generated at her market;
-- the job 3 objects when the skip starts at stage 7 or earlier and the job 4 objects at 11 or earlier, with the same `kestevenQuestRandom` draws in the same order: job 3 target, satellite #3, strike group, satellite #4, wrecks, Eliza's market;
+- `CACHE_FOUND` (`KestevenCacheModule.onSkip`), the Delve and `cache` entries shown once at `CACHE_KNOWN` in that order, and Eliza generated at her market;
+- the job 3 objects when the skip starts at stage 7 or earlier and the job 4 objects at 11 or earlier, drawn from `kestevenQuestRandom` in this order: job 3 target, satellite #3, strike group, satellite #4, wrecks, Eliza's market;
 - no intel, fleets, people or timers of the passed jobs;
-- in addition, for the stages it passes: `JOB1_SENSOR_DATA`, `JOB1_DATA_DELIVERED`, `JOB1_ELECTRONICS_DELIVERED`, `JOB3_TARGET_DISCOVERED`, `JOB4_WAIT_OVER`, `JOB4_TARGET_DESTROYED`, `ALL_DISKS_RECOVERED`, `disksRecovered` 5, `elizaSearchStage` 3, and the passed stages in the state's reached set.
+- for the stages it passes: `JOB1_SENSOR_DATA`, `JOB1_DATA_DELIVERED`, `JOB1_ELECTRONICS_DELIVERED`, `JOB3_TARGET_DISCOVERED`, `JOB4_WAIT_OVER`, `JOB4_TARGET_DESTROYED`, `ALL_DISKS_RECOVERED`, `disksRecovered` 5, `elizaSearchStage` 3, and the passed stages in the state's reached set.
 
 Nothing reads the additions at `CACHE_KNOWN` or later: the job 1 flags only at `JOB1_ACTIVE` (hub rows, `job1` intel rows); `JOB3_TARGET_DISCOVERED` only in the party at stages 8 and 9, Alice's `JOB3_DONE` question and her stage 16 lead lines; `JOB4_WAIT_OVER` only at stage 11; `JOB4_TARGET_DESTROYED` only in the `job4` intel rows at stages 12 and 13 and in `KestevenJob4Module`, which stops at 17; the disk count, `ALL_DISKS_RECOVERED` and `elizaSearchStage` only in stage 16 rows, the `job5` intel rows at stage 16 and the Eliza search checks; `reached` only as `reached JOB5_OFFERED` in the `job4` intel rows. No other quest, hint or `KestevenQuest` query reads them.

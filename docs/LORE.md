@@ -94,8 +94,8 @@ The Enigma is the autonomous force now fielding Project Enigma's ships. Its ship
 
 - **Tri-Tachyon.** Kesteven's rival. Its expedition studies Enigma activity (job 3). A "Black Ops" fleet collects Artifact Electronics from Kesteven's contractors. Alice believes Tri-Tachyon is "somehow behind this Enigma activity"; that is her belief, not an established fact.
 - **Project Helios.** A Tri-Tachyon Integrated Space Defense mothership (rules `nskr_bounty_mothershipOpen`, descriptions `nskr_sunburst`), now a Remnant fleet guarding two habitable worlds, Helios and Polaris. It asks whether the player is "omega" and refuses its override.
-- **Void cores.** The Hollow, Chasm and Fissure hulls run exotic "Void" power cores that "draw energy from nowhere". Spacer legends attach to each (descriptions `nskr_reverie_boss`, `nskr_harbinger_boss`, `nskr_afflictor_boss`). The Hollow is the flagship of "a rogue AI core that, by most accounts, only wanted a brief vacation from its blacksite assignment". Its fleet answers comms with "What have we done?" repeated (rules `abyssDialog`).
-- **Anti-Remnant Organization (ARO).** Posts a bounty on the Void Group. One of its strike groups preaches purging "the Remnant scourge" by fire (rules `AROstrikeDialogInitial`).
+- **Void cores.** The Hollow, Chasm and Fissure hulls run exotic "Void" power cores that "draw energy from nowhere". Spacer legends attach to each (descriptions `nskr_reverie_boss`, `nskr_harbinger_boss`, `nskr_afflictor_boss`). The Hollow is the flagship of "a rogue AI core that, by most accounts, only wanted a brief vacation from its blacksite assignment". Its fleet answers comms with "What have we done?" repeated (rules `nskr_bounty_abyssOpen`).
+- **Anti-Remnant Organization (ARO).** Posts a bounty on the Void Group. One of its strike groups preaches purging "the Remnant scourge" by fire (rules `nskr_ic_aroOpen`).
 - **The Peacekeepers.** An infamous mercenary group under Alistair Walsh, flagship "ISS White Whale", policing Independent space. Many parties want it gone.
 - **Rogue Co.** A pre-Collapse group of "engineers, smugglers, and ex-military specialists" whose hand-built Rorqual cruisers survive as priceless relics.
 - **Blacksites.** Improvised storage stations of several factions, used for "less-than-legal logistics", rigged with tripwire alarms.
@@ -127,9 +127,9 @@ These instructions describe how the existing mod text is written. They govern pl
 
 - **Second person.** Narration addresses the captain as "you" in present tense and follows the bridge crew at work: "Your ops chief oversees the mission by-the-book, staging approach-and-scan to maximize safety..." (rule `nskr_kq_satelliteSendSel`).
 - **Competent crew.** Crew members are professionals with their own manner: the careful ops chief, the sarcastic sensors officer, the comms officer's "nothing a little elbow grease from our team can't solve".
-- **Gray asides.** Gray narration carries the captain's own reactions and occasional judgment: "Wait, you really agree with her? Oh dear." (`ElizaDialog`), "Hope you made the right choice, captain." (rules `nskr_kq_elizaEndingDone`). The Cache's inner voice (rules `nskr_kq_doubt…`) uses the same gray voice as an inner voice that talks back.
+- **Gray asides.** Gray narration carries the captain's own reactions and occasional judgment: "Wait, you really agree with her? Oh dear." (rules `nskr_kq_elizaAgree`), "Hope you made the right choice, captain." (rules `nskr_kq_elizaEndingDone`). The Cache's inner voice (rules `nskr_kq_doubt…`) uses the same gray voice as an inner voice that talks back.
 - **Wide tonal range.** Comedy and horror sit side by side.
-  - Comic: the drinking scenes (the job 3 party, rules `nskr_kq_party…`; the artisan liqueur in the Delve meeting, rules `nskr_kq_delveDrink`); the Peacekeepers' commander asking whether "Sam" sent the player to prank him (rules `pkInspired`); the Cache guardian's taunts ("Is this autofit by chance?", "Have it writ upon thy meagre grave : Skill issue.", `CacheBossTauntPlugin`).
+  - Comic: the drinking scenes (the job 3 party, rules `nskr_kq_party…`; the artisan liqueur in the Delve meeting, rules `nskr_kq_delveDrink`); the Peacekeepers' commander asking whether "Sam" sent the player to prank him (rules `nskr_bounty_peacekeepersPraise`); the Cache guardian's taunts ("Is this autofit by chance?", "Have it writ upon thy meagre grave : Skill issue.", `CacheBossTauntPlugin`).
   - Grave: the Frozen Heart's enslaved thousands and the Enigma doctrine are written without jokes.
 - **Machine voices.** AI and system voices use log formatting: bracketed tokens, lowercase queries, `INTERRUPT` breaks and cut-off protocol text. Example (rules `greetingEnigmaHostile`): `query. blood?. scanning. [BLOOD] collect, amass, gather, stockpile, hoard, reap...`
 - **Lore by quotation.** Prototype hulls, weapons and upgrades carry a quoted project log or journal line with a named author instead of a technical description.
@@ -252,13 +252,13 @@ THRN is the Hellspawn judge. It speaks in short gray lines, sometimes one word a
 | Tri-Tachyon collector | rules `nskr_kq_ttCollector*` | Resentful and businesslike: "We know you are working with those snakes from Kesteven." ... "Pleasure doing business with you captain." |
 | Tri-Tachyon buyer | rules `nskr_kq_altEndingTt…` | Skeptical, then greedy: "Just think of all the things you could buy." (ravenous smile) |
 | Luddic official | rules `nskr_kq_altEndingLuddic…` | Scriptural: "I hear you speak of a vile creation of mammon." ... "you do not *get* your way to providence." |
-| Pirate spacers | Eliza bar events | Hostile to corporations and questions: "Keep your nose out of our business captain." "You better not be another bloodhound from CommSec." |
+| Pirate spacers | rules `nskr_kq_elizaSpacer…`, `nskr_kq_elizaSly…` | Hostile to corporations and questions: "Keep your nose out of our business captain." "You better not be another bloodhound from CommSec." |
 | Special Operations captain | rules `nskr_kq_job4Fleet*` | Exhausted and grateful: "Am I glad to finally see a friendly face around here." |
 | Kesteven debt collector | rules `nskr_ic_collector*` | Ruthless and sarcastic: "Thank you for your business captain. Glad we could come to terms, peacefully." |
 | "LZ" messenger | rules `nskr_ic_messengerMessage` | Formal letter: "Tread with care captain, you are entering a dangerous field of work." |
-| ARO captain | rules `AROstrikeDialogInitial` | Zealot: "May the cold vacuum of space redeem your spirit." |
-| Alistair Walsh | rules `pk*` | Pompous and easily rattled: "crime doesn't pay!" |
-| Umbra | rules `eternityDialog` | Protocol voice: "UMBRA operations ... authorized to use lethal force" |
+| ARO captain | rules `nskr_ic_aroOpen` | Zealot: "May the cold vacuum of space redeem your spirit." |
+| Alistair Walsh | rules `nskr_bounty_peacekeepers*` | Pompous and easily rattled: "crime doesn't pay!" |
+| Umbra | rules `nskr_bounty_eternityOpen` | Protocol voice: "UMBRA operations ... authorized to use lethal force" |
 
 ## Faction voices
 

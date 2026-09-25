@@ -14,7 +14,7 @@ The Descent itself (points, levels, stat bonuses, the Gate Conduit ability and i
 | Fleet builder | `HellSpawnFleets.judgement` |
 | Portrait animation | `HellSpawnThrnAnimation`, a transient script started by the `thrnAnimate` action |
 | Encounter | `HellSpawnJudgementInteraction`, a `FleetInteractionDialogPluginImpl` subclass |
-| Countdown intel | `HellSpawnJudgementIntel`, Java until quest intel moves to rows (T11) |
+| Countdown intel | `HellSpawnJudgementIntel`, a Java intel class that `HellSpawnCountdownModule` adds and ends; not a `QuestIntel` entry |
 | Text | `data/campaign/rules.csv`, block `# HELLSPAWN` |
 
 `HellSpawnQuest.isAvailable()` is true only in a campaign whose `GameModeManager` mode is `HELLSPAWN`, which the Nexerelin background `HellSpawnBackground` sets before the load finishes. Other campaigns have no `hs` state and no `hs` events.
@@ -66,4 +66,4 @@ Clicking the judgement fleet on the map uses the `CorePlugin` route on `HellSpaw
 
 - The judgement fleet is not despawned when the player leaves the encounter. `otherFleet` in `HellSpawnJudgementInteraction` is the battle's combined fleet, a copy that `BattleAPI.genCombined` builds, so `otherFleet.despawn()` does not remove the real fleet; a fleet that survives keeps hunting the player. The quest keeps this: the `judge` role's module stays active in `JUDGED`.
 - `HellSpawnJudgementInteraction`'s battle-disengage line says "effected" for "affected".
-- The warning appears on the first daily tick at level 15 or more, and the judgement on the first daily tick after 40 days; the old manager checked every second.
+- The warning appears on the first daily tick at level 15 or more, and the judgement on the first daily tick after 40 days.

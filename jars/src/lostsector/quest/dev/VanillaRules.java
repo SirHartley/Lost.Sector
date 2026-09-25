@@ -16,7 +16,8 @@ import java.util.TreeSet;
 // rules.csv rows use and fire, generated from the vanilla file by "RulesCheck --index" (README "Rules check tool").
 final class VanillaRules {
 
-    static final String INDEX = "jars/src/lostsector/quest/dev/vanilla-rules-index.txt";
+    // Kept outside jars/src: IntelliJ copies every non-Java file of a source root into Lost.Sector.jar.
+    static final String INDEX = "docs/rules-reference/vanilla-rules-index.txt";
 
     // Every call in the 0.98a-RC8 sources that fires or opens a trigger given as a string literal: FireBest.fire,
     // FireAll.fire, the dialog plugins' fireBest/fireAll, getBestMatching and RuleBasedInteractionDialogPluginImpl.

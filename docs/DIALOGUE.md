@@ -65,7 +65,7 @@ Quest dialogue is written in `rules.csv`, and its presentation uses vanilla comm
 
 ### Small and gray text
 
-- Narration the Java dialogs printed in gray (thoughts, asides) stays gray: `AddText "..." gray`. The Text column cannot be coloured, so a screen that is entirely gray keeps its Text cell empty and prints with `AddText`.
+- Gray narration (thoughts, asides) is `AddText "..." gray`. The Text column cannot be coloured, so a screen that is entirely gray keeps its Text cell empty and prints with `AddText`.
 - A consequence the prose does not state goes in small gray text after it: `AddTextSmall "Acquired the expedition coordinates" gray`, with `SetTextHighlights` for the name. Do not write a small line for a grant that prints its own receipt.
 - A custom colour is an `r,g,b,a` literal that matches the Java constant it mirrors; use it only where the intel already uses that colour.
 

@@ -1,6 +1,6 @@
 # Kesteven questline dialogue map
 
-Where each questline conversation is implemented, how it is entered and how control passes between `rules.csv` and Java. Use it to find the text for a change and to plan moving Java-authored dialogue into rules. How to structure rules content is in [RULES_WRITING.md](../RULES_WRITING.md); rules syntax and project routing in [RULES.md](../RULES.md); commands and memory in [RULES_AUTHORING.md](../RULES_AUTHORING.md); text standards in [DIALOGUE.md](../DIALOGUE.md).
+Where each questline conversation is implemented, how it is entered and which Java checks, actions and tokens its rows call. Use it to find the text for a change. How to structure rules content is in [RULES_WRITING.md](../RULES_WRITING.md); rules syntax and project routing in [RULES.md](../RULES.md); commands and memory in [RULES_AUTHORING.md](../RULES_AUTHORING.md); text standards in [DIALOGUE.md](../DIALOGUE.md).
 
 Java paths are relative to `jars/src/lostsector/campaign/`; `dialogue/rules/` and `combat/` paths are relative to `jars/src/lostsector/`.
 
@@ -73,7 +73,7 @@ Option ids:
 | token | `job1TipSystem`, `job3Start`, `job3Market`, `job3TargetSystem`, `job4Constellation`, `job4TargetSystem`, `outpostName` | Names from the saved targets: tip system; job 3 start entity and its market; job 3 target system; friendly target constellation; strike group system; Outpost |
 | token | `frostName`, `frostTipConstellation`, `frostTipDistance` | Frost's name; the hint system's constellation (`KestevenQuest.constellationName`); the distance from it to Frost times 1.5 in light-years, rounded to two decimals and printed as a Java float |
 
-Targets are picked where the old dialog first read them: the job 1 tip when Jack's menu opens at `JOB1_ACTIVE` with neither task done and no tip given (`nskr_kq_jackChatJob1Tip`) and when his questions open at `NOT_STARTED` (`nskr_kq_jackAskJob1`); the job 3 start market by the job 3 briefing; the friendly target by the job 4 briefing; the job 3 target by Alice's leads; the hint system by Alice's Frost tip. An action runs first in the row's Script and the text follows with `AddText`, so the tokens read the picked value. Checks and tokens never pick.
+Targets are picked at these points: the job 1 tip when Jack's menu opens at `JOB1_ACTIVE` with neither task done and no tip given (`nskr_kq_jackChatJob1Tip`) and when his questions open at `NOT_STARTED` (`nskr_kq_jackAskJob1`); the job 3 start market by the job 3 briefing; the friendly target by the job 4 briefing; the job 3 target by Alice's leads; the hint system by Alice's Frost tip. An action runs first in the row's Script and the text follows with `AddText`, so the tokens read the picked value. Checks and tokens never pick.
 
 `job1Progress` (declared by `KestevenJob1Module`) moves `JOB1_ACTIVE` to `JOB1_DONE` once both deliveries are recorded and refreshes the job 1 map marker; the hand-in rows and the tip row run it after setting their flags.
 
@@ -196,7 +196,7 @@ Every question list ends with Back (`nskr_kq_brief`, Escape), which shows the br
 | `JOB5_DISKS`, both tips, not all disks | `…aliceFrostFound` (4) | Delve log line, `FROST_FOUND` |
 | `JOB5_DISKS`, all disks | `…aliceCacheFound` (3) | `CACHE_FOUND`, `advance JOB5_DISKS CACHE_KNOWN` |
 
-The two `JOB5_DISKS` confirmations test the disks, not which screen offered the option: "It's the <Frost>." on the Frost tip screen with all five disks gives the Cache coordinates, as the old `quest()` did.
+The two `JOB5_DISKS` confirmations test the disks, not which screen offered the option: "It's the <Frost>." on the Frost tip screen with all five disks gives the Cache coordinates.
 
 ## Data-disk satellites
 
@@ -210,7 +210,7 @@ The dialog of every satellite is the `# KESTEVEN QUESTLINE: SATELLITES` block of
 | Salvage | Shared insert on `nskr_kqSatelliteSalvaged`, fired with `FireBest` by both last screens | `nskr_kq_satelliteSalvaged`: actions `salvageSatellite` and `wakeSatelliteGuard`, `Ping sensor_burst` and `Ping interdict`, the receipt "Acquired Data Disk #<n>" (token `satelliteDisk`), `ui_rep_raise`; adds Leave with Escape |
 | Leave after the salvage | `DialogOptionSelected` | `nskr_kq_satelliteLeaveSel`: `ui_sensor_burst_on`, `DismissDialog` |
 
-Every other Leave is vanilla's `defaultLeave`, which also takes Escape. Paragraphs after the first use `AddText`, as the Java dialog printed one paragraph per call; grey paragraphs use `AddText … gray`. The Java dialog called `setFontInsignia` once at the start; the rows need no equivalent, because vanilla's `AddTextSmall` also switches back to the insignia font after its line (0.98a-RC8 `AddTextSmall.execute`).
+Every other Leave is vanilla's `defaultLeave`, which also takes Escape. Paragraphs after the first use `AddText`, one paragraph per call; grey paragraphs use `AddText … gray`. The rows set no font; vanilla's `AddTextSmall` prints its line in the small insignia font and switches to the insignia font after it (0.98a-RC8 `AddTextSmall.execute`).
 
 `KestevenSatelliteModule` declarations used by the rows:
 
@@ -316,7 +316,7 @@ The `# KESTEVEN QUESTLINE: JOB 4` block holds the job's conversations and intel 
 | action | `readHintWreck` | `KestevenHintWreckModule`, in every stage: sets `JOB4_HINT_WRECK_READ`, releases the wreck's claim and, at `JOB4_ACTIVE`, moves the `job4` map marker |
 | token | `job4FriendlySystem`, `job4FriendlyEntity`, `job4TargetEntity`, `job4OutpostSystem`, `job4SearchArea`, `job4Supplies`, `job4Fuel` | Names from the job 4 targets and the Outpost; the constellation with its type (`KestevenQuest.constellationName`); the player's supplies and fuel in whole units |
 
-The hand-over uses `AddRemoveCommodity`, `AdjustRep kesteven 5` and `AdjustRepActivePerson COOPERATIVE 10`, whose vanilla receipts replace the old custom receipt lines. The rows also use the hub's `outpostExists`, `nicholasTipGiven` and `job4TargetKnown`, the job 1 module's `kestevenHostile` and `homeName`, and the hub token `job4TargetSystem`.
+The hand-over uses `AddRemoveCommodity`, `AdjustRep kesteven 5` and `AdjustRepActivePerson COOPERATIVE 10`, which print the vanilla receipts. The rows also use the hub's `outpostExists`, `nicholasTipGiven` and `job4TargetKnown`, the job 1 module's `kestevenHostile` and `homeName`, and the hub token `job4TargetSystem`.
 
 ### Tri-Tachyon collector rows
 
@@ -346,7 +346,7 @@ The Luddic and Tri-Tachyon endings are the `# KESTEVEN QUESTLINE: ALTERNATIVE EN
 | Agreement | Plain chain | `nskr_kq_altEndingLuddicAgreeSel`: "the Unlimited Production Chip is destroyed", `AddStoryPoints 8`, `AdjustRep $faction.id 15`, `AdjustRepActivePerson COOPERATIVE 10`, `AddPotentialContact`, `ui_rep_raise`, action `altEndingFallout`. `nskr_kq_altEndingTtAgreeSel`: "Lost the Unlimited Production Chip", action `altEndingPay`, `AdjustRep tritachyon 15`, the same person, contact and sound lines, `altEndingFallout`, `altEndingPlaceChip` |
 | Exits | `DialogOptionSelected` | `nskr_kq_altEndingExitSel` ("Do come back if you change your mind.") and `nskr_kq_altEndingExitAgreeSel`, both `FireAll PopulateOptions` |
 
-The vanilla receipts of `AddStoryPoints`, `AdjustRep`, `AdjustRepActivePerson`, `QuestRewards.credits` and `QuestRewards.relationship` replace the old hand-written receipt lines. The speaker's pronouns are vanilla's `$HeOrShe` and `$hisOrHer`; the Tri-Tachyon official's greeting uses the hub token `playerFullName`.
+`AddStoryPoints`, `AdjustRep`, `AdjustRepActivePerson`, `QuestRewards.credits` and `QuestRewards.relationship` print the vanilla receipts. The speaker's pronouns are vanilla's `$HeOrShe` and `$hisOrHer`; the Tri-Tachyon official's greeting uses the hub token `playerFullName`.
 
 `KestevenAltEndingsModule` (active at `CHIP_RECOVERED` and `COMPLETED`) declarations:
 
@@ -402,12 +402,4 @@ Both endings are rows in the `# KESTEVEN QUESTLINE: ENDINGS` block that take ove
 | Eliza: the call | `OpenInteractionDialog` row, `score:10000` | `nskr_kq_elizaEndingOpen` (`check elizaEndingHere`): `ShowDefaultVisual`, Continue only. |
 | Eliza: talk, equipment, end | Plain chain | `nskr_kq_elizaEndingCall` (Eliza's card, `ShowPersonVisual false nskr_anarchist`; token `endingManOrWoman`: "man", "woman", or "captain" for another gender), `nskr_kq_elizaEndingEquipment`, `nskr_kq_elizaEndingDone` (flag, stage 20, action `elizaEnding`, the rewards, the `FireAll` inserts `nskr_kqElizaEndingWar`: `nskr_kq_elizaEndingKesteven`, `…Hegemony`, `…IronShell`, then the contact with `AddPotentialContact nskr_anarchist`), then `defaultLeave`. |
 
-The insert rows' checks read a relationship before their own action lowers it, because a `FireAll` matches all its rows before it runs their scripts ([FireAll and FireBest](../RULES.md#fireall-and-firebest)). The "reduced to" and "improved to" values are tokens (`endingTriTachyonRep`, `elizaEndingPiratesRep`, `elizaEndingKestevenRep`, `elizaEndingHegemonyRep`), rounded as the old lines were.
-
-## Notes for moving dialogue into rules
-
-- **Speaker branching:** a Java branch on the active person and on flags becomes a row keyed on the person (`$id`) and the conditions it tests, as the hub rows above do.
-- **Highlights:** Java highlights use `addPara(text, color, highlight, …)`. The highlighted phrases and colours move with the text.
-- **Values in text:** job 1 electronics, payouts, the job 4 constellation, the Frost distance and target names are computed in Java. They must be prepared as tokens before a row displays them; see [RULES_AUTHORING.md](../RULES_AUTHORING.md#create-a-custom-text-token).
-- **Stage writes:** the full list is in [KESTEVEN_STATE.md](KESTEVEN_STATE.md#who-changes-the-stage).
-- **Bar events:** every questline bar event is a rules bar event, which saves nothing of its own; the job 3 party, the Eliza search and the Delve meeting are examples.
+The insert rows' checks read a relationship before their own action lowers it, because a `FireAll` matches all its rows before it runs their scripts ([FireAll and FireBest](../RULES.md#fireall-and-firebest)). The "reduced to" and "improved to" values are tokens (`endingTriTachyonRep`, `elizaEndingPiratesRep`, `elizaEndingKestevenRep`, `elizaEndingHegemonyRep`), rounded to whole points.
