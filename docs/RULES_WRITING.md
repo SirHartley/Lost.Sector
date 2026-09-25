@@ -152,7 +152,7 @@ Rows cannot do everything. Use a command verb ([Rule commands](#rule-commands)) 
 
 Java must not print prose. It may print short receipt lines in the vanilla receipt style when no vanilla command does the grant. Text, options and branching stay in rows.
 
-Options that change with data are a Java job only when the count or labels cannot be known in advance, such as one option per ship. A fixed set of options belongs in rows, even when Java decides whether each is available: expose that decision as a condition verb.
+Options that change with data are a Java job only when the count or labels cannot be known in advance, such as one option per ship. Lines that change with data work the same way: for a list of unknown length, the command writes each item's tokens and fires a line trigger once per item with `FireBest`, so each line's wording and style stay in a row (`nskr_shipSwap listPicked`). A fixed set of options belongs in rows, even when Java decides whether each is available: expose that decision as a condition verb.
 
 These catch.release cases show Java doing a row's job. Avoid them:
 
@@ -276,7 +276,7 @@ Versions of a line separated by a line containing only `OR` are picked at random
 
 ### Highlights and small text
 
-`SetTextHighlights` and `SetTextHighlightColors` color phrases in the last paragraph shown, in the order they appear. Arguments get token replacement, so `SetTextHighlights $nskr_x_amount` highlights the displayed value. Put them in the Script of the row whose Text they decorate, before any `AddText` in that Script. Repeat a phrase for each occurrence. See [Shared text presentation](DIALOGUE.md#shared-text-presentation).
+`SetTextHighlights` and `SetTextHighlightColors` color phrases in the last paragraph shown, in the order they appear. Arguments get token replacement, so `SetTextHighlights $nskr_x_amount` highlights the displayed value. Color arguments (`SetTextHighlightColors`, `AddText`, `AddTextSmall`, `SetOptionColor`) accept `highlight` or `h`, `good`, `bad`, `gray` or `grey`, `story`, a faction id (its base UI color), an `r,g,b,a` literal, a color name from `settings.json`, or a variable holding a `Color` (`Token.getColor` in `sources-api/util.java`). `bad` is `textEnemyColor`; unlike `Misc.getNegativeHighlightColor()` it does not turn blue in colorblind mode. Put them in the Script of the row whose Text they decorate, before any `AddText` in that Script. Repeat a phrase for each occurrence. See [Shared text presentation](DIALOGUE.md#shared-text-presentation).
 
 After the prose, small gray text can state a mechanical consequence the prose does not. SotF writes it as an indented list: `AddTextSmall "    - Progress made\n    - Its scorn grows" textGrayColor` (`sotfHauntedPenult4`). Real grants use the vanilla receipt commands, which print their own receipts; see [Receipts](#receipts).
 

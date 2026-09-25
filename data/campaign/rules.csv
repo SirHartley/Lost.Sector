@@ -59,11 +59,32 @@ nskr_shipSwapSell:Trade in artifacts
 nskr_shipSwapExit:Go back",
 nskr_shipSwapSellOption,DialogOptionSelected,"$option == nskr_shipSwapSell","nskr_shipSwap sell",,,
 nskr_shipSwap_SellResponse,nskr_shipSold,,"FireAll nskr_shipSwapMenu","""Thank you for your business.""",,
-nskr_shipSwap_ListBuyableShips,DialogOptionSelected,"$option == nskr_shipSwapBuyShips","nskr_shipSwap getShipForSale",,,
-nskr_shipSwap_ListBuyableGuns,DialogOptionSelected,"$option == nskr_shipSwapBuyGuns","nskr_shipSwap getGunForSale",,,
-nskr_shipSwapBuyConfirm,DialogOptionSelected,"$option == nskr_shipSwapConfirmPurchase","nskr_shipSwap confirmPurchase
+nskr_shipSwap_ListBuyableShips,DialogOptionSelected,"$option == nskr_shipSwapBuyShips","nskr_shipSwap prepareStock
+FireBest nskr_shipSwapHullStock",,,
+nskr_shipSwap_hullStock,nskr_shipSwapHullStock,"nskr_shipSwap hasStock SHIP","nskr_shipSwap getShipForSale
+ShowPersonVisual",,,
+nskr_shipSwap_hullStockNone,nskr_shipSwapHullStock,,"SetShortcut nskr_shipSwapMenuReturn ESCAPE","""Looks like we don't have any ships in stock at the moment.""","nskr_shipSwapMenuReturn:Back",
+nskr_shipSwap_ListBuyableGuns,DialogOptionSelected,"$option == nskr_shipSwapBuyGuns","nskr_shipSwap prepareStock
+FireBest nskr_shipSwapWeaponStock",,,
+nskr_shipSwap_weaponStock,nskr_shipSwapWeaponStock,"nskr_shipSwap hasStock WEAPON","nskr_shipSwap getGunForSale",,,
+nskr_shipSwap_weaponStockNone,nskr_shipSwapWeaponStock,,"SetShortcut nskr_shipSwapMenuReturn ESCAPE","""Looks like we don't have any weapons in stock at the moment.""","nskr_shipSwapMenuReturn:Back",
+nskr_shipSwap_pickCancelled,nskr_shipSwapPickCancelled,,"SetShortcut nskr_shipSwapMenuReturn ESCAPE","""Don't want anything? Shame.""","nskr_shipSwapMenuReturn:Go back","Fired by nskr_shipSwap when a stock picker is cancelled or nothing is picked."
+nskr_shipSwap_picked,nskr_shipSwapPicked,,"nskr_shipSwap listPicked
+AddTextSmall ""This will cost $nskr_shipSwap_costStr points.""
+SetTextHighlights $nskr_shipSwap_costStr
 AddTextSmall ""You have $nskr_shipSwap_pointsStr points.""
-SetTextHighlights $nskr_shipSwap_pointsStr","""Thank you for your business.""",,
+SetTextHighlights $nskr_shipSwap_pointsStr
+FireBest nskr_shipSwapPickedOffer",,,"Fired by nskr_shipSwap after a stock pick."
+nskr_shipSwap_pickedHull,nskr_shipSwapPickedHull,,"AddTextSmall ""$nskr_shipSwap_itemName-Class"" textGrayColor",,,"Fired by nskr_shipSwap listPicked once per picked hull."
+nskr_shipSwap_pickedWeapon,nskr_shipSwapPickedWeapon,,"AddTextSmall ""$nskr_shipSwap_itemName"" textGrayColor",,,"Fired by nskr_shipSwap listPicked once per picked weapon."
+nskr_shipSwap_offer,nskr_shipSwapPickedOffer,"nskr_shipSwap canAfford","SetShortcut nskr_shipSwapMenuReturn ESCAPE",,"nskr_shipSwapConfirmPurchase:Make the purchase
+nskr_shipSwapMenuReturn:""Never mind.""",
+nskr_shipSwap_offerTooExpensive,nskr_shipSwapPickedOffer,,"SetShortcut nskr_shipSwapMenuReturn ESCAPE","You can not afford this transaction.","nskr_shipSwapMenuReturn:Go back",
+nskr_shipSwapBuyConfirm,DialogOptionSelected,"$option == nskr_shipSwapConfirmPurchase","nskr_shipSwap confirmPurchase
+ShowPersonVisual
+AddTextSmall ""You have $nskr_shipSwap_pointsStr points.""
+SetTextHighlights $nskr_shipSwap_pointsStr
+SetShortcut nskr_shipSwapMenuReturn ESCAPE","""Thank you for your business.""","nskr_shipSwapMenuReturn:Go back",
 nskr_shipSwapExit,DialogOptionSelected,"$option == nskr_shipSwapExit","FireAll PopulateOptions",,,
 "#END ARTIFACT swap options",,,,,,
 ,,,,,,
@@ -76,12 +97,35 @@ SetShortcut nskr_modRemovalExit ""ESCAPE""",,"nskr_modRemovalManage:Select one o
 nskr_modRemovalExit:Go back",
 nskr_modRemovalMenuSel,DialogOptionSelected,"$option == nskr_modRemovalMenu","FireAll nskr_modRemovalMenu",,,
 nskr_modRemovalExit,DialogOptionSelected,"$option == nskr_modRemovalExit","FireAll PopulateOptions",,,
-nskr_modRemovalManage,DialogOptionSelected,"$option == nskr_modRemovalManage","nskr_modRemoval getHulls",,"
-nskr_modRemovalExit:Go back",
+nskr_modRemovalManage,DialogOptionSelected,"$option == nskr_modRemovalManage
+nskr_modRemoval hasShips","nskr_modRemoval getHulls",,,
+nskr_modRemovalManageNone,DialogOptionSelected,"$option == nskr_modRemovalManage
+!nskr_modRemoval hasShips","SetShortcut nskr_modRemovalExit ESCAPE","""Looks like you don't have any ships with Special Modifications. Quit wasting my time now, will you."" She groans.","nskr_modRemovalExit:Leave",
+nskr_modRemoval_pickCancelled,nskr_modRemovalPickCancelled,,"SetShortcut nskr_modRemovalReturn ESCAPE","""Come on captain, just make up your mind already. I don't have all day."" She mutters.","nskr_modRemovalReturn:Go back","Fired by nskr_modRemoval when the ship picker is cancelled or nothing is picked."
+nskr_modRemoval_shipPicked,nskr_modRemovalShipPicked,,"AddTextSmall ""Selected $nskr_modRemoval_shipName $nskr_modRemoval_hullName-Class"" textGrayColor
+SetTextHighlights $nskr_modRemoval_hullName
+FireAll nskr_modRemovalShipOptions",,,"Fired by nskr_modRemoval after a ship is picked."
+nskr_modRemoval_shipOptPickOne,nskr_modRemovalShipOptions,"$nskr_modRemoval_sMods == 1",,,"nskr_modRemoval_pick_ship:Select $nskr_modRemoval_hullName-Class has $nskr_modRemoval_sMods S-Mod",
+nskr_modRemoval_shipOptPickMany,nskr_modRemovalShipOptions,"$nskr_modRemoval_sMods != 1",,,"nskr_modRemoval_pick_ship:Select $nskr_modRemoval_hullName-Class has $nskr_modRemoval_sMods S-Mods",
+nskr_modRemoval_shipOptBack,nskr_modRemovalShipOptions,,"SetShortcut nskr_modRemovalReturn ESCAPE",,"nskr_modRemovalReturn:Go back",
 nskr_modRemovalReturnSel,DialogOptionSelected,"$option == nskr_modRemovalReturn","FireAll nskr_modRemovalMenu",,,
-nskr_modRemovalPickOption,DialogOptionSelected,"nskr_optionStartsWith ""nskr_modRemoval_pick_""","nskr_modRemoval prepareRemove",,"
-nskr_modRemovalManage:Go back",
-nskr_modRemovalPickOptionConfirm,DialogOptionSelected,"$option == nskr_modRemoval_confirm","nskr_modRemoval remove",,,
+nskr_modRemovalPickOption,DialogOptionSelected,"$option == nskr_modRemoval_pick_ship","nskr_modRemoval prepareRemove
+AddText ""Removing all the Special Modifications from the $nskr_modRemoval_hullName without causing permanent damage would require significant work.""
+SetStoryOption nskr_modRemoval_confirm 1 nskr_modRemoval ui_char_spent_story_point ""Removed S-Mods from a ship""
+SetShortcut nskr_modRemovalReturn ESCAPE",,"nskr_modRemoval_confirm:I'm sure you're capable enough.
+nskr_modRemovalReturn:Go back",
+nskr_modRemoval_sModLine,nskr_modRemovalSModLine,,"AddTextSmall ""S-Modded $nskr_modRemoval_sModName"" textGrayColor
+SetTextHighlightColors story
+SetTextHighlights $nskr_modRemoval_sModName",,,"Fired by nskr_modRemoval prepareRemove once per S-mod."
+nskr_modRemovalPickOptionConfirm,DialogOptionSelected,"$option == nskr_modRemoval_confirm","nskr_modRemoval remove
+AddText ""After some waiting around Alice finally gets back in contact with you.""
+AddText ""\""It wasn't easy but we pulled it off captain.\"" She says with a smug expression.""
+FireBest nskr_modRemovalRemovedText
+SetShortcut nskr_modRemovalExit ESCAPE","The hull is offloaded at a dry-dock so the crew can begin work on it.","nskr_modRemovalExit:Leave",
+nskr_modRemoval_removedOne,nskr_modRemovalRemovedText,"$nskr_modRemoval_removed == 1","AddTextSmall ""$nskr_modRemoval_shipName $nskr_modRemoval_hullName-Class removed $nskr_modRemoval_removed S-Mod"" textGrayColor
+SetTextHighlights $nskr_modRemoval_removed",,,
+nskr_modRemoval_removedMany,nskr_modRemovalRemovedText,,"AddTextSmall ""$nskr_modRemoval_shipName $nskr_modRemoval_hullName-Class removed $nskr_modRemoval_removed S-Mods"" textGrayColor
+SetTextHighlights $nskr_modRemoval_removed",,,
 "#END MOD REMOVAL",,,,,,
 ,,,,,,
 # DEBT options,,,,,,

@@ -63,6 +63,7 @@ Fixed - Markets no longer keep the Enigma population supply bonus or the Unlimit
 Fixed - Reality Splitter's exit blast no longer hits the ship that uses it
 Fixed - The Temporal Paradox system description is no longer cut off
 Fixed - Typos in Kesteven questline dialogue, Hellspawn event text, a tip and the Gate Conduit description
+Adjusted - Escape now goes back on every screen of the artifact exchange and the S-mod removal, and removing S-mods uses the standard story point prompt
 
 1.0.b
 Adjusted - Severely nerfed spawn rates for Borealis, Rhea and Kingslayer
