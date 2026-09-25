@@ -387,6 +387,11 @@ public class FleetHelper {
         return info.fleet.getFleetPoints() * 4.0f < info.strength;
     }
 
+    // No fleet points left: the fleet has no ships that count.
+    public static boolean isEmptied(FleetInfo info) {
+        return info.fleet.getFleetPoints() <= 0;
+    }
+
     // Despawns the fleet only when it is farther from the player than the maximum hyperspace sensor range, so the
     // player never sees it vanish. True when it despawned.
     public static boolean despawnOutOfSight(CampaignFleetAPI fleet) {

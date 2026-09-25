@@ -14,11 +14,9 @@ import com.fs.starfarer.api.impl.MusicPlayerPluginImpl;
 import com.fs.starfarer.api.impl.campaign.ids.Factions;
 import com.fs.starfarer.api.impl.campaign.ids.Pings;
 import com.fs.starfarer.api.impl.campaign.world.MoteParticleScript;
-import lostsector.campaign.kesteven.ExileManager;
 import lostsector.ModPlugin;
 import lostsector.helper.FleetHelper;
 import lostsector.helper.Ids;
-import lostsector.helper.SectorLookup;
 import lostsector.world.systems.cache.Cache;
 import org.lazywizard.lazylib.MathUtils;
 import org.lazywizard.lazylib.VectorUtils;
@@ -26,7 +24,6 @@ import org.lwjgl.util.vector.Vector2f;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 public class QuestStageManager extends BaseCampaignEventListener implements EveryFrameScript  {
     //
@@ -37,11 +34,6 @@ public class QuestStageManager extends BaseCampaignEventListener implements Ever
         JOB3_MARKET_BLACKLIST.add("eochu_bres");
         JOB3_MARKET_BLACKLIST.add("culann");
     }
-    public static final String JACK_REVENGEANCE_FLEET_KEY = "$RevengeanceJack";
-    public static final String REVENGEANCE_FLEET_KEY = "$RevengeanceQuestFleet";
-
-    //chance per day
-    public static final float REVENGEANCE_CHANCE = 0.01f;
     private float pingTimer = 0;
 
     private int stage =0;
@@ -74,12 +66,6 @@ public class QuestStageManager extends BaseCampaignEventListener implements Ever
 
         stage = QuestHelper.getStage();
 
-        //both mission markets lost failure
-        if (!ExileManager.canExile() && !SectorLookup.asteriaExists() && !QuestHelper.getEndMissions()){
-            QuestHelper.setStage(99);
-            QuestHelper.setEndMissions(true);
-            log("ERROR sector is fucked, ending missions");
-        }
         //////////////////
         //done while paused
         //////////////////
@@ -102,10 +88,8 @@ public class QuestStageManager extends BaseCampaignEventListener implements Ever
         if (Global.getSector().isPaused()) return;
         //timer
         if (Global.getSector().isInFastAdvance()) {
-            state.dayCounter += 2f*amount;
             state.fleetCounter += 2f*amount;
         } else{
-            state.dayCounter += amount;
             state.fleetCounter += amount;
         }
         //FLEETS
@@ -191,20 +175,6 @@ public class QuestStageManager extends BaseCampaignEventListener implements Ever
             }
             //cache mote particles
             if (Math.random()<0.004f)MoteParticleScript.spawnMote(pf);
-        }
-        //mission logic
-        if (state.dayCounter>10f) {
-            //revengeace fleet spawner
-            if (getRandom().nextFloat()<REVENGEANCE_CHANCE && stage == 20 && !state.jackRevengeSpawned) {
-                //jack
-                if (QuestHelper.getCompleted(KestevenFlag.ELIZA_ENDING_DONE) || QuestHelper.getCompleted(KestevenFlag.ALT_ENDING_DONE)){
-                    CampaignFleetAPI fleet = vengeanceJack();
-                    state.jackRevengeSpawned = true;
-                    log("Revengeanced Jack");
-                }
-            }
-            //END
-            state.dayCounter = 0f;
         }
         //fleet logic once a seconds (10s is a day)
         if (state.fleetCounter>1f){
@@ -302,50 +272,7 @@ public class QuestStageManager extends BaseCampaignEventListener implements Ever
                 }
                 continue;
             }
-            //revengeance fleets
-            if (fleet.getMemoryWithoutUpdate().contains(REVENGEANCE_FLEET_KEY)){
-                boolean despawn = false;
-
-                //destroyed
-                if (fleet.getFleetPoints()<=0) {
-                    despawn = true;
-                }
-
-                Vector2f fp = fleet.getLocationInHyperspace();
-                Vector2f pp = pf.getLocationInHyperspace();
-                float dist = MathUtils.getDistance(pp, fp);
-                if (despawn) {
-                    if (dist > Global.getSettings().getMaxSensorRangeHyper()) {
-                        //tracker for cleaning the list
-                        removed.add(fleet);
-                        fleet.despawn();
-                    }
-                }
-                //logic
-
-                //AI LOGIC
-                FleetHelper.gotoAndInterceptPlayerAI(fleet, f, FleetHelper.InterceptBehaviour.AROUND);
-                continue;
-            }
         }
-    }
-
-    private CampaignFleetAPI vengeanceJack(){
-        PersonAPI jack = KestevenPeople.getJack();
-        SectorEntityToken loc = SectorLookup.asteriaOrOutpost().getPrimaryEntity();
-        //spawn fleet and add to list
-        CampaignFleetAPI fleet = KestevenFleets.spawnJackFleet(loc, jack, KestevenQuest.random(KestevenState.RANDOM_QUEST));
-        //remove from market
-        loc.getMarket().getCommDirectory().removePerson(jack);
-        loc.getMarket().removePerson(jack);
-        //gone
-        Global.getSector().getImportantPeople().removePerson("nskr_opguy");
-        QuestHelper.setCompleted(true, KestevenFlag.JACK_GONE);
-        return fleet;
-    }
-
-    public static Random getRandom() {
-        return KestevenQuest.random(KestevenState.RANDOM_REVENGE);
     }
 
 }

@@ -891,20 +891,6 @@ cacheDialogEnd,DialogOptionSelected,"$option == cacheDialogEnd","EndConversation
 ShowDefaultVisual","You cut the comm link",,
 "#END CACHE fleet dialog",,,,,,
 ,,,,,,
-# JACK revengeance dialog,,,,,,
-jackRevengeanceDialogInit,BeginFleetEncounter,"$faction.id == kesteven score:1000
-!$ignorePlayerCommRequests
-$RevengeanceJack","HailPlayer",,,
-jackRevengeanceDialogInitial,OpenCommLink,"$faction.id == kesteven score:1000
-$entity.isHostile
-$entity.RevengeanceJack score:100","$entity.ignorePlayerCommRequests = true 100","A furious Jack shows up on your screen. ""I can't believe you betrayed us just like that, and to work with some lunatic spacer. You really have lost your damn mind, you'll be put out of your misery soon enough though."" He struggles to maintain his composure.
-""We can still make things right, wipe your stupid mistakes of the face of this sector. I will make sure of this!"" Before you can get even a word in he's gone.
-
-The comm link is cut before you have a chance to respond.","jackRevengeanceDialogEnd:Cut the comm link",
-jackRevengeanceDialogEnd,DialogOptionSelected,"$option == jackRevengeanceDialogEnd","EndConversation
-ShowDefaultVisual","the $faction $fleetName powers up their weapons and moves in to engage.",,
-"#END JACK revengeance dialog",,,,,,
-,,,,,,
 "#END KESTEVEN QUEST",,,,,,
 ,,,,,,
 # BOUNTIES,,,,,,
@@ -3029,3 +3015,16 @@ nskr_kq_elizaEndingIronShell,nskr_kqElizaEndingWar,nskr_quest kq check elizaEndi
 AddTextSmall ""Relationship with the Iron Shell reduced to $nskr_kq_elizaEndingHegemonyRep"" gray
 SetTextHighlightColors bad
 SetTextHighlights ""$nskr_kq_elizaEndingHegemonyRep""",,,Only with Iron Shell enabled; it takes the Hegemony value
+,,,,,,
+# KESTEVEN QUESTLINE: AFTERMATH,,,,,,
+nskr_kq_jackRevengeInit,BeginFleetEncounter,"$faction.id == kesteven score:1000
+!$ignorePlayerCommRequests
+$nskr_kq_jackRevenge",HailPlayer,,,
+nskr_kq_jackRevengeGreeting,OpenCommLink,"$faction.id == kesteven score:1000
+$entity.isHostile
+$entity.nskr_kq_jackRevenge score:100",$entity.ignorePlayerCommRequests = true 100,"A furious Jack shows up on your screen. ""I can't believe you betrayed us just like that, and to work with some lunatic spacer. You really have lost your damn mind, you'll be put out of your misery soon enough though."" He struggles to maintain his composure.
+""We can still make things right, wipe your stupid mistakes of the face of this sector. I will make sure of this!"" Before you can get even a word in he's gone.
+
+The comm link is cut before you have a chance to respond.",nskr_kq_jackRevengeEnd:Cut the comm link,
+nskr_kq_jackRevengeEnd,DialogOptionSelected,$option == nskr_kq_jackRevengeEnd,"EndConversation
+ShowDefaultVisual",the $faction $fleetName powers up their weapons and moves in to engage.,,

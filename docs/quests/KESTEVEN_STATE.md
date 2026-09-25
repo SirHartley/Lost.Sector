@@ -148,7 +148,7 @@ The actual path can skip stages: 8 to 10 without 9, 7 to 11 when job 3 is refuse
 | `ALT_ENDING_DONE` | Luddic or Tri-Tachyon ending done (shared) | `KestevenAltEndingsModule` action `altEndingFallout` |
 | `LUDDIC_ENDING_SECOND_TALK`, `TT_ENDING_SECOND_TALK` | Second conversation reached | Rules `nskr_kq_altEndingLuddicDoubtSel`, `nskr_kq_altEndingTtIncreaseSel` |
 | `COMMISSION_RESTORE_PENDING` | Commission fix pending | `KestevenEndingsModule` action `elizaEnding` |
-| `JACK_GONE` | Jack left for revenge | `QuestStageManager.vengeanceJack` |
+| `JACK_GONE` | Jack left for revenge | `KestevenAftermathModule` |
 | `ELIZA_BETRAYED` | Player took Eliza's market after her ending | `KestevenElizaFleetsModule.onDay` |
 
 Other features read flags through the [queries](#queries-for-other-features). `nskr_starfarerFromStart` (`ModPlugin.STARFARER_MODE_FROM_START_KEY`) is not questline state: `ModPlugin.onNewGame` writes it to sector persistent data, `Difficulty.clearStarfarerFromStartUnlessStarfarer()` and the story skip clear it, and `QuestHelper.saveEnding()` reads it for `hellspawnUnlocked`.
@@ -181,12 +181,12 @@ Other features read flags through the [queries](#queries-for-other-features). `n
 | `ttPayout` | `float` | Tri-Tachyon price, at least 2,000,000 | `KestevenAltEndingsModule` actions `altEndingRaisePrice` and `altEndingPay` |
 | `kestevenEndingTriTachyonRep` | `float` | The Tri-Tachyon relationship the Kesteven ending rolls, -0.70 to -0.65 | `KestevenEndingsModule` action `kestevenEnding` |
 | `commissionRepPirates`, `commissionRepKesteven`, `commissionRepHegemony` | `float` | The Eliza ending's relationship values, which the commission fix re-applies | `KestevenEndingsModule` action `elizaEnding` |
-| `dayCounter`, `fleetCounter` | `float` | Daily logic timer (10 s) and fleet timer (1 s), in frame seconds | `QuestStageManager` |
+| `fleetCounter` | `float` | Fleet timer (1 s), in frame seconds | `QuestStageManager` |
 | `cacheSeconds` | `float` | Frame seconds spent in Unknown Site before the guardian | `QuestStageManager` |
 | `cacheIntelAdded` | `boolean` | Intel added once | `QuestStageManager` |
 | `cacheGuardianSpotPicked`, `cacheDoubtShown`, `cacheGuardianSpawned` | `boolean` | Guardian location picked, Cache hint shown, guardian spawned | `QuestStageManager` |
 | `elizaInterceptSpawned`, `elizaRevengeSpawned` | `boolean` | Eliza's intercept and Eliza's revenge spawned | `KestevenElizaFleetsModule` |
-| `jackRevengeSpawned` | `boolean` | Jack's revenge spawned | `QuestStageManager` |
+| `jackRevengeSpawned` | `boolean` | Jack's revenge spawned | `KestevenAftermathModule` |
 | `commissionRestored` | `boolean` | Commission fix applied | `KestevenEndingsModule` |
 
 `QuestStageManager` keeps `pingTimer` (seconds between Cache pings) as a plain instance field. It is not saved and restarts on every load.
@@ -198,7 +198,7 @@ Each purpose is a constant on `KestevenState`, named after the persistent-data k
 | Constant | Purpose | Accessor |
 |---|---|---|
 | `RANDOM_QUEST` | `kestevenQuestRandom` | `KestevenQuest.random(KestevenState.RANDOM_QUEST)` and the hub actions: target pickers, fleets, the modspec reward, Eliza bar payment, Cache guardian and wrecks |
-| `RANDOM_REVENGE` | `kestevenQuestRandomKey` | `QuestStageManager.getRandom()`: Jack's revenge roll |
+| `RANDOM_REVENGE` | `kestevenQuestRandomKey` | `KestevenAftermathModule`: Jack's revenge roll, drawn every day |
 | `RANDOM_GLACIER` | `glacierCommsKeyRandom` | `KestevenGlacierModule` action `damageFleet`: which ships the barrage hits and how hard |
 | `RANDOM_ELIZA` | `elizaDialogKeyRandom` | `KestevenQuest.random(KestevenState.RANDOM_ELIZA)`: Eliza's fleets and raid |
 | `RANDOM_CACHE_DOUBT` | `cacheDoubtDialogRandom` | `CacheDoubtDialog.getRandom()` |
@@ -228,7 +228,7 @@ The Kesteven bar tip is not questline content; it is quest `hint` ([Exploration 
 | `$nskr_kq_elizaRaided`, `$nskr_kq_elizaIntercept`, `$nskr_kq_elizaReturning`, `$nskr_kq_elizaRevenge` | Eliza's fleets: role flags of quest `kq` | `QuestFleets` | Rules `# KESTEVEN QUESTLINE: ELIZA FLEETS` |
 | `$nskr_kq_elizaFleetDone` | An Eliza fleet that lost Eliza or gave up the chase | `KestevenElizaFleetsModule` | The `withdrawWhen` condition of its role's orders |
 | `$nskr_kq_elizaStood` | Local memory of the market entity during the port meeting; expiry `0` | Row `nskr_kq_elizaStand` | Row `nskr_kq_elizaStoodLine` |
-| `$RevengeanceQuestFleet`, `$RevengeanceJack` | Revenge fleets | `KestevenFleets` | `QuestStageManager`, rules |
+| `$nskr_kq_jackRevenge` | Jack's revenge fleet: role flag of quest `kq` | `QuestFleets` | Rules `# KESTEVEN QUESTLINE: AFTERMATH` |
 | `$CacheGuardianFleet` (`Cache.CACHE_FLEET_KEY`) | Guardian fleet | `Cache` | `QuestStageManager`, `CacheBossTauntPlugin`, rules |
 | `$EnigmaDormantFleet` (`DormantSpawner.DORMANT_KEY`) | Dormant fleets at quest locations | `DormantSpawner.addDormant` | Action `wakeSatelliteGuard`, which keeps the flag on the fleets it wakes; rules `dormantDialog` |
 | `$nskr_kq_satelliteGuard` | A dormant fleet woken at satellite #3: role flag of quest `kq` | `QuestFleets.adopt`, from action `wakeSatelliteGuard` | Nothing reads it |

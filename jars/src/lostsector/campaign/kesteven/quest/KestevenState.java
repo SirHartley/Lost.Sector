@@ -71,7 +71,6 @@ public final class KestevenState extends QuestState<KestevenStage> implements In
     float commissionRepHegemony;
 
     // Frame seconds, as QuestStageManager counts them: 10 seconds are one campaign day.
-    float dayCounter;
     float fleetCounter;
     float cacheSeconds;
 

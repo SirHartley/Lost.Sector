@@ -1,6 +1,5 @@
 package lostsector.campaign.kesteven.quest;
 
-import lostsector.helper.fleet.FleetInfo;
 import lostsector.helper.fleet.SimpleCaptain;
 import lostsector.helper.fleet.SimpleFleet;
 import lostsector.helper.fleet.SimpleFleetMember;
@@ -13,7 +12,6 @@ import com.fs.starfarer.api.campaign.StarSystemAPI;
 import com.fs.starfarer.api.characters.PersonAPI;
 import com.fs.starfarer.api.impl.campaign.ids.*;
 import lostsector.settings.Difficulty;
-import lostsector.helper.FleetHelper;
 import lostsector.helper.MathHelper;
 import lostsector.helper.ShipHelper;
 import lostsector.helper.StringHelper;
@@ -91,8 +89,8 @@ public class KestevenFleets {
         return simpleFleet;
     }
 
-    //JACK FLEET
-    public static CampaignFleetAPI spawnJackFleet(SectorEntityToken loc, PersonAPI jack, Random random) {
+    // Jack's revenge fleet, unbuilt, with Jack as commander; KestevenAftermathModule spawns it.
+    static SimpleFleet jackRevenge(SectorEntityToken loc, PersonAPI jack, Random random) {
 
         float points = MathHelper.getSeededRandomNumberInRange(190f,200f, random);
 
@@ -122,8 +120,6 @@ public class KestevenFleets {
         keys.add(MemFlags.FLEET_FIGHT_TO_THE_LAST);
         keys.add(MemFlags.FLEET_IGNORES_OTHER_FLEETS);
         keys.add(MemFlags.MEMORY_KEY_MISSION_IMPORTANT);
-        keys.add(QuestStageManager.JACK_REVENGEANCE_FLEET_KEY);
-        keys.add(QuestStageManager.REVENGEANCE_FLEET_KEY);
 
         //permamods
         List<String> permamods = new ArrayList<>();
@@ -144,19 +140,7 @@ public class KestevenFleets {
         simpleFleet.name = "Task Force";
         simpleFleet.assignment = FleetAssignment.ORBIT_PASSIVE;
         simpleFleet.assignmentText = "holding";
-        CampaignFleetAPI fleet = simpleFleet.create();
-
-        //add to mem IMPORTANT
-        List<FleetInfo> fleets = FleetHelper.getFleets(QuestStageManager.FLEET_ARRAY_KEY);
-        FleetInfo info = new FleetInfo(fleet, null, loc);
-        info.flagshipSimpleMember = simpleFleet.getFlagshipInfo();
-        info.secondaries = simpleFleet.getSecondaryMembers();
-        fleets.add(info);
-        FleetHelper.setFleets(fleets, QuestStageManager.FLEET_ARRAY_KEY);
-
-        log("Jack SPAWNED, size " + points + " loc " + loc.getName() + " system " + loc.getContainingLocation().getName());
-        log("Jack FLEET, loc " + fleet.getStarSystem().getName() +" size "+ fleet.getFleetPoints() + " commander " + fleet.getCommander().getName().getFullName() + " flagship " + fleet.getFlagship().getHullSpec().getBaseHullId());
-        return fleet;
+        return simpleFleet;
     }
 
     // Memory flags of the Tri-Tachyon collector; KestevenCollector removes them once the player pays.

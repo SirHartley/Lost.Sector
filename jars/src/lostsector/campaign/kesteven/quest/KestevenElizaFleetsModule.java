@@ -53,7 +53,8 @@ final class KestevenElizaFleetsModule extends QuestModule<KestevenStage, Kesteve
         d.role(ROLE_RAIDED, FleetRole.of(FleetOrders.intercept(FleetHelper.InterceptBehaviour.AROUND).withdrawWhen(KestevenElizaFleetsModule::done)));
         d.role(ROLE_INTERCEPT, FleetRole.of(FleetOrders.intercept(FleetHelper.InterceptBehaviour.DIRECT).withdrawWhen(KestevenElizaFleetsModule::done)));
         d.role(ROLE_RETURNING, FleetRole.of(FleetOrders.leave().withdrawWhen(KestevenElizaFleetsModule::done)));
-        d.role(ROLE_REVENGE, FleetRole.of(FleetOrders.intercept(FleetHelper.InterceptBehaviour.AROUND)));
+        // The old revenge fleet logic despawned an emptied fleet once out of the player's sight, as Jack's revenge role does.
+        d.role(ROLE_REVENGE, FleetRole.of(FleetOrders.intercept(FleetHelper.InterceptBehaviour.AROUND).withdrawWhen(FleetHelper::isEmptied)));
 
         d.check("elizaChipGone", ctx -> ctx.has(KestevenFlag.KESTEVEN_ENDING_DONE) || ctx.has(KestevenFlag.ALT_ENDING_DONE));
 

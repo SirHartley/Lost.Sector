@@ -160,7 +160,7 @@ Jack is Kesteven's space operations officer at Asteria (`nskr_opguy`), the quest
 - On Kesteven's mission (rules `nskr_kq_delveDoubt`): "Think about it, Asteria is one of the last great bastions of equality and democracy. We are very much in a unique position to drive progress in this sector." This shows the sincere-sounding corporate pitch; he believes it, and the setting's own descriptions undercut it.
 - On Eliza's death (rules `nskr_kq_jackLeadsElizaKilled`, job 5 tip): "I hear you managed to already take out Eliza for good, very impressive captain." The narration adds "There is a sinister smile on his face, you seem to have made his day." His warmth has a hard edge.
 - At the Kesteven ending (rules `nskr_kq_kestevenEndingShare` and `nskr_kq_kestevenEndingDone`): "This cold war of ours is about to go hot, but we will be ready." ... "I hope we can again work together in the future, burn bright." Defiance, confidence and a sign-off that belongs to him.
-- Betrayed (rules `jackRevengeanceDialogInitial`): "I can't believe you betrayed us just like that, and to work with some lunatic spacer." He "struggles to maintain his composure".
+- Betrayed (rules `nskr_kq_jackRevengeGreeting`): "I can't believe you betrayed us just like that, and to work with some lunatic spacer." He "struggles to maintain his composure".
 
 **Traits.** He keeps secrets politely: "That's classified information captain. I'm sure you'll understand." He slips the player a bonus he "isn't supposed to", and offers artisan liqueur made with "*real* fruits, none of that synth crap". He is skeptical of rumors and proud of Kesteven's work.
 
