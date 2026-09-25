@@ -28,6 +28,7 @@ import java.util.IdentityHashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.Set;
 
 // Transient: ModPlugin.createManagers() builds it on every load and the EFS_LIST loop registers it.
@@ -426,9 +427,17 @@ public final class QuestManager extends BaseCampaignEventListener
         for (FleetInfo info : new ArrayList<>(fleets)) {
             if (info.fleet == null || !info.fleet.isAlive()) continue;
             info.age += elapsed;
-            FleetRole role = declaredRole(new QuestFleet(info));
-            if (role != null) role.orders().apply(info);
+            QuestFleet fleet = new QuestFleet(info);
+            FleetRole role = declaredRole(fleet);
+            if (role != null) role.orders().apply(info, ordersRandom(fleet));
         }
+    }
+
+    // The owning quest's saved sequence; Misc.random only for a quest without state, whose fleets still get orders.
+    private Random ordersRandom(QuestFleet fleet) {
+        Run<?, ?> run = runs.get(fleet.owner());
+        QuestState<?> state = run == null ? null : run.state();
+        return state == null ? Misc.random : QuestContext.random(state, "fleetOrders");
     }
 
     // The declared role of a registered fleet; logs once per fleet when its quest or role is unknown.

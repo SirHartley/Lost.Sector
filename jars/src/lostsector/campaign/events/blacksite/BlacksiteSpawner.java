@@ -9,8 +9,6 @@ import com.fs.starfarer.api.impl.campaign.procgen.themes.BaseThemeGenerator;
 import com.fs.starfarer.api.impl.campaign.procgen.themes.DerelictThemeGenerator;
 import com.fs.starfarer.api.util.Pair;
 import com.fs.starfarer.api.util.WeightedRandomPicker;
-import lostsector.campaign.events.blacksite.BlacksiteInfo;
-import lostsector.campaign.events.blacksite.BlacksiteManager;
 import lostsector.helper.fleet.SystemPicker;
 import lostsector.helper.Ids;
 import lostsector.helper.SystemHelper;
@@ -47,6 +45,18 @@ public class BlacksiteSpawner {
 
     // Functions
 
+    // Every id spawnBases() can assign, in spawn order; BlacksiteModule adopts the stations that exist.
+    public static List<String> siteIds() {
+        List<String> ids = new ArrayList<>();
+        for (Pair<String, Integer> spawnData : STATION_SPAWNS) {
+            for (int i = 0; i < spawnData.two; i++) {
+                ids.add(Ids.BLACKSITE_ENTITY_ID + i);
+            }
+        }
+        return ids;
+    }
+
+    // World generation only: the blacksite quest picks each station's owner and name when it starts.
     public static void spawnBases() {
         for (Pair<String, Integer> spawnData : STATION_SPAWNS) {
             int numberOfSpawns = 0;
@@ -72,36 +82,10 @@ public class BlacksiteSpawner {
                 //makes sure we are not in a star
                 SystemHelper.spawnAwayFromStarFixer(base);
                 base.setId(Ids.BLACKSITE_ENTITY_ID+numberOfSpawns);
-
-                List<BlacksiteInfo> sites = BlacksiteManager.getSites(BlacksiteManager.SITE_ARRAY_KEY);
-                BlacksiteInfo site = new BlacksiteInfo(base, new Random());
-                sites.add(site);
-                BlacksiteManager.setSites(sites, BlacksiteManager.SITE_ARRAY_KEY);
-
-                switch (site.faction){
-                    case Factions.PIRATES:
-                        base.setName("Pirate Stash");
-                        break;
-                    case Factions.LUDDIC_PATH:
-                        base.setName("Pather Stash");
-                        break;
-                    case Factions.TRITACHYON:
-                        base.setName("Tri-Tachyon Blacksite");
-                        break;
-                    case Ids.KESTEVEN_FACTION_ID:
-                        base.setName("Kesteven Blacksite");
-                        break;
-                    case Ids.ENIGMA_FACTION_ID:
-                        base.setName("Ancient Enigma Hangar");
-                        break;
-                    case Factions.REMNANTS:
-                        base.setName("Ancient Remnant Hangar");
-                        break;
-                }
                 base.setDiscoverable(true);
                 base.setSensorProfile(1000f);
 
-                log("location blacksite "+site.faction+" loc "+ base.getStarSystem().getName()+" "+placeToSpawn);
+                log("location blacksite "+base.getId()+" loc "+ base.getStarSystem().getName()+" "+placeToSpawn);
 
                 numberOfSpawns++;
             }

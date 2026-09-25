@@ -1296,3 +1296,42 @@ AddText ""There is no escape."" gray
 AddText ""Despite your best efforts the opposing fleet remains one step ahead of you.""",,,Fired by HellSpawnJudgementInteraction
 nskr_hs_fightBattleDisengage,nskr_hsFightBattleDisengage,,"AddText ""You have to finish this."" gray
 AddText ""The opposing fleet doesn't seem to be effected by the damage you caused.""",,,Fired by HellSpawnJudgementInteraction
+,,,,,,
+# BLACKSITES,,,,,,
+nskr_bs_siteDormant,nskr_bsSite,nskr_quest bs check dormant,"ShowDefaultVisual
+FireBest nskr_bsFactionHighlight","Upon closer inspection it becomes clear that the site has multiple tripwire alarms rigged to it. There is no clear way to salvage anything of worth without triggering them.
+
+""The whole damn thing is tamper proof."" Your ops chief scoffs. ""According to our quick analysis of the site it appears to belong to $nskr_bs_factionName. They'll come and try to stop us from salvaging it. I would expect $nskr_bs_expectedCount $nskr_bs_expectedNoun, with their total numbers being $nskr_bs_strength to ours.""
+
+""They'll most likely try and empty the station themselves - as to not risk any of the valuable equipment falling into our hands, rather than try attacking us directly. So be prepared to stop them. That's all captain."" The ops chief gives you a nod of confirmation.
+
+You can't safely take further actions with the site until all the hostile fleets are defeated or enough time has passed.","nskr_bs_tripAlarm:Trip the alarm
+defaultLeave:Leave",Opened through the claim BlacksiteModule places on every station
+nskr_bs_siteActive,nskr_bsSite,nskr_quest bs check active,"ShowDefaultVisual
+SetTextHighlights ""$nskr_bs_remainingCount""","You can't safely take further actions with the site until all the hostile fleets are defeated or enough time has passed.
+
+There appears to be $nskr_bs_remainingCount active hostile $nskr_bs_remainingNoun remaining.",defaultLeave:Leave,
+nskr_bs_siteGone,nskr_bsSite,,DismissDialog,,,Fallback; the claim is released when a site is cleared or destroyed
+,,,,,,
+nskr_bs_highlightPather,nskr_bsFactionHighlight,nskr_quest bs check faction luddic_path,"SetTextHighlightColors luddic_path highlight
+SetTextHighlights ""$nskr_bs_factionName"" ""hostile fleets are defeated""",,,
+nskr_bs_highlightPirates,nskr_bsFactionHighlight,nskr_quest bs check faction pirates,"SetTextHighlightColors pirates highlight
+SetTextHighlights ""$nskr_bs_factionName"" ""hostile fleets are defeated""",,,
+nskr_bs_highlightEnigma,nskr_bsFactionHighlight,nskr_quest bs check faction enigma,"SetTextHighlightColors enigma highlight
+SetTextHighlights ""$nskr_bs_factionName"" ""hostile fleets are defeated""",,,
+nskr_bs_highlightKesteven,nskr_bsFactionHighlight,nskr_quest bs check faction kesteven,"SetTextHighlightColors kesteven highlight
+SetTextHighlights ""$nskr_bs_factionName"" ""hostile fleets are defeated""",,,
+nskr_bs_highlightTriTachyon,nskr_bsFactionHighlight,nskr_quest bs check faction tritachyon,"SetTextHighlightColors tritachyon highlight
+SetTextHighlights ""$nskr_bs_factionName"" ""hostile fleets are defeated""",,,
+nskr_bs_highlightRemnant,nskr_bsFactionHighlight,nskr_quest bs check faction remnant,"SetTextHighlightColors remnant highlight
+SetTextHighlights ""$nskr_bs_factionName"" ""hostile fleets are defeated""",,,
+nskr_bs_highlightDefault,nskr_bsFactionHighlight,,"SetTextHighlights ""$nskr_bs_factionName"" ""hostile fleets are defeated""",,,Fallback without the faction colour
+,,,,,,
+nskr_bs_tripAlarmSel,DialogOptionSelected,$option == nskr_bs_tripAlarm,"nskr_quest bs do activate
+Ping sensor_burst
+Ping interdict
+SetShortcut nskr_bs_leaveAlarm ESCAPE","You give the order, and shortly the alarms are tripped by one carefully placed remote charge.
+
+Get ready to defend the location.",nskr_bs_leaveAlarm:Leave,
+nskr_bs_leaveAlarmSel,DialogOptionSelected,$option == nskr_bs_leaveAlarm,"PlaySound ui_sensor_burst_on
+DismissDialog",,,

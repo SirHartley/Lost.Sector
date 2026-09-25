@@ -15,16 +15,12 @@ import lostsector.campaign.starts.hellspawn.HellSpawnAbilityInteraction;
 import lostsector.campaign.starts.hellspawn.HellSpawnJudgementInteraction;
 import lostsector.campaign.bounties.mothership.MothershipInteractionBlocker;
 import lostsector.campaign.bounties.mothership.MothershipSpawner;
-import lostsector.campaign.events.blacksite.BlacksiteInfo;
-import lostsector.campaign.events.blacksite.BlacksiteDialog;
-import lostsector.campaign.events.blacksite.BlacksiteManager;
 import lostsector.campaign.kesteven.quest.KestevenQuest;
 import lostsector.campaign.kesteven.quest.QuestHelper;
 import lostsector.helper.SectorLookup;
 import lostsector.quest.QuestDialogs;
 
 import java.util.Collection;
-import java.util.List;
 
 public class CorePlugin extends BaseCampaignPlugin {
 
@@ -48,14 +44,6 @@ public class CorePlugin extends BaseCampaignPlugin {
         String claimedTrigger = QuestDialogs.claimedTrigger(interactionTarget);
         if (claimedTrigger != null) {
             return new PluginPick<InteractionDialogPlugin>(QuestDialogs.plugin(claimedTrigger), PickPriority.MOD_GENERAL);
-        }
-        //blacksite interaction
-        List<BlacksiteInfo> sites = BlacksiteManager.getSites(BlacksiteManager.SITE_ARRAY_KEY);
-        if (!sites.isEmpty()) {
-            BlacksiteInfo site = BlacksiteManager.getInfo(interactionTarget.getId(), sites);
-            if (site != null) {
-                return new PluginPick<InteractionDialogPlugin>(new BlacksiteDialog(), PickPriority.MOD_GENERAL);
-            }
         }
         //mothership bounty
         if (interactionTarget.getId().equals(MothershipSpawner.PLANET1_ID) || interactionTarget.getId().equals(MothershipSpawner.PLANET2_ID)) {

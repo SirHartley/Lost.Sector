@@ -59,7 +59,6 @@ import lostsector.campaign.bounties.abyss.AbyssSpawner;
 import lostsector.campaign.bounties.eternity.EternitySpawner;
 import lostsector.campaign.bounties.mothership.MothershipSpawner;
 import lostsector.campaign.bounties.peacekeepers.RorqualSpawner;
-import lostsector.campaign.events.blacksite.BlacksiteManager;
 import lostsector.campaign.events.hints.HintManager;
 import lostsector.campaign.enigma.EnigmaFleetLoot;
 import lostsector.campaign.bounties.BountyLoot;
@@ -200,7 +199,6 @@ public class ModPlugin extends BaseModPlugin {
         EFS_LIST.add(new ContractManager());
         EFS_LIST.add(new EnigmaHullmodListener());
         EFS_LIST.add(new MothershipSpawner());
-        EFS_LIST.add(new BlacksiteManager());
         EFS_LIST.add(new EnigmaAIConverter());
         EFS_LIST.add(new GameModeManager());
         EFS_LIST.add(new ThronesGiftManager());
@@ -445,7 +443,7 @@ public class ModPlugin extends BaseModPlugin {
         Frost.generateRuins(Global.getSector().getStarSystem(Frost.getName()));
         //fix frozen desert conditions
         DesertConditionRepair.fix();
-        //blacksites, done later so we can use sector memory
+        //blacksites; the blacksite quest adopts them at the end of onGameLoad
         BlacksiteSpawner.spawnBases();
 
         //mothership fleet

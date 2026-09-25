@@ -26,17 +26,26 @@ public final class QuestContext<S extends Enum<S> & QuestStage, T extends QuestS
     private final InteractionDialogAPI dialog;
     private final Map<String, MemoryAPI> memoryMap;
     private final List<String> args;
+    private final SectorEntityToken tokenTarget;
     private QuestRewards rewards;
     private QuestIntels intels;
 
     QuestContext(QuestManager.Run<S, T> run, String source, String ruleId, InteractionDialogAPI dialog,
                  Map<String, MemoryAPI> memoryMap, List<String> args) {
+        this(run, source, ruleId, dialog, memoryMap, args, null);
+    }
+
+    // tokenTarget: for a token context, the entity the engine passes to the token generator, which is the dialog's
+    // interaction target for dialog text (FireBest/FireAll addText, Misc.Token.getStringWithTokenReplacement).
+    QuestContext(QuestManager.Run<S, T> run, String source, String ruleId, InteractionDialogAPI dialog,
+                 Map<String, MemoryAPI> memoryMap, List<String> args, SectorEntityToken tokenTarget) {
         this.run = run;
         this.source = source;
         this.ruleId = ruleId;
         this.dialog = dialog;
         this.memoryMap = memoryMap;
         this.args = args == null ? List.of() : List.copyOf(args);
+        this.tokenTarget = tokenTarget;
     }
 
     public Quest<S, T> quest() {
@@ -210,8 +219,9 @@ public final class QuestContext<S extends Enum<S> & QuestStage, T extends QuestS
         return memoryMap;
     }
 
+    // The dialog target; in a token, the entity whose text is being replaced; null otherwise.
     public SectorEntityToken target() {
-        return dialog == null ? null : dialog.getInteractionTarget();
+        return dialog == null ? tokenTarget : dialog.getInteractionTarget();
     }
 
     public TextPanelAPI textPanel() {

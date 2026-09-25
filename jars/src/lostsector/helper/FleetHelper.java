@@ -10,6 +10,7 @@ import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.CampaignEventListener.FleetDespawnReason;
 import com.fs.starfarer.api.campaign.CampaignFleetAPI;
 import com.fs.starfarer.api.campaign.FleetAssignment;
+import com.fs.starfarer.api.campaign.SectorEntityToken;
 import com.fs.starfarer.api.campaign.ai.CampaignFleetAIAPI;
 import com.fs.starfarer.api.campaign.ai.FleetAssignmentDataAPI;
 import com.fs.starfarer.api.campaign.ai.ModularFleetAIAPI;
@@ -375,6 +376,50 @@ public class FleetHelper {
         if (dist <= Global.getSettings().getMaxSensorRangeHyper()) return false;
         fleet.despawn(FleetDespawnReason.PLAYER_FAR_AWAY, null);
         return true;
+    }
+
+    public static final float RAID_ORBIT_RANGE = 600f;
+    public static final float RAID_BROKEN_STRENGTH = 0.2f;
+
+    // Goes to info.target and orbits it with orbitText, re-issued on every call, while the target is set and the fleet
+    // is not broken. Otherwise it withdraws once, to info.home when withdrawHome or to a random market of its faction
+    // (info.home when there is none), and despawns there. Unlike the other AI methods it continues after the
+    // standing-down check, so a standing-down fleet is sent back to its raid on the same call.
+    public static void raidTargetAI(CampaignFleetAPI fleet, FleetInfo info, String orbitText, boolean withdrawHome, Random random) {
+        CampaignFleetAPI pf = Global.getSector().getPlayerFleet();
+        if (fleet.getAI() == null) return;
+        FleetAssignmentDataAPI curr = fleet.getAI().getCurrentAssignment();
+        safetyCheck(fleet, curr);
+        specManeuversCheck(fleet, pf, curr);
+
+        if (info.target == null || isRaidBroken(info)) {
+            if (fleet.getAI().getCurrentAssignmentType() == FleetAssignment.GO_TO_LOCATION_AND_DESPAWN) return;
+            SectorEntityToken market = withdrawHome ? null : SystemHelper.getRandomFactionMarket(random, fleet.getFaction().getId());
+            fleet.clearAssignments();
+            if (market == null) {
+                fleet.addAssignment(FleetAssignment.GO_TO_LOCATION_AND_DESPAWN, info.home, Float.MAX_VALUE, "standing down");
+            } else {
+                fleet.addAssignment(FleetAssignment.GO_TO_LOCATION_AND_DESPAWN, market, Float.MAX_VALUE, "returning to " + market.getName());
+            }
+            return;
+        }
+        fleet.clearAssignments();
+        if (MathUtils.getDistance(fleet.getLocation(), info.target.getLocation()) > RAID_ORBIT_RANGE) {
+            fleet.addAssignment(FleetAssignment.GO_TO_LOCATION, info.target, Float.MAX_VALUE, "moving to location");
+        } else {
+            fleet.addAssignment(FleetAssignment.ORBIT_PASSIVE, info.target, Float.MAX_VALUE, orbitText);
+        }
+    }
+
+    // A raiding fleet below a fifth of its spawn strength withdraws and no longer counts as a defender.
+    public static boolean isRaidBroken(FleetInfo info) {
+        return info.fleet.getFleetPoints() < info.strength * RAID_BROKEN_STRENGTH;
+    }
+
+    // Orbiting its target, in the sense raidTargetAI orders it.
+    public static boolean isRaidingTarget(FleetInfo info) {
+        return info.target != null && !isRaidBroken(info)
+                && MathUtils.getDistance(info.fleet.getLocation(), info.target.getLocation()) <= RAID_ORBIT_RANGE;
     }
 
     public static FleetMemberAPI generateShip(String variant, boolean noAutofit, boolean alwaysRecover) {
