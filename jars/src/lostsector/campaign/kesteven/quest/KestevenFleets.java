@@ -31,9 +31,9 @@ public class KestevenFleets {
     public static final String FLEET_NAME = "Eliza's Merc Armada";
     public static final String FLAGSHIP_VARIANT = "nskr_onslaught_boss";
     public static final String FS_NAME = "Regicide";
-    public static final String ELIZA_RAIDED_FLEET_KEY = "$ElizaFleet";
-    //ELIZA FLEET
-    public static CampaignFleetAPI spawnElizaFleet(SectorEntityToken loc, PersonAPI eliza, Random random, boolean revengeance, boolean intercept) {
+    // Eliza's fleet, unbuilt, with Eliza as commander; hostile unless it comes to take the chip. KestevenElizaFleetsModule
+    // spawns it, then sets the mercenary faction and runs FleetHelper.update with the same random.
+    public static SimpleFleet elizaFleet(SectorEntityToken loc, PersonAPI eliza, Random random, boolean hostile) {
 
         float points = MathHelper.getSeededRandomNumberInRange(190f,200f, random);
 
@@ -63,20 +63,10 @@ public class KestevenFleets {
         ArrayList<String> keys = new ArrayList<>();
         keys.add(MemFlags.MEMORY_KEY_SAW_PLAYER_WITH_TRANSPONDER_ON);
         keys.add(MemFlags.MEMORY_KEY_NO_REP_IMPACT);
-        if (!intercept) keys.add(MemFlags.MEMORY_KEY_MAKE_HOSTILE);
+        if (hostile) keys.add(MemFlags.MEMORY_KEY_MAKE_HOSTILE);
         keys.add(MemFlags.FLEET_FIGHT_TO_THE_LAST);
         keys.add(MemFlags.FLEET_IGNORES_OTHER_FLEETS);
         keys.add(MemFlags.MEMORY_KEY_MISSION_IMPORTANT);
-
-        if (!revengeance && !intercept){
-            keys.add(ELIZA_RAIDED_FLEET_KEY);
-        }
-        else if (revengeance){
-            keys.add(QuestStageManager.REVENGEANCE_FLEET_KEY);
-        }
-        else if (intercept){
-            keys.add(QuestStageManager.ELIZA_INTERCEPT_FLEET_KEY);
-        }
 
         //permamods
         List<String> permamods = new ArrayList<>();
@@ -98,25 +88,13 @@ public class KestevenFleets {
         simpleFleet.noFactionInName = true;
         simpleFleet.assignment = FleetAssignment.ORBIT_PASSIVE;
         simpleFleet.assignmentText = "holding";
-        CampaignFleetAPI fleet = simpleFleet.create();
+        return simpleFleet;
+    }
 
-        fleet.setFaction(Factions.MERCENARY, false);
-
-        //update
-        FleetHelper.update(fleet, random);
-
-
-        //add to mem IMPORTANT
-        List<FleetInfo> fleets = FleetHelper.getFleets(QuestStageManager.FLEET_ARRAY_KEY);
-        FleetInfo info = new FleetInfo(fleet, null, loc);
-        info.flagshipSimpleMember = simpleFleet.getFlagshipInfo();
-        info.secondaries = simpleFleet.getSecondaryMembers();
-        fleets.add(info);
-        FleetHelper.setFleets(fleets, QuestStageManager.FLEET_ARRAY_KEY);
-
-        log("Eliza SPAWNED, size " + points + " loc " + loc.getName() + " system " + loc.getContainingLocation().getName());
-        log("Eliza FLEET, loc " + fleet.getStarSystem().getName() +" size "+ fleet.getFleetPoints() + " commander " + fleet.getCommander().getName().getFullName() + " flagship " + fleet.getFlagship().getHullSpec().getBaseHullId());
-        return fleet;
+    // The fleet Eliza leads after the raid on her market, for ElizaRaid until it moves to the quest; the other two Eliza
+    // fleets are spawned by KestevenElizaFleetsModule, and the flags are kept for that one caller.
+    public static CampaignFleetAPI spawnElizaFleet(SectorEntityToken loc, PersonAPI eliza, Random random, boolean revengeance, boolean intercept) {
+        return KestevenElizaFleetsModule.spawnRaided(loc, eliza, random);
     }
 
     //JACK FLEET

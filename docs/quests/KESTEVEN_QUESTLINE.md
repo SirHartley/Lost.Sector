@@ -10,8 +10,9 @@ Java paths are relative to `jars/src/lostsector/campaign/`; `dialogue/rules/` an
 |---|---|
 | `# KESTEVEN QUESTLINE` rows in `data/campaign/rules.csv`, `kesteven/quest/KestevenHubModule` | Every conversation with Jack, Alice and Nicholas: offers, briefings, hand-ins, rewards, questions, the job 3 refusal, the story skip and most player-driven stage changes; the job gates and payouts ([dialogue map](KESTEVEN_DIALOGUE.md#jack-alice-and-nicholas)) |
 | `kesteven/quest/QuestStageManager` | `EveryFrameScript` in `EFS_LIST`: automatic stage changes, failure checks, intel, bar events, quest fleets and their AI, the Cache guardian timer, Eliza relocation, post-quest revenge fleets |
-| `kesteven/quest/KestevenQuest`, `KestevenStage`, `KestevenFlag`, `KestevenState` | Framework definition of quest `kq`, with the modules `KestevenHubModule`, `KestevenJob1Module`, `KestevenJob3Module`, `KestevenJob4Module`, `KestevenJob5Module`, `KestevenGlacierModule`, `KestevenElizaSearchModule`, `KestevenSatelliteModule` and the Tri-Tachyon collector's shared modules (`KestevenCollector`); the stage enum, the flags and the saved state ([KESTEVEN_STATE.md](KESTEVEN_STATE.md)) |
+| `kesteven/quest/KestevenQuest`, `KestevenStage`, `KestevenFlag`, `KestevenState` | Framework definition of quest `kq`, with the modules `KestevenHubModule`, `KestevenJob1Module`, `KestevenJob3Module`, `KestevenJob4Module`, `KestevenJob5Module`, `KestevenGlacierModule`, `KestevenElizaSearchModule`, `KestevenSatelliteModule`, `KestevenElizaModule`, `KestevenElizaFleetsModule` and the Tri-Tachyon collector's shared modules (`KestevenCollector`); the stage enum, the flags and the saved state ([KESTEVEN_STATE.md](KESTEVEN_STATE.md)) |
 | `kesteven/quest/KestevenJob1Module`, `# KESTEVEN QUESTLINE: JOB 1` rows in `data/campaign/rules.csv` | Job 1 world logic: the intel entry and its text rows, the tip system's dormant fleet, the move to stage 2 ([Job 1](#job-1-enemy-unknown-stages-0-to-6)) |
+| `kesteven/quest/KestevenElizaFleetsModule`, `# KESTEVEN QUESTLINE: ELIZA FLEETS` rows | Eliza's fleets after the raid, for the chip and for revenge, their conversations and `ELIZA_KILLED` ([Eliza's fleets](#elizas-fleets)) |
 | `kesteven/quest/KestevenElizaSearchModule`, `# KESTEVEN QUESTLINE: ELIZA SEARCH` rows | The search for Eliza at pirate bars during stage 16 ([Finding Eliza](#finding-eliza)) |
 | `kesteven/quest/KestevenJob3Module`, `# KESTEVEN QUESTLINE: JOB 3` rows | Job 3 world logic: the expedition and its outcome, the intel entry and its text rows, and the objects placed when the job is accepted ([Job 3](#job-3-hostile-takeover-stages-6-to-11)) |
 | `kesteven/quest/KestevenJob4Module`, `# KESTEVEN QUESTLINE: JOB 4` rows | Job 4 world logic: the wait, the intel entry and its text rows, the strike group, the Special Operations fleet and its conversation, the splinter patrols, the hint wreck, completion and failure ([Job 4](#job-4-operation-lifesaver-stages-11-to-14)) |
@@ -24,7 +25,7 @@ Java paths are relative to `jars/src/lostsector/campaign/`; `dialogue/rules/` an
 | `kesteven/quest/KestevenElizaModule`, `# KESTEVEN QUESTLINE: ELIZA` rows | The meeting at Eliza's port ([Eliza's port](#elizas-port)) |
 | `CorePlugin` | Opens the Java quest dialogs when the player interacts with a quest entity, deciding through `KestevenQuest` queries |
 | `kesteven/quest/*Dialog`, `kesteven/quest/*BarEvent` | Java dialogs and bar events |
-| `dialogue/rules/nskr_elizaInterceptDialog`, `nskr_altEndingDialogLuddic`, `nskr_altEndingDialogTT`, `nskr_isKStage`, `nskr_isAtLeastKStage` | Rules commands for the fleet conversations, endings and stage predicates |
+| `dialogue/rules/nskr_altEndingDialogLuddic`, `nskr_altEndingDialogTT`, `nskr_isKStage`, `nskr_isAtLeastKStage` | Rules commands for the fleet conversations, endings and stage predicates |
 | `kesteven/quest/ElizaRaid`, `ElizaRaidObjectiveCreator` | Ground raid for Eliza's disks |
 | `world/systems/cache/Cache` | The Cache system, guardian fleet and its fleet-interaction config |
 | `kesteven/quest/CacheIntel` | Intel entry of the Cache; they read the stage and flags and never write the stage |
@@ -309,25 +310,39 @@ All four endings set stage 20 and call `QuestHelper.saveEnding()`. That turns on
 | Ending | How | Main results |
 |---|---|---|
 | Kesteven | `CorePlugin` opens `EndingKestevenDialog` at `asteriaOrOutpost` (or the Asteria station) while the UPC was not handed to Eliza | Prototype Light Ships blueprint package, 565,000 credits, 450,000 exchange points, 1 story point, Kesteven +25, Jack and Alice +20 and very high importance; player and Kesteven relations with Tri-Tachyon set to about -0.65 to -0.70; Eliza -75; `nskr_upChip` on the market |
-| Eliza | Requires `ELIZA_HELPED`. At stage 19 `QuestStageManager` spawns her fleet once to intercept the player. Handing over the UPC (`nskr_elizaInterceptDialog`) sets the handover flag and caps the player's Kesteven relationship at -0.35; her fleet returns home and she reappears (`ELIZA_RETURNED`). `CorePlugin` then opens `EndingElizaDialog` at her market. | Prototype Weapons and Heavy Ships blueprint packages, 2 story points, pirates at least 0.25 to 0.30, Eliza +30 and contact; Kesteven about -0.80 to -0.90 and Hegemony (and Iron Shell) about -0.65 to -0.70, also between pirates and those factions; Jack and Alice -75 with contacts suspended; `nskr_upChip`, orbital works or a heavy-industry upgrade, and a military base or patrol upgrade on her market |
+| Eliza | Requires `ELIZA_HELPED`. At stage 19 `KestevenElizaFleetsModule` spawns her fleet once to intercept the player ([Eliza's fleets](#elizas-fleets)). Handing over the UPC sets the handover flag and caps the player's Kesteven relationship at -0.35; her fleet returns home and she reappears (`ELIZA_RETURNED`). `CorePlugin` then opens `EndingElizaDialog` at her market. | Prototype Weapons and Heavy Ships blueprint packages, 2 story points, pirates at least 0.25 to 0.30, Eliza +30 and contact; Kesteven about -0.80 to -0.90 and Hegemony (and Iron Shell) about -0.65 to -0.70, also between pirates and those factions; Jack and Alice -75 with contacts suspended; `nskr_upChip`, orbital works or a heavy-industry upgrade, and a military base or patrol upgrade on her market |
 | Luddic | Admin official at a Luddic Church or Path market (`nskr_altEndingDialogLuddic`): destroy the Chip | 8 story points, that faction +15, the official +10 and contact; `makeMad`: Jack, Alice and Eliza -50 with contacts suspended, Kesteven about -0.55 to -0.65 |
 | Tri-Tachyon | Admin official at a Tri-Tachyon market (`nskr_altEndingDialogTT`): sell the Chip for 2,000,000 credits or a haggled price | Credits, Tri-Tachyon +15, the official +10 and contact, the same `makeMad` fallout; `nskr_upChip` on Culann if Tri-Tachyon holds it, otherwise on this market |
 
 The two alternative endings share one finished flag and are offered only at stage 19 before a handover. If the player refuses Eliza's intercept, her fleet turns hostile. If she has talked to the player but received nothing, her fleet leaves after 60 days and she returns home.
 
+### Eliza's fleets
+
+`KestevenElizaFleetsModule`, active in every stage, owns Eliza's three fleets. Each is "Eliza's Merc Armada" from `KestevenFleets.elizaFleet` (flagship "Regicide", Eliza as commander, mercenary faction), a `QuestFleets` role with `FleetOrders`:
+
+| Role | Spawned | Orders |
+|---|---|---|
+| `elizaRaided` | By `ElizaRaid` through `KestevenFleets.spawnElizaFleet`, after the raid on her market | Intercept the player (`AROUND`) |
+| `elizaIntercept` | Once, on the first day at stage 19 with `ELIZA_HELPED`, at Eliza's market, which she leaves | Intercept the player (`DIRECT`) |
+| `elizaReturning` | The intercept fleet after the hand-over, with Eliza's market as `FleetInfo.target` | `leave()`: fly home and despawn there |
+| `elizaRevenge` | Once, the day after `ELIZA_BETRAYED`, at Eliza's market, which she leaves; Eliza -75 | Intercept the player (`AROUND`) |
+
+The daily check sets `ELIZA_BETRAYED` once Eliza's market belongs to the player after `ELIZA_ENDING_DONE` with `ELIZA_HELPED`. A raided, intercept or returning fleet that no longer carries Eliza after a battle, or is destroyed, sets `ELIZA_KILLED` and removes her from important people; it then gets `$nskr_kq_elizaFleetDone`, which its role's `FleetOrders.withdrawWhen` condition tests, and withdraws, despawning once out of the player's sight while it keeps its role. An intercept fleet older than 60 days after the player talked without handing over the chip also withdraws. An intercept or returning fleet that despawns with Eliza aboard, not destroyed, brings her back to her market (`QuestStageManager.respawnEliza`, `ELIZA_RETURNED`).
+
+The conversations are the `# KESTEVEN QUESTLINE: ELIZA FLEETS` rows ([dialogue map](KESTEVEN_DIALOGUE.md#fleet-conversations)). Opening the intercept fleet's comm sets `ELIZA_INTERCEPT_TALKED`. "Give her the UPC" (while the chip has not gone to Kesteven or an alternative ending) runs `elizaChipHandOver`: `CHIP_HANDED_TO_ELIZA`, Eliza +5 (up to cooperative), the player's Kesteven relationship capped at -0.35, the important flag moved from the fleet and the Kesteven home to Eliza's market, and the fleet stands down and flies home. Refusing, or saying the chip is gone, runs `elizaHostile`: the fleet turns hostile and aggressive, Eliza -75. The revenge fleet hails the player; its comm opens with Eliza's accusation and three replies, each of which ends the call before the fight.
+
 ## After the questline
 
 - **Jack's revenge:** at stage 20, after the Eliza, Luddic or Tri-Tachyon ending, `QuestStageManager` rolls 1% per day, once, to spawn Jack's "Task Force" (flagship "K-Corp Homewrecker"). Jack is removed from his market and from important people (`JACK_GONE`).
-- **Eliza's revenge:** after the Eliza ending, if the player's faction takes Eliza's market, `ELIZA_BETRAYED` spawns her fleet to hunt the player.
+- **Eliza's revenge:** after the Eliza ending, if the player's faction takes Eliza's market, `ELIZA_BETRAYED` spawns her fleet to hunt the player ([Eliza's fleets](#elizas-fleets)).
 - **Relationship caps:** after the Eliza ending, `QuestStageManager.reportPlayerReputationChange` keeps Kesteven at or below -0.50 and the Hegemony and Iron Shell at or below -0.35, adjusted for Nexerelin's maximum relationship.
 - **Commission fix:** if the player held a Kesteven, Hegemony or Iron Shell commission at the Eliza ending, `QuestStageManager` waits 30 frames and re-applies the saved relationship values.
 
 ## Failure
 
-`QuestStageManager` sets stage 99 and `ENDED` when:
+`QuestStageManager` sets stage 99 and `ENDED` when the Outpost cannot host Kesteven and Asteria does not exist.
 
-- the Outpost cannot host Kesteven and Asteria does not exist;
-- stage is 19, the UPC was handed to Eliza, and Eliza has been killed (`JOB5_FAILED`).
+`KestevenElizaFleetsModule` sets stage 99 and `ENDED` when the stage is 19, the UPC was handed to Eliza and Eliza has been killed (`JOB5_FAILED`). It checks this when Eliza is lost, at the hand-over and once a day ([Eliza's fleets](#elizas-fleets)).
 
 `KestevenJob4Module` sets stage 99 and `ENDED` when the player attacks the Special Operations fleet ([Job 4](#job-4-operation-lifesaver-stages-11-to-14)).
 

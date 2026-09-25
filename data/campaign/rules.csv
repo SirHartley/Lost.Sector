@@ -873,19 +873,6 @@ nskr_debtExit,DialogOptionSelected,"$option == nskr_debtExit","FireAll PopulateO
 ,,,,,,
 # KESTEVEN QUEST,,,,,,
 ,,,,,,
-# ELIZA fight dialog,,,,,,
-elizaDialogInit,BeginFleetEncounter,"$faction.id == mercenary score:1000
-!$ignorePlayerCommRequests
-$ElizaFleet","HailPlayer",,,
-elizaDialogInitial,OpenCommLink,"$faction.id == mercenary score:1000
-$entity.isHostile
-$entity.ElizaFleet score:100","$entity.ignorePlayerCommRequests = true 100","""The greed of you corporate scum truly knows no bounds, always trying to suck away every last drop. You know $playerFirstName, stealing from the cause is punishable by death, and today I will be your executioner."" Her fiery eyes gives you one last look.
-
-The comm link is cut before you have a chance to respond.","elizaDialogEnd:Cut the comm link",
-elizaDialogEnd,DialogOptionSelected,"$option == elizaDialogEnd","EndConversation
-ShowDefaultVisual","$fleetName powers up their weapons and moves in to engage.",,
-"#END ELIZA fight dialog",,,,,,
-,,,,,,
 # CACHE fleet dialog,,,,,,
 cacheDialogInit,BeginFleetEncounter,"!$ignorePlayerCommRequests
 $isHostile
@@ -904,30 +891,6 @@ cacheDialogEnd,DialogOptionSelected,"$option == cacheDialogEnd","EndConversation
 ShowDefaultVisual","You cut the comm link",,
 "#END CACHE fleet dialog",,,,,,
 ,,,,,,
-# ELIZA revengeance dialog,,,,,,
-elizaRevengeanceDialogInit,BeginFleetEncounter,"$faction.id == mercenary score:1000
-!$ignorePlayerCommRequests
-$RevengeanceEliza","HailPlayer",,,
-elizaRevengeanceDialogInitial,OpenCommLink,"$faction.id == mercenary score:1000
-$entity.isHostile
-$entity.RevengeanceEliza score:100","FireBest elizaRevengeanceDialogOptions","Furious Eliza shows up on your screen. ""I should have known you were a liar and corporate bootlicker all along! I can't believe you sold your soul and sector's salvation for idle promises of power. I will not your greed go unpunished!""",,
-elizaRevengeanceDialogOptions,elizaRevengeanceDialogOptions,,,,"0:elizaRevengeanceDialogContinue:""This is just a big misunderstanding.""
-1:elizaRevengeanceDialogContinue2:""what? I'm not a bootlicker.""
-2:elizaRevengeanceDialogContinue3:""Time to die, anarchist scum!""
-3:elizaRevengeanceDialogEnd:Cut the comm link",
-elizaRevengeanceDialogContinue,DialogOptionSelected,"$option ==elizaRevengeanceDialogContinue","$entity.ignorePlayerCommRequests = true 100","""No, there is nothing to misunderstand. You betrayed the cause, and now you will die for your crimes, it's simple."" Eliza is staring through your soul on the holodisplay. 
-
-The comm link is cut before you have a chance to respond.","elizaRevengeanceDialogEnd:Cut the comm link",
-elizaRevengeanceDialogContinue2,DialogOptionSelected,"$option ==elizaRevengeanceDialogContinue2","$entity.ignorePlayerCommRequests = true 100","""Yes you are. You would do anything to have more power over others. Now you will die for your crimes."" Eliza is staring through your soul on the holodisplay. 
-
-The comm link is cut before you have a chance to respond.","elizaRevengeanceDialogEnd:Cut the comm link",
-elizaRevengeanceDialogContinue3,DialogOptionSelected,"$option ==elizaRevengeanceDialogContinue3","$entity.ignorePlayerCommRequests = true 100","""No, you are the one who dies here. The sector will not miss tyrants like you, the people won't miss you. I will not miss you."" Eliza is staring through your soul on the holodisplay. 
-
-The comm link is cut before you have a chance to respond.","elizaRevengeanceDialogEnd:Cut the comm link",
-elizaRevengeanceDialogEnd,DialogOptionSelected,"$option == elizaRevengeanceDialogEnd","EndConversation
-ShowDefaultVisual","$fleetName powers up their weapons and moves in to engage.",,
-"#END ELIZA revengeance dialog",,,,,,
-,,,,,,
 # JACK revengeance dialog,,,,,,
 jackRevengeanceDialogInit,BeginFleetEncounter,"$faction.id == kesteven score:1000
 !$ignorePlayerCommRequests
@@ -941,33 +904,6 @@ The comm link is cut before you have a chance to respond.","jackRevengeanceDialo
 jackRevengeanceDialogEnd,DialogOptionSelected,"$option == jackRevengeanceDialogEnd","EndConversation
 ShowDefaultVisual","the $faction $fleetName powers up their weapons and moves in to engage.",,
 "#END JACK revengeance dialog",,,,,,
-,,,,,,
-# ELIZA INTERCEPT dialog,,,,,,
-nskr_elizaInterceptDialogInit,BeginFleetEncounter,"$faction.id == mercenary score:1000
-!$ignorePlayerCommRequests
-$InterceptPlayerElizaFleet","HailPlayer
-nskr_elizaInterceptDialog aggro
-",,,
-nskr_elizaInterceptDialogInitial,OpenCommLink,"$faction.id == mercenary score:100
-!$ignorePlayerCommRequests
-nskr_elizaInterceptDialog hasOption",,"""Good day to you captain, what a coincidence that we meet out here."" She says sarcastically.
-""Enough small-talk, you know why I'm here don't you captain.""","nskr_elizaInterceptDialogInitialText:Continue",
-nskr_elizaInterceptDialogInitialText,DialogOptionSelected,"$option == nskr_elizaInterceptDialogInitialText","nskr_elizaInterceptDialog addOptions
-$entity.ignorePlayerCommRequests = true 10",,,
-nskr_elizaInterceptDialogHandOver,DialogOptionSelected,"$option ==nskr_elizaInterceptDialogHandOver","nskr_elizaInterceptDialog handOver
-",,"nskr_elizaInterceptDialogExit:Leave",
-nskr_elizaInterceptDialogExitFightDialog,DialogOptionSelected,"$option ==nskr_elizaInterceptDialogExitFight","nskr_elizaInterceptDialog hostile","""We had a simple deal captain - if you are not willing to hold up your part, I shall fulfill it by force."" Her menacing eyes stare straight into you.
-The comm link is cut before you can respond.
-
-$fleetName powers up their weapons and moves in to engage.","nskr_elizaInterceptDialogExit:Cut the comm link",
-nskr_elizaInterceptDialogExitFightNoChip,DialogOptionSelected,"$option ==nskr_elizaInterceptDialogExitFightNoChip","nskr_elizaInterceptDialog hostile","""You did what?!""  She yells. ""You disgusting corporate scum. You sycophant. You bootlicker. You- you betrayer of the cause, now *you* die."" Her furious stare gives you one last look.
-The comm link is cut before you can respond.
-
-$fleetName powers up their weapons and moves in to engage.","nskr_elizaInterceptDialogExit:Cut the comm link",
-nskr_elizaIntercetpDialogExit,DialogOptionSelected,"$option == nskr_elizaInterceptDialogExit","EndConversation
-ShowDefaultVisual
-","You cut the comm link.",,
-"#END ELIZA INTERCEPT dialog",,,,,,
 ,,,,,,
 # ALT ENDING Dialog,,,,,,
 nskr_altEndingOptionLuddic,PopulateOptions,"nskr_isBaseOfficial admin
@@ -2865,3 +2801,86 @@ nskr_kq_ttCollectorFight,DialogOptionSelected,$option == nskr_kq_ttCollectorFigh
 The comm link is cut before you can respond.
 
 the $faction $fleetName powers up their weapons and moves in to engage.",nskr_kq_ttCollectorExit:Cut the comm link,
+,,,,,,
+# KESTEVEN QUESTLINE: ELIZA FLEETS,,,,,,
+# Raided fleet,,,,,,
+nskr_kq_elizaRaidedInit,BeginFleetEncounter,"$faction.id == mercenary score:1000
+!$ignorePlayerCommRequests
+$nskr_kq_elizaRaided",HailPlayer,,,
+nskr_kq_elizaRaidedGreeting,OpenCommLink,"$faction.id == mercenary score:1000
+$entity.isHostile
+$entity.nskr_kq_elizaRaided score:100",$entity.ignorePlayerCommRequests = true 100,"""The greed of you corporate scum truly knows no bounds, always trying to suck away every last drop. You know $playerFirstName, stealing from the cause is punishable by death, and today I will be your executioner."" Her fiery eyes gives you one last look.
+
+The comm link is cut before you have a chance to respond.",nskr_kq_elizaRaidedEnd:Cut the comm link,
+nskr_kq_elizaRaidedEnd,DialogOptionSelected,$option == nskr_kq_elizaRaidedEnd,"EndConversation
+ShowDefaultVisual",$fleetName powers up their weapons and moves in to engage.,,
+,,,,,,
+# Intercept for the chip,,,,,,
+nskr_kq_elizaInterceptInit,BeginFleetEncounter,"$faction.id == mercenary score:1000
+!$ignorePlayerCommRequests
+$nskr_kq_elizaIntercept","HailPlayer
+nskr_quest kq do elizaAggro",,,
+nskr_kq_elizaInterceptInitReturning,BeginFleetEncounter,"$faction.id == mercenary score:1000
+!$ignorePlayerCommRequests
+$nskr_kq_elizaReturning","HailPlayer
+nskr_quest kq do elizaAggro",,,"After the hand-over, as the old rows did once $ignorePlayerCommRequests expired"
+nskr_kq_elizaInterceptGreeting,OpenCommLink,"$faction.id == mercenary score:100
+!$ignorePlayerCommRequests
+$entity.nskr_kq_elizaIntercept",,"""Good day to you captain, what a coincidence that we meet out here."" She says sarcastically.
+""Enough small-talk, you know why I'm here don't you captain.""",nskr_kq_elizaInterceptTalk:Continue,
+nskr_kq_elizaInterceptGreetingReturning,OpenCommLink,"$faction.id == mercenary score:100
+!$ignorePlayerCommRequests
+$entity.nskr_kq_elizaReturning",,"""Good day to you captain, what a coincidence that we meet out here."" She says sarcastically.
+""Enough small-talk, you know why I'm here don't you captain.""",nskr_kq_elizaInterceptTalk:Continue,"After the hand-over, as the old rows did once $ignorePlayerCommRequests expired"
+nskr_kq_elizaInterceptTalk,DialogOptionSelected,$option == nskr_kq_elizaInterceptTalk,"nskr_quest kq do elizaTalked
+AddText ""\""Now can you hand the Chip over, like we agreed.\""""
+AddText ""\""You haven't had a change of heart by chance?\"" She stares deeply into your eyes while waiting for a response.""
+$entity.ignorePlayerCommRequests = true 10
+FireAll nskr_kqElizaInterceptOptions","""I can tell you have the UPC captain."" She says sharply. ""I have eyes and ears all across the sector, tracking every one of your fascinating moves.""",,
+nskr_kq_elizaInterceptOptHandOver,nskr_kqElizaInterceptOptions,!nskr_quest kq check elizaChipGone,,,nskr_kq_elizaInterceptHandOver:Give her the UPC,While the chip has not gone to Kesteven or an alternative ending
+nskr_kq_elizaInterceptOptRefuse,nskr_kqElizaInterceptOptions,!nskr_quest kq check elizaChipGone,,,"nskr_kq_elizaInterceptRefuse:""No, I'd rather not.""",
+nskr_kq_elizaInterceptOptNoChip,nskr_kqElizaInterceptOptions,nskr_quest kq check elizaChipGone,,,"nskr_kq_elizaInterceptNoChip:""I don't have it anymore.""",The only option once the chip is gone; the other two show otherwise
+nskr_kq_elizaInterceptHandOver,DialogOptionSelected,$option == nskr_kq_elizaInterceptHandOver,"AddText ""\""Now come visit me at $nskr_kq_elizaHomeMarket to reap your reward.\""""
+nskr_quest kq do elizaChipHandOver
+PlaySound ui_noise_static
+AddTextSmall ""Lost the Unlimited Production Chip"" gray
+SetTextHighlightColors bad
+SetTextHighlights Lost
+AddTextSmall ""Relationship with Eliza improved by 5"" gray
+SetTextHighlightColors good
+SetTextHighlights 5","A shuttle quickly delivers the UPC over to Eliza's flagship. ""Oh yes captain, you've done an invaluable deed for the cause. Our time has come indeed."" An unsettling grin develops on her face.",nskr_kq_elizaInterceptExit:Leave,"elizaChipHandOver: the chip, reputation, markers, and the fleet stands down and flies home"
+nskr_kq_elizaInterceptRefuse,DialogOptionSelected,$option == nskr_kq_elizaInterceptRefuse,"nskr_quest kq do elizaHostile
+PlaySound ui_rep_drop","""We had a simple deal captain - if you are not willing to hold up your part, I shall fulfill it by force."" Her menacing eyes stare straight into you.
+The comm link is cut before you can respond.
+
+$fleetName powers up their weapons and moves in to engage.",nskr_kq_elizaInterceptExit:Cut the comm link,
+nskr_kq_elizaInterceptNoChip,DialogOptionSelected,$option == nskr_kq_elizaInterceptNoChip,"nskr_quest kq do elizaHostile
+PlaySound ui_rep_drop","""You did what?!""  She yells. ""You disgusting corporate scum. You sycophant. You bootlicker. You- you betrayer of the cause, now *you* die."" Her furious stare gives you one last look.
+The comm link is cut before you can respond.
+
+$fleetName powers up their weapons and moves in to engage.",nskr_kq_elizaInterceptExit:Cut the comm link,
+nskr_kq_elizaInterceptExit,DialogOptionSelected,$option == nskr_kq_elizaInterceptExit,"EndConversation
+ShowDefaultVisual",You cut the comm link.,,
+,,,,,,
+# Revenge fleet,,,,,,
+nskr_kq_elizaRevengeInit,BeginFleetEncounter,"$faction.id == mercenary score:1000
+!$ignorePlayerCommRequests
+$nskr_kq_elizaRevenge",HailPlayer,,,
+nskr_kq_elizaRevengeGreeting,OpenCommLink,"$faction.id == mercenary score:1000
+$entity.isHostile
+$entity.nskr_kq_elizaRevenge score:100",FireBest nskr_kqElizaRevengeOptions,"Furious Eliza shows up on your screen. ""I should have known you were a liar and corporate bootlicker all along! I can't believe you sold your soul and sector's salvation for idle promises of power. I will not your greed go unpunished!""",,
+nskr_kq_elizaRevengeOptions,nskr_kqElizaRevengeOptions,,,,"0:nskr_kq_elizaRevengeMisunderstanding:""This is just a big misunderstanding.""
+1:nskr_kq_elizaRevengeBootlicker:""what? I'm not a bootlicker.""
+2:nskr_kq_elizaRevengeDie:""Time to die, anarchist scum!""
+3:nskr_kq_elizaRevengeEnd:Cut the comm link",
+nskr_kq_elizaRevengeMisunderstanding,DialogOptionSelected,$option == nskr_kq_elizaRevengeMisunderstanding,$entity.ignorePlayerCommRequests = true 100,"""No, there is nothing to misunderstand. You betrayed the cause, and now you will die for your crimes, it's simple."" Eliza is staring through your soul on the holodisplay. 
+
+The comm link is cut before you have a chance to respond.",nskr_kq_elizaRevengeEnd:Cut the comm link,
+nskr_kq_elizaRevengeBootlicker,DialogOptionSelected,$option == nskr_kq_elizaRevengeBootlicker,$entity.ignorePlayerCommRequests = true 100,"""Yes you are. You would do anything to have more power over others. Now you will die for your crimes."" Eliza is staring through your soul on the holodisplay. 
+
+The comm link is cut before you have a chance to respond.",nskr_kq_elizaRevengeEnd:Cut the comm link,
+nskr_kq_elizaRevengeDie,DialogOptionSelected,$option == nskr_kq_elizaRevengeDie,$entity.ignorePlayerCommRequests = true 100,"""No, you are the one who dies here. The sector will not miss tyrants like you, the people won't miss you. I will not miss you."" Eliza is staring through your soul on the holodisplay. 
+
+The comm link is cut before you have a chance to respond.",nskr_kq_elizaRevengeEnd:Cut the comm link,
+nskr_kq_elizaRevengeEnd,DialogOptionSelected,$option == nskr_kq_elizaRevengeEnd,"EndConversation
+ShowDefaultVisual",$fleetName powers up their weapons and moves in to engage.,,

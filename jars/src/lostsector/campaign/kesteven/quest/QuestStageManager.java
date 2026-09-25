@@ -40,7 +40,6 @@ public class QuestStageManager extends BaseCampaignEventListener implements Ever
     }
     public static final String JACK_REVENGEANCE_FLEET_KEY = "$RevengeanceJack";
     public static final String REVENGEANCE_FLEET_KEY = "$RevengeanceQuestFleet";
-    public static final String ELIZA_INTERCEPT_FLEET_KEY = "$InterceptPlayerElizaFleet";
 
     //chance per day
     public static final float REVENGEANCE_CHANCE = 0.01f;
@@ -84,14 +83,6 @@ public class QuestStageManager extends BaseCampaignEventListener implements Ever
             QuestHelper.setStage(99);
             QuestHelper.setEndMissions(true);
             log("ERROR sector is fucked, ending missions");
-        }
-        //kill Eliza after handing over failure
-        if (stage == 19 && QuestHelper.getCompleted(KestevenFlag.CHIP_HANDED_TO_ELIZA) && QuestHelper.getCompleted(KestevenFlag.ELIZA_KILLED) && !QuestHelper.getEndMissions()) {
-            QuestHelper.setCompleted(true, KestevenFlag.JOB5_FAILED);
-
-            QuestHelper.setStage(99);
-            QuestHelper.setEndMissions(true);
-
         }
         //////////////////
         //done while paused
@@ -234,30 +225,8 @@ public class QuestStageManager extends BaseCampaignEventListener implements Ever
                 state.commissionRestored = true;
             }
         }
-        //player betrays Eliza after completing the mission for her
-        if (QuestHelper.getElizaLoc()!=null) {
-            if (!QuestHelper.getElizaLoc().getMarket().isPlanetConditionMarketOnly()) {
-                if (QuestHelper.getElizaLoc().getMarket().getFaction().getId().equals(Factions.PLAYER) &&
-                        QuestHelper.getCompleted(KestevenFlag.ELIZA_HELPED) && !QuestHelper.getCompleted(KestevenFlag.ELIZA_BETRAYED) && QuestHelper.getCompleted(KestevenFlag.ELIZA_ENDING_DONE)) {
-                    QuestHelper.setCompleted(true, KestevenFlag.ELIZA_BETRAYED);
-                }
-            }
-        }
         //mission logic
         if (state.dayCounter>10f) {
-            if (!state.elizaInterceptSpawned){
-                //eliza intercept player for UPC
-                if (stage==19 && QuestHelper.getCompleted(KestevenFlag.ELIZA_HELPED)){
-                    CampaignFleetAPI fleet = vengeanceEliza(true);
-                    state.elizaInterceptSpawned = true;
-                    log("Intercepted Eliza");
-                }
-            }
-            //vengeance Eliza betray by player, after questline
-            if (QuestHelper.getCompleted(KestevenFlag.ELIZA_BETRAYED) && !state.elizaRevengeSpawned){
-                CampaignFleetAPI fleet = vengeanceEliza(false);
-                state.elizaRevengeSpawned = true;
-            }
             //revengeace fleet spawner
             if (getRandom().nextFloat()<REVENGEANCE_CHANCE && stage == 20 && !state.jackRevengeSpawned) {
                 //jack
@@ -286,7 +255,8 @@ public class QuestStageManager extends BaseCampaignEventListener implements Ever
         }
     }
 
-    private void respawnEliza(SectorEntityToken loc) {
+    // Called by KestevenElizaFleetsModule when Eliza's fleet takes her home; T28 moves it with Eliza's port.
+    static void respawnEliza(SectorEntityToken loc) {
         PersonAPI eliza = KestevenPeople.getEliza();
         //add eliza to market
         loc.getMarket().getCommDirectory().addPerson(eliza,1);
@@ -376,131 +346,6 @@ public class QuestStageManager extends BaseCampaignEventListener implements Ever
                 }
                 continue;
             }
-            //eliza fleet, after raiding her
-            if (fleet.getMemoryWithoutUpdate().contains(KestevenFleets.ELIZA_RAIDED_FLEET_KEY)){
-                boolean despawn = false;
-
-                //destroyed
-                if (fleet.getFleetPoints()<=0) {
-                    despawn = true;
-                }
-                //eliza check
-                for (FleetMemberAPI m : fleet.getFleetData().getMembersListWithFightersCopy()){
-                    if (m.getCaptain()==null) continue;
-                    if (m.getCaptain().getId().equals("nskr_anarchist")){
-                        despawn = false;
-                        break;
-                    }
-                    despawn = true;
-                }
-                if (despawn && !QuestHelper.getCompleted(KestevenFlag.ELIZA_KILLED)){
-                    //eliza is gone
-                    QuestHelper.setCompleted(true, KestevenFlag.ELIZA_KILLED);
-                    //gone
-                    Global.getSector().getImportantPeople().removePerson("nskr_anarchist");
-                }
-
-                Vector2f fp = fleet.getLocationInHyperspace();
-                Vector2f pp = pf.getLocationInHyperspace();
-                float dist = MathUtils.getDistance(pp, fp);
-                if (despawn) {
-                    if (dist > Global.getSettings().getMaxSensorRangeHyper()) {
-                        //tracker for cleaning the list
-                        removed.add(fleet);
-                        fleet.despawn();
-                    }
-                }
-                //logic
-
-                FleetHelper.gotoAndInterceptPlayerAI(fleet, f, FleetHelper.InterceptBehaviour.AROUND);
-                continue;
-            }
-            //eliza fleet, after recovering UPC
-            if (fleet.getMemoryWithoutUpdate().contains(ELIZA_INTERCEPT_FLEET_KEY)){
-                boolean despawn = false;
-
-                //destroyed
-                if (fleet.getFleetPoints()<=0) {
-                    despawn = true;
-                }
-                //eliza check
-                for (FleetMemberAPI m : fleet.getFleetData().getMembersListWithFightersCopy()){
-                    if (m.getCaptain()==null) continue;
-                    if (m.getCaptain().getId().equals("nskr_anarchist")){
-                        despawn = false;
-                        break;
-                    }
-                    despawn = true;
-                }
-                if (despawn && !QuestHelper.getCompleted(KestevenFlag.ELIZA_KILLED)){
-                    //eliza is gone
-                    QuestHelper.setCompleted(true, KestevenFlag.ELIZA_KILLED);
-                    //gone
-                    Global.getSector().getImportantPeople().removePerson("nskr_anarchist");
-                }
-
-
-                Vector2f fp = fleet.getLocationInHyperspace();
-                Vector2f pp = pf.getLocationInHyperspace();
-                float dist = MathUtils.getDistance(pp, fp);
-                //stop chasing eventually if not handed over
-                if (QuestHelper.getCompleted(KestevenFlag.ELIZA_INTERCEPT_TALKED) && !QuestHelper.getCompleted(KestevenFlag.CHIP_HANDED_TO_ELIZA) && f.age>60f && !despawn){
-                    if (dist > Global.getSettings().getMaxSensorRangeHyper()) {
-                        //tracker for cleaning the list
-                        removed.add(fleet);
-                        fleet.despawn();
-                        //add back
-                        respawnEliza(QuestHelper.getElizaLoc());
-                        log("despawn timeout, talked");
-                        continue;
-                    }
-                }
-                //defeated despawn
-                if (despawn) {
-                    if (dist > Global.getSettings().getMaxSensorRangeHyper()) {
-                        //tracker for cleaning the list
-                        removed.add(fleet);
-                        fleet.despawn();
-                        log("despawn defeated");
-                    }
-                }
-                //stop here when defeated
-                if (despawn) continue;
-
-                //logic
-                if (!QuestHelper.getCompleted(KestevenFlag.CHIP_HANDED_TO_ELIZA)) {
-                    FleetHelper.gotoAndInterceptPlayerAI(fleet, f, FleetHelper.InterceptBehaviour.DIRECT);
-                } else {
-                    //assignment logic
-                    FleetAssignmentDataAPI curr = fleet.getAI().getCurrentAssignment();
-                    if (curr == null) {
-                        fleet.clearAssignments();
-                        fleet.addAssignment(FleetAssignment.HOLD, fleet.getContainingLocation().createToken(fleet.getLocation()), Float.MAX_VALUE, "holding");
-                        log("null assignment");
-                    }
-                    //go back to home, if handed over UPC
-                    SectorEntityToken loc = QuestHelper.getElizaLoc();
-                    if (fleet.getContainingLocation()!=loc.getContainingLocation() && fleet.getCurrentAssignment().getAssignment()!=FleetAssignment.GO_TO_LOCATION) {
-                        fleet.clearAssignments();
-                        fleet.addAssignment(FleetAssignment.GO_TO_LOCATION, loc, Float.MAX_VALUE, "returning to "+loc.getMarket().getName());
-                        log("Qmanager DESPAWNING TO " + loc.getName() + " IN " + loc.getContainingLocation().getName());
-                    }
-                    if (fleet.getContainingLocation()==loc.getContainingLocation() && fleet.getCurrentAssignment().getAssignment()!=FleetAssignment.ORBIT_PASSIVE) {
-                        fleet.clearAssignments();
-                        fleet.addAssignment(FleetAssignment.ORBIT_PASSIVE, loc, Float.MAX_VALUE, "returning to "+loc.getMarket().getName());
-                    }
-                    //remove fleet once back
-                    if (MathUtils.getDistance(fleet, loc)<200f+loc.getRadius()){
-                        //tracker for cleaning the list
-                        removed.add(fleet);
-                        fleet.despawn();
-                        //add back
-                        respawnEliza(loc);
-                        log("despawn to base, handed over");
-                    }
-                }
-                continue;
-            }
             //revengeance fleets
             if (fleet.getMemoryWithoutUpdate().contains(REVENGEANCE_FLEET_KEY)){
                 boolean despawn = false;
@@ -529,24 +374,6 @@ public class QuestStageManager extends BaseCampaignEventListener implements Ever
         }
     }
 
-    private CampaignFleetAPI vengeanceEliza(boolean intercept){
-        PersonAPI eliza = KestevenPeople.getEliza();
-        SectorEntityToken loc = QuestHelper.getElizaLoc();
-        //-rep
-        if (!intercept) eliza.getRelToPlayer().adjustRelationship(-0.75f, RepLevel.VENGEFUL);
-        //spawn fleet and add to list
-        CampaignFleetAPI fleet;
-        if (!intercept){
-            fleet = KestevenFleets.spawnElizaFleet(loc, eliza, KestevenQuest.random(KestevenState.RANDOM_ELIZA), true, false);
-        } else {
-            fleet = KestevenFleets.spawnElizaFleet(loc, eliza, KestevenQuest.random(KestevenState.RANDOM_ELIZA), false, true);
-        }
-        //remove from market
-        loc.getMarket().getCommDirectory().removePerson(eliza);
-        loc.getMarket().removePerson(eliza);
-
-        return fleet;
-    }
     private CampaignFleetAPI vengeanceJack(){
         PersonAPI jack = KestevenPeople.getJack();
         SectorEntityToken loc = SectorLookup.asteriaOrOutpost().getPrimaryEntity();

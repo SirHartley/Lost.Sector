@@ -26,7 +26,6 @@ public final class KestevenState extends QuestState<KestevenStage> implements In
     public static final String RANDOM_KESTEVEN_ENDING = "kestevenEndingDialogKeyRandom";
     public static final String RANDOM_ELIZA_ENDING = "elizaEndingDialogKeyRandom";
     public static final String RANDOM_ALT_ENDING = "endingAltDialogKeyRandom";
-    public static final String RANDOM_ELIZA_INTERCEPT = "elizaInterceptDialogRandom";
 
     // Started when the job 3 expedition spawns; the job fails when it passes KestevenJob3Module.TIME_LIMIT days.
     public static final String TIMER_JOB3 = "job3Expedition";

@@ -33,7 +33,7 @@ The quest manager creates the state on the first unpaused frame of a new campaig
 
 ### Access from the old code
 
-The questline's own old classes use these accessors until later tasks replace them with modules. These are the quest package and the questline dialog commands `nskr_elizaInterceptDialog`, `nskr_altEndingDialogLuddic` and `nskr_altEndingDialogTT`; other features use the [queries](#queries-for-other-features). Each is a thin wrapper over the state; the quest package's own classes also read and write fields directly where they already hold the state.
+The questline's own old classes use these accessors until later tasks replace them with modules. These are the quest package and the questline dialog commands `nskr_altEndingDialogLuddic` and `nskr_altEndingDialogTT`; other features use the [queries](#queries-for-other-features). Each is a thin wrapper over the state; the quest package's own classes also read and write fields directly where they already hold the state.
 
 | Accessor | Reads or writes |
 |---|---|
@@ -138,20 +138,20 @@ The actual path can skip stages: 8 to 10 without 9, 7 to 11 when job 3 is refuse
 | `ELIZA_AGREED_SINCERELY` | Agreed sincerely | Rules `nskr_kq_elizaAgree` |
 | `ELIZA_RAID_ENABLED` | Refused; raid enabled | Rules `nskr_kq_elizaDismissed` |
 | `ELIZA_RAIDED` | Raid done | `ElizaRaid` |
-| `ELIZA_KILLED` | Eliza dead | `QuestStageManager.runFleetLogic` |
+| `ELIZA_KILLED` | Eliza dead | `KestevenElizaFleetsModule` (`onBattle`, `onFleetGone`) |
 | `CACHE_FOUND` | Cache coordinates known | Rules `nskr_kq_aliceCacheFound`, `QuestStageManager`, story skip |
 | `CORE_SEEN`, `CHIP_SALVAGED` | Core seen; UPC salvaged | `CacheCoreDialog` |
-| `ELIZA_INTERCEPT_TALKED` | Eliza's intercept fleet spoke to the player | `nskr_elizaInterceptDialog` |
-| `CHIP_HANDED_TO_ELIZA` | UPC handed to Eliza | `nskr_elizaInterceptDialog` |
-| `ELIZA_RETURNED` | Eliza back at her market | `QuestStageManager.respawnEliza` |
-| `JOB5_FAILED` | Eliza killed after the handover | `QuestStageManager` |
+| `ELIZA_INTERCEPT_TALKED` | Eliza's intercept fleet spoke to the player | `KestevenElizaFleetsModule` action `elizaTalked` |
+| `CHIP_HANDED_TO_ELIZA` | UPC handed to Eliza | `KestevenElizaFleetsModule` action `elizaChipHandOver` |
+| `ELIZA_RETURNED` | Eliza back at her market | `QuestStageManager.respawnEliza`, called by `KestevenElizaFleetsModule.onFleetGone` |
+| `JOB5_FAILED` | Eliza killed after the handover | `KestevenElizaFleetsModule` |
 | `KESTEVEN_ENDING_DONE` | Kesteven ending done | `EndingKestevenDialog` |
 | `ELIZA_ENDING_DONE` | Eliza ending done | `EndingElizaDialog` |
 | `ALT_ENDING_DONE` | Luddic or Tri-Tachyon ending done (shared) | `nskr_altEndingDialogLuddic.makeMad` |
 | `LUDDIC_ENDING_SECOND_TALK`, `TT_ENDING_SECOND_TALK` | Second conversation reached | Alternative endings |
 | `COMMISSION_RESTORE_PENDING` | Commission fix pending | `EndingElizaDialog` |
 | `JACK_GONE` | Jack left for revenge | `QuestStageManager.vengeanceJack` |
-| `ELIZA_BETRAYED` | Player took Eliza's market after her ending | `QuestStageManager` |
+| `ELIZA_BETRAYED` | Player took Eliza's market after her ending | `KestevenElizaFleetsModule.onDay` |
 
 Other features read flags through the [queries](#queries-for-other-features). `nskr_starfarerFromStart` (`ModPlugin.STARFARER_MODE_FROM_START_KEY`) is not questline state: `ModPlugin.onNewGame` writes it to sector persistent data, `Difficulty.clearStarfarerFromStartUnlessStarfarer()` and the story skip clear it, and `QuestHelper.saveEnding()` reads it for `hellspawnUnlocked`.
 
@@ -185,7 +185,8 @@ Other features read flags through the [queries](#queries-for-other-features). `n
 | `cacheSeconds` | `float` | Frame seconds spent in Unknown Site before the guardian | `QuestStageManager` |
 | `cacheIntelAdded` | `boolean` | Intel added once | `QuestStageManager` |
 | `cacheGuardianSpotPicked`, `cacheDoubtShown`, `cacheGuardianSpawned` | `boolean` | Guardian location picked, Cache hint shown, guardian spawned | `QuestStageManager` |
-| `elizaInterceptSpawned`, `elizaRevengeSpawned`, `jackRevengeSpawned` | `boolean` | Eliza's intercept, Eliza's revenge and Jack's revenge spawned | `QuestStageManager` |
+| `elizaInterceptSpawned`, `elizaRevengeSpawned` | `boolean` | Eliza's intercept and Eliza's revenge spawned | `KestevenElizaFleetsModule` |
+| `jackRevengeSpawned` | `boolean` | Jack's revenge spawned | `QuestStageManager` |
 | `commissionRestored` | `boolean` | Commission fix applied | `QuestStageManager` |
 
 `QuestStageManager` keeps `pingTimer` (seconds between Cache pings) and `frameWait` (30-frame delay before the commission fix) as plain instance fields. They are not saved and restart on every load.
@@ -205,7 +206,6 @@ Each purpose is a constant on `KestevenState`, named after the persistent-data k
 | `RANDOM_KESTEVEN_ENDING` | `kestevenEndingDialogKeyRandom` | `EndingKestevenDialog.getRandom()` |
 | `RANDOM_ELIZA_ENDING` | `elizaEndingDialogKeyRandom` | `EndingElizaDialog.getRandom()` |
 | `RANDOM_ALT_ENDING` | `endingAltDialogKeyRandom` | `nskr_altEndingDialogLuddic.getRandom()` and `nskr_altEndingDialogTT.getRandom()`, one shared sequence |
-| `RANDOM_ELIZA_INTERCEPT` | `elizaInterceptDialogRandom` | `nskr_elizaInterceptDialog.getRandom()` |
 
 `KestevenPartyModule` uses `ctx.random` directly: `partyHangover` for the hangover bill, and the framework's `person:<key>` purposes for its guests.
 
@@ -225,9 +225,9 @@ The Kesteven bar tip is not questline content; it is quest `hint` ([Exploration 
 | `$nskr_kq_job3Expedition`, `$nskr_kq_job3ExpeditionOver` | The job 3 expedition: role flags of quest `kq` | `QuestFleets` | Nothing reads them |
 | `$nskr_kq_job4StrikeGroup`, `$nskr_kq_job4SpecialOps`, `$nskr_kq_job4SpecialOpsLeaving`, `$nskr_kq_job4Splinter` | Job 4 fleets: role flags of quest `kq` | `QuestFleets` | Rules `# KESTEVEN QUESTLINE: JOB 4` (strike group and Special Operations rows); `KestevenSatelliteModule` action `wakeSatelliteGuard` finds the strike group by its role |
 | `$nskr_kq_ttCollector`, `$nskr_kq_ttCollectorLeaving` | Tri-Tachyon collector: role flags of quest `kq` | `QuestFleets` | Rules `# KESTEVEN QUESTLINE: COLLECTOR` (`ttCollector` only) |
-| `$ElizaFleet` | Eliza's fleet after the raid | `KestevenFleets` | `QuestStageManager`, rules |
+| `$nskr_kq_elizaRaided`, `$nskr_kq_elizaIntercept`, `$nskr_kq_elizaReturning`, `$nskr_kq_elizaRevenge` | Eliza's fleets: role flags of quest `kq` | `QuestFleets` | Rules `# KESTEVEN QUESTLINE: ELIZA FLEETS` |
+| `$nskr_kq_elizaFleetDone` | An Eliza fleet that lost Eliza or gave up the chase | `KestevenElizaFleetsModule` | The `withdrawWhen` condition of its role's orders |
 | `$nskr_kq_elizaStood` | Local memory of the market entity during the port meeting; expiry `0` | Row `nskr_kq_elizaStand` | Row `nskr_kq_elizaStoodLine` |
-| `$InterceptPlayerElizaFleet` | Eliza's intercept fleet | `KestevenFleets` | `QuestStageManager`, rules, `nskr_elizaInterceptDialog` |
 | `$RevengeanceQuestFleet`, `$RevengeanceJack` | Revenge fleets | `KestevenFleets` | `QuestStageManager`, rules |
 | `$CacheGuardianFleet` (`Cache.CACHE_FLEET_KEY`) | Guardian fleet | `Cache` | `QuestStageManager`, `CacheBossTauntPlugin`, rules |
 | `$EnigmaDormantFleet` (`DormantSpawner.DORMANT_KEY`) | Dormant fleets at quest locations | `DormantSpawner.addDormant` | Action `wakeSatelliteGuard`, which keeps the flag on the fleets it wakes; rules `dormantDialog` |

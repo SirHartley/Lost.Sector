@@ -91,6 +91,7 @@ Adjusted - Handing supplies and fuel to the Special Operations fleet shows the s
 Fixed - Attacking the Special Operations fleet after Operation Lifesaver is over no longer sets the questline back
 Fixed - After the Kesteven story skip, the data-disk satellites' empty dialog has a Leave option
 Adjusted - Handing Artifact Electronics to the Tri-Tachyon collector shows the standard cargo lost and relationship receipts
+Fixed - Eliza's revenge fleet now opens its own conversation when you meet it
 
 1.0.b
 Adjusted - Severely nerfed spawn rates for Borealis, Rhea and Kingslayer

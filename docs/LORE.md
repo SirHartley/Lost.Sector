@@ -218,8 +218,8 @@ Eliza is a revolutionary, and Kesteven calls her a terrorist (`nskr_anarchist`, 
 - **Host.** She opens as a host ("Welcome to my humble port captain." ... "Feel free to take a seat, we have a lot to discuss.") and demands candor: "Such indecisiveness is not characteristic for a great captain. Come on spit it out, just say what you *really* think."
 - **Contempt for apathy.** She has open contempt for apathy ("Damn, they really did brainwash you into the perfect killing machine huh. ... I'm sure you don't even flinch when you glass a colony with the flick of a switch.") and for corporate loyalty ("Another victim of corporate propaganda I see. Ready to die for the 'greater good' I'm sure.").
 - **Temper.** She loses her temper when challenged: "Her face quickly turns red." "You don't just barge in, and start accusing me like some hound from COMSEC!"
-- **Sarcasm and threat.** "Good day to you captain, what a coincidence that we meet out here." (rules `nskr_elizaInterceptDialogInitial`). "We had a simple deal captain - if you are not willing to hold up your part, I shall fulfill it by force." (rules `nskr_elizaInterceptDialogExitFightDialog`).
-- **Betrayed.** Fury and a string of insults: "You did what?! You disgusting corporate scum. You sycophant. You bootlicker. You- you betrayer of the cause, now *you* die." (rules `nskr_elizaInterceptDialogExitFightNoChip`). "The sector will not miss tyrants like you, the people won't miss you. I will not miss you." (rules `elizaRevengeanceDialogContinue3`).
+- **Sarcasm and threat.** "Good day to you captain, what a coincidence that we meet out here." (rules `nskr_kq_elizaInterceptGreeting`). "We had a simple deal captain - if you are not willing to hold up your part, I shall fulfill it by force." (rules `nskr_kq_elizaInterceptRefuse`).
+- **Betrayed.** Fury and a string of insults: "You did what?! You disgusting corporate scum. You sycophant. You bootlicker. You- you betrayer of the cause, now *you* die." (rules `nskr_kq_elizaInterceptNoChip`). "The sector will not miss tyrants like you, the people won't miss you. I will not miss you." (rules `nskr_kq_elizaRevengeDie`).
 
 **Writing her.**
 
