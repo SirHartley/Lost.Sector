@@ -1,10 +1,15 @@
 package lostsector.campaign.kesteven.quest;
 
 import com.fs.starfarer.api.Global;
+import com.fs.starfarer.api.campaign.CampaignFleetAPI;
+import com.fs.starfarer.api.campaign.CargoAPI;
+import com.fs.starfarer.api.campaign.FleetEncounterContextPlugin;
 import com.fs.starfarer.api.campaign.SectorEntityToken;
 import com.fs.starfarer.api.campaign.StarSystemAPI;
 import com.fs.starfarer.api.campaign.econ.MarketAPI;
+import com.fs.starfarer.api.campaign.comm.IntelInfoPlugin.IntelSortTier;
 import com.fs.starfarer.api.impl.campaign.ids.Tags;
+import com.fs.starfarer.api.impl.campaign.intel.BaseIntelPlugin;
 import lostsector.helper.Ids;
 import lostsector.helper.SectorLookup;
 import lostsector.quest.Declarations;
@@ -15,21 +20,24 @@ import lostsector.quest.QuestModule;
 
 import java.util.List;
 
-// Job 1, "Enemy Unknown": the intel entry, the tip system's dormant fleet and the move to JOB1_DONE once both
-// deliveries are recorded. Briefings and hand-ins are the hub's (KestevenHubModule).
+// Job 1, "Enemy Unknown": the sensor task and the Enigma fight before it, the intel entry, the tip system's dormant
+// fleet and the move to JOB1_DONE once both deliveries are recorded. Briefings and hand-ins are the hub's
+// (KestevenHubModule). Active in JOB3_OFFERED only to complete the intel entry once the job is turned in.
 final class KestevenJob1Module extends QuestModule<KestevenStage, KestevenState> {
 
     static final String INTEL = "job1";
+    static final String UPDATE_SENSOR_DATA = "sensorData";
     // Placed by QuestHelper.getJob1Tip; persistent because the old dormant fleet outlived the job.
     static final String ROLE_TIP_DORMANT = "job1Dormant";
 
     KestevenJob1Module() {
-        super(KestevenStage.JOB1_ACTIVE, KestevenStage.JOB1_DONE);
+        super(KestevenStage.NOT_STARTED, KestevenStage.JOB1_ACTIVE, KestevenStage.JOB1_DONE, KestevenStage.JOB3_OFFERED);
     }
 
     @Override
     protected void declare(Declarations<KestevenStage, KestevenState> d) {
-        d.intel(INTEL, "job1", Tags.INTEL_IMPORTANT, Tags.INTEL_ACCEPTED, Tags.INTEL_MISSIONS).descriptionBullets();
+        d.intel(INTEL, "job1", Tags.INTEL_IMPORTANT, Tags.INTEL_ACCEPTED, Tags.INTEL_MISSIONS)
+                .tier(IntelSortTier.TIER_2).majorPosting().faction(Ids.KESTEVEN_FACTION_ID).deletable().descriptionBullets();
         d.role(ROLE_TIP_DORMANT, FleetRole.of(FleetOrders.none()).persistent());
 
         // The job 3 intel rows read it too.
@@ -48,10 +56,37 @@ final class KestevenJob1Module extends QuestModule<KestevenStage, KestevenState>
 
     // The old intel picked the tip system on its first display, right after the job was accepted.
     @Override
-    protected void onStart(QuestContext<KestevenStage, KestevenState> ctx) {
-        QuestHelper.getJob1Tip();
-        ctx.intel().show(INTEL);
-        progress(ctx);
+    protected void onStage(QuestContext<KestevenStage, KestevenState> ctx, KestevenStage from) {
+        if (ctx.stage() == KestevenStage.JOB1_ACTIVE) {
+            QuestHelper.getJob1Tip();
+            ctx.intel().show(INTEL);
+            progress(ctx);
+        } else if (ctx.stage() == KestevenStage.JOB3_OFFERED && ctx.intel().isShown(INTEL)) {
+            ctx.intel().complete(INTEL);
+        }
+    }
+
+    // Any won fight against Enigma in which the player's share of the enemy's lost ships reaches one: before the job it
+    // unlocks Jack's "I've already fought them.", during it the sensor task is done. Every such win at JOB1_ACTIVE
+    // reports again, as the old check did.
+    @Override
+    protected void onEncounterLoot(QuestContext<KestevenStage, KestevenState> ctx, FleetEncounterContextPlugin plugin, CargoAPI loot) {
+        KestevenStage stage = ctx.stage();
+        if (stage != KestevenStage.NOT_STARTED && stage != KestevenStage.JOB1_ACTIVE) return;
+        CampaignFleetAPI loser = plugin.getLoser();
+        if (loser == null || !loser.getFaction().getId().equals(Ids.ENIGMA_FACTION_ID)) return;
+        float kills = 0f;
+        for (FleetEncounterContextPlugin.FleetMemberData member : plugin.getLoserData().getOwnCasualties()) {
+            if (member.getStatus() != FleetEncounterContextPlugin.Status.NORMAL) kills += plugin.computePlayerContribFraction();
+        }
+        if (kills < 1f) return;
+        if (stage == KestevenStage.NOT_STARTED) {
+            ctx.set(KestevenFlag.FOUGHT_ENIGMA);
+            return;
+        }
+        ctx.set(KestevenFlag.JOB1_SENSOR_DATA);
+        // The old campaign message played the minor message sound (MessageIntel.getCommMessageSound).
+        if (ctx.intel().isShown(INTEL)) ctx.intel().update(INTEL, UPDATE_SENSOR_DATA, BaseIntelPlugin.getSoundMinorMessage());
     }
 
     // A jump past the tasks assumes the sensor task is done; the deliveries are the hub's.
@@ -60,11 +95,10 @@ final class KestevenJob1Module extends QuestModule<KestevenStage, KestevenState>
         if (ctx.stage() == KestevenStage.JOB1_ACTIVE) ctx.set(KestevenFlag.JOB1_SENSOR_DATA);
     }
 
-    // The old entry ended once the stage passed JOB1_DONE, or on failure; it ended after the vanilla delay only when
-    // the player had starred it, which QuestIntels cannot see.
+    // Failure or a jump: an entry that was not completed ends at once, as the old one did on failure.
     @Override
     protected void onStop(QuestContext<KestevenStage, KestevenState> ctx) {
-        ctx.intel().end(INTEL);
+        if (ctx.intel().isShown(INTEL)) ctx.intel().end(INTEL);
     }
 
     // Catches changes no row reports: an Enigma base destroyed, the home market moved, flags set from the dev menu.

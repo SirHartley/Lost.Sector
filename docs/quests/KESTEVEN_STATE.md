@@ -114,7 +114,7 @@ The actual path can skip stages: 8 to 10 without 9, 7 to 11 when job 3 is refuse
 |---|---|---|
 | `ENDED` | Questline permanently failed | `QuestStageManager` failure checks |
 | `STORY_SKIPPED` | Story skip used; nothing reads it | Hub action `storySkip` |
-| `FOUGHT_ENIGMA` | Beat Enigma before accepting job 1 | `QuestStageManager.reportEncounterLootGenerated` |
+| `FOUGHT_ENIGMA` | Beat Enigma before accepting job 1 | `KestevenJob1Module.onEncounterLoot` |
 | `JOB1_SENSOR_DATA` | Sensor task done | Same; `KestevenJob1Module.onSkip` on a jump past `JOB1_ACTIVE` |
 | `JOB1_DATA_DELIVERED`, `JOB1_ELECTRONICS_DELIVERED` | Sensor package and electronics delivered | Rules `nskr_kq_jackJob1HandIn…` |
 | `JOB1_TIP_GIVEN` | Jack gave the location tip | Rules `nskr_kq_jackJob1Tip`, `nskr_kq_jackAskTipSel` |

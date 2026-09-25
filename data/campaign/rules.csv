@@ -1763,36 +1763,48 @@ DismissDialog",,,
 nskr_kq_job1IntelTitle,nskr_kqIntelTitle,$nskr_intel_key == job1,,Enemy Unknown,,
 nskr_kq_job1IntelHostile,nskr_kqIntelBullets,"$nskr_intel_key == job1
 nskr_quest kq is JOB1_ACTIVE JOB1_DONE
-nskr_quest kq check kestevenHostile",,"You need to get back to non-hostile relations with Kesteven, if you want to finish this job.",,
+$nskr_intel_mode != update
+nskr_quest kq check kestevenHostile","SetTextHighlights ""non-hostile relations""","You need to get back to non-hostile relations with Kesteven, if you want to finish this job.",,
 nskr_kq_job1IntelSensors,nskr_kqIntelBullets,"$nskr_intel_key == job1
 nskr_quest kq is JOB1_ACTIVE
+$nskr_intel_update != sensorData
 !nskr_quest kq flag JOB1_SENSOR_DATA",,"Locate any of the unknown AI force, and run the custom sensors package while engaging them.",,
 nskr_kq_job1IntelData,nskr_kqIntelBullets,"$nskr_intel_key == job1
 nskr_quest kq is JOB1_ACTIVE
+$nskr_intel_update != sensorData
 nskr_quest kq flag JOB1_SENSOR_DATA
-!nskr_quest kq flag JOB1_DATA_DELIVERED",,"With the data gathered, you should return to Jack Lapua in $nskr_kq_job1HomeName to deliver the package.",,
+!nskr_quest kq flag JOB1_DATA_DELIVERED","SetTextHighlights ""return to Jack Lapua in $nskr_kq_job1HomeName""","With the data gathered, you should return to Jack Lapua in $nskr_kq_job1HomeName to deliver the package.",,
 nskr_kq_job1IntelElectronics,nskr_kqIntelBullets,"$nskr_intel_key == job1
 nskr_quest kq is JOB1_ACTIVE
-!nskr_quest kq flag JOB1_ELECTRONICS_DELIVERED",,"Search for more AI activity, and recover the electronics once you've defeated them. Once you have $nskr_kq_job1ArtifactCount Artifact Electronics deliver them to Jack Lapua in $nskr_kq_job1HomeName.",,
+$nskr_intel_update != sensorData
+!nskr_quest kq flag JOB1_ELECTRONICS_DELIVERED","SetTextHighlights ""$nskr_kq_job1ArtifactCount Artifact Electronics""","Search for more AI activity, and recover the electronics once you've defeated them. Once you have $nskr_kq_job1ArtifactCount Artifact Electronics deliver them to Jack Lapua in $nskr_kq_job1HomeName.",,
 nskr_kq_job1IntelTip,nskr_kqIntelBullets,"$nskr_intel_key == job1
 nskr_quest kq is JOB1_ACTIVE
+$nskr_intel_update != sensorData
 nskr_quest kq flag JOB1_TIP_GIVEN
 nskr_quest kq check job1TipBase",,Investigate the $nskr_kq_job1TipSystem.,,
 nskr_kq_job1IntelTasksDone,nskr_kqIntelBullets,"$nskr_intel_key == job1
 nskr_quest kq is JOB1_DONE",,You have completed the tasks. Talk to Jack Lapua to finish the job.,,
+nskr_kq_job1IntelSensorData,nskr_kqIntelBullets,"$nskr_intel_key == job1
+$nskr_intel_update == sensorData","SetTextHighlightColors yellowTextColor
+SetTextHighlights ""Deliver it back to $nskr_kq_job1HomeName""",You managed to gather sufficient data in battle for the task. Deliver it back to $nskr_kq_job1HomeName.,,The message KestevenJob1Module sends when the sensor task is done
+nskr_kq_job1IntelCompleted,nskr_kqIntelBullets,"$nskr_intel_key == job1
+$nskr_intel_status == completed",,You managed to complete the job.,,
 nskr_kq_job1IntelDescActive,nskr_kqIntelDesc,"$nskr_intel_key == job1
 nskr_quest kq is JOB1_ACTIVE",,"Jack Lapua gave you a set of tasks to complete, involving an unknown AI threat.",,
 nskr_kq_job1IntelDescDone,nskr_kqIntelDesc,"$nskr_intel_key == job1
 nskr_quest kq is JOB1_DONE",,Return to $nskr_kq_job1HomeName.,,
+nskr_kq_job1IntelDescCompleted,nskr_kqIntelDesc,"$nskr_intel_key == job1
+$nskr_intel_status == completed",,Mission complete.,,
 ,,,,,,
 # KESTEVEN QUESTLINE: JOB 3,,,,,,
 nskr_kq_job3IntelTitle,nskr_kqIntelTitle,$nskr_intel_key == job3,,Hostile Takeover,,
 nskr_kq_job3IntelHostile,nskr_kqIntelBullets,"$nskr_intel_key == job3
 nskr_quest kq is JOB3_ACTIVE JOB3_TARGET_KNOWN
-nskr_quest kq check kestevenHostile",,"You need to get back to non-hostile relations with Kesteven, if you want to finish this job.",,
+nskr_quest kq check kestevenHostile","SetTextHighlights ""non-hostile relations""","You need to get back to non-hostile relations with Kesteven, if you want to finish this job.",,
 nskr_kq_job3IntelDays,nskr_kqIntelBullets,"$nskr_intel_key == job3
 nskr_quest kq is JOB3_ACTIVE JOB3_TARGET_KNOWN
-nskr_quest kq check job3TimeLeft",,You have $nskr_kq_job3DaysLeft days to finish this job.,,
+nskr_quest kq check job3TimeLeft","SetTextHighlights ""$nskr_kq_job3DaysLeft days""",You have $nskr_kq_job3DaysLeft days to finish this job.,,
 nskr_kq_job3IntelStart,nskr_kqIntelBullets,"$nskr_intel_key == job3
 nskr_quest kq is JOB3_ACTIVE",,Head to $nskr_kq_job3HomeMarket in $nskr_kq_job3HomeSystem and figure out what the expeditions target is. Then neutralize the fleet.,,
 nskr_kq_job3IntelTarget,nskr_kqIntelBullets,"$nskr_intel_key == job3

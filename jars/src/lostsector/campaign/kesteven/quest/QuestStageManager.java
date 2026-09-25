@@ -1168,36 +1168,6 @@ public class QuestStageManager extends BaseCampaignEventListener implements Ever
     public void reportEncounterLootGenerated(FleetEncounterContextPlugin plugin, CargoAPI loot) {
         CampaignFleetAPI loser = plugin.getLoser();
         if (loser == null) return;
-        // TODO T18: move to KestevenJob1Module once the quest framework routes encounter loot of fleets that are not
-        // quest fleets; onLoot sees only quest fleets.
-        //job 1 completion check and has fought enigma dialog check
-        if (stage<=1 && loser.getFaction().getId().equals("enigma")) {
-            List<FleetEncounterContextPlugin.FleetMemberData> casualties = plugin.getLoserData().getOwnCasualties();
-            float kills = 0f;
-            for (FleetEncounterContextPlugin.FleetMemberData memberData : casualties) {
-                FleetEncounterContextPlugin.Status status = memberData.getStatus();
-                if (status == FleetEncounterContextPlugin.Status.NORMAL) continue;
-                float contrib = plugin.computePlayerContribFraction();
-                kills += 1f*contrib;
-            }
-            if(kills>=1f){
-                //has fought enigma dialog check key
-                if (stage==0 && !QuestHelper.getCompleted(KestevenFlag.FOUGHT_ENIGMA)) {
-                    QuestHelper.setCompleted(true, KestevenFlag.FOUGHT_ENIGMA);
-                }
-                //job1 sensor check
-                if (stage==1) {
-                    QuestHelper.setCompleted(true, KestevenFlag.JOB1_SENSOR_DATA);
-                    //completion text
-                    Global.getSector().getCampaignUI().addMessage("You managed to gather sufficient data in battle for the task. Deliver it back to " + SectorLookup.asteriaOrOutpost().getName() + ".",
-                            Global.getSettings().getColor("standardTextColor"),
-                            "Deliver it back to " + SectorLookup.asteriaOrOutpost().getName(),
-                            "",
-                            Global.getSettings().getColor("yellowTextColor"),
-                            Global.getSettings().getColor("yellowTextColor"));
-                }
-            }
-        }
         //job 3 fail check
         if (stage <=9) {
             if (loser.getMemoryWithoutUpdate().contains(JOB3_TARGET_KEY) && loser.getMemoryWithoutUpdate().contains(MemFlags.MEMORY_KEY_SAW_PLAYER_WITH_TRANSPONDER_ON)) {

@@ -1,9 +1,11 @@
 package lostsector.campaign.kesteven.quest;
 
 import com.fs.starfarer.api.campaign.SectorEntityToken;
+import com.fs.starfarer.api.campaign.comm.IntelInfoPlugin.IntelSortTier;
 import com.fs.starfarer.api.impl.campaign.ids.Tags;
 import com.fs.starfarer.api.impl.campaign.intel.bar.PortsideBarData;
 import lostsector.campaign.enigma.DormantSpawner;
+import lostsector.helper.Ids;
 import lostsector.quest.Declarations;
 import lostsector.quest.QuestContext;
 import lostsector.quest.QuestModule;
@@ -24,7 +26,8 @@ final class KestevenJob3Module extends QuestModule<KestevenStage, KestevenState>
 
     @Override
     protected void declare(Declarations<KestevenStage, KestevenState> d) {
-        d.intel(INTEL, "job3", Tags.INTEL_IMPORTANT, Tags.INTEL_ACCEPTED, Tags.INTEL_MISSIONS).descriptionBullets();
+        d.intel(INTEL, "job3", Tags.INTEL_IMPORTANT, Tags.INTEL_ACCEPTED, Tags.INTEL_MISSIONS)
+                .tier(IntelSortTier.TIER_2).majorPosting().faction(Ids.KESTEVEN_FACTION_ID).deletable().descriptionBullets();
 
         d.check("job3TimeLeft", ctx -> ctx.state().job3TimeLeft > 0f);
 

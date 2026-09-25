@@ -79,6 +79,7 @@ Adjusted - The Frost intel entry and its sensor report appear as soon as you arr
 Adjusted - The Frost intel entry closes three days after the Frozen Heart falls instead of when you next open it
 Removed - The delete button on the Frost intel entry while the Frozen Heart stands
 Fixed - Typo in the Kesteven officer's system tip conversation
+Adjusted - The Enemy Unknown intel entry reports the recovered sensor data as an update and stays for three days once finished
 
 1.0.b
 Adjusted - Severely nerfed spawn rates for Borealis, Rhea and Kingslayer
