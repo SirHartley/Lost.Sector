@@ -222,7 +222,7 @@ The main session owns planning and integration. It reviews every subagent diff, 
 |---|---|
 | Planning, architecture, sequencing, and review and integration of code changes | The main session |
 | Code changes, including Java and data files | Opus 5.5 subagents at high effort, using the `java-implementer` agent (`.claude/agents/java-implementer.md`) |
-| Repository search, call tracing, and reading game sources | Sonnet 5 subagents using `model: sonnet` |
+| Repository search, call tracing, and reading game sources | Opus 5.5 subagents at medium effort, using the `researcher` agent (`.claude/agents/researcher.md`) |
 | UI and UI-adjacent research and scoping, including panels, dialogs, tooltips, renderers, shaders, and sprites | Fable 5 subagents using `model: fable` |
 
 Code subagents work from a brief written with the [dispatch template](#subagent-dispatch-template) and edit only the checkout it names. On rules or quest work they read the in-full guides before editing, use the framework service for every job the framework guide's contract table lists, and stop and report a missing capability instead of writing their own; the main session then extends the framework. They do not commit, push, open pull requests or merge. Parallel code subagents get separate files or separate worktrees. Other subagents perform research and scoping, not shipped code. When the player can see the result, a Fable subagent scopes it before an Opus subagent implements it.
