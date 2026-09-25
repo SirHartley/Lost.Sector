@@ -48,7 +48,7 @@ The framework is built on branch `quest-overhaul`; the task ids refer to the tra
 | Gap verbs: `confirm`, `engage` | `nskr_quest` | planned | T10 |
 | Intel and rules text outside dialogs | `QuestIntel`, `QuestText` | planned | T11 |
 | Rules check tool | `lostsector.quest.dev.RulesCheck` | implemented | T12 |
-| Dev menu and stage jumps | `nskr_questDev` | planned | T13 |
+| Dev menu and stage jumps | `nskr_questDev`, `QuestDevTools` | implemented | T13 |
 | Shared modules | `lostsector.quest.modules` | planned | T37 to T41 |
 
 Until a component is implemented, do not write code against it and do not write a substitute. Implement it in its task, or stop and report.
@@ -111,7 +111,7 @@ A record quest routes events to records through the fleet's record id or the dia
 ## Package layout
 
 ```
-lostsector/quest/                 framework: definitions, state, manager, services
+lostsector/quest/                 framework: definitions, state, manager, services, dev menu support
 lostsector/quest/modules/         shared modules used by several quests
 lostsector/quest/dev/             RulesCheck and dev support
 lostsector/dialogue/rules/        nskr_quest and nskr_questDev commands
@@ -762,15 +762,24 @@ Each applies the grant the way `AddRemoveCommodity` and `AddRemoveAnyItem` do an
 
 ### Dev tools
 
-`nskr_questDev`, a `PaginatedOptions` command, drives a dev menu reached from a `(dev)` option in market menus, which the game shows only in dev mode ([Options](../../../../docs/RULES_WRITING.md#options)). For each quest it shows the stage, flags, timers and every module's `devInfo`, and offers:
+`nskr_questDev <verb>`, a `PaginatedOptions` command in `lostsector.dialogue.rules`, drives a dev menu for every quest. `QuestDevTools`, in the framework package for access to the state and the manager's runs, reads and changes the quests; the command shows the lists and prints the lines. Quests add nothing to the dev menu beyond `onSkip` and `devInfo`.
 
-- jump to any stage (the [jump](#a-stage-jump) path, with `onSkip`);
-- set or clear any flag;
-- expire any timer;
-- reset the quest;
-- open any declared trigger on the current target.
+The entry is the option `(dev)nskr_questDev_open` in the market menu (`PopulateOptions` with `$hasMarket` and `$menuState == main`, as vanilla's own dev menus). `FireBest` and `FireAll` skip option ids starting with `(dev)` outside dev mode, so the menu exists only in dev mode ([Options](../../../../docs/RULES_WRITING.md#options)). The rows are the `# QUEST DEV` block of `rules.csv`.
 
-The player's story skip calls the same `QuestManager.jump`. Quests add nothing to the dev menu beyond `onSkip` and `devInfo`.
+| Screen | Built by | Options | Selection |
+|---|---|---|---|
+| Quest list | `nskr_questDev quests` | One per quest in `QuestCatalog` order, labelled with its stage; Back (`nskr_questDevQuestsOptions` row) | `select` stores the quest id in local `$nskr_questDev_quest` (expiry `0`) and fires `FireAll nskr_questDevQuest`; Back fires `FireAll PopulateOptions` |
+| Quest menu | `FireAll nskr_questDevQuest` | Rows: jump, flags, timers, triggers, reset, Back to the quest list. The first row runs `info` | Each category fires its list verb; reset runs `reset` and shows the menu again |
+| Stage list | `stages` | Every stage in declaration order, the current one marked | `jump` calls `QuestManager.jump`, the path of the player's story skip, then shows the quest menu |
+| Flag list | `flags` | Every flag of the flag enum, `[x]` when set | `toggleFlag` sets or clears it through the context and shows the list again |
+| Timer list | `timers` | Every started timer with its days | `expireTimer` moves the timer's start 1000 days back (`QuestDevTools.EXPIRED_TIMER_DAYS`), so every wait on it has passed, and shows the list again |
+| Trigger list | `triggers` | Every trigger declared with `d.trigger` | `open` clears the options and fires the trigger with `FireBest.fire(null, dialog, memoryMap, trigger)` in the current dialog, on the market's entity, with a null rule id as when a claimed entity's dialog opens. The best row takes over the dialog. When no row matches (a line says so) or the fired rows leave no options, the list shows again |
+
+- **Info.** `info` prints, in the small font: the quest's definition class, availability, stage and days in stage, set flags, started timers with their days, and every module's `devInfo` lines prefixed with the module's class name. `devInfo` is called for every module, active or not, with the module's hook context.
+- **Reset** is a jump to the start stage, which always resets ([A stage jump](#a-stage-jump)).
+- **Lists.** Stages, flags, timers, triggers and quests vary in length, so the command builds them with `PaginatedOptions` (five per page). Option ids are a prefix plus the stage, flag, timer, trigger or quest name: `nskr_questDev_pickQuest_`, `_pickStage_`, `_pickFlag_`, `_pickTimer_`, `_pickTrigger_`; their handlers match with `nskr_optionStartsWith` and the verb reads the name from `$option`. Each list's fixed options come from rows: after drawing every page, the command fires `FireBest nskr_questDevQuestsOptions true` or `FireBest nskr_questDevListOptions true`, which adds the Back row's option to the page and binds Escape to it. A list shown again after a selection opens on the page of that selection (local `$nskr_questDev_page`, expiry `0`).
+- **PaginatedOptions**, verified in the 0.98a-RC8 source (`rulecmd/PaginatedOptions.java`): it becomes the dialog's plugin while a list shows. `showOptions` clears the option panel, adds the page, the Previous and Next page options when there is more than one page, then `DevMenuOptions` in dev mode. Selecting a page option redraws the page; any other option prints its label, restores the original plugin, writes `$option` to the target's memory and to local with expiry `0`, and fires `DialogOptionSelected` with `FireBest` and a null rule id. Each list gets its own command instance, because how the rules engine instantiates commands is not in the sources.
+- **Errors.** An unknown quest, stage, flag or timer, or a quest without state, is logged with the quest id and printed in the dialog, as for the [quest command](#the-quest-command). Jump errors are logged by `QuestManager.jump`.
 
 ### Rules check tool
 

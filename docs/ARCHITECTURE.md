@@ -141,10 +141,10 @@ Packages group code by feature. Use `rg --files jars/src/lostsector/<package>` f
 | `lostsector` | `ModPlugin` |
 | `settings` | LunaLib-backed settings: `Setting`, `SettingsManager`, `Difficulty` |
 | `persistence` | `Saved`, `CampaignTimer` |
-| `quest` | Quest framework: definitions, saved quest state, `QuestManager` (stage changes, daily tick, frame hook, event routing to modules and quest fleet orders), quest fleets (`QuestFleets`, one `FleetHelper` list), dialog claims, the `nskr_quest` verbs (`QuestVerbs`), quest tokens (`QuestTokens`), generated people (`QuestPeople`) and receipts (`QuestRewards`); specification and status in [`quest/README.md`](../jars/src/lostsector/quest/README.md) |
+| `quest` | Quest framework: definitions, saved quest state, `QuestManager` (stage changes, daily tick, frame hook, event routing to modules and quest fleet orders), quest fleets (`QuestFleets`, one `FleetHelper` list), dialog claims, the `nskr_quest` verbs (`QuestVerbs`), quest tokens (`QuestTokens`), generated people (`QuestPeople`), receipts (`QuestRewards`) and the dev menu's reads and changes (`QuestDevTools`); specification and status in [`quest/README.md`](../jars/src/lostsector/quest/README.md) |
 | `helper`, `helper/fleet` | Shared helpers; fleet, captain and system builders |
 | `rendering` | Render helpers and blast sprites |
-| `dialogue/rules` | Rule commands (`nskr_*`); `nskr_quest` hands its verbs to `quest/QuestVerbs` |
+| `dialogue/rules` | Rule commands (`nskr_*`); `nskr_quest` hands its verbs to `quest/QuestVerbs`; `nskr_questDev`, the dev-mode quest menu, uses `quest/QuestDevTools` |
 | `campaign` | `CorePlugin`; feature packages below |
 | `campaign/enigma` | Enigma fleets, bases, relations, officers, loot, the Heart occupation and Frost intel, `EnigmaPopCondition` |
 | `campaign/kesteven` | Kesteven economy, exports, blueprints, black ops, exile; `loans/`, `contracts/`, bar tips in `tips/`, and the questline in `quest/` |

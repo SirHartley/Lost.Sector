@@ -841,3 +841,38 @@ nskr_thronesGift_anotherSel,DialogOptionSelected,$option == nskr_thronesGift_ano
 nskr_thronesGift_leaveSel,DialogOptionSelected,$option == nskr_thronesGift_leave,"DismissDialog
 nskr_thronesGift refreshIntel",,,
 
+,,,,,,
+# QUEST DEV,,,,,,
+nskr_questDev_marketOption,PopulateOptions,"$hasMarket
+$menuState == main",SetOptionColor (dev)nskr_questDev_open gray,,200:(dev)nskr_questDev_open:>> (dev) Quests,Dev mode only
+nskr_questDev_openSel,DialogOptionSelected,$option == (dev)nskr_questDev_open,nskr_questDev quests,,,
+,,,,,,
+nskr_questDev_questsBack,nskr_questDevQuestsOptions,,SetShortcut nskr_questDev_close ESCAPE,,nskr_questDev_close:Back,Fired by nskr_questDev after each page of the quest list
+nskr_questDev_pickQuestSel,DialogOptionSelected,"nskr_optionStartsWith ""nskr_questDev_pickQuest_""","nskr_questDev select
+FireAll nskr_questDevQuest",,,
+nskr_questDev_closeSel,DialogOptionSelected,$option == nskr_questDev_close,FireAll PopulateOptions,,,
+,,,,,,
+nskr_questDev_questInfo,nskr_questDevQuest,,nskr_questDev info,,,
+nskr_questDev_questJump,nskr_questDevQuest,,,,nskr_questDev_jump:Jump to a stage,
+nskr_questDev_questFlags,nskr_questDevQuest,,,,nskr_questDev_flags:Set or clear a flag,
+nskr_questDev_questTimers,nskr_questDevQuest,,,,nskr_questDev_timers:Expire a timer,
+nskr_questDev_questTriggers,nskr_questDevQuest,,,,nskr_questDev_triggers:Open a declared trigger here,
+nskr_questDev_questReset,nskr_questDevQuest,,"nskr_quest confirm nskr_questDev_reset ""Reset this quest to its start stage?"" ""Reset"" ""Cancel""",,nskr_questDev_reset:Reset the quest,
+nskr_questDev_questBack,nskr_questDevQuest,,SetShortcut nskr_questDev_quests ESCAPE,,100:nskr_questDev_quests:Back,
+nskr_questDev_jumpSel,DialogOptionSelected,$option == nskr_questDev_jump,nskr_questDev stages,,,
+nskr_questDev_flagsSel,DialogOptionSelected,$option == nskr_questDev_flags,nskr_questDev flags,,,
+nskr_questDev_timersSel,DialogOptionSelected,$option == nskr_questDev_timers,nskr_questDev timers,,,
+nskr_questDev_triggersSel,DialogOptionSelected,$option == nskr_questDev_triggers,nskr_questDev triggers,,,
+nskr_questDev_resetSel,DialogOptionSelected,$option == nskr_questDev_reset,"nskr_questDev reset
+FireAll nskr_questDevQuest",,,
+nskr_questDev_questsSel,DialogOptionSelected,$option == nskr_questDev_quests,nskr_questDev quests,,,
+,,,,,,
+nskr_questDev_listBack,nskr_questDevListOptions,,SetShortcut nskr_questDev_questMenu ESCAPE,,nskr_questDev_questMenu:Back,Fired by nskr_questDev after each page of the stage and flag and timer and trigger lists
+nskr_questDev_pickStageSel,DialogOptionSelected,"nskr_optionStartsWith ""nskr_questDev_pickStage_""","nskr_questDev jump
+FireAll nskr_questDevQuest",,,
+nskr_questDev_pickFlagSel,DialogOptionSelected,"nskr_optionStartsWith ""nskr_questDev_pickFlag_""","nskr_questDev toggleFlag
+nskr_questDev flags",,,
+nskr_questDev_pickTimerSel,DialogOptionSelected,"nskr_optionStartsWith ""nskr_questDev_pickTimer_""","nskr_questDev expireTimer
+nskr_questDev timers",,,
+nskr_questDev_pickTriggerSel,DialogOptionSelected,"nskr_optionStartsWith ""nskr_questDev_pickTrigger_""",nskr_questDev open,,,
+nskr_questDev_questMenuSel,DialogOptionSelected,$option == nskr_questDev_questMenu,FireAll nskr_questDevQuest,,,

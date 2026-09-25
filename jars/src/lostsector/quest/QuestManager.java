@@ -38,7 +38,7 @@ public final class QuestManager extends BaseCampaignEventListener
     static final String STORE_KEY = "quests";
     private static final int MAX_QUEUED_CHANGES = 20;
     // Clock timestamps are milliseconds with 86,400,000 per game day: CampaignClock.getElapsedDaysSince divides by 8.64E7.
-    private static final long TIMESTAMP_PER_DAY = 86_400_000L;
+    static final long TIMESTAMP_PER_DAY = 86_400_000L;
     // FleetHelper's AI methods are written for this pace, as QuestStageManager and InterceptManager call them.
     private static final float ORDERS_INTERVAL_DAYS = 0.1f;
 
@@ -600,6 +600,11 @@ public final class QuestManager extends BaseCampaignEventListener
 
     Run<?, ?> run(String questId) {
         return runs.get(questId);
+    }
+
+    // In QuestCatalog order.
+    List<Run<?, ?>> runs() {
+        return Collections.unmodifiableList(order);
     }
 
     Quest<?, ?> quest(String questId) {
