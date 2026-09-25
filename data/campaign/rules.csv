@@ -131,31 +131,56 @@ SetTextHighlights $nskr_modRemoval_removed",,,
 # DEBT options,,,,,,
 nskr_debtOption,PopulateOptions,"nskr_isBaseOfficial admin
 nskr_debt hasOption",,,"nskr_debtMenu:Take or repay loan(s)",
-nskr_debtMenuSel,DialogOptionSelected,"$option == nskr_debtMenu","FireAll nskr_debtMenu","""Ah, good. Looking to take more loans or to repay?""",,
-nskr_debtMenuReturnSel,DialogOptionSelected,"$option == nskr_debtMenuReturn","FireAll nskr_debtMenu",,,
-nskr_debtMenu,nskr_debtMenu,,"AddTextSmall ""You have loaned $nskr_debt_pointsStr""
-SetTextHighlights $nskr_debt_pointsStr
-AddTextSmall ""Your maximum loan is $nskr_debt_MaxpointsStr""
-SetTextHighlights $nskr_debt_MaxpointsStr
+nskr_debtMenuSel,DialogOptionSelected,"$option == nskr_debtMenu","nskr_debt init
+FireAll nskr_debtMenu","""Ah, good. Looking to take more loans or to repay?""",,
+nskr_debtMenuReturnSel,DialogOptionSelected,"$option == nskr_debtMenuReturn","nskr_debt init
+FireAll nskr_debtMenu",,,
+nskr_debtMenu,nskr_debtMenu,,"FireBest nskr_debtStatus
 AddTextSmall ""Current monthly interest rate is $nskr_debtInterestStr""
 SetTextHighlights $nskr_debtInterestStr
 SetShortcut nskr_debtExit ""ESCAPE""",,"nskr_debtBuy:Manage loan(s)
 nskr_debtExit:Go back",
-nskr_debt_ListBuyable,DialogOptionSelected,"$option == nskr_debtBuy","nskr_debt getLoans",,,
-nskr_debtBuyOption,DialogOptionSelected,"nskr_optionStartsWith ""nskr_debt_pick_""","nskr_debt loan
-AddText ""\""Will this be suitable?\""""
-SetShortcut nskr_debtBuy ""ESCAPE""
-AddTextSmall ""You have loaned $nskr_debt_pointsStr""
+nskr_debtStatus,nskr_debtStatus,,"AddTextSmall ""You have loaned $nskr_debt_pointsStr""
 SetTextHighlights $nskr_debt_pointsStr
 AddTextSmall ""Your maximum loan is $nskr_debt_MaxpointsStr""
-SetTextHighlights $nskr_debt_MaxpointsStr",,"nskr_debtConfirmLoan:Confirm transaction
+SetTextHighlights $nskr_debt_MaxpointsStr",,,Shared status lines; tokens written by nskr_debt init
+nskr_debt_ListBuyable,DialogOptionSelected,"$option == nskr_debtBuy","nskr_debt init
+FireAll nskr_debtLoans",,,
+nskr_debt_loanSmall,nskr_debtLoans,,,,"nskr_debt_loanSmall:Loan $nskr_debt_loanSmallStr",
+nskr_debt_loanSmallOff,nskr_debtLoans,"!nskr_debt available loanSmall","SetEnabled nskr_debt_loanSmall false",,,
+nskr_debt_loanLarge,nskr_debtLoans,,,,"nskr_debt_loanLarge:Loan $nskr_debt_loanLargeStr",
+nskr_debt_loanLargeOff,nskr_debtLoans,"!nskr_debt available loanLarge","SetEnabled nskr_debt_loanLarge false",,,
+nskr_debt_loanAll,nskr_debtLoans,,,,"nskr_debt_loanAll:Loan $nskr_debt_loanAllStr",
+nskr_debt_loanAllOff,nskr_debtLoans,"!nskr_debt available loanAll","SetEnabled nskr_debt_loanAll false",,,
+nskr_debt_repaySmall,nskr_debtLoans,,,,"nskr_debt_repaySmall:Repay $nskr_debt_repaySmallStr",
+nskr_debt_repaySmallOff,nskr_debtLoans,"!nskr_debt available repaySmall","SetEnabled nskr_debt_repaySmall false",,,
+nskr_debt_repayLarge,nskr_debtLoans,,,,"nskr_debt_repayLarge:Repay $nskr_debt_repayLargeStr",
+nskr_debt_repayLargeOff,nskr_debtLoans,"!nskr_debt available repayLarge","SetEnabled nskr_debt_repayLarge false",,,
+nskr_debt_repayAll,nskr_debtLoans,,,,"nskr_debt_repayAll:Repay $nskr_debt_repayAllStr",
+nskr_debt_repayAllOff,nskr_debtLoans,"!nskr_debt available repayAll","SetEnabled nskr_debt_repayAll false",,,
+nskr_debt_loansBack,nskr_debtLoans,,"SetShortcut nskr_debtMenuReturn ""ESCAPE"" false",,"nskr_debtMenuReturn:Back",
+nskr_debt_loanSmallSel,DialogOptionSelected,"$option == nskr_debt_loanSmall","$nskr_debt_pick = loanSmall 0
+FireAll nskr_debtPreview",,,
+nskr_debt_loanLargeSel,DialogOptionSelected,"$option == nskr_debt_loanLarge","$nskr_debt_pick = loanLarge 0
+FireAll nskr_debtPreview",,,
+nskr_debt_loanAllSel,DialogOptionSelected,"$option == nskr_debt_loanAll","$nskr_debt_pick = loanAll 0
+FireAll nskr_debtPreview",,,
+nskr_debt_repaySmallSel,DialogOptionSelected,"$option == nskr_debt_repaySmall","$nskr_debt_pick = repaySmall 0
+FireAll nskr_debtPreview",,,
+nskr_debt_repayLargeSel,DialogOptionSelected,"$option == nskr_debt_repayLarge","$nskr_debt_pick = repayLarge 0
+FireAll nskr_debtPreview",,,
+nskr_debt_repayAllSel,DialogOptionSelected,"$option == nskr_debt_repayAll","$nskr_debt_pick = repayAll 0
+FireAll nskr_debtPreview",,,
+nskr_debtPreview,nskr_debtPreview,,"nskr_debt preview $nskr_debt_pick
+SetShortcut nskr_debtBuy ""ESCAPE""",,"nskr_debtConfirmLoan:Confirm transaction
 nskr_debtBuy:Go back",
-nskr_debtBuyConfirm,DialogOptionSelected,"$option == nskr_debtConfirmLoan","nskr_debt confirmLoan
-nskr_debt getLoans
-AddTextSmall ""You have loaned $nskr_debt_pointsStr""
-SetTextHighlights $nskr_debt_pointsStr
-AddTextSmall ""Your maximum loan is $nskr_debt_MaxpointsStr""
-SetTextHighlights $nskr_debt_MaxpointsStr","""Thank you for your business.""",,
+nskr_debtPreviewCost,nskr_debtPreview,"nskr_debt isLoan $nskr_debt_pick","SetTextHighlights $nskr_debt_costStr","A loan of $nskr_debt_amountStr would cost you $nskr_debt_costStr monthly, at the current interest rate.",,
+nskr_debtPreviewAsk,nskr_debtPreview,,"FireBest nskr_debtStatus","""Will this be suitable?""",,
+nskr_debtBuyConfirm,DialogOptionSelected,"$option == nskr_debtConfirmLoan","nskr_debt take $nskr_debt_pick
+PlaySound ui_rep_raise
+nskr_debt init
+FireAll nskr_debtLoans
+FireBest nskr_debtStatus","""Thank you for your business.""",,
 nskr_debtExit,DialogOptionSelected,"$option == nskr_debtExit","FireAll PopulateOptions",,,
 "#END DEBT options",,,,,,
 "#END RULES BASED SCRIPT DIALOGS",,,,,,

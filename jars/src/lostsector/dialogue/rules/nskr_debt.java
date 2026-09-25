@@ -4,298 +4,180 @@
 package lostsector.dialogue.rules;
 
 import com.fs.starfarer.api.Global;
-import com.fs.starfarer.api.campaign.*;
+import com.fs.starfarer.api.campaign.CargoAPI;
+import com.fs.starfarer.api.campaign.InteractionDialogAPI;
+import com.fs.starfarer.api.campaign.SectorEntityToken;
+import com.fs.starfarer.api.campaign.TextPanelAPI;
 import com.fs.starfarer.api.campaign.econ.MarketAPI;
 import com.fs.starfarer.api.campaign.rules.MemKeys;
 import com.fs.starfarer.api.campaign.rules.MemoryAPI;
-import com.fs.starfarer.api.characters.PersonAPI;
-import com.fs.starfarer.api.combat.ShipAPI;
-import com.fs.starfarer.api.impl.campaign.rulecmd.PaginatedOptions;
+import com.fs.starfarer.api.impl.campaign.rulecmd.AddRemoveCommodity;
+import com.fs.starfarer.api.impl.campaign.rulecmd.BaseCommandPlugin;
 import com.fs.starfarer.api.util.Misc;
 import com.fs.starfarer.api.util.Misc.Token;
 import lostsector.campaign.kesteven.quest.EndingElizaDialog;
 import lostsector.campaign.kesteven.quest.QuestHelper;
 import lostsector.helper.MathHelper;
 import org.lazywizard.lazylib.MathUtils;
-import org.lwjgl.input.Keyboard;
 
-import java.awt.*;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
-public class nskr_debt extends PaginatedOptions {
+public class nskr_debt extends BaseCommandPlugin {
+
+	// Each id names one option of the nskr_debtLoans menu in rules.csv; positive credits take a loan, negative repay.
+	public enum Amount {
+		LOAN_SMALL("loanSmall"),
+		LOAN_LARGE("loanLarge"),
+		LOAN_ALL("loanAll"),
+		REPAY_SMALL("repaySmall"),
+		REPAY_LARGE("repayLarge"),
+		REPAY_ALL("repayAll");
+
+		public final String id;
+
+		Amount(String id) {
+			this.id = id;
+		}
+
+		public int getCredits() {
+			switch (this) {
+				case LOAN_SMALL: return SMALL_AMOUNT;
+				case LOAN_LARGE: return LARGE_AMOUNT;
+				case LOAN_ALL: return Math.max(0, getMaxDebt() - getDebt());
+				case REPAY_SMALL: return -SMALL_AMOUNT;
+				case REPAY_LARGE: return -LARGE_AMOUNT;
+				default: return -getDebt();
+			}
+		}
+
+		public static Amount fromId(String id) {
+			for (Amount amount : values()) {
+				if (amount.id.equals(id)) return amount;
+			}
+			return null;
+		}
+	}
 
 	public static final String DEBT_KEY = "$nskr_debtPoints";
 	public static final String INTEREST_KEY = "$nskr_debtInterest";
 	public static final String PERSISTENT_RANDOM_KEY = "nskr_debtRandom";
-	public static final String DIALOG_OPTION_PREFIX = "nskr_debt_pick_";
 	public static final int BASE_DEBT = 8000;
+	public static final int SMALL_AMOUNT = 10000;
+	public static final int LARGE_AMOUNT = 100000;
 	public static final float MIN_INTEREST = 2f;
 	public static final float MAX_INTEREST = 6f;
 	public static final float MAX_CHANGE = 0.25f;
 
-	protected static LoanInfo toLoan = null;
-	protected CampaignFleetAPI playerFleet;
 	protected SectorEntityToken entity;
-	protected MarketAPI market;
-	protected FactionAPI playerFaction;
-	protected FactionAPI entityFaction;
 	protected TextPanelAPI text;
 	protected CargoAPI playerCargo;
-	protected PersonAPI person;
-	protected FactionAPI faction;
-	protected ShipAPI ship;
-	protected int debt;
-	protected int mDebt;
-	protected float interest;
-	protected List<String> disabledOpts = new ArrayList<>();
+	protected MemoryAPI local;
 
-	static void log(final String message) {
-		Global.getLogger(nskr_debt.class).info(message);
-	}
-	
 	@Override
-	public boolean execute(String ruleId, InteractionDialogAPI dialog, List<Token> params, Map<String, MemoryAPI> memoryMap) 
+	public boolean execute(String ruleId, InteractionDialogAPI dialog, List<Token> params, Map<String, MemoryAPI> memoryMap)
 	{
 		String arg = params.get(0).getString(memoryMap);
-		setupVars(dialog, memoryMap);
+		entity = dialog.getInteractionTarget();
+		text = dialog.getTextPanel();
+		playerCargo = Global.getSector().getPlayerFleet().getCargo();
+		local = memoryMap.get(MemKeys.LOCAL);
 
 		switch (arg)
 		{
 			case "init":
-				break;
+				if (getInterest()<MIN_INTEREST){
+					initInterest();
+				}
+				updateTokens();
+				return true;
 			case "hasOption":
 				return validMarket(entity.getMarket());
-			case "getLoans":
-				setupDelegateDialog(dialog);
-				addDebtOptions();
-				showOptions();
-				break;
-			case "loan":
-				int index = Integer.parseInt(memoryMap.get(MemKeys.LOCAL).getString("$option").substring(DIALOG_OPTION_PREFIX.length()));
-				showDebtInfoAndPreparePurchase(index, dialog.getTextPanel());
-				break;
-			case "confirmLoan":
-				loan();
-				break;
+			case "available":
+				return isAvailable(getAmount(params, memoryMap));
+			case "isLoan":
+				Amount loan = getAmount(params, memoryMap);
+				return loan != null && loan.getCredits() > 0;
+			case "preview":
+				return updatePreviewTokens(getAmount(params, memoryMap));
+			case "take":
+				return take(getAmount(params, memoryMap));
 		}
-		return true;
-	}
-	
-	/**
-	 * To be called only when paginated dialog options are required. 
-	 * Otherwise we get nested dialogs that take multiple clicks of the exit option to actually exit.
-	 * @param dialog
-	 */
-	protected void setupDelegateDialog(InteractionDialogAPI dialog)
-	{
-		originalPlugin = dialog.getPlugin();  
-
-		dialog.setPlugin(this);  
-		init(dialog);
-	}
-	
-	protected void setupVars(InteractionDialogAPI dialog, Map<String, MemoryAPI> memoryMap)
-	{
-		this.dialog = dialog;  
-		this.memoryMap = memoryMap;
-		
-		entity = dialog.getInteractionTarget();
-		market = entity.getMarket();
-		text = dialog.getTextPanel();
-		
-		playerFleet = Global.getSector().getPlayerFleet();
-		playerCargo = playerFleet.getCargo();
-		
-		playerFaction = Global.getSector().getPlayerFaction();
-		entityFaction = entity.getFaction();
-		
-		person = dialog.getInteractionTarget().getActivePerson();
-		faction = person.getFaction();
-		
-		updateDebtInMemory(getDebt(), getMaxDebt());
-		if (getInterest()<MIN_INTEREST){
-			initInterest();
-		}
-		updateInterestInMemory(getInterest());
+		return false;
 	}
 
-	protected void updateDebtInMemory(int newDebt, int maxDebt)
-	{
-		debt = newDebt;
-		mDebt = maxDebt;
-		memoryMap.get(MemKeys.LOCAL).set("$nskr_debt_points", debt, 0);
-		memoryMap.get(MemKeys.LOCAL).set("$nskr_debt_pointsStr", Misc.getDGSCredits(debt)+"", 0);
-		memoryMap.get(MemKeys.LOCAL).set("$nskr_debt_MaxpointsStr", Misc.getDGSCredits(mDebt)+"", 0);
+	protected static Amount getAmount(List<Token> params, Map<String, MemoryAPI> memoryMap) {
+		if (params.size() < 2) return null;
+		return Amount.fromId(params.get(1).getString(memoryMap));
 	}
 
-	protected void updateInterestInMemory(float newInterest)
+	protected void updateTokens()
 	{
-		interest = newInterest;
+		int debt = getDebt();
+		float interest = getInterest();
 		float rounded = interest;
 		rounded *= 100f;
 		rounded = Math.round(rounded);
 		rounded /= 100f;
-		memoryMap.get(MemKeys.LOCAL).set("$nskr_debtInterest", interest, 0);
-		memoryMap.get(MemKeys.LOCAL).set("$nskr_debtInterestStr", rounded + "%", 0);
-	}
-	
-	@Override
-	public void showOptions() {
-		super.showOptions();
-		for (String optId : disabledOpts)
-		{
-			dialog.getOptionPanel().setEnabled(optId, false);
+		local.set("$nskr_debt_points", debt, 0);
+		local.set("$nskr_debt_pointsStr", Misc.getDGSCredits(debt)+"", 0);
+		local.set("$nskr_debt_MaxpointsStr", Misc.getDGSCredits(getMaxDebt())+"", 0);
+		local.set("$nskr_debtInterest", interest, 0);
+		local.set("$nskr_debtInterestStr", rounded + "%", 0);
+		for (Amount amount : Amount.values()) {
+			local.set("$nskr_debt_" + amount.id + "Str", Misc.getDGSCredits(Math.abs(amount.getCredits())), 0);
 		}
-		dialog.getOptionPanel().setShortcut("nskr_debtMenuReturn", Keyboard.KEY_ESCAPE, false, false, false, false);
 	}
-	
-	/**
-	 * Adds the dialog options.
-	 */
-	protected void addDebtOptions()
+
+	protected boolean isAvailable(Amount amount)
 	{
-		dialog.getOptionPanel().clearOptions();
-
-		List<LoanInfo> loans = getLoans();
-
-		int index = 0;
-		for (LoanInfo loan : loans)
-		{
-			addDebtOption(loan, index);
-			index++;
-		}
-
-		addOptionAllPages("Back", "nskr_debtMenuReturn");
-	}
-
-	public static List<LoanInfo> getLoans(){
-		List<LoanInfo> loans = new ArrayList<>();
-
-		LoanInfo add10k = new LoanInfo(10000);
-		loans.add(add10k);
-		LoanInfo add100k = new LoanInfo(100000);
-		loans.add(add100k);
-		int all = getMaxDebt()-getDebt();
-		all = Math.max(0,all);
-		LoanInfo addAll = new LoanInfo(all);
-		loans.add(addAll);
-		LoanInfo pay10k = new LoanInfo(-10000);
-		loans.add(pay10k);
-		LoanInfo pay100k = new LoanInfo(-100000);
-		loans.add(pay100k);
-		int debt = getDebt();
-		if (debt!=0) debt*=-1;
-		LoanInfo payAll = new LoanInfo(debt);
-		loans.add(payAll);
-
-		return loans;
-	}
-
-	protected void addDebtOption(LoanInfo info, int index){
-
-		int maxDebt = getMaxDebt();
+		if (amount == null) return false;
+		int credits = amount.getCredits();
 		int currDebt = getDebt();
-
-		int amount = info.amount;
-
-		String desc;
-		if (amount>0) {
-			desc = "Loan " + Misc.getDGSCredits(amount);
-		} else {
-			desc = "Repay " + Misc.getDGSCredits(-1*amount);
-		}
-
-		String optId = DIALOG_OPTION_PREFIX + index;
-		String str = desc;
-
-		addOption(str, optId);
-		if (amount > 0 && currDebt > maxDebt){
-			log("nskr_debt Loan unavailable, total over max: " + amount);
-			disabledOpts.add(optId);
-		}
-		if (amount > 0 && amount+currDebt > maxDebt){
-			log("nskr_debt Loan unavailable, over max: " + amount);
-			disabledOpts.add(optId);
-		}
-		if (amount == 0){
-			log("nskr_debt Loan would be 0: " + amount);
-			disabledOpts.add(optId);
-		}
-		if (amount < 0 && (-1*amount) > (int)playerCargo.getCredits().get()){
-			log("nskr_debt Not enough credits: " + amount);
-			disabledOpts.add(optId);
-		}
-		if (amount <= 0 && currDebt == 0){
-			log("nskr_debt No debt to repay: " + amount);
-			disabledOpts.add(optId);
-		}
-		if (amount < 0 && currDebt+amount < 0){
-			log("nskr_debt Can't overpay: " + amount);
-			disabledOpts.add(optId);
-		}
+		if (credits == 0) return false;
+		if (credits > 0) return credits + currDebt <= getMaxDebt();
+		return currDebt != 0 && -credits <= (int)playerCargo.getCredits().get() && currDebt + credits >= 0;
 	}
 
-	protected void showDebtInfoAndPreparePurchase(int index, TextPanelAPI text) {
-		Color h = Misc.getHighlightColor();
-		Color g = Misc.getGrayColor();
-		Color tc = Misc.getTextColor();
-
-		String desc;
-		String hl;
-		toLoan = getLoans().get(index);
-		text.setFontInsignia();
-
-		if(toLoan.amount>0) {
-			float cost = Math.round(toLoan.amount * (getInterest() / 100f));
-			desc = "A loan of " + Misc.getDGSCredits(toLoan.amount) + " would cost you " + Misc.getDGSCredits(cost) + " monthly, at the current interest rate.";
-			hl = Misc.getDGSCredits(cost);
-			text.addPara(desc, tc, h, hl, "");
-		}
-
-		text.setFontInsignia();
-	}
-
-	protected void loan()
+	protected boolean updatePreviewTokens(Amount amount)
 	{
-
-		int newDebt = addDebt(toLoan.amount);
-		updateDebtInMemory(newDebt, getMaxDebt());
-		if (toLoan.amount>0) {
-			playerCargo.getCredits().add(toLoan.amount);
-		} else playerCargo.getCredits().subtract(-1*toLoan.amount);
-
-		text.setFontSmallInsignia();
-		String str;
-		String hl = "" + toLoan.amount;
-		if (toLoan.amount > 0) {
-			str = "Loan " + Misc.getDGSCredits(toLoan.amount);
-		} else {
-			str = "Repay " + Misc.getDGSCredits(-1*toLoan.amount);
-		}
-		text.addPara(str, Misc.getPositiveHighlightColor(), Misc.getHighlightColor(), hl);
-
-		Global.getSoundPlayer().playUISound("ui_rep_raise",1f,1f);
-
-		text.setFontInsignia();
+		if (amount == null) return false;
+		int credits = amount.getCredits();
+		float cost = Math.round(credits * (getInterest() / 100f));
+		local.set("$nskr_debt_amountStr", Misc.getDGSCredits(credits), 0);
+		local.set("$nskr_debt_costStr", Misc.getDGSCredits(cost), 0);
+		return true;
 	}
 
+	protected boolean take(Amount amount)
+	{
+		if (amount == null) return false;
+		int credits = amount.getCredits();
+		addDebt(credits);
+		if (credits > 0) {
+			playerCargo.getCredits().add(credits);
+			AddRemoveCommodity.addCreditsGainText(credits, text);
+		} else {
+			playerCargo.getCredits().subtract(-credits);
+			AddRemoveCommodity.addCreditsLossText(-credits, text);
+		}
+		return true;
+	}
 
 	public static int addDebt(int debt)
 	{
 		debt += getDebt();
 		Global.getSector().getPersistentData().put(DEBT_KEY, debt);
-		
+
 		return debt;
 	}
-	
+
 	public static int getDebt() {
 		Map<String, Object> data = Global.getSector().getPersistentData();
 		if (!data.containsKey(DEBT_KEY))
 			data.put(DEBT_KEY, 0);
-		
+
 		return (int)data.get(DEBT_KEY);
 	}
 
@@ -329,7 +211,6 @@ public class nskr_debt extends PaginatedOptions {
 		return (float)data.get(INTEREST_KEY);
 	}
 
-
 	public static int getMaxDebt(){
 
 		return (int)((Global.getSector().getPlayerFaction().getRelationship("kesteven") * 100f) + 50f) * BASE_DEBT;
@@ -344,7 +225,7 @@ public class nskr_debt extends PaginatedOptions {
 
 		return market.getFaction().getId().equals("kesteven");
 	}
-	
+
 	public static Random getRandom() {
 		Map<String, Object> data = Global.getSector().getPersistentData();
 		if (!data.containsKey(PERSISTENT_RANDOM_KEY)) {
@@ -353,22 +234,4 @@ public class nskr_debt extends PaginatedOptions {
 		}
 		return (Random)data.get(PERSISTENT_RANDOM_KEY);
 	}
-
-	public static class LoanInfo implements Comparable<LoanInfo> {
-		public int amount;
-
-		public LoanInfo(int amount)
-		{
-			this.amount = amount;
-		}
-
-		@Override
-		public int compareTo(LoanInfo other) {
-			// descending cost order
-			if (amount != other.amount) return Integer.compare(other.amount, amount);
-
-			return amount;
-		}
-	}
 }
-
