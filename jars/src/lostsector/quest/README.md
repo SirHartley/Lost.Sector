@@ -1029,7 +1029,7 @@ public final class BountyEncounter<S, T extends QuestState<S> & BountyEncounter.
     public static final String UPDATE_SIGHTED = "sighted";
     public enum Status { NOT_PLACED, ACTIVE, DEFEATED, DONE }
     public interface Host { Map<String, Record> bounties(); }   // the state creates the map; the module fills it
-    public static final class Record { Status status(); SectorEntityToken location(); boolean sighted(); int paid(); }
+    public static final class Record { Status status(); SectorEntityToken location(); boolean sighted(); int paid(); boolean looted(); }
     public interface Reward<S, T> { void grant(QuestContext<S, T> ctx, CargoAPI loot, FleetEncounterContextPlugin plugin); }
     public interface Payout { int paid(int amount, FleetEncounterContextPlugin plugin); }
 
@@ -1043,6 +1043,8 @@ public final class BountyEncounter<S, T extends QuestState<S> & BountyEncounter.
     public BountyEncounter<S, T> mapFollowsFleet();
     public BountyEncounter<S, T> guards(String trigger, Supplier<List<SectorEntityToken>> entities);
     public BountyEncounter<S, T> revealOnRecovery(String... hullIds);
+    public BountyEncounter<S, T> intel(Consumer<IntelSpec> options);
+    public BountyEncounter<S, T> completionSound(Function<Record, String> sound);
 }
 ```
 
@@ -1051,7 +1053,7 @@ public final class BountyEncounter<S, T extends QuestState<S> & BountyEncounter.
 - **First sighting.** `wantsFrames` is true while the player shares a location with the unsighted, living fleet. Each such frame the module checks `fleet.isVisibleToSensorsOf(playerFleet)`, which is false for fleets in another location. The first time it is true: `onSighted`, `ctx.intel().show(id)`, the location as map location, and the update `sighted`. With `mapFollowsFleet`, the map location is instead the hyperspace anchor of the fleet's star system, none while the fleet is in hyperspace, set again in every `onDay` while the bounty is active.
 - **Defeat.** The fleet is beaten when `defeated` is true for its `QuestFleet` (which gives the `FleetInfo`, for `FleetHelper.getOriginalFlagship`) at its loot or after a battle it fought (`onLoot`, `onBattle`), or when it is destroyed (`onFleetGone` with `wasDestroyed`). The record becomes `DEFEATED`, guarded entities are released; the fleet loses `MemFlags.MEMORY_KEY_MISSION_IMPORTANT` and moves to `<id>Beaten`, so rows keyed on the role flag stop matching and the fleet despawns once out of the player's sight.
 - **Reward.** At the loot of a beaten fleet, once per record and only while the bounty is `ACTIVE` (a bounty another party beat first pays nothing): `reward` (add items to `loot`; they show on the loot screen), then, with `payout`, the rule's amount through `ctx.rewards().credits`, stored in the record, then, with `relationshipPenalty`, `ctx.rewards().relationship(factionId, delta)` when the player faction's relationship with the faction is above `onlyAbove`, recorded in the record. The hook has no dialog, so no receipt prints; the intel completion reports the payment. Loot comes after the recovery screen ([Events](#events)), so a rule can read the player's fleet as recovered.
-- **Completion.** On the next unpaused frame after the defeat, after any open dialog, the intel completes (`ctx.intel().complete(id)`, when shown) and the record becomes `DONE`.
+- **Completion.** On the next unpaused frame after the defeat, after any open dialog, the intel completes (`ctx.intel().complete(id, "", sound)`, when shown), with the sound `completionSound` returns for the record (null, the default, keeps the update sound), and the record becomes `DONE`.
 - **Guarded entities.** With `guards`, once the fleet is placed the module claims the dialog of every entity `entities` returns with `trigger` and keeps them in the record; the trigger is declared once per quest, so bounties can share it. Rows on the trigger test the check `<id>Guards` (the dialog target is guarded, the bounty is active and its fleet is alive in the player's location) and start the fight with `nskr_quest <q> engage <id>`; a fallback row handles a guard that is not there. The defeat releases the claims.
 - **Recovery.** `onShipsRecovered` removes `Tags.SHIP_LIMITED_TOOLTIP` from recovered ships whose base hull id is listed in `revealOnRecovery`.
 - **Tokens and checks.**
@@ -1067,6 +1069,7 @@ public final class BountyEncounter<S, T extends QuestState<S> & BountyEncounter.
   | `<id>Paid`, `<id>PaidInFull` | check | With `payout`: credits were paid; the payment is within one credit of the amount |
   | `<id>RelationsLost` | check | With `relationshipPenalty`: the penalty was applied |
   | `<id>Guards` | check | With `guards`: see Guarded entities |
+- **Presentation.** `intel` sets the entry's [presentation options](#intel) on the `IntelSpec` the module declares, such as the sort tier, `majorPosting()`, `descriptionBullets()` and `deletable()`.
 - **Shared text slots.** Every bounty of a quest writes its intel text on the quest's three intel triggers, selected by `$nskr_intel_key == <id>`, with `$nskr_intel_update == sighted` for the sighting message and `$nskr_intel_status == completed` with `$nskr_intel_mode == update` for the completion message.
 - **Dev info.** One line per bounty: status, location, sighted, looted, paid, relations lost, and whether the fleet is alive.
 

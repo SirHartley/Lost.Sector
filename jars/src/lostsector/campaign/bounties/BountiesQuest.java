@@ -3,12 +3,14 @@ package lostsector.campaign.bounties;
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.CampaignFleetAPI;
 import com.fs.starfarer.api.campaign.SectorEntityToken;
+import com.fs.starfarer.api.campaign.comm.IntelInfoPlugin.IntelSortTier;
 import com.fs.starfarer.api.impl.campaign.ids.Commodities;
 import com.fs.starfarer.api.impl.campaign.ids.Factions;
 import lostsector.campaign.events.hints.HintManager;
 import lostsector.helper.SystemHelper;
 import lostsector.quest.FleetOrders;
 import lostsector.quest.FleetRole;
+import lostsector.quest.IntelSpec;
 import lostsector.quest.NoFlags;
 import lostsector.quest.Quest;
 import lostsector.quest.QuestModule;
@@ -32,6 +34,8 @@ public final class BountiesQuest extends Quest<BountiesStage, BountiesState> {
     static final String TRIGGER_GUARD = "nskr_bountyGuard";
 
     private static final String ICON = "umbra";
+    private static final String SOUND_PAID = "ui_rep_raise";
+    private static final String SOUND_UNPAID = "ui_rep_drop";
     private static final int ABYSS_PAYOUT = 600000;
     private static final int PEACEKEEPERS_PAYOUT = 315000;
     private static final float PEACEKEEPERS_SWITCH_DAYS = 30f;
@@ -60,6 +64,8 @@ public final class BountiesQuest extends Quest<BountiesStage, BountiesState> {
                 .reward((ctx, loot, plugin) -> loot.addCommodity(Commodities.ALPHA_CORE, 1))
                 .payout(ABYSS_PAYOUT, (amount, plugin) -> carriesAbyssShips(Global.getSector().getPlayerFleet()) ? 0 : amount)
                 .onSighted(ctx -> HintManager.removeHintIntel())
+                .intel(BountiesQuest::oldBountyIntel)
+                .completionSound(record -> record.paid() > 0 ? SOUND_PAID : SOUND_UNPAID)
                 .revealOnRecovery(BountiesFleets.ABYSS_FLAGSHIP_HULL, BountiesFleets.ABYSS_CHASM_HULL, BountiesFleets.ABYSS_FISSURE_HULL);
     }
 
@@ -72,6 +78,7 @@ public final class BountiesQuest extends Quest<BountiesStage, BountiesState> {
                     loot.addCommodity("nskr_electronics", 500);
                 })
                 .onSighted(ctx -> HintManager.removeHintIntel())
+                .intel(BountiesQuest::oldBountyIntel)
                 .revealOnRecovery(BountiesFleets.ETERNITY_HULL);
     }
 
@@ -87,7 +94,8 @@ public final class BountiesQuest extends Quest<BountiesStage, BountiesState> {
                     ctx.state().mothershipWreck = BountiesFleets.mothershipWreck(Global.getSector().getPlayerFleet(), ctx.random("mothershipWreck"));
                 })
                 .guards(TRIGGER_GUARD, HeliosSite::planets)
-                .onSighted(ctx -> HintManager.removeHintIntel());
+                .onSighted(ctx -> HintManager.removeHintIntel())
+                .intel(BountiesQuest::oldBountyIntel);
     }
 
     // Patrols Independent markets. The anonymous donors pay the player's share of the bounty, and the Independents take
@@ -101,7 +109,15 @@ public final class BountiesQuest extends Quest<BountiesStage, BountiesState> {
                 .finish(BountiesFleets::finishPeacekeepers)
                 .payout(PEACEKEEPERS_PAYOUT, (amount, plugin) -> Math.round(amount * plugin.computePlayerContribFraction()))
                 .relationshipPenalty(Factions.INDEPENDENT, -0.10f, -0.5f)
-                .mapFollowsFleet();
+                .mapFollowsFleet()
+                .intel(BountiesQuest::oldBountyIntel)
+                .completionSound(record -> record.looted() ? SOUND_PAID : null);
+    }
+
+    // The old bounty intel classes sorted in TIER_2, posted with the major posting sound, listed their bullets under
+    // the description and offered the delete button once finished.
+    private static void oldBountyIntel(IntelSpec spec) {
+        spec.tier(IntelSortTier.TIER_2).majorPosting().descriptionBullets().deletable();
     }
 
     public static BountiesState state() {

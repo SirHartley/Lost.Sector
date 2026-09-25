@@ -16,6 +16,7 @@ import lostsector.helper.fleet.SimpleFleet;
 import lostsector.quest.Declarations;
 import lostsector.quest.FleetOrders;
 import lostsector.quest.FleetRole;
+import lostsector.quest.IntelSpec;
 import lostsector.quest.QuestContext;
 import lostsector.quest.QuestFleet;
 import lostsector.quest.QuestModule;
@@ -74,6 +75,9 @@ public final class BountyEncounter<S extends Enum<S> & QuestStage, T extends Que
     private boolean mapFollowsFleet;
     private String guardTrigger;
     private Supplier<List<SectorEntityToken>> guarded;
+    private Consumer<IntelSpec> intelOptions = spec -> {
+    };
+    private Function<Record, String> completionSound = record -> null;
 
     public interface Host {
 
@@ -109,6 +113,10 @@ public final class BountyEncounter<S extends Enum<S> & QuestStage, T extends Que
 
         public int paid() {
             return paid;
+        }
+
+        public boolean looted() {
+            return looted;
         }
     }
 
@@ -199,6 +207,20 @@ public final class BountyEncounter<S extends Enum<S> & QuestStage, T extends Que
         return this;
     }
 
+    // Presentation options of the intel entry (README "Intel"), applied in declare.
+    public BountyEncounter<S, T> intel(Consumer<IntelSpec> options) {
+        if (options == null) throw new IllegalArgumentException("intel options of " + id + " must not be null");
+        intelOptions = options;
+        return this;
+    }
+
+    // The sounds.json id the completion message plays, from the record; null keeps the standard update sound.
+    public BountyEncounter<S, T> completionSound(Function<Record, String> sound) {
+        if (sound == null) throw new IllegalArgumentException("completion sound of " + id + " must not be null");
+        completionSound = sound;
+        return this;
+    }
+
     // Base hull ids whose limited tooltip (Tags.SHIP_LIMITED_TOOLTIP) is lifted when the player recovers such a ship.
     public BountyEncounter<S, T> revealOnRecovery(String... hullIds) {
         revealedHulls = Set.of(hullIds);
@@ -209,7 +231,7 @@ public final class BountyEncounter<S extends Enum<S> & QuestStage, T extends Que
     protected void declare(Declarations<S, T> d) {
         d.role(id, fleetRole);
         d.role(beatenRole, FleetRole.of(FleetOrders.withdraw()));
-        d.intel(id, icon, Tags.INTEL_BOUNTY);
+        intelOptions.accept(d.intel(id, icon, Tags.INTEL_BOUNTY));
         d.token(id + "FleetName", ctx -> {
             Record record = ctx.state().bounties().get(id);
             return record == null || record.fleetName == null ? "" : record.fleetName;
@@ -312,7 +334,7 @@ public final class BountyEncounter<S extends Enum<S> & QuestStage, T extends Que
     protected void onFrame(QuestContext<S, T> ctx, float amount) {
         Record record = record(ctx);
         if (record.status == Status.DEFEATED) {
-            if (ctx.intel().isShown(id)) ctx.intel().complete(id);
+            if (ctx.intel().isShown(id)) ctx.intel().complete(id, "", completionSound.apply(record));
             record.status = Status.DONE;
             return;
         }

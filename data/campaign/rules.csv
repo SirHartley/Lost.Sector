@@ -1204,15 +1204,18 @@ nskr_bounty_abyssReward,nskr_bountyIntelBullets,"$nskr_intel_key == abyss
 $nskr_intel_status == active
 $nskr_intel_update != sighted",,$nskr_bounty_abyssPayout reward,,
 nskr_bounty_abyssSighted,nskr_bountyIntelBullets,"$nskr_intel_key == abyss
-$nskr_intel_update == sighted",,"Initial examinations of the Remnant fleet shows an unusual flagship, the Hollow-Class. Approach with extreme caution.",,
+$nskr_intel_update == sighted","SetTextHighlightColors yellowTextColor
+SetTextHighlights ""Hollow-Class"" ""extreme caution""","Initial examinations of the Remnant fleet shows an unusual flagship, the Hollow-Class. Approach with extreme caution.",,
 nskr_bounty_abyssPaidMessage,nskr_bountyIntelBullets,"$nskr_intel_key == abyss
 $nskr_intel_status == completed
 $nskr_intel_mode == update
-nskr_quest bounty check abyssPaid",,"Bounty payment received from ARO, +$nskr_bounty_abyssPayout",,
+nskr_quest bounty check abyssPaid","SetTextHighlightColors yellowTextColor
+SetTextHighlights ""+$nskr_bounty_abyssPayout""","Bounty payment received from ARO, +$nskr_bounty_abyssPayout",,
 nskr_bounty_abyssUnpaidMessage,nskr_bountyIntelBullets,"$nskr_intel_key == abyss
 $nskr_intel_status == completed
 $nskr_intel_mode == update
-!nskr_quest bounty check abyssPaid",,"Since you have no proof of complete destruction, you will not receive any payments from ARO.",,
+!nskr_quest bounty check abyssPaid","SetTextHighlightColors yellowTextColor
+SetTextHighlights ""no proof of complete destruction""","Since you have no proof of complete destruction, you will not receive any payments from ARO.",,
 nskr_bounty_eternityLocation,nskr_bountyIntelBullets,"$nskr_intel_key == eternity
 $nskr_intel_status == active
 $nskr_intel_update != sighted",,Hiding in the $nskr_bounty_eternitySystem orbiting $nskr_bounty_eternityEntity,,
@@ -1220,7 +1223,8 @@ nskr_bounty_eternityReward,nskr_bountyIntelBullets,"$nskr_intel_key == eternity
 $nskr_intel_status == active
 $nskr_intel_update != sighted",,Unknown reward,,
 nskr_bounty_eternitySighted,nskr_bountyIntelBullets,"$nskr_intel_key == eternity
-$nskr_intel_update == sighted",,"Initial examinations of the Enigma fleet shows an unusual flagship, the Eternity-Class. Approach with extreme caution.",,
+$nskr_intel_update == sighted","SetTextHighlightColors yellowTextColor
+SetTextHighlights ""Eternity-Class"" ""extreme caution""","Initial examinations of the Enigma fleet shows an unusual flagship, the Eternity-Class. Approach with extreme caution.",,
 nskr_bounty_mothershipLocation,nskr_bountyIntelBullets,"$nskr_intel_key == mothership
 $nskr_intel_status == active
 $nskr_intel_update != sighted",,Last seen in the $nskr_bounty_mothershipSystem orbiting $nskr_bounty_mothershipEntity,,
@@ -1228,11 +1232,12 @@ nskr_bounty_mothershipReward,nskr_bountyIntelBullets,"$nskr_intel_key == mothers
 $nskr_intel_status == active
 $nskr_intel_update != sighted",,Unknown reward,,
 nskr_bounty_mothershipSighted,nskr_bountyIntelBullets,"$nskr_intel_key == mothership
-$nskr_intel_update == sighted",,"Initial examinations of the Remnant fleet shows an unusual flagship, the Sunburst-Class. Approach with extreme caution.",,
+$nskr_intel_update == sighted","SetTextHighlightColors yellowTextColor
+SetTextHighlights ""Sunburst-Class"" ""extreme caution""","Initial examinations of the Remnant fleet shows an unusual flagship, the Sunburst-Class. Approach with extreme caution.",,
 nskr_bounty_peacekeepersLocationHyperspace,nskr_bountyIntelBullets,"$nskr_intel_key == peacekeepers
 $nskr_intel_status == active
 $nskr_intel_update != sighted
-nskr_quest bounty check peacekeepersInHyperspace",,Current rumoured location is somewhere in hyperspace.,,
+nskr_quest bounty check peacekeepersInHyperspace","SetTextHighlights ""somewhere in hyperspace""",Current rumoured location is somewhere in hyperspace.,,
 nskr_bounty_peacekeepersLocation,nskr_bountyIntelBullets,"$nskr_intel_key == peacekeepers
 $nskr_intel_status == active
 $nskr_intel_update != sighted
@@ -1241,68 +1246,51 @@ nskr_bounty_peacekeepersReward,nskr_bountyIntelBullets,"$nskr_intel_key == peace
 $nskr_intel_status == active
 $nskr_intel_update != sighted",,$nskr_bounty_peacekeepersPayout reward,,
 nskr_bounty_peacekeepersSighted,nskr_bountyIntelBullets,"$nskr_intel_key == peacekeepers
-$nskr_intel_update == sighted",,"Initial examinations of the Independent fleet shows an unusual flagship, the Rorqual-Class. Approach with caution.",,
+$nskr_intel_update == sighted","SetTextHighlightColors yellowTextColor
+SetTextHighlights ""Rorqual-Class"" ""caution""","Initial examinations of the Independent fleet shows an unusual flagship, the Rorqual-Class. Approach with caution.",,
 nskr_bounty_peacekeepersPaidMessage,nskr_bountyIntelBullets,"$nskr_intel_key == peacekeepers
 $nskr_intel_status == completed
 $nskr_intel_mode == update
-nskr_quest bounty check peacekeepersLooted",,"Donation received from an anonymous source, +$nskr_bounty_peacekeepersPaidAmount",,
+nskr_quest bounty check peacekeepersLooted","SetTextHighlightColors yellowTextColor
+SetTextHighlights ""+$nskr_bounty_peacekeepersPaidAmount""","Donation received from an anonymous source, +$nskr_bounty_peacekeepersPaidAmount",,
 nskr_bounty_peacekeepersRelationsMessage,nskr_bountyIntelBullets,"$nskr_intel_key == peacekeepers
 $nskr_intel_status == completed
 $nskr_intel_mode == update
-nskr_quest bounty check peacekeepersRelationsLost",,Relations with the Independents reduced by 10,,
+nskr_quest bounty check peacekeepersRelationsLost","SetTextHighlightColors 150,150,150,255 bad
+SetTextHighlights Independents 10",Relations with the Independents reduced by 10,,
 ,,,,,,
 nskr_bounty_abyssDescFound,nskr_bountyIntelDesc,"$nskr_intel_key == abyss
 $nskr_intel_status == active",,You've found a mysterious seemingly passive Remnant fleet with unusual phase ships.,,
 nskr_bounty_abyssDescPosting,nskr_bountyIntelDesc,"$nskr_intel_key == abyss
 $nskr_intel_status == active",,Your comms team finds an open bounty posting by the Anti-Remnant Organization for a fleet with a matching yet vague description. The payout is $nskr_bounty_abyssPayout but requires the complete destruction of the fleet (no recovery).,,
-nskr_bounty_abyssDescLocation,nskr_bountyIntelDesc,"$nskr_intel_key == abyss
-$nskr_intel_status == active",,Found patrolling in the $nskr_bounty_abyssSystem.,,
-nskr_bounty_abyssDescReward,nskr_bountyIntelDesc,"$nskr_intel_key == abyss
-$nskr_intel_status == active",,$nskr_bounty_abyssPayout reward,,
 nskr_bounty_abyssDescDefeated,nskr_bountyIntelDesc,"$nskr_intel_key == abyss
 $nskr_intel_status == completed",,"You were able to defeat the Abyss fleet, good riddance.",,
 nskr_bounty_abyssDescPaid,nskr_bountyIntelDesc,"$nskr_intel_key == abyss
 $nskr_intel_status == completed
-nskr_quest bounty check abyssPaid",,You received the payment from ARO +$nskr_bounty_abyssPayout,,
+nskr_quest bounty check abyssPaid","SetTextHighlights ""+$nskr_bounty_abyssPayout""",You received the payment from ARO +$nskr_bounty_abyssPayout,,
 nskr_bounty_eternityDescFound,nskr_bountyIntelDesc,"$nskr_intel_key == eternity
 $nskr_intel_status == active",,You've found a mysterious seemingly malfunctioning Enigma fleet with an unusual flagship hiding in a nebula system.,,
-nskr_bounty_eternityDescLocation,nskr_bountyIntelDesc,"$nskr_intel_key == eternity
-$nskr_intel_status == active",,Hiding in the $nskr_bounty_eternitySystem orbiting $nskr_bounty_eternityEntity,,
-nskr_bounty_eternityDescReward,nskr_bountyIntelDesc,"$nskr_intel_key == eternity
-$nskr_intel_status == active",,Unknown reward,,
 nskr_bounty_eternityDescDefeated,nskr_bountyIntelDesc,"$nskr_intel_key == eternity
 $nskr_intel_status == completed",,"You were able to defeat the commanders fleet, good riddance.",,
 nskr_bounty_mothershipDescFound,nskr_bountyIntelDesc,"$nskr_intel_key == mothership
 $nskr_intel_status == active",,You've found a strange Remnant fleet commanded by a very formidable mothership.,,
-nskr_bounty_mothershipDescLocation,nskr_bountyIntelDesc,"$nskr_intel_key == mothership
-$nskr_intel_status == active",,Last seen in the $nskr_bounty_mothershipSystem orbiting $nskr_bounty_mothershipEntity,,
-nskr_bounty_mothershipDescReward,nskr_bountyIntelDesc,"$nskr_intel_key == mothership
-$nskr_intel_status == active",,Unknown reward,,
 nskr_bounty_mothershipDescDefeated,nskr_bountyIntelDesc,"$nskr_intel_key == mothership
 $nskr_intel_status == completed",,"You were able to defeat the Remnant fleet, good riddance.",,
 nskr_bounty_peacekeepersDescFound,nskr_bountyIntelDesc,"$nskr_intel_key == peacekeepers
 $nskr_intel_status == active",,An infamous mercenary group patrolling the core systems.,,
 nskr_bounty_peacekeepersDescPosting,nskr_bountyIntelDesc,"$nskr_intel_key == peacekeepers
 $nskr_intel_status == active",,"Shortly after, you were contact by an anonymous source telling you that there are many parties in the sector wishing to get rid of this fleet. Their payout is $nskr_bounty_peacekeepersPayout",,
-nskr_bounty_peacekeepersDescLocationHyperspace,nskr_bountyIntelDesc,"$nskr_intel_key == peacekeepers
-$nskr_intel_status == active
-nskr_quest bounty check peacekeepersInHyperspace",,Current rumoured location is somewhere in hyperspace.,,
-nskr_bounty_peacekeepersDescLocation,nskr_bountyIntelDesc,"$nskr_intel_key == peacekeepers
-$nskr_intel_status == active
-!nskr_quest bounty check peacekeepersInHyperspace",,Current rumoured location is the $nskr_bounty_peacekeepersFleetSystem.,,
-nskr_bounty_peacekeepersDescReward,nskr_bountyIntelDesc,"$nskr_intel_key == peacekeepers
-$nskr_intel_status == active",,$nskr_bounty_peacekeepersPayout reward,,
 nskr_bounty_peacekeepersDescDefeated,nskr_bountyIntelDesc,"$nskr_intel_key == peacekeepers
 $nskr_intel_status == completed
 nskr_quest bounty check peacekeepersLooted",,"You were able to defeat the Peacekeepers, good riddance.",,
 nskr_bounty_peacekeepersDescPaid,nskr_bountyIntelDesc,"$nskr_intel_key == peacekeepers
 $nskr_intel_status == completed
 nskr_quest bounty check peacekeepersLooted
-nskr_quest bounty check peacekeepersPaidInFull",,You received the anonymous *donation* +$nskr_bounty_peacekeepersPaidAmount,,
+nskr_quest bounty check peacekeepersPaidInFull","SetTextHighlights ""+$nskr_bounty_peacekeepersPaidAmount""",You received the anonymous *donation* +$nskr_bounty_peacekeepersPaidAmount,,
 nskr_bounty_peacekeepersDescPaidReduced,nskr_bountyIntelDesc,"$nskr_intel_key == peacekeepers
 $nskr_intel_status == completed
 nskr_quest bounty check peacekeepersLooted
-!nskr_quest bounty check peacekeepersPaidInFull",,You received the anonymous *donation* +$nskr_bounty_peacekeepersPaidAmount the amount was reduced due to low contribution.,,
+!nskr_quest bounty check peacekeepersPaidInFull","SetTextHighlights ""+$nskr_bounty_peacekeepersPaidAmount""",You received the anonymous *donation* +$nskr_bounty_peacekeepersPaidAmount the amount was reduced due to low contribution.,,
 nskr_bounty_peacekeepersDescMissed,nskr_bountyIntelDesc,"$nskr_intel_key == peacekeepers
 $nskr_intel_status == completed
 !nskr_quest bounty check peacekeepersLooted",,The Peacekeepers were defeated by another party. Seems like you missed your chance.,,
