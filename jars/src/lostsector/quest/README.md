@@ -516,7 +516,7 @@ public final class Quests {
 }
 ```
 
-Each quest adds public static methods for the questions other features ask, named after the question: `KestevenQuest.ending()`, `KestevenQuest.isExiled()`. All return safe values before a campaign is loaded.
+Each quest adds public static methods for the questions other features ask, named after the question: `KestevenQuest.kestevenEndingDone()`, `KestevenQuest.researchServicesClosed()`. All return safe values before a campaign is loaded. A feature that must change another quest's state calls a named method on that quest (`KestevenQuest.reportMessengerMet()`), never its state fields.
 
 ### Events
 
@@ -928,7 +928,7 @@ Migration map for the Kesteven questline and the other systems. The owning task 
 | `HostileTakeoverBarEvent`, `ElizaSearch*BarEvent`, `DelveMeetingBarEvent`, `KestevenTipBarEvent` | `AddBarEvents` rows and quest people |
 | `EnemyUnknownIntel`, `HostileTakeoverIntel`, `OperationLifesaverIntel`, `TheDelveIntel`, `CacheIntel` | `QuestIntel` with intel rows |
 | `nskr_isKStage` and other stage predicates | `nskr_quest kq is` and `reached` |
-| Outside readers (`ContractManager`, the kiosk commands, `StalkerSpawner`, `InterceptManager`, `BlackOpsManager`, `Cache`, `CorePlugin`) | `Quests` and `KestevenQuest` queries (T15) |
+| Outside readers (`ContractManager`, the kiosk commands, `StalkerSpawner`, `InterceptManager`, `BlackOpsManager`, `Cache`, `CorePlugin`) | `Quests` and `KestevenQuest` queries (done in T15; see [KESTEVEN_STATE.md](../../../../docs/quests/KESTEVEN_STATE.md)) |
 
 ## Outside the framework
 

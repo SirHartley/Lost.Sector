@@ -16,8 +16,7 @@ import com.fs.starfarer.api.loading.WeaponSpecAPI;
 import com.fs.starfarer.api.util.WeightedRandomPicker;
 import lostsector.campaign.starts.GameModeManager;
 import lostsector.helper.fleet.FleetInfo;
-import lostsector.campaign.kesteven.quest.QuestHelper;
-import lostsector.campaign.kesteven.quest.KestevenFlag;
+import lostsector.campaign.kesteven.quest.KestevenQuest;
 import lostsector.helper.fleet.SimpleFleet;
 import lostsector.settings.Difficulty;
 import lostsector.persistence.Saved;
@@ -260,7 +259,7 @@ public class StalkerSpawner extends BaseCampaignEventListener implements EveryFr
         }
 
         //for kesteven quest line
-        if (QuestHelper.getCompleted(KestevenFlag.GLACIER_DISK_RECOVERED) && !questSpawn.val){
+        if (KestevenQuest.glacierDiskRecovered() && !questSpawn.val){
             float power = PowerLevel.get(0.2f, 0f, MAX_POWER);
             spawnStalkerFleets(3, power, getRandom(PERSISTENT_FLEET_RANDOM_KEY));
             questSpawn.val = true;

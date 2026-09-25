@@ -7,7 +7,7 @@ import com.fs.starfarer.api.campaign.rules.MemoryAPI;
 import com.fs.starfarer.api.impl.campaign.rulecmd.BaseCommandPlugin;
 import com.fs.starfarer.api.util.Misc;
 import lostsector.campaign.kesteven.quest.DelveMeetingBarEvent;
-import lostsector.campaign.kesteven.quest.QuestHelper;
+import lostsector.campaign.kesteven.quest.KestevenQuest;
 import lostsector.helper.SectorLookup;
 
 import java.util.List;
@@ -21,11 +21,10 @@ public class nskr_barEventFixer extends BaseCommandPlugin {
 
     @Override
     public boolean execute(String ruleId, InteractionDialogAPI dialog, List<Misc.Token> params, Map<String, MemoryAPI> memoryMap) {
-        int stage = QuestHelper.getStage();
         MarketAPI market = dialog.getInteractionTarget().getMarket();
 
         //job5 bar intial
-        if (stage==15 && market== SectorLookup.asteriaOrOutpost()) {
+        if (KestevenQuest.delveMeetingDue() && market== SectorLookup.asteriaOrOutpost()) {
             DelveMeetingBarEvent event = new DelveMeetingBarEvent();
             event.addPromptAndOption(dialog, memoryMap);
             log("fixer added job5bar");

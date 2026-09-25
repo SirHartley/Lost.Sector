@@ -17,8 +17,7 @@ import com.fs.starfarer.api.impl.campaign.ids.MemFlags;
 import com.fs.starfarer.api.impl.campaign.ids.Tags;
 import lostsector.campaign.bounties.abyss.AbyssSpawner;
 import lostsector.helper.fleet.FleetInfo;
-import lostsector.campaign.kesteven.quest.QuestHelper;
-import lostsector.campaign.kesteven.quest.KestevenFlag;
+import lostsector.campaign.kesteven.quest.KestevenQuest;
 import lostsector.helper.fleet.SimpleFleet;
 import lostsector.settings.Difficulty;
 import lostsector.persistence.Saved;
@@ -107,7 +106,7 @@ public class InterceptManager extends BaseCampaignEventListener implements Every
             float distance = pf.getLocationInHyperspace().length();
             boolean hyperSpace = pf.isInHyperspace();
             Random random = getRandom(PERSISTENT_RANDOM_KEY);
-            int stage = QuestHelper.getStage();
+            boolean messengerWindow = KestevenQuest.inMessengerWindow();
 
             //SPAWNING LOGIC
             //ARO FLEET
@@ -124,7 +123,7 @@ public class InterceptManager extends BaseCampaignEventListener implements Every
             //MESSENGER
             if (!messengerFleetSpawned.val){
                 //spawn check
-                if (stage>=10 && stage<=14 && hyperSpace && distance < IN_CORE_DIST) {
+                if (messengerWindow && hyperSpace && distance < IN_CORE_DIST) {
                     //rng check
                     if (random.nextFloat()<MESSENGER_SPAWN_CHANCE) {
                         spawnMessengerFleet(getRandom(PERSISTENT_FLEET_RANDOM_KEY));
@@ -209,10 +208,7 @@ public class InterceptManager extends BaseCampaignEventListener implements Every
 
                     boolean talked = fleet.getMemoryWithoutUpdate().contains(MESSENGER_FLEET_TALKED_KEY);
                     //mem key for other quest dialog
-                    if (talked && !QuestHelper.getCompleted(KestevenFlag.MESSENGER_MET)){
-                        QuestHelper.setCompleted(true , KestevenFlag.MESSENGER_MET);
-                        QuestHelper.setCompleted(true , KestevenFlag.MESSENGER_QUESTION_OPEN);
-                    }
+                    if (talked) KestevenQuest.reportMessengerMet();
 
                     if (fleet.getFleetPoints()*4.0f<f.strength){
                         despawn = true;

@@ -7,7 +7,7 @@ import com.fs.starfarer.api.campaign.InteractionDialogAPI;
 import com.fs.starfarer.api.campaign.rules.MemoryAPI;
 import com.fs.starfarer.api.impl.campaign.rulecmd.BaseCommandPlugin;
 import com.fs.starfarer.api.util.Misc;
-import lostsector.campaign.kesteven.quest.QuestHelper;
+import lostsector.campaign.kesteven.quest.KestevenQuest;
 
 import java.util.List;
 import java.util.Map;
@@ -18,7 +18,7 @@ public class nskr_isKStage extends BaseCommandPlugin {
 	public boolean execute(String ruleId, InteractionDialogAPI dialog, List<Misc.Token> params, Map<String, MemoryAPI> memoryMap) {
 	boolean is = false;
 	String stringArg = params.get(0).getString(memoryMap);
-	int stage = QuestHelper.getStage();
+	int stage = KestevenQuest.stage().toLegacy();
 	int arg = Integer.parseInt(stringArg);
 
 	if (stage==arg) is = true;

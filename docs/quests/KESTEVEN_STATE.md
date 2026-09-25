@@ -23,13 +23,14 @@ The questline is quest `kq` of the quest framework. `kesteven/quest/KestevenQues
 The quest manager creates the state on the first unpaused frame of a new campaign and loads it with the save afterwards. Until then:
 
 - `KestevenQuest.state()` returns null, and the `kesteven/quest/QuestHelper` wrappers return the old defaults: stage 0, flags off, counts 0, targets null, the job 3 timer at 90;
-- writes through the wrappers log an error through the quest manager and change nothing;
+- the [queries for other features](#queries-for-other-features) read every flag as unset and the stage as `NOT_STARTED`;
+- writes through the wrappers and `KestevenQuest.reportMessengerMet()` log an error through the quest manager and change nothing;
 - `KestevenQuest.random(purpose)` throws;
 - `QuestStageManager.advance()` returns at once.
 
 ### Access from the old code
 
-The old callers use these accessors until later tasks replace them with modules and `KestevenQuest` queries. Each is a thin wrapper over the state; the quest package's own classes also read and write fields directly where they already hold the state.
+The questline's own old classes use these accessors until later tasks replace them with modules. These are the quest package and the questline dialog commands `nskr_kestevenQuest`, `nskr_job4FleetDialog`, `nskr_ttCollectorDialog`, `nskr_elizaInterceptDialog`, `nskr_altEndingDialogLuddic` and `nskr_altEndingDialogTT`; other features use the [queries](#queries-for-other-features). Each is a thin wrapper over the state; the quest package's own classes also read and write fields directly where they already hold the state.
 
 | Accessor | Reads or writes |
 |---|---|
@@ -46,6 +47,36 @@ The old callers use these accessors until later tasks replace them with modules 
 | `getRandom()` on each class in [Randoms](#randoms) | `KestevenQuest.random` with that class's purpose |
 
 `QuestHelper.getCompleted(String)` and `setCompleted(boolean, String)` still read and write sector persistent data. The bounties, the Mothership and HellSpawn keep their own flags through them; no questline value uses them.
+
+### Queries for other features
+
+Classes outside the quest package and the questline dialog commands read and change questline state only through these public static methods of `KestevenQuest`, as the [framework README](../../jars/src/lostsector/quest/README.md#queries-from-other-features) requires. Stage comparisons use the legacy ints the callers used before, so "16 or later" also holds at 99.
+
+| Query | True when | Callers |
+|---|---|---|
+| `stage()` | Returns the current `KestevenStage`; `NOT_STARTED` before the state exists | `dialogue/rules/nskr_isKStage`, `nskr_isAtLeastKStage`, `nskr_isAtMostKStage`, compared as legacy ints |
+| `isFailed()` | `ENDED` | `kesteven/contracts/ContractManager` (fails every contract) |
+| `kestevenEndingDone()` | `KESTEVEN_ENDING_DONE` | `ContractManager` (doubles the contract cap), `nskr_shipSwap` (heavy hulls in stock) |
+| `elizaEndingDone()` | `ELIZA_ENDING_DONE` | `nskr_debt` (`hasOption` false) |
+| `researchServicesClosed()` | `CHIP_HANDED_TO_ELIZA` or `ALT_ENDING_DONE` | `nskr_shipSwap` and `nskr_modRemoval` (`hasOption` false) |
+| `isJackGone()` | `JACK_GONE` | `kesteven/ExileManager` (Jack is not moved) |
+| `glacierDiskRecovered()` | `GLACIER_DISK_RECOVERED` | `enigma/StalkerSpawner` (three stalker fleets, once) |
+| `inMessengerWindow()` | Stage 10 to 14 | `events/InterceptManager` (the "LZ" messenger may spawn) |
+| `delveMeetingDue()` | Stage 15 | `dialogue/rules/nskr_barEventFixer` (adds `DelveMeetingBarEvent`) |
+| `cacheIsQuestTarget()` | Stage 16 or later | `world/systems/cache/Cache` (marks the command core important) |
+| `isUnreadHintWreck(entity)` | The entity id starts with `$job4HintWreck` and `JOB4_HINT_WRECK_READ` is unset | `CorePlugin` (`HintWreckDialog`) |
+| `glacierCommsOpen()` | `JOB5_ALICE_TIP2`, stage 16 or later, and `GLACIER_DISK_RECOVERED` unset | `CorePlugin` at `nskr_glacier` (`GlacierCommsDialog`) |
+| `isDataSatellite(entity)` | The entity has a memory key starting with `$kQuestArtifact` | `CorePlugin` (`DataSatelliteDialog`) |
+| `elizaMeetingDone()` | `ELIZA_DIALOG_FINISHED` | `CorePlugin` (`ElizaDialog` while false) |
+| `atElizaMarket(entity)` | `elizaMarket` is set and the entity is it or belongs to a market connected to it | `CorePlugin` (`ElizaDialog`, `EndingElizaDialog`) |
+| `kestevenEndingAvailable()` | Stage 19, `KESTEVEN_ENDING_DONE` and `CHIP_HANDED_TO_ELIZA` unset | `CorePlugin` at `asteriaOrOutpost` or the Asteria station (`EndingKestevenDialog`) |
+| `elizaEndingAvailable()` | Stage 19, `ELIZA_HELPED`, `CHIP_HANDED_TO_ELIZA` and `ELIZA_RETURNED` set, `ELIZA_ENDING_DONE` and `ELIZA_KILLED` unset | `CorePlugin` (`EndingElizaDialog`) |
+
+| Action | Does | Caller |
+|---|---|---|
+| `reportMessengerMet()` | Sets `MESSENGER_MET` and `MESSENGER_QUESTION_OPEN` unless `MESSENGER_MET` is set | `events/InterceptManager`, each fleet tick after the messenger fleet was talked to |
+| `reportCacheGuardianDefeated()` | Stage 18 through `QuestHelper.setStage`, unless `ENDED` is set or the stage is below 16 | `Cache.CacheGuardInteractionConfig.notifyLeave` |
+| `markEmptyDataSatellite(entity, number)` | Sets `$kQuestArtifact<number>` and `$nskr_artifactKeyEmpty` on the entity; no state | `Cache.generate`, satellites 5 and 6 |
 
 ## Stages
 
@@ -90,7 +121,7 @@ The actual path can skip stages: 8 to 10 without 9, 7 to 11 when job 3 is refuse
 | `JOB3_REFUSED` | Job 3 refused; nothing reads it | `nskr_kestevenQuest.confirmSkip` |
 | `JOB3_TARGET_DISCOVERED` | Target coordinates from the bar | `HostileTakeoverBarEvent` |
 | `JOB3_FAILED` | Timeout or stealth broken | `QuestStageManager` |
-| `MESSENGER_MET`, `MESSENGER_QUESTION_OPEN` | "LZ" messenger met; question available (cleared after asking Alice) | `events/InterceptManager`; cleared by `nskr_kestevenQuest` |
+| `MESSENGER_MET`, `MESSENGER_QUESTION_OPEN` | "LZ" messenger met; question available (cleared after asking Alice) | `events/InterceptManager` through `KestevenQuest.reportMessengerMet()`; cleared by `nskr_kestevenQuest` |
 | `JOB4_WAIT_OVER` | 30-day wait over | `QuestStageManager` |
 | `JOB4_REQUIREMENT_SKIPPED` | Job 4 strength gate bypassed with a story point | `nskr_kestevenQuest` |
 | `JOB4_HINT_WRECK_READ` | Hint wreck read | `HintWreckDialog` |
@@ -126,7 +157,7 @@ The actual path can skip stages: 8 to 10 without 9, 7 to 11 when job 3 is refuse
 | `JACK_GONE` | Jack left for revenge | `QuestStageManager.vengeanceJack` |
 | `ELIZA_BETRAYED` | Player took Eliza's market after her ending | `QuestStageManager` |
 
-`kesteven/ExileManager` reads `JACK_GONE`; `enigma/StalkerSpawner` reads `GLACIER_DISK_RECOVERED`; `kesteven/contracts/ContractManager`, `CorePlugin`, `nskr_debt`, `nskr_shipSwap` and `nskr_modRemoval` read ending flags. `nskr_starfarerFromStart` (`ModPlugin.STARFARER_MODE_FROM_START_KEY`) is not questline state: `ModPlugin.onNewGame` writes it to sector persistent data, `Difficulty.clearStarfarerFromStartUnlessStarfarer()` and the story skip clear it, and `QuestHelper.saveEnding()` reads it for `hellspawnUnlocked`.
+Other features read flags through the [queries](#queries-for-other-features). `nskr_starfarerFromStart` (`ModPlugin.STARFARER_MODE_FROM_START_KEY`) is not questline state: `ModPlugin.onNewGame` writes it to sector persistent data, `Difficulty.clearStarfarerFromStartUnlessStarfarer()` and the story skip clear it, and `QuestHelper.saveEnding()` reads it for `hellspawnUnlocked`.
 
 ## Fields
 
@@ -189,9 +220,10 @@ Each purpose is a constant on `KestevenState`, named after the persistent-data k
 
 | Flag | Owner memory | Set by | Read by |
 |---|---|---|---|
-| `$kQuestArtifact3`, `$kQuestArtifact4` | Satellite entity | `QuestHelper.spawnArtifact` | `CorePlugin` (prefix match) and `DataSatelliteDialog` |
-| `$nskr_artifactKeyEmpty` | Satellite entity | `DataSatelliteDialog` | `DataSatelliteDialog` |
-| `$job4HintWreck` + number | Entity **id** prefix, not memory | `QuestStageManager.spawnJob4Wrecks` | `CorePlugin` |
+| `$kQuestArtifact3`, `$kQuestArtifact4` | Satellite entity | `QuestHelper.spawnArtifact` | `KestevenQuest.isDataSatellite` for `CorePlugin` (prefix match) and `DataSatelliteDialog` |
+| `$kQuestArtifact5`, `$kQuestArtifact6` | The two Unknown Site satellites | `Cache.generate` through `KestevenQuest.markEmptyDataSatellite` | As above |
+| `$nskr_artifactKeyEmpty` | Satellite entity | `DataSatelliteDialog`, `KestevenQuest.markEmptyDataSatellite` | `DataSatelliteDialog` |
+| `$job4HintWreck` + number | Entity **id** prefix, not memory | `QuestStageManager.spawnJob4Wrecks` | `KestevenQuest.isUnreadHintWreck` for `CorePlugin` |
 | `$KestevenQuestJob3Target` | Expedition fleet | `KestevenFleets` | `QuestStageManager` |
 | `$KestevenQuestJob4Target`, `$KestevenQuestJob4Friendly`, `$KestevenQuestJob4Splinter` | Job 4 fleets | `KestevenFleets` | `QuestStageManager`, rules |
 | `$KestevenQuestTTCollector` | Collector fleet | `KestevenFleets` | `QuestStageManager`, rules |
@@ -218,6 +250,6 @@ Each purpose is a constant on `KestevenState`, named after the persistent-data k
 | `QuestStageManager.reportEncounterLootGenerated()` | 8 or 9→10 (stealth broken), any→14 (friendly attacked) |
 | `HostileTakeoverBarEvent` | 8→9 |
 | `DelveMeetingBarEvent` | 15→16 |
-| `Cache.CacheGuardInteractionConfig` | 16 or 17→18 |
+| `Cache.CacheGuardInteractionConfig`, through `KestevenQuest.reportCacheGuardianDefeated()` | 16 or 17→18 |
 | `CacheCoreDialog` | →19 |
 | `EndingKestevenDialog`, `EndingElizaDialog`, `nskr_altEndingDialogLuddic.makeMad` | 19→20 |

@@ -15,8 +15,7 @@ import com.fs.starfarer.api.impl.campaign.rulecmd.AddRemoveCommodity;
 import com.fs.starfarer.api.impl.campaign.rulecmd.BaseCommandPlugin;
 import com.fs.starfarer.api.util.Misc;
 import com.fs.starfarer.api.util.Misc.Token;
-import lostsector.campaign.kesteven.quest.QuestHelper;
-import lostsector.campaign.kesteven.quest.KestevenFlag;
+import lostsector.campaign.kesteven.quest.KestevenQuest;
 import lostsector.helper.MathHelper;
 import org.lazywizard.lazylib.MathUtils;
 
@@ -224,7 +223,7 @@ public class nskr_debt extends BaseCommandPlugin {
 	{
 		if (market==null) return false;
 		if (Global.getSector().getPlayerFaction().getRelationship("kesteven")<=-0.5f) return false;
-		if (QuestHelper.getCompleted(KestevenFlag.ELIZA_ENDING_DONE)) return false;
+		if (KestevenQuest.elizaEndingDone()) return false;
 
 		return market.getFaction().getId().equals("kesteven");
 	}

@@ -10,10 +10,10 @@ Java paths are relative to `jars/src/lostsector/campaign/`; `dialogue/rules/` an
 |---|---|
 | `dialogue/rules/nskr_kestevenQuest` | Every conversation with Jack, Alice and Nicholas about the questline: offers, briefings, hand-ins, rewards and most player-driven stage changes |
 | `kesteven/quest/QuestStageManager` | `EveryFrameScript` in `EFS_LIST`: automatic stage changes, failure checks, intel, bar events, quest fleets and their AI, the Cache guardian timer, Eliza relocation, post-quest revenge fleets |
-| `kesteven/quest/KestevenQuest`, `KestevenStage`, `KestevenFlag`, `KestevenState` | Framework definition of quest `kq`, with no modules yet; the stage enum, the flags and the saved state ([KESTEVEN_STATE.md](KESTEVEN_STATE.md)) |
-| `kesteven/quest/QuestHelper` | Wrappers over `KestevenState` for the old callers: the stage as a legacy int, flags, fields and lazily picked target locations; `saveEnding()` |
+| `kesteven/quest/KestevenQuest`, `KestevenStage`, `KestevenFlag`, `KestevenState` | Framework definition of quest `kq`, with no modules yet; the stage enum, the flags and the saved state ([KESTEVEN_STATE.md](KESTEVEN_STATE.md)). `KestevenQuest` also holds the [queries and actions](KESTEVEN_STATE.md#queries-for-other-features) through which every other feature reads or changes the questline. |
+| `kesteven/quest/QuestHelper` | Wrappers over `KestevenState` for the questline's own old classes: the stage as a legacy int, flags, fields and lazily picked target locations; `saveEnding()` |
 | `kesteven/quest/KestevenFleets` | Builders for every quest fleet |
-| `CorePlugin` | Opens the Java quest dialogs when the player interacts with a quest entity |
+| `CorePlugin` | Opens the Java quest dialogs when the player interacts with a quest entity, deciding through `KestevenQuest` queries |
 | `kesteven/quest/*Dialog`, `kesteven/quest/*BarEvent`, `kesteven/quest/HintWreckDialog` | Java dialogs and bar events |
 | `dialogue/rules/nskr_job4FleetDialog`, `nskr_ttCollectorDialog`, `nskr_elizaInterceptDialog`, `nskr_altEndingDialogLuddic`, `nskr_altEndingDialogTT`, `nskr_barEventFixer`, `nskr_isKStage` family | Rules commands for the fleet conversations, endings and stage predicates |
 | `kesteven/quest/ElizaRaid`, `ElizaRaidObjectiveCreator` | Ground raid for Eliza's disks |
@@ -254,7 +254,7 @@ The questline option then disappears. The Cache can still be found and fought; `
 | Event | Owner | When | What |
 |---|---|---|---|
 | Tri-Tachyon collector | `QuestStageManager`, `KestevenFleets.spawnCollectorFleet`, `nskr_ttCollectorDialog` | Once; stages 2 to 15; the player carries at least 50 Artifact Electronics, is in hyperspace within 25,000 units of the centre; 3% per day | "Black Ops" demands all Artifact Electronics; paying sends it home |
-| "LZ" messenger | `events/InterceptManager`, rules `MessengerFleetDialog*` | Once; stages 10 to 14; hyperspace near the core; 4% per day | Anonymous warning signed "LZ"; unlocks "LZ" questions for Alice and in `DelveMeetingBarEvent` |
+| "LZ" messenger | `events/InterceptManager`, rules `MessengerFleetDialog*` | Once; stages 10 to 14 (`KestevenQuest.inMessengerWindow()`); hyperspace near the core; 4% per day | Anonymous warning signed "LZ"; `KestevenQuest.reportMessengerMet()` unlocks "LZ" questions for Alice and in `DelveMeetingBarEvent` |
 | Exile | `kesteven/ExileManager` | Daily | If Asteria is lost while the Outpost is Kesteven's, the quest people move to the Outpost and back when Asteria returns |
 
 ## Story skip
@@ -274,3 +274,5 @@ These follow from the code and rules as written. None has been checked in game.
 2. **Missing shortcut target.** Rows call `SetShortcut nskr_kestevenQuestCancel`, but no option has that id. The call does nothing; `updateOptions()` puts Escape on `nskr_kestevenQuestExit`.
 3. **Glacier.** The first screen of `GlacierCommsDialog` has no Leave option. `CorePlugin` opens it only when its one option, "Search for the facility", is available, and the next screen offers Leave.
 4. **Operation Lifesaver system fallbacks.** `KestevenFleets.spawnJob4Target` picks the strike group's system inside the friendly target's constellation. When no other system there has two planets, `QuestHelper.getRandomSystemWithinConstellation` retries without excluding the friendly system, so both fleets can share one system; with no candidate at all it returns null and the spawn fails. `getRandomSystemFarCore`'s fallback can return a system outside any constellation, which `OperationLifesaverIntel` does not expect. Kept as is by the maintainer.
+5. **Cache guardian report can move the stage back.** `KestevenQuest.reportCacheGuardianDefeated()` sets stage 18 whenever the questline has not ended and the stage is 16 or later, so a guardian defeat reported at stage 19 or 20 would return the questline to 18. Normal play defeats the guardian before stage 19.
+6. **Failure counts as late stages.** `glacierCommsOpen()` and `cacheIsQuestTarget()` keep the old `stage >= 16` comparison on legacy numbers, so they are also true after failure (legacy stage 99).

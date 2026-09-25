@@ -19,9 +19,8 @@ import lostsector.campaign.bounties.mothership.MothershipSpawner;
 import lostsector.campaign.events.blacksite.BlacksiteInfo;
 import lostsector.campaign.events.blacksite.BlacksiteDialog;
 import lostsector.campaign.events.blacksite.BlacksiteManager;
-import lostsector.campaign.kesteven.quest.QuestStageManager;
+import lostsector.campaign.kesteven.quest.KestevenQuest;
 import lostsector.campaign.kesteven.quest.QuestHelper;
-import lostsector.campaign.kesteven.quest.KestevenFlag;
 import lostsector.helper.SectorLookup;
 import lostsector.quest.QuestDialogs;
 
@@ -66,17 +65,15 @@ public class CorePlugin extends BaseCampaignPlugin {
             }
         }
         //job4hintWreck dialog
-        if (interactionTarget.getId().startsWith(QuestStageManager.JOB4_HINT_WRECK_ID_KEY) && !QuestHelper.getCompleted(KestevenFlag.JOB4_HINT_WRECK_READ)) {
+        if (KestevenQuest.isUnreadHintWreck(interactionTarget)) {
             return new PluginPick<InteractionDialogPlugin>(new HintWreckDialog(), PickPriority.MOD_GENERAL);
         }
         //glacier comms dialog
-        int stage = QuestHelper.getStage();
-        boolean aliceTip2 = QuestHelper.getCompleted(KestevenFlag.JOB5_ALICE_TIP2);
-        if (interactionTarget.getId().equals("nskr_glacier") && aliceTip2 && stage>=16 && !QuestHelper.getCompleted(KestevenFlag.GLACIER_DISK_RECOVERED)) {
+        if (interactionTarget.getId().equals("nskr_glacier") && KestevenQuest.glacierCommsOpen()) {
             return new PluginPick<InteractionDialogPlugin>(new GlacierCommsDialog(), PickPriority.MOD_GENERAL);
         }
         //satellite dialog
-        if (hasMemoryKeyStartsWith(QuestStageManager.ARTIFACT_KEY, interactionTarget)) {
+        if (KestevenQuest.isDataSatellite(interactionTarget)) {
             return new PluginPick<InteractionDialogPlugin>(new DataSatelliteDialog(), PickPriority.MOD_GENERAL);
         }
         //cache recovery dialog
@@ -84,41 +81,22 @@ public class CorePlugin extends BaseCampaignPlugin {
             return new PluginPick<InteractionDialogPlugin>(new CacheCoreDialog(), PickPriority.MOD_GENERAL);
         }
         //job5 eliza dialog
-        if (QuestHelper.getElizaLoc()!=null) {
-            String loc = QuestHelper.getElizaLoc().getId();
-            if (!QuestHelper.getCompleted(KestevenFlag.ELIZA_DIALOG_FINISHED)) {
-                if (interactionTarget.getId().equals(loc)) {
-                    return new PluginPick<InteractionDialogPlugin>(new ElizaDialog(), PickPriority.MOD_GENERAL);
-                } else if (interactionTarget.getMarket() != null && interactionTarget.getMarket().getConnectedEntities().contains(QuestHelper.getElizaLoc())) {
-                    return new PluginPick<InteractionDialogPlugin>(new ElizaDialog(), PickPriority.MOD_GENERAL);
-                }
-            }
+        if (!KestevenQuest.elizaMeetingDone() && KestevenQuest.atElizaMarket(interactionTarget)) {
+            return new PluginPick<InteractionDialogPlugin>(new ElizaDialog(), PickPriority.MOD_GENERAL);
         }
         //job5 end
-        if (stage==19){
-            //kesteven
-            if (SectorLookup.asteriaOrOutpost()!=null) {
-                String loc = SectorLookup.asteriaOrOutpost().getId();
-                if (!QuestHelper.getCompleted(KestevenFlag.KESTEVEN_ENDING_DONE) && !QuestHelper.getCompleted(KestevenFlag.CHIP_HANDED_TO_ELIZA)) {
-                    if (interactionTarget.getId().equals(loc)) {
-                        return new PluginPick<InteractionDialogPlugin>(new EndingKestevenDialog(), PickPriority.MOD_GENERAL);
-                    } else if (loc.equals("nskr_asteria") && interactionTarget.getId().equals("nskr_asteria_station")){
-                        return new PluginPick<InteractionDialogPlugin>(new EndingKestevenDialog(), PickPriority.MOD_GENERAL);
-                    }
-                }
+        //kesteven
+        if (KestevenQuest.kestevenEndingAvailable() && SectorLookup.asteriaOrOutpost()!=null) {
+            String loc = SectorLookup.asteriaOrOutpost().getId();
+            if (interactionTarget.getId().equals(loc)) {
+                return new PluginPick<InteractionDialogPlugin>(new EndingKestevenDialog(), PickPriority.MOD_GENERAL);
+            } else if (loc.equals("nskr_asteria") && interactionTarget.getId().equals("nskr_asteria_station")){
+                return new PluginPick<InteractionDialogPlugin>(new EndingKestevenDialog(), PickPriority.MOD_GENERAL);
             }
-            //eliza
-            if (QuestHelper.getElizaLoc()!=null){
-                String loc = QuestHelper.getElizaLoc().getId();
-                if (!QuestHelper.getCompleted(KestevenFlag.ELIZA_ENDING_DONE) && !QuestHelper.getCompleted(KestevenFlag.ELIZA_KILLED) &&
-                        QuestHelper.getCompleted(KestevenFlag.ELIZA_HELPED) && QuestHelper.getCompleted(KestevenFlag.CHIP_HANDED_TO_ELIZA) && QuestHelper.getCompleted(KestevenFlag.ELIZA_RETURNED)){
-                    if (interactionTarget.getId().equals(loc)) {
-                        return new PluginPick<InteractionDialogPlugin>(new EndingElizaDialog(), PickPriority.MOD_GENERAL);
-                    } else if (interactionTarget.getMarket()!=null && interactionTarget.getMarket().getConnectedEntities().contains(QuestHelper.getElizaLoc())) {
-                        return new PluginPick<InteractionDialogPlugin>(new EndingElizaDialog(), PickPriority.MOD_GENERAL);
-                    }
-                }
-            }
+        }
+        //eliza
+        if (KestevenQuest.elizaEndingAvailable() && KestevenQuest.atElizaMarket(interactionTarget)) {
+            return new PluginPick<InteractionDialogPlugin>(new EndingElizaDialog(), PickPriority.MOD_GENERAL);
         }
 
         return null;

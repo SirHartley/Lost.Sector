@@ -1,7 +1,6 @@
 package lostsector.world.systems.cache;
 
-import lostsector.campaign.kesteven.quest.QuestHelper;
-import lostsector.campaign.kesteven.quest.QuestStageManager;
+import lostsector.campaign.kesteven.quest.KestevenQuest;
 import lostsector.helper.fleet.SimpleCaptain;
 import lostsector.helper.fleet.SimpleFleet;
 import lostsector.helper.fleet.SimpleFleetMember;
@@ -28,7 +27,6 @@ import com.fs.starfarer.api.impl.campaign.terrain.DebrisFieldTerrainPlugin;
 import com.fs.starfarer.api.impl.campaign.terrain.HyperspaceTerrainPlugin;
 import com.fs.starfarer.api.impl.campaign.terrain.MagneticFieldTerrainPlugin.MagneticFieldParams;
 import com.fs.starfarer.api.util.Misc;
-import lostsector.campaign.kesteven.quest.DataSatelliteDialog;
 import lostsector.campaign.kesteven.quest.CacheCoreDialog;
 import lostsector.dialogue.rules.nskr_kestevenQuest;
 import lostsector.settings.Difficulty;
@@ -172,15 +170,13 @@ public class Cache {
         SectorEntityToken satellite1 = DerelictThemeGenerator.addNonSalvageEntity(system, DerelictThemeGenerator.createLocationAtRandomGap(new Random(), gate, 100f), "nskr_artifact", Factions.NEUTRAL).entity;
         satellite1.setDiscoverable(true);
         satellite1.setSensorProfile(100f);
-        satellite1.getMemory().set(QuestStageManager.ARTIFACT_KEY+5, true);
-        satellite1.getMemory().set(DataSatelliteDialog.ARTIFACT_EMPTY_KEY, true);
+        KestevenQuest.markEmptyDataSatellite(satellite1, 5);
         satellite1.setCircularOrbitPointingDown(center, 0, 400, 60f);
 
         SectorEntityToken satellite2 = DerelictThemeGenerator.addNonSalvageEntity(system, DerelictThemeGenerator.createLocationAtRandomGap(new Random(), gate, 100f), "nskr_artifact", Factions.NEUTRAL).entity;
         satellite2.setDiscoverable(true);
         satellite2.setSensorProfile(100f);
-        satellite2.getMemory().set(QuestStageManager.ARTIFACT_KEY+6, true);
-        satellite2.getMemory().set(DataSatelliteDialog.ARTIFACT_EMPTY_KEY, true);
+        KestevenQuest.markEmptyDataSatellite(satellite2, 6);
         satellite2.setCircularOrbitPointingDown(center, 180, 400, 60f);
 
         //DORMANT
@@ -408,7 +404,7 @@ public class Cache {
                     //do one time stuff
                     spawnEverything(fleet.getStarSystem());
                     spawnWrecks(fleet);
-                    if (!QuestHelper.getEndMissions() && QuestHelper.getStage()>=16) QuestHelper.setStage(18);
+                    KestevenQuest.reportCacheGuardianDefeated();
                     //command core
                     SectorEntityToken entity = spawnCore(fleet);
 
@@ -484,7 +480,7 @@ public class Cache {
         entity.getLocation().x = fleet.getLocation().x + (10f - (float) Math.random() * 50f);
         entity.getLocation().y = fleet.getLocation().y + (10f - (float) Math.random() * 50f);
 
-        if (QuestHelper.getStage()>=16) entity.getMemory().set(MemFlags.MEMORY_KEY_MISSION_IMPORTANT, true);
+        if (KestevenQuest.cacheIsQuestTarget()) entity.getMemory().set(MemFlags.MEMORY_KEY_MISSION_IMPORTANT, true);
 
         entity.getMemory().set(CORE_KEY, true);
         entity.getMemoryWithoutUpdate().set(MusicPlayerPluginImpl.KEEP_PLAYING_LOCATION_MUSIC_DURING_ENCOUNTER_MEM_KEY, true);
