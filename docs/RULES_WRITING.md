@@ -11,7 +11,7 @@ Game version: Starsector **0.98a-RC8**. Engine statements are checked against th
 Write a conversation in this order.
 
 1. **Describe the scene.** Entry point, speakers, what the player already knows, what the conversation reads (quest state, cargo, reputation), what it changes, and every way out. See [Entry points](#entry-points).
-2. **Split it into screens.** A screen is what the player sees between two clicks: one or two short paragraphs and a set of options. A longer speech becomes several screens joined by a Continue option. See [Text](#text).
+2. **Split it into screens.** A screen is what the player sees between two clicks: one or two short paragraphs in one Text cell and a set of options. A longer speech becomes several screens joined by a Continue option. See [Text](#text).
 3. **Choose a structure for each screen.** Most screens are plain chains; lists the player returns to use `FireAll`; state or random variants use `FireBest`. See [Choosing a structure](#choosing-a-structure).
 4. **Decide the state.** For each fact the conversation reads or writes, choose its owner and lifetime before writing a row. See [State and memory keys](#state-and-memory-keys).
 5. **Write the rows in play order.** Entry row, each beat, each menu's option rows followed by their handlers in the same order, then exits. See [Layout and naming](#layout-and-naming).
@@ -250,8 +250,14 @@ Decide where each fact lives before writing rows.
 
 ### Where text goes
 
-- **Text column** for prose. It is the default: SotF puts 68% of its rows' text there. The whole cell is one paragraph; line breaks inside it stay inside that paragraph.
-- **`AddText` in Script** when a line must appear between two commands, for example after a portrait change. `AddTextSmall` prints the same in the small font. Each call adds a new paragraph.
+- **Text column** for the screen's prose. One screen's prose is one Text cell, with its paragraphs separated by one blank line. Vanilla and SotF write screens this way: 4,445 of vanilla's 4,542 multi-line Text cells are paragraphs separated by blank lines. The text panel draws the blank line as high as the gap between two paragraphs, so the player sees normal paragraph spacing; a single line break stays a line break with no gap ([CSV columns](RULES.md#csv-columns)). The engine treats the cell as one paragraph: one highlight list for all of it.
+- **`AddText` in Script** only for a paragraph the Text cell cannot hold:
+  - a colored paragraph, such as gray narration: `AddText "..." gray`;
+  - a paragraph that must print after a Script line that prints or changes what its tokens show: a receipt ([Receipts](#receipts)), a `FireAll` or `FireBest`, a `Call`, any `nskr_quest` verb (`advance` and `do` can print, and quest tokens are computed when shown), an assignment of a key the text shows, or `BeginConversation` when the text has tokens (they follow the new speaker).
+
+  A portrait or picture change, a sound, an option decoration or an assignment of a key the text does not show is not such a line: the text goes in the cell. When moving Java dialogue into rules, the `addPara` calls of one screen become one Text cell, not one `AddText` each.
+- **`AddTextSmall`** for small lines, such as a consequence the prose does not state ([Highlights and small text](#highlights-and-small-text)).
+- Each `AddText` or `AddTextSmall` call adds a new paragraph after the Text cell. The [rules check tool](../jars/src/lostsector/quest/README.md#rules-check-tool) reports a plain `AddText` that could be part of the cell (`text-cell`).
 - A row that only dispatches (fires a trigger, sets flags) has no text.
 
 ### Length
@@ -276,9 +282,9 @@ Versions of a line separated by a line containing only `OR` are picked at random
 
 ### Highlights and small text
 
-`SetTextHighlights` and `SetTextHighlightColors` color phrases in the last paragraph shown, in the order they appear. Arguments get token replacement, so `SetTextHighlights $nskr_x_amount` highlights the displayed value of a memory key; a quest token must be quoted, `SetTextHighlights "$nskr_kq_job3Start"`, because an unquoted `$` argument is read from memory ([Tokens](../jars/src/lostsector/quest/README.md#tokens)). Color arguments (`SetTextHighlightColors`, `AddText`, `AddTextSmall`, `SetOptionColor`) accept `highlight` or `h`, `good`, `bad`, `gray` or `grey`, `story`, a faction id (its base UI color), an `r,g,b,a` literal, a color name from `settings.json`, or a variable holding a `Color` (`Token.getColor` in `sources-api/util.java`). `bad` is `textEnemyColor`; unlike `Misc.getNegativeHighlightColor()` it does not turn blue in colorblind mode. Put them in the Script of the row whose Text they decorate, before any `AddText` in that Script. Write `SetTextHighlightColors` before `SetTextHighlights`, as vanilla's `ome_askHireSel` does: it calls `highlightInLastPara(color, "")`, which replaces the paragraph's highlight phrases, so phrases set before it are lost (`SetTextHighlightColors.execute`, `sources-api/impl.campaign.java`). Repeat a phrase for each occurrence. See [Shared text presentation](DIALOGUE.md#shared-text-presentation).
+`SetTextHighlights` and `SetTextHighlightColors` color phrases in the last paragraph shown. The phrases are searched in the order written: each is found at its first occurrence after the previous phrase's match that is not part of a longer word or number; a phrase that is not found is skipped but still takes its color slot; a second `SetTextHighlights` on the same paragraph replaces the first (0.98a-RC8 text renderer). For a Text cell of several paragraphs, write one `SetTextHighlights` with the phrases of every paragraph in reading order. Arguments get token replacement, so `SetTextHighlights $nskr_x_amount` highlights the displayed value of a memory key; a quest token must be quoted, `SetTextHighlights "$nskr_kq_job3Start"`, because an unquoted `$` argument is read from memory ([Tokens](../jars/src/lostsector/quest/README.md#tokens)). Color arguments (`SetTextHighlightColors`, `AddText`, `AddTextSmall`, `SetOptionColor`) accept `highlight` or `h`, `good`, `bad`, `gray` or `grey`, `story`, a faction id (its base UI color), an `r,g,b,a` literal, a color name from `settings.json`, or a variable holding a `Color` (`Token.getColor` in `sources-api/util.java`). `bad` is `textEnemyColor`; unlike `Misc.getNegativeHighlightColor()` it does not turn blue in colorblind mode. Put them in the Script of the row whose Text they decorate, before any `AddText` in that Script; for the Text cell they are the first lines of the Script. Write `SetTextHighlightColors` before `SetTextHighlights`, as vanilla's `ome_askHireSel` does: it calls `highlightInLastPara(color, "")`, which replaces the paragraph's highlight phrases, so phrases set before it are lost (`SetTextHighlightColors.execute`, `sources-api/impl.campaign.java`). Repeat a phrase for each occurrence. See [Shared text presentation](DIALOGUE.md#shared-text-presentation).
 
-After the prose, small gray text can state a mechanical consequence the prose does not. SotF writes it as an indented list: `AddTextSmall "    - Progress made\n    - Its scorn grows" textGrayColor` (`sotfHauntedPenult4`). Real grants use the vanilla receipt commands, which print their own receipts; see [Receipts](#receipts).
+After the prose, small gray text can state a mechanical consequence the prose does not. Write one `AddTextSmall` call per line or paragraph, as vanilla and SotF do; the same goes for colored `AddText`. A list whose lines belong together is one call with `\n` between the lines, which prints them without paragraph spacing: `AddTextSmall "    - Progress made\n    - Its scorn grows" textGrayColor` (SotF `sotfHauntedPenult4`). Real grants use the vanilla receipt commands, which print their own receipts; see [Receipts](#receipts).
 
 ## Options
 
@@ -349,7 +355,7 @@ A hub mission is its own command target: `Call $<ref> <action>`. Every hub missi
 - **Triggers and keys.** Every fired trigger has rows with exactly that spelling. Every key is read and written with the same spelling and scope.
 - **Options.** Every option has a handler and no colon in its label. Every menu has an option that always shows. Every screen has a way out. Decorating commands run after their option exists.
 - **State.** Quest state comes from its owner. Conversation flags sit on the speaker. Display values have expiry `0`. Menu option rows change nothing.
-- **Text.** No leftover tokens, internal ids or `.0` numbers on screen. Highlights match what is shown. Paragraphs are short.
+- **Text.** No leftover tokens, internal ids or `.0` numbers on screen. Highlights match what is shown. Paragraphs are short. Each screen's prose is one Text cell with blank lines between paragraphs; `AddText` only for color or for text that must follow a line that prints or changes its tokens.
 - **CSV.** The file round-trips byte for byte, every row has seven columns, and no Conditions or Script line holds only spaces; see [Editing and validation](RULES.md#editing-and-validation).
 - **Routes.** Trace entry, every option, refusal, lack of money, hand-in, return and exit, plus save and load. See [Technical handoff](DIALOGUE.md#technical-handoff).
 
