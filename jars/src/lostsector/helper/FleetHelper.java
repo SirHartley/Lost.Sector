@@ -24,8 +24,6 @@ import com.fs.starfarer.api.impl.campaign.ids.MemFlags;
 import com.fs.starfarer.api.impl.campaign.ids.Tags;
 import com.fs.starfarer.api.loading.VariantSource;
 import com.fs.starfarer.api.util.Misc;
-import lostsector.campaign.bounties.mothership.MothershipSpawner;
-import lostsector.campaign.bounties.peacekeepers.RorqualSpawner;
 import lostsector.helper.fleet.FleetInfo;
 import lostsector.campaign.kesteven.quest.QuestStageManager;
 import lostsector.helper.fleet.SimpleFleetMember;
@@ -409,6 +407,47 @@ public class FleetHelper {
         }
     }
 
+    // Patrols the system of info.target (info.home until the first switch) with patrolText. Once the fleet has been in
+    // that system for more than switchDays, it switches info.target to a random market of the faction and moves there,
+    // ignoring other fleets on the way. Nothing changes while the fleet is in hyperspace. True on the call that switched.
+    public static boolean patrolMarketsAI(CampaignFleetAPI fleet, FleetInfo info, String factionId, float switchDays,
+                                          String patrolText, Random random) {
+        CampaignFleetAPI pf = Global.getSector().getPlayerFleet();
+        if (fleet.getAI() == null) return false;
+        FleetAssignmentDataAPI curr = fleet.getAI().getCurrentAssignment();
+        safetyCheck(fleet, curr);
+        specManeuversCheck(fleet, pf, curr);
+        if (info.target == null) info.target = info.home;
+        if (info.target == null || fleet.isInHyperspace()) return false;
+
+        boolean switched = false;
+        if (fleet.getStarSystem() == info.target.getStarSystem()) {
+            if (info.patrolArrivedAge < 0f) info.patrolArrivedAge = info.age;
+            if (fleet.getAI().getCurrentAssignmentType() != FleetAssignment.PATROL_SYSTEM) {
+                fleet.clearAssignments();
+                fleet.addAssignment(FleetAssignment.PATROL_SYSTEM, info.target, Float.MAX_VALUE, patrolText);
+                fleet.getMemoryWithoutUpdate().unset(MemFlags.FLEET_IGNORES_OTHER_FLEETS);
+            }
+            if (info.age - info.patrolArrivedAge > switchDays) {
+                // Resets the patrol assignment before the move.
+                fleet.clearAssignments();
+                fleet.addAssignment(FleetAssignment.ORBIT_PASSIVE, info.target, Float.MAX_VALUE, patrolText);
+                info.target = SystemHelper.getRandomFactionMarket(random, factionId);
+                info.patrolArrivedAge = -1f;
+                switched = true;
+                log("patrol of " + fleet.getName() + " switches to " + info.target.getName());
+            }
+        }
+        if (fleet.getStarSystem() != info.target.getStarSystem()
+                && fleet.getAI().getCurrentAssignmentType() != FleetAssignment.GO_TO_LOCATION) {
+            String name = info.target.getMarket() != null ? info.target.getMarket().getName() : info.target.getName();
+            fleet.clearAssignments();
+            fleet.addAssignment(FleetAssignment.GO_TO_LOCATION, info.target, Float.MAX_VALUE, "moving to " + name);
+            fleet.getMemoryWithoutUpdate().set(MemFlags.FLEET_IGNORES_OTHER_FLEETS, true);
+        }
+        return switched;
+    }
+
     // A raiding fleet below a fifth of its spawn strength withdraws and no longer counts as a defender.
     public static boolean isRaidBroken(FleetInfo info) {
         return info.fleet.getFleetPoints() < info.strength * RAID_BROKEN_STRENGTH;
@@ -530,9 +569,7 @@ public class FleetHelper {
         FLEET_ARRAY_KEYS.add(StalkerSpawner.FLEET_ARRAY_KEY);
         FLEET_ARRAY_KEYS.add(KestevenScavenger.FLEET_ARRAY_KEY);
         FLEET_ARRAY_KEYS.add(GuardSpawner.FLEET_ARRAY_KEY);
-        FLEET_ARRAY_KEYS.add(RorqualSpawner.FLEET_ARRAY_KEY);
         FLEET_ARRAY_KEYS.add(BlackOpsManager.FLEET_ARRAY_KEY);
-        FLEET_ARRAY_KEYS.add(MothershipSpawner.FLEET_ARRAY_KEY);
         FLEET_ARRAY_KEYS.add(QuestFleets.KEY);
     }
     public static void hackBrokenVariants(){

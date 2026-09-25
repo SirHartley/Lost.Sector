@@ -55,11 +55,9 @@ import exerelin.campaign.SectorManager;
 import indevo.industries.artillery.conditions.ArtilleryStationCondition;
 import indevo.industries.artillery.scripts.ArtilleryStationScript;
 import indevo.industries.artillery.utils.ArtilleryStationPlacer;
-import lostsector.campaign.bounties.mothership.MothershipSpawner;
-import lostsector.campaign.bounties.peacekeepers.RorqualSpawner;
+import lostsector.campaign.bounties.HeliosSite;
 import lostsector.campaign.events.hints.HintManager;
 import lostsector.campaign.enigma.EnigmaFleetLoot;
-import lostsector.campaign.bounties.BountyLoot;
 import lostsector.campaign.kesteven.contracts.ContractManager;
 import lostsector.campaign.kesteven.tips.KestevenTipBarEventCreator;
 import lostsector.campaign.kesteven.quest.QuestStageManager;
@@ -162,10 +160,6 @@ public class ModPlugin extends BaseModPlugin {
             Global.getSector().getListenerManager().addListener(new CommissionedCrewsBonus());
             log("added EnigmaFleetLootGenerator");
         }
-        if (!Global.getSector().hasScript(BountyLoot.class)) {
-            Global.getSector().addScript(new BountyLoot());
-            log("added bountyLoot");
-        }
         GenericPluginManagerAPI plugins = Global.getSector().getGenericPlugins();
         if (!plugins.hasPlugin(EnigmaDefenderPlugin.class)) {
             plugins.addPlugin(new EnigmaDefenderPlugin(), true);
@@ -182,7 +176,6 @@ public class ModPlugin extends BaseModPlugin {
 
         EFS_LIST.add(new HyperspaceEnigmaSpawner());
         EFS_LIST.add(new HintManager());
-        EFS_LIST.add(new RorqualSpawner());
         EFS_LIST.add(new HeartOccupation());
         EFS_LIST.add(new StalkerSpawner());
         EFS_LIST.add(new EnigmaRelations());
@@ -194,7 +187,6 @@ public class ModPlugin extends BaseModPlugin {
         EFS_LIST.add(new BlackOpsManager());
         EFS_LIST.add(new ContractManager());
         EFS_LIST.add(new EnigmaHullmodListener());
-        EFS_LIST.add(new MothershipSpawner());
         EFS_LIST.add(new EnigmaAIConverter());
         EFS_LIST.add(new GameModeManager());
         EFS_LIST.add(new ThronesGiftManager());
@@ -365,7 +357,7 @@ public class ModPlugin extends BaseModPlugin {
             Asteria.generateInRandomSystemIfMissing(Global.getSector());
         }
         //once per campaign
-        MothershipSpawner.spawnPlanets(MothershipSpawner.getMothershipBaseLocation(), new Random());
+        HeliosSite.place();
         EnigmaBaseSpawner.spawnBases();
         DormantSpawner.spawnDormant();
         EnvironmentalStorytelling.spawnStorytelling();
@@ -441,9 +433,6 @@ public class ModPlugin extends BaseModPlugin {
         DesertConditionRepair.fix();
         //blacksites; the blacksite quest adopts them at the end of onGameLoad
         BlacksiteSpawner.spawnBases();
-
-        //mothership fleet
-        MothershipSpawner.spawnMothershipFleet(MothershipSpawner.getMothershipBaseLocation(), new Random());
 
         SectorGen.setEnigmaRelation(Global.getSector());
     }

@@ -1126,8 +1126,76 @@ INTERRUPT
 
 "" -UMBRA operations. captain.getName Do not interfere with this fleet. It is authorized to use lethal force to ensure operational security.'""","cutCommLink:Cut the comm link",
 ,,,,,,
+nskr_bounty_mothershipOpen,OpenCommLink,"$faction.id == remnant score:1000
+$entity.isHostile
+$entity.nskr_bounty_mothership score:100
+!$ignorePlayerCommRequests",FireAll nskr_bountyMothershipOptions,"""CID-IFF received 'Greetings valued technician. Your vessel is logged as a valid contract holder with the Tri-Tachyon Integrated Space Defense line of products and services. Development mode is now active.""
+
+Project Helios :
+STATUS REPORT
+
+Weapons: Standby
+Sensors: Active
+Comms: ERROR - NO CONNECTION
+Reactor: Full output
+Bays: Standby
+Subroutines: Active
+
+INTERRUPT
+
+Are you omega [query] No, return; ",,
+nskr_bounty_mothershipOptCut,nskr_bountyMothershipOptions,,,,cutCommLink:Cut the comm link,
+nskr_bounty_mothershipOptShutdown,nskr_bountyMothershipOptions,!$nskr_bounty_mothershipShutdownTried,,,nskr_bounty_mothershipShutdown:Try to shut down the AI,
+nskr_bounty_mothershipShutdown,DialogOptionSelected,$option == nskr_bounty_mothershipShutdown,$nskr_bounty_mothershipShutdownTried = true 100,"You order the comms team to see if they can take remote control of the mothership, but are shortly confronted by the following interface.
+""Valued technician, Please re-enter the system override key for further access.""
+
+INTERRUPT
+
+You are not [omega]
+",cutCommLink:Cut the comm link,
+,,,,,,
+nskr_bounty_mothershipGuard,nskr_bountyGuard,nskr_quest bounty check mothershipGuards,"SetTextHighlights ""maneuvers to prevent your approach""
+nskr_quest bounty engage mothership","The fleet appears to be protecting this planet, and maneuvers to prevent your approach.",,
+nskr_bounty_guardLeave,nskr_bountyGuard,,DismissDialog,,,The guarding fleet is not here to engage.
+,,,,,,
+nskr_bounty_peacekeepersOpen,OpenCommLink,"$faction.id == independent score:1000
+$entity.nskr_bounty_peacekeepers score:100",,"""Hello this is $personName speaking, please state your business.""","nskr_bounty_peacekeepersCut:Cut the comm link
+nskr_bounty_peacekeepersPraise:""I uhh... just wanted to tell you, that you are doing a *great* job.""
+nskr_bounty_peacekeepersFight:""It's time for you to die, Pig!""",
+nskr_bounty_peacekeepersCutAgain,DialogOptionSelected,"$option == nskr_bounty_peacekeepersCut
+$nskr_bounty_peacekeepersCutSelected score:100","EndConversation
+ShowDefaultVisual",The comm link is cut.,,
+nskr_bounty_peacekeepersCut,DialogOptionSelected,$option == nskr_bounty_peacekeepersCut,$nskr_bounty_peacekeepersCutSelected = true 100,"$PersonRank $personName looks very displeased.
+
+You can hear him mumble to himself before the comm link is cut.
+""One day these dumbass spacers will stop wasting my time, Gah.""
+",nskr_bounty_peacekeepersEnd:Cut the comm link,
+nskr_bounty_peacekeepersPraiseAgain,DialogOptionSelected,"$option == nskr_bounty_peacekeepersPraise
+$nskr_bounty_peacekeepersPraiseSelected score:100",,Dialog option already selected.,,
+nskr_bounty_peacekeepersPraise,DialogOptionSelected,$option == nskr_bounty_peacekeepersPraise,$nskr_bounty_peacekeepersPraiseSelected = true 100,"$personName looks confused for a moment.
+
+""What are you talking about? Is this a prank, did Sam send you to fuck with me again? ""
+$personName continues rambling to himself, something about ""payback"" and ""fucking killing Sam"". 
+
+The comm link is cut before you can decipher any meaning to this conversation.",nskr_bounty_peacekeepersEnd:Cut the comm link,
+nskr_bounty_peacekeepersFight,DialogOptionSelected,$option == nskr_bounty_peacekeepersFight,"MakeOtherFleetPreventDisengage true
+MakeOtherFleetAggressive true
+MakeOtherFleetHostile true
+$entity.ignorePlayerCommRequests = true 100
+$nskr_bounty_peacekeepersFightSelected = true 100","""Is that so? It's time for me and my boys to teach you little lesson, crime doesn't pay!"" He shouts through the comm link.
+
+The comm link is cut before you have a chance to respond.
+
+the $fleetName power up combat systems and move in to engage.
+
+",nskr_bounty_peacekeepersEnd:Cut the comm link,
+nskr_bounty_peacekeepersEnd,DialogOptionSelected,$option == nskr_bounty_peacekeepersEnd,"EndConversation
+ShowDefaultVisual",,,
+,,,,,,
 nskr_bounty_abyssTitle,nskr_bountyIntelTitle,$nskr_intel_key == abyss,,$nskr_bounty_abyssFleetName,,
 nskr_bounty_eternityTitle,nskr_bountyIntelTitle,$nskr_intel_key == eternity,,Commander Umbra's Fleet,,
+nskr_bounty_mothershipTitle,nskr_bountyIntelTitle,$nskr_intel_key == mothership,,$nskr_bounty_mothershipFleetName,,
+nskr_bounty_peacekeepersTitle,nskr_bountyIntelTitle,$nskr_intel_key == peacekeepers,,The Peacekeepers,,
 ,,,,,,
 nskr_bounty_abyssLocation,nskr_bountyIntelBullets,"$nskr_intel_key == abyss
 $nskr_intel_status == active
@@ -1153,6 +1221,35 @@ $nskr_intel_status == active
 $nskr_intel_update != sighted",,Unknown reward,,
 nskr_bounty_eternitySighted,nskr_bountyIntelBullets,"$nskr_intel_key == eternity
 $nskr_intel_update == sighted",,"Initial examinations of the Enigma fleet shows an unusual flagship, the Eternity-Class. Approach with extreme caution.",,
+nskr_bounty_mothershipLocation,nskr_bountyIntelBullets,"$nskr_intel_key == mothership
+$nskr_intel_status == active
+$nskr_intel_update != sighted",,Last seen in the $nskr_bounty_mothershipSystem orbiting $nskr_bounty_mothershipEntity,,
+nskr_bounty_mothershipReward,nskr_bountyIntelBullets,"$nskr_intel_key == mothership
+$nskr_intel_status == active
+$nskr_intel_update != sighted",,Unknown reward,,
+nskr_bounty_mothershipSighted,nskr_bountyIntelBullets,"$nskr_intel_key == mothership
+$nskr_intel_update == sighted",,"Initial examinations of the Remnant fleet shows an unusual flagship, the Sunburst-Class. Approach with extreme caution.",,
+nskr_bounty_peacekeepersLocationHyperspace,nskr_bountyIntelBullets,"$nskr_intel_key == peacekeepers
+$nskr_intel_status == active
+$nskr_intel_update != sighted
+nskr_quest bounty check peacekeepersInHyperspace",,Current rumoured location is somewhere in hyperspace.,,
+nskr_bounty_peacekeepersLocation,nskr_bountyIntelBullets,"$nskr_intel_key == peacekeepers
+$nskr_intel_status == active
+$nskr_intel_update != sighted
+!nskr_quest bounty check peacekeepersInHyperspace",,Current rumoured location is the $nskr_bounty_peacekeepersFleetSystem.,,
+nskr_bounty_peacekeepersReward,nskr_bountyIntelBullets,"$nskr_intel_key == peacekeepers
+$nskr_intel_status == active
+$nskr_intel_update != sighted",,$nskr_bounty_peacekeepersPayout reward,,
+nskr_bounty_peacekeepersSighted,nskr_bountyIntelBullets,"$nskr_intel_key == peacekeepers
+$nskr_intel_update == sighted",,"Initial examinations of the Independent fleet shows an unusual flagship, the Rorqual-Class. Approach with caution.",,
+nskr_bounty_peacekeepersPaidMessage,nskr_bountyIntelBullets,"$nskr_intel_key == peacekeepers
+$nskr_intel_status == completed
+$nskr_intel_mode == update
+nskr_quest bounty check peacekeepersLooted",,"Donation received from an anonymous source, +$nskr_bounty_peacekeepersPaidAmount",,
+nskr_bounty_peacekeepersRelationsMessage,nskr_bountyIntelBullets,"$nskr_intel_key == peacekeepers
+$nskr_intel_status == completed
+$nskr_intel_mode == update
+nskr_quest bounty check peacekeepersRelationsLost",,Relations with the Independents reduced by 10,,
 ,,,,,,
 nskr_bounty_abyssDescFound,nskr_bountyIntelDesc,"$nskr_intel_key == abyss
 $nskr_intel_status == active",,You've found a mysterious seemingly passive Remnant fleet with unusual phase ships.,,
@@ -1175,104 +1272,40 @@ nskr_bounty_eternityDescReward,nskr_bountyIntelDesc,"$nskr_intel_key == eternity
 $nskr_intel_status == active",,Unknown reward,,
 nskr_bounty_eternityDescDefeated,nskr_bountyIntelDesc,"$nskr_intel_key == eternity
 $nskr_intel_status == completed",,"You were able to defeat the commanders fleet, good riddance.",,
-,,,,,,
-# PEACEKEEPERS,,,,,,
-pkDialog,OpenCommLink,"$faction.id == independent score:1000
-$entity.RorqLoot score:100","FireBest pkDialogOptions","""Hello this is $personName speaking, please state your business.""",,
-pkDialogOptions,pkDialogOptions,,,,"0:pkCommLink:Cut the comm link
-1:pkInspired:""I uhh... just wanted to tell you, that you are doing a *great* job.""
-2:pkFight:""It's time for you to die, Pig!""",
-pkCommLinkSelected,DialogOptionSelected,"$option == pkCommLink
-$pkCommLinkSelected score:100","EndConversation
-ShowDefaultVisual","The comm link is cut.",,
-pkCommLink,DialogOptionSelected,"$option == pkCommLink","$pkCommLinkSelected= true 100
-
-","$PersonRank $personName looks very displeased.
-
-You can hear him mumble to himself before the comm link is cut.
-""One day these dumbass spacers will stop wasting my time, Gah.""
-","pkEndComms:Cut the comm link",
-pkInspiredSelected,DialogOptionSelected,"$option == pkInspired
-$pkInspiredSelected score:100",,"Dialog option already selected.",,
-pkInspired,DialogOptionSelected,"$option == pkInspired","$pkInspiredSelected = true 100
-","$personName looks confused for a moment.
-
-""What are you talking about? Is this a prank, did Sam send you to fuck with me again? ""
-$personName continues rambling to himself, something about ""payback"" and ""fucking killing Sam"". 
-
-The comm link is cut before you can decipher any meaning to this conversation.","pkEndComms:Cut the comm link",
-pkFight,DialogOptionSelected,"$option == pkFight
-","MakeOtherFleetPreventDisengage true
-MakeOtherFleetAggressive true
-MakeOtherFleetHostile true
-$entity.ignorePlayerCommRequests = true 100
-$pkFightSelected = true 100
-
-","""Is that so? It's time for me and my boys to teach you little lesson, crime doesn't pay!"" He shouts through the comm link.
-
-The comm link is cut before you have a chance to respond.
-
-the $fleetName power up combat systems and move in to engage.
-
-","pkEndComms:Cut the comm link",
-pkEndComms,DialogOptionSelected,"$option == pkEndComms","EndConversation
-ShowDefaultVisual",,,
-"#END PEACEKEEPERS",,,,,,
-,,,,,,
-# MOTHERSHIP,,,,,,
-mothershipDialogExtra,OpenCommLink,"$faction.id == remnant score:1000
-$entity.isHostile
-$entity.mothershipLoot score:100
-!$ignorePlayerCommRequests
-",,"""CID-IFF received 'Greetings valued technician. Your vessel is logged as a valid contract holder with the Tri-Tachyon Integrated Space Defense line of products and services. Development mode is now active.""
-
-Project Helios :
-STATUS REPORT
-
-Weapons: Standby
-Sensors: Active
-Comms: ERROR - NO CONNECTION
-Reactor: Full output
-Bays: Standby
-Subroutines: Active
-
-INTERRUPT
-
-Are you omega [query] No, return; ","cutCommLink:Cut the comm link
-mothershipDialogExtraShutdown:Try to shut down the AI
-",
-mothershipDialogDefault,OpenCommLink,"$faction.id == remnant score:1000
-$entity.isHostile
-$entity.mothershipLoot score:100
-!$ignorePlayerCommRequests
-$mothershipDialogExtraSelected score:100",,"""CID-IFF received 'Greetings valued technician. Your vessel is logged as a valid contract holder with the Tri-Tachyon Integrated Space Defense line of products and services. Development mode is now active.""
-
-Project Helios :
-STATUS REPORT
-
-Weapons: Standby
-Sensors: Active
-Comms: ERROR - NO CONNECTION
-Reactor: Full output
-Bays: Standby
-Subroutines: Active
-
-INTERRUPT
-
-Are you omega [query] No, return; 
-
-
-","cutCommLink:Cut the comm link
-",
-mothershipDialogExtraShutdown,DialogOptionSelected,"$option == mothershipDialogExtraShutdown","$mothershipDialogExtraSelected = true 100","You order the comms team to see if they can take remote control of the mothership, but are shortly confronted by the following interface.
-""Valued technician, Please re-enter the system override key for further access.""
-
-INTERRUPT
-
-You are not [omega]
-","cutCommLink:Cut the comm link
-",
-"#END MOTHERSHIP",,,,,,
+nskr_bounty_mothershipDescFound,nskr_bountyIntelDesc,"$nskr_intel_key == mothership
+$nskr_intel_status == active",,You've found a strange Remnant fleet commanded by a very formidable mothership.,,
+nskr_bounty_mothershipDescLocation,nskr_bountyIntelDesc,"$nskr_intel_key == mothership
+$nskr_intel_status == active",,Last seen in the $nskr_bounty_mothershipSystem orbiting $nskr_bounty_mothershipEntity,,
+nskr_bounty_mothershipDescReward,nskr_bountyIntelDesc,"$nskr_intel_key == mothership
+$nskr_intel_status == active",,Unknown reward,,
+nskr_bounty_mothershipDescDefeated,nskr_bountyIntelDesc,"$nskr_intel_key == mothership
+$nskr_intel_status == completed",,"You were able to defeat the Remnant fleet, good riddance.",,
+nskr_bounty_peacekeepersDescFound,nskr_bountyIntelDesc,"$nskr_intel_key == peacekeepers
+$nskr_intel_status == active",,An infamous mercenary group patrolling the core systems.,,
+nskr_bounty_peacekeepersDescPosting,nskr_bountyIntelDesc,"$nskr_intel_key == peacekeepers
+$nskr_intel_status == active",,"Shortly after, you were contact by an anonymous source telling you that there are many parties in the sector wishing to get rid of this fleet. Their payout is $nskr_bounty_peacekeepersPayout",,
+nskr_bounty_peacekeepersDescLocationHyperspace,nskr_bountyIntelDesc,"$nskr_intel_key == peacekeepers
+$nskr_intel_status == active
+nskr_quest bounty check peacekeepersInHyperspace",,Current rumoured location is somewhere in hyperspace.,,
+nskr_bounty_peacekeepersDescLocation,nskr_bountyIntelDesc,"$nskr_intel_key == peacekeepers
+$nskr_intel_status == active
+!nskr_quest bounty check peacekeepersInHyperspace",,Current rumoured location is the $nskr_bounty_peacekeepersFleetSystem.,,
+nskr_bounty_peacekeepersDescReward,nskr_bountyIntelDesc,"$nskr_intel_key == peacekeepers
+$nskr_intel_status == active",,$nskr_bounty_peacekeepersPayout reward,,
+nskr_bounty_peacekeepersDescDefeated,nskr_bountyIntelDesc,"$nskr_intel_key == peacekeepers
+$nskr_intel_status == completed
+nskr_quest bounty check peacekeepersLooted",,"You were able to defeat the Peacekeepers, good riddance.",,
+nskr_bounty_peacekeepersDescPaid,nskr_bountyIntelDesc,"$nskr_intel_key == peacekeepers
+$nskr_intel_status == completed
+nskr_quest bounty check peacekeepersLooted
+nskr_quest bounty check peacekeepersPaidInFull",,You received the anonymous *donation* +$nskr_bounty_peacekeepersPaidAmount,,
+nskr_bounty_peacekeepersDescPaidReduced,nskr_bountyIntelDesc,"$nskr_intel_key == peacekeepers
+$nskr_intel_status == completed
+nskr_quest bounty check peacekeepersLooted
+!nskr_quest bounty check peacekeepersPaidInFull",,You received the anonymous *donation* +$nskr_bounty_peacekeepersPaidAmount the amount was reduced due to low contribution.,,
+nskr_bounty_peacekeepersDescMissed,nskr_bountyIntelDesc,"$nskr_intel_key == peacekeepers
+$nskr_intel_status == completed
+!nskr_quest bounty check peacekeepersLooted",,The Peacekeepers were defeated by another party. Seems like you missed your chance.,,
 "#END BOUNTIES",,,,,,
 ,,,,,,
 # MISC EVENTS,,,,,,

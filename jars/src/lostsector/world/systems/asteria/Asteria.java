@@ -10,7 +10,7 @@ import com.fs.starfarer.api.impl.campaign.procgen.themes.BaseThemeGenerator;
 import com.fs.starfarer.api.impl.campaign.procgen.themes.BaseThemeGenerator.EntityLocation;
 import com.fs.starfarer.api.impl.campaign.procgen.themes.BaseThemeGenerator.LocationType;
 import com.fs.starfarer.api.util.Misc;
-import lostsector.campaign.bounties.mothership.MothershipSpawner;
+import lostsector.campaign.bounties.HeliosSite;
 import lostsector.helper.Ids;
 import lostsector.helper.MathHelper;
 import lostsector.helper.SectorLookup;
@@ -184,9 +184,9 @@ public class Asteria {
 		picker.blacklistSystemTypes = banTypes;
 		picker.blacklistEntities = banEntities;
 		// Nexerelin random sectors place the Mothership planets before Asteria.
-		Object mothership = Global.getSector().getPersistentData().get(MothershipSpawner.MOTHERSHIP_LOC_MEM_KEY);
-		if (mothership instanceof SectorEntityToken && ((SectorEntityToken) mothership).getStarSystem() != null) {
-			picker.blacklistSystems.add(((SectorEntityToken) mothership).getStarSystem());
+		SectorEntityToken mothership = HeliosSite.base();
+		if (mothership != null && mothership.getStarSystem() != null) {
+			picker.blacklistSystems.add(mothership.getStarSystem());
 		}
 
 		for (float maxDistance : SEARCH_DISTANCES) {

@@ -2,10 +2,12 @@ package lostsector.quest;
 
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.CargoAPI;
+import com.fs.starfarer.api.campaign.FactionAPI;
 import com.fs.starfarer.api.campaign.SpecialItemData;
 import com.fs.starfarer.api.campaign.TextPanelAPI;
 import com.fs.starfarer.api.characters.PersonAPI;
 import com.fs.starfarer.api.characters.SkillSpecAPI;
+import com.fs.starfarer.api.impl.campaign.CoreReputationPlugin;
 import com.fs.starfarer.api.impl.campaign.rulecmd.AddRemoveCommodity;
 import com.fs.starfarer.api.util.Misc;
 import com.fs.starfarer.api.util.MutableValue;
@@ -100,6 +102,20 @@ public final class QuestRewards {
             text.setFontInsignia();
         }
         ctx.log("skill " + skillId + " " + level);
+    }
+
+    // The player faction's relationship with the faction, as FactionAPI.adjustRelationship; with a dialog, the receipt
+    // CoreReputationPlugin.adjustPlayerReputation prints ("Relationship with ... reduced by 10, currently at ...").
+    public void relationship(String factionId, float delta) {
+        FactionAPI faction = Global.getSector().getFaction(factionId);
+        if (faction == null || delta == 0f) {
+            ctx.error("relationship refused: faction " + factionId + ", change " + delta);
+            return;
+        }
+        Global.getSector().getPlayerFaction().adjustRelationship(factionId, delta);
+        TextPanelAPI text = ctx.textPanel();
+        if (text != null) CoreReputationPlugin.addAdjustmentMessage(delta, faction, null, text, null, null, true, 0f);
+        ctx.log("relationship " + factionId + " " + delta);
     }
 
     private boolean positive(String grant, int amount) {

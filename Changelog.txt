@@ -72,7 +72,7 @@ Adjusted - Kesteven job rewards and penalties now show the game's standard recei
 Adjusted - The Hellspawn judgement's story point and Peaceful Heart rewards show the standard receipts
 Fixed - Paying the Kesteven debt collector now shows "Debt reduced to" instead of an internal name
 Adjusted - Paying the Kesteven debt collector shows the standard credits lost and relationship receipts
-Adjusted - The Abyss and Eternity bounties report their first sighting and their end, including the ARO payment, as updates of their intel entries
+Adjusted - The Abyss, Eternity, Project Helios and Peacekeepers bounties report their first sighting and their end, including payments and the Independent relationship loss, as updates of their intel entries
 
 1.0.b
 Adjusted - Severely nerfed spawn rates for Borealis, Rhea and Kingslayer

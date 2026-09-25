@@ -22,6 +22,7 @@ import lostsector.quest.QuestModule;
 import lostsector.quest.QuestStage;
 import lostsector.quest.QuestState;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -31,6 +32,7 @@ import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 
 // One named bounty: a fleet placed once per game, intel on first sighting, a reward when the player loots it beaten,
 // and the intel's completion afterwards. The quest's state implements Host and keeps one Record per bounty; the id
@@ -66,6 +68,12 @@ public final class BountyEncounter<S extends Enum<S> & QuestStage, T extends Que
     private Consumer<QuestContext<S, T>> onSighted = ctx -> {
     };
     private Set<String> revealedHulls = Set.of();
+    private String penaltyFaction;
+    private float penaltyDelta;
+    private float penaltyAbove;
+    private boolean mapFollowsFleet;
+    private String guardTrigger;
+    private Supplier<List<SectorEntityToken>> guarded;
 
     public interface Host {
 
@@ -83,6 +91,8 @@ public final class BountyEncounter<S extends Enum<S> & QuestStage, T extends Que
         boolean sighted;
         boolean looted;
         int paid;
+        boolean relationsLost;
+        List<SectorEntityToken> guarded = new ArrayList<>();
 
         public Status status() {
             return status;
@@ -163,6 +173,32 @@ public final class BountyEncounter<S extends Enum<S> & QuestStage, T extends Que
         return this;
     }
 
+    // At the loot of the beaten fleet, while the player faction's relationship with the faction is above onlyAbove, it
+    // changes by delta through ctx.rewards().relationship. Declares the check <id>RelationsLost.
+    public BountyEncounter<S, T> relationshipPenalty(String factionId, float delta, float onlyAbove) {
+        if (factionId == null || delta == 0f) throw new IllegalArgumentException("relationship penalty of " + id + " needs a faction and a change");
+        penaltyFaction = factionId;
+        penaltyDelta = delta;
+        penaltyAbove = onlyAbove;
+        return this;
+    }
+
+    // The intel's map location is the hyperspace anchor of the fleet's star system, none while it is in hyperspace,
+    // refreshed each day, instead of the placement location.
+    public BountyEncounter<S, T> mapFollowsFleet() {
+        mapFollowsFleet = true;
+        return this;
+    }
+
+    // While the bounty is active, the entities' dialogs are claimed with the trigger (declared once per quest, so
+    // bounties can share it); the claims are released at the defeat. Declares the check <id>Guards.
+    public BountyEncounter<S, T> guards(String trigger, Supplier<List<SectorEntityToken>> entities) {
+        if (trigger == null || entities == null) throw new IllegalArgumentException("guards of " + id + " need a trigger and entities");
+        guardTrigger = trigger;
+        guarded = entities;
+        return this;
+    }
+
     // Base hull ids whose limited tooltip (Tags.SHIP_LIMITED_TOOLTIP) is lifted when the player recovers such a ship.
     public BountyEncounter<S, T> revealOnRecovery(String... hullIds) {
         revealedHulls = Set.of(hullIds);
@@ -186,12 +222,43 @@ public final class BountyEncounter<S extends Enum<S> & QuestStage, T extends Que
             SectorEntityToken at = placed(ctx);
             return at == null ? "" : at.getName();
         });
+        d.token(id + "FleetSystem", ctx -> {
+            CampaignFleetAPI fleet = fleet(ctx);
+            return fleet == null || fleet.isInHyperspace() || fleet.getStarSystem() == null ? "" : fleet.getStarSystem().getName();
+        });
+        d.check(id + "InHyperspace", ctx -> {
+            CampaignFleetAPI fleet = fleet(ctx);
+            return fleet != null && fleet.isInHyperspace();
+        });
+        d.check(id + "Looted", ctx -> {
+            Record record = ctx.state().bounties().get(id);
+            return record != null && record.looted;
+        });
         if (payoutRule != null) {
             d.token(id + "Payout", ctx -> Misc.getDGSCredits(payout));
+            d.token(id + "PaidAmount", ctx -> {
+                Record record = ctx.state().bounties().get(id);
+                return record == null ? "" : Misc.getDGSCredits(record.paid);
+            });
             d.check(id + "Paid", ctx -> {
                 Record record = ctx.state().bounties().get(id);
                 return record != null && record.paid > 0;
             });
+            // Within a credit of the amount, as the old Peacekeepers intel compared the rounded payment.
+            d.check(id + "PaidInFull", ctx -> {
+                Record record = ctx.state().bounties().get(id);
+                return record != null && record.paid >= payout - 1;
+            });
+        }
+        if (penaltyFaction != null) {
+            d.check(id + "RelationsLost", ctx -> {
+                Record record = ctx.state().bounties().get(id);
+                return record != null && record.relationsLost;
+            });
+        }
+        if (guardTrigger != null) {
+            if (!d.triggers().contains(guardTrigger)) d.trigger(guardTrigger);
+            d.check(id + "Guards", this::guardsTarget);
         }
     }
 
@@ -212,7 +279,22 @@ public final class BountyEncounter<S extends Enum<S> & QuestStage, T extends Que
         record.fleet = fleet;
         record.fleetName = fleet.getName();
         record.status = Status.ACTIVE;
+        if (guarded != null) {
+            for (SectorEntityToken entity : guarded.get()) {
+                if (entity == null) continue;
+                record.guarded.add(entity);
+                ctx.claimDialog(entity, guardTrigger);
+            }
+        }
         ctx.log("bounty " + id + " placed at " + record.location.getName() + " in " + record.location.getContainingLocation().getName());
+    }
+
+    @Override
+    protected void onDay(QuestContext<S, T> ctx) {
+        Record record = ctx.state().bounties().get(id);
+        if (mapFollowsFleet && record != null && record.status == Status.ACTIVE && ctx.intel().isShown(id)) {
+            ctx.intel().setMapLocation(id, fleetAnchor(record));
+        }
     }
 
     // Only while the player shares a location with the unsighted fleet, and once after a defeat.
@@ -241,17 +323,18 @@ public final class BountyEncounter<S extends Enum<S> & QuestStage, T extends Que
         record.sighted = true;
         onSighted.accept(ctx);
         ctx.intel().show(id);
-        ctx.intel().setMapLocation(id, record.location);
+        ctx.intel().setMapLocation(id, mapFollowsFleet ? fleetAnchor(record) : record.location);
         ctx.intel().update(id, UPDATE_SIGHTED);
     }
 
     // Vanilla reports the loot before the battle (FleetInteractionDialogPluginImpl CONTINUE_LOOT, then
-    // applyAfterBattleEffectsIfThereWasABattle), so a player victory is rewarded here first.
+    // applyAfterBattleEffectsIfThereWasABattle), so a player victory is rewarded here, while the bounty is still
+    // active. A bounty another party beat first pays nothing.
     @Override
     protected void onLoot(QuestContext<S, T> ctx, QuestFleet fleet, FleetEncounterContextPlugin plugin, CargoAPI loot) {
         if (!id.equals(fleet.record())) return;
         Record record = record(ctx);
-        if (record.looted || !defeated.test(fleet)) return;
+        if (record.status != Status.ACTIVE || record.looted || !defeated.test(fleet)) return;
         record.looted = true;
         reward.grant(ctx, loot, plugin);
         if (payoutRule != null) {
@@ -260,6 +343,10 @@ public final class BountyEncounter<S extends Enum<S> & QuestStage, T extends Que
                 ctx.rewards().credits(paid);
                 record.paid = paid;
             }
+        }
+        if (penaltyFaction != null && Global.getSector().getPlayerFaction().getRelationship(penaltyFaction) > penaltyAbove) {
+            ctx.rewards().relationship(penaltyFaction, penaltyDelta);
+            record.relationsLost = true;
         }
         defeat(ctx, record, fleet);
     }
@@ -274,16 +361,42 @@ public final class BountyEncounter<S extends Enum<S> & QuestStage, T extends Que
     protected void onFleetGone(QuestContext<S, T> ctx, QuestFleet fleet, FleetDespawnReason reason, Object param) {
         if (!id.equals(fleet.record()) || !fleet.wasDestroyed(reason)) return;
         Record record = record(ctx);
-        if (record.status == Status.ACTIVE) record.status = Status.DEFEATED;
+        if (record.status != Status.ACTIVE) return;
+        record.status = Status.DEFEATED;
+        releaseGuarded(ctx, record);
     }
 
     // The fleet leaves its role, so rows keyed on the role flag stop matching, and despawns once out of sight.
     private void defeat(QuestContext<S, T> ctx, Record record, QuestFleet fleet) {
         if (record.status != Status.ACTIVE) return;
         record.status = Status.DEFEATED;
+        releaseGuarded(ctx, record);
         fleet.fleet().getMemoryWithoutUpdate().unset(MemFlags.MEMORY_KEY_MISSION_IMPORTANT);
         if (fleet.isRole(id)) ctx.fleets().reassign(fleet, beatenRole);
         ctx.log("bounty " + id + " defeated");
+    }
+
+    private void releaseGuarded(QuestContext<S, T> ctx, Record record) {
+        for (SectorEntityToken entity : record.guarded) {
+            ctx.releaseDialog(entity);
+        }
+        record.guarded.clear();
+    }
+
+    // The dialog target is guarded and the active fleet is in the player's location, so engage can start the fight.
+    private boolean guardsTarget(QuestContext<S, T> ctx) {
+        Record record = ctx.state().bounties().get(id);
+        SectorEntityToken target = ctx.target();
+        CampaignFleetAPI player = Global.getSector().getPlayerFleet();
+        return record != null && record.status == Status.ACTIVE && target != null && record.guarded.contains(target)
+                && record.fleet != null && record.fleet.isAlive() && player != null
+                && record.fleet.getContainingLocation() == player.getContainingLocation();
+    }
+
+    // Null while the fleet is in hyperspace, as the old Peacekeepers intel showed no map location there.
+    private static SectorEntityToken fleetAnchor(Record record) {
+        if (record.fleet == null || record.fleet.isInHyperspace() || record.fleet.getStarSystem() == null) return null;
+        return record.fleet.getStarSystem().getHyperspaceAnchor();
     }
 
     @Override
@@ -295,6 +408,11 @@ public final class BountyEncounter<S extends Enum<S> & QuestStage, T extends Que
             variant.removeTag(Tags.SHIP_LIMITED_TOOLTIP);
             member.setVariant(variant, false, false);
         }
+    }
+
+    private CampaignFleetAPI fleet(QuestContext<S, T> ctx) {
+        Record record = ctx.state().bounties().get(id);
+        return record == null || record.fleet == null || !record.fleet.isAlive() ? null : record.fleet;
     }
 
     private SectorEntityToken placed(QuestContext<S, T> ctx) {
@@ -315,6 +433,6 @@ public final class BountyEncounter<S extends Enum<S> & QuestStage, T extends Que
         }
         String at = record.location == null ? "nowhere" : record.location.getName() + ", " + record.location.getContainingLocation().getName();
         lines.add(id + ": " + record.status + " at " + at + ", sighted " + record.sighted + ", looted " + record.looted
-                + ", paid " + record.paid + ", fleet " + (record.fleet != null && record.fleet.isAlive() ? "alive" : "gone"));
+                + ", paid " + record.paid + ", relations lost " + record.relationsLost + ", fleet " + (record.fleet != null && record.fleet.isAlive() ? "alive" : "gone"));
     }
 }

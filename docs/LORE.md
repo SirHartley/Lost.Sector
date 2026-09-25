@@ -93,7 +93,7 @@ The Enigma is the autonomous force now fielding Project Enigma's ships. Its ship
 ### Other powers and legends
 
 - **Tri-Tachyon.** Kesteven's rival. Its expedition studies Enigma activity (job 3). A "Black Ops" fleet collects Artifact Electronics from Kesteven's contractors. Alice believes Tri-Tachyon is "somehow behind this Enigma activity"; that is her belief, not an established fact.
-- **Project Helios.** A Tri-Tachyon Integrated Space Defense mothership (rules `mothershipDialogExtra`, descriptions `nskr_sunburst`), now a Remnant fleet guarding two habitable worlds, Helios and Polaris. It asks whether the player is "omega" and refuses its override.
+- **Project Helios.** A Tri-Tachyon Integrated Space Defense mothership (rules `nskr_bounty_mothershipOpen`, descriptions `nskr_sunburst`), now a Remnant fleet guarding two habitable worlds, Helios and Polaris. It asks whether the player is "omega" and refuses its override.
 - **Void cores.** The Hollow, Chasm and Fissure hulls run exotic "Void" power cores that "draw energy from nowhere". Spacer legends attach to each (descriptions `nskr_reverie_boss`, `nskr_harbinger_boss`, `nskr_afflictor_boss`). The Hollow is the flagship of "a rogue AI core that, by most accounts, only wanted a brief vacation from its blacksite assignment". Its fleet answers comms with "What have we done?" repeated (rules `abyssDialog`).
 - **Anti-Remnant Organization (ARO).** Posts a bounty on the Void Group. One of its strike groups preaches purging "the Remnant scourge" by fire (rules `AROstrikeDialogInitial`).
 - **The Peacekeepers.** An infamous mercenary group under Alistair Walsh, flagship "ISS White Whale", policing Independent space. Many parties want it gone.

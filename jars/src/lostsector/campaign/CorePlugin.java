@@ -13,10 +13,7 @@ import com.fs.starfarer.api.PluginPick;
 import com.fs.starfarer.api.campaign.*;
 import lostsector.campaign.starts.hellspawn.HellSpawnAbilityInteraction;
 import lostsector.campaign.starts.hellspawn.HellSpawnJudgementInteraction;
-import lostsector.campaign.bounties.mothership.MothershipInteractionBlocker;
-import lostsector.campaign.bounties.mothership.MothershipSpawner;
 import lostsector.campaign.kesteven.quest.KestevenQuest;
-import lostsector.campaign.kesteven.quest.QuestHelper;
 import lostsector.helper.SectorLookup;
 import lostsector.quest.QuestDialogs;
 
@@ -44,12 +41,6 @@ public class CorePlugin extends BaseCampaignPlugin {
         String claimedTrigger = QuestDialogs.claimedTrigger(interactionTarget);
         if (claimedTrigger != null) {
             return new PluginPick<InteractionDialogPlugin>(QuestDialogs.plugin(claimedTrigger), PickPriority.MOD_GENERAL);
-        }
-        //mothership bounty
-        if (interactionTarget.getId().equals(MothershipSpawner.PLANET1_ID) || interactionTarget.getId().equals(MothershipSpawner.PLANET2_ID)) {
-            if (!QuestHelper.getCompleted(MothershipSpawner.MOTHERSHIP_SPAWNED_MEM_KEY) && !MothershipSpawner.getBountyCompleted()) {
-                return new PluginPick<InteractionDialogPlugin>(new MothershipInteractionBlocker(), PickPriority.MOD_GENERAL);
-            }
         }
         //job4hintWreck dialog
         if (KestevenQuest.isUnreadHintWreck(interactionTarget)) {
