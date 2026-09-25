@@ -3,6 +3,7 @@ package lostsector.quest.dev;
 import lostsector.quest.Declarations;
 import lostsector.quest.Quest;
 import lostsector.quest.QuestCatalog;
+import lostsector.quest.QuestFleets;
 import lostsector.quest.dev.RuleExpression.Operator;
 import lostsector.quest.dev.RuleExpression.Token;
 
@@ -41,14 +42,15 @@ public final class RulesCheck {
     private static final String JAVA_SOURCES = "jars/src";
     private static final String OWN_SOURCES = "lostsector/quest/dev";
 
-    // Scratch keys QuestText writes before it matches intel rows (README "Intel").
-    private static final Set<String> FRAMEWORK_KEYS = Set.of("$nskr_intel_key", "$nskr_intel_status", "$nskr_intel_update", "$nskr_intel_mode");
+    // Scratch keys QuestText writes before it matches intel rows (README "Intel") and the fleet memory keys QuestFleets
+    // writes on spawn; role flags $nskr_<q>_<role> are added per declared role.
+    private static final Set<String> FRAMEWORK_KEYS = Set.of("$nskr_intel_key", "$nskr_intel_status", "$nskr_intel_update", "$nskr_intel_mode",
+            QuestFleets.OWNER_KEY, QuestFleets.ROLE_KEY, QuestFleets.RECORD_KEY);
     // QuestText fires these for every quest; the last two select every matching row (README "Intel").
     private static final List<String> INTEL_SUFFIXES = List.of("IntelTitle", "IntelBullets", "IntelDesc");
     private static final Set<String> INTEL_ALL_SUFFIXES = Set.of("IntelBullets", "IntelDesc");
     // QuestTokens adds these for each quest person: $nskr_<q>_<key>_<suffix> (README "People").
     private static final Set<String> PERSON_TOKEN_SUFFIXES = Set.of("name", "heOrShe", "HeOrShe", "himOrHer", "HimOrHer", "hisOrHer", "HisOrHer");
-    private static final Pattern PERSON_KEY = Pattern.compile("[a-z][A-Za-z0-9]*");
 
     private static final String QUEST_COMMAND = "nskr_quest";
     private static final Set<String> CONDITION_VERBS = Set.of("is", "reached", "flag", "check");
@@ -79,13 +81,15 @@ public final class RulesCheck {
     record Finding(Severity severity, String check, int line, String ruleId, String message) {
     }
 
+    // A role's defeat trigger is among the triggers: Declarations refuses a defeat trigger that is not declared.
     record QuestInfo(String id, Set<String> stages, Set<String> flags, Set<String> checks, Set<String> actions,
-                     Set<String> tokens, Set<String> triggers) {
+                     Set<String> tokens, Set<String> triggers, Set<String> roles, Set<String> people) {
 
         static QuestInfo of(Quest<?, ?> quest) {
             Declarations<?, ?> d = quest.declarations();
             return new QuestInfo(quest.id(), names(quest.stages()), names(quest.flags()), Set.copyOf(d.checks().keySet()),
-                    Set.copyOf(d.actions().keySet()), new TreeSet<>(d.tokens().keySet()), Set.copyOf(d.triggers()));
+                    Set.copyOf(d.actions().keySet()), new TreeSet<>(d.tokens().keySet()), Set.copyOf(d.triggers()),
+                    Set.copyOf(d.roles().keySet()), new TreeSet<>(d.people()));
         }
 
         private static Set<String> names(Class<? extends Enum<?>> type) {
@@ -433,7 +437,7 @@ public final class RulesCheck {
                 Matcher m = QUEST_TOKEN.matcher(token);
                 if (!m.matches()) continue;
                 QuestInfo quest = quests.get(m.group(1));
-                if (!quest.tokens().contains(m.group(2)) && !isPersonToken(m.group(2))) {
+                if (!quest.tokens().contains(m.group(2)) && !isPersonToken(quest, m.group(2))) {
                     add(Severity.ERROR, "token", row, "unknown token " + token);
                 }
                 if (!row.id().startsWith("nskr_" + quest.id() + "_")) {
@@ -462,10 +466,9 @@ public final class RulesCheck {
         return found;
     }
 
-    private static boolean isPersonToken(String name) {
+    private static boolean isPersonToken(QuestInfo quest, String name) {
         int split = name.lastIndexOf('_');
-        return split > 0 && PERSON_TOKEN_SUFFIXES.contains(name.substring(split + 1))
-                && PERSON_KEY.matcher(name.substring(0, split)).matches();
+        return split > 0 && PERSON_TOKEN_SUFFIXES.contains(name.substring(split + 1)) && quest.people().contains(name.substring(0, split));
     }
 
     private boolean isDeclaredToken(String key) {
@@ -478,7 +481,13 @@ public final class RulesCheck {
     private boolean isQuestToken(String key) {
         Matcher m = QUEST_TOKEN.matcher(key);
         return m.matches() && quests.containsKey(m.group(1))
-                && (quests.get(m.group(1)).tokens().contains(m.group(2)) || isPersonToken(m.group(2)));
+                && (quests.get(m.group(1)).tokens().contains(m.group(2)) || isPersonToken(quests.get(m.group(1)), m.group(2)));
+    }
+
+    // Fleet memory flag QuestFleets writes for every fleet of a declared role.
+    private boolean isRoleFlag(String key) {
+        Matcher m = QUEST_TOKEN.matcher(key);
+        return m.matches() && quests.containsKey(m.group(1)) && quests.get(m.group(1)).roles().contains(m.group(2));
     }
 
     private static boolean isWrite(RuleExpression e) {
@@ -711,6 +720,7 @@ public final class RulesCheck {
             }
             for (String key : read) {
                 if (!key.startsWith("$nskr_") || written.contains(key) || javaKeys.contains(key) || FRAMEWORK_KEYS.contains(key)) continue;
+                if (isRoleFlag(key)) continue;
                 if (isQuestToken(key)) continue;
                 add(Severity.WARN, "unwritten", row, key + " is read but no row writes it and no Java string names it");
             }
@@ -825,6 +835,11 @@ public final class RulesCheck {
                 for (String other : quest.tokens()) {
                     if (!token.equals(other) && other.startsWith(token)) {
                         add(Severity.ERROR, "token-prefix", 0, where, "token " + token + " is a prefix of token " + other);
+                    }
+                }
+                for (String person : quest.people()) {
+                    if (person.startsWith(token)) {
+                        add(Severity.ERROR, "token-prefix", 0, where, "token " + token + " is a prefix of the person tokens of " + person);
                     }
                 }
             }

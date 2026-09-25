@@ -27,18 +27,21 @@ import java.util.Random;
 public class nskr_debt extends BaseCommandPlugin {
 
 	// Each id names one option of the nskr_debtLoans menu in rules.csv; positive credits take a loan, negative repay.
+	// The key is the display String the option's text reads; it is written out in full so a search finds its writer.
 	public enum Amount {
-		LOAN_SMALL("loanSmall"),
-		LOAN_LARGE("loanLarge"),
-		LOAN_ALL("loanAll"),
-		REPAY_SMALL("repaySmall"),
-		REPAY_LARGE("repayLarge"),
-		REPAY_ALL("repayAll");
+		LOAN_SMALL("loanSmall", "$nskr_debt_loanSmallStr"),
+		LOAN_LARGE("loanLarge", "$nskr_debt_loanLargeStr"),
+		LOAN_ALL("loanAll", "$nskr_debt_loanAllStr"),
+		REPAY_SMALL("repaySmall", "$nskr_debt_repaySmallStr"),
+		REPAY_LARGE("repayLarge", "$nskr_debt_repayLargeStr"),
+		REPAY_ALL("repayAll", "$nskr_debt_repayAllStr");
 
 		public final String id;
+		public final String key;
 
-		Amount(String id) {
+		Amount(String id, String key) {
 			this.id = id;
+			this.key = key;
 		}
 
 		public int getCredits() {
@@ -126,7 +129,7 @@ public class nskr_debt extends BaseCommandPlugin {
 		local.set("$nskr_debtInterest", interest, 0);
 		local.set("$nskr_debtInterestStr", rounded + "%", 0);
 		for (Amount amount : Amount.values()) {
-			local.set("$nskr_debt_" + amount.id + "Str", Misc.getDGSCredits(Math.abs(amount.getCredits())), 0);
+			local.set(amount.key, Misc.getDGSCredits(Math.abs(amount.getCredits())), 0);
 		}
 	}
 

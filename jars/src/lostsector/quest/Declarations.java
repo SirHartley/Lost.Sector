@@ -28,6 +28,7 @@ public final class Declarations<S extends Enum<S> & QuestStage, T extends QuestS
     private final Map<String, FleetRole> roles = new LinkedHashMap<>();
     private final Map<String, QuestModule<S, T>> roleModules = new HashMap<>();
     private final Set<String> triggers = new LinkedHashSet<>();
+    private final Set<String> people = new LinkedHashSet<>();
 
     private QuestModule<S, T> declaring;
     private boolean sealed;
@@ -80,6 +81,18 @@ public final class Declarations<S extends Enum<S> & QuestStage, T extends QuestS
         }
     }
 
+    // A quest person key; QuestPeople creates people only under declared keys, and the rules check tool reads the
+    // keys to check person tokens $nskr_<q>_<key>_<suffix>.
+    public void person(String key) {
+        requireOpen();
+        if (key == null || !NAME.matcher(key).matches()) {
+            throw new IllegalArgumentException("[" + questId + "] person key must be lowerCamel: " + key);
+        }
+        if (!people.add(key)) {
+            throw new IllegalArgumentException("[" + questId + "] duplicate person " + key);
+        }
+    }
+
     public Map<String, Predicate<QuestContext<S, T>>> checks() {
         return Collections.unmodifiableMap(checks);
     }
@@ -107,6 +120,10 @@ public final class Declarations<S extends Enum<S> & QuestStage, T extends QuestS
 
     public Set<String> triggers() {
         return Collections.unmodifiableSet(triggers);
+    }
+
+    public Set<String> people() {
+        return Collections.unmodifiableSet(people);
     }
 
     private <V> void put(Map<String, V> map, String kind, String name, V value) {

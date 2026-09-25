@@ -428,6 +428,7 @@ public final class Declarations<S, T> {
     public void action(String name, Consumer<QuestContext<S, T>> action);
     public void token(String name, Function<QuestContext<S, T>, String> token);
     public void role(String name, FleetRole role);
+    public void person(String key);
     public void intel(String key, String icon, String... tags);
     public void trigger(String trigger);
 }
@@ -439,6 +440,7 @@ public final class Declarations<S, T> {
 | `action` | `nskr_quest <q> do <name> [args]` in Script | Only while the declaring module is active; otherwise logged and skipped | Does one game action. May call `advance`. Never prints prose. |
 | `token` | `$nskr_<q>_<name>` in Text and option text | Any stage | Reads only, returns a finished display String, `""` when its data is not set. No random draws. |
 | `role` | Fleet memory flag `$nskr_<q>_<role>` | While fleets of the role exist | See [Fleets](#fleets). |
+| `person` | Person tokens `$nskr_<q>_<key>_name` and the pronoun tokens; person id `nskr_<q>_<key>` | While the person exists | Required for every quest person key. See [People](#people). |
 | `intel` | Intel rows keyed by `$nskr_intel_key` | When shown | See [Intel](#intel). |
 | `trigger` | Rows on that trigger | When Java fires it | Every trigger that Java opens, claims or reads text from. The check tool treats it as fired. |
 
@@ -607,6 +609,8 @@ public final class QuestPeople {
 }
 ```
 
+Every key passed to `create` is declared first with `d.person(key)` in the `declare` of a module; the key follows the declaration name rules (lowerCamel, unique within the quest). `QuestPeople` refuses a key that is not declared. The declaration lets the [rules check tool](#rules-check-tool) check person tokens and their clashes with token names.
+
 `create` makes the person with `FactionAPI.createRandomPerson(ctx.random("person:" + key))`, sets the id `nskr_<q>_<key>`, runs `setup` for portrait, name, rank, post and gender, registers the person with `ImportantPeopleAPI.addPerson` and stores it in the state. Registration is what lets the vanilla presentation commands find generated people: `BeginConversation nskr_kq_host` makes the person the active speaker (their memory becomes `$local`), and `ShowSecondPerson` and `ShowThirdPerson` add portraits. `release` removes the person from the important people and the state; call it in `onStop` for people the quest no longer needs.
 
 Fixed characters (Alice, Jack, Nicholas, Eliza) are created by world generation with ids in `helper/Ids`; quests look them up and never create them.
@@ -773,15 +777,15 @@ Findings about definitions rather than rows show `-` as the line and `(quest <q>
 | `fire-in-conditions` | error | `FireAll` or `FireBest` in Conditions |
 | `quest-call` | error | In `nskr_quest` calls: an unknown quest id, verb, stage, flag, check or action; a verb in the wrong column; the wrong number of arguments. A `$variable` argument is a warning, because it is not checked |
 | `advance` | error | `advance` from a stage to itself |
-| `token` | error | An unknown `$nskr_<q>_<name>` token in Text, option labels or Script literals; a token in a row whose id does not start with `nskr_<q>_`; a token name read in Conditions or Script, where it is not memory |
+| `token` | error | An unknown `$nskr_<q>_<name>` token in Text, option labels or Script literals, including a person token whose key is not declared with `d.person`; a token in a row whose id does not start with `nskr_<q>_`; a token name read in Conditions or Script, where it is not memory |
 | `token-assign` | error | A Script line that assigns a token's name |
-| `token-prefix` | error | A token name that is a prefix of another token name of the same quest |
+| `token-prefix` | error | A token name that is a prefix of another token name or of a declared person key of the same quest |
 | `declared-trigger` | error | A trigger declared with `d.trigger(...)` that no row uses |
 | `fire-target` | error | A literal `FireAll` or `FireBest` target that no mod or vanilla row uses |
 | `unreachable` | error / warning | A trigger with mod rows that nothing fires, reported once at its first row. An error for a quest's trigger (`nskr_<q>` followed by an upper-case letter or `_`), a warning otherwise |
 | `handler` | error | An option id from the Options column, an `AddBarEvent` call or a `$option = <id>` line without a `DialogOptionSelected` or `NewGameOptionSelected` row testing `$option == <id>`, in the mod or vanilla, or a `nskr_optionStartsWith` handler whose prefix matches |
 | `case` | warning | A trigger or memory key of a mod row that differs only by case from another trigger or key in the mod, vanilla or the engine list |
-| `unwritten` | warning | A `$nskr_` key read in Conditions, Script, Text or option labels that no mod row writes, that no Java string literal under `jars/src` names, and that is not an intel scratch key or a quest token |
+| `unwritten` | warning | A `$nskr_` key read in Conditions, Script, Text or option labels that no mod row writes, that no Java string literal under `jars/src` names, and that is not an intel scratch key, a `QuestFleets` fleet key (`OWNER_KEY`, `ROLE_KEY`, `RECORD_KEY`), the role flag `$nskr_<q>_<role>` of a declared role, or a quest token |
 | `identical` | warning | Two rows on one trigger with the same condition lines in any order, unless both notes contain `variant`. Triggers fired with `FireAll` by a row, by vanilla rows or by the engine, and the `IntelBullets` and `IntelDesc` triggers, are skipped, because every match runs there |
 | `intel` | error / warning | A command other than `nskr_quest` in the Conditions of an intel row / Script or Options in an intel row, which are ignored |
 | `naming` | error / warning | In quest rows (id `nskr_<q>_`): a `$global.` write / a `$nskr_` write other than `$nskr_<q>_<name>` on local memory or `$player.nskr_<name>`; a row on a quest's trigger whose id does not start with `nskr_<q>_` |
@@ -789,7 +793,7 @@ Findings about definitions rather than rows show `-` as the line and `(quest <q>
 
 Quest checks use only the quests `QuestCatalog` returns. A `$nskr_<x>_` name whose `<x>` is not a quest id is treated as an ordinary memory key, because legacy keys share that shape, so the tool cannot report an unknown quest id inside a token.
 
-**What counts as fired.** A trigger is fired when a mod row fires it with `FireAll` or `FireBest`; when the engine list in `VanillaRules.ENGINE` names it; when it ends with a hub mission suffix (`_blurb`, `_option`, `_blurbBar`, `_optionBar`, `_startBar`); when vanilla rows use or fire it; when a quest declares it; when it is an [intel trigger](#intel) of a quest; or, for triggers that do not belong to a quest, when a Java string literal under `jars/src` equals it, which covers legacy code that fires its own triggers. A quest's own trigger counts only when declared.
+**What counts as fired.** A trigger is fired when a mod row fires it with `FireAll` or `FireBest`; when the engine list in `VanillaRules.ENGINE` names it; when it ends with a hub mission suffix (`_blurb`, `_option`, `_blurbBar`, `_optionBar`, `_startBar`); when vanilla rows use or fire it; when a quest declares it, which includes every role's defeat trigger because `Declarations` refuses an undeclared one; when it is an [intel trigger](#intel) of a quest; or, for triggers that do not belong to a quest, when a Java string literal under `jars/src` equals it, which covers legacy code that fires its own triggers. A quest's own trigger counts only when declared.
 
 **Vanilla lists.** `VanillaRules.ENGINE` lists every trigger the 0.98a-RC8 game code fires or opens with a literal name (`FireBest.fire`, `FireAll.fire`, the dialog plugins' `fireBest` and `fireAll`, `getBestMatching`, `RuleBasedInteractionDialogPluginImpl`), each with its bundle file and line in the `starsector-knowledge` sources; triggers vanilla fires from variables, such as defeat triggers, are covered because vanilla rows use them. `VanillaRules.COMMAND_PACKAGES` is vanilla's `ruleCommandPackages`. `vanilla-rules-index.txt`, next to the tool, lists the triggers vanilla rows use, the literal `FireAll` and `FireBest` targets in vanilla rows, the option ids vanilla rows handle and the memory keys vanilla rows use. The tool reads it from the repository at run time. Regenerate it from a game version's `starsector-core/data/campaign/rules.csv`:
 
@@ -801,8 +805,6 @@ Passing a vanilla `rules.csv` as the second argument of a check builds the same 
 
 **Limits.**
 
-- Quest people are created in hooks, not declared, so a person token `$nskr_<q>_<key>_<suffix>` is checked for its shape only.
-- `Declarations` has no roles yet ([Fleets](#fleets), planned), so a row that reads a role flag `$nskr_<q>_<role>` gets an `unwritten` warning, and rows on a role's defeat trigger count as fired only when the trigger is declared.
 - Other mods' rule command packages are not known, so rows that call another mod's command get a `command` error.
 - A mod row whose id equals a vanilla row id is not reported; the index holds no vanilla ids.
 
