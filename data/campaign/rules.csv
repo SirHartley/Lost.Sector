@@ -1386,7 +1386,7 @@ DismissDialog",,,
 nskr_kq_job1IntelTitle,nskr_kqIntelTitle,$nskr_intel_key == job1,,Enemy Unknown,,
 nskr_kq_job1IntelHostile,nskr_kqIntelBullets,"$nskr_intel_key == job1
 nskr_quest kq is JOB1_ACTIVE JOB1_DONE
-nskr_quest kq check job1Hostile",,"You need to get back to non-hostile relations with Kesteven, if you want to finish this job.",,
+nskr_quest kq check kestevenHostile",,"You need to get back to non-hostile relations with Kesteven, if you want to finish this job.",,
 nskr_kq_job1IntelSensors,nskr_kqIntelBullets,"$nskr_intel_key == job1
 nskr_quest kq is JOB1_ACTIVE
 !nskr_quest kq flag JOB1_SENSOR_DATA",,"Locate any of the unknown AI force, and run the custom sensors package while engaging them.",,
@@ -1409,7 +1409,7 @@ nskr_kq_job1IntelDescDone,nskr_kqIntelDesc,"$nskr_intel_key == job1
 nskr_quest kq is JOB1_DONE",,Return to $nskr_kq_job1HomeName.,,
 nskr_kq_job1IntelDescHostile,nskr_kqIntelDesc,"$nskr_intel_key == job1
 nskr_quest kq is JOB1_ACTIVE JOB1_DONE
-nskr_quest kq check job1Hostile",,"You need to get back to non-hostile relations with Kesteven, if you want to finish this job.",,Same text as bullet nskr_kq_job1IntelHostile: the description panel shows no bullets
+nskr_quest kq check kestevenHostile",,"You need to get back to non-hostile relations with Kesteven, if you want to finish this job.",,Same text as bullet nskr_kq_job1IntelHostile: the description panel shows no bullets
 nskr_kq_job1IntelDescSensors,nskr_kqIntelDesc,"$nskr_intel_key == job1
 nskr_quest kq is JOB1_ACTIVE
 !nskr_quest kq flag JOB1_SENSOR_DATA",,"Locate any of the unknown AI force, and run the custom sensors package while engaging them.",,Same text as bullet nskr_kq_job1IntelSensors: the description panel shows no bullets
@@ -1426,3 +1426,30 @@ nskr_quest kq flag JOB1_TIP_GIVEN
 nskr_quest kq check job1TipBase",,Investigate the $nskr_kq_job1TipSystem.,,Same text as bullet nskr_kq_job1IntelTip: the description panel shows no bullets
 nskr_kq_job1IntelDescTasksDone,nskr_kqIntelDesc,"$nskr_intel_key == job1
 nskr_quest kq is JOB1_DONE",,You have completed the tasks. Talk to Jack Lapua to finish the job.,,Same text as bullet nskr_kq_job1IntelTasksDone: the description panel shows no bullets
+,,,,,,
+# KESTEVEN QUESTLINE: JOB 3,,,,,,
+nskr_kq_job3IntelTitle,nskr_kqIntelTitle,$nskr_intel_key == job3,,Hostile Takeover,,
+nskr_kq_job3IntelHostile,nskr_kqIntelBullets,"$nskr_intel_key == job3
+nskr_quest kq is JOB3_ACTIVE JOB3_TARGET_KNOWN
+nskr_quest kq check kestevenHostile",,"You need to get back to non-hostile relations with Kesteven, if you want to finish this job.",,
+nskr_kq_job3IntelDays,nskr_kqIntelBullets,"$nskr_intel_key == job3
+nskr_quest kq is JOB3_ACTIVE JOB3_TARGET_KNOWN
+nskr_quest kq check job3TimeLeft",,You have $nskr_kq_job3DaysLeft days to finish this job.,,
+nskr_kq_job3IntelStart,nskr_kqIntelBullets,"$nskr_intel_key == job3
+nskr_quest kq is JOB3_ACTIVE",,Head to $nskr_kq_job3MarketName in $nskr_kq_job3MarketSystem and figure out what the expeditions target is. Then neutralize the fleet.,,
+nskr_kq_job3IntelTarget,nskr_kqIntelBullets,"$nskr_intel_key == job3
+nskr_quest kq is JOB3_TARGET_KNOWN",,"Ambush the fleet on its way to, or in $nskr_kq_job3TargetSystem. Leave no witness.",,
+nskr_kq_job3IntelDescActive,nskr_kqIntelDesc,"$nskr_intel_key == job3
+nskr_quest kq is JOB3_ACTIVE",,Figure out the target and neutralize the fleet.,,
+nskr_kq_job3IntelDescKnown,nskr_kqIntelDesc,"$nskr_intel_key == job3
+nskr_quest kq is JOB3_TARGET_KNOWN",,Neutralize the fleet.,,
+nskr_kq_job3IntelDescHostile,nskr_kqIntelDesc,"$nskr_intel_key == job3
+nskr_quest kq is JOB3_ACTIVE JOB3_TARGET_KNOWN
+nskr_quest kq check kestevenHostile",,"You need to get back to non-hostile relations with Kesteven, if you want to finish this job.",,Same text as bullet nskr_kq_job3IntelHostile: the description panel shows no bullets
+nskr_kq_job3IntelDescDays,nskr_kqIntelDesc,"$nskr_intel_key == job3
+nskr_quest kq is JOB3_ACTIVE JOB3_TARGET_KNOWN
+nskr_quest kq check job3TimeLeft",,You have $nskr_kq_job3DaysLeft days to finish this job.,,Same text as bullet nskr_kq_job3IntelDays: the description panel shows no bullets
+nskr_kq_job3IntelDescStart,nskr_kqIntelDesc,"$nskr_intel_key == job3
+nskr_quest kq is JOB3_ACTIVE",,Head to $nskr_kq_job3MarketName in $nskr_kq_job3MarketSystem and figure out what the expeditions target is. Then neutralize the fleet.,,Same text as bullet nskr_kq_job3IntelStart: the description panel shows no bullets
+nskr_kq_job3IntelDescTarget,nskr_kqIntelDesc,"$nskr_intel_key == job3
+nskr_quest kq is JOB3_TARGET_KNOWN",,"Ambush the fleet on its way to, or in $nskr_kq_job3TargetSystem. Leave no witness.",,Same text as bullet nskr_kq_job3IntelTarget: the description panel shows no bullets

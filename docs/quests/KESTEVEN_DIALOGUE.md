@@ -192,7 +192,7 @@ The official who reaches the second conversation is locked to it through `$nskr_
 
 | Class | Opened by | Content | State written |
 |---|---|---|---|
-| `kesteven/quest/HostileTakeoverBarEvent` | `PortsideBarData` at the job 3 start market, stages 8–9 | Party with a Tri-Tachyon employee | Stage 9, target discovered |
+| `kesteven/quest/HostileTakeoverBarEvent` | `PortsideBarData` at the job 3 start market, stages 8–9; added by `KestevenJob3Module` | Party with a Tri-Tachyon employee | Stage 9, target discovered |
 | `kesteven/quest/DataSatelliteDialog` | `CorePlugin`, satellites #3 and #4 | Disk salvage, ping, keywords | Disk count, satellite flags, wakes the guard |
 | `kesteven/quest/HintWreckDialog` | `CorePlugin`, hint wreck | Coordinates of the friendly fleet | Hint flag |
 | `kesteven/quest/DelveMeetingBarEvent` | `nskr_barEventFixer` on each bar visit at stage 15 | Meeting with Jack and Alice | Advance credits, stage 16 |

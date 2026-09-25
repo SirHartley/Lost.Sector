@@ -33,7 +33,8 @@ final class KestevenJob1Module extends QuestModule<KestevenStage, KestevenState>
         d.intel(INTEL, "job1", Tags.INTEL_IMPORTANT, Tags.INTEL_ACCEPTED, Tags.INTEL_MISSIONS);
         d.role(ROLE_TIP_DORMANT, FleetRole.of(FleetOrders.none()).persistent());
 
-        d.check("job1Hostile", ctx -> Global.getSector().getPlayerFaction().getRelationship(Ids.KESTEVEN_FACTION_ID) <= -0.50f);
+        // The job 3 intel rows read it too.
+        d.check("kestevenHostile", ctx -> Global.getSector().getPlayerFaction().getRelationship(Ids.KESTEVEN_FACTION_ID) <= -0.50f);
         d.check("job1TipBase", ctx -> tipHasBase(ctx.state()));
 
         // Rows call it after recording a job 1 delivery or the tip, where the old frame poll reacted.

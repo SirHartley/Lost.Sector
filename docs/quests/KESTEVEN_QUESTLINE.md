@@ -11,8 +11,9 @@ Java paths are relative to `jars/src/lostsector/campaign/`; `dialogue/rules/` an
 | `# KESTEVEN QUESTLINE` rows in `data/campaign/rules.csv`, `kesteven/quest/KestevenHubModule` | The conversation hub with Jack, Alice and Nicholas: entry option, greetings, introductions, status lines, menus, questions and the story point requirement skip ([dialogue map](KESTEVEN_DIALOGUE.md#jack-alice-and-nicholas)) |
 | `dialogue/rules/nskr_kestevenQuest` | Briefings, hand-ins, rewards, the job 3 refusal, the story skip and most player-driven stage changes, called from the hub rows |
 | `kesteven/quest/QuestStageManager` | `EveryFrameScript` in `EFS_LIST`: automatic stage changes, failure checks, intel, bar events, quest fleets and their AI, the Cache guardian timer, Eliza relocation, post-quest revenge fleets |
-| `kesteven/quest/KestevenQuest`, `KestevenStage`, `KestevenFlag`, `KestevenState` | Framework definition of quest `kq`, with the modules `KestevenHubModule` and `KestevenJob1Module`; the stage enum, the flags and the saved state ([KESTEVEN_STATE.md](KESTEVEN_STATE.md)) |
+| `kesteven/quest/KestevenQuest`, `KestevenStage`, `KestevenFlag`, `KestevenState` | Framework definition of quest `kq`, with the modules `KestevenHubModule`, `KestevenJob1Module` and `KestevenJob3Module`; the stage enum, the flags and the saved state ([KESTEVEN_STATE.md](KESTEVEN_STATE.md)) |
 | `kesteven/quest/KestevenJob1Module`, `# KESTEVEN QUESTLINE: JOB 1` rows in `data/campaign/rules.csv` | Job 1 world logic: the intel entry and its text rows, the tip system's dormant fleet, the move to stage 2 ([Job 1](#job-1-enemy-unknown-stages-0-to-6)) |
+| `kesteven/quest/KestevenJob3Module`, `# KESTEVEN QUESTLINE: JOB 3` rows | Job 3 intel entry and its text rows, and the objects placed when the job is accepted ([Job 3](#job-3-hostile-takeover-stages-6-to-11)); the expedition itself is still `QuestStageManager`'s |
 | `kesteven/quest/QuestHelper` | Wrappers over `KestevenState` for the old callers: the stage as a legacy int, flags, fields and lazily picked target locations; `saveEnding()` |
 | `kesteven/quest/KestevenFleets` | Builders for every quest fleet |
 | `CorePlugin` | Opens the Java quest dialogs when the player interacts with a quest entity, deciding through `KestevenQuest` queries |
@@ -20,7 +21,7 @@ Java paths are relative to `jars/src/lostsector/campaign/`; `dialogue/rules/` an
 | `dialogue/rules/nskr_job4FleetDialog`, `nskr_ttCollectorDialog`, `nskr_elizaInterceptDialog`, `nskr_altEndingDialogLuddic`, `nskr_altEndingDialogTT`, `nskr_barEventFixer`, `nskr_isKStage`, `nskr_isAtLeastKStage` | Rules commands for the fleet conversations, endings and stage predicates |
 | `kesteven/quest/ElizaRaid`, `ElizaRaidObjectiveCreator` | Ground raid for Eliza's disks |
 | `world/systems/cache/Cache` | The Cache system, guardian fleet and its fleet-interaction config |
-| `kesteven/quest/HostileTakeoverIntel`, `OperationLifesaverIntel`, `TheDelveIntel`, `CacheIntel` | Intel entries of jobs 3 to 5 and the Cache; they read the stage and flags and never write the stage |
+| `kesteven/quest/OperationLifesaverIntel`, `TheDelveIntel`, `CacheIntel` | Intel entries of jobs 4 and 5 and the Cache; they read the stage and flags and never write the stage |
 | `kesteven/ExileManager` | Moves the quest people between Asteria and the Outpost |
 
 ## Where the quest is offered
@@ -94,7 +95,7 @@ Winning against Enigma before accepting sets `FOUGHT_ENIGMA`, which changes one 
 
 `KestevenJob1Module` is active at stages 1 and 2. When stage 1 starts it shows the `QuestIntel` entry `job1` (icon `job1`; tags important, accepted, missions) as a campaign message, and it ends the entry at once when the stage leaves 2, including on failure. Its map marker is the tip system's hyperspace anchor once the tip was given and the system still has an Enigma base, otherwise `asteriaOrOutpost`; the module sets it when stage 1 starts, in `job1Progress` and once a day.
 
-The text is in the `# KESTEVEN QUESTLINE: JOB 1` block, selected by `$nskr_intel_key == job1`: the title "Enemy Unknown" (`nskr_kqIntelTitle`), one bullet per open task (`nskr_kqIntelBullets`) and the description (`nskr_kqIntelDesc`). The description repeats the bullets as paragraphs after its first line, because `QuestIntel` shows no bullets in the description panel. The rows use the module's checks `job1Hostile` (Kesteven relationship at most -0.50) and `job1TipBase` (the tip system has an Enigma base), the tokens `job1HomeName` (`asteriaOrOutpost` name) and `job1ArtifactCount` (`nskr_kestevenQuest.JOB1_ARTIFACTS`), and the hub's `job1TipSystem`.
+The text is in the `# KESTEVEN QUESTLINE: JOB 1` block, selected by `$nskr_intel_key == job1`: the title "Enemy Unknown" (`nskr_kqIntelTitle`), one bullet per open task (`nskr_kqIntelBullets`) and the description (`nskr_kqIntelDesc`). The description repeats the bullets as paragraphs after its first line, because `QuestIntel` shows no bullets in the description panel. The rows use the module's checks `kestevenHostile` (Kesteven relationship at most -0.50; job 3 rows use it too) and `job1TipBase` (the tip system has an Enigma base), the tokens `job1HomeName` (`asteriaOrOutpost` name) and `job1ArtifactCount` (`nskr_kestevenQuest.JOB1_ARTIFACTS`), and the hub's `job1TipSystem`.
 
 ## Job 3: Hostile Takeover (stages 6 to 11)
 
@@ -102,12 +103,14 @@ At stage 6 Jack sends the player to Alice and mentions the artifact exchange (`n
 
 Alice's briefing at stage 7: a Tri-Tachyon expedition leaves from the job 3 start market, a random Tri-Tachyon market other than `eochu_bres` and `culann`. The player must destroy it without being identified, within about 90 days, for 205,000 credits. Accepting sets stage 8.
 
-When stage 8 is first seen, `QuestStageManager`:
+When stage 8 starts, `KestevenJob3Module` (active at stages 8 and 9):
 
-- adds `HostileTakeoverIntel`;
-- adds `HostileTakeoverBarEvent` to the start market's bar;
-- places a dormant Enigma fleet and data-disk satellite #3 at the job 3 target, a random location in a system near the core;
-- spawns the "Expedition" fleet (Tri-Tachyon) at the start market and tracks it.
+- picks the start market and the job 3 target, a random location in a system near the core, if they are not picked yet;
+- shows the intel entry `job3`;
+- adds `HostileTakeoverBarEvent` to `PortsideBarData` (still a Java bar event);
+- places a dormant Enigma fleet at the target. It is not a quest fleet: `DataSatelliteDialog.makeHostile` moves it to `QuestStageManager`'s fleet list when satellite #3 is salvaged.
+
+On the first unpaused frame at stage 8, `QuestStageManager` spawns the "Expedition" fleet (Tri-Tachyon) at the start market, tracks it, and places data-disk satellite #3 at the target. The expedition, its countdown, completion and failure stay in `QuestStageManager` until `FleetOrders` can run the expedition's schedule.
 
 The expedition prepares at home for 10 days, travels to the target, orbits it until day 70, then returns home and stands down.
 
@@ -118,6 +121,10 @@ The job ends in `QuestStageManager` at stage 10 in one of three ways:
 - the expedition falls below 20% of its spawn strength: success;
 - the expedition is older than 90 days: `JOB3_FAILED`, and derelicts are left at the target;
 - the player contributes to a battle against the expedition while it has seen the player's transponder on: `JOB3_FAILED` ("failed to neutralize the fleet stealthily").
+
+### Intel
+
+The `QuestIntel` entry `job3` (icon `job3`; tags important, accepted, missions) shows as a campaign message when stage 8 starts, and `KestevenJob3Module` ends it at once when the stage leaves 9, including on failure. Its map marker is the start market at stage 8 and the target at stage 9. The text is in the `# KESTEVEN QUESTLINE: JOB 3` block, selected by `$nskr_intel_key == job3`: the title "Hostile Takeover", bullets for hostile relations (`kestevenHostile`), the days left (`job3TimeLeft`, token `job3DaysLeft`: `job3TimeLeft` cut to whole days) and the current step (tokens `job3MarketName`, `job3MarketSystem`, `job3TargetSystem`), and the description with the bullets repeated as paragraphs.
 
 Alice's turn-in at stage 10: on success, a modspec, 50,000 exchange points, 205,000 credits, Kesteven +5 and Alice +10; on failure, Kesteven -5 and Alice -10. Both set stage 11.
 

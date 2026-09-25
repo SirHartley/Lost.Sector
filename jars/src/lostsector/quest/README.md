@@ -1084,7 +1084,7 @@ Migration map for the Kesteven questline and the other systems. The owning task 
 | `campaign/kesteven/quest/KestevenPeople` | Fixed people stay in world generation; generated people move to `ctx.people()` |
 | Java dialog classes (`ElizaDialog`, `CacheCoreDialog`, `HintWreckDialog`, endings, `nskr_kestevenQuest` and the other questline commands) | Rows, checks, actions and claims |
 | `HostileTakeoverBarEvent`, `ElizaSearch*BarEvent`, `DelveMeetingBarEvent`, `KestevenTipBarEvent` | `AddBarEvents` rows and quest people |
-| `EnemyUnknownIntel`, `HostileTakeoverIntel`, `OperationLifesaverIntel`, `TheDelveIntel`, `CacheIntel` | `QuestIntel` with intel rows (`EnemyUnknownIntel` done in T18: key `job1` of `KestevenJob1Module`) |
+| `EnemyUnknownIntel`, `HostileTakeoverIntel`, `OperationLifesaverIntel`, `TheDelveIntel`, `CacheIntel` | `QuestIntel` with intel rows (`EnemyUnknownIntel` done in T18: key `job1` of `KestevenJob1Module`; `HostileTakeoverIntel` in T19: key `job3` of `KestevenJob3Module`) |
 | `nskr_isKStage` and other stage predicates | `nskr_quest kq is` and `reached` |
 | `events/InterceptManager`, its `Saved` spawn flags, frame counters and per-fleet AI | Quest `ic` in `campaign/events/intercepts`: `InterceptEncounter` records, `onDay` rolls, roles with `FleetOrders` withdrawal and `reassign` (done in T41) |
 | `kesteven/loans/LoanShark` and `dialogue/rules/nskr_loanSharkDialog`, their persistent-data keys, `$debtCollector` and the `# DEBT collector dialog` rows | Records `collector` of quest `ic`: an `InterceptEncounter` with `switchOnAction`, `switchWhen` and `onSwitch`, a `PayOffEncounter`, and rows in `# INTERCEPTS` (done in T37) |

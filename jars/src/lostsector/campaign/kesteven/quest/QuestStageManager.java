@@ -215,21 +215,9 @@ public class QuestStageManager extends BaseCampaignEventListener implements Ever
                 state.job4WaitCounter = 0f;
             }
         }
-        //start job 3
+        //start job 3; KestevenJob3Module adds the intel, the bar event and the dormant fleet when the stage starts
+        // TODO T19: move the expedition to KestevenJob3Module once FleetOrders can run its schedule.
         if (stage ==8) {
-            //Adds our intel
-            if (!state.job3IntelAdded) {
-                HostileTakeoverIntel intel3 = new HostileTakeoverIntel();
-                Global.getSector().getIntelManager().addIntel(intel3, false);
-                state.job3IntelAdded = true;
-                log("Qmanager added INTEL for " + "Hostile Takeover");
-                //BAR EVENT
-                PortsideBarData.getInstance().addEvent(new HostileTakeoverBarEvent());
-                //DORMANT fleet at target
-                DormantSpawner.addDormant(QuestHelper.getJob3Target(), "enigma", 45f, 50f, 0f, 1f, 1f, 1f, 1, 1);
-                log("Qmanager added dormant to target " + QuestHelper.getJob3Target().getName() +" "+ QuestHelper.getJob3Target().getStarSystem().getName());
-            }
-            //logic
             if (!state.job3FleetSpawned) {
                 CampaignFleetAPI fleet = KestevenFleets.spawnJob3TargetFleet();
                 fleets.add(new FleetInfo(fleet, QuestHelper.getJob3Target(), QuestHelper.getJob3Start()));
