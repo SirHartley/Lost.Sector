@@ -2,6 +2,7 @@ package lostsector.campaign.kesteven.quest;
 
 import com.fs.starfarer.api.campaign.SectorEntityToken;
 import com.fs.starfarer.api.campaign.StarSystemAPI;
+import com.fs.starfarer.api.fleet.FleetMemberAPI;
 import lostsector.quest.QuestState;
 
 import java.util.ArrayList;
@@ -48,6 +49,8 @@ public final class KestevenState extends QuestState<KestevenStage> {
     int elizaSearchStage;
     int partyDrinks;
     List<String> elizaSearchUsedMarkets = new ArrayList<>();
+    // The ship whose barrage line KestevenGlacierModule is printing; null outside its damageFleet action, never saved.
+    transient FleetMemberAPI glacierHit;
 
     float ttPayout;
     float commissionRepPirates;

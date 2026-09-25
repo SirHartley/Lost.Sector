@@ -6,7 +6,7 @@ Java paths are relative to `jars/src/lostsector/campaign/`; `dialogue/rules/`, `
 
 ## Storage
 
-The questline is quest `kq` of the quest framework. `kesteven/quest/KestevenQuest` is its definition, registered in `quest/QuestCatalog`. `KestevenHubModule` declares the checks, actions and tokens of the rows for every conversation with Jack, Alice and Nicholas ([dialogue map](KESTEVEN_DIALOGUE.md#jack-alice-and-nicholas)); `KestevenJob1Module` runs job 1's intel, dormant fleet and move to `JOB1_DONE` ([Job 1](KESTEVEN_QUESTLINE.md#job-1-enemy-unknown-stages-0-to-6)); `KestevenJob3Module` runs job 3's intel and the objects placed at acceptance ([Job 3](KESTEVEN_QUESTLINE.md#job-3-hostile-takeover-stages-6-to-11)); `KestevenPartyModule` runs the job 3 party's guests, drink count and hangover bill ([The party](KESTEVEN_QUESTLINE.md#the-party)). `QuestStageManager` and the Java dialogs, bar events, intel and rules commands still run the rest of the questline, reading and writing one saved `kesteven/quest/KestevenState`. `KestevenQuest.isAvailable()` keeps the default `true`, because the old code runs the questline in every campaign and handles a missing Kesteven home as failure.
+The questline is quest `kq` of the quest framework. `kesteven/quest/KestevenQuest` is its definition, registered in `quest/QuestCatalog`. `KestevenHubModule` declares the checks, actions and tokens of the rows for every conversation with Jack, Alice and Nicholas ([dialogue map](KESTEVEN_DIALOGUE.md#jack-alice-and-nicholas)); `KestevenJob1Module` runs job 1's intel, dormant fleet and move to `JOB1_DONE` ([Job 1](KESTEVEN_QUESTLINE.md#job-1-enemy-unknown-stages-0-to-6)); `KestevenJob3Module` runs job 3's intel and the objects placed at acceptance ([Job 3](KESTEVEN_QUESTLINE.md#job-3-hostile-takeover-stages-6-to-11)); `KestevenPartyModule` runs the job 3 party's guests, drink count and hangover bill ([The party](KESTEVEN_QUESTLINE.md#the-party)); `KestevenGlacierModule` runs the Glacier facility ([Glacier](KESTEVEN_QUESTLINE.md#glacier-disk-5)). `QuestStageManager` and the Java dialogs, bar events, intel and rules commands still run the rest of the questline, reading and writing one saved `kesteven/quest/KestevenState`. `KestevenQuest.isAvailable()` keeps the default `true`, because the old code runs the questline in every campaign and handles a missing Kesteven home as failure.
 
 | Mechanism | Location | Notes |
 |---|---|---|
@@ -68,7 +68,6 @@ Classes outside the quest package and the questline dialog commands read and cha
 | `delveMeetingDue()` | Stage 15 | `dialogue/rules/nskr_barEventFixer` (adds `DelveMeetingBarEvent`) |
 | `cacheIsQuestTarget()` | Stage 16 or later | `world/systems/cache/Cache` (marks the command core important) |
 | `isUnreadHintWreck(entity)` | The entity id starts with `$job4HintWreck` and `JOB4_HINT_WRECK_READ` is unset | `CorePlugin` (`HintWreckDialog`) |
-| `glacierCommsOpen()` | `JOB5_ALICE_TIP2`, stage 16 or later, and `GLACIER_DISK_RECOVERED` unset | `CorePlugin` at `nskr_glacier` (`GlacierCommsDialog`) |
 | `isDataSatellite(entity)` | The entity has a memory key starting with `$kQuestArtifact` | `CorePlugin` (`DataSatelliteDialog`) |
 | `elizaMeetingDone()` | `ELIZA_DIALOG_FINISHED` | `CorePlugin` (`ElizaDialog` while false) |
 | `atElizaMarket(entity)` | `elizaMarket` is set and the entity is it or belongs to a market connected to it | `CorePlugin` (`ElizaDialog`, `EndingElizaDialog`) |
@@ -136,7 +135,7 @@ The actual path can skip stages: 8 to 10 without 9, 7 to 11 when job 3 is refuse
 | `JOB5_JACK_TIP`, `JOB5_ALICE_TIP`, `JOB5_ALICE_TIP2` | Job 5 tips given | Rules `nskr_kq_jackLeads`, `nskr_kq_aliceLeads`, `nskr_kq_aliceFrostTip`; story skip |
 | `FROST_FOUND` | Frost identified | Rules `nskr_kq_aliceFrostFound`, `QuestStageManager`, story skip |
 | `SATELLITE3_RECOVERED`, `SATELLITE4_RECOVERED` | Satellite #3 or #4 salvaged | `DataSatelliteDialog`, story skip |
-| `GLACIER_DISK_RECOVERED` | Disk #5 recovered | `GlacierCommsDialog`, story skip |
+| `GLACIER_DISK_RECOVERED` | Disk #5 recovered | `KestevenGlacierModule` action `recoverGlacierDisk` and `onSkip` on a jump past `JOB5_DISKS`; story skip |
 | `ALL_DISKS_RECOVERED` | At least five disks | `QuestStageManager` |
 | `ELIZA_SPACER_PAID` | Paid the spacer | `ElizaSearchBarEvent` |
 | `ELIZA_FOUND` | Eliza's market known | `ElizaSearchFinalBarEvent`, story skip |
@@ -175,13 +174,14 @@ Other features read flags through the [queries](#queries-for-other-features). `n
 | `elizaMarket` | `SectorEntityToken` | Eliza's market entity; re-picked on decivilization | `QuestHelper.setElizaLoc()` |
 | `elizaContactMarket` | `SectorEntityToken` | Contact market after paying the spacer; re-picked on decivilization | `ElizaSearchBarEvent.setPaidForInfoTarget()` |
 | `cacheGuardianSpot` | `SectorEntityToken` | Guardian spawn point in Unknown Site | `QuestHelper.setCacheFleetLoc()` |
-| `disksRecovered` | `int` | Disks recovered | `DataSatelliteDialog`, `ElizaDialog`, `ElizaRaid`, `GlacierCommsDialog` |
+| `disksRecovered` | `int` | Disks recovered | `DataSatelliteDialog`, `ElizaDialog`, `ElizaRaid`, `KestevenGlacierModule` action `recoverGlacierDisk` |
 | `satellitesRecovered` | `int` | Satellites salvaged, 0 to 2 | `DataSatelliteDialog`, story skip |
 | `nicholasDialogStage` | `int` | Nicholas's job 4 dialogue stage; the hub reads it through `check nicholasTipGiven` | Hub action `recordNicholasTip` |
 | `job4FleetDialogStage` | `int` | Special Operations fleet dialogue stage | `nskr_job4FleetDialog setDialogStage`, called from rules |
 | `elizaSearchStage` | `int` | Eliza bar chain stage, 0 to 3 | Eliza bar events |
 | `partyDrinks` | `int` | Drinks at the job 3 party; checks `partyTipsy` (1 or more) and `partyDrunk` (2 or more) | Action `partyDrink` of `KestevenPartyModule` |
 | `elizaSearchUsedMarkets` | `List<String>` | Market ids already used by the Eliza bar chain | Eliza bar events |
+| `glacierHit` | `FleetMemberAPI` | The ship whose barrage line is being printed, read by the tokens `glacierHitShip` and `glacierHitHull`; null outside the action | `KestevenGlacierModule` action `damageFleet` |
 | `ttPayout` | `float` | Tri-Tachyon price, at least 2,000,000 | `nskr_altEndingDialogTT` |
 | `commissionRepPirates`, `commissionRepKesteven`, `commissionRepHegemony` | `float` | Relationship values the commission fix re-applies | `EndingElizaDialog` |
 | `dayCounter`, `fleetCounter` | `float` | Daily logic timer (10 s) and fleet timer (1 s), in frame seconds | `QuestStageManager` |
@@ -205,7 +205,7 @@ Each purpose is a constant on `KestevenState`, named after the persistent-data k
 | `RANDOM_QUEST` | `kestevenQuestRandom` | `KestevenQuest.random(KestevenState.RANDOM_QUEST)` and the hub actions: target pickers, fleets, the modspec reward, Eliza bar payment, Cache guardian and wrecks |
 | `RANDOM_REVENGE` | `kestevenQuestRandomKey` | `QuestStageManager.getRandom()`: Jack's revenge roll |
 | `RANDOM_SATELLITE` | `artifactKeyRandom` | `DataSatelliteDialog.getRandom()` |
-| `RANDOM_GLACIER` | `glacierCommsKeyRandom` | `GlacierCommsDialog.getRandom()` |
+| `RANDOM_GLACIER` | `glacierCommsKeyRandom` | `KestevenGlacierModule` action `damageFleet`: which ships the barrage hits and how hard |
 | `RANDOM_HINT_WRECK` | `job4HintWreckDialogRandom` | `HintWreckDialog.getRandom()` |
 | `RANDOM_ELIZA` | `elizaDialogKeyRandom` | `ElizaDialog.getRandom()`, also Eliza's fleets and raid |
 | `RANDOM_CACHE_DOUBT` | `cacheDoubtDialogRandom` | `CacheDoubtDialog.getRandom()` |
@@ -240,7 +240,9 @@ The Kesteven bar tip is not questline content; it is quest `hint` ([Exploration 
 | `$nskr_kq_job1Dormant` | The job 1 tip system's dormant fleet: role flag of quest `kq` | `QuestFleets.adopt`, from `QuestHelper.getJob1Tip()` | Nothing reads it yet |
 | `$nskr_altEndingDialogLockedToPerson` | The official in either alternative ending | Alternative endings | Alternative endings |
 | `$nskr_ic_messenger`, `$nskr_ic_messengerLeaving` | Messenger fleet role flags of quest `ic` | `QuestFleets` | Rules `# INTERCEPTS` |
-| `$missionImportant` with reason `nskr_kq` | Satellite #3, satellite #4, Glacier | Hub actions `markJob3Satellite`, `markJob4Satellite`, `markGlacier` (`ctx.mark`, scope `JOB5_DISKS` on) | Map markers; `DataSatelliteDialog` and `GlacierCommsDialog` unset the key on salvage |
+| `$missionImportant` with reason `nskr_kq` | Satellite #3, satellite #4, Glacier | Hub actions `markJob3Satellite`, `markJob4Satellite`; `KestevenGlacierModule` action `markGlacier` (`ctx.mark`, scope `JOB5_DISKS` on) | Map markers; `DataSatelliteDialog` unsets the key on salvage, `recoverGlacierDisk` calls `ctx.unmark` |
+| `$nskr_questDialog` (`quest/QuestDialogs.CLAIM_KEY`) = `nskr_kqGlacier` | Glacier | `markGlacier` (`ctx.claimDialog`, scope `JOB5_DISKS` on); released by `recoverGlacierDisk` | `CorePlugin`, which opens the `# KESTEVEN QUESTLINE: GLACIER` rows |
+| `$nskr_kq_glacierPath` (`walk`, `cut`, `blast`), `$nskr_kq_glacierShutdown`, `$nskr_kq_glacierLate` | Glacier; expiry 0, so they end with the dialog | Glacier rows: the door choice, the shutdown choice, the countdown reaching 0 | Glacier rows: countdown lines, way back, barrage and congratulations |
 | `$nskr_kq_introduced` | Jack, Alice or Nicholas, each their own; no expiry | Hub introduction rows `nskr_kq_jackIntro`, `nskr_kq_aliceIntro`, `nskr_kq_nicholasIntro` | Hub greeting rows |
 | `$nskr_kq_partyTechiesDone`, `$nskr_kq_partyCrowdDone`, `$nskr_kq_partyOfficersDone` | The party employee (`nskr_kq_partyEmployee`); no expiry | Party rows `nskr_kq_partyPitchDecline`, `nskr_kq_partyPitchListen`, `nskr_kq_partyToastLeave`, `nskr_kq_partyTarget` | Party group menu `nskr_kqPartyGroups` and `nskr_kqPartyLookText` |
 | `$nskr_kq_asked<Topic>` (`askedRogueAi`, `askedShips`, `askedElectronics`, `askedCores`, `askedFought`, `askedEquipment`, `askedEnigma`, `askedNextJob` on Jack; `askedWhere`, `askedAlone`, `askedNecessary`, `askedTarget`, `askedNextJob`, `askedSpecOps`, `askedThreats`, `askedSupplies`, `askedNicholas`, `askedGoal`, `askedInterest`, `askedArtifact` on Alice) | The speaker; no expiry | Hub answer rows `nskr_kq_<speaker>Ask<Topic>Sel` | Hub question rows, which hide an asked question |

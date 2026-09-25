@@ -9,8 +9,8 @@ Java paths are relative to `jars/src/lostsector/campaign/`; `dialogue/rules/` an
 | Style | Used by | How it runs |
 |---|---|---|
 | Rules rows with a multi-verb command | The Special Operations fleet (`nskr_job4FleetDialog`); the collector (`nskr_ttCollectorDialog`); Eliza's intercept (`nskr_elizaInterceptDialog`); both alternative endings | Rows select the conversation and call a verb. The verb writes most text and options from Java strings. Several commands extend `PaginatedOptions` and take over the dialog plugin (`setupDelegateDialog`). Every non-paging option then returns to rules through `FireBest DialogOptionSelected`. |
-| Rules rows only | Every conversation with Jack, Alice and Nicholas (gates, values and game actions from `KestevenHubModule`); the job 3 party, a rules bar event (guests, drink count and bill from `KestevenPartyModule`); fleet greetings and threats: Enigma strike group, Eliza's raided and revenge fleets, Jack's revenge fleet, the Cache guardian, the "LZ" messenger, generic Enigma comms | Text, options and scripts live in `data/campaign/rules.csv`. |
-| Java `InteractionDialogPlugin` or `BaseBarEvent` | Satellites, Glacier, Cache hint, Cache core, Eliza's port, both final ending dialogs, the job 5 bar scenes, the job 4 hint wreck | `CorePlugin.pickInteractionDialogPlugin` or `PortsideBarData` opens the class. All text, options and state changes are in the Java class, using a nested `OptionId` enum. |
+| Rules rows only | Every conversation with Jack, Alice and Nicholas (gates, values and game actions from `KestevenHubModule`); the job 3 party, a rules bar event (guests, drink count and bill from `KestevenPartyModule`); the Glacier facility (`KestevenGlacierModule`); fleet greetings and threats: Enigma strike group, Eliza's raided and revenge fleets, Jack's revenge fleet, the Cache guardian, the "LZ" messenger, generic Enigma comms | Text, options and scripts live in `data/campaign/rules.csv`. |
+| Java `InteractionDialogPlugin` or `BaseBarEvent` | Satellites, Cache hint, Cache core, Eliza's port, both final ending dialogs, the job 5 bar scenes, the job 4 hint wreck | `CorePlugin.pickInteractionDialogPlugin` or `PortsideBarData` opens the class. All text, options and state changes are in the Java class, using a nested `OptionId` enum. |
 
 ## Jack, Alice and Nicholas
 
@@ -66,7 +66,7 @@ Option ids:
 | check | `noSatellite`, `oneSatellite`, `twoSatellites`, `disksOverTwo`, `allDisks` | Satellites salvaged 0, 1, at least 2; disks above 2, at least 5 |
 | action | `pickJob1Tip`, `pickJob3Start`, `pickJob3Target`, `pickJob4FriendlyTarget`, `pickJob5FrostTip` | The `QuestHelper` getter of that target, which picks it on first use; `pickJob1Tip` also places a dormant Enigma fleet |
 | action | `recordNicholasTip` | `nicholasDialogStage` = 1 |
-| action | `markJob3Satellite`, `markJob4Satellite`, `markGlacier` | `ctx.mark` on satellite #3, satellite #4 or Glacier, from `JOB5_DISKS` on |
+| action | `markJob3Satellite`, `markJob4Satellite` | `ctx.mark` on satellite #3 or satellite #4, from `JOB5_DISKS` on |
 | action | `grantModspec` | A random Kesteven modspec the player does not know yet, if any (purpose `kestevenQuestRandom`), through `ctx.rewards().item` |
 | action | `grantExchangePoints`, `grantEpoch`, `raiseJackImportance` | 50,000 artifact exchange points (`nskr_shipSwap.addPoints`); the `nskr_epoch_empty` frigate with the vanilla ship receipt; Jack's importance to high |
 | action | `placeJob3Leftovers` | The derelicts, debris, satellite #3 and dormant fleet at the job 3 target after a refusal |
@@ -200,6 +200,23 @@ Every question list ends with Back (`nskr_kq_brief`, Escape), which shows the br
 
 The two `JOB5_DISKS` confirmations test the disks, not which screen offered the option: "It's the <Frost>." on the Frost tip screen with all five disks gives the Cache coordinates, as the old `quest()` did.
 
+## Glacier
+
+The comms facility raid for disk #5 is the `# KESTEVEN QUESTLINE: GLACIER` block of `data/campaign/rules.csv`. Alice's Frost tip row runs `do markGlacier`, which `KestevenGlacierModule` declares: it marks Glacier and claims its dialog with `nskr_kqGlacier`, so `CorePlugin` opens a rules dialog that fires that trigger ([flow and countdown](KESTEVEN_QUESTLINE.md#glacier-disk-5)). The speaker is the player's own crew; no person is shown.
+
+| Screen | Structure | Rows |
+|---|---|---|
+| Approach | Entry row | `nskr_kq_glacierOpen` on `nskr_kqGlacier`: `ShowLargePlanet`, "Search for the facility" and `defaultLeave` Leave |
+| Search to the alarm | Plain chain | `nskr_kq_glacierSearchSel` (Continue and Leave), `…LandSel`, `…DigSel`, `…HallsSel`. From the landing on, every screen runs `ShowPic nskr_glacier`. The alarm's two spoken replies (`…ComplicatesSel`, `…CurseSel`) set `$option` to `nskr_kq_glacierRush` and fire `DialogOptionSelected`, so all three options show the same next screen |
+| Countdown screens | Plain chain; the minutes are literal `AddTextSmall … gray` lines with `SetTextHighlights` on the number | `…RushSel`, `…ImpasseSel`, the door handlers `…WalkSel`, `…CutSel`, `…BlastSel` (they write `$nskr_kq_glacierPath`), `…ServersSel`, `…ConsoleSel` |
+| Minutes that depend on the door | `FireBest` pick, fallback for walk and cut | `nskr_kqGlacierServersTime`, `nskr_kqGlacierConsoleTime`, `nskr_kqGlacierDefuseTime` |
+| Way back after running | `FireBest` pick by `$nskr_kq_glacierPath`, fallback for the cut | `nskr_kqGlacierRunBack`; the walk and blast rows set `$nskr_kq_glacierLate` |
+| Shutdown result | `DialogOptionSelected` pick | `nskr_kq_glacierDefusedSel` (in time, blast only) and `…DefusedLateSel` (`$nskr_kq_glacierLate`: barrage, `do damageFleet`) |
+| Return to the fleet | Handler with `defaultLeave` Continue, then picks | `nskr_kq_glacierReturnSel` fires `nskr_kqGlacierShuttle` (run or shutdown line) and `FireBest nskr_kqGlacierEscape true` (barrage after a late run; congratulations with "I know, I'm the best." when not late; an empty fallback after a late shutdown), then runs `do recoverGlacierDisk` and prints "Acquired Data Disk #5" |
+| Shared lines | Shared insert; line trigger | `nskr_kqGlacierRedAlert`, the first line of both barrages; `nskr_kqGlacierHit`, fired by `damageFleet` once per damaged ship with the tokens `$nskr_kq_glacierHitShip` and `$nskr_kq_glacierHitHull` |
+
+`KestevenGlacierModule` declarations: the triggers `nskr_kqGlacier` and `nskr_kqGlacierHit`; the actions `markGlacier`, `damageFleet` and `recoverGlacierDisk`; the tokens `glacierHitShip` and `glacierHitHull`.
+
 ## Fleet conversations
 
 | Fleet | Rows | Command verbs |
@@ -256,7 +273,6 @@ The party at the job 3 start market is in the `# KESTEVEN QUESTLINE: JOB 3 PARTY
 | `kesteven/quest/DelveMeetingBarEvent` | `nskr_barEventFixer` on each bar visit at stage 15 | Meeting with Jack and Alice | Advance credits, stage 16 |
 | `kesteven/quest/ElizaSearchBarEvent`, `…Second`, `…Final` | `PortsideBarData` at pirate markets, stage 16 | Search for Eliza | Chain stage, used markets, Eliza's market |
 | `kesteven/quest/ElizaDialog` | `CorePlugin`, Eliza's market until finished | Meeting Eliza | Disks, help or raid flags |
-| `kesteven/quest/GlacierCommsDialog` | `CorePlugin`, Glacier after tip 2 | Timed facility raid | Disk #5; possible fleet damage |
 | `kesteven/quest/CacheDoubtDialog` | `QuestStageManager`, once in Unknown Site | Inner-voice hint | None |
 | `kesteven/quest/CacheCoreDialog` | `CorePlugin` or the guardian's fleet-interaction config | Cache core salvage | Stage 19, rewards |
 | `kesteven/quest/EndingKestevenDialog` | `CorePlugin` at stage 19 | Kesteven ending | Stage 20, rewards, relations |

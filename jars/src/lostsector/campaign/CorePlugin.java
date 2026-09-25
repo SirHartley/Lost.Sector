@@ -5,7 +5,6 @@ import lostsector.campaign.kesteven.quest.DataSatelliteDialog;
 import lostsector.campaign.kesteven.quest.ElizaDialog;
 import lostsector.campaign.kesteven.quest.EndingElizaDialog;
 import lostsector.campaign.kesteven.quest.EndingKestevenDialog;
-import lostsector.campaign.kesteven.quest.GlacierCommsDialog;
 import lostsector.campaign.kesteven.quest.HintWreckDialog;
 
 import com.fs.starfarer.api.Global;
@@ -45,10 +44,6 @@ public class CorePlugin extends BaseCampaignPlugin {
         //job4hintWreck dialog
         if (KestevenQuest.isUnreadHintWreck(interactionTarget)) {
             return new PluginPick<InteractionDialogPlugin>(new HintWreckDialog(), PickPriority.MOD_GENERAL);
-        }
-        //glacier comms dialog
-        if (interactionTarget.getId().equals("nskr_glacier") && KestevenQuest.glacierCommsOpen()) {
-            return new PluginPick<InteractionDialogPlugin>(new GlacierCommsDialog(), PickPriority.MOD_GENERAL);
         }
         //satellite dialog
         if (KestevenQuest.isDataSatellite(interactionTarget)) {

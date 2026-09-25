@@ -116,7 +116,6 @@ final class KestevenHubModule extends QuestModule<KestevenStage, KestevenState> 
         d.action("recordNicholasTip", ctx -> ctx.state().nicholasDialogStage = 1);
         d.action("markJob3Satellite", ctx -> markSatellite(ctx, ctx.state().job3Target));
         d.action("markJob4Satellite", ctx -> markSatellite(ctx, ctx.state().job4EnemyTarget));
-        d.action("markGlacier", KestevenHubModule::markGlacier);
         d.action("grantModspec", KestevenHubModule::grantModspec);
         d.action("grantExchangePoints", ctx -> nskr_shipSwap.addPoints(EXCHANGE_POINTS_BONUS));
         d.action("grantEpoch", KestevenHubModule::grantEpoch);
@@ -210,12 +209,6 @@ final class KestevenHubModule extends QuestModule<KestevenStage, KestevenState> 
         if (location == null || location.getStarSystem() == null) return;
         SectorEntityToken satellite = QuestHelper.getArtifact(location.getStarSystem());
         if (satellite != null) ctx.mark(satellite, JOB5_ON);
-    }
-
-    private static void markGlacier(QuestContext<KestevenStage, KestevenState> ctx) {
-        for (SectorEntityToken entity : SectorLookup.getFrost().getAllEntities()) {
-            if ("nskr_glacier".equals(entity.getId())) ctx.mark(entity, JOB5_ON);
-        }
     }
 
     // A modspec the player does not know yet when there is one.

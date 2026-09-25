@@ -2073,3 +2073,119 @@ AddTextSmall ""Acquired Expedition coordinates"" gray
 SetTextHighlights ""Expedition coordinates""
 PlaySound ui_rep_raise
 BarCMD returnFromEvent true",,,
+,,,,,,
+# KESTEVEN QUESTLINE: GLACIER,,,,,,
+nskr_kq_glacierOpen,nskr_kqGlacier,,ShowLargePlanet,Your fleet approaches the tundra planet Glacier.,"nskr_kq_glacierSearch:Search for the facility
+defaultLeave:Leave","Opened through the claim of markGlacier, from Alice's second Frost tip until the disk is recovered"
+nskr_kq_glacierSearchSel,DialogOptionSelected,$option == nskr_kq_glacierSearch,"AddText ""\""There's no sign of human activity on the site, past or present.\"" The ops chief report. \""Well within the past few centuries at least. But there's no way of telling what else we could find here, we'll have to go in expecting the worst.\""""
+AddText ""\""This is our last chance to turn back.\""""",You order the sensor team to begin tracking down the signal on the planets surface. And in no time you have confirmation on the comms facility's exact coordinates.,"nskr_kq_glacierLand:Continue
+defaultLeave:Leave",
+nskr_kq_glacierLandSel,DialogOptionSelected,$option == nskr_kq_glacierLand,"AddText ""The only evidence of the facility's existence are the tall comms towers going through the layers of packed snow and ice. The salvor crew has to use heavy machinery to start digging through the ice to even reach an entrance of any kind.""
+ShowPic nskr_glacier","You watch the salvor teams shuttle land on the top of a large flat hill near the pole of the planet. Relentless wind and snow beats on the shuttle and crew. Far away rolling hills dot the horizon, everything else is barren.",nskr_kq_glacierDig:Continue,"From here on every screen shows the Glacier illustration again, as the old dialog did after each click"
+nskr_kq_glacierDigSel,DialogOptionSelected,$option == nskr_kq_glacierDig,"AddText ""Despite being abandoned for seemingly centuries, the facility still has power. \""Explains how we could track down the signal so easily, everything is still lit up like no one left. It must be powered by some sort of passive decay reactor.\"" your ops chief comments.""
+AddText ""Clouds of dust get kicked up as the team makes their way through the countless hallways of the facility.""
+ShowPic nskr_glacier","After some waiting, and a lot of digging. The crew has finally reached the facility proper.",nskr_kq_glacierHalls:Continue,
+nskr_kq_glacierHallsSel,DialogOptionSelected,$option == nskr_kq_glacierHalls,"AddText ""\""It appears we've tripped some security mechanism, it's brought multiple hidden anti-ship batteries around the perimeter online.\"" The chief urgently reports.""
+AddText ""They continue, making quick orders and frantically going through the info feeds \""Looks like the decades of frost are buying us some extra time, I'd say we have around an hour before they come fully online.\""""
+ShowPic nskr_glacier",Alarms go off on the bridge as multiple screens turn red. The security chief scrambles to assess the situation.,"nskr_kq_glacierRush:Continue
+nskr_kq_glacierComplicates:""This *complicates* things.""
+nskr_kq_glacierCurse:""Ahh shit.""",
+nskr_kq_glacierComplicatesSel,DialogOptionSelected,$option == nskr_kq_glacierComplicates,"$option = nskr_kq_glacierRush 0
+FireBest DialogOptionSelected",,,Same screen as Continue
+nskr_kq_glacierCurseSel,DialogOptionSelected,$option == nskr_kq_glacierCurse,"$option = nskr_kq_glacierRush 0
+FireBest DialogOptionSelected",,,Same screen as Continue
+,,,,,,
+nskr_kq_glacierRushSel,DialogOptionSelected,$option == nskr_kq_glacierRush,"AddText ""You watch the operations chief shout quick and precise orders across the bride, you need to reach the central command room and fast.""
+AddTextSmall ""You have around 90 minutes left."" gray
+SetTextHighlights ""90""
+ShowPic nskr_glacier","The salvor team receives the orders to get moving, but their pace remains uncomfortably slow as they lug around the heavy EVA equipment and tools.",nskr_kq_glacierImpasse:Continue,"The countdown starts at 90 minutes; each line states the minutes left after that screen, which reach 0 on the late paths"
+nskr_kq_glacierImpasseSel,DialogOptionSelected,$option == nskr_kq_glacierImpasse,"AddText ""The ops chief hastily makes some plans of action and delivers them to you. \""We have a few tricks we can try here, remember time is of the essence captain.\""""
+AddTextSmall ""You have around 75 minutes left."" gray
+SetTextHighlights ""75""
+ShowPic nskr_glacier",The team makes steady progress deeper into the facility until they reach an impasse. A heavily reinforced door is blocking the shortest path.,"nskr_kq_glacierWalk:Try to find a way around
+nskr_kq_glacierCut:Cut through it
+nskr_kq_glacierBlast:Blast it",
+nskr_kq_glacierWalkSel,DialogOptionSelected,$option == nskr_kq_glacierWalk,"AddTextSmall ""You have around 45 minutes left."" gray
+SetTextHighlights ""45""
+$nskr_kq_glacierPath = walk 0
+ShowPic nskr_glacier","The team backtracks through the facility searching for an alternate route. Traversing the labyrinthine structure is quite time consuming, but eventually they discover a secondary route.",nskr_kq_glacierServers:Continue,
+nskr_kq_glacierCutSel,DialogOptionSelected,$option == nskr_kq_glacierCut,"AddTextSmall ""You have around 45 minutes left."" gray
+SetTextHighlights ""45""
+$nskr_kq_glacierPath = cut 0
+ShowPic nskr_glacier","The team sets up the plasma torch and gets to work. You watch as everyone pulls down a solid shining black visor on their helmets, suddenly a blinding stream of sparks fills the view while they cut the structure. It takes some time, but eventually they get through.",nskr_kq_glacierServers:Continue,
+nskr_kq_glacierBlastSel,DialogOptionSelected,$option == nskr_kq_glacierBlast,"AddText ""Seems like structure is only barely holding it together as it creeks and bends under the newfound stress. The team quickly squeezes through the hole in the door.""
+AddText ""That was quite fast, lets hope the structure holds on for a little while longer.""
+AddTextSmall ""You have around 60 minutes left."" gray
+SetTextHighlights ""60""
+$nskr_kq_glacierPath = blast 0
+ShowPic nskr_glacier","The team carefully install the shaped breaching charge. They take cover, and as the charges are blown the hallways get filled with a storm of dust.",nskr_kq_glacierServers:Continue,
+,,,,,,
+nskr_kq_glacierServersSel,DialogOptionSelected,$option == nskr_kq_glacierServers,"AddText ""The crew on bridge quickly map out the room, after a short wait they locate the central command console. \""Seems like we found what we are looking for, let's get to work.\"" Your ops chief comments.""
+FireBest nskr_kqGlacierServersTime
+ShowPic nskr_glacier","The team has finally reached what looks like the right place. A massive central server room, dimly lit server racks with multiple stories of intertwined walkways seem to continue on for eternity, as a thin haze of fog and dust obscures your view.",nskr_kq_glacierConsole:Continue,
+nskr_kq_glacierServersTime,nskr_kqGlacierServersTime,,"AddTextSmall ""You have around 35 minutes left."" gray
+SetTextHighlights ""35""",,,Fallback: after the walk or the cut
+nskr_kq_glacierServersTimeBlast,nskr_kqGlacierServersTime,$nskr_kq_glacierPath == blast,"AddTextSmall ""You have around 50 minutes left."" gray
+SetTextHighlights ""50""",,,
+nskr_kq_glacierConsoleSel,DialogOptionSelected,$option == nskr_kq_glacierConsole,"AddText ""The console seems to be in control of most of the facility's systems, your bridge crew might be able to guide the salvor team to shutdown the defenses.""
+AddText ""The ops chief and the comms officer don't seem to agree which course of action is the best, so they leave the choice to you.""
+FireBest nskr_kqGlacierConsoleTime
+ShowPic nskr_glacier","Next to the console you see a large rack of identical disks, an intricate sprawl of wires connects it to the console. It takes a moment for your crew to figure out which is the correct one.","nskr_kq_glacierRun:Grab the disk and run
+nskr_kq_glacierDefuse:Try to shut down the system",
+nskr_kq_glacierConsoleTime,nskr_kqGlacierConsoleTime,,"AddTextSmall ""You have around 30 minutes left."" gray
+SetTextHighlights ""30""",,,Fallback: after the walk or the cut
+nskr_kq_glacierConsoleTimeBlast,nskr_kqGlacierConsoleTime,$nskr_kq_glacierPath == blast,"AddTextSmall ""You have around 45 minutes left."" gray
+SetTextHighlights ""45""",,,
+,,,,,,
+nskr_kq_glacierRunSel,DialogOptionSelected,$option == nskr_kq_glacierRun,"FireBest nskr_kqGlacierRunBack
+ShowPic nskr_glacier",The team quickly grabs the correct disk and wastes no time to get moving.,nskr_kq_glacierReturn:Continue,
+nskr_kq_glacierRunBack,nskr_kqGlacierRunBack,,"AddTextSmall ""You have around 15 minutes left."" gray
+SetTextHighlights ""15""",It's only a short walk and the team manages to get out without further incident.,,Fallback: after the cut
+nskr_kq_glacierRunBackWalk,nskr_kqGlacierRunBack,$nskr_kq_glacierPath == walk,"AddTextSmall ""You have around 0 minutes left."" gray
+SetTextHighlights ""0""
+$nskr_kq_glacierLate = true 0","Taking the long way back takes a considerable amount of time, but the team manages to get out without further incident.",,
+nskr_kq_glacierRunBackBlast,nskr_kqGlacierRunBack,$nskr_kq_glacierPath == blast,"AddTextSmall ""You have around 0 minutes left."" gray
+SetTextHighlights ""0""
+$nskr_kq_glacierLate = true 0","On their way back they make a worrying discovery. A part of blown up section has caved in, a considerable amount of time is wasted as the crew tries to clear a path big enough to squeeze through.",,
+,,,,,,
+nskr_kq_glacierDefuseSel,DialogOptionSelected,$option == nskr_kq_glacierDefuse,"AddText ""It takes excruciatingly long for any part of the system to respond to orders, but eventually it seems like you might be back in control.""
+FireBest nskr_kqGlacierDefuseTime
+$nskr_kq_glacierShutdown = true 0
+ShowPic nskr_glacier","You watch as both the bridge crew and the team on site scramble to get control of the system. As they try to coerce it to shutdown, it becomes obvious that large parts of it are corrupted or otherwise non-functional.",nskr_kq_glacierDefused:Continue,
+nskr_kq_glacierDefuseTime,nskr_kqGlacierDefuseTime,,"AddTextSmall ""You have around 0 minutes left."" gray
+SetTextHighlights ""0""
+$nskr_kq_glacierLate = true 0",,,Fallback: after the walk or the cut
+nskr_kq_glacierDefuseTimeBlast,nskr_kqGlacierDefuseTime,$nskr_kq_glacierPath == blast,"AddTextSmall ""You have around 15 minutes left."" gray
+SetTextHighlights ""15""",,,
+nskr_kq_glacierDefusedSel,DialogOptionSelected,$option == nskr_kq_glacierDefused,"AddText ""With the systems shut down the team is free to grab the disk and make their way back to the shuttle.""
+AddText ""On their way back the team discovers that a part of blown up section has caved in, good thing your not in a hurry though. They manage to dig and reinforce a new path through rubble without much effort, and are shortly on their way back.""
+ShowPic nskr_glacier","After some frantic back and forth the team finally finds a way to lower the emergency defense level of the facility, de-escalating the situation. After a short breather the operation is back in progress.",nskr_kq_glacierReturn:Continue,"Only the blast path shuts the defenses down in time, so the cave-in line always follows"
+nskr_kq_glacierDefusedLateSel,DialogOptionSelected,"$option == nskr_kq_glacierDefused
+$nskr_kq_glacierLate","FireBest nskr_kqGlacierRedAlert
+AddText ""Seems like you are barely late, as the team finally finds a way to lower the emergency defense level of the facility. A barrage from the anti-ship batteries has already fired off, some ships in your fleet suffer some damage as a result.""
+PlaySound nskr_ui_hit
+nskr_quest kq do damageFleet
+AddText ""Despite the incident the system seems to be shut down, and the team is free to grab the disk and make their way back to the shuttle without further incident.""
+ShowPic nskr_glacier",,nskr_kq_glacierReturn:Continue,
+,,,,,,
+nskr_kq_glacierReturnSel,DialogOptionSelected,$option == nskr_kq_glacierReturn,"FireBest nskr_kqGlacierShuttle
+FireBest nskr_kqGlacierEscape true
+nskr_quest kq do recoverGlacierDisk
+AddTextSmall ""Acquired Data Disk #5"" gray
+SetTextHighlights ""Data Disk #5""
+ShowPic nskr_glacier",,defaultLeave:Continue,
+nskr_kq_glacierShuttle,nskr_kqGlacierShuttle,,,"The team rushes into the shuttle, a blizzard of snow gets kicked up as the thruster go into maximum power. In a short moment the shuttle is on it's way back to the fleet.",,Fallback: the team ran with the disk
+nskr_kq_glacierShuttleLoaded,nskr_kqGlacierShuttle,$nskr_kq_glacierShutdown,,"The team loads everything into the shuttle, a blizzard of snow gets kicked up as the thruster go into maximum power. In a short moment the shuttle is on it's way back to the fleet.",,
+nskr_kq_glacierEscape,nskr_kqGlacierEscape,,,,,Fallback: the late shutdown took its damage at the console
+nskr_kq_glacierEscapeClean,nskr_kqGlacierEscape,!$nskr_kq_glacierLate,PlaySound ui_rep_raise,"The operations chief comes to congratulate for a job well done. ""I knew I could trust you, that was about to get hairy captain, can't believe we made it out with out a scratch.""","nskr_kq_glacierBest:""I know, I'm the best.""","Fired with true, so Continue stays first"
+nskr_kq_glacierEscapeBarrage,nskr_kqGlacierEscape,"$nskr_kq_glacierLate
+!$nskr_kq_glacierShutdown","FireBest nskr_kqGlacierRedAlert
+AddText ""Your fleet manages to pull out of range as the shuttle arrives just in time, but some ships in your fleet suffer some damage as a result.""
+PlaySound nskr_ui_hit
+nskr_quest kq do damageFleet",,,
+nskr_kq_glacierBestSel,DialogOptionSelected,$option == nskr_kq_glacierBest,DismissDialog,,,
+,,,,,,
+nskr_kq_glacierRedAlert,nskr_kqGlacierRedAlert,,,"Suddenly the bridge goes into red alert, sirens blaring as it becomes obvious the anti-ship batteries have come online.",,Shared by the two late outcomes
+nskr_kq_glacierHit,nskr_kqGlacierHit,,"AddTextSmall ""$nskr_kq_glacierHitShip $nskr_kq_glacierHitHull-class was damaged in the barrage."" gray
+SetTextHighlightColors bad
+SetTextHighlights ""$nskr_kq_glacierHitHull""",,,Fired by the damageFleet action once per damaged ship

@@ -10,9 +10,10 @@ Java paths are relative to `jars/src/lostsector/campaign/`; `dialogue/rules/` an
 |---|---|
 | `# KESTEVEN QUESTLINE` rows in `data/campaign/rules.csv`, `kesteven/quest/KestevenHubModule` | Every conversation with Jack, Alice and Nicholas: offers, briefings, hand-ins, rewards, questions, the job 3 refusal, the story skip and most player-driven stage changes; the job gates and payouts ([dialogue map](KESTEVEN_DIALOGUE.md#jack-alice-and-nicholas)) |
 | `kesteven/quest/QuestStageManager` | `EveryFrameScript` in `EFS_LIST`: automatic stage changes, failure checks, intel, bar events, quest fleets and their AI, the Cache guardian timer, Eliza relocation, post-quest revenge fleets |
-| `kesteven/quest/KestevenQuest`, `KestevenStage`, `KestevenFlag`, `KestevenState` | Framework definition of quest `kq`, with the modules `KestevenHubModule`, `KestevenJob1Module` and `KestevenJob3Module`; the stage enum, the flags and the saved state ([KESTEVEN_STATE.md](KESTEVEN_STATE.md)) |
+| `kesteven/quest/KestevenQuest`, `KestevenStage`, `KestevenFlag`, `KestevenState` | Framework definition of quest `kq`, with the modules `KestevenHubModule`, `KestevenJob1Module`, `KestevenJob3Module` and `KestevenGlacierModule`; the stage enum, the flags and the saved state ([KESTEVEN_STATE.md](KESTEVEN_STATE.md)) |
 | `kesteven/quest/KestevenJob1Module`, `# KESTEVEN QUESTLINE: JOB 1` rows in `data/campaign/rules.csv` | Job 1 world logic: the intel entry and its text rows, the tip system's dormant fleet, the move to stage 2 ([Job 1](#job-1-enemy-unknown-stages-0-to-6)) |
 | `kesteven/quest/KestevenJob3Module`, `# KESTEVEN QUESTLINE: JOB 3` rows | Job 3 world logic: the expedition and its outcome, the intel entry and its text rows, and the objects placed when the job is accepted ([Job 3](#job-3-hostile-takeover-stages-6-to-11)) |
+| `kesteven/quest/KestevenGlacierModule`, `# KESTEVEN QUESTLINE: GLACIER` rows | The Glacier comms facility: its map marker and dialog claim, the timed raid, the barrage's fleet damage and disk #5 ([Glacier](#glacier-disk-5)) |
 | `kesteven/quest/QuestHelper` | Wrappers over `KestevenState` for the old callers: the stage as a legacy int, flags, fields and lazily picked target locations; `saveEnding()` |
 | `kesteven/quest/KestevenFleets` | Builders for every quest fleet |
 | `CorePlugin` | Opens the Java quest dialogs when the player interacts with a quest entity, deciding through `KestevenQuest` queries |
@@ -196,7 +197,7 @@ When stage 16 is first seen, `QuestStageManager` adds `TheDelveIntel` and the th
 | #1 and #2 | Eliza: given if the player agrees to help her, or taken by raiding her market |
 | #3 | Satellite at the job 3 target system (`DataSatelliteDialog`) |
 | #4 | Satellite at the job 4 enemy target system (`DataSatelliteDialog`) |
-| #5 | Comms facility on Glacier in the Frost system (`GlacierCommsDialog`) |
+| #5 | Comms facility on Glacier in the Frost system ([Glacier](#glacier-disk-5)) |
 
 The satellites exist from jobs 3 and 4 and can be salvaged at any time. Each salvage fires a hyperwave ping and wakes the nearby guard: the dormant Enigma fleet at #3, the strike group at #4. The second satellite also yields the keywords that point to the Frost system.
 
@@ -206,7 +207,23 @@ Tips unlock in this order:
 2. Alice (`JOB5_ALICE_TIP`): where the two satellites are. She marks the one not yet salvaged.
 3. Alice again (`JOB5_ALICE_TIP2`), after both tips and at least two satellites, while the disks are incomplete: a tundra planet around a red dwarf with a comms facility, within a stated distance of a named constellation. She marks Glacier.
 
-If the player has visited Frost, answering "It's the Frost." sets `FROST_FOUND`. `QuestStageManager` also sets it when the player enters Frost after tip 2. `CorePlugin` opens `GlacierCommsDialog` at Glacier from tip 2 on; the timed raid there gives disk #5.
+If the player has visited Frost, answering "It's the Frost." sets `FROST_FOUND`. `QuestStageManager` also sets it when the player enters Frost after tip 2. Tip 2 marks Glacier and claims its dialog; the timed raid there gives disk #5.
+
+### Glacier (disk #5)
+
+Alice's Frost tip row runs `nskr_quest kq do markGlacier` after setting `JOB5_ALICE_TIP2`. The action, declared by `KestevenGlacierModule` (active from `JOB5_DISKS` on, `FAILED` included), marks `nskr_glacier` and claims its dialog with the trigger `nskr_kqGlacier`, both scoped to those stages. Interacting with Glacier then opens the rules dialog of the `# KESTEVEN QUESTLINE: GLACIER` block instead of the planet's own dialog.
+
+The first screen offers "Search for the facility" and Leave; the next offers Continue and Leave. From the landing on, the only way out is to finish. The raid counts down from 90 minutes as a fixed sequence of choices:
+
+| Step | Minutes after |
+|---|---|
+| Alarm, then the impasse | 90, 75 |
+| Door: find a way around / cut through / blast | 45 / 45 / 60 |
+| Server room, then the console | 35, 30 (walk or cut); 50, 45 (blast) |
+| "Grab the disk and run": way back | 0 (walk), 15 (cut), 0 (blast, cave-in) |
+| "Try to shut down the system" | 0 (walk or cut), 15 (blast) |
+
+Reaching 0 is late. A late shutdown takes the barrage at the console; a late run takes it while the shuttle returns. The barrage damages up to four ships that are not fighters and are at least a quarter repaired: each loses 25 to 50% of its hull and 25 to 50% CR (`damageFleet`, random purpose `glacierCommsKeyRandom`), with one line per ship. Only the cut-and-run and the blast-and-shutdown paths escape undamaged; they get the ops chief's congratulations and the extra "I know, I'm the best." option. Every path ends with `recoverGlacierDisk`: `GLACIER_DISK_RECOVERED`, one more recovered disk, the marker and claim removed, and "Acquired Data Disk #5".
 
 ### Finding Eliza
 
@@ -301,11 +318,10 @@ While the `storySkipUnlocked` setting is on, the speaker menus add a 5-story-poi
 These follow from the code and rules as written. None has been checked in game.
 
 1. **"Yes (lie)" to Alice.** It follows the same path as "Yes" and records nothing; no code reads a lie to Alice.
-2. **Glacier.** The first screen of `GlacierCommsDialog` has no Leave option. `CorePlugin` opens it only when its one option, "Search for the facility", is available, and the next screen offers Leave.
-3. **Operation Lifesaver system fallbacks.** `KestevenFleets.spawnJob4Target` picks the strike group's system inside the friendly target's constellation. When no other system there has two planets, `QuestHelper.getRandomSystemWithinConstellation` retries without excluding the friendly system, so both fleets can share one system; with no candidate at all it returns null and the spawn fails. `getRandomSystemFarCore`'s fallback can return a system outside any constellation, which `OperationLifesaverIntel` does not expect. Kept as is by the maintainer.
-4. **Cache guardian report can move the stage back.** `KestevenQuest.reportCacheGuardianDefeated()` sets stage 18 whenever the questline has not ended and the stage is 16 or later, so a guardian defeat reported at stage 19 or 20 would return the questline to 18. Normal play defeats the guardian before stage 19.
-5. **Failure counts as late stages.** `glacierCommsOpen()` and `cacheIsQuestTarget()` keep the old `stage >= 16` comparison on legacy numbers, so they are also true after failure (legacy stage 99).
-6. **Frost guess with all disks.** Alice's confirmations at stage 16 test the disks, not the screen that offered the option. With all five disks, a Frost tip screen (both tips given, tip 2 not yet) offers "It's the <Frost>.", and choosing it gives the Cache coordinates and stage 17 (`nskr_kq_aliceCacheFound`).
-7. **Empty screen at stage 16.** Alice's "Continue" with all disks leads to her Cache briefing only when both tips and tip 2 are recorded. With all disks and her tip given but Jack's missing, the briefing option shows only Back (`nskr_kq_hubBrief`).
-8. **Highlight without its phrase.** Jack's job 5 briefing highlights "Go to the bar", which its text does not contain, so nothing is highlighted.
-9. **Repeated sensor message.** Every Enigma win that counts for the sensor task at stage 1 sends the `sensorData` update again, also after the package was delivered (`KestevenJob1Module.onEncounterLoot`, as the old `QuestStageManager` check did).
+2. **Operation Lifesaver system fallbacks.** `KestevenFleets.spawnJob4Target` picks the strike group's system inside the friendly target's constellation. When no other system there has two planets, `QuestHelper.getRandomSystemWithinConstellation` retries without excluding the friendly system, so both fleets can share one system; with no candidate at all it returns null and the spawn fails. `getRandomSystemFarCore`'s fallback can return a system outside any constellation, which `OperationLifesaverIntel` does not expect. Kept as is by the maintainer.
+3. **Cache guardian report can move the stage back.** `KestevenQuest.reportCacheGuardianDefeated()` sets stage 18 whenever the questline has not ended and the stage is 16 or later, so a guardian defeat reported at stage 19 or 20 would return the questline to 18. Normal play defeats the guardian before stage 19.
+4. **Failure counts as late stages.** The Glacier claim keeps the old route's `stage >= 16` on legacy numbers, so its scope includes `FAILED`, and `cacheIsQuestTarget()` keeps the comparison itself; both hold after failure (legacy stage 99).
+5. **Frost guess with all disks.** Alice's confirmations at stage 16 test the disks, not the screen that offered the option. With all five disks, a Frost tip screen (both tips given, tip 2 not yet) offers "It's the <Frost>.", and choosing it gives the Cache coordinates and stage 17 (`nskr_kq_aliceCacheFound`).
+6. **Empty screen at stage 16.** Alice's "Continue" with all disks leads to her Cache briefing only when both tips and tip 2 are recorded. With all disks and her tip given but Jack's missing, the briefing option shows only Back (`nskr_kq_hubBrief`).
+7. **Highlight without its phrase.** Jack's job 5 briefing highlights "Go to the bar", which its text does not contain, so nothing is highlighted.
+8. **Repeated sensor message.** Every Enigma win that counts for the sensor task at stage 1 sends the `sensorData` update again, also after the package was delivered (`KestevenJob1Module.onEncounterLoot`, as the old `QuestStageManager` check did).

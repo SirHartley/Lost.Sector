@@ -1133,7 +1133,7 @@ Migration map for the Kesteven questline and the other systems. The owning task 
 | `QuestHelper` questline getters and setters | `KestevenState` fields and `KestevenQuest` queries |
 | `campaign/kesteven/quest/KestevenFleets` builders | Builders in the Kesteven quest package returning `SimpleFleet` |
 | `campaign/kesteven/quest/KestevenPeople` | Fixed people stay in world generation; generated people move to `ctx.people()` |
-| Java dialog classes (`ElizaDialog`, `CacheCoreDialog`, `HintWreckDialog`, endings and the other questline commands) | Rows, checks, actions and claims (`nskr_kestevenQuest` done in T16 and T17: `KestevenHubModule` and the `# KESTEVEN QUESTLINE` rows) |
+| Java dialog classes (`ElizaDialog`, `CacheCoreDialog`, `HintWreckDialog`, endings and the other questline commands) | Rows, checks, actions and claims (`nskr_kestevenQuest` done in T16 and T17: `KestevenHubModule` and the `# KESTEVEN QUESTLINE` rows; `GlacierCommsDialog` and its `CorePlugin` route in T26: `KestevenGlacierModule`, a claim and the `# KESTEVEN QUESTLINE: GLACIER` rows) |
 | `HostileTakeoverBarEvent`, `ElizaSearch*BarEvent`, `DelveMeetingBarEvent` | `AddBarEvents` rows and quest people (`HostileTakeoverBarEvent` done in T20 and T21: `KestevenPartyModule` and the `# KESTEVEN QUESTLINE: JOB 3 PARTY` rows) |
 | `EnemyUnknownIntel`, `HostileTakeoverIntel`, `OperationLifesaverIntel`, `TheDelveIntel`, `CacheIntel` | `QuestIntel` with intel rows (`EnemyUnknownIntel` done in T18: key `job1` of `KestevenJob1Module`; `HostileTakeoverIntel` in T19: key `job3` of `KestevenJob3Module`) |
 | `nskr_isKStage` and other stage predicates | `nskr_quest kq is` and `reached` |
