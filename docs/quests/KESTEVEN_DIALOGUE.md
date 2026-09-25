@@ -4,12 +4,11 @@ Where each questline conversation is implemented, how it is entered and how cont
 
 Java paths are relative to `jars/src/lostsector/campaign/`; `dialogue/rules/` and `combat/` paths are relative to `jars/src/lostsector/`.
 
-## Three implementation styles
+## Implementation styles
 
 | Style | Used by | How it runs |
 |---|---|---|
-| Rules rows with a multi-verb command | Both alternative endings | Rows select the conversation and call a verb. The verb writes most text and options from Java strings. Several commands extend `PaginatedOptions` and take over the dialog plugin (`setupDelegateDialog`). Every non-paging option then returns to rules through `FireBest DialogOptionSelected`. |
-| Rules rows only | Every conversation with Jack, Alice and Nicholas (gates, values and game actions from `KestevenHubModule`); the job 3 party, a rules bar event (guests, drink count and bill from `KestevenPartyModule`); the Glacier facility (`KestevenGlacierModule`); the Eliza search at pirate bars (`KestevenElizaSearchModule`); the data-disk satellites (`KestevenSatelliteModule`); the Delve meeting at the bar (`KestevenJob5Module`); the meeting at Eliza's port (`KestevenElizaModule`); Eliza's fleets (`KestevenElizaFleetsModule`); job 4: the Special Operations fleet, the Enigma strike group and the hint wreck (checks, actions and tokens from `KestevenJob4Module`, [below](#job-4-rows)); the Tri-Tachyon collector ([below](#tri-tachyon-collector-rows)); fleet greetings and threats: Jack's revenge fleet, the Cache guardian, the "LZ" messenger, generic Enigma comms | Text, options and scripts live in `data/campaign/rules.csv`. |
+| Rules rows only | Every conversation with Jack, Alice and Nicholas (gates, values and game actions from `KestevenHubModule`); the job 3 party, a rules bar event (guests, drink count and bill from `KestevenPartyModule`); the Glacier facility (`KestevenGlacierModule`); the Eliza search at pirate bars (`KestevenElizaSearchModule`); the data-disk satellites (`KestevenSatelliteModule`); the Luddic and Tri-Tachyon endings (`KestevenAltEndingsModule`); the Delve meeting at the bar (`KestevenJob5Module`); the meeting at Eliza's port (`KestevenElizaModule`); Eliza's fleets (`KestevenElizaFleetsModule`); job 4: the Special Operations fleet, the Enigma strike group and the hint wreck (checks, actions and tokens from `KestevenJob4Module`, [below](#job-4-rows)); the Tri-Tachyon collector ([below](#tri-tachyon-collector-rows)); fleet greetings and threats: Jack's revenge fleet, the Cache guardian, the "LZ" messenger, generic Enigma comms | Text, options and scripts live in `data/campaign/rules.csv`. |
 | Java `InteractionDialogPlugin` or `BaseBarEvent` | Cache hint, Cache core, both final ending dialogs | `CorePlugin.pickInteractionDialogPlugin` or `PortsideBarData` opens the class. All text, options and state changes are in the Java class, using a nested `OptionId` enum. |
 
 ## Jack, Alice and Nicholas
@@ -322,17 +321,28 @@ The demand's `ttCollectorCanPayAll` never passes, because the demand is everythi
 
 ## Alternative endings
 
-Admin officials at Luddic Church, Luddic Path and Tri-Tachyon markets get "Talk about the Unlimited Production Chip you have" at stage 19 (`nskr_altEndingOptionLuddic`, `nskr_altEndingOptionTT`).
+The Luddic and Tri-Tachyon endings are the `# KESTEVEN QUESTLINE: ALTERNATIVE ENDINGS` block of `data/campaign/rules.csv`; `kesteven/quest/KestevenAltEndingsModule` declares their checks, actions and tokens. Behavior is in [Stage 19](KESTEVEN_QUESTLINE.md#stage-19-who-receives-the-chip).
 
-| Row | Verb |
-|---|---|
-| `nskr_altEndingPickLuddic`, `nskr_altEndingPickTT` | `addOptions` |
-| `nskr_altEndingLuddicDoubt` | `setSecond`, then `addOptions` |
-| `nskr_altEndingTTIncrease` | `setPriceIncrease`, `setSecond`, `addOptions` |
-| `nskr_altEndingLuddicAgree`, `nskr_altEndingTTAgree` | `luddicAgree`, `tachAgree` |
-| `nskr_altEndingExit` | "Do come back if you change your mind." and `FireAll PopulateOptions` |
+| Screen | Structure | Rows |
+|---|---|---|
+| Entry option | `PopulateOptions` rows, "Talk about the Unlimited Production Chip you have" | `nskr_kq_altEndingLuddicOption` and `nskr_kq_altEndingTtOption` while the ending's second-talk flag is unset; `…OptionLocked` after it, only for the official with `$nskr_kq_altEndingLocked`. All need `nskr_isBaseOfficial admin`, `is CHIP_RECOVERED`, the market check `altEndingLuddicMarket` or `altEndingTtMarket`, and neither `CHIP_HANDED_TO_ELIZA` nor `ALT_ENDING_DONE` |
+| First talk | `DialogOptionSelected` pick | `nskr_kq_altEndingLuddicPickSel`, `nskr_kq_altEndingTtPickSel`; the locked official gets `…PickLocked` (one more condition line). The Tri-Tachyon options come from `nskr_kq_altEndingTtOfferOptions` on `nskr_kqAltEndingTtOfferOptions`, fired with `FireBest`, because the counter-offer label shows a quest token |
+| Second talk | Plain chain | `nskr_kq_altEndingLuddicDoubtSel` ("So I would get nothing?") and `nskr_kq_altEndingTtIncreaseSel` (the counter-offer, action `altEndingRaisePrice`) set `LUDDIC_ENDING_SECOND_TALK` or `TT_ENDING_SECOND_TALK` and lock the official (`$nskr_kq_altEndingLocked`, no expiry) |
+| Agreement | Plain chain | `nskr_kq_altEndingLuddicAgreeSel`: "the Unlimited Production Chip is destroyed", `AddStoryPoints 8`, `AdjustRep $faction.id 15`, `AdjustRepActivePerson COOPERATIVE 10`, `AddPotentialContact`, `ui_rep_raise`, action `altEndingFallout`. `nskr_kq_altEndingTtAgreeSel`: "Lost the Unlimited Production Chip", action `altEndingPay`, `AdjustRep tritachyon 15`, the same person, contact and sound lines, `altEndingFallout`, `altEndingPlaceChip` |
+| Exits | `DialogOptionSelected` | `nskr_kq_altEndingExitSel` ("Do come back if you change your mind.") and `nskr_kq_altEndingExitAgreeSel`, both `FireAll PopulateOptions` |
 
-The official who reaches the second conversation is locked to it through `$nskr_altEndingDialogLockedToPerson`.
+The vanilla receipts of `AddStoryPoints`, `AdjustRep`, `AdjustRepActivePerson`, `QuestRewards.credits` and `QuestRewards.relationship` replace the old hand-written receipt lines. The speaker's pronouns are vanilla's `$HeOrShe` and `$hisOrHer`; the Tri-Tachyon official's greeting uses the hub token `playerFullName`.
+
+`KestevenAltEndingsModule` (active at `CHIP_RECOVERED` and `COMPLETED`) declarations:
+
+| Kind | Name | Meaning |
+|---|---|---|
+| check | `altEndingLuddicMarket`, `altEndingTtMarket` | The dialog target's market belongs to the Luddic Path or Luddic Church, or to Tri-Tachyon |
+| action | `altEndingRaisePrice` | `ttPayout` = 2,500,000 |
+| action | `altEndingPay` | Raises `ttPayout` to at least 2,000,000 and pays it through `QuestRewards.credits` |
+| action | `altEndingFallout` | Unmarks `asteriaOrOutpost` and Eliza's market, Alice and Jack -50 (at worst hostile) with their contacts suspended, Eliza -50, Kesteven set to a random -0.55 to -0.65 when that is lower (purpose `endingAltDialogKeyRandom`, receipt through `QuestRewards.relationship`), `ALT_ENDING_DONE`, stage `COMPLETED`, `QuestHelper.saveEnding()` |
+| action | `altEndingPlaceChip` | `nskr_upChip` on Culann while Hybrasil exists and Tri-Tachyon holds Culann, otherwise on the dialog target's market |
+| token | `altEndingTtOffer`, `altEndingTtRaised` | 2,000,000 and 2,500,000 with `Misc.getDGSCredits` |
 
 ## Job 3 party
 

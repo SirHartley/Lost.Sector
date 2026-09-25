@@ -6,7 +6,7 @@ Java paths are relative to `jars/src/lostsector/campaign/`; `dialogue/rules/`, `
 
 ## Storage
 
-The questline is quest `kq` of the quest framework. `kesteven/quest/KestevenQuest` is its definition, registered in `quest/QuestCatalog`. `KestevenHubModule` declares the checks, actions and tokens of the rows for every conversation with Jack, Alice and Nicholas ([dialogue map](KESTEVEN_DIALOGUE.md#jack-alice-and-nicholas)); `KestevenJob1Module` runs job 1's intel, dormant fleet and move to `JOB1_DONE` ([Job 1](KESTEVEN_QUESTLINE.md#job-1-enemy-unknown-stages-0-to-6)); `KestevenJob3Module` runs job 3's intel and the objects placed at acceptance ([Job 3](KESTEVEN_QUESTLINE.md#job-3-hostile-takeover-stages-6-to-11)); `KestevenJob4Module` runs job 4's wait, intel, fleets, hint wreck, completion and failure ([Job 4](KESTEVEN_QUESTLINE.md#job-4-operation-lifesaver-stages-11-to-14)); `KestevenPartyModule` runs the job 3 party's guests, drink count and hangover bill ([The party](KESTEVEN_QUESTLINE.md#the-party)); `KestevenJob5Module` runs the Delve meeting's checks, its guard and the job 5 intel ([Job 5](KESTEVEN_QUESTLINE.md#briefing-and-meeting)); `KestevenGlacierModule` runs the Glacier facility ([Glacier](KESTEVEN_QUESTLINE.md#glacier-disk-5)). `KestevenElizaSearchModule` runs the search for Eliza at pirate bars ([Finding Eliza](KESTEVEN_QUESTLINE.md#finding-eliza)); `KestevenElizaModule` serves the rows of the meeting at Eliza's port and moves her when her market is decivilized ([Eliza's port](KESTEVEN_QUESTLINE.md#elizas-port)). `KestevenCollector` configures the Tri-Tachyon collector's `InterceptEncounter` and `PayOffEncounter` ([Tri-Tachyon collector](KESTEVEN_QUESTLINE.md#tri-tachyon-collector)). `KestevenSatelliteModule` runs the data-disk satellites, `ALL_DISKS_RECOVERED` and the Frost sighting ([The five data disks](KESTEVEN_QUESTLINE.md#the-five-data-disks)). `QuestStageManager` and the Java dialogs, bar events, intel and rules commands still run the rest of the questline, reading and writing one saved `kesteven/quest/KestevenState`. `KestevenQuest.isAvailable()` keeps the default `true`, because the old code runs the questline in every campaign and handles a missing Kesteven home as failure.
+The questline is quest `kq` of the quest framework. `kesteven/quest/KestevenQuest` is its definition, registered in `quest/QuestCatalog`. `KestevenHubModule` declares the checks, actions and tokens of the rows for every conversation with Jack, Alice and Nicholas ([dialogue map](KESTEVEN_DIALOGUE.md#jack-alice-and-nicholas)); `KestevenJob1Module` runs job 1's intel, dormant fleet and move to `JOB1_DONE` ([Job 1](KESTEVEN_QUESTLINE.md#job-1-enemy-unknown-stages-0-to-6)); `KestevenJob3Module` runs job 3's intel and the objects placed at acceptance ([Job 3](KESTEVEN_QUESTLINE.md#job-3-hostile-takeover-stages-6-to-11)); `KestevenJob4Module` runs job 4's wait, intel, fleets, hint wreck, completion and failure ([Job 4](KESTEVEN_QUESTLINE.md#job-4-operation-lifesaver-stages-11-to-14)); `KestevenPartyModule` runs the job 3 party's guests, drink count and hangover bill ([The party](KESTEVEN_QUESTLINE.md#the-party)); `KestevenJob5Module` runs the Delve meeting's checks, its guard and the job 5 intel ([Job 5](KESTEVEN_QUESTLINE.md#briefing-and-meeting)); `KestevenGlacierModule` runs the Glacier facility ([Glacier](KESTEVEN_QUESTLINE.md#glacier-disk-5)). `KestevenElizaSearchModule` runs the search for Eliza at pirate bars ([Finding Eliza](KESTEVEN_QUESTLINE.md#finding-eliza)); `KestevenElizaModule` serves the rows of the meeting at Eliza's port and moves her when her market is decivilized ([Eliza's port](KESTEVEN_QUESTLINE.md#elizas-port)). `KestevenCollector` configures the Tri-Tachyon collector's `InterceptEncounter` and `PayOffEncounter` ([Tri-Tachyon collector](KESTEVEN_QUESTLINE.md#tri-tachyon-collector)). `KestevenSatelliteModule` runs the data-disk satellites, `ALL_DISKS_RECOVERED` and the Frost sighting ([The five data disks](KESTEVEN_QUESTLINE.md#the-five-data-disks)). `KestevenAltEndingsModule` runs the Luddic and Tri-Tachyon endings ([Stage 19](KESTEVEN_QUESTLINE.md#stage-19-who-receives-the-chip)). `QuestStageManager` and the Java dialogs, bar events, intel and rules commands still run the rest of the questline, reading and writing one saved `kesteven/quest/KestevenState`. `KestevenQuest.isAvailable()` keeps the default `true`, because the old code runs the questline in every campaign and handles a missing Kesteven home as failure.
 
 | Mechanism | Location | Notes |
 |---|---|---|
@@ -33,14 +33,14 @@ The quest manager creates the state on the first unpaused frame of a new campaig
 
 ### Access from the old code
 
-The questline's own old classes use these accessors until later tasks replace them with modules. These are the quest package and the questline dialog commands `nskr_altEndingDialogLuddic` and `nskr_altEndingDialogTT`; other features use the [queries](#queries-for-other-features). Each is a thin wrapper over the state; the quest package's own classes also read and write fields directly where they already hold the state.
+The questline's own old classes use these accessors until later tasks replace them with modules. These are the quest package's classes; other features use the [queries](#queries-for-other-features). Each is a thin wrapper over the state; the quest package's own classes also read and write fields directly where they already hold the state.
 
 | Accessor | Reads or writes |
 |---|---|
 | `QuestHelper.getStage()`, `setStage(int)` | The stage, as the legacy int; `setStage` calls `QuestContext.advance` and skips a write of the current stage |
 | `QuestHelper.getCompleted(KestevenFlag)`, `setCompleted(boolean, KestevenFlag)`, `getFailed`, `setFailed` | A flag; the failed pair is identical |
 | `QuestHelper.getEndMissions()`, `setEndMissions(boolean)` | `ENDED` |
-| `QuestHelper.getDisksRecovered`, `getNicholasDialogStage`, `getTtPayout` and their setters | The field of the same meaning; `setDisksRecovered` then runs `KestevenSatelliteModule.checkAllDisks` |
+| `QuestHelper.getDisksRecovered`, `getNicholasDialogStage` and their setters | The field of the same meaning; `setDisksRecovered` then runs `KestevenSatelliteModule.checkAllDisks` |
 | `QuestHelper.getJob1Tip`, `getJob3Start`, `getJob3Target`, `getJob4FriendlyTarget`, `getJob5FrostTip` | The target field; the first read after it is null picks and stores it |
 | `QuestHelper.getJob4EnemyTarget`, `getElizaLoc/setElizaLoc`, `getCacheFleetLoc/setCacheFleetLoc` | The target field; the setters without an argument pick a new value |
 | `KestevenElizaSearchModule.searchStage()`, `usedMarkets()`, `contactMarket()` (read only; `QuestHelper.pickElizaMarket`) | `elizaSearchStage`, `elizaSearchUsedMarkets`, `elizaContactMarket` |
@@ -147,8 +147,8 @@ The actual path can skip stages: 8 to 10 without 9, 7 to 11 when job 3 is refuse
 | `JOB5_FAILED` | Eliza killed after the handover | `KestevenElizaFleetsModule` |
 | `KESTEVEN_ENDING_DONE` | Kesteven ending done | `EndingKestevenDialog` |
 | `ELIZA_ENDING_DONE` | Eliza ending done | `EndingElizaDialog` |
-| `ALT_ENDING_DONE` | Luddic or Tri-Tachyon ending done (shared) | `nskr_altEndingDialogLuddic.makeMad` |
-| `LUDDIC_ENDING_SECOND_TALK`, `TT_ENDING_SECOND_TALK` | Second conversation reached | Alternative endings |
+| `ALT_ENDING_DONE` | Luddic or Tri-Tachyon ending done (shared) | `KestevenAltEndingsModule` action `altEndingFallout` |
+| `LUDDIC_ENDING_SECOND_TALK`, `TT_ENDING_SECOND_TALK` | Second conversation reached | Rules `nskr_kq_altEndingLuddicDoubtSel`, `nskr_kq_altEndingTtIncreaseSel` |
 | `COMMISSION_RESTORE_PENDING` | Commission fix pending | `EndingElizaDialog` |
 | `JACK_GONE` | Jack left for revenge | `QuestStageManager.vengeanceJack` |
 | `ELIZA_BETRAYED` | Player took Eliza's market after her ending | `KestevenElizaFleetsModule.onDay` |
@@ -179,7 +179,7 @@ Other features read flags through the [queries](#queries-for-other-features). `n
 | `elizaSearchUsedMarkets` | `List<String>` | Market ids whose bar the Eliza search already used | `KestevenElizaSearchModule` actions |
 | `glacierHit` | `FleetMemberAPI` | The ship whose barrage line is being printed, read by the tokens `glacierHitShip` and `glacierHitHull`; null outside the action | `KestevenGlacierModule` action `damageFleet` |
 | `intercepts`, `payOffs` | `Map<String, InterceptEncounter.Record>`, `Map<String, PayOffEncounter.Record>` | The Tri-Tachyon collector's spawn count and payments, record `ttCollector` (`KestevenState` implements both modules' `Host`) | `KestevenCollector`'s shared modules |
-| `ttPayout` | `float` | Tri-Tachyon price, at least 2,000,000 | `nskr_altEndingDialogTT` |
+| `ttPayout` | `float` | Tri-Tachyon price, at least 2,000,000 | `KestevenAltEndingsModule` actions `altEndingRaisePrice` and `altEndingPay` |
 | `commissionRepPirates`, `commissionRepKesteven`, `commissionRepHegemony` | `float` | Relationship values the commission fix re-applies | `EndingElizaDialog` |
 | `dayCounter`, `fleetCounter` | `float` | Daily logic timer (10 s) and fleet timer (1 s), in frame seconds | `QuestStageManager` |
 | `cacheSeconds` | `float` | Frame seconds spent in Unknown Site before the guardian | `QuestStageManager` |
@@ -205,7 +205,7 @@ Each purpose is a constant on `KestevenState`, named after the persistent-data k
 | `RANDOM_CACHE_CORE` | `coreDialogKeyRandom` | `CacheCoreDialog.getRandom()` |
 | `RANDOM_KESTEVEN_ENDING` | `kestevenEndingDialogKeyRandom` | `EndingKestevenDialog.getRandom()` |
 | `RANDOM_ELIZA_ENDING` | `elizaEndingDialogKeyRandom` | `EndingElizaDialog.getRandom()` |
-| `RANDOM_ALT_ENDING` | `endingAltDialogKeyRandom` | `nskr_altEndingDialogLuddic.getRandom()` and `nskr_altEndingDialogTT.getRandom()`, one shared sequence |
+| `RANDOM_ALT_ENDING` | `endingAltDialogKeyRandom` | `KestevenAltEndingsModule` action `altEndingFallout`, for both alternative endings |
 
 `KestevenPartyModule` uses `ctx.random` directly: `partyHangover` for the hangover bill, and the framework's `person:<key>` purposes for its guests.
 
@@ -233,7 +233,7 @@ The Kesteven bar tip is not questline content; it is quest `hint` ([Exploration 
 | `$EnigmaDormantFleet` (`DormantSpawner.DORMANT_KEY`) | Dormant fleets at quest locations | `DormantSpawner.addDormant` | Action `wakeSatelliteGuard`, which keeps the flag on the fleets it wakes; rules `dormantDialog` |
 | `$nskr_kq_satelliteGuard` | A dormant fleet woken at satellite #3: role flag of quest `kq` | `QuestFleets.adopt`, from action `wakeSatelliteGuard` | Nothing reads it |
 | `$nskr_kq_job1Dormant` | The job 1 tip system's dormant fleet: role flag of quest `kq` | `QuestFleets.adopt`, from `QuestHelper.getJob1Tip()` | Nothing reads it yet |
-| `$nskr_altEndingDialogLockedToPerson` | The official in either alternative ending | Alternative endings | Alternative endings |
+| `$nskr_kq_altEndingLocked` | The official who had the second talk of either alternative ending; no expiry | Rules `nskr_kq_altEndingLuddicDoubtSel`, `nskr_kq_altEndingTtIncreaseSel` | Alternative ending entry and greeting rows |
 | `$nskr_ic_messenger`, `$nskr_ic_messengerLeaving` | Messenger fleet role flags of quest `ic` | `QuestFleets` | Rules `# INTERCEPTS` |
 | `$missionImportant` with reason `nskr_kq` | Satellite #3, satellite #4, Glacier; the Eliza contact market (`KestevenElizaSearchModule`, scope `JOB5_DISKS`) | Hub actions `markJob3Satellite`, `markJob4Satellite`; `KestevenGlacierModule` action `markGlacier` (`ctx.mark`, scope `JOB5_DISKS` on) | Map markers; `salvageSatellite` and `recoverGlacierDisk` call `ctx.unmark` |
 | `$missionImportant` with reason `nskr_kq` | The Cache command core `nskr_cache_core`, when it exists | `KestevenJob5Module` action `markCacheCore`, from the Delve meeting's "I think I already found that place." (`ctx.mark`, scope `JOB5_MEETING` on) | Map marker; `CacheCoreDialog` unsets the key on salvage |
@@ -262,4 +262,5 @@ The Kesteven bar tip is not questline content; it is quest `hint` ([Exploration 
 | Row `nskr_kq_delveLeave` (Delve meeting), `nskr_quest kq advance` | 15→16 |
 | `Cache.CacheGuardInteractionConfig`, through `KestevenQuest.reportCacheGuardianDefeated()` | 16 or 17→18 |
 | `CacheCoreDialog` | →19 |
-| `EndingKestevenDialog`, `EndingElizaDialog`, `nskr_altEndingDialogLuddic.makeMad` | 19→20 |
+| `EndingKestevenDialog`, `EndingElizaDialog` | 19→20 |
+| `KestevenAltEndingsModule` action `altEndingFallout` (`ctx.advance`) | 19→20 |

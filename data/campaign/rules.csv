@@ -905,26 +905,6 @@ jackRevengeanceDialogEnd,DialogOptionSelected,"$option == jackRevengeanceDialogE
 ShowDefaultVisual","the $faction $fleetName powers up their weapons and moves in to engage.",,
 "#END JACK revengeance dialog",,,,,,
 ,,,,,,
-# ALT ENDING Dialog,,,,,,
-nskr_altEndingOptionLuddic,PopulateOptions,"nskr_isBaseOfficial admin
-nskr_altEndingDialogLuddic hasOption
-nskr_isKStage 19",,,"nskr_altEndingPickLuddic:Talk about the Unlimited Production Chip you have",
-nskr_altEndingPickLuddic,DialogOptionSelected,"$option == nskr_altEndingPickLuddic","nskr_altEndingDialogLuddic addOptions",,,
-nskr_altEndingOptionTT,PopulateOptions,"nskr_isBaseOfficial admin
-nskr_altEndingDialogTT hasOption
-nskr_isKStage 19",,,"nskr_altEndingPickTT:Talk about the Unlimited Production Chip you have",
-nskr_altEndingPickTT,DialogOptionSelected,"$option == nskr_altEndingPickTT","nskr_altEndingDialogTT addOptions",,,
-nskr_altEndingLuddicAgree,DialogOptionSelected,"$option == nskr_altEndingLuddicAgree","nskr_altEndingDialogLuddic luddicAgree",,,
-nskr_altEndingLuddicDoubt,DialogOptionSelected,"$option == nskr_altEndingLuddicDoubt","nskr_altEndingDialogLuddic setSecond
-nskr_altEndingDialogLuddic addOptions",,,
-nskr_altEndingTTAgree,DialogOptionSelected,"$option == nskr_altEndingTTAgree","nskr_altEndingDialogTT tachAgree",,,
-nskr_altEndingTTIncrease,DialogOptionSelected,"$option == nskr_altEndingTTIncrease","nskr_altEndingDialogTT setPriceIncrease
-nskr_altEndingDialogTT setSecond
-nskr_altEndingDialogTT addOptions
-",,,
-nskr_altEndingExit,DialogOptionSelected,"$option == nskr_altEndingExit","FireAll PopulateOptions","""Do come back if you change your mind.""",,
-nskr_altEndingExitAgree,DialogOptionSelected,"$option == nskr_altEndingExitAgree","FireAll PopulateOptions",,,
-"#END ALT ENDING Dialog",,,,,,
 "#END KESTEVEN QUEST",,,,,,
 ,,,,,,
 # BOUNTIES,,,,,,
@@ -2884,3 +2864,88 @@ nskr_kq_elizaRevengeDie,DialogOptionSelected,$option == nskr_kq_elizaRevengeDie,
 The comm link is cut before you have a chance to respond.",nskr_kq_elizaRevengeEnd:Cut the comm link,
 nskr_kq_elizaRevengeEnd,DialogOptionSelected,$option == nskr_kq_elizaRevengeEnd,"EndConversation
 ShowDefaultVisual",$fleetName powers up their weapons and moves in to engage.,,
+,,,,,,
+# KESTEVEN QUESTLINE: ALTERNATIVE ENDINGS,,,,,,
+# Luddic ending,,,,,,
+nskr_kq_altEndingLuddicOption,PopulateOptions,"nskr_isBaseOfficial admin
+nskr_quest kq is CHIP_RECOVERED
+nskr_quest kq check altEndingLuddicMarket
+!nskr_quest kq flag CHIP_HANDED_TO_ELIZA
+!nskr_quest kq flag ALT_ENDING_DONE
+!nskr_quest kq flag LUDDIC_ENDING_SECOND_TALK",,,nskr_kq_altEndingLuddicPick:Talk about the Unlimited Production Chip you have,"Admin officials of Luddic Church and Luddic Path markets, until one reaches the second conversation"
+nskr_kq_altEndingLuddicOptionLocked,PopulateOptions,"nskr_isBaseOfficial admin
+nskr_quest kq is CHIP_RECOVERED
+nskr_quest kq check altEndingLuddicMarket
+!nskr_quest kq flag CHIP_HANDED_TO_ELIZA
+!nskr_quest kq flag ALT_ENDING_DONE
+nskr_quest kq flag LUDDIC_ENDING_SECOND_TALK
+$nskr_kq_altEndingLocked",,,nskr_kq_altEndingLuddicPick:Talk about the Unlimited Production Chip you have,"After the second conversation, only the official who had it"
+nskr_kq_altEndingLuddicPickSel,DialogOptionSelected,$option == nskr_kq_altEndingLuddicPick,"SetTextHighlights destroyed
+AddText ""\""For these are the evils that corrupt our world - Taking us further from Providence. You don't deny this do you captain? For certain you knew our reaction to this object, a true walker would know to approach us.\""""
+AddText ""\""Is this true captain?\"" $HeOrShe rubs $hisOrHer chin with deep intent in $hisOrHer eyes.""","""I hear you speak of a vile creation of mammon."" $HeOrShe says sharply. ""It must be destroyed, no question about it.""","nskr_kq_altEndingLuddicAgree:Destroy the Chip
+nskr_kq_altEndingLuddicDoubt:""So I would get nothing?""
+nskr_kq_altEndingExit:""Actually, never mind.""",
+nskr_kq_altEndingLuddicPickLocked,DialogOptionSelected,"$option == nskr_kq_altEndingLuddicPick
+$nskr_kq_altEndingLocked","AddText ""\""You need to destroy the Chip.\"" $HeOrShe commands.""
+SetTextHighlights destroy","""Have you finally seen the path captain? Or are you here to just waste my time.""","nskr_kq_altEndingLuddicAgree:Destroy the Chip
+nskr_kq_altEndingExit:""Nope.""","An official locked to the ending, or any official already locked by the Tri-Tachyon ending"
+nskr_kq_altEndingLuddicDoubtSel,DialogOptionSelected,$option == nskr_kq_altEndingLuddicDoubt,"nskr_quest kq set LUDDIC_ENDING_SECOND_TALK
+$nskr_kq_altEndingLocked = true
+AddText ""\""So, will you help amend for the sins of the past, and destroy the Chip?\"" $HeOrShe questions.""
+SetTextHighlights destroy","""Faith is not about having something, you do not *get* your way to providence. When one takes a righteous action - Suddenly they can find themselves walking the right path.""","nskr_kq_altEndingLuddicAgree:Destroy the Chip
+nskr_kq_altEndingExit:""Actually, never mind.""",Locks the ending to this official
+nskr_kq_altEndingLuddicAgreeSel,DialogOptionSelected,$option == nskr_kq_altEndingLuddicAgree,"AddText ""You feel a wave of inspiration pass through you."" gray
+AddTextSmall ""the Unlimited Production Chip is destroyed"" gray
+SetTextHighlightColors bad
+SetTextHighlights destroyed
+AddStoryPoints 8
+AdjustRep $faction.id 15
+AdjustRepActivePerson COOPERATIVE 10
+AddPotentialContact
+PlaySound ui_rep_raise
+nskr_quest kq do altEndingFallout","""The tools of mammon shall be rendered to pieces, rightfully reduced to ash, returned to providence. You walk the right path now captain."" $HeOrShe says with righteous words.",nskr_kq_altEndingExitAgree:Leave,"altEndingFallout turns Kesteven, Jack, Alice and Eliza against the player and completes the questline"
+,,,,,,
+# Tri-Tachyon ending,,,,,,
+nskr_kq_altEndingTtOption,PopulateOptions,"nskr_isBaseOfficial admin
+nskr_quest kq is CHIP_RECOVERED
+nskr_quest kq check altEndingTtMarket
+!nskr_quest kq flag CHIP_HANDED_TO_ELIZA
+!nskr_quest kq flag ALT_ENDING_DONE
+!nskr_quest kq flag TT_ENDING_SECOND_TALK",,,nskr_kq_altEndingTtPick:Talk about the Unlimited Production Chip you have,"Admin officials of Tri-Tachyon markets, until one reaches the second conversation"
+nskr_kq_altEndingTtOptionLocked,PopulateOptions,"nskr_isBaseOfficial admin
+nskr_quest kq is CHIP_RECOVERED
+nskr_quest kq check altEndingTtMarket
+!nskr_quest kq flag CHIP_HANDED_TO_ELIZA
+!nskr_quest kq flag ALT_ENDING_DONE
+nskr_quest kq flag TT_ENDING_SECOND_TALK
+$nskr_kq_altEndingLocked",,,nskr_kq_altEndingTtPick:Talk about the Unlimited Production Chip you have,"After the second conversation, only the official who had it"
+nskr_kq_altEndingTtPickSel,DialogOptionSelected,$option == nskr_kq_altEndingTtPick,"AddText ""\""Such an item holds great power, the Tri-Tachyon corporation is willing to grant $nskr_kq_altEndingTtOffer for such an item.\""""
+SetTextHighlights ""$nskr_kq_altEndingTtOffer""
+AddText ""\""Remember, such power would come with additional costs, requiring further investment. So... Take it or leave it captain.\""""
+FireBest nskr_kqAltEndingTtOfferOptions","""What a fascinating object you speak of, if you are telling the truth of course."" $HeOrShe looks skeptical",,"The counter-offer label shows a quest token, so its options come from a quest row"
+nskr_kq_altEndingTtOfferOptions,nskr_kqAltEndingTtOfferOptions,,,,"nskr_kq_altEndingTtAgree:Sell the Chip
+nskr_kq_altEndingTtIncrease:""How about $nskr_kq_altEndingTtRaised""
+nskr_kq_altEndingExit:""Actually, never mind.""",
+nskr_kq_altEndingTtPickLocked,DialogOptionSelected,"$option == nskr_kq_altEndingTtPick
+$nskr_kq_altEndingLocked","AddText ""\""The $nskr_kq_altEndingTtRaised for the Chip is waiting for you.\""""
+SetTextHighlights ""$nskr_kq_altEndingTtRaised""","""Changed your fickle mind yet $nskr_kq_playerFullName?""","nskr_kq_altEndingTtAgree:Sell the Chip
+nskr_kq_altEndingExit:""Nope.""","An official locked to the ending, or any official already locked by the Luddic ending"
+nskr_kq_altEndingTtIncreaseSel,DialogOptionSelected,$option == nskr_kq_altEndingTtIncrease,"nskr_quest kq do altEndingRaisePrice
+nskr_quest kq set TT_ENDING_SECOND_TALK
+$nskr_kq_altEndingLocked = true
+AddText ""\""$nskr_kq_altEndingTtRaised for the Chip, in liquid cash. Just think of all the things you could buy.\""$HeOrShe has a ravenous smile.""
+SetTextHighlights ""$nskr_kq_altEndingTtRaised""","""Damn... You drive a hard bargain captain, but for such an exceptional artifact... I think we can squeeze in some extra investment."" $HeOrShe takes a moment to adjust some datafeeds on $hisOrHer end.","nskr_kq_altEndingTtAgree:Sell the Chip
+nskr_kq_altEndingExit:""Actually, never mind.""",Locks the ending to this official
+nskr_kq_altEndingTtAgreeSel,DialogOptionSelected,$option == nskr_kq_altEndingTtAgree,"AddTextSmall ""Lost the Unlimited Production Chip"" gray
+SetTextHighlightColors bad
+SetTextHighlights Lost
+nskr_quest kq do altEndingPay
+AdjustRep tritachyon 15
+AdjustRepActivePerson COOPERATIVE 10
+AddPotentialContact
+PlaySound ui_rep_raise
+nskr_quest kq do altEndingFallout
+nskr_quest kq do altEndingPlaceChip","""You made the right choice captain. Enjoy the spoils."" $HeOrShe nods and gets back to work.",nskr_kq_altEndingExitAgree:Leave,"altEndingPay pays the first or the raised price; altEndingPlaceChip runs at COMPLETED, after the fallout"
+,,,,,,
+nskr_kq_altEndingExitSel,DialogOptionSelected,$option == nskr_kq_altEndingExit,FireAll PopulateOptions,"""Do come back if you change your mind.""",,
+nskr_kq_altEndingExitAgreeSel,DialogOptionSelected,$option == nskr_kq_altEndingExitAgree,FireAll PopulateOptions,,,

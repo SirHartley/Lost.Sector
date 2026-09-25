@@ -1128,7 +1128,7 @@ Do not add a framework feature that only one quest could ever use; keep that in 
 | Duplicate today | Replaced by |
 |---|---|
 | `QuestHelper.getFailed`/`setFailed` and `getCompleted`/`setCompleted`, identical bodies | Flags on the state |
-| Seven hand-written seeded `Random` accessors (`ElizaDialog`, `CacheDoubtDialog`, `CacheCoreDialog`, `EndingKestevenDialog`, `EndingElizaDialog`, `nskr_altEndingDialogLuddic`, `nskr_altEndingDialogTT`) | `ctx.random(purpose)` |
+| Five hand-written seeded `Random` accessors (`ElizaDialog`, `CacheDoubtDialog`, `CacheCoreDialog`, `EndingKestevenDialog`, `EndingElizaDialog`) | `ctx.random(purpose)` |
 | `nskr_ttCollectorDialog`, the second copy of the loan collector's encounter | `PayOffEncounter` and rows (done in T32: `KestevenCollector` in quest `kq`) |
 | Intel classes that register themselves and poll in `advanceImpl` | `QuestIntel` and intel rows |
 | The spawn-and-register tail repeated across `KestevenFleets` spawners | `ctx.fleets().spawn` |

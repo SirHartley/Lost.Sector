@@ -250,8 +250,8 @@ THRN is the Hellspawn judge. It speaks in short gray lines, sometimes one word a
 |---|---|---|
 | Tri-Tachyon employee | Job 3 party, rules `nskr_kq_party…` | Friendly heavy drinker who gets the captain into a management party |
 | Tri-Tachyon collector | rules `nskr_kq_ttCollector*` | Resentful and businesslike: "We know you are working with those snakes from Kesteven." ... "Pleasure doing business with you captain." |
-| Tri-Tachyon buyer | `nskr_altEndingDialogTT` | Skeptical, then greedy: "Just think of all the things you could buy." (ravenous smile) |
-| Luddic official | `nskr_altEndingDialogLuddic` | Scriptural: "I hear you speak of a vile creation of mammon." ... "you do not *get* your way to providence." |
+| Tri-Tachyon buyer | rules `nskr_kq_altEndingTt…` | Skeptical, then greedy: "Just think of all the things you could buy." (ravenous smile) |
+| Luddic official | rules `nskr_kq_altEndingLuddic…` | Scriptural: "I hear you speak of a vile creation of mammon." ... "you do not *get* your way to providence." |
 | Pirate spacers | Eliza bar events | Hostile to corporations and questions: "Keep your nose out of our business captain." "You better not be another bloodhound from CommSec." |
 | Special Operations captain | rules `nskr_kq_job4Fleet*` | Exhausted and grateful: "Am I glad to finally see a friendly face around here." |
 | Kesteven debt collector | rules `nskr_ic_collector*` | Ruthless and sarcastic: "Thank you for your business captain. Glad we could come to terms, peacefully." |

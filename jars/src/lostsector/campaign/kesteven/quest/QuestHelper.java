@@ -428,16 +428,6 @@ public class QuestHelper {
         if (state != null) state.nicholasDialogStage = stage;
     }
 
-    public static float getTtPayout() {
-        KestevenState state = KestevenQuest.state();
-        return state == null ? 0f : state.ttPayout;
-    }
-
-    public static void setTtPayout(float payout) {
-        KestevenState state = writableState();
-        if (state != null) state.ttPayout = payout;
-    }
-
     public static StarSystemAPI getJob1Tip(){
         KestevenState state = writableState();
         if (state == null) return null;
