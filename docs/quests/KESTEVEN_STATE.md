@@ -54,7 +54,7 @@ Classes outside the quest package and the questline dialog commands read and cha
 
 | Query | True when | Callers |
 |---|---|---|
-| `stage()` | Returns the current `KestevenStage`; `NOT_STARTED` before the state exists | `dialogue/rules/nskr_isKStage`, `nskr_isAtLeastKStage`, `nskr_isAtMostKStage`, compared as legacy ints |
+| `stage()` | Returns the current `KestevenStage`; `NOT_STARTED` before the state exists | `KestevenJob4Module` (a withdraw condition that runs outside a context) |
 | `isFailed()` | `ENDED` | `kesteven/contracts/ContractManager` (fails every contract) |
 | `kestevenEndingDone()` | `KESTEVEN_ENDING_DONE` | `ContractManager` (doubles the contract cap), `nskr_shipSwap` (heavy hulls in stock) |
 | `elizaEndingDone()` | `ELIZA_ENDING_DONE` | `nskr_debt` (`hasOption` false) |
@@ -73,7 +73,7 @@ Classes outside the quest package and the questline dialog commands read and cha
 
 ## Stages
 
-`KestevenStage` lists the stages in story order; each names the stage before it. `FAILED` has no previous stage, because the questline fails from several stages. The legacy int is the value `QuestHelper.getStage()` returns and `setStage` accepts, and the argument of the `nskr_isKStage` family in `rules.csv`. `KestevenStage.fromLegacy(int)` and `toLegacy()` translate; they are removed with the last int caller.
+`KestevenStage` lists the stages in story order; each names the stage before it. `FAILED` has no previous stage, because the questline fails from several stages. The legacy int is the value `QuestHelper.getStage()` returns and `setStage` accepts. `KestevenStage.fromLegacy(int)` and `toLegacy()` translate; they are removed with the last int caller.
 
 | Stage | Legacy | Previous | Meaning |
 |---|---|---|---|

@@ -255,7 +255,7 @@ THRN is the Hellspawn judge. It speaks in short gray lines, sometimes one word a
 | Pirate spacers | Eliza bar events | Hostile to corporations and questions: "Keep your nose out of our business captain." "You better not be another bloodhound from CommSec." |
 | Special Operations captain | rules `nskr_kq_job4Fleet*` | Exhausted and grateful: "Am I glad to finally see a friendly face around here." |
 | Kesteven debt collector | rules `nskr_ic_collector*` | Ruthless and sarcastic: "Thank you for your business captain. Glad we could come to terms, peacefully." |
-| "LZ" messenger | rules `MessengerFleetDialogInitial` | Formal letter: "Tread with care captain, you are entering a dangerous field of work." |
+| "LZ" messenger | rules `nskr_ic_messengerMessage` | Formal letter: "Tread with care captain, you are entering a dangerous field of work." |
 | ARO captain | rules `AROstrikeDialogInitial` | Zealot: "May the cold vacuum of space redeem your spirit." |
 | Alistair Walsh | rules `pk*` | Pompous and easily rattled: "crime doesn't pay!" |
 | Umbra | rules `eternityDialog` | Protocol voice: "UMBRA operations ... authorized to use lethal force" |

@@ -27,7 +27,6 @@ Java paths are relative to `jars/src/lostsector/campaign/`; `dialogue/rules/` an
 | `kesteven/quest/KestevenEndingsModule`, `# KESTEVEN QUESTLINE: ENDINGS` rows | The Kesteven and Eliza endings: their checks, rewards and relationship changes, and the commission restore after the Eliza ending ([endings](#the-kesteven-and-eliza-endings)) |
 | `CorePlugin` | Opens the Java quest dialogs when the player interacts with a quest entity, deciding through `KestevenQuest` queries |
 | `kesteven/quest/*Dialog`, `kesteven/quest/*BarEvent` | Java dialogs and bar events |
-| `dialogue/rules/nskr_isKStage`, `nskr_isAtLeastKStage` | Rules stage predicates |
 | `world/systems/cache/Cache` | The Cache system, guardian fleet and its fleet-interaction config |
 | `kesteven/quest/CacheIntel` | Intel entry of the Cache; they read the stage and flags and never write the stage |
 | `kesteven/ExileManager` | Moves the quest people between Asteria and the Outpost |
@@ -107,7 +106,7 @@ The text is in the `# KESTEVEN QUESTLINE: JOB 1` block, selected by `$nskr_intel
 
 ## Job 3: Hostile Takeover (stages 6 to 11)
 
-At stage 6 Jack sends the player to Alice and mentions the artifact exchange (`nskr_shipSwap`, available from stage 7 through a research official). Continuing makes Jack a potential contact and sets stage 7.
+At stage 6 Jack sends the player to Alice and mentions the artifact exchange (`nskr_shipSwap`, available through a research official from stage 7 on and after failure: its menu row lists those stages with `nskr_quest kq is`). Continuing makes Jack a potential contact and sets stage 7.
 
 Alice's briefing at stage 7: a Tri-Tachyon expedition leaves from the job 3 start market, a random Tri-Tachyon market other than `eochu_bres` and `culann`. The player must destroy it without being identified, within about 90 days, for 205,000 credits. Accepting sets stage 8.
 
@@ -191,7 +190,7 @@ The `QuestIntel` entry `job4` (icon `job4`; tags important, accepted, missions; 
 
 When stage 13 is reached the module sets the marker to `asteriaOrOutpost` and completes the entry with the update `done` ("With the threat eliminated and the Operations fleet located, you can report back to <home> to finish the job."), and on failure fails it with the update `failed` ("You attacked the Special Operations fleet. Mission failed, better not to talk to anyone about this."), each with `ui_intel_minor_message`. A completed entry ends after the vanilla delay; the module ends the entry at once when it stops (stage 17 or failure). A failure attack at stages 14 to 16 sends no message, because the entry is no longer shown there.
 
-Alice's turn-in at stage 13 grants 1 story point, 285,000 credits, a modspec, Kesteven +5 and Alice +10. If the player helped the fleet it also grants an Epoch-class prototype frigate (`nskr_epoch_empty`). Alice becomes a potential contact, Jack's importance rises to high, and S-mod removal (`nskr_modRemoval`) opens at research officials. Stage becomes 14.
+Alice's turn-in at stage 13 grants 1 story point, 285,000 credits, a modspec, Kesteven +5 and Alice +10. If the player helped the fleet it also grants an Epoch-class prototype frigate (`nskr_epoch_empty`). Alice becomes a potential contact, Jack's importance rises to high, and S-mod removal (`nskr_modRemoval`) opens at research officials, from stage 14 on and after failure (its menu row lists those stages with `nskr_quest kq is`). Stage becomes 14.
 
 ## Job 5: The Delve (stages 14 to 19)
 

@@ -280,7 +280,7 @@ The in-person meeting of job 5 is a rules bar event in the `# Meeting` part of t
 | Eliza's revenge | `nskr_kq_elizaRevengeInit`, `…Greeting`, `nskr_kqElizaRevengeOptions`, `…Misunderstanding`, `…Bootlicker`, `…Die`, `…End`, on role flag `$nskr_kq_elizaRevenge` | none |
 | Jack's revenge | `jackRevengeanceDialogInit`, `…Initial`, `…End` | none |
 | Cache guardian | `cacheDialogInit`, `cacheDialogInitial`, `cacheDialogEnd` | none |
-| "LZ" messenger | `MessengerFleetDialogInit`, `…Initial`, `…End` | none |
+| "LZ" messenger | Quest `ic`, not the questline: `nskr_ic_messengerHail`, `…Open`, `…LeavingOpen`, `…Message`, `…Cut` in `# INTERCEPTS` ([intercept fleets](CONTRACTS_AND_BOUNTIES.md#intercept-fleets)); the message runs `nskr_quest ic do messengerMet`, which calls `KestevenQuest.reportMessengerMet()` | `nskr_quest ic` |
 
 ### Job 4 rows
 

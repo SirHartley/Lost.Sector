@@ -11,7 +11,6 @@ import com.fs.starfarer.api.characters.PersonAPI;
 import com.fs.starfarer.api.impl.campaign.ids.Industries;
 import com.fs.starfarer.api.impl.campaign.ids.Items;
 import com.fs.starfarer.api.impl.campaign.ids.Skills;
-import lostsector.campaign.kesteven.quest.QuestHelper;
 import lostsector.ModPlugin;
 import lostsector.persistence.Saved;
 import lostsector.campaign.kesteven.quest.KestevenQuest;
@@ -88,7 +87,7 @@ public class ExileManager extends BaseCampaignEventListener implements EveryFram
                 }
             }
             //fix outpost ppl exiled
-            if (getExiled(EXILE_KEY) && !QuestHelper.outpostExists()){
+            if (getExiled(EXILE_KEY) && !SectorLookup.outpostExists()){
                 PersonAPI jack = KestevenPeople.getJack();
                 PersonAPI alice = KestevenPeople.getAlice();
                 PersonAPI nick = KestevenPeople.getNick();
@@ -141,7 +140,7 @@ public class ExileManager extends BaseCampaignEventListener implements EveryFram
                 setExiled(true, EXILE_KEY);
                 // Silent when Asteria was never generated: Kesteven has been at the Outpost from the start.
                 if (SectorLookup.getAsteria() != null) {
-                    Global.getSector().getCampaignUI().addMessage("With the loss of Asteria, the leadership of Kesteven Corporation has fled to "+ QuestHelper.outpostName()+".",
+                    Global.getSector().getCampaignUI().addMessage("With the loss of Asteria, the leadership of Kesteven Corporation has fled to "+ SectorLookup.outpostName()+".",
                             Global.getSettings().getColor("standardTextColor"),
                             "Kesteven Corporation",
                             "",

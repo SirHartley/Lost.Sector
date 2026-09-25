@@ -44,6 +44,17 @@ public class SectorLookup {
         return Global.getSector().getEconomy().getMarket("nskr_outpost").getPrimaryEntity();
     }
 
+    // The Outpost market exists and belongs to Kesteven.
+    public static boolean outpostExists(){
+        if (Global.getSector().getEconomy().getMarket("nskr_outpost")==null) return false;
+        return Global.getSector().getEconomy().getMarket("nskr_outpost").getFaction().getId().equals("kesteven");
+    }
+
+    // Throws when the Outpost market does not exist.
+    public static String outpostName(){
+        return Global.getSector().getEconomy().getMarket("nskr_outpost").getName();
+    }
+
     // Null only when neither Asteria nor the Outpost exists.
     public static MarketAPI asteriaOrOutpost(){
         SectorEntityToken asteria = getAsteria();
