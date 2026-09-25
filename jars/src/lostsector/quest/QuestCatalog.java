@@ -1,5 +1,6 @@
 package lostsector.quest;
 
+import lostsector.campaign.bounties.BountiesQuest;
 import lostsector.campaign.events.blacksite.BlacksiteQuest;
 import lostsector.campaign.events.intercepts.InterceptsQuest;
 import lostsector.campaign.kesteven.quest.KestevenQuest;
@@ -19,7 +20,7 @@ public final class QuestCatalog {
     }
 
     public static List<Quest<?, ?>> create() {
-        return build(List.of(new KestevenQuest(), new InterceptsQuest(), new HellSpawnQuest(), new BlacksiteQuest()));
+        return build(List.of(new KestevenQuest(), new InterceptsQuest(), new HellSpawnQuest(), new BlacksiteQuest(), new BountiesQuest()));
     }
 
     // Definition errors throw here, during load, so the first dev run finds them.

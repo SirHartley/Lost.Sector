@@ -1,6 +1,6 @@
 # Contracts and bounties
 
-The repeatable Kesteven contracts, the four named bounty fleets and the intercept fleets of quest `ic`, including the Kesteven debt collector. The bounties are one-off fleets with an intel entry and a reward, not quests with stages. Java paths are relative to `jars/src/lostsector/campaign/`; `dialogue/rules/` and `combat/` paths are relative to `jars/src/lostsector/`.
+The repeatable Kesteven contracts, the four named bounty fleets (Abyss and Eternity in quest `bounty`) and the intercept fleets of quest `ic`, including the Kesteven debt collector. The bounties are one-off fleets with an intel entry and a reward, not quests with stages. Java paths are relative to `jars/src/lostsector/campaign/`; `dialogue/rules/` and `combat/` paths are relative to `jars/src/lostsector/`.
 
 ## Contracts
 
@@ -47,33 +47,64 @@ The blurb rows `nskr_contracts_blurbElimination` and `nskr_contracts_blurbRecove
 
 ## Named bounties
 
-All four spawners are `EFS_LIST` scripts in `bounties/`. Rewards are paid by `bounties/BountyLoot`, a saved script listening for encounter loot.
+Abyss and Eternity are records of the record quest `bounty` (`bounties/BountiesQuest`), one [`BountyEncounter`](../../jars/src/lostsector/quest/README.md#bountyencounter) module each. Mothership and Peacekeepers still run on their own `EFS_LIST` spawners in `bounties/mothership` and `bounties/peacekeepers`, and are paid by `bounties/BountyLoot`, a saved script listening for encounter loot; they move to the quest in T40.
 
 | Bounty | Fleet | Commander | Flagship | Location | Reward |
 |---|---|---|---|---|---|
-| `AbyssSpawner` | "Void Group", Remnant | Lucius | Hollow-class "Piercing Darkness" (`nskr_reverie_boss`), with a Chasm (`nskr_harbinger_boss`) and two Fissures (`nskr_afflictor_boss`) | Orbiting a body in a Remnant-themed red giant system, or any red giant | 1 Alpha Core; the Anti-Remnant Organization pays 600,000 credits if the player's fleet holds none of the bounty ships when the loot is generated |
-| `EternitySpawner` | "Commander Umbra's Fleet", Enigma | Umbra | Eternity-class "DSRD Shadows Of Tomorrow" (`nskr_eternity_e_boss`) | Nebula system without a Remnant theme | 2 Alpha Cores and 500 Artifact Electronics |
+| Record `abyss` | "Void Group" and a Greek letter, Remnant, 135 to 145 points | Lucius | Hollow-class "Piercing Darkness" (`nskr_reverie_boss`), with a Chasm (`nskr_harbinger_boss`) and two Fissures (`nskr_afflictor_boss`) | Orbiting a body in a Remnant-themed red giant system, or any procgen red giant, or any non-core system | 1 Alpha Core in the loot; the Anti-Remnant Organization pays 600,000 credits if the player's fleet holds none of the bounty ships when the loot is generated |
+| Record `eternity` | "Commander Umbra's Fleet", Enigma, 80 to 85 points | Umbra | Eternity-class "DSRD Shadows Of Tomorrow" (`nskr_eternity_e_boss`) | Orbiting a body in a procgen nebula system without a Remnant theme, or any procgen nebula, or any non-core system | 2 Alpha Cores and 500 Artifact Electronics in the loot |
 | `RorqualSpawner` | "Peacekeepers", mercenary fleet shown as Independent | Alistair Walsh | Rorqual-class "ISS White Whale" (`nskr_rorqual_boss`), with a Conquest and two Champions | Patrols Independent markets and switches to another after a counter reaches 30 | 315,000 credits times the player's contribution, as an anonymous "donation" |
 | `MothershipSpawner` | "Project Helios Remnant", Remnant | "CREATOR-A3401#" | Sunburst-class "TTDS Helios" (`nskr_sunburst_boss`) | Guards two habitable planets, Helios and Polaris (`nskr_terra1`, `nskr_terra2`), created at new game around a moonless gas giant, preferably in a Remnant system; without any moonless gas giant the bounty is not placed | 1 Alpha Core |
 
-Shared structure (Abyss and Eternity in detail; the others follow the same outline):
+Point budgets are multiplied by `Difficulty.scriptedFleetMult()`. Builders and location pickers are in `bounties/BountiesFleets`.
 
-1. **Spawn.** Once per campaign, when the spawner's fleet list is empty and its `persistence/Saved` `NewGame` flag is true, the fleet spawns at a location stored under a persistent key: `ABYSS`, `ETERNITY` or `RORQ`; the Mothership uses `nskr_mothershipKey`.
+### Quest `bounty`
+
+One stage, `RUNNING`, no flags. `BountiesState.bounties` holds one `BountyEncounter.Record` per bounty; the record id is also the fleet role, the intel key and the prefix of the bounty's tokens and checks.
+
+1. **Placement.** When the quest state is created at load, each module picks its location with the saved random `location:<id>`, builds the fleet with `fleet:<id>` and spawns it in role `<id>` (`FleetOrders.none()`: the fleet keeps the assignment `SimpleFleet` gave it, patrolling or orbiting). The fleet has `FLEET_FIGHT_TO_THE_LAST`, allows disengaging, ignores and is ignored by other fleets, and is `MEMORY_KEY_MISSION_IMPORTANT`. A record whose location picker finds nothing stays `NOT_PLACED`.
+2. **First sighting.** While the player is in the fleet's location, the module checks every unpaused frame whether the fleet is visible to the player's sensors. The first time it is, it removes the hint intel for the player's current system (`HintManager.removeHintIntel`), shows the intel entry with the location as map location and sends the update `sighted`: "Initial examinations of the … fleet shows an unusual flagship, the …-Class. Approach with extreme caution."
+3. **Defeat.** Abyss is beaten when none of its three bounty hulls is left in the fleet; Eternity when its flagship is gone (`getFlagship()` is null). The module checks at the fleet's loot and after every battle it fought, and counts a destroyed fleet as beaten. The beaten fleet loses `MEMORY_KEY_MISSION_IMPORTANT` and moves to role `<id>Beaten` (`FleetOrders.withdraw()`), so its comm rows stop matching, and it despawns once out of the player's sight.
+4. **Reward.** At the loot of the beaten fleet (`onLoot`, after the recovery screen), the module adds the loot items once. For Abyss it then pays 600,000 credits through `ctx.rewards()` unless the player's fleet holds an Abyss bounty hull, and records the amount.
+5. **Completion.** On the next unpaused frame after the defeat, the intel entry completes: its update message shows, for Abyss, "Bounty payment received from ARO, +600,000¢" or "Since you have no proof of complete destruction, you will not receive any payments from ARO."; for Eternity, the title only. The entry leaves the intel screen after the vanilla delay.
+6. **Recovery.** A recovered ship of a bounty hull (Abyss: `nskr_reverie_boss`, `nskr_harbinger_boss`, `nskr_afflictor_boss`; Eternity: `nskr_eternity_e`) loses `Tags.SHIP_LIMITED_TOOLTIP`, from any recovery the game reports.
+
+Queries for other features: `BountiesQuest.location(bounty)`, `BountiesQuest.sighted(bounty)` and `BountiesQuest.carriesAbyssShips(fleet)`.
+
+Rules rows are in the `# BOUNTY QUEST` block inside `# BOUNTIES`:
+
+| Rows | Trigger | Selects by |
+|---|---|---|
+| `nskr_bounty_abyssOpen`, `nskr_bounty_eternityOpen` | `OpenCommLink` | Role flag `$entity.nskr_bounty_<id>`; the Abyss row also needs `!$ignorePlayerCommRequests` and sets `$entity.ignorePlayerCommRequests` for 1 day |
+| Titles | `nskr_bountyIntelTitle` | `$nskr_intel_key` |
+| Location, reward, sighting and completion lines | `nskr_bountyIntelBullets` | `$nskr_intel_key`, `$nskr_intel_status`, `$nskr_intel_update` (`sighted`) and, for the completion lines, `$nskr_intel_mode == update` and `nskr_quest bounty check abyssPaid` |
+| Description paragraphs | `nskr_bountyIntelDesc` | `$nskr_intel_key` and `$nskr_intel_status`; the active description repeats the location and reward lines after the paragraphs |
+
+Tokens: `$nskr_bounty_<id>FleetName`, `<id>System`, `<id>Entity`, and `$nskr_bounty_abyssPayout`.
+
+### Mothership and Peacekeepers
+
+1. **Spawn.** Once per campaign, when the spawner's fleet list is empty and its `persistence/Saved` `NewGame` flag is true, the fleet spawns at a location stored under a persistent key: `RORQ`, or `nskr_mothershipKey` for the Mothership.
 2. **Tracking.** The fleet is kept in a sector-memory list (`$nskr_<name>SpawnerFleets`) and has `MEMORY_KEY_MISSION_IMPORTANT`.
-3. **First sighting.** When the fleet is first visible to the player, the intel entry (`AbyssIntel`, `UmbraIntel`, `RorqualIntel` or `MothershipIntel`) is added. A message reads: "Initial examinations of the … fleet shows an unusual flagship, the …-Class. Approach with extreme caution."
-4. **Despawn.** Every 4 seconds (every 10 for the Peacekeepers), the spawner removes the fleet once it has no bounty ships left and is out of sensor range.
-5. **Reward.** `BountyLoot.reportEncounterLootGenerated` recognises the fleet by its loot key (`$AbyssLoot`, `$EternityLoot`, `$RorqLoot`, `$mothershipLoot`). It adds the reward and sets `$nskr_abyssDefeated`, `$nskr_umbraDefeated`, `$nskr_rorqDefeated` or `$nskr_heliosDefeated`. These are persistent-data flags despite the `$`.
-6. **Recovery.** The Abyss and Eternity spawners are `ShipRecoveryListener`s and remove the limited-tooltip tag from recovered bounty ships.
+3. **First sighting.** When the fleet is first visible to the player, the intel entry (`RorqualIntel` or `MothershipIntel`) is added, with a message of the same form as above ("Approach with caution." for the Peacekeepers).
+4. **Despawn.** Every 4 seconds (every 10 for the Peacekeepers), the spawner removes the fleet once its loot flag is gone and it is out of sensor range.
+5. **Reward.** `BountyLoot.reportEncounterLootGenerated` recognises the fleet by its loot key (`$RorqLoot`, `$mothershipLoot`). It adds the reward and sets `$nskr_rorqDefeated` or `$nskr_heliosDefeated`. These are persistent-data flags despite the `$`.
 
 Other pieces:
 
-- **Hints.** `events/hints/HintManager` rolls 4% when the player enters a new system outside the core. A hit adds a `HintIntel` pointing to the Abyss, Eternity, Mothership or Frost system. A hint source is dropped once that bounty's own intel exists.
-- **Rules conversations.** Comm rows `abyssDialog`, `eternityDialog`, `pkDialog*` and `mothershipDialog*` hold the fleets' voice. The Mothership comm offers "Try to shut down the AI", which fails.
+- **Hints.** `events/hints/HintManager` rolls 4% when the player enters a new system outside the core. A hit adds a `HintIntel` pointing to the Abyss, Eternity, Mothership or Frost system. A hint source is dropped once that bounty is sighted (`BountiesQuest.sighted`) or, for the Mothership and Frost, once its own intel exists.
+- **Rules conversations.** Comm rows `pkDialog*` and `mothershipDialog*` hold the fleets' voice. The Mothership comm offers "Try to shut down the AI", which fails.
 - **Mothership planets.** `CorePlugin` routes both planets to `MothershipInteractionBlocker` until the fleet has been beaten. The Mothership's fleet-interaction config records `nskr_mothershipKeySpawnedWreck` when its flagship is gone. `nskr_mothershipKeyCompleted` marks the bounty done.
 - **Peacekeepers.** The Rorqual flagship is the bounty (`RorqualSpawner.hasRorqual`, which tracks the ship `SimpleFleet` created as flagship). `BountyLoot` pays when the Rorqual is gone after a battle the player won, even if escorts survive. Once it is gone, the spawner also clears the loot flag at its next daily check and the fleet despawns out of sensor range; if someone else destroyed it, `RorqualIntel` reports the chance missed. `events/DerelictTeaserSpawner` places a Rorqual derelict as a teaser.
 - **ARO strike group.** Quest `ic` can send an ARO strike group after a player whose fleet contains Abyss bounty ships; see [Intercept fleets](#intercept-fleets).
 
-None of the bounties has stages, dialogue choices that change state, or a failure path beyond another party killing the Peacekeepers.
+None of the bounties has dialogue choices that change state, or a failure path beyond another party killing the Peacekeepers.
+
+### Defects
+
+- The Eternity comm text shows `captain.getName` literally.
+- Eternity and the Mothership count as beaten only when `getFlagship()` is null. Vanilla then returns another member while escorts remain, the case the Peacekeepers fix handled with `FleetHelper.getOriginalFlagship`.
+- A bounty beaten without a loot screen (another party's battle, or a player victory with empty loot) completes its intel without the reward; for Abyss the completion then reads "no proof of complete destruction".
 
 ## Intercept fleets
 
@@ -81,7 +112,7 @@ Record quest `ic` (`events/intercepts/InterceptsQuest`) sends four fleets after 
 
 | Record and role | Daily roll, once per campaign | Fleet | Orders |
 |---|---|---|---|
-| `aro` | 1% while the player is in hyperspace within 25,000 of the center and carries Abyss bounty ships (`AbyssSpawner.hasBountyShips`) | "ARO Strike Group": Luddic Church doctrine, 110 to 130 points, flies as mercenaries, hostile, no reputation impact | Intercept around the player; withdraws when beaten or after 45 days |
+| `aro` | 1% while the player is in hyperspace within 25,000 of the center and carries Abyss bounty ships (`BountiesQuest.carriesAbyssShips`) | "ARO Strike Group": Luddic Church doctrine, 110 to 130 points, flies as mercenaries, hostile, no reputation impact | Intercept around the player; withdraws when beaten or after 45 days |
 | `messenger`, then `messengerLeaving` | 4% while `KestevenQuest.inMessengerWindow()` (stages 10 to 14) and the player is in hyperspace within 25,000 of the center | "Merc Messenger": pirate doctrine, 50 to 70 points, flies as mercenaries | Intercepts the player directly. Once the player has opened its comm link, it leaves for a random pirate market and despawns there. Withdraws when beaten or after 20 days, in either role |
 | `collector`, then `collectorLeaving` | 1% while Kesteven has markets (`SectorLookup.kestevenExists`), the player is in hyperspace within 25,000 of the center, Kesteven's relationship with the player is -0.50 or lower, and the Kesteven debt (`nskr_debt.getDebt()`) is at least 250,000 credits | "Debt Collector": Kesteven, 100 to 110 points, ships up to size 3, 2 to 3 S-mods | Intercepts around the player. Once paid (action `collectorLeave`), or on the first day Kesteven's relationship with the player is above -0.50, it ignores other fleets (`MemFlags.FLEET_IGNORES_OTHER_FLEETS`) and leaves for a random Kesteven market, despawning there. Withdraws when beaten or after 45 days, in either role |
 | `autoHunter`, then `autoHunterGuard` | 1% while the player is in hyperspace within 50,000 of the center, has at least 75 deployment points of automated ships (`automated` or SotF's `sotf_sierrasconcord`), and the player faction's relationship with the Luddic Path is below 0 | "Hunter Fanatics": Luddic Path, 70 to 80 points, half the ships and the flagship with `nskr_machineSpirit` | Intercepts around the player for 30 days, then orbits a random Luddic Path market, intercepting the player with a 1% chance per order tick while it sees them; withdraws when beaten |

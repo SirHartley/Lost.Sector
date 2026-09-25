@@ -71,6 +71,7 @@ Adjusted - Questions you have already asked Jack and Alice no longer return to t
 Adjusted - The Hellspawn judgement's story point and Peaceful Heart rewards show the standard receipts
 Fixed - Paying the Kesteven debt collector now shows "Debt reduced to" instead of an internal name
 Adjusted - Paying the Kesteven debt collector shows the standard credits lost and relationship receipts
+Adjusted - The Abyss and Eternity bounties report their first sighting and their end, including the ARO payment, as updates of their intel entries
 
 1.0.b
 Adjusted - Severely nerfed spawn rates for Borealis, Rhea and Kingslayer

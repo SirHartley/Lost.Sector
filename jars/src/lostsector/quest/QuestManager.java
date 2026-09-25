@@ -14,8 +14,10 @@ import com.fs.starfarer.api.campaign.SectorEntityToken;
 import com.fs.starfarer.api.campaign.econ.MarketAPI;
 import com.fs.starfarer.api.campaign.listeners.ColonyDecivListener;
 import com.fs.starfarer.api.campaign.listeners.CurrentLocationChangedListener;
+import com.fs.starfarer.api.campaign.listeners.ShipRecoveryListener;
 import com.fs.starfarer.api.campaign.rules.MemoryAPI;
 import com.fs.starfarer.api.characters.PersonAPI;
+import com.fs.starfarer.api.fleet.FleetMemberAPI;
 import com.fs.starfarer.api.util.Misc;
 import lostsector.ModPlugin;
 import lostsector.helper.fleet.FleetInfo;
@@ -34,7 +36,7 @@ import java.util.Set;
 // Transient: ModPlugin.createManagers() builds it on every load and the EFS_LIST loop registers it.
 // It is the only writer of quest stages (README "Lifecycle").
 public final class QuestManager extends BaseCampaignEventListener
-        implements EveryFrameScript, CurrentLocationChangedListener, ColonyDecivListener {
+        implements EveryFrameScript, CurrentLocationChangedListener, ColonyDecivListener, ShipRecoveryListener {
 
     static final String STORE_KEY = "quests";
     private static final int MAX_QUEUED_CHANGES = 20;
@@ -531,6 +533,17 @@ public final class QuestManager extends BaseCampaignEventListener
             @Override
             public <S extends Enum<S> & QuestStage, T extends QuestState<S>> void call(QuestModule<S, T> module, QuestContext<S, T> ctx) {
                 module.onDecivilized(ctx, market, fullyDestroyed);
+            }
+        });
+    }
+
+    // ListenerUtil.reportShipsRecovered: after-battle recovery and derelict recovery (ShipRecoverySpecial).
+    @Override
+    public void reportShipsRecovered(List<FleetMemberAPI> ships, InteractionDialogAPI dialog) {
+        deliver(new Hook() {
+            @Override
+            public <S extends Enum<S> & QuestStage, T extends QuestState<S>> void call(QuestModule<S, T> module, QuestContext<S, T> ctx) {
+                module.onShipsRecovered(ctx, ships);
             }
         });
     }

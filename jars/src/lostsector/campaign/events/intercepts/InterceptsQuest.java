@@ -4,7 +4,7 @@ import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.fleet.FleetMemberAPI;
 import com.fs.starfarer.api.impl.campaign.ids.Factions;
 import com.fs.starfarer.api.impl.campaign.ids.HullMods;
-import lostsector.campaign.bounties.abyss.AbyssSpawner;
+import lostsector.campaign.bounties.BountiesQuest;
 import lostsector.campaign.kesteven.quest.KestevenQuest;
 import lostsector.dialogue.rules.nskr_debt;
 import lostsector.helper.FleetHelper.GuardAttackBehaviour;
@@ -65,7 +65,7 @@ public final class InterceptsQuest extends Quest<InterceptsStage, InterceptsStat
                 FleetRole.of(FleetOrders.intercept(InterceptBehaviour.AROUND).withdrawWhenBeaten().withdrawAfter(45f)),
                 Repeat.ONCE, 0.01f,
                 ctx -> InterceptEncounter.playerInHyperspaceWithin(CORE_DISTANCE)
-                        && AbyssSpawner.hasBountyShips(Global.getSector().getPlayerFleet()),
+                        && BountiesQuest.carriesAbyssShips(Global.getSector().getPlayerFleet()),
                 InterceptsFleets::aro)
                 .finish(InterceptsFleets::flyAsMercenaries);
     }

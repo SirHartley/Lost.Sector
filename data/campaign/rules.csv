@@ -739,10 +739,10 @@ nskr_altEndingExitAgree,DialogOptionSelected,"$option == nskr_altEndingExitAgree
 ,,,,,,
 # BOUNTIES,,,,,,
 ,,,,,,
-# ABYSS,,,,,,
-abyssDialog,OpenCommLink,"$faction.id == remnant score:1000
+# BOUNTY QUEST,,,,,,
+nskr_bounty_abyssOpen,OpenCommLink,"$faction.id == remnant score:1000
 $entity.isHostile
-$entity.AbyssLoot score:100
+$entity.nskr_bounty_abyss score:100
 !$ignorePlayerCommRequests
 ","$entity.ignorePlayerCommRequests = true 1","The comms plays with a strange echo to it. Eventually you are greeted by a chaotic flurry of colors and a voice.
 
@@ -751,12 +751,9 @@ $entity.AbyssLoot score:100
 INTERRUPT 
 
 ""CID-IFF not received [TARGET UNKNOWN] respond null // 'Greetings valued customer of Tri-Tachyon Corporation products. Your vessel is not logged as a valid contract holder with the Tri-Tachyon Integrated Space Defense line of products and services. Have you considered a Tri-Tachyon Orbital Defense Plan? Please contact a customer service representative for more information.""","cutCommLink:Cut the comm link",
-"#END ABYSS",,,,,,
-,,,,,,
-# ETERNITY,,,,,,
-eternityDialog,OpenCommLink,"$faction.id == enigma score:1000
+nskr_bounty_eternityOpen,OpenCommLink,"$faction.id == enigma score:1000
 $entity.isHostile
-$entity.EternityLoot score:100
+$entity.nskr_bounty_eternity score:100
 ",,"""CID-IFF not received [TARGET UNKNOWN] respond null // 'Greetings Your vessel is not logged as a valid contact with - ""
 
 INTERRUPT
@@ -772,7 +769,56 @@ waiting. query blood?. scanning. false. return to (DIALOG)
 INTERRUPT
 
 "" -UMBRA operations. captain.getName Do not interfere with this fleet. It is authorized to use lethal force to ensure operational security.'""","cutCommLink:Cut the comm link",
-"#END ETERNITY",,,,,,
+,,,,,,
+nskr_bounty_abyssTitle,nskr_bountyIntelTitle,$nskr_intel_key == abyss,,$nskr_bounty_abyssFleetName,,
+nskr_bounty_eternityTitle,nskr_bountyIntelTitle,$nskr_intel_key == eternity,,Commander Umbra's Fleet,,
+,,,,,,
+nskr_bounty_abyssLocation,nskr_bountyIntelBullets,"$nskr_intel_key == abyss
+$nskr_intel_status == active
+$nskr_intel_update != sighted",,Found patrolling in the $nskr_bounty_abyssSystem.,,
+nskr_bounty_abyssReward,nskr_bountyIntelBullets,"$nskr_intel_key == abyss
+$nskr_intel_status == active
+$nskr_intel_update != sighted",,$nskr_bounty_abyssPayout reward,,
+nskr_bounty_abyssSighted,nskr_bountyIntelBullets,"$nskr_intel_key == abyss
+$nskr_intel_update == sighted",,"Initial examinations of the Remnant fleet shows an unusual flagship, the Hollow-Class. Approach with extreme caution.",,
+nskr_bounty_abyssPaidMessage,nskr_bountyIntelBullets,"$nskr_intel_key == abyss
+$nskr_intel_status == completed
+$nskr_intel_mode == update
+nskr_quest bounty check abyssPaid",,"Bounty payment received from ARO, +$nskr_bounty_abyssPayout",,
+nskr_bounty_abyssUnpaidMessage,nskr_bountyIntelBullets,"$nskr_intel_key == abyss
+$nskr_intel_status == completed
+$nskr_intel_mode == update
+!nskr_quest bounty check abyssPaid",,"Since you have no proof of complete destruction, you will not receive any payments from ARO.",,
+nskr_bounty_eternityLocation,nskr_bountyIntelBullets,"$nskr_intel_key == eternity
+$nskr_intel_status == active
+$nskr_intel_update != sighted",,Hiding in the $nskr_bounty_eternitySystem orbiting $nskr_bounty_eternityEntity,,
+nskr_bounty_eternityReward,nskr_bountyIntelBullets,"$nskr_intel_key == eternity
+$nskr_intel_status == active
+$nskr_intel_update != sighted",,Unknown reward,,
+nskr_bounty_eternitySighted,nskr_bountyIntelBullets,"$nskr_intel_key == eternity
+$nskr_intel_update == sighted",,"Initial examinations of the Enigma fleet shows an unusual flagship, the Eternity-Class. Approach with extreme caution.",,
+,,,,,,
+nskr_bounty_abyssDescFound,nskr_bountyIntelDesc,"$nskr_intel_key == abyss
+$nskr_intel_status == active",,You've found a mysterious seemingly passive Remnant fleet with unusual phase ships.,,
+nskr_bounty_abyssDescPosting,nskr_bountyIntelDesc,"$nskr_intel_key == abyss
+$nskr_intel_status == active",,Your comms team finds an open bounty posting by the Anti-Remnant Organization for a fleet with a matching yet vague description. The payout is $nskr_bounty_abyssPayout but requires the complete destruction of the fleet (no recovery).,,
+nskr_bounty_abyssDescLocation,nskr_bountyIntelDesc,"$nskr_intel_key == abyss
+$nskr_intel_status == active",,Found patrolling in the $nskr_bounty_abyssSystem.,,
+nskr_bounty_abyssDescReward,nskr_bountyIntelDesc,"$nskr_intel_key == abyss
+$nskr_intel_status == active",,$nskr_bounty_abyssPayout reward,,
+nskr_bounty_abyssDescDefeated,nskr_bountyIntelDesc,"$nskr_intel_key == abyss
+$nskr_intel_status == completed",,"You were able to defeat the Abyss fleet, good riddance.",,
+nskr_bounty_abyssDescPaid,nskr_bountyIntelDesc,"$nskr_intel_key == abyss
+$nskr_intel_status == completed
+nskr_quest bounty check abyssPaid",,You received the payment from ARO +$nskr_bounty_abyssPayout,,
+nskr_bounty_eternityDescFound,nskr_bountyIntelDesc,"$nskr_intel_key == eternity
+$nskr_intel_status == active",,You've found a mysterious seemingly malfunctioning Enigma fleet with an unusual flagship hiding in a nebula system.,,
+nskr_bounty_eternityDescLocation,nskr_bountyIntelDesc,"$nskr_intel_key == eternity
+$nskr_intel_status == active",,Hiding in the $nskr_bounty_eternitySystem orbiting $nskr_bounty_eternityEntity,,
+nskr_bounty_eternityDescReward,nskr_bountyIntelDesc,"$nskr_intel_key == eternity
+$nskr_intel_status == active",,Unknown reward,,
+nskr_bounty_eternityDescDefeated,nskr_bountyIntelDesc,"$nskr_intel_key == eternity
+$nskr_intel_status == completed",,"You were able to defeat the commanders fleet, good riddance.",,
 ,,,,,,
 # PEACEKEEPERS,,,,,,
 pkDialog,OpenCommLink,"$faction.id == independent score:1000

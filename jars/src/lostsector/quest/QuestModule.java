@@ -7,6 +7,7 @@ import com.fs.starfarer.api.campaign.CargoAPI;
 import com.fs.starfarer.api.campaign.FleetEncounterContextPlugin;
 import com.fs.starfarer.api.campaign.LocationAPI;
 import com.fs.starfarer.api.campaign.econ.MarketAPI;
+import com.fs.starfarer.api.fleet.FleetMemberAPI;
 
 import java.util.HashSet;
 import java.util.List;
@@ -68,6 +69,9 @@ public abstract class QuestModule<S extends Enum<S> & QuestStage, T extends Ques
     }
 
     protected void onDecivilized(QuestContext<S, T> ctx, MarketAPI market, boolean fullyDestroyed) {
+    }
+
+    protected void onShipsRecovered(QuestContext<S, T> ctx, List<FleetMemberAPI> ships) {
     }
 
     protected void devInfo(QuestContext<S, T> ctx, List<String> lines) {

@@ -1,7 +1,6 @@
 package lostsector.campaign.events.hints;
 
-import lostsector.campaign.bounties.abyss.AbyssIntel;
-import lostsector.campaign.bounties.eternity.UmbraIntel;
+import lostsector.campaign.bounties.BountiesQuest;
 import lostsector.campaign.bounties.mothership.MothershipIntel;
 import lostsector.campaign.enigma.FrostIntel;
 
@@ -14,8 +13,6 @@ import com.fs.starfarer.api.campaign.StarSystemAPI;
 import com.fs.starfarer.api.campaign.comm.IntelInfoPlugin;
 import com.fs.starfarer.api.campaign.comm.IntelManagerAPI;
 import com.fs.starfarer.api.impl.campaign.ids.Tags;
-import lostsector.campaign.bounties.abyss.AbyssSpawner;
-import lostsector.campaign.bounties.eternity.EternitySpawner;
 import lostsector.campaign.bounties.mothership.MothershipSpawner;
 import lostsector.persistence.Saved;
 import lostsector.helper.MathHelper;
@@ -70,8 +67,10 @@ public class HintManager extends BaseCampaignEventListener implements EveryFrame
 
         if (sources.val.isEmpty() && newGame.val){
             //init locations
-            sources.val.add(AbyssSpawner.getLoc().getStarSystem());
-            sources.val.add(EternitySpawner.getLoc().getStarSystem());
+            SectorEntityToken abyss = BountiesQuest.location(BountiesQuest.ABYSS);
+            if (abyss != null) sources.val.add(abyss.getStarSystem());
+            SectorEntityToken eternity = BountiesQuest.location(BountiesQuest.ETERNITY);
+            if (eternity != null) sources.val.add(eternity.getStarSystem());
             SectorEntityToken mothershipBase = MothershipSpawner.getMothershipBaseLocation();
             if (mothershipBase != null) sources.val.add(mothershipBase.getStarSystem());
             sources.val.add(Global.getSector().getStarSystem(Frost.getName()));
@@ -85,13 +84,13 @@ public class HintManager extends BaseCampaignEventListener implements EveryFrame
 
             IntelManagerAPI manager = Global.getSector().getIntelManager();
             //abyss
-            if (manager.hasIntelOfClass(AbyssIntel.class)){
-                StarSystemAPI sys = AbyssSpawner.getLoc().getStarSystem();
+            if (BountiesQuest.sighted(BountiesQuest.ABYSS)){
+                StarSystemAPI sys = BountiesQuest.location(BountiesQuest.ABYSS).getStarSystem();
                 if (sources.val.contains(sys)) cleanup.add(sys);
             }
             //umbra
-            if (manager.hasIntelOfClass(UmbraIntel.class)){
-                StarSystemAPI sys = EternitySpawner.getLoc().getStarSystem();
+            if (BountiesQuest.sighted(BountiesQuest.ETERNITY)){
+                StarSystemAPI sys = BountiesQuest.location(BountiesQuest.ETERNITY).getStarSystem();
                 if (sources.val.contains(sys)) cleanup.add(sys);
             }
             //mothership

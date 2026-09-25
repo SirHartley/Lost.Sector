@@ -49,7 +49,7 @@ The framework is built on branch `quest-overhaul`; the task ids refer to the tra
 | Intel and rules text outside dialogs | `QuestIntel`, `QuestIntels`, `QuestText` | implemented | T11 |
 | Rules check tool | `lostsector.quest.dev.RulesCheck` | implemented | T12 |
 | Dev menu and stage jumps | `nskr_questDev`, `QuestDevTools` | implemented | T13 |
-| Shared modules | `lostsector.quest.modules` | `InterceptEncounter` and `PayOffEncounter` implemented; the others planned | T37 to T41 |
+| Shared modules | `lostsector.quest.modules` | `InterceptEncounter`, `PayOffEncounter` and `BountyEncounter` implemented; the others planned | T37 to T41 |
 
 Until a component is implemented, do not write code against it and do not write a substitute. Implement it in its task, or stop and report.
 
@@ -399,6 +399,7 @@ public abstract class QuestModule<S, T> {
     protected void onBattle(QuestContext<S, T> ctx, QuestFleet fleet, BattleAPI battle, CampaignFleetAPI primaryWinner);
     protected void onLoot(QuestContext<S, T> ctx, QuestFleet fleet, FleetEncounterContextPlugin plugin, CargoAPI loot);
     protected void onDecivilized(QuestContext<S, T> ctx, MarketAPI market, boolean fullyDestroyed);
+    protected void onShipsRecovered(QuestContext<S, T> ctx, List<FleetMemberAPI> ships);
 
     protected void devInfo(QuestContext<S, T> ctx, List<String> lines);
 }
@@ -417,6 +418,7 @@ public abstract class QuestModule<S, T> {
 | `onBattle` | A battle involving a fleet of this quest's roles | Partial defeats, player participation |
 | `onLoot` | Loot is generated from an encounter with this quest's fleet | Adding quest items to loot |
 | `onDecivilized` | Any colony is decivilized | Losing a quest location |
+| `onShipsRecovered` | The player recovers ships, after a battle or from a derelict | Changing recovered quest hulls |
 | `devInfo` | The dev menu shows the quest | One line per value worth checking |
 
 Every hook has an empty default. Hooks run only while the module is active, except `onSkip`, which runs for the skipped stage. A module handles its own events and does not call another module; shared work goes into the state, a declared action, or a shared module.
@@ -536,6 +538,7 @@ The manager implements the vanilla callbacks below and routes each to the hooks 
 | `reportBattleOccurred(primaryWinner, battle)` | `CampaignEventListener` | `onBattle` | Owning quests of every quest fleet in the battle |
 | `reportEncounterLootGenerated(plugin, loot)` | `CampaignEventListener` | `onLoot` | Owning quests of the quest fleets on the side the player fought |
 | `reportColonyDecivilized(market, fullyDestroyed)` | `ColonyDecivListener` | `onDecivilized` | All active modules |
+| `reportShipsRecovered(ships, dialog)` | `ShipRecoveryListener` | `onShipsRecovered` | All active modules |
 
 Delivery order is quest order in `QuestCatalog`, then module order. A stage change during delivery takes effect at once: each module's activity is checked when its turn comes, so a module that became inactive does not receive the rest of that event and one that became active does. Unavailable quests and quests without state receive nothing, which includes events that arrive during a load before `startQuests()`. `EconomyTickListener` is not a daily tick (it fires about every three days) and is not used.
 
@@ -544,6 +547,8 @@ Delivery order is quest order in `QuestCatalog`, then module order. A stage chan
 - **Contexts.** The manager keeps one context per module and passes it to every hook call of that module; an idle frame, where no module wants frames, allocates nothing.
 - **Registration.** Implementing a listener interface on `QuestManager` is enough. The `EFS_LIST` loop calls `getListenerManager().addListener(script, true)`; vanilla's `ListenerManager` files the object under every class and interface it implements (`FastIterationClassifier.classify`), and `ListenerUtil` fetches listeners by interface. `beforeGameSave` removes the object and `afterGameSave` adds it again.
 - **Decivilization.** Only `reportColonyDecivilized` is routed. `DecivTracker.decivilize` fires `reportColonyAboutToBeDecivilized` earlier in the same call, before the market leaves the economy; the manager ignores it.
+- **Recovery.** `ListenerUtil.reportShipsRecovered` calls every `ShipRecoveryListener` in the listener manager. `FleetInteractionDialogPluginImpl` calls it after the post-battle recovery picker, and `ShipRecoverySpecial` after recovering a derelict. The dialog argument is not passed on; the hook context has no dialog.
+- **Loot before battle.** For a player battle, `FleetInteractionDialogPluginImpl` reports the loot (`CONTINUE_LOOT`, "Pick through the wreckage") after the recovery screen, and reports the battle later, from `applyAfterBattleEffectsIfThereWasABattle` when the loot screen closes; so `onLoot` sees the player's fleet after recovery and comes before `onBattle`. Loot is reported only when it is not empty.
 
 To add a callback, follow [Extending the framework](#extending-the-framework): implement it on `QuestManager`, add a hook with an empty default, route it through the manager's `deliver` helper (all quests) or `deliverToOwners` (each quest fleet's event to its owning quest), and add a row here.
 
@@ -579,6 +584,7 @@ public final class FleetOrders {
     public static FleetOrders intercept(FleetHelper.InterceptBehaviour behaviour);
     public static FleetOrders guard(FleetHelper.GuardMovementBehaviour movement, FleetHelper.GuardAttackBehaviour attack, float playerInterceptChance);
     public static FleetOrders leave();                // go to FleetInfo.target and despawn there
+    public static FleetOrders withdraw();             // keep the last assignment, despawn once out of the player's sight
     public FleetOrders withdrawWhenBeaten();          // copies; see Withdrawal below
     public FleetOrders withdrawAfter(float days);
     public static FleetOrders raid(String orbitText, boolean withdrawHome);
@@ -601,7 +607,7 @@ The `KEY` list in sector memory is the only saved fleet data. Owner, role and re
 - **Load checks.** `FleetRole.config` throws unless the generator is a named top-level or static nested class, because fleet memory saves it; a lambda, anonymous, local or inner class would drag its enclosing objects into the save. A role's defeat trigger must also be declared with `d.trigger`, or the definition throws at load.
 
 - **Orders.** Every 0.1 days of campaign time (`Misc.getDays(amount)`, unpaused frames), the manager reads the list and applies each live fleet's `FleetOrders` by calling `FleetHelper.gotoAndInterceptPlayerAI`, `FleetHelper.guardTargetAI`, for `leave()` `FleetHelper.goToTargetAndDespawnAI` or, for `raid(...)`, `FleetHelper.raidTargetAI`, the cadence the old questline and the old intercept fleets use and the one those methods are written for. The list is read once per interval, not every frame, because `FleetHelper.getFleets` goes through the sector's `getMemory()`, which runs every campaign plugin's `updateGlobalFacts`. Orders do not depend on the quest being available. A fleet whose quest or role is unknown gets no orders and is logged once. The manager also advances `FleetInfo.age` in days. A behavior these two methods do not provide is added to `FleetHelper`, then to `FleetOrders`; never to a quest.
-- **Withdrawal.** `withdrawWhenBeaten()` (below a quarter of the spawn strength, `FleetHelper.isBeaten`) and `withdrawAfter(days)` (`FleetInfo.age` above the days) replace the orders with `FleetHelper.despawnOutOfSight`: the fleet keeps its last assignment and despawns with `PLAYER_FAR_AWAY` once it is farther from the player than `getMaxSensorRangeHyper()`, measured between `getLocationInHyperspace()` positions. The despawn reaches `onFleetGone`. This is the rule the old spawners check before their fleet AI.
+- **Withdrawal.** `withdrawWhenBeaten()` (below a quarter of the spawn strength, `FleetHelper.isBeaten`) and `withdrawAfter(days)` (`FleetInfo.age` above the days) replace the orders with `FleetHelper.despawnOutOfSight`: the fleet keeps its last assignment and despawns with `PLAYER_FAR_AWAY` once it is farther from the player than `getMaxSensorRangeHyper()`, measured between `getLocationInHyperspace()` positions. The despawn reaches `onFleetGone`. This is the rule the old spawners check before their fleet AI. `withdraw()` applies the same rule at once, for a role a fleet takes when its part is over, such as a beaten bounty fleet.
 - **Leaving.** `leave()` issues `GO_TO_LOCATION_AND_DESPAWN` to `FleetInfo.target` with the text "returning to <market name>" (the entity name without a market) whenever the fleet has another assignment, after the same `STANDING_DOWN` handling as the other two methods. It does nothing while the target is null, so the quest sets the target before the fleet takes the role.
 - **Raid.** `FleetOrders.raid(orbitText, withdrawHome)` runs `FleetHelper.raidTargetAI`: the fleet goes to `FleetInfo.target` when farther than `FleetHelper.RAID_ORBIT_RANGE` (600) and otherwise orbits it (`ORBIT_PASSIVE`, `orbitText`), re-issued on every order interval. `spawn` leaves the target null, so the quest sets `fleet.info().target` right after spawning. When the quest clears the target, or the fleet falls below `RAID_BROKEN_STRENGTH` (a fifth) of the fleet points it had when registered (`FleetHelper.isRaidBroken`), it withdraws once with `GO_TO_LOCATION_AND_DESPAWN`: to `FleetInfo.home` when `withdrawHome`, otherwise to a random market of its faction from `SystemHelper.getRandomFactionMarket`, or home when there is none. `FleetHelper.isRaidingTarget` answers whether a fleet is orbiting its target in that sense. The market pick draws from the owning quest's saved random `fleetOrders` (`Misc.random` for a quest without state), which `QuestManager` passes to every order. Raid fleets can also take `withdrawAfter(days)`.
 - **Despawn routing.** `reportFleetDespawned` removes a registered fleet from the list and calls `onFleetGone` on its quest's active modules. Every despawn the game makes uses this path: destroyed in battle, `NO_MEMBERS`, reaching a destination, or despawned by other code.
@@ -924,7 +930,7 @@ Behavior used by more than one quest lives once in `lostsector.quest.modules`, c
 | Module | Used by | Does | Status |
 |---|---|---|---|
 | [`PayOffEncounter`](#payoffencounter) | Loan collector (quest `ic`); planned for the Tri-Tachyon collector | A hostile fleet that demands payment in credits or cargo; pay, part pay or fight | implemented, T37 |
-| `BountyEncounter` | Abyss, Eternity, Mothership, Peacekeepers | Spawn, first sighting, intel, completion, reward, shared text slots | planned, T39 |
+| [`BountyEncounter`](#bountyencounter) | Abyss, Eternity (quest `bounty`); planned for Mothership and Peacekeepers | Placement, first sighting, intel, defeat, reward, completion, shared intel text slots | implemented, T39; Mothership and Peacekeepers in T40 |
 | [`InterceptEncounter`](#interceptencounter) | ARO strike, "LZ" messenger, Auto-Hunter, loan collector (quest `ic`); planned for the Tri-Tachyon collector | Daily roll, spawn near the player, the orders of its role, an optional second role | implemented, T41 |
 
 The task that builds a shared module documents its constructor and behavior here. A shared module that keeps data defines a saved record class and an interface the quest's state implements to hold the records.
@@ -991,6 +997,40 @@ public final class PayOffEncounter<S, T extends QuestState<S> & PayOffEncounter.
 - **`onPaid`** does what the payment settles in the quest's own data, such as reducing the Kesteven debt. It runs inside the action, after the receipt.
 - **Dev info.** One line per demand: payments and the total paid.
 
+### BountyEncounter
+
+One named bounty: a fleet placed once per game, intel from its first sighting, a reward when the player loots it beaten, and the intel's completion. A quest adds one instance per bounty; quest `bounty` (`campaign/bounties/BountiesQuest`) is the example.
+
+```java
+public final class BountyEncounter<S, T extends QuestState<S> & BountyEncounter.Host> extends QuestModule<S, T> {
+    public static final String UPDATE_SIGHTED = "sighted";
+    public enum Status { NOT_PLACED, ACTIVE, DEFEATED, DONE }
+    public interface Host { Map<String, Record> bounties(); }   // the state creates the map; the module fills it
+    public static final class Record { Status status(); SectorEntityToken location(); boolean sighted(); int paid(); }
+    public interface Reward<S, T> { void grant(QuestContext<S, T> ctx, CargoAPI loot, FleetEncounterContextPlugin plugin); }
+    public interface Payout { int paid(int amount, FleetEncounterContextPlugin plugin); }
+
+    @SafeVarargs public BountyEncounter(String id, String icon, FleetRole fleetRole, Function<Random, SectorEntityToken> location,
+            BiFunction<SectorEntityToken, Random, SimpleFleet> builder, Predicate<QuestFleet> defeated, S... stages);
+    public BountyEncounter<S, T> finish(BiConsumer<CampaignFleetAPI, Random> finish);
+    public BountyEncounter<S, T> reward(Reward<S, T> reward);
+    public BountyEncounter<S, T> payout(int amount, Payout rule);
+    public BountyEncounter<S, T> onSighted(Consumer<QuestContext<S, T>> onSighted);
+    public BountyEncounter<S, T> revealOnRecovery(String... hullIds);
+}
+```
+
+- **Identity.** `id` names the record in `Host.bounties()`, the role of the fleet (declared with `fleetRole`), the record id of the fleet, the intel key (declared with `icon` and `Tags.INTEL_BOUNTY`), the random purposes `location:<id>` and `fleet:<id>`, and the prefix of its tokens and checks. The module also declares the role `<id>Beaten` with `FleetOrders.withdraw()`. No stages: active in every stage.
+- **Placement.** In `onStart`, once per record: `location` picks the entity with the `location:<id>` random; null leaves the record `NOT_PLACED`. The builder gets the entity and the `fleet:<id>` random and returns the fleet unbuilt; `ctx.fleets().spawn(id, id, spec)` builds and registers it, `finish` runs with the same random (placement fixes, faction, `FleetHelper.update`), and the record keeps the fleet, its name and `ACTIVE`.
+- **First sighting.** `wantsFrames` is true while the player shares a location with the unsighted, living fleet. Each such frame the module checks `fleet.isVisibleToSensorsOf(playerFleet)`, which is false for fleets in another location. The first time it is true: `onSighted`, `ctx.intel().show(id)`, the location as map location, and the update `sighted`.
+- **Defeat.** The fleet is beaten when `defeated` is true for its `QuestFleet` (which gives the `FleetInfo`, for `FleetHelper.getOriginalFlagship`) at its loot or after a battle it fought (`onLoot`, `onBattle`), or when it is destroyed (`onFleetGone` with `wasDestroyed`). The record becomes `DEFEATED`; the fleet loses `MemFlags.MEMORY_KEY_MISSION_IMPORTANT` and moves to `<id>Beaten`, so rows keyed on the role flag stop matching and the fleet despawns once out of the player's sight.
+- **Reward.** At the loot of a beaten fleet, once per record: `reward` (add items to `loot`; they show on the loot screen), then, with `payout`, the rule's amount through `ctx.rewards().credits`, stored in the record. The hook has no dialog, so no receipt prints; the intel completion reports the payment. Loot comes after the recovery screen ([Events](#events)), so a rule can read the player's fleet as recovered.
+- **Completion.** On the next unpaused frame after the defeat, after any open dialog, the intel completes (`ctx.intel().complete(id)`, when shown) and the record becomes `DONE`.
+- **Recovery.** `onShipsRecovered` removes `Tags.SHIP_LIMITED_TOOLTIP` from recovered ships whose base hull id is listed in `revealOnRecovery`.
+- **Tokens and checks.** Tokens `$nskr_<q>_<id>FleetName` (the fleet's name at spawn), `<id>System` (the location's system), `<id>Entity` (the location's name) and, with `payout`, `<id>Payout` (the amount, `Misc.getDGSCredits`); with `payout`, the check `<id>Paid` (credits were paid).
+- **Shared text slots.** Every bounty of a quest writes its intel text on the quest's three intel triggers, selected by `$nskr_intel_key == <id>`, with `$nskr_intel_update == sighted` for the sighting message and `$nskr_intel_status == completed` with `$nskr_intel_mode == update` for the completion message.
+- **Dev info.** One line per bounty: status, location, sighted, looted, paid, and whether the fleet is alive.
+
 ## Save compatibility
 
 Version 1.0.c breaks saves, so the overhaul needs no migration. After it ships:
@@ -1049,6 +1089,7 @@ Migration map for the Kesteven questline and the other systems. The owning task 
 | `events/InterceptManager`, its `Saved` spawn flags, frame counters and per-fleet AI | Quest `ic` in `campaign/events/intercepts`: `InterceptEncounter` records, `onDay` rolls, roles with `FleetOrders` withdrawal and `reassign` (done in T41) |
 | `kesteven/loans/LoanShark` and `dialogue/rules/nskr_loanSharkDialog`, their persistent-data keys, `$debtCollector` and the `# DEBT collector dialog` rows | Records `collector` of quest `ic`: an `InterceptEncounter` with `switchOnAction`, `switchWhen` and `onSwitch`, a `PayOffEncounter`, and rows in `# INTERCEPTS` (done in T37) |
 | `BlacksiteManager`, `BlacksiteDialog`, `BlacksiteInfo` and the sector-memory site list | Record quest `bs` in `campaign/events/blacksite`; `BlacksiteSpawner` stays world generation ([BLACKSITES.md](../../../../docs/quests/BLACKSITES.md)) |
+| `bounties/abyss` and `bounties/eternity`: spawners, `Saved` counters, loot keys, `AbyssIntel`, `UmbraIntel`, their `BountyLoot` branches | Quest `bounty` in `campaign/bounties`: `BountyEncounter` records, frame sighting, `onLoot` rewards, `QuestIntel` with intel rows (done in T39; Mothership and Peacekeepers in T40) |
 | Outside readers (`ContractManager`, the kiosk commands, `StalkerSpawner`, `InterceptManager`, `BlackOpsManager`, `Cache`, `CorePlugin`) | `Quests` and `KestevenQuest` queries (done in T15; see [KESTEVEN_STATE.md](../../../../docs/quests/KESTEVEN_STATE.md)) |
 
 ## Outside the framework

@@ -13,7 +13,8 @@ public final class FleetOrders {
         INTERCEPT,
         GUARD,
         LEAVE,
-        RAID
+        RAID,
+        WITHDRAW
     }
 
     private final Kind kind;
@@ -73,6 +74,11 @@ public final class FleetOrders {
         return new FleetOrders(Kind.RAID, null, null, null, 0f, orbitText, withdrawHome, false, Float.POSITIVE_INFINITY);
     }
 
+    // Keeps its last assignment and despawns once out of the player's sight, for a fleet whose part is over.
+    public static FleetOrders withdraw() {
+        return new FleetOrders(Kind.WITHDRAW, null, null, null, 0f);
+    }
+
     // Below a quarter of its spawn strength the fleet gets no more orders and despawns once out of the player's sight.
     public FleetOrders withdrawWhenBeaten() {
         return new FleetOrders(kind, intercept, movement, attack, playerInterceptChance, orbitText, withdrawHome, true, withdrawAfterDays);
@@ -103,6 +109,9 @@ public final class FleetOrders {
                 break;
             case RAID:
                 FleetHelper.raidTargetAI(info.fleet, info, orbitText, withdrawHome, random);
+                break;
+            case WITHDRAW:
+                FleetHelper.despawnOutOfSight(info.fleet);
                 break;
             default:
                 break;

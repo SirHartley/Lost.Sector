@@ -9,8 +9,6 @@ import com.fs.starfarer.api.campaign.FleetEncounterContextPlugin;
 import com.fs.starfarer.api.combat.EngagementResultAPI;
 import com.fs.starfarer.api.impl.campaign.ids.Factions;
 import com.fs.starfarer.api.impl.campaign.ids.MemFlags;
-import lostsector.campaign.bounties.abyss.AbyssSpawner;
-import lostsector.campaign.bounties.eternity.EternitySpawner;
 import lostsector.campaign.bounties.mothership.MothershipSpawner;
 import lostsector.campaign.bounties.peacekeepers.RorqualSpawner;
 import lostsector.campaign.kesteven.quest.QuestHelper;
@@ -19,9 +17,7 @@ import java.util.Map;
 
 public class BountyLoot extends BaseCampaignEventListener implements EveryFrameScript {
 
-	public static final String DEFEATED_ABYSS_KEY = "$nskr_abyssDefeated";
 	public static final String DEFEATED_RORQ_KEY = "$nskr_rorqDefeated";
-	public static final String DEFEATED_UMBRA_KEY = "$nskr_umbraDefeated";
 	public static final String DEFEATED_HELIOS_KEY = "$nskr_heliosDefeated";
 
 	static void log(final String message) {
@@ -51,39 +47,6 @@ public class BountyLoot extends BaseCampaignEventListener implements EveryFrameS
 				MothershipSpawner.setBountyCompleted(true);
 
 				log("Loot added mothership loot");
-			}
-		}
-
-		//eternity "bounty" loot
-		if (loser.getMemoryWithoutUpdate().contains(EternitySpawner.LOOT_KEY)){
-			if (loser.getFlagship()==null) {
-				//completed
-				QuestHelper.setCompleted(true, DEFEATED_UMBRA_KEY);
-
-				loot.addCommodity("alpha_core", 2);
-				loot.addCommodity("nskr_electronics", 500);
-
-				loser.getMemoryWithoutUpdate().unset(EternitySpawner.LOOT_KEY);
-				loser.getMemoryWithoutUpdate().unset(MemFlags.MEMORY_KEY_MISSION_IMPORTANT);
-				log("Loot added eternity loot");
-			}
-		}
-
-		//abyss "bounty" loot
-		if (loser.getMemoryWithoutUpdate().contains(AbyssSpawner.LOOT_KEY)){
-			if (!AbyssSpawner.hasBountyShips(loser)) {
-				//completed
-				QuestHelper.setCompleted(true, DEFEATED_ABYSS_KEY);
-
-				loot.addCommodity("alpha_core", 1);
-				//payout for not recovering
-				if (!AbyssSpawner.hasBountyShips(Global.getSector().getPlayerFleet())) {
-					Global.getSector().getPlayerFleet().getCargo().getCredits().add(AbyssSpawner.BOUNTY_PAYOUT);
-					log("Loot added abyss payout");
-				}
-				loser.getMemoryWithoutUpdate().unset(AbyssSpawner.LOOT_KEY);
-				loser.getMemoryWithoutUpdate().unset(MemFlags.MEMORY_KEY_MISSION_IMPORTANT);
-				log("Loot added abyss loot");
 			}
 		}
 
