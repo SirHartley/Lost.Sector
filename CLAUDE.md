@@ -235,7 +235,7 @@ Code subagents work from a brief written with the [dispatch template](#subagent-
 
 The quest overhaul runs on the shared branch `quest-overhaul`, tracked by the draft pull request SirHartley/Lost.Sector#8. The user authorized it to proceed task by task without approval of each stage. Remove this section in the commit that merges the branch.
 
-- Every quest overhaul task commits to `quest-overhaul`, not to a new task branch. One task is one commit, in tracker order.
+- Every quest overhaul task commits to `quest-overhaul`, not to a new task branch. One task is one commit. Tasks run in parallel where their files do not overlap, so they may land out of tracker order; a task whose inputs are not committed yet waits.
 - At the start of a session, check out `quest-overhaul`, merge current `main` into it, read the in-full guides and start the first unchecked task.
 - Each runtime-affecting commit passes the full compile gate in [Building](#building) before it is pushed. Push after every task and tick its box in the tracker with the commit id.
 - The branch merges to `main` once, after the final task, through the tracker pull request and the full gate on its exact final revision.
