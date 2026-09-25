@@ -55,7 +55,6 @@ public final class QuestManager extends BaseCampaignEventListener
     private final List<Run<?, ?>> order = new ArrayList<>();
     private final Map<Class<?>, Run<?, ?>> runsByStages = new HashMap<>();
     private final Map<Class<?>, Run<?, ?>> runsByFlags = new HashMap<>();
-    private boolean initialized;
     private float daysSinceOrders;
     private final Set<CampaignFleetAPI> reportedUnknownFleets = Collections.newSetFromMap(new IdentityHashMap<>());
 
@@ -405,10 +404,6 @@ public final class QuestManager extends BaseCampaignEventListener
 
     @Override
     public void advance(float amount) {
-        if (!initialized) {
-            initialized = true;
-            startAvailableQuests();
-        }
         deliverDay();
         for (int i = 0; i < order.size(); i++) {
             order.get(i).frame(amount);
@@ -546,7 +541,10 @@ public final class QuestManager extends BaseCampaignEventListener
         }
     }
 
-    private void startAvailableQuests() {
+    // Called at the end of ModPlugin.onGameLoad, after the world exists (onGameLoad follows every onNewGame* hook, and
+    // ModPlugin generates the mod's world there when it is added to a save), so states exist before any script or
+    // dialog of the load runs, including QuestStageManager, which runs while paused.
+    public void startQuests() {
         for (Run<?, ?> run : runs.values()) {
             run.available = run.quest.isAvailable();
             if (run.available && run.state() == null) {

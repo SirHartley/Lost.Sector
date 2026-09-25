@@ -279,6 +279,8 @@ public class ModPlugin extends BaseModPlugin {
         }
 
         FleetHelper.hackBrokenVariants();
+
+        QuestManager.get().startQuests();
     }
 
     //Thanks to HzDev for just making this for me

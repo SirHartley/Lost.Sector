@@ -6,13 +6,10 @@ import com.fs.starfarer.api.characters.PersonAPI;
 
 import java.util.ArrayList;
 import java.util.function.Consumer;
-import java.util.regex.Pattern;
 
 // Generated quest people. Registration with ImportantPeopleAPI is what lets BeginConversation, ShowPersonVisual
 // and ShowSecondPerson find them by id; ImportantPeople keys people by getId(), so the id is set before adding.
 public final class QuestPeople {
-
-    private static final Pattern KEY = Pattern.compile("[a-z][A-Za-z0-9]*");
 
     private final QuestManager.Run<?, ?> run;
 
@@ -20,13 +17,13 @@ public final class QuestPeople {
         this.run = run;
     }
 
-    // Returns the existing person when the key exists; null when the key or faction is invalid.
+    // Returns the existing person when the key exists; null when the key is not declared with d.person or the faction is unknown.
     public PersonAPI create(String key, String factionId, Consumer<PersonAPI> setup) {
         QuestState<?> state = run.state();
         PersonAPI existing = state.people.get(key);
         if (existing != null) return existing;
-        if (key == null || !KEY.matcher(key).matches()) {
-            QuestManager.logError(run.id(), "person key must be lowerCamel: " + key);
+        if (!run.quest.declarations().people().contains(key)) {
+            QuestManager.logError(run.id(), "person " + key + " refused: not declared with d.person");
             return null;
         }
         FactionAPI faction = Global.getSector().getFaction(factionId);

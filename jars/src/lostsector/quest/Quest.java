@@ -75,7 +75,7 @@ public abstract class Quest<S extends Enum<S> & QuestStage, T extends QuestState
 
     protected abstract List<QuestModule<S, T>> createModules();
 
-    // Checked on the first frame after each load.
+    // Checked once per load by QuestManager.startQuests(), at the end of ModPlugin.onGameLoad.
     protected boolean isAvailable() {
         return true;
     }

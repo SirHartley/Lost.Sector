@@ -99,7 +99,7 @@ public class QuestStageManager extends BaseCampaignEventListener implements Ever
     public void advance(float amount) {
         CampaignFleetAPI pf = Global.getSector().getPlayerFleet();
         if (pf == null) return;
-        // QuestManager creates the state on the first unpaused frame of a new campaign; this script runs while paused.
+        // QuestManager creates the state at the end of ModPlugin.onGameLoad, so it exists here unless the quest is unavailable.
         KestevenState state = KestevenQuest.state();
         if (state == null) return;
 

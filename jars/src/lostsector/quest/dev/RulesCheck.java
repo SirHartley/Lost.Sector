@@ -180,6 +180,7 @@ public final class RulesCheck {
         checkLoading();
         checkQuestCalls();
         checkTokens();
+        checkOptionTokens();
         checkTriggers();
         checkOptionHandlers();
         checkCase();
@@ -454,6 +455,51 @@ public final class RulesCheck {
                 }
             }
         }
+    }
+
+    // The engine replaces tokens in Options-column labels with the id of the rule that fired the row's trigger, not the
+    // row's own id: RuleBasedInteractionDialogPluginImpl fires its initial trigger and DialogOptionSelected with
+    // FireBest.fire(null, ...), and FireAll/FireBest pass their caller's id to OptionAdder.add. Quest tokens reach an
+    // option label only when every source of the trigger is a FireAll/FireBest in a row of the same quest (README "Tokens").
+    private void checkOptionTokens() {
+        Map<String, Set<String>> firingQuests = new HashMap<>();
+        for (ParsedRow row : rows) {
+            for (RuleExpression e : row.all()) {
+                String target = fireTarget(e);
+                if (target == null) continue;
+                String quest = rowQuest(row);
+                firingQuests.computeIfAbsent(target, t -> new HashSet<>()).add(quest == null ? "" : quest);
+            }
+        }
+        Set<String> declared = declaredTriggers();
+        for (ParsedRow row : rows) {
+            Set<String> tokens = new LinkedHashSet<>();
+            for (RulesFile.Option option : row.options()) {
+                if (option.error() == null) tokens.addAll(questTokens(option.text()));
+            }
+            for (String token : tokens) {
+                Matcher m = QUEST_TOKEN.matcher(token);
+                if (!m.matches()) continue;
+                String reason = optionRuleIdProblem(row.trigger(), m.group(1), firingQuests, declared);
+                if (reason != null) add(Severity.ERROR, "option-token", row, token + " in an option label is not replaced: " + reason);
+            }
+        }
+    }
+
+    private String optionRuleIdProblem(String trigger, String quest, Map<String, Set<String>> firingQuests, Set<String> declared) {
+        if (VanillaRules.OPTION_TRIGGERS.contains(trigger)) {
+            return "the dialog applies " + trigger + " rows with rule id null; fire a private option trigger from this row";
+        }
+        if (declared.contains(trigger)) return "Java opens or fires " + trigger + " with rule id null";
+        if (VanillaRules.engineFires(trigger) || vanilla.triggers().contains(trigger)
+                || vanilla.fireAll().contains(trigger) || vanilla.fireBest().contains(trigger)) {
+            return "the engine or vanilla rows fire " + trigger + ", passing a rule id of another feature or null";
+        }
+        Set<String> firing = firingQuests.getOrDefault(trigger, Set.of());
+        if (!firing.equals(Set.of(quest))) {
+            return trigger + " is not fired only by FireAll or FireBest in rows of quest " + quest;
+        }
+        return null;
     }
 
     // Tokens of known quests; $nskr_<x>_ names of other features are legacy memory keys.

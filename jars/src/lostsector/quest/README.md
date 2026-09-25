@@ -129,6 +129,7 @@ A quest package holds only content: its definition, stage and flag enums, state,
 |---|---|---|
 | `ModPlugin.createManagers()` | `EFS_LIST.add(new QuestManager())`, like every other transient manager. The existing `onGameLoad` loop registers it as transient script, transient campaign listener and transient listener-manager listener, and `beforeGameSave` removes it. | `ModPlugin.java` |
 | `ModPlugin.onGameLoad` | `Global.getSector().getRules().addTokenReplacementGenerator(new QuestTokens())`. Generators are not saved; vanilla adds its own on every load (`CoreLifecyclePluginImpl`, source comment "the token replacement generators don't get saved"). | `ModPlugin.java`, next to `registerPlugin(new CorePlugin())` |
+| `ModPlugin.onGameLoad`, last line | `QuestManager.get().startQuests()` creates missing states ([Load](#load)). | `ModPlugin.java` |
 | `CorePlugin.pickInteractionDialogPlugin` | One route for [claimed entities](#dialog-entry-points). | `CorePlugin.java` |
 | `FleetHelper.FLEET_ARRAY_KEYS` | `QuestFleets.KEY`, so `hackBrokenVariants()` repairs quest fleets. | `FleetHelper.java` |
 
@@ -138,7 +139,9 @@ No other registration exists. A quest never registers scripts, listeners or plug
 
 1. `QuestManager` is constructed in `createManagers()`. Its constructor creates the store handle (`Saved<QuestStore>` under key `quests`, stored as `nskr_quests`) and builds every definition from `QuestCatalog`. Building definitions calls no game API.
 2. `Saved.loadPersistentData()` loads the store.
-3. On the first unpaused frame, the manager calls `isAvailable()` on each quest. For an available quest without state it creates the state, puts it in the start stage and calls `onStart` on the start stage's modules (not `onStage`). States are never deleted; an unavailable quest keeps its state but receives no events. The manager does not run while paused: `runWhilePaused()` is false, as for vanilla's wait script.
+3. At the end of `ModPlugin.onGameLoad`, `QuestManager.startQuests()` calls `isAvailable()` on each quest. For an available quest without state it creates the state, puts it in the start stage and calls `onStart` on the start stage's modules (not `onStage`). States are never deleted; an unavailable quest keeps its state but receives no events.
+
+   The world is complete at that point: vanilla calls `onGameLoad(true)` after every mod's `onNewGame*` hooks (`sources-obf/campaign.save.java` 606-609), and `ModPlugin.onGameLoad` generates the mod's world itself, before this call, when the mod is added to an existing save. States therefore exist before the first frame, so scripts that run while paused (`QuestStageManager`) and dialogs opened before the game is unpaused find them. `onStart` hooks run during the load: a dialog they open with `ctx.open` waits in the pending list while the UI is busy. The manager itself does not run while paused: `runWhilePaused()` is false, as for vanilla's wait script.
 
 ### A stage change
 
@@ -329,7 +332,7 @@ public abstract class Quest<S, T> {
     public final S start();
     protected abstract T createState();
     protected abstract List<QuestModule<S, T>> createModules();
-    protected boolean isAvailable();   // default true; checked on the first frame after each load
+    protected boolean isAvailable();   // default true; checked once per load, at the end of ModPlugin.onGameLoad
 }
 ```
 
@@ -532,9 +535,9 @@ The manager implements the vanilla callbacks below and routes each to the hooks 
 | `reportEncounterLootGenerated(plugin, loot)` | `CampaignEventListener` | `onLoot` | Owning quests of the quest fleets on the side the player fought |
 | `reportColonyDecivilized(market, fullyDestroyed)` | `ColonyDecivListener` | `onDecivilized` | All active modules |
 
-Delivery order is quest order in `QuestCatalog`, then module order. A stage change during delivery takes effect at once: each module's activity is checked when its turn comes, so a module that became inactive does not receive the rest of that event and one that became active does. Unavailable quests and quests without state receive nothing, which includes every event before the first unpaused frame after a load. `EconomyTickListener` is not a daily tick (it fires about every three days) and is not used.
+Delivery order is quest order in `QuestCatalog`, then module order. A stage change during delivery takes effect at once: each module's activity is checked when its turn comes, so a module that became inactive does not receive the rest of that event and one that became active does. Unavailable quests and quests without state receive nothing, which includes events that arrive during a load before `startQuests()`. `EconomyTickListener` is not a daily tick (it fires about every three days) and is not used.
 
-- **Frame order.** Each unpaused frame runs, in order: the start of available quests (first frame only), the daily tick, then `onFrame`, then the retry of [pending dialogs](#dialog-entry-points).
+- **Frame order.** Each unpaused frame runs, in order: the daily tick, then `onFrame`, then the retry of [pending dialogs](#dialog-entry-points).
 - **Days.** The store saves the clock timestamp of the last delivered day (`lastDay`), set when the store is first created. Each unpaused frame, when `getElapsedDaysSince(lastDay)` reaches 1, the manager advances `lastDay` by one day (86,400,000 timestamp units; `CampaignClock.getElapsedDaysSince` divides by `8.64E7`) and delivers `onDay`. Reloads keep the count. At most one `onDay` is delivered per frame, so days missed during a long fast-forward arrive one per frame until caught up; there is no cap. Days count from the store's creation, not from calendar midnight.
 - **Contexts.** The manager keeps one context per module and passes it to every hook call of that module; an idle frame, where no module wants frames, allocates nothing.
 - **Registration.** Implementing a listener interface on `QuestManager` is enough. The `EFS_LIST` loop calls `getListenerManager().addListener(script, true)`; vanilla's `ListenerManager` files the object under every class and interface it implements (`FastIterationClassifier.classify`), and `ListenerUtil` fetches listeners by interface. `beforeGameSave` removes the object and `afterGameSave` adds it again.
@@ -613,7 +616,7 @@ Every key passed to `create` is declared first with `d.person(key)` in the `decl
 
 `create` makes the person with `FactionAPI.createRandomPerson(ctx.random("person:" + key))`, sets the id `nskr_<q>_<key>`, runs `setup` for portrait, name, rank, post and gender, registers the person with `ImportantPeopleAPI.addPerson` and stores it in the state. Registration is what lets the vanilla presentation commands find generated people: `BeginConversation nskr_kq_host` makes the person the active speaker (their memory becomes `$local`), and `ShowSecondPerson` and `ShowThirdPerson` add portraits. `release` removes the person from the important people and the state; call it in `onStop` for people the quest no longer needs. A quest reset releases all of its people.
 
-- **Keys** are lowerCamel, like declared names. An invalid key or an unknown faction id logs an error and `create` returns null.
+- **Keys** are the ones declared with `d.person`. An undeclared key or an unknown faction id logs an error and `create` returns null.
 - **Ids.** `ImportantPeople.addPerson` files the person under `getId()` at the time of the call, so the id is set before registering and must not change afterwards. `BeginConversation <id>` looks the id up with `getImportantPeople().getData(id)`, then among the target market's people, or `POST:<postId>` in its comm directory; `ShowSecondPerson` and `ShowThirdPerson` use `getData(id)` only and do nothing for an unknown id.
 
 Fixed characters (Alice, Jack, Nicholas, Eliza) are created by world generation with ids in `helper/Ids`; quests look them up and never create them.
@@ -802,6 +805,7 @@ Findings about definitions rather than rows show `-` as the line and `(quest <q>
 | `quest-call` | error | In `nskr_quest` calls: an unknown quest id, verb, stage, flag, check or action; a verb in the wrong column; the wrong number of arguments. A `$variable` argument is a warning, because it is not checked |
 | `advance` | error | `advance` from a stage to itself |
 | `token` | error | An unknown `$nskr_<q>_<name>` token in Text, option labels or Script literals, including a person token whose key is not declared with `d.person`; a token in a row whose id does not start with `nskr_<q>_`; a token name read in Conditions or Script, where it is not memory |
+| `option-token` | error | A quest token in an Options-column label of a row that cannot receive the quest's rule id ([Tokens](#tokens)): a row on `DialogOptionSelected`, on a declared (Java-fired) trigger, on a trigger the engine or vanilla rows fire, or on a trigger that is not fired only by `FireAll` or `FireBest` in rows of the same quest |
 | `token-assign` | error | A Script line that assigns a token's name |
 | `token-prefix` | error | A token name that is a prefix of another token name or of a declared person key of the same quest |
 | `declared-trigger` | error | A trigger declared with `d.trigger(...)` that no row uses |

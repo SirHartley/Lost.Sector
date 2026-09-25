@@ -32,7 +32,7 @@ public final class KestevenQuest extends Quest<KestevenStage, KestevenState> {
         return List.of();
     }
 
-    // Null before load and, in a new campaign, until QuestManager creates the state on the first unpaused frame.
+    // Null before QuestManager.startQuests() at the end of ModPlugin.onGameLoad, which includes new-campaign generation.
     public static KestevenState state() {
         return Quests.state(ID);
     }
