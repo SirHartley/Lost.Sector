@@ -21,7 +21,6 @@ import com.fs.starfarer.api.impl.campaign.terrain.DebrisFieldTerrainPlugin;
 import com.fs.starfarer.api.util.Misc;
 import com.fs.starfarer.api.util.Pair;
 import com.fs.starfarer.api.util.WeightedRandomPicker;
-import lostsector.campaign.kesteven.quest.QuestHelper;
 import lostsector.helper.fleet.SystemPicker;
 import lostsector.campaign.enigma.DormantSpawner;
 import lostsector.helper.SystemHelper;
@@ -101,7 +100,7 @@ public class EnvironmentalStorytelling {
                 SectorEntityToken dormant = DormantSpawner.addDormant(SystemHelper.getRandomLocationInSystem(system,false,true, new Random()),
                         "enigma", MathUtils.getRandomNumberInRange(80f,120f));
                 //makes sure we are not in a star
-                QuestHelper.spawnAwayFromStarFixer(dormant,2.0f);
+                SystemHelper.spawnAwayFromStarFixer(dormant,2.0f);
 
                 //debris
                 DebrisFieldTerrainPlugin.DebrisFieldParams params_debrisField = new DebrisFieldTerrainPlugin.DebrisFieldParams(
@@ -166,7 +165,7 @@ public class EnvironmentalStorytelling {
                 debrisField.setId("nskr_debrisField_"+new Random().nextLong());
 
                 //makes sure we are not in a star
-                QuestHelper.spawnAwayFromStarFixer(debrisField);
+                SystemHelper.spawnAwayFromStarFixer(debrisField);
 
                 //ships
                 float recoveryChance = 0.25f;

@@ -32,9 +32,10 @@ public class HellSpawnNexListener extends BaseCampaignEventListener implements E
         return false;
     }
 
+    // An EveryFrameScript only because the EFS_LIST loop registers every manager as one; its work is in the listeners.
     @Override
     public boolean runWhilePaused() {
-        return true;
+        return false;
     }
 
     @Override

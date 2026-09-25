@@ -1,7 +1,7 @@
 package lostsector.world.systems.cache;
 
-import lostsector.campaign.kesteven.quest.QuestHelper;
-import lostsector.campaign.kesteven.quest.QuestStageManager;
+import lostsector.campaign.kesteven.quest.KestevenQuest;
+import lostsector.campaign.kesteven.quest.KestevenState;
 import lostsector.helper.fleet.SimpleCaptain;
 import lostsector.helper.fleet.SimpleFleet;
 import lostsector.helper.fleet.SimpleFleetMember;
@@ -28,11 +28,9 @@ import com.fs.starfarer.api.impl.campaign.terrain.DebrisFieldTerrainPlugin;
 import com.fs.starfarer.api.impl.campaign.terrain.HyperspaceTerrainPlugin;
 import com.fs.starfarer.api.impl.campaign.terrain.MagneticFieldTerrainPlugin.MagneticFieldParams;
 import com.fs.starfarer.api.util.Misc;
-import lostsector.campaign.kesteven.quest.DataSatelliteDialog;
-import lostsector.campaign.kesteven.quest.CacheCoreDialog;
-import lostsector.dialogue.rules.nskr_kestevenQuest;
 import lostsector.settings.Difficulty;
 import lostsector.helper.FleetHelper;
+import lostsector.helper.MathHelper;
 import lostsector.campaign.enigma.DormantSpawner;
 import lostsector.helper.ShipHelper;
 import lostsector.helper.SystemHelper;
@@ -83,6 +81,7 @@ public class Cache {
     }
 
     public static final String CACHE_FLEET_KEY = "$CacheGuardianFleet";
+    public static final String GUARDIAN_ASSIGNMENT_TEXT = "error #406, try again?";
     public static final String CORE_KEY = "$CacheCoreKey";
     public static String NASCENT_WELL_KEY = "$nskr_CacheWell";
 
@@ -172,15 +171,13 @@ public class Cache {
         SectorEntityToken satellite1 = DerelictThemeGenerator.addNonSalvageEntity(system, DerelictThemeGenerator.createLocationAtRandomGap(new Random(), gate, 100f), "nskr_artifact", Factions.NEUTRAL).entity;
         satellite1.setDiscoverable(true);
         satellite1.setSensorProfile(100f);
-        satellite1.getMemory().set(QuestStageManager.ARTIFACT_KEY+5, true);
-        satellite1.getMemory().set(DataSatelliteDialog.ARTIFACT_EMPTY_KEY, true);
+        KestevenQuest.markEmptyDataSatellite(satellite1, 5);
         satellite1.setCircularOrbitPointingDown(center, 0, 400, 60f);
 
         SectorEntityToken satellite2 = DerelictThemeGenerator.addNonSalvageEntity(system, DerelictThemeGenerator.createLocationAtRandomGap(new Random(), gate, 100f), "nskr_artifact", Factions.NEUTRAL).entity;
         satellite2.setDiscoverable(true);
         satellite2.setSensorProfile(100f);
-        satellite2.getMemory().set(QuestStageManager.ARTIFACT_KEY+6, true);
-        satellite2.getMemory().set(DataSatelliteDialog.ARTIFACT_EMPTY_KEY, true);
+        KestevenQuest.markEmptyDataSatellite(satellite2, 6);
         satellite2.setCircularOrbitPointingDown(center, 180, 400, 60f);
 
         //DORMANT
@@ -245,11 +242,10 @@ public class Cache {
         }
     }
 
-    //GUARDIAN FLEET
-    public static CampaignFleetAPI spawnGuardianFleet(CampaignFleetAPI pf, SectorEntityToken loc) {
-        float points = MathUtils.getRandomNumberInRange(45f, 50f);
-
-        Random random = nskr_kestevenQuest.getRandom();
+    // The guardian fleet, unbuilt; the questline builds and registers it (KestevenCacheModule) and then calls
+    // finishGuardianFleet with the same random.
+    public static SimpleFleet guardianFleet(SectorEntityToken loc, Random random) {
+        float points = MathHelper.getSeededRandomNumberInRange(45f, 50f, random);
 
         //skills
         Map<String, Integer> skills = new HashMap<>(OFFICER_SKILLS);
@@ -351,18 +347,18 @@ public class Cache {
         simpleFleet.secondaries = secondaries;
         simpleFleet.assignment = FleetAssignment.INTERCEPT;
         simpleFleet.interceptPlayer = true;
-        simpleFleet.assignmentText = "error #406, try again?";
-        CampaignFleetAPI fleet = simpleFleet.create();
+        simpleFleet.assignmentText = GUARDIAN_ASSIGNMENT_TEXT;
+        log("cache guardian, size " + points + " system " + loc.getName());
+        return simpleFleet;
+    }
 
+    public static void finishGuardianFleet(CampaignFleetAPI fleet, SectorEntityToken loc, Random random) {
         //drone tags
         for (FleetMemberAPI m : fleet.getMembersWithFightersCopy()){
             if (m.isFighterWing() && ShipHelper.isProtTech(m)){
                 m.getVariant().addTag(Tags.SHIP_LIMITED_TOOLTIP);
             }
         }
-
-        //custom key
-        fleet.getMemoryWithoutUpdate().set(MemFlags.FLEET_INTERACTION_DIALOG_CONFIG_OVERRIDE_GEN, new CacheGuardInteractionConfig());
 
         fleet.setFaction(Factions.DERELICT, true);
 
@@ -373,10 +369,7 @@ public class Cache {
         //update
         FleetHelper.update(fleet, random);
 
-        log("cache SPAWNED, size " + points + " system " + loc.getName());
         log("cache FLEET, loc " + fleet.getStarSystem().getName() +" size "+ fleet.getFleetPoints() + " commander " + fleet.getCommander().getName().getFullName() + " flagship " + fleet.getFlagship().getHullSpec().getBaseHullId());
-
-        return fleet;
     }
 
     public static class CacheGuardInteractionConfig implements FleetInteractionDialogPluginImpl.FIDConfigGen {
@@ -408,15 +401,12 @@ public class Cache {
                     //do one time stuff
                     spawnEverything(fleet.getStarSystem());
                     spawnWrecks(fleet);
-                    if (!QuestHelper.getEndMissions() && QuestHelper.getStage()>=16) QuestHelper.setStage(18);
+                    KestevenQuest.reportCacheGuardianDefeated();
                     //command core
                     SectorEntityToken entity = spawnCore(fleet);
 
-                    //end, swap to core dialog
-                    dialog.setInteractionTarget(entity);
-                    InteractionDialogPlugin plugin = new CacheCoreDialog();
-                    dialog.setPlugin(plugin);
-                    plugin.init(dialog);
+                    //end, the core's dialog takes over
+                    KestevenQuest.showCacheCore(dialog, entity);
                 }
                 public void battleContextCreated(InteractionDialogAPI dialog, BattleCreationContext bcc) {
                     bcc.aiRetreatAllowed = false;
@@ -484,8 +474,6 @@ public class Cache {
         entity.getLocation().x = fleet.getLocation().x + (10f - (float) Math.random() * 50f);
         entity.getLocation().y = fleet.getLocation().y + (10f - (float) Math.random() * 50f);
 
-        if (QuestHelper.getStage()>=16) entity.getMemory().set(MemFlags.MEMORY_KEY_MISSION_IMPORTANT, true);
-
         entity.getMemory().set(CORE_KEY, true);
         entity.getMemoryWithoutUpdate().set(MusicPlayerPluginImpl.KEEP_PLAYING_LOCATION_MUSIC_DURING_ENCOUNTER_MEM_KEY, true);
 
@@ -509,7 +497,7 @@ public class Cache {
 
         ShipRecoverySpecial.ShipRecoverySpecialData data = new ShipRecoverySpecial.ShipRecoverySpecialData(null);
         //random SP recovery
-        data.storyPointRecovery = nskr_kestevenQuest.getRandom().nextFloat()<0.50f;
+        data.storyPointRecovery = KestevenQuest.random(KestevenState.RANDOM_QUEST).nextFloat()<0.50f;
         data.notNowOptionExits = true;
         data.noDescriptionText = true;
         DerelictShipEntityPlugin dsep = (DerelictShipEntityPlugin) entity.getCustomPlugin();

@@ -8,22 +8,19 @@ import com.fs.starfarer.api.campaign.TextPanelAPI;
 import com.fs.starfarer.api.fleet.FleetMemberAPI;
 import com.fs.starfarer.api.impl.campaign.FleetEncounterContext;
 import com.fs.starfarer.api.impl.campaign.FleetInteractionDialogPluginImpl;
+import com.fs.starfarer.api.impl.campaign.rulecmd.FireBest;
 import com.fs.starfarer.api.util.Misc;
-import lostsector.campaign.kesteven.quest.QuestHelper;
 
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.Random;
 
+// The Final Judgement encounter. Its lines are rows on HellSpawnFightModule's triggers, fired into this dialog.
 public class HellSpawnJudgementInteraction extends FleetInteractionDialogPluginImpl {
 
+    // Fleet memory flag of the judgement fleet; CorePlugin routes it to this class.
+    public static final String JUDGEMENT_FLEET_KEY = "$hellSpawnJudgementFleet";
 
-    private Random random;
     private Color b;
-    private Color tc;
-    private Color r;
-    private Color gr;
-    private Color g;
     private Color h;
     private TextPanelAPI text;
 
@@ -66,12 +63,7 @@ public class HellSpawnJudgementInteraction extends FleetInteractionDialogPluginI
         visual = dialog.getVisualPanel();
 
         h = Misc.getHighlightColor();
-        g = Misc.getGrayColor();
-        gr = Misc.getPositiveHighlightColor();
-        r = Misc.getNegativeHighlightColor();
-        tc = Misc.getTextColor();
         b = Misc.getBasePlayerColor();
-        random = HellSpawnManager.getRandom();
     }
 
     public void showFleet(){
@@ -91,8 +83,7 @@ public class HellSpawnJudgementInteraction extends FleetInteractionDialogPluginI
 
         //talk
         if (optionData == OptionId.OPEN_COMM){
-            text.addPara("What? The chance to talk your way out is long gone.", g, h, "", "");
-            text.addPara("You attempt to open comms but nothing happens.", tc, h, "", "");
+            FireBest.fire(null, dialog, getMemoryMap(), HellSpawnFightModule.TRIGGER_COMMS);
 
             options.clearOptions();
             super.optionSelected(optionText, OptionId.INIT);
@@ -104,9 +95,7 @@ public class HellSpawnJudgementInteraction extends FleetInteractionDialogPluginI
 
         //try to disengage
         if (optionData == OptionId.ATTEMPT_TO_DISENGAGE){
-            text.addPara("Ha ha ha.", g, h, "", "");
-            text.addPara("Not so fast captain.", g, h, "", "");
-            text.addPara("Your attempt was quickly blocked by the opposing fleet.", tc, h, "", "");
+            FireBest.fire(null, dialog, getMemoryMap(), HellSpawnFightModule.TRIGGER_DISENGAGE);
 
             options.clearOptions();
             super.optionSelected(optionText, OptionId.INIT);
@@ -118,9 +107,7 @@ public class HellSpawnJudgementInteraction extends FleetInteractionDialogPluginI
 
         //story disengage
         if (optionData == OptionId.CLEAN_DISENGAGE){
-            text.addPara("Pathetic.", g, h, "", "");
-            text.addPara("There is no escape.", g, h, "", "");
-            text.addPara("Despite your best efforts the opposing fleet remains one step ahead of you.", tc, h, "", "");
+            FireBest.fire(null, dialog, getMemoryMap(), HellSpawnFightModule.TRIGGER_STORY_DISENGAGE);
 
             options.clearOptions();
             super.optionSelected(optionText, OptionId.INIT);
@@ -132,8 +119,7 @@ public class HellSpawnJudgementInteraction extends FleetInteractionDialogPluginI
 
         //fight disengage
         if (optionData == OptionId.DISENGAGE){
-            text.addPara("You have to finish this.", g, h, "", "");
-            text.addPara("The opposing fleet doesn't seem to be effected by the damage you caused.", tc, h, "", "");
+            FireBest.fire(null, dialog, getMemoryMap(), HellSpawnFightModule.TRIGGER_BATTLE_DISENGAGE);
 
             options.clearOptions();
             super.optionSelected(optionText, OptionId.INIT);
@@ -145,7 +131,7 @@ public class HellSpawnJudgementInteraction extends FleetInteractionDialogPluginI
 
         if (optionData == OptionId.CONTINUE_LEAVE || optionData == OptionId.LEAVE || optionData == OptionId.CONTINUE_LOOT){
             otherFleet.despawn();
-            QuestHelper.setCompleted(true, HellSpawnManager.JUDGEMENT_DEFEATED_KEY);
+            HellSpawnQuest.reportJudgementLeft();
         }
 
         if (openComms) dialog.getOptionPanel().removeOption(OptionId.OPEN_COMM);

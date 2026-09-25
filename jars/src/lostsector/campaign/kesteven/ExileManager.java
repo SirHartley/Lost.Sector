@@ -11,11 +11,10 @@ import com.fs.starfarer.api.characters.PersonAPI;
 import com.fs.starfarer.api.impl.campaign.ids.Industries;
 import com.fs.starfarer.api.impl.campaign.ids.Items;
 import com.fs.starfarer.api.impl.campaign.ids.Skills;
-import lostsector.campaign.kesteven.quest.QuestStageManager;
-import lostsector.campaign.kesteven.quest.QuestHelper;
 import lostsector.ModPlugin;
 import lostsector.persistence.Saved;
-import lostsector.campaign.kesteven.quest.QuestPeople;
+import lostsector.campaign.kesteven.quest.KestevenQuest;
+import lostsector.campaign.kesteven.quest.KestevenPeople;
 import lostsector.helper.SectorLookup;
 import lostsector.world.SectorGen;
 
@@ -65,10 +64,10 @@ public class ExileManager extends BaseCampaignEventListener implements EveryFram
             //fix outpost ppl no exile
             if (asteria!=null) {
                 if (!getExiled(EXILE_KEY) && !canExile() && !asteria.getFaction().getId().equals("kesteven")) {
-                    PersonAPI jack = QuestPeople.getJack();
-                    PersonAPI alice = QuestPeople.getAlice();
-                    PersonAPI nick = QuestPeople.getNick();
-                    PersonAPI michael = QuestPeople.getMichael();
+                    PersonAPI jack = KestevenPeople.getJack();
+                    PersonAPI alice = KestevenPeople.getAlice();
+                    PersonAPI nick = KestevenPeople.getNick();
+                    PersonAPI michael = KestevenPeople.getMichael();
                     if (nick != null && outpost!=null){
                         outpost.getCommDirectory().removePerson(nick);
                         outpost.removePerson(nick);
@@ -88,11 +87,11 @@ public class ExileManager extends BaseCampaignEventListener implements EveryFram
                 }
             }
             //fix outpost ppl exiled
-            if (getExiled(EXILE_KEY) && !QuestHelper.outpostExists()){
-                PersonAPI jack = QuestPeople.getJack();
-                PersonAPI alice = QuestPeople.getAlice();
-                PersonAPI nick = QuestPeople.getNick();
-                PersonAPI michael = QuestPeople.getMichael();
+            if (getExiled(EXILE_KEY) && !SectorLookup.outpostExists()){
+                PersonAPI jack = KestevenPeople.getJack();
+                PersonAPI alice = KestevenPeople.getAlice();
+                PersonAPI nick = KestevenPeople.getNick();
+                PersonAPI michael = KestevenPeople.getMichael();
                 if (outpost!=null) {
                     if (nick != null){
                         outpost.getCommDirectory().removePerson(nick);
@@ -141,7 +140,7 @@ public class ExileManager extends BaseCampaignEventListener implements EveryFram
                 setExiled(true, EXILE_KEY);
                 // Silent when Asteria was never generated: Kesteven has been at the Outpost from the start.
                 if (SectorLookup.getAsteria() != null) {
-                    Global.getSector().getCampaignUI().addMessage("With the loss of Asteria, the leadership of Kesteven Corporation has fled to "+ QuestHelper.outpostName()+".",
+                    Global.getSector().getCampaignUI().addMessage("With the loss of Asteria, the leadership of Kesteven Corporation has fled to "+ SectorLookup.outpostName()+".",
                             Global.getSettings().getColor("standardTextColor"),
                             "Kesteven Corporation",
                             "",
@@ -163,7 +162,7 @@ public class ExileManager extends BaseCampaignEventListener implements EveryFram
 
     public void exile() {
         MarketAPI outpost = SectorLookup.getOutpost().getMarket();
-        boolean jackGone = QuestHelper.getCompleted(QuestStageManager.JACK_GONE_KEY);
+        boolean jackGone = KestevenQuest.isJackGone();
         //add heavy industry item
         if (outpost.getIndustry(Industries.HEAVYINDUSTRY) != null) {
             if (outpost.getIndustry(Industries.HEAVYINDUSTRY).getSpecialItem() == null) {
@@ -176,19 +175,19 @@ public class ExileManager extends BaseCampaignEventListener implements EveryFram
         }
 
         //move people
-        PersonAPI michael = QuestPeople.getMichael();
+        PersonAPI michael = KestevenPeople.getMichael();
         if (michael==null){
             SectorGen.genMichael(outpost, 0);
         }
-        PersonAPI jack = QuestPeople.getJack();
+        PersonAPI jack = KestevenPeople.getJack();
         if (jack==null && !jackGone){
             SectorGen.genJack(outpost, 1);
         }
-        PersonAPI alice = QuestPeople.getAlice();
+        PersonAPI alice = KestevenPeople.getAlice();
         if (alice==null){
             SectorGen.genAlice(outpost, 2);
         }
-        PersonAPI nick = QuestPeople.getNick();
+        PersonAPI nick = KestevenPeople.getNick();
         if (nick==null){
             SectorGen.genNicholas(outpost, 3);
         }
@@ -232,14 +231,14 @@ public class ExileManager extends BaseCampaignEventListener implements EveryFram
     }
 
     public void unExile() {
-        PersonAPI jack = QuestPeople.getJack();
-        PersonAPI alice = QuestPeople.getAlice();
-        PersonAPI nick = QuestPeople.getNick();
-        PersonAPI michael = QuestPeople.getMichael();
+        PersonAPI jack = KestevenPeople.getJack();
+        PersonAPI alice = KestevenPeople.getAlice();
+        PersonAPI nick = KestevenPeople.getNick();
+        PersonAPI michael = KestevenPeople.getMichael();
 
         MarketAPI asteria = Global.getSector().getEconomy().getMarket("nskr_asteria");
         MarketAPI outpost = SectorLookup.getOutpost().getMarket();
-        boolean jackGone = QuestHelper.getCompleted(QuestStageManager.JACK_GONE_KEY);
+        boolean jackGone = KestevenQuest.isJackGone();
         if (outpost!=null){
             //new admin
             PersonAPI admin = Global.getSector().getFaction("kesteven").createRandomPerson(new Random());

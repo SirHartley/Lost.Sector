@@ -1,0 +1,158 @@
+package lostsector.campaign.bounties;
+
+import com.fs.starfarer.api.Global;
+import com.fs.starfarer.api.campaign.CampaignFleetAPI;
+import com.fs.starfarer.api.campaign.SectorEntityToken;
+import com.fs.starfarer.api.campaign.comm.IntelInfoPlugin.IntelSortTier;
+import com.fs.starfarer.api.impl.campaign.ids.Commodities;
+import com.fs.starfarer.api.impl.campaign.ids.Factions;
+import lostsector.campaign.events.hints.HintsQuest;
+import lostsector.helper.SystemHelper;
+import lostsector.quest.FleetOrders;
+import lostsector.quest.FleetRole;
+import lostsector.quest.IntelSpec;
+import lostsector.quest.NoFlags;
+import lostsector.quest.Quest;
+import lostsector.quest.QuestModule;
+import lostsector.quest.Quests;
+import lostsector.quest.modules.BountyEncounter;
+
+import java.util.List;
+
+// Record quest "bounty": the named bounty fleets, one BountyEncounter each. Records, roles and intel keys share the
+// names below.
+public final class BountiesQuest extends Quest<BountiesStage, BountiesState> {
+
+    public static final String ID = "bounty";
+
+    public static final String ABYSS = "abyss";
+    public static final String ETERNITY = "eternity";
+    public static final String MOTHERSHIP = "mothership";
+    public static final String PEACEKEEPERS = "peacekeepers";
+
+    // Fired on Helios and Polaris while the Mothership fleet guards them.
+    static final String TRIGGER_GUARD = "nskr_bountyGuard";
+
+    private static final String ICON = "umbra";
+    private static final String SOUND_PAID = "ui_rep_raise";
+    private static final String SOUND_UNPAID = "ui_rep_drop";
+    private static final int ABYSS_PAYOUT = 600000;
+    private static final int PEACEKEEPERS_PAYOUT = 315000;
+    private static final float PEACEKEEPERS_SWITCH_DAYS = 30f;
+    private static final float PEACEKEEPERS_REINFORCE_BELOW = 0.80f;
+
+    public BountiesQuest() {
+        super(ID, BountiesStage.class, NoFlags.class, BountiesStage.RUNNING);
+    }
+
+    @Override
+    protected BountiesState createState() {
+        return new BountiesState();
+    }
+
+    @Override
+    protected List<QuestModule<BountiesStage, BountiesState>> createModules() {
+        return List.of(abyss(), eternity(), mothership(), peacekeepers());
+    }
+
+    // Pays only when none of its ships were recovered: the player fleet holds none of them when the loot is generated,
+    // which vanilla does after the recovery screen.
+    private static BountyEncounter<BountiesStage, BountiesState> abyss() {
+        return new BountyEncounter<BountiesStage, BountiesState>(ABYSS, ICON, FleetRole.of(FleetOrders.none()),
+                BountiesFleets::abyssLocation, BountiesFleets::abyss, fleet -> !BountiesFleets.hasAbyssShips(fleet.fleet()))
+                .finish(BountiesFleets::finishAbyss)
+                .reward((ctx, loot, plugin) -> loot.addCommodity(Commodities.ALPHA_CORE, 1))
+                .payout(ABYSS_PAYOUT, (amount, plugin) -> carriesAbyssShips(Global.getSector().getPlayerFleet()) ? 0 : amount)
+                .onSighted(ctx -> HintsQuest.reportBountySighted())
+                .intel(BountiesQuest::oldBountyIntel)
+                .completionSound(record -> record.paid() > 0 ? SOUND_PAID : SOUND_UNPAID)
+                .revealOnRecovery(BountiesFleets.ABYSS_FLAGSHIP_HULL, BountiesFleets.ABYSS_CHASM_HULL, BountiesFleets.ABYSS_FISSURE_HULL);
+    }
+
+    private static BountyEncounter<BountiesStage, BountiesState> eternity() {
+        return new BountyEncounter<BountiesStage, BountiesState>(ETERNITY, ICON, FleetRole.of(FleetOrders.none()),
+                BountiesFleets::eternityLocation, BountiesFleets::eternity, fleet -> fleet.fleet().getFlagship() == null)
+                .finish(BountiesFleets::finishEternity)
+                .reward((ctx, loot, plugin) -> {
+                    loot.addCommodity(Commodities.ALPHA_CORE, 2);
+                    loot.addCommodity("nskr_electronics", 500);
+                })
+                .onSighted(ctx -> HintsQuest.reportBountySighted())
+                .intel(BountiesQuest::oldBountyIntel)
+                .revealOnRecovery(BountiesFleets.ETERNITY_HULL);
+    }
+
+    // Guards Helios and Polaris: their dialogs start the fight. Beaten, it leaves the TTDS Helios as a wreck, which the
+    // fleet dialog opens on leaving (MothershipInteractionConfig).
+    private static BountyEncounter<BountiesStage, BountiesState> mothership() {
+        return new BountyEncounter<BountiesStage, BountiesState>(MOTHERSHIP, "mothership",
+                FleetRole.of(FleetOrders.none()).config(new MothershipInteractionConfig()),
+                random -> HeliosSite.base(), BountiesFleets::mothership, fleet -> fleet.fleet().getFlagship() == null)
+                .finish(BountiesFleets::finishMothership)
+                .reward((ctx, loot, plugin) -> {
+                    loot.addCommodity(Commodities.ALPHA_CORE, 1);
+                    ctx.state().mothershipWreck = BountiesFleets.mothershipWreck(Global.getSector().getPlayerFleet(), ctx.random("mothershipWreck"));
+                })
+                .guards(TRIGGER_GUARD, HeliosSite::planets)
+                .onSighted(ctx -> HintsQuest.reportBountySighted())
+                .intel(BountiesQuest::oldBountyIntel);
+    }
+
+    // Patrols Independent markets. The anonymous donors pay the player's share of the bounty, and the Independents take
+    // the kill badly.
+    private static BountyEncounter<BountiesStage, BountiesState> peacekeepers() {
+        return new BountyEncounter<BountiesStage, BountiesState>(PEACEKEEPERS, "pk",
+                FleetRole.of(FleetOrders.patrolMarkets(Factions.INDEPENDENT, PEACEKEEPERS_SWITCH_DAYS, BountiesFleets.PEACEKEEPERS_PATROL_TEXT)
+                        .reinforceBelow(PEACEKEEPERS_REINFORCE_BELOW, BountiesFleets::reinforcePeacekeepers)),
+                random -> SystemHelper.getRandomFactionMarket(random, Factions.INDEPENDENT), BountiesFleets::peacekeepers,
+                fleet -> !BountiesFleets.hasRorqual(fleet.info()))
+                .finish(BountiesFleets::finishPeacekeepers)
+                .payout(PEACEKEEPERS_PAYOUT, (amount, plugin) -> Math.round(amount * plugin.computePlayerContribFraction()))
+                .relationshipPenalty(Factions.INDEPENDENT, -0.10f, -0.5f)
+                .mapFollowsFleet()
+                .intel(BountiesQuest::oldBountyIntel)
+                .completionSound(record -> record.looted() ? SOUND_PAID : null);
+    }
+
+    // The old bounty intel classes sorted in TIER_2, posted with the major posting sound, listed their bullets under
+    // the description and offered the delete button once finished.
+    private static void oldBountyIntel(IntelSpec spec) {
+        spec.tier(IntelSortTier.TIER_2).majorPosting().descriptionBullets().deletable();
+    }
+
+    public static BountiesState state() {
+        return Quests.state(ID);
+    }
+
+    // Queries
+
+    // Whether the fleet carries a ship of the Abyss bounty fleet.
+    public static boolean carriesAbyssShips(CampaignFleetAPI fleet) {
+        return fleet != null && BountiesFleets.hasAbyssShips(fleet);
+    }
+
+    // Where the bounty was placed; null before load, before placement or when no location was found.
+    public static SectorEntityToken location(String bounty) {
+        BountyEncounter.Record record = record(bounty);
+        return record == null ? null : record.location();
+    }
+
+    // Whether the player has sighted the bounty fleet, which shows its intel.
+    public static boolean sighted(String bounty) {
+        BountyEncounter.Record record = record(bounty);
+        return record != null && record.sighted();
+    }
+
+    // The Mothership wreck, once, for the fleet dialog that moves to it; null when there is none or it was shown.
+    static SectorEntityToken takeMothershipWreck() {
+        BountiesState state = state();
+        if (state == null || state.mothershipWreck == null || state.mothershipWreckShown) return null;
+        state.mothershipWreckShown = true;
+        return state.mothershipWreck;
+    }
+
+    private static BountyEncounter.Record record(String bounty) {
+        BountiesState state = state();
+        return state == null ? null : state.bounties().get(bounty);
+    }
+}

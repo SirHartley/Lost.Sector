@@ -6,33 +6,45 @@ package lostsector.dialogue.rules;
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.*;
 import com.fs.starfarer.api.campaign.econ.MarketAPI;
+import com.fs.starfarer.api.campaign.rules.MemKeys;
 import com.fs.starfarer.api.campaign.rules.MemoryAPI;
 import com.fs.starfarer.api.characters.PersonAPI;
 import com.fs.starfarer.api.combat.ShipAPI;
 import com.fs.starfarer.api.fleet.FleetMemberAPI;
-import com.fs.starfarer.api.impl.campaign.rulecmd.PaginatedOptions;
-import com.fs.starfarer.api.impl.campaign.rulecmd.SetStoryOption;
+import com.fs.starfarer.api.impl.campaign.rulecmd.BaseCommandPlugin;
+import com.fs.starfarer.api.impl.campaign.rulecmd.FireBest;
 import com.fs.starfarer.api.loading.HullModSpecAPI;
-import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import com.fs.starfarer.api.util.Misc;
 import com.fs.starfarer.api.util.Misc.Token;
-import lostsector.campaign.kesteven.quest.QuestStageManager;
-import lostsector.campaign.kesteven.quest.QuestHelper;
+import lostsector.campaign.kesteven.quest.KestevenQuest;
 import lostsector.helper.MathHelper;
-import org.lwjgl.input.Keyboard;
+import lostsector.helper.SectorLookup;
 
-import java.awt.*;
 import java.util.List;
 import java.util.*;
+import java.util.regex.Matcher;
 
-public class nskr_modRemoval extends PaginatedOptions {
+public class nskr_modRemoval extends BaseCommandPlugin {
 
-    public static final String DIALOG_OPTION_PREFIX = "nskr_modRemoval_pick_";
     public static final String PERSISTENT_RANDOM_KEY = "nskr_modRemovalRandom";
 
     public static final String SHIP_IN_MEMORY_KEY = "nskr_modRemovalShipInMemory";
+
+    // Local display values for rules text, written with expiry 0.
+    public static final String SHIP_NAME_KEY = "$nskr_modRemoval_shipName";
+    public static final String HULL_NAME_KEY = "$nskr_modRemoval_hullName";
+    public static final String SMOD_COUNT_KEY = "$nskr_modRemoval_sMods";
+    public static final String SMOD_NAME_KEY = "$nskr_modRemoval_sModName";
+    public static final String REMOVED_COUNT_KEY = "$nskr_modRemoval_removed";
+
+    public static final String SHIP_PICKED_TRIGGER = "nskr_modRemovalShipPicked";
+    public static final String PICK_CANCELLED_TRIGGER = "nskr_modRemovalPickCancelled";
+    public static final String SMOD_LINE_TRIGGER = "nskr_modRemovalSModLine";
+
     private FleetMemberAPI targetShip;
 
+    protected InteractionDialogAPI dialog;
+    protected Map<String, MemoryAPI> memoryMap;
     protected CampaignFleetAPI playerFleet;
     protected SectorEntityToken entity;
     protected MarketAPI market;
@@ -43,8 +55,6 @@ public class nskr_modRemoval extends PaginatedOptions {
     protected PersonAPI person;
     protected FactionAPI faction;
     protected ShipAPI ship;
-
-    protected List<String> disabledOpts = new ArrayList<>();
 
     static void log(final String message) {
         Global.getLogger(nskr_modRemoval.class).info(message);
@@ -62,35 +72,19 @@ public class nskr_modRemoval extends PaginatedOptions {
                 break;
             case "hasOption":
                 return validMarket(entity.getMarket());
+            case "hasShips":
+                return !getShipsWithSmods().isEmpty();
             case "getHulls":
-                setupDelegateDialog(dialog);
-                showOptions();
-                startAndShowOptions();
+                showShipPicker();
                 break;
             case "prepareRemove":
-                showOptions();
                 prepareToRemove();
                 break;
             case "remove":
-                showOptions();
                 remove();
                 break;
         }
-        updateOptions();
         return true;
-    }
-
-    /**
-     * To be called only when paginated dialog options are required.
-     * Otherwise we get nested dialogs that take multiple clicks of the exit option to actually exit.
-     * @param dialog
-     */
-    protected void setupDelegateDialog(InteractionDialogAPI dialog)
-    {
-        originalPlugin = dialog.getPlugin();
-
-        dialog.setPlugin(this);
-        init(dialog);
     }
 
     protected void setupVars(InteractionDialogAPI dialog, Map<String, MemoryAPI> memoryMap)
@@ -129,117 +123,47 @@ public class nskr_modRemoval extends PaginatedOptions {
         return (FleetMemberAPI) data.get(SHIP_IN_MEMORY_KEY);
     }
 
-    public void updateOptions() {
-        for (String optId : disabledOpts)
-        {
-            dialog.getOptionPanel().setEnabled(optId, false);
-        }
-        dialog.getOptionPanel().setShortcut("nskr_modRemovalReturn", Keyboard.KEY_ESCAPE, false, false, false, false);
-    }
-
-    protected void startAndShowOptions() {
-        final Color h = Misc.getHighlightColor();
-        final Color g = Misc.getGrayColor();
-        final Color tc = Misc.getTextColor();
-        text.setFontInsignia();
-
-        if (getShipsWithSmods().isEmpty()){
-            text.addParagraph("\"Looks like you don't have any ships with Special Modifications. Quit wasting my time now, will you.\" She groans.");
-
-            dialog.getOptionPanel().addOption("Leave", "nskr_modRemovalExit");
-            return;
-        }
-
-        // prevents an IllegalAccessError
-        final InteractionDialogAPI dialog = this.dialog;
-
+    protected void showShipPicker() {
         dialog.showFleetMemberPickerDialog("Pick from your fleet",
                 Misc.ucFirst("confirm"),
                 Misc.ucFirst("cancel"),
                 5, 6, 120,true,false, getShipsWithSmods(), new FleetMemberPickerListener() {
+                    // Picker callbacks run after the command has returned, so they fire the rules triggers themselves.
                     @Override
                     public void pickedFleetMembers(List<FleetMemberAPI> members) {
-                        //cancelled
                         if (members.isEmpty()){
-                            text.addParagraph("\"Come on captain, just make up your mind already. I don't have all day.\" She mutters.");
-
-                            dialog.getOptionPanel().addOption("Go back", "nskr_modRemovalReturn");
+                            FireBest.fire(null, dialog, memoryMap, PICK_CANCELLED_TRIGGER);
                             return;
                         }
                         FleetMemberAPI f = members.get(0);
 
                         setShipFromMemory(f);
-                        text.setFontSmallInsignia();
-                        text.addPara("Selected "+f.getShipName()+" "+f.getHullSpec().getHullName()+"-Class", g, h,f.getHullSpec().getHullName(),"");
-                        text.setFontInsignia();
-
-                        String sMods = "S-Mods";
-                        if (f.getVariant().getSMods().size()==1) sMods = "S-Mod";
-
-                        dialog.getOptionPanel().addOption("Select "+f.getHullSpec().getHullName()+"-Class has "+f.getVariant().getSMods().size()+" "+sMods,"nskr_modRemoval_pick_ship");
-                        dialog.getOptionPanel().addOption("Go back", "nskr_modRemovalReturn");
-
+                        writeShipTokens(f);
+                        memoryMap.get(MemKeys.LOCAL).set(SMOD_COUNT_KEY, f.getVariant().getSMods().size() + "", 0);
+                        FireBest.fire(null, dialog, memoryMap, SHIP_PICKED_TRIGGER);
                     }
 
                     @Override
                     public void cancelledFleetMemberPicking() {
-                        text.addParagraph("\"Come on captain, just make up your mind already. I don't have all day.\" She mutters.");
-
-                        dialog.getOptionPanel().addOption("Go back", "nskr_modRemovalReturn");
+                        FireBest.fire(null, dialog, memoryMap, PICK_CANCELLED_TRIGGER);
                     }
                 });
-
-        text.setFontInsignia();
     }
 
+    /**
+     * Shows one rules line per S-mod on the picked ship.
+     */
     protected void prepareToRemove() {
-        Color h = Misc.getHighlightColor();
-        Color g = Misc.getGrayColor();
-        Color tc = Misc.getTextColor();
-        Color gr = Misc.getStoryBrightColor();
-
-        text.setFontSmallInsignia();
+        writeShipTokens(targetShip);
+        MemoryAPI local = memoryMap.get(MemKeys.LOCAL);
         for (String s : targetShip.getVariant().getSMods()){
-            text.addPara("S-Modded "+Global.getSettings().getHullModSpec(s).getDisplayName(),g,gr,Global.getSettings().getHullModSpec(s).getDisplayName(),"");
+            local.set(SMOD_NAME_KEY, Global.getSettings().getHullModSpec(s).getDisplayName(), 0);
+            FireBest.fire(null, dialog, memoryMap, SMOD_LINE_TRIGGER);
         }
-        text.setFontInsignia();
-
-        text.addParagraph("Removing all the Special Modifications from the "+targetShip.getHullSpec().getHullName()+" without causing permanent damage would require significant work.");
-
-        dialog.getOptionPanel().addOption("I'm sure you're capable enough.","nskr_modRemoval_confirm");
-        dialog.makeStoryOption("nskr_modRemoval_confirm",1,0.75f,"ui_char_spent_story_point");
-        //tooltip
-        dialog.getOptionPanel().addOptionTooltipAppender("nskr_modRemoval_confirm", new OptionPanelAPI.OptionTooltipCreator() {
-            public void createTooltip(TooltipMakerAPI tooltip, boolean hadOtherText) {
-                float opad = 10f;
-                float initPad = 0f;
-                if (hadOtherText) initPad = opad;
-                tooltip.addStoryPointUseInfo(initPad, 1, 0.75f, false);
-                int sp = Global.getSector().getPlayerStats().getStoryPoints();
-                String points = "points";
-                if (sp == 1) points = "point";
-                tooltip.addPara("You have %s " + Misc.STORY + " " + points + ".", opad,
-                        Misc.getStoryOptionColor(), "" + sp);
-            }
-        });
-        //pop up
-        dialog.getOptionPanel().addOptionConfirmation("nskr_modRemoval_confirm",
-                new SetStoryOption.BaseOptionStoryPointActionDelegate(dialog,
-                        new SetStoryOption.StoryOptionParams("nskr_modRemoval_confirm",1,"nskr_modRemoval","ui_char_spent_story_point","Removed S-Mods from a ship")));
-
-        dialog.getOptionPanel().addOption("Go back", "nskr_modRemovalReturn");
-        text.setFontInsignia();
     }
 
     protected void remove() {
-        Color h = Misc.getHighlightColor();
-        Color g = Misc.getGrayColor();
-        Color tc = Misc.getTextColor();
-        Color gr = Misc.getStoryBrightColor();
-
         int count = targetShip.getVariant().getSMods().size();
-        text.setFontSmallInsignia();
-        text.setFontInsignia();
 
         //remove
         LinkedHashSet<String> sModsCopy = new LinkedHashSet<>(targetShip.getVariant().getSMods());
@@ -251,31 +175,28 @@ public class nskr_modRemoval extends PaginatedOptions {
             }
             targetShip.getVariant().removePermaMod(s);
         }
-        text.addParagraph("The hull is offloaded at a dry-dock so the crew can begin work on it.");
-        text.addParagraph("After some waiting around Alice finally gets back in contact with you.");
-        text.addParagraph("\"It wasn't easy but we pulled it off captain.\" She says with a smug expression.");
 
-        String sMods = "S-Mods";
-        if (count==1) sMods = "S-Mod";
-
-        text.setFontSmallInsignia();
-        text.addPara(targetShip.getShipName()+" "+targetShip.getHullSpec().getHullName()+"-Class removed "+count+" "+sMods,g,h,count+"","");
-        text.setFontInsignia();
+        writeShipTokens(targetShip);
+        memoryMap.get(MemKeys.LOCAL).set(REMOVED_COUNT_KEY, count + "", 0);
 
         Global.getSoundPlayer().playUISound("ui_char_spent_story_point",1f,1f);
+    }
 
-        dialog.getOptionPanel().addOption("Leave", "nskr_modRemovalExit");
-        text.setFontInsignia();
+    protected void writeShipTokens(FleetMemberAPI member) {
+        MemoryAPI local = memoryMap.get(MemKeys.LOCAL);
+        // Rules text replacement passes values to String.replaceAll, and players name their ships.
+        local.set(SHIP_NAME_KEY, Matcher.quoteReplacement(member.getShipName()), 0);
+        local.set(HULL_NAME_KEY, member.getHullSpec().getHullName(), 0);
     }
 
     //Alice
     public static boolean validMarket(MarketAPI market) {
         if (market==null) return false;
         if (Global.getSector().getPlayerFaction().getRelationship("kesteven")<=-0.5f) return false;
-        if (QuestHelper.asteriaOrOutpost()==null) return false;
-        if (QuestHelper.getCompleted(QuestStageManager.ELIZA_INTERCEPT_HANDED_OVER) || QuestHelper.getCompleted(nskr_altEndingDialogLuddic.DIALOG_FINISHED_KEY)) return false;
+        if (SectorLookup.asteriaOrOutpost()==null) return false;
+        if (KestevenQuest.researchServicesClosed()) return false;
 
-        return market== QuestHelper.asteriaOrOutpost();
+        return market== SectorLookup.asteriaOrOutpost();
     }
 
     public static List<FleetMemberAPI> getShipsWithSmods(){

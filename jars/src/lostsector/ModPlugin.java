@@ -31,6 +31,8 @@ import lostsector.campaign.starts.thronesgift.ThronesGiftDisposableFleetSpawner;
 import lostsector.campaign.starts.thronesgift.ThronesGiftManager;
 
 import lostsector.persistence.Saved;
+import lostsector.quest.QuestManager;
+import lostsector.quest.QuestTokens;
 import lostsector.settings.Difficulty;
 import lostsector.settings.SettingsManager;
 
@@ -45,7 +47,6 @@ import com.fs.starfarer.api.combat.MissileAIPlugin;
 import com.fs.starfarer.api.combat.MissileAPI;
 import com.fs.starfarer.api.combat.ShipAPI;
 import com.fs.starfarer.api.impl.campaign.ids.Ranks;
-import com.fs.starfarer.api.impl.campaign.intel.bar.events.BarEventManager;
 import com.fs.starfarer.api.impl.campaign.procgen.ProcgenUsedNames;
 import com.fs.starfarer.api.impl.campaign.rulecmd.Nex_TransferMarket;
 import com.fs.starfarer.api.impl.campaign.shared.SharedData;
@@ -53,19 +54,9 @@ import exerelin.campaign.SectorManager;
 import indevo.industries.artillery.conditions.ArtilleryStationCondition;
 import indevo.industries.artillery.scripts.ArtilleryStationScript;
 import indevo.industries.artillery.utils.ArtilleryStationPlacer;
-import lostsector.campaign.bounties.abyss.AbyssSpawner;
-import lostsector.campaign.bounties.eternity.EternitySpawner;
-import lostsector.campaign.bounties.mothership.MothershipSpawner;
-import lostsector.campaign.bounties.peacekeepers.RorqualSpawner;
-import lostsector.campaign.events.blacksite.BlacksiteManager;
-import lostsector.campaign.events.InterceptManager;
-import lostsector.campaign.kesteven.loans.LoanShark;
-import lostsector.campaign.events.hints.HintManager;
+import lostsector.campaign.bounties.HeliosSite;
 import lostsector.campaign.enigma.EnigmaFleetLoot;
-import lostsector.campaign.bounties.BountyLoot;
 import lostsector.campaign.kesteven.contracts.ContractManager;
-import lostsector.campaign.kesteven.quest.KestevenTipBarEventCreator;
-import lostsector.campaign.kesteven.quest.QuestStageManager;
 import lostsector.persistence.CampaignTimer;
 import lostsector.helper.FleetHelper;
 import lostsector.helper.Ids;
@@ -165,10 +156,6 @@ public class ModPlugin extends BaseModPlugin {
             Global.getSector().getListenerManager().addListener(new CommissionedCrewsBonus());
             log("added EnigmaFleetLootGenerator");
         }
-        if (!Global.getSector().hasScript(BountyLoot.class)) {
-            Global.getSector().addScript(new BountyLoot());
-            log("added bountyLoot");
-        }
         GenericPluginManagerAPI plugins = Global.getSector().getGenericPlugins();
         if (!plugins.hasPlugin(EnigmaDefenderPlugin.class)) {
             plugins.addPlugin(new EnigmaDefenderPlugin(), true);
@@ -184,29 +171,21 @@ public class ModPlugin extends BaseModPlugin {
         EFS_LIST.clear();
 
         EFS_LIST.add(new HyperspaceEnigmaSpawner());
-        EFS_LIST.add(new HintManager());
-        EFS_LIST.add(new RorqualSpawner());
-        EFS_LIST.add(new EternitySpawner());
         EFS_LIST.add(new HeartOccupation());
         EFS_LIST.add(new StalkerSpawner());
         EFS_LIST.add(new EnigmaRelations());
         EFS_LIST.add(new KestevenScavenger());
         EFS_LIST.add(new KestevenExportManager());
         EFS_LIST.add(new GuardSpawner());
-        EFS_LIST.add(new AbyssSpawner());
-        EFS_LIST.add(new QuestStageManager());
         EFS_LIST.add(new ExileManager());
-        EFS_LIST.add(new LoanShark());
-        EFS_LIST.add(new InterceptManager());
         EFS_LIST.add(new BlackOpsManager());
         EFS_LIST.add(new ContractManager());
         EFS_LIST.add(new EnigmaHullmodListener());
-        EFS_LIST.add(new MothershipSpawner());
-        EFS_LIST.add(new BlacksiteManager());
         EFS_LIST.add(new EnigmaAIConverter());
         EFS_LIST.add(new GameModeManager());
         EFS_LIST.add(new ThronesGiftManager());
         EFS_LIST.add(new HellSpawnManager());
+        EFS_LIST.add(new QuestManager());
 
         if (IS_NEXERELIN){
             EFS_LIST.add(new HellSpawnNexListener());
@@ -236,6 +215,7 @@ public class ModPlugin extends BaseModPlugin {
         syncNSKRScripts();
 
         Global.getSector().registerPlugin(new CorePlugin());
+        Global.getSector().getRules().addTokenReplacementGenerator(new QuestTokens());
 
         for (BaseCampaignEventListener script : EFS_LIST){
             Global.getSector().addTransientScript((EveryFrameScript) script);
@@ -244,12 +224,6 @@ public class ModPlugin extends BaseModPlugin {
         }
 
         Saved.loadPersistentData();
-
-        //BAR
-        BarEventManager bar = BarEventManager.getInstance();
-        if (!bar.hasEventCreator(KestevenTipBarEventCreator.class)) {
-            bar.addEventCreator(new KestevenTipBarEventCreator());
-        }
 
         //DATA
         Map<String, Object> data = Global.getSector().getPersistentData();
@@ -275,6 +249,8 @@ public class ModPlugin extends BaseModPlugin {
         }
 
         FleetHelper.hackBrokenVariants();
+
+        QuestManager.get().startQuests();
     }
 
     //Thanks to HzDev for just making this for me
@@ -369,7 +345,7 @@ public class ModPlugin extends BaseModPlugin {
             Asteria.generateInRandomSystemIfMissing(Global.getSector());
         }
         //once per campaign
-        MothershipSpawner.spawnPlanets(MothershipSpawner.getMothershipBaseLocation(), new Random());
+        HeliosSite.place();
         EnigmaBaseSpawner.spawnBases();
         DormantSpawner.spawnDormant();
         EnvironmentalStorytelling.spawnStorytelling();
@@ -443,11 +419,8 @@ public class ModPlugin extends BaseModPlugin {
         Frost.generateRuins(Global.getSector().getStarSystem(Frost.getName()));
         //fix frozen desert conditions
         DesertConditionRepair.fix();
-        //blacksites, done later so we can use sector memory
+        //blacksites; the blacksite quest adopts them at the end of onGameLoad
         BlacksiteSpawner.spawnBases();
-
-        //mothership fleet
-        MothershipSpawner.spawnMothershipFleet(MothershipSpawner.getMothershipBaseLocation(), new Random());
 
         SectorGen.setEnigmaRelation(Global.getSector());
     }

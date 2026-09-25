@@ -7,8 +7,10 @@ import lostsector.campaign.kesteven.BlackOpsManager;
 import lostsector.campaign.kesteven.KestevenScavenger;
 
 import com.fs.starfarer.api.Global;
+import com.fs.starfarer.api.campaign.CampaignEventListener.FleetDespawnReason;
 import com.fs.starfarer.api.campaign.CampaignFleetAPI;
 import com.fs.starfarer.api.campaign.FleetAssignment;
+import com.fs.starfarer.api.campaign.SectorEntityToken;
 import com.fs.starfarer.api.campaign.ai.CampaignFleetAIAPI;
 import com.fs.starfarer.api.campaign.ai.FleetAssignmentDataAPI;
 import com.fs.starfarer.api.campaign.ai.ModularFleetAIAPI;
@@ -22,15 +24,9 @@ import com.fs.starfarer.api.impl.campaign.ids.MemFlags;
 import com.fs.starfarer.api.impl.campaign.ids.Tags;
 import com.fs.starfarer.api.loading.VariantSource;
 import com.fs.starfarer.api.util.Misc;
-import lostsector.campaign.bounties.abyss.AbyssSpawner;
-import lostsector.campaign.bounties.eternity.EternitySpawner;
-import lostsector.campaign.bounties.mothership.MothershipSpawner;
-import lostsector.campaign.bounties.peacekeepers.RorqualSpawner;
-import lostsector.campaign.events.InterceptManager;
-import lostsector.campaign.kesteven.loans.LoanShark;
 import lostsector.helper.fleet.FleetInfo;
-import lostsector.campaign.kesteven.quest.QuestStageManager;
 import lostsector.helper.fleet.SimpleFleetMember;
+import lostsector.quest.QuestFleets;
 import org.lazywizard.lazylib.MathUtils;
 import org.lwjgl.util.vector.Vector2f;
 
@@ -287,7 +283,7 @@ public class FleetHelper {
         //
         //set
         if (info.target==null) {
-            createGuardTarget(info, pf);
+            createGuardTarget(info);
         }
         //close enough check
         //MOVE AI
@@ -333,11 +329,12 @@ public class FleetHelper {
             }
         }
     }
-    private static void createGuardTarget(FleetInfo info, CampaignFleetAPI pf) {
+    // The guard point is where the fleet is now, in its own location, which need not be the player's.
+    private static void createGuardTarget(FleetInfo info) {
         //clean up
         if (info.target!=null) info.target.setExpired(true);
 
-        info.target = pf.getContainingLocation().createToken(info.fleet.getLocation());
+        info.target = info.fleet.getContainingLocation().createToken(info.fleet.getLocation());
     }
     public enum GuardMovementBehaviour {
         HOLD,
@@ -346,6 +343,242 @@ public class FleetHelper {
     public enum GuardAttackBehaviour {
         HOSTILE,
         PLAYER
+    }
+
+    // Heads for info.target and despawns there. The assignment is issued again whenever the fleet has another one.
+    public static void goToTargetAndDespawnAI(CampaignFleetAPI fleet, FleetInfo info) {
+        goToTargetAndDespawnAI(fleet, info, "returning to");
+    }
+
+    // The assignment text is textPrefix, a space and the target's market name (the entity name without a market).
+    public static void goToTargetAndDespawnAI(CampaignFleetAPI fleet, FleetInfo info, String textPrefix) {
+        CampaignFleetAPI pf = Global.getSector().getPlayerFleet();
+        if (fleet.getAI() == null || info.target == null) return;
+        specManeuversCheck(fleet, pf, fleet.getAI().getCurrentAssignment());
+        if (fleet.getAI().getCurrentAssignmentType() != FleetAssignment.GO_TO_LOCATION_AND_DESPAWN) {
+            String name = info.target.getMarket() != null ? info.target.getMarket().getName() : info.target.getName();
+            fleet.clearAssignments();
+            fleet.addAssignment(FleetAssignment.GO_TO_LOCATION_AND_DESPAWN, info.target, Float.MAX_VALUE, textPrefix + " " + name);
+        }
+    }
+
+    // Keeps the assignment the fleet was built with; a fleet left without one holds where it is.
+    public static void keepAssignmentAI(CampaignFleetAPI fleet) {
+        if (fleet.getAI() == null) return;
+        safetyCheck(fleet, fleet.getAI().getCurrentAssignment());
+    }
+
+    // As keepAssignmentAI; a fleet that is intercepting outside the player's location remembers the player as seen
+    // with the transponder on, so it stays aggressive, and patrols the system of info.home with patrolText.
+    public static void patrolHomeAfterChaseAI(CampaignFleetAPI fleet, FleetInfo info, String patrolText) {
+        CampaignFleetAPI pf = Global.getSector().getPlayerFleet();
+        if (fleet.getAI() == null || info.home == null) return;
+        safetyCheck(fleet, fleet.getAI().getCurrentAssignment());
+        if (fleet.getContainingLocation() != pf.getContainingLocation() && fleet.getAI().getCurrentAssignmentType() == FleetAssignment.INTERCEPT) {
+            fleet.clearAssignments();
+            fleet.getMemoryWithoutUpdate().set(MemFlags.MEMORY_KEY_SAW_PLAYER_WITH_TRANSPONDER_ON, true);
+            fleet.addAssignment(FleetAssignment.PATROL_SYSTEM, info.home, Float.MAX_VALUE, patrolText);
+        }
+    }
+
+    // Below a quarter of the fleet points it spawned with, the threshold defeatedCheck also uses.
+    public static boolean isBeaten(FleetInfo info) {
+        return info.fleet.getFleetPoints() * 4.0f < info.strength;
+    }
+
+    // No fleet points left: the fleet has no ships that count.
+    public static boolean isEmptied(FleetInfo info) {
+        return info.fleet.getFleetPoints() <= 0;
+    }
+
+    // Despawns the fleet only when it is farther from the player than the maximum hyperspace sensor range, so the
+    // player never sees it vanish. True when it despawned.
+    public static boolean despawnOutOfSight(CampaignFleetAPI fleet) {
+        CampaignFleetAPI pf = Global.getSector().getPlayerFleet();
+        if (pf == null) return false;
+        float dist = MathUtils.getDistance(pf.getLocationInHyperspace(), fleet.getLocationInHyperspace());
+        if (dist <= Global.getSettings().getMaxSensorRangeHyper()) return false;
+        fleet.despawn(FleetDespawnReason.PLAYER_FAR_AWAY, null);
+        return true;
+    }
+
+    public static final float RAID_ORBIT_RANGE = 600f;
+    public static final float RAID_BROKEN_STRENGTH = 0.2f;
+
+    // Goes to info.target and orbits it with orbitText, re-issued on every call, while the target is set and the fleet
+    // is not broken. Otherwise it withdraws once, to info.home when withdrawHome or to a random market of its faction
+    // (info.home when there is none), and despawns there. Unlike the other AI methods it continues after the
+    // standing-down check, so a standing-down fleet is sent back to its raid on the same call.
+    public static void raidTargetAI(CampaignFleetAPI fleet, FleetInfo info, String orbitText, boolean withdrawHome, Random random) {
+        CampaignFleetAPI pf = Global.getSector().getPlayerFleet();
+        if (fleet.getAI() == null) return;
+        FleetAssignmentDataAPI curr = fleet.getAI().getCurrentAssignment();
+        safetyCheck(fleet, curr);
+        specManeuversCheck(fleet, pf, curr);
+
+        if (info.target == null || isRaidBroken(info)) {
+            if (fleet.getAI().getCurrentAssignmentType() == FleetAssignment.GO_TO_LOCATION_AND_DESPAWN) return;
+            SectorEntityToken market = withdrawHome ? null : SystemHelper.getRandomFactionMarket(random, fleet.getFaction().getId());
+            fleet.clearAssignments();
+            if (market == null) {
+                fleet.addAssignment(FleetAssignment.GO_TO_LOCATION_AND_DESPAWN, info.home, Float.MAX_VALUE, "standing down");
+            } else {
+                fleet.addAssignment(FleetAssignment.GO_TO_LOCATION_AND_DESPAWN, market, Float.MAX_VALUE, "returning to " + market.getName());
+            }
+            return;
+        }
+        fleet.clearAssignments();
+        if (MathUtils.getDistance(fleet.getLocation(), info.target.getLocation()) > RAID_ORBIT_RANGE) {
+            fleet.addAssignment(FleetAssignment.GO_TO_LOCATION, info.target, Float.MAX_VALUE, "moving to location");
+        } else {
+            fleet.addAssignment(FleetAssignment.ORBIT_PASSIVE, info.target, Float.MAX_VALUE, orbitText);
+        }
+    }
+
+    // Patrols the system of info.target (info.home until the first switch) with patrolText. Once the fleet has been in
+    // that system for more than switchDays, it switches info.target to a random market of the faction and moves there,
+    // ignoring other fleets on the way. Nothing changes while the fleet is in hyperspace. True on the call that switched.
+    public static boolean patrolMarketsAI(CampaignFleetAPI fleet, FleetInfo info, String factionId, float switchDays,
+                                          String patrolText, Random random) {
+        CampaignFleetAPI pf = Global.getSector().getPlayerFleet();
+        if (fleet.getAI() == null) return false;
+        FleetAssignmentDataAPI curr = fleet.getAI().getCurrentAssignment();
+        safetyCheck(fleet, curr);
+        specManeuversCheck(fleet, pf, curr);
+        if (info.target == null) info.target = info.home;
+        if (info.target == null || fleet.isInHyperspace()) return false;
+
+        boolean switched = false;
+        if (fleet.getStarSystem() == info.target.getStarSystem()) {
+            if (info.patrolArrivedAge < 0f) info.patrolArrivedAge = info.age;
+            if (fleet.getAI().getCurrentAssignmentType() != FleetAssignment.PATROL_SYSTEM) {
+                fleet.clearAssignments();
+                fleet.addAssignment(FleetAssignment.PATROL_SYSTEM, info.target, Float.MAX_VALUE, patrolText);
+                fleet.getMemoryWithoutUpdate().unset(MemFlags.FLEET_IGNORES_OTHER_FLEETS);
+            }
+            if (info.age - info.patrolArrivedAge > switchDays) {
+                // Resets the patrol assignment before the move.
+                fleet.clearAssignments();
+                fleet.addAssignment(FleetAssignment.ORBIT_PASSIVE, info.target, Float.MAX_VALUE, patrolText);
+                info.target = SystemHelper.getRandomFactionMarket(random, factionId);
+                info.patrolArrivedAge = -1f;
+                switched = true;
+                log("patrol of " + fleet.getName() + " switches to " + info.target.getName());
+            }
+        }
+        if (fleet.getStarSystem() != info.target.getStarSystem()
+                && fleet.getAI().getCurrentAssignmentType() != FleetAssignment.GO_TO_LOCATION) {
+            String name = info.target.getMarket() != null ? info.target.getMarket().getName() : info.target.getName();
+            fleet.clearAssignments();
+            fleet.addAssignment(FleetAssignment.GO_TO_LOCATION, info.target, Float.MAX_VALUE, "moving to " + name);
+            fleet.getMemoryWithoutUpdate().set(MemFlags.FLEET_IGNORES_OTHER_FLEETS, true);
+        }
+        return switched;
+    }
+
+    // A raiding fleet below a fifth of its spawn strength withdraws and no longer counts as a defender.
+    public static boolean isRaidBroken(FleetInfo info) {
+        return info.fleet.getFleetPoints() < info.strength * RAID_BROKEN_STRENGTH;
+    }
+
+    // Orbiting its target, in the sense raidTargetAI orders it.
+    public static boolean isRaidingTarget(FleetInfo info) {
+        return info.target != null && !isRaidBroken(info)
+                && MathUtils.getDistance(info.fleet.getLocation(), info.target.getLocation()) <= RAID_ORBIT_RANGE;
+    }
+
+    // An expedition by FleetInfo.age: orbits info.home ("preparing") until prepareDays, travels to info.target, orbits it
+    // ("on expedition", re-issued on every call) until returnAfterDays, then goes home and stands down there. The
+    // phase checks run in this order against the assignment the fleet had at the start of the call, as the old job 3
+    // expedition logic did; nothing is issued while the fleet is busy (MemFlags.FLEET_BUSY).
+    public static void expeditionAI(CampaignFleetAPI fleet, FleetInfo info, float prepareDays, float returnAfterDays) {
+        if (fleet.getAI() == null || info.home == null || info.target == null) return;
+        if (fleet.getMemoryWithoutUpdate().contains(MemFlags.FLEET_BUSY)) return;
+        if (fleet.getAI().getCurrentAssignment() == null) {
+            fleet.clearAssignments();
+            fleet.addAssignment(FleetAssignment.HOLD, fleet.getContainingLocation().createToken(fleet.getLocation()), Float.MAX_VALUE, "holding");
+        }
+        FleetAssignment assignment = fleet.getCurrentAssignment().getAssignment();
+        boolean atHome = fleet.getContainingLocation() == info.home.getContainingLocation();
+        boolean atTarget = fleet.getContainingLocation() == info.target.getContainingLocation();
+        float age = info.age;
+        if (age < prepareDays && atHome && assignment != FleetAssignment.ORBIT_PASSIVE) {
+            fleet.clearAssignments();
+            fleet.addAssignment(FleetAssignment.ORBIT_PASSIVE, info.home, Float.MAX_VALUE, "preparing");
+        }
+        if (age > prepareDays && !atTarget && assignment != FleetAssignment.GO_TO_LOCATION) {
+            fleet.clearAssignments();
+            fleet.addAssignment(FleetAssignment.GO_TO_LOCATION, info.target, Float.MAX_VALUE, "moving to location");
+        }
+        // The fleet is never given PATROL_SYSTEM, so this orbit is issued again on every call.
+        if (age < returnAfterDays && atTarget && assignment != FleetAssignment.PATROL_SYSTEM) {
+            fleet.clearAssignments();
+            fleet.addAssignment(FleetAssignment.ORBIT_PASSIVE, info.target, Float.MAX_VALUE, "on expedition");
+        }
+        if (age > returnAfterDays && atTarget && assignment != FleetAssignment.GO_TO_LOCATION) {
+            fleet.clearAssignments();
+            fleet.addAssignment(FleetAssignment.GO_TO_LOCATION, info.home, Float.MAX_VALUE, "returning to " + info.home.getName());
+        }
+        if (age > returnAfterDays && atHome && assignment != FleetAssignment.ORBIT_PASSIVE) {
+            fleet.addAssignment(FleetAssignment.ORBIT_PASSIVE, info.home, Float.MAX_VALUE, "standing down");
+        }
+    }
+
+    // Intercepts the player while the player is visible to the fleet's sensors, otherwise patrols the centre of the
+    // fleet's star system (in hyperspace, the point where the fleet is). A fleet with no fleet points left gets no
+    // orders and despawns once out of the player's sight. Unlike the other AI methods, a STANDING_DOWN fleet gets the
+    // do-not-attack handling and still takes the intercept or patrol in the same call, as the old woken dormant
+    // guards of the Kesteven questline did.
+    public static void huntInSystemAI(CampaignFleetAPI fleet) {
+        CampaignFleetAPI pf = Global.getSector().getPlayerFleet();
+        if (pf == null || fleet.getAI() == null) return;
+        if (fleet.getFleetPoints() <= 0) {
+            despawnOutOfSight(fleet);
+            return;
+        }
+        FleetAssignmentDataAPI curr = fleet.getAI().getCurrentAssignment();
+        safetyCheck(fleet, curr);
+        if (curr != null && curr.getAssignment() == FleetAssignment.STANDING_DOWN) {
+            CampaignFleetAIAPI ai = fleet.getAI();
+            if (ai instanceof ModularFleetAIAPI) {
+                // needed to interrupt an in-progress pursuit
+                ModularFleetAIAPI m = (ModularFleetAIAPI) ai;
+                m.getStrategicModule().getDoNotAttack().add(pf, 1f);
+                m.getTacticalModule().setTarget(null);
+            }
+        }
+        if (pf.isVisibleToSensorsOf(fleet)) {
+            if (fleet.getAI().getCurrentAssignmentType() != FleetAssignment.INTERCEPT) {
+                fleet.clearAssignments();
+                fleet.addAssignment(FleetAssignment.INTERCEPT, pf, Float.MAX_VALUE, "intercepting your fleet");
+            }
+        } else if (fleet.getAI().getCurrentAssignmentType() != FleetAssignment.PATROL_SYSTEM) {
+            SectorEntityToken patrolCenter = fleet.getStarSystem() != null
+                    ? fleet.getStarSystem().getCenter()
+                    : fleet.getContainingLocation().createToken(fleet.getLocation());
+            fleet.clearAssignments();
+            fleet.addAssignment(FleetAssignment.PATROL_SYSTEM, patrolCenter, Float.MAX_VALUE, "patrolling");
+        }
+    }
+
+    // Intercepts the player while the player is in the fleet's star system, otherwise orbits the system's center, both
+    // with text; each assignment is issued again only when the fleet has another one. Unlike most AI methods it
+    // continues after the standing-down check, as the old Cache guardian logic did. Nothing is issued outside a star system.
+    public static void defendSystemAI(CampaignFleetAPI fleet, String text) {
+        CampaignFleetAPI pf = Global.getSector().getPlayerFleet();
+        if (pf == null || fleet.getAI() == null || fleet.getStarSystem() == null) return;
+        FleetAssignmentDataAPI curr = fleet.getAI().getCurrentAssignment();
+        safetyCheck(fleet, curr);
+        specManeuversCheck(fleet, pf, curr);
+        if (pf.getStarSystem() != null && pf.getStarSystem() == fleet.getStarSystem()) {
+            if (fleet.getAI().getCurrentAssignmentType() != FleetAssignment.INTERCEPT) {
+                fleet.clearAssignments();
+                fleet.addAssignment(FleetAssignment.INTERCEPT, pf, Float.MAX_VALUE, text);
+            }
+        } else if (fleet.getAI().getCurrentAssignmentType() != FleetAssignment.ORBIT_PASSIVE) {
+            fleet.clearAssignments();
+            fleet.addAssignment(FleetAssignment.ORBIT_PASSIVE, fleet.getStarSystem().getCenter(), Float.MAX_VALUE, text);
+        }
     }
 
     public static FleetMemberAPI generateShip(String variant, boolean noAutofit, boolean alwaysRecover) {
@@ -453,18 +686,12 @@ public class FleetHelper {
 
     public static final ArrayList<String> FLEET_ARRAY_KEYS = new ArrayList<>();
     static {
-        FLEET_ARRAY_KEYS.add(QuestStageManager.FLEET_ARRAY_KEY);
         FLEET_ARRAY_KEYS.add(HyperspaceEnigmaSpawner.FLEET_ARRAY_KEY);
         FLEET_ARRAY_KEYS.add(StalkerSpawner.FLEET_ARRAY_KEY);
-        FLEET_ARRAY_KEYS.add(EternitySpawner.FLEET_ARRAY_KEY);
         FLEET_ARRAY_KEYS.add(KestevenScavenger.FLEET_ARRAY_KEY);
         FLEET_ARRAY_KEYS.add(GuardSpawner.FLEET_ARRAY_KEY);
-        FLEET_ARRAY_KEYS.add(AbyssSpawner.FLEET_ARRAY_KEY);
-        FLEET_ARRAY_KEYS.add(RorqualSpawner.FLEET_ARRAY_KEY);
-        FLEET_ARRAY_KEYS.add(InterceptManager.FLEET_ARRAY_KEY);
         FLEET_ARRAY_KEYS.add(BlackOpsManager.FLEET_ARRAY_KEY);
-        FLEET_ARRAY_KEYS.add(LoanShark.FLEET_ARRAY_KEY);
-        FLEET_ARRAY_KEYS.add(MothershipSpawner.FLEET_ARRAY_KEY);
+        FLEET_ARRAY_KEYS.add(QuestFleets.KEY);
     }
     public static void hackBrokenVariants(){
         for (String key : FLEET_ARRAY_KEYS) {

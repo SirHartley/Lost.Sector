@@ -8,7 +8,6 @@ import com.fs.starfarer.api.campaign.*;
 import com.fs.starfarer.api.campaign.ai.CampaignFleetAIAPI;
 import com.fs.starfarer.api.campaign.ai.FleetAssignmentDataAPI;
 import com.fs.starfarer.api.campaign.ai.ModularFleetAIAPI;
-import com.fs.starfarer.api.campaign.comm.IntelInfoPlugin;
 import com.fs.starfarer.api.campaign.econ.Industry;
 import com.fs.starfarer.api.campaign.econ.MarketAPI;
 import com.fs.starfarer.api.campaign.listeners.ColonyPlayerHostileActListener;
@@ -25,9 +24,7 @@ import exerelin.campaign.DiplomacyManager;
 import lostsector.campaign.starts.hellspawn.HellSpawnAbility;
 import lostsector.campaign.starts.hellspawn.HellSpawnEventFactors;
 import lostsector.campaign.starts.hellspawn.HellSpawnEventIntel;
-import lostsector.campaign.starts.hellspawn.HellSpawnJudgementIntel;
 import lostsector.helper.fleet.FleetInfo;
-import lostsector.campaign.kesteven.quest.QuestHelper;
 import lostsector.persistence.CampaignTimer;
 import lostsector.ModPlugin;
 import lostsector.helper.FleetHelper;
@@ -44,9 +41,6 @@ import java.util.Random;
 
 public class HellSpawnManager extends BaseCampaignEventListener implements EveryFrameScript, ColonyPlayerHostileActListener {
 
-    public static final int PEACEFUL_MAX_POINTS = 350;
-    public static final int NEUTRAL_MAX_POINTS = 2000;
-    public static final float JUDGEMENT_TIMER = 40f;
     public static final float PEACEFUL_BONUS= 33f;
 
     public static final float FLAGSHIP_CAP_BONUS = 25f;
@@ -81,9 +75,6 @@ public class HellSpawnManager extends BaseCampaignEventListener implements Every
     public static final float UNLAWFUL_POINTS_MULT = 0.33f;
 
     public static final String STAT_ID = "HellspawnBonus";
-    public static final String STARTED_KEY = "HellspawnStartedKey";
-    public static final String JUDGEMENT_KEY = "HellspawnJudgementKey";
-    public static final String JUDGEMENT_DEFEATED_KEY = "HellspawnJudgementDefeatedKey";
     public static final String LEVEL_KEY = "hellSpawnManagerLevel";
     public static final String PERSISTENT_RANDOM_KEY = "hellSpawnManagerRandom";
 
@@ -153,6 +144,9 @@ public class HellSpawnManager extends BaseCampaignEventListener implements Every
         return false;
     }
 
+    // The stat hullmod is added to new player ships while paused too, so the fleet and refit screens show its
+    // effects at once. No vanilla callback reports a ship joining the player fleet: purchases, recoveries, rules
+    // commands and other mods all add members without a common listener (campaign.listeners in 0.98a-RC8).
     @Override
     public boolean runWhilePaused() {
         return true;
@@ -177,47 +171,6 @@ public class HellSpawnManager extends BaseCampaignEventListener implements Every
         if (timer.onTimeout()){
             MutableCharacterStatsAPI characterStats = Global.getSector().getPlayerStats();
             MutableFleetStatsAPI fleetStats = Global.getSector().getPlayerFleet().getStats();
-            if (characterStats.getLevel()>=15){
-
-                //start
-                if (!QuestHelper.getCompleted(STARTED_KEY)) {
-                    CampaignUIAPI ui = Global.getSector().getCampaignUI();
-                    if (!ui.isShowingDialog() && !ui.isShowingMenu()) {
-                        //judgement
-                        Global.getSector().getCampaignUI().showInteractionDialog(new HellSpawnJudgementWarning(), null);
-
-                        QuestHelper.setCompleted(true, STARTED_KEY);
-                    }
-                }
-
-            }
-            IntelInfoPlugin info = Global.getSector().getIntelManager().getFirstIntel(HellSpawnJudgementIntel.class);
-            if (info!=null){
-                HellSpawnJudgementIntel intel = HellSpawnJudgementIntel.get();
-
-                float timer = Global.getSector().getClock().getElapsedDaysSince(intel.time);
-
-                if (timer > JUDGEMENT_TIMER){
-
-                    //NOW
-                    if (!QuestHelper.getCompleted(JUDGEMENT_KEY)) {
-                        CampaignUIAPI ui = Global.getSector().getCampaignUI();
-                        if (!ui.isShowingDialog() && !ui.isShowingMenu()) {
-                            //delete intel
-                            intel.endImmediately();
-                            //judgement
-                            Global.getSector().getCampaignUI().showInteractionDialog(new HellSpawnJudgementDialog(), null);
-
-                            QuestHelper.setCompleted(true, JUDGEMENT_KEY);
-                        }
-                    }
-
-                }
-
-            }
-            if (QuestHelper.getCompleted(JUDGEMENT_DEFEATED_KEY)) {
-                HellSpawnJudgementWarning.stopMusic();
-            }
 
             if (level==0) return;
             if (getStabPenalty()>0) {

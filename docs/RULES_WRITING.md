@@ -107,10 +107,10 @@ A private trigger holds several versions of one thing; `FireBest` shows exactly 
 id: nskr_ex_greet             trigger: nskr_exGreeting
 text:    (general greeting)
 
-id: nskr_ex_greetOffered      trigger: nskr_exGreeting   conditions: nskr_ex stage OFFERED
+id: nskr_ex_greetOffered      trigger: nskr_exGreeting   conditions: nskr_quest ex is OFFERED
 text:    (greeting while the offer is open)
 
-id: nskr_ex_greetFailed       trigger: nskr_exGreeting   conditions: nskr_ex failed score:100
+id: nskr_ex_greetFailed       trigger: nskr_exGreeting   conditions: nskr_quest ex is FAILED score:100
 text:    (greeting after a failure, overrides the others)
 ```
 
@@ -152,7 +152,7 @@ Rows cannot do everything. Use a command verb ([Rule commands](#rule-commands)) 
 
 Java must not print prose. It may print short receipt lines in the vanilla receipt style when no vanilla command does the grant. Text, options and branching stay in rows.
 
-Options that change with data are a Java job only when the count or labels cannot be known in advance, such as one option per ship. A fixed set of options belongs in rows, even when Java decides whether each is available: expose that decision as a condition verb.
+Options that change with data are a Java job only when the count or labels cannot be known in advance, such as one option per ship. Lines that change with data work the same way: for a list of unknown length, the command writes each item's tokens and fires a line trigger once per item with `FireBest`, so each line's wording and style stay in a row (`nskr_shipSwap listPicked`). A fixed set of options belongs in rows, even when Java decides whether each is available: expose that decision as a condition verb.
 
 These catch.release cases show Java doing a row's job. Avoid them:
 
@@ -183,6 +183,7 @@ A conversation starts from a trigger that vanilla or Java fires. Add rows to it;
 | A bar event | `BarCMD` fires `FireAll AddBarEvents`; `AddBarEvent <optionId> "option" "blurb"` queues the blurb and option, which `BarCMD` then shows | An `AddBarEvents` row with `AddBarEvent`; the handler on `DialogOptionSelected`; return with `BarCMD returnFromEvent` |
 | A hub mission offered by a contact | `<missionId>_blurb` and `<missionId>_option`, each fired with `FireBest ... true` | The blurb and option rows; the offer row sets `$missionId = <missionId>` and calls `Call $<ref> ...` |
 | A hub mission offered at the bar | `<missionId>_blurbBar` and `<missionId>_optionBar`, with the mission's person as `$local` | The same shape as the contact offer |
+| An intel button | `IntelUIAPI.showDialog(target, trigger)` builds `new RuleBasedInteractionDialogPluginImpl(trigger)` and shows it; that fires `<trigger>`. A null target is replaced by a location token in hyperspace with the neutral faction, no market, no person and its own new memory, so `$local` is scratch memory for this dialog and `$entity` and `$market` do not exist. Dismissing the dialog does not redraw the intel panel: to refresh it, build the plugin yourself, pass the `IntelUIAPI` with `setCustom1`, show it with `showDialog(target, plugin)` and call `recreateIntelUI()` from a command after `DismissDialog`, as `nskr_thronesGift refreshIntel` does | Rows on `<trigger>` |
 | A rules dialog opened from Java | `showInteractionDialog(new RuleBasedInteractionDialogPluginImpl("<trigger>"), target)` fires `<trigger>` when the dialog opens. `FireBest.fire(null, dialog, memoryMap, "<trigger>")` fires a trigger into a rules dialog that is already open, as `OpenCDE` does | Rows on `<trigger>` |
 
 Which memory scopes exist depends on the entry. With an active person, `$local` is the person's memory and `$entity` the target's; without one, `$local` is the target's memory and `$entity` does not exist. `$faction` stays the target's faction even while a person from another faction speaks; use `$personFaction` for theirs. See [Memory ownership and scopes](RULES_AUTHORING.md#memory-ownership-and-scopes).
@@ -199,7 +200,7 @@ Every line of the Conditions cell must pass. Lines are checked top to bottom and
 - **Scopes.** Write the scope when the key is not on `$local`: `$player.nskr_x`, `$global.nskr_x`, `$entity.nskr_x`. An absent scope falls back to local and silently reads a key literally named `$entity.nskr_x` there.
 - **Commands.** A command in Conditions answers a question: `PlayerHasCargo supplies 10`, `nskr_isBaseOfficial command`. `!Command args` negates it. Condition commands run for every candidate row on every matching round, so they must be cheap and must not change state, grant anything or roll a new random target.
 - **Specificity.** In a `FireBest` trigger, rows compete by their summed score; see [FireBest pick](#firebest-pick). `FireAll` ignores scores.
-- **Quest state.** Ask the owner with a condition verb (`nskr_kestevenQuest ...`) or a mission reference instead of copying quest state into memory for rules to read.
+- **Quest state.** Ask the owner with a condition verb (`nskr_quest kq check job3Fleet`) or a mission reference instead of copying quest state into memory for rules to read.
 - **Case.** Keys and trigger names are case sensitive. `$nskr_x` and `$nskr_X` are different keys; a `FireAll` on a misspelled trigger finds no rows and shows nothing. SotF ships this bug: two rows fire `sotfWendigoCHOffers` while the menu's rows use `sotfWendigoCHoffers`.
 
 ## Script
@@ -230,9 +231,9 @@ Decide where each fact lives before writing rows.
 
 | Fact | Owner | Example |
 |---|---|---|
-| Quest progress, targets, timers, decisions, counters | The quest's Java owner (a mission, intel or manager), read through a command verb or a mission reference | `nskr_kestevenQuest getStage`; a hub mission's `$<missionId>_stage` |
+| Quest progress, targets, timers, decisions, counters | The quest's Java owner (a mission, intel or manager), read through a command verb or a mission reference | `nskr_quest kq is JOB3_BRIEFING`; a hub mission's `$<missionId>_stage` |
 | "Already asked", "already introduced" and other conversation flags | The speaker's own memory: an unscoped key while the person is active | `$nskr_ex_askedPay` |
-| What a fleet is for | The fleet's memory, set by its spawner | `$debtCollector` |
+| What a fleet is for | The fleet's memory, set by its spawner | `$nskr_ic_collector` |
 | Something the player knows, shared by several conversations | `$player` | SotF `$player.sotf_knowDustkeepers` |
 | A sector-wide fact that rows in unrelated places read | `$global`, only when no better owner exists | SotF `$global.apromise_completed` |
 | A value shown in text | A String with expiry `0`, written before the row that shows it | `$nskr_debt_pointsStr` |
@@ -275,7 +276,7 @@ Versions of a line separated by a line containing only `OR` are picked at random
 
 ### Highlights and small text
 
-`SetTextHighlights` and `SetTextHighlightColors` color phrases in the last paragraph shown, in the order they appear. Put them in the Script of the row whose Text they decorate, before any `AddText` in that Script. Repeat a phrase for each occurrence. See [Shared text presentation](DIALOGUE.md#shared-text-presentation).
+`SetTextHighlights` and `SetTextHighlightColors` color phrases in the last paragraph shown, in the order they appear. Arguments get token replacement, so `SetTextHighlights $nskr_x_amount` highlights the displayed value of a memory key; a quest token must be quoted, `SetTextHighlights "$nskr_kq_job3Start"`, because an unquoted `$` argument is read from memory ([Tokens](../jars/src/lostsector/quest/README.md#tokens)). Color arguments (`SetTextHighlightColors`, `AddText`, `AddTextSmall`, `SetOptionColor`) accept `highlight` or `h`, `good`, `bad`, `gray` or `grey`, `story`, a faction id (its base UI color), an `r,g,b,a` literal, a color name from `settings.json`, or a variable holding a `Color` (`Token.getColor` in `sources-api/util.java`). `bad` is `textEnemyColor`; unlike `Misc.getNegativeHighlightColor()` it does not turn blue in colorblind mode. Put them in the Script of the row whose Text they decorate, before any `AddText` in that Script. Write `SetTextHighlightColors` before `SetTextHighlights`, as vanilla's `ome_askHireSel` does: it calls `highlightInLastPara(color, "")`, which replaces the paragraph's highlight phrases, so phrases set before it are lost (`SetTextHighlightColors.execute`, `sources-api/impl.campaign.java`). Repeat a phrase for each occurrence. See [Shared text presentation](DIALOGUE.md#shared-text-presentation).
 
 After the prose, small gray text can state a mechanical consequence the prose does not. SotF writes it as an indented list: `AddTextSmall "    - Progress made\n    - Its scorn grows" textGrayColor` (`sotfHauntedPenult4`). Real grants use the vanilla receipt commands, which print their own receipts; see [Receipts](#receipts).
 
@@ -283,7 +284,7 @@ After the prose, small gray text can state a mechanical consequence the prose do
 
 - **Options column** for every option whose label is known in advance. Format `order:id:text`. Lower order shows higher.
 - **Order.** Normally leave it out, as 94% of SotF's and vanilla's options do: `id:text` has order 0, and equal orders show in the order the rows and lines are written. Write an order only to move an option away from that position, for example `100:defaultLeave:Leave` to keep Leave last in a menu assembled from several rows.
-- **No colons in labels.** The loader splits the line on every colon: a colon in an `id:text` label stops the file loading, and in `order:id:text` the label is cut at the next colon.
+- **No colons in labels.** The loader splits the line on every colon: a colon in an `id:text` label stops the file loading, and in `order:id:text` the label is cut at the next colon. A label that needs one gets it from `SetOptionText` in the Script of the row that adds the option ([CSV columns](RULES.md#csv-columns)).
 - **Labels.** Spoken options in quotation marks, actions without; see [Dialogue and player options](LORE.md#dialogue-and-player-options). Add a bracketed note only where the words hide the consequence: `(lie)`, `(decline)`, `(attack)`. SotF does this on under 5% of its options. Labels get token replacement.
 - **Ids.** `nskr_<feature>_<purpose>`, never starting with `$`. Name the handler row after the option it answers so a search finds both; SotF adds a suffix (option `sotfDKOME_askHire`, handler `sotfDKOMEaskHireSel`). The handler's condition is `$option == <optionId>`.
 - **Handlers.** Every option id needs a `DialogOptionSelected` row, except the ids vanilla already handles: `defaultLeave` and the `cutCommLink` family (see [Exits and returns](#exits-and-returns)). A click with no handler prints a red error and an "Exit dialog" option, unless the option went through a confirmation such as a story point option.
@@ -336,6 +337,7 @@ A hub mission is its own command target: `Call $<ref> <action>`. Every hub missi
 - **One block per feature.** A `# FEATURE NAME` row opens it and blank rows end it, as in SotF and vanilla; rows whose id starts with `#` are skipped by the loader. Existing Lost.Sector blocks also carry `#END` rows; new blocks do not need them. Long quests get sub-headers along their stages, as SotF's `# THE HAUNTED` block does.
 - **Play order.** Within a block, the entry row first, then each beat in the order the player meets it. A menu's option rows sit together, directly above their handler rows, in the same order.
 - **Blank rows** separate conversations and menus.
+- **Moving rows.** Where a block sits in the file matters only for rows of one trigger that can match together, such as `FireAll` menus, `AddBarEvents` entries and intel text. Check them before moving a block ([Editing and validation](RULES.md#editing-and-validation)).
 - **Rule ids** `nskr_<feature>_<purpose>`: sequential numbers for a strictly linear scene (`..._brief1`, `..._brief2`), short names for branches. The loader only rejects a duplicate id under the same trigger, so keep every id unique yourself.
 - **Private triggers** `nskr_<feature><Purpose>`: `...Options` for menus, `...Greeting` or `...Text` for picks and inserts, and a plain descriptive name for a shared insert or side effect, as SotF's `sotfLearnAboutDustkeepers`.
 - **Comments.** A `#` line inside Conditions, Script or Options is skipped; use it for a non-obvious line, as SotF's `# removes map` explains a bare `ShowPersonVisual`. The notes column can say why a score exists or which rows are deliberate random variants; SotF leaves it empty, so this is a Lost.Sector addition. Keep jokes and history out.

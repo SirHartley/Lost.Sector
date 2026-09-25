@@ -33,7 +33,7 @@ After reading this file, use the task to choose the next document. Read the rele
 | Use, change or debug commands, mission calls, memory or text replacements, even in Java without a CSV edit | [RULES_AUTHORING.md](docs/RULES_AUTHORING.md), its relevant dictionary entries and [RULES.md project routing](docs/RULES.md#project-routing). This applies to existing mechanisms, not only new plugins or keys. |
 | Find an existing vanilla command, fact, flag or text token | [COMMANDS.md](docs/rules-reference/COMMANDS.md) for command recipes/classes; [MEMORY.md](docs/rules-reference/MEMORY.md) for reusable facts and replacements; [KEY_USAGE.md](docs/rules-reference/KEY_USAGE.md) for literal-key call sites. Read each dictionary's scope notes, then search the relevant entry and inspect its source/context. |
 | Investigate rules-engine behavior | [RULES.md](docs/RULES.md) and the [source corrections](docs/RULES_AUTHORING.md#corrections-to-the-preserved-simulator-references), then relevant parts of the preserved [engine workflow](docs/rules/engine_workflow.md) and [simulator command table](docs/rules/command_table.md). Apply [Technical references and conflicts](#technical-references-and-conflicts); verify uncertain behavior against the exact game's source. |
-| Change, fix or restructure quest code, quest state or quest dialogue: the Kesteven questline, contracts, bounties, encounters, blacksites, Hellspawn, quest intel, quest bar events or quest fleets | The quest framework guide `jars/src/lostsector/quest/README.md` in full (on branch `quest-overhaul` until it merges; see [Quest overhaul](#quest-overhaul)), then [Quest implementation](docs/quests/README.md) and the page for that quest, after `ARCHITECTURE.md`. Add the rules route for rules rows and the text route for wording. The framework guide governs how quest code is built and which shared services it must use; the quest pages describe current behavior; neither governs lore or rules syntax. |
+| Change, fix or restructure quest code, quest state or quest dialogue: the Kesteven questline, contracts, bounties, encounters, blacksites, Hellspawn, quest intel, quest bar events or quest fleets | The quest framework guide `jars/src/lostsector/quest/README.md` in full, then [Quest implementation](docs/quests/README.md) and the page for that quest, after `ARCHITECTURE.md`. Add the rules route for rules rows and the text route for wording. The framework guide governs how quest code is built and which shared services it must use; the quest pages describe current behavior; neither governs lore or rules syntax. |
 | Implement Java custom panels, widgets, renderers, tooltips, layout or input | [UI.md](docs/UI.md) and the owner in `ARCHITECTURE.md`. Add `DIALOGUE.md` for text work and the rules route for rules-hosted interaction changes. `UI.md` is not a second rules-dialogue standard. |
 | Edit a guide or add documentation | [Documentation upkeep](#documentation-upkeep), the owning guide and its inbound links. Documentation editing and technical-only routing changes without prose changes do not require an Editor pass. |
 
@@ -47,7 +47,7 @@ The dictionaries distinguish checked recipes from extracted names, expressions a
 
 ### Make and record changes
 
-- Use one task branch for the user's message. Quest overhaul tasks use the shared branch in [Quest overhaul](#quest-overhaul).
+- Use one task branch for the user's message.
 - Make one commit per requested change. If one message contains several changes, commit them separately in the requested order.
 - Keep each commit message to one short, plain-English summary. Do not include testing notes, agent or model names, co-author trailers, session metadata, links, formatting, or session URLs.
 - Update the affected documentation in the same commit, following [Documentation upkeep](#documentation-upkeep). Do this without a separate user request.
@@ -62,7 +62,7 @@ The dictionaries distinguish checked recipes from extracted names, expressions a
 - Every runtime-affecting final branch must pass the full clean Java 17 build described in [Building](#building).
 - Build the exact final remote task-branch revision. Earlier builds, partial builds, IDE analysis, and static checks do not satisfy the gate.
 - Missing compilers or dependencies are merge blockers. Documentation-only changes do not require a Java build.
-- Open a pull request and merge it when the work is complete. Do not leave finished work on an unmerged branch. The quest overhaul branch is the exception while its tracker is open.
+- Open a pull request and merge it when the work is complete. Do not leave finished work on an unmerged branch.
 - Use the connected GitHub app to create, inspect, and merge pull requests. Use `gh` only if the app is unavailable. A broken `gh` login is not a blocker when the app works.
 - Fetch current remote `main` before branching and again before merging. Integrate intervening changes, push the exact final commit, and verify the merged remote revision.
 
@@ -91,9 +91,9 @@ Update documents automatically as part of each relevant change, not by a backgro
 | `docs/RULES.md` | Rules language, execution, project routing contracts and CSV validation | Update verified contracts and local links. Keep syntax and introductory examples accurate; link to the authoring guide for full command/key integration procedures. |
 | `docs/RULES_WRITING.md` | Writing rules content: process, choosing a structure per screen, entry points, conditions, script, state and memory keys, text, options, exits, visuals, command verbs, layout and naming, review checklist | Update when a structural convention changes. Check engine claims against the exact source and conventions against Secrets of the Frontier and vanilla. Link to `RULES.md` for engine facts and `RULES_AUTHORING.md` for mechanism procedures instead of restating them. |
 | `docs/RULES_AUTHORING.md` | Command/key implementation, memory lifetime, replacement preparation, Java integration and source corrections | Check exact source and CSV usage when updating. Keep full procedures here and align related summaries in `RULES.md`; reuse existing mechanisms before adding new ones. |
-| `docs/rules-reference/*.md` | Vanilla lookup dictionaries: recipes, source expressions, classes and call sites | Retain game version, provenance and scope limits. Distinguish checked behavior from extracted inventory; link usage procedures to the authoring guide instead of maintaining a second manual. |
+| `docs/rules-reference/*.md`, `docs/rules-reference/vanilla-rules-index.txt` | Vanilla lookup dictionaries: recipes, source expressions, classes and call sites; the rules check tool's generated index of vanilla triggers, handled options and keys | Retain game version, provenance and scope limits. Distinguish checked behavior from extracted inventory; link usage procedures to the authoring guide instead of maintaining a second manual. Regenerate the index with `RulesCheck --index` for a new game version, never by hand. |
 | `docs/rules/*.md` | Preserved external simulator references | Preserve upstream text and provenance. Record source-verified corrections in `docs/RULES_AUTHORING.md`'s correction section and update affected `RULES.md` summaries/links, rather than silently altering the reference. |
-| `jars/src/lostsector/quest/README.md` | Quest framework: centralization contract, lifecycle, API reference, rules contract, shared modules and extension procedure | Update in the commit that changes a framework signature, hook, verb, key, trigger pattern, service or registration; keep its Status table current. It lives on `quest-overhaul` until that branch merges. |
+| `jars/src/lostsector/quest/README.md` | Quest framework: centralization contract, lifecycle, API reference, rules contract, shared modules and extension procedure | Update in the commit that changes a framework signature, hook, verb, key, trigger pattern, service or registration; keep its Status table current. |
 | Other framework `README.md` files (none yet) | Integration and extension instructions for that framework | Update when its API, registration, dependencies, paths or lifecycle changes. Add a routing row to [Which guide to read](#which-guide-to-read) when the first one is created. |
 
 Give each fact one home. Move useful detail to its proper owner and link to it; do not keep a second copy in architecture. After moving a section, repair inbound links and check that no requirement or technical constraint was lost. Keep architecture compact and readable; do not create a parallel human version to maintain.
@@ -230,16 +230,6 @@ Code subagents work from a brief written with the [dispatch template](#subagent-
 ### Claude Code hooks
 
 `.claude/settings.json` runs two hooks in Claude Code sessions. After a compaction or resume, `.claude/hooks/reread-guides.sh` reminds the session to read this file, `docs/RULES_WRITING.md` and the quest framework guide again. Before an edit to rules or quest files, `.claude/hooks/rules-edit-reminder.sh` repeats the rules of [Read the current documentation](#read-the-current-documentation). The hooks remind; they do not replace those rules. Update them when the guide paths or the reading rules change.
-
-## Quest overhaul
-
-The quest overhaul runs on the shared branch `quest-overhaul`, tracked by the draft pull request SirHartley/Lost.Sector#8. The user authorized it to proceed task by task without approval of each stage. Remove this section in the commit that merges the branch.
-
-- Every quest overhaul task commits to `quest-overhaul`, not to a new task branch. One task is one commit. Tasks run in parallel where their files do not overlap, so they may land out of tracker order; a task whose inputs are not committed yet waits.
-- At the start of a session, check out `quest-overhaul`, merge current `main` into it, read the in-full guides and start the first unchecked task.
-- Each runtime-affecting commit passes the full compile gate in [Building](#building) before it is pushed. Push after every task and tick its box in the tracker with the commit id.
-- The branch merges to `main` once, after the final task, through the tracker pull request and the full gate on its exact final revision.
-- A task that cannot finish leaves no commit behind; the next session repeats it.
 
 ## Version names
 

@@ -17,6 +17,8 @@ public class FleetInfo {
     public SectorEntityToken home;
     public float age;
     public float strength;
+    // FleetHelper.patrolMarketsAI: the age at which the fleet reached its target's system; -1 while on the way.
+    public float patrolArrivedAge = -1f;
     //custom
     public HashMap<FleetMemberAPI, SimpleFleetMember> secondaries = new HashMap<>();
     public SimpleFleetMember flagshipSimpleMember = null;
