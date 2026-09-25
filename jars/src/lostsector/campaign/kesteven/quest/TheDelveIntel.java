@@ -12,7 +12,6 @@ import com.fs.starfarer.api.ui.SectorMapAPI;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import com.fs.starfarer.api.util.Misc;
 import lostsector.campaign.kesteven.quest.DataSatelliteDialog;
-import lostsector.campaign.kesteven.quest.ElizaSearchBarEvent;
 import lostsector.campaign.kesteven.quest.QuestHelper;
 import lostsector.helper.SectorLookup;
 
@@ -176,9 +175,9 @@ public class TheDelveIntel extends BaseIntelPlugin {
         //Eliza
         if (stage == 16 && !foundEliza) info.addPara("Figure out where Eliza is hiding.", initPad, g, h, "", "");
         if (stage == 16 && jackTip && !foundEliza) info.addPara("Ask some pirates if they know anything about Eliza.", initPad, g, h, "", "");
-        if (stage == 16 && !foundEliza && paid && ElizaSearchBarEvent.getDialogStage()==2){
-            String loc = ElizaSearchBarEvent.getPaidForInfoTarget().getMarket().getName();
-            String locSys = ElizaSearchBarEvent.getPaidForInfoTarget().getStarSystem().getName();
+        if (stage == 16 && !foundEliza && paid && KestevenElizaSearchModule.searchStage()==2){
+            String loc = KestevenElizaSearchModule.contactMarket().getMarket().getName();
+            String locSys = KestevenElizaSearchModule.contactMarket().getStarSystem().getName();
             info.addPara("Go to "+loc+" in "+locSys+" and speak with the contact.", initPad, g, h, loc, "");
         }
         if(QuestHelper.getElizaLoc()!=null) {

@@ -14,7 +14,6 @@ import com.fs.starfarer.api.impl.MusicPlayerPluginImpl;
 import com.fs.starfarer.api.impl.campaign.ids.Factions;
 import com.fs.starfarer.api.impl.campaign.ids.MemFlags;
 import com.fs.starfarer.api.impl.campaign.ids.Pings;
-import com.fs.starfarer.api.impl.campaign.intel.bar.PortsideBarData;
 import com.fs.starfarer.api.impl.campaign.intel.contacts.ContactIntel;
 import com.fs.starfarer.api.impl.campaign.terrain.DebrisFieldTerrainPlugin;
 import com.fs.starfarer.api.impl.campaign.world.MoteParticleScript;
@@ -156,28 +155,6 @@ public class QuestStageManager extends BaseCampaignEventListener implements Ever
                         Global.getSettings().getColor("yellowTextColor"));
             }
         }
-        //paid for loc changer
-        if (stage==16 && QuestHelper.getCompleted(KestevenFlag.ELIZA_SPACER_PAID) && !QuestHelper.getCompleted(KestevenFlag.ELIZA_FOUND) && ElizaSearchBarEvent.getDialogStage()==2){
-            if(ElizaSearchBarEvent.getPaidForInfoTarget().getMarket().isPlanetConditionMarketOnly()){
-                //remove important
-                if (ElizaSearchBarEvent.getPaidForInfoTarget().getMemoryWithoutUpdate().contains(MemFlags.MEMORY_KEY_MISSION_IMPORTANT)){
-                    ElizaSearchBarEvent.getPaidForInfoTarget().getMemoryWithoutUpdate().unset(MemFlags.MEMORY_KEY_MISSION_IMPORTANT);
-                }
-                log("Qmanager paid for loc deciv, changing");
-                String oldLoc = ElizaSearchBarEvent.getPaidForInfoTarget().getMarket().getPrimaryEntity().getName();
-                //new loc
-                ElizaSearchBarEvent.setPaidForInfoTarget();
-                //make important, again
-                ElizaSearchBarEvent.getPaidForInfoTarget().getMemoryWithoutUpdate().set(MemFlags.MEMORY_KEY_MISSION_IMPORTANT,true);
-                //text
-                Global.getSector().getCampaignUI().addMessage("With the conditions deteriorating on "+oldLoc+", the contact has moved their operations to "+ ElizaSearchBarEvent.getPaidForInfoTarget().getName()+".",
-                        Global.getSettings().getColor("standardTextColor"),
-                        "the contact",
-                        "",
-                        Global.getSector().getFaction(Factions.PIRATES).getColor(),
-                        Global.getSettings().getColor("yellowTextColor"));
-            }
-        }
         if (stage==16) {
             //cache found, before mission
             if (QuestHelper.getCompleted(KestevenFlag.CACHE_FOUND)) {
@@ -274,10 +251,6 @@ public class QuestStageManager extends BaseCampaignEventListener implements Ever
                 Global.getSector().getIntelManager().addIntel(intel5, false);
                 state.job5IntelAdded = true;
                 log("Qmanager added INTEL for " + "The Delve");
-                //BAR EVENTS
-                if (stage==16) PortsideBarData.getInstance().addEvent(new ElizaSearchBarEvent());
-                if (stage==16) PortsideBarData.getInstance().addEvent(new ElizaSearchSecondBarEvent());
-                if (stage==16) PortsideBarData.getInstance().addEvent(new ElizaSearchFinalBarEvent());
             }
         }
         if (stage==16) {

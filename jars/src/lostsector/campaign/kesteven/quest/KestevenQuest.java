@@ -12,8 +12,9 @@ import java.util.List;
 import java.util.Random;
 
 // KestevenHubModule serves every conversation with Jack, Alice and Nicholas, KestevenJob1Module runs job 1,
-// KestevenJob3Module and KestevenPartyModule run job 3 and KestevenGlacierModule the Glacier facility;
-// QuestStageManager and the old dialog classes still run the rest of the questline on this state (T19 to T35).
+// KestevenJob3Module and KestevenPartyModule run job 3, KestevenGlacierModule the Glacier facility and
+// KestevenElizaSearchModule the Eliza search at pirate bars; QuestStageManager and the old dialog classes still run the
+// rest of the questline on this state (T19 to T35).
 // isAvailable() keeps the default: the old code runs the questline in every campaign and treats a missing
 // Kesteven home as failure (stage 99), so the state must always exist.
 public final class KestevenQuest extends Quest<KestevenStage, KestevenState> {
@@ -32,7 +33,7 @@ public final class KestevenQuest extends Quest<KestevenStage, KestevenState> {
     @Override
     protected List<QuestModule<KestevenStage, KestevenState>> createModules() {
         return List.of(new KestevenHubModule(), new KestevenJob1Module(), new KestevenJob3Module(), new KestevenPartyModule(),
-                new KestevenGlacierModule());
+                new KestevenGlacierModule(), new KestevenElizaSearchModule());
     }
 
     // Null before QuestManager.startQuests() at the end of ModPlugin.onGameLoad, which includes new-campaign generation.

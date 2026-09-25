@@ -10,8 +10,9 @@ Java paths are relative to `jars/src/lostsector/campaign/`; `dialogue/rules/` an
 |---|---|
 | `# KESTEVEN QUESTLINE` rows in `data/campaign/rules.csv`, `kesteven/quest/KestevenHubModule` | Every conversation with Jack, Alice and Nicholas: offers, briefings, hand-ins, rewards, questions, the job 3 refusal, the story skip and most player-driven stage changes; the job gates and payouts ([dialogue map](KESTEVEN_DIALOGUE.md#jack-alice-and-nicholas)) |
 | `kesteven/quest/QuestStageManager` | `EveryFrameScript` in `EFS_LIST`: automatic stage changes, failure checks, intel, bar events, quest fleets and their AI, the Cache guardian timer, Eliza relocation, post-quest revenge fleets |
-| `kesteven/quest/KestevenQuest`, `KestevenStage`, `KestevenFlag`, `KestevenState` | Framework definition of quest `kq`, with the modules `KestevenHubModule`, `KestevenJob1Module`, `KestevenJob3Module` and `KestevenGlacierModule`; the stage enum, the flags and the saved state ([KESTEVEN_STATE.md](KESTEVEN_STATE.md)) |
+| `kesteven/quest/KestevenQuest`, `KestevenStage`, `KestevenFlag`, `KestevenState` | Framework definition of quest `kq`, with the modules `KestevenHubModule`, `KestevenJob1Module`, `KestevenJob3Module`, `KestevenGlacierModule` and `KestevenElizaSearchModule`; the stage enum, the flags and the saved state ([KESTEVEN_STATE.md](KESTEVEN_STATE.md)) |
 | `kesteven/quest/KestevenJob1Module`, `# KESTEVEN QUESTLINE: JOB 1` rows in `data/campaign/rules.csv` | Job 1 world logic: the intel entry and its text rows, the tip system's dormant fleet, the move to stage 2 ([Job 1](#job-1-enemy-unknown-stages-0-to-6)) |
+| `kesteven/quest/KestevenElizaSearchModule`, `# KESTEVEN QUESTLINE: ELIZA SEARCH` rows | The search for Eliza at pirate bars during stage 16 ([Finding Eliza](#finding-eliza)) |
 | `kesteven/quest/KestevenJob3Module`, `# KESTEVEN QUESTLINE: JOB 3` rows | Job 3 world logic: the expedition and its outcome, the intel entry and its text rows, and the objects placed when the job is accepted ([Job 3](#job-3-hostile-takeover-stages-6-to-11)) |
 | `kesteven/quest/KestevenGlacierModule`, `# KESTEVEN QUESTLINE: GLACIER` rows | The Glacier comms facility: its map marker and dialog claim, the timed raid, the barrage's fleet damage and disk #5 ([Glacier](#glacier-disk-5)) |
 | `kesteven/quest/QuestHelper` | Wrappers over `KestevenState` for the old callers: the stage as a legacy int, flags, fields and lazily picked target locations; `saveEnding()` |
@@ -188,7 +189,7 @@ At stage 15 the rules row `BarFixerEntered` runs `nskr_barEventFixer` on every b
 
 Leaving sets stage 16. If the player had already entered the Cache system, the meeting takes a shorter branch and still sets stage 16; `QuestStageManager` then moves to 17.
 
-When stage 16 is first seen, `QuestStageManager` adds `TheDelveIntel` and the three Eliza bar events.
+When stage 16 is first seen, `QuestStageManager` adds `TheDelveIntel`.
 
 ### The five data disks
 
@@ -227,15 +228,17 @@ Reaching 0 is late. A late shutdown takes the barrage at the console; a late run
 
 ### Finding Eliza
 
-The three bar events appear at pirate markets and share a dialogue stage (`KestevenState.elizaSearchStage`) and a list of used markets:
+`KestevenElizaSearchModule`, active at stage 16, runs three rules bar conversations in the `# KESTEVEN QUESTLINE: ELIZA SEARCH` block of `data/campaign/rules.csv`. They share a search step (`KestevenState.elizaSearchStage`, 0 to 3) and a list of used markets (`elizaSearchUsedMarkets`). Each `AddBarEvents` row shows at a pirate market whose bar the search has not used yet, at stage 16 and at its step. The speakers are the quest people `roughSpacer`, `slySpacer` and `pirateContact` (pirates, created when stage 16 starts, released when it ends); each is the same person at every bar.
 
-| Event | When | Result |
+| Conversation | When | Result |
 |---|---|---|
-| `ElizaSearchBarEvent` | Stage 0, any unused pirate market | A rough spacer. Paying 4,000 to 7,000 credits names a contact market (stage 2, marked). Pressing without paying ends the talk (stage 1). |
-| `ElizaSearchSecondBarEvent` | Stage 1 | A sly spacer who refuses to talk; leads to stage 2 |
-| `ElizaSearchFinalBarEvent` | Stage 2; only at the paid-for market if the player paid | "Eliza herself wants to speak to you." Picks Eliza's market and sets `ELIZA_FOUND`. |
+| First spacer (`nskr_kq_elizaSpacer…`) | Step 0 | A rough spacer. Opening it rolls a price of 4,000 to 7,000 credits (`elizaSpacerPrice`, action `elizaSpacerOpen`); the offer to pay shows only while the player has more credits than that. Paying names a contact market (`elizaContactMarket`, picked like Eliza's market; marked with `ctx.mark` for stage 16), sets `ELIZA_SPACER_PAID` and step 2. Leaving without paying sets step 1. Either way the market is used. |
+| Second spacer (`nskr_kq_elizaSly…`) | Step 1 | A sly spacer who refuses to talk whatever the answer; leaving uses the market and sets step 2 |
+| Contact (`nskr_kq_elizaContact…`) | Step 2; only at the contact market if the player paid, with another option label | "Eliza herself wants to speak to you." Uses the market, picks Eliza's market (`QuestHelper.setElizaLoc()`), and on leaving sets `ELIZA_FOUND` and step 3, unmarks the contact market and sets the plain `$missionImportant` flag on Eliza's market, which the old Eliza classes clear |
 
-Eliza's market is a pirate market in Yma, Corvus, Isirah, Thule, Hybrasil, Galatia, Mayasura or Kumari Kandam, excluding Kanta's Den and used markets. If that market or the paid-for market decivilizes, `QuestStageManager` picks another and moves Eliza.
+Every conversation ends with `BarCMD returnFromEvent true`, the Continue option the old Java bar events showed. If the contact market decivilizes at step 2 before Eliza is found, `onDecivilized` picks a new contact market, moves the mark and sends the Delve intel the update `contactMoved` ("With the conditions deteriorating on …, the contact has moved their operations to …." with "the contact" in the pirate faction color and the minor message sound).
+
+Eliza's market is a pirate market in Yma, Corvus, Isirah, Thule, Hybrasil, Galatia, Mayasura or Kumari Kandam, excluding Kanta's Den and used markets. If that market decivilizes, `QuestStageManager` picks another and moves Eliza.
 
 At her market, `CorePlugin` opens `ElizaDialog` until it has finished once. Eliza generates on first contact (`SectorGen.genEliza()`).
 
@@ -247,7 +250,7 @@ At her market, `CorePlugin` opens `ElizaDialog` until it has finished once. Eliz
 
 With five disks `QuestStageManager` sets `ALL_DISKS_RECOVERED`. Alice's all-disks conversation offers "Yes" and, if the player sincerely agreed to help Eliza, "Yes (lie)". Both set `CACHE_FOUND` and stage 17 and hand over the Cache coordinates. The Cache system "Unknown Site" is reached by a transverse jump.
 
-Entering Unknown Site at stage 15 or 16 sets `CACHE_FOUND` without any disks, and stage 16 becomes 17. Stage 17 removes the Eliza bar events, so a player who reaches the Cache early can skip Eliza and the remaining disks.
+Entering Unknown Site at stage 15 or 16 sets `CACHE_FOUND` without any disks, and stage 16 becomes 17. The Eliza search runs only at stage 16, so a player who reaches the Cache early can skip Eliza and the remaining disks.
 
 Inside Unknown Site, `QuestStageManager`:
 

@@ -2189,3 +2189,73 @@ nskr_kq_glacierRedAlert,nskr_kqGlacierRedAlert,,,"Suddenly the bridge goes into 
 nskr_kq_glacierHit,nskr_kqGlacierHit,,"AddTextSmall ""$nskr_kq_glacierHitShip $nskr_kq_glacierHitHull-class was damaged in the barrage."" gray
 SetTextHighlightColors bad
 SetTextHighlights ""$nskr_kq_glacierHitHull""",,,Fired by the damageFleet action once per damaged ship
+,,,,,,
+# KESTEVEN QUESTLINE: ELIZA SEARCH,,,,,,
+# First spacer,,,,,,
+nskr_kq_elizaSpacerBar,AddBarEvents,"nskr_quest kq is JOB5_DISKS
+nskr_quest kq check elizaSpacerHere","AddBarEvent nskr_kq_elizaSpacer ""See if this spacer knows anything about Eliza"" ""A rough looking spacer is drinking alone at a corner table.""",,,"Any pirate bar not used by the search, at search step 0"
+nskr_kq_elizaSpacer,DialogOptionSelected,$option == nskr_kq_elizaSpacer,"BeginConversation nskr_kq_roughSpacer true false
+nskr_quest kq do elizaSpacerOpen",The spacer is busy in thought while drinking and doesn't seem to notice you.,"nskr_kq_elizaSpacerAsk:""I'm looking for Eliza.""",elizaSpacerOpen rolls the price each time the conversation opens
+nskr_kq_elizaSpacerAsk,DialogOptionSelected,$option == nskr_kq_elizaSpacerAsk,FireAll nskr_kqElizaSpacerOptions,"No response, $heOrShe doesn't seem interested in talking to you.",,
+nskr_kq_elizaSpacerOptHello,nskr_kqElizaSpacerOptions,,,,"nskr_kq_elizaSpacerHello:""Hello? I'm talking to you.""",
+nskr_kq_elizaSpacerOptCredits,nskr_kqElizaSpacerOptions,nskr_quest kq check elizaSpacerAffordable,,,"nskr_kq_elizaSpacerCredits:""Would some credits change your mind?""",Only while the player has more credits than the price
+nskr_kq_elizaSpacerOptLeave,nskr_kqElizaSpacerOptions,,,,nskr_kq_elizaSpacerLeave:Leave,
+nskr_kq_elizaSpacerHello,DialogOptionSelected,$option == nskr_kq_elizaSpacerHello,"AddText ""\""Keep your nose out of our business captain.\"" $HeOrShe says in a gruesome tone, and returns to drinking like nothing happened.""","The spacer slowly turns to you, staring at you intensely.",nskr_kq_elizaSpacerLeave:Leave,
+nskr_kq_elizaSpacerCredits,DialogOptionSelected,$option == nskr_kq_elizaSpacerCredits,"AddText ""$HeOrShe adjusts $hisOrHer position on $hisOrHer chair, and quickly eyes up the room. \""For a small donation I could point you towards a certain person.\""""","The spacer slowly turns to you. ""Everything is always about the damn money to you people, but if you insist...""","nskr_kq_elizaSpacerPay:Pay $himOrHer
+nskr_kq_elizaSpacerLeave:Leave",
+nskr_kq_elizaSpacerPay,DialogOptionSelected,$option == nskr_kq_elizaSpacerPay,"nskr_quest kq do elizaPickContact
+AddText ""\""You will want to talk the contact at $nskr_kq_elizaContactMarket. You will have no trouble finding them at the bar, trust me.\""""
+SetTextHighlights ""$nskr_kq_elizaContactMarket""
+AddText ""The spacer doesn't seem to want to say more, and is quick to distance $himOrHerself from you.""
+nskr_quest kq do elizaSpacerPay
+FireBest nskr_kqDelveUpdated",,nskr_kq_elizaSpacerPaidLeave:Leave,elizaPickContact picks the contact market before the text names it; elizaSpacerPay takes the credits and prints the receipt
+nskr_kq_elizaSpacerLeave,DialogOptionSelected,$option == nskr_kq_elizaSpacerLeave,"nskr_quest kq do elizaSpacerLeave
+HideVisual
+BarCMD returnFromEvent true",You decide to leave the spacer alone.,,Search step 1
+nskr_kq_elizaSpacerPaidLeave,DialogOptionSelected,$option == nskr_kq_elizaSpacerPaidLeave,"nskr_quest kq do elizaSpacerPaidLeave
+HideVisual
+BarCMD returnFromEvent true",It's time to move on.,,Search step 2
+,,,,,,
+# Second spacer,,,,,,
+nskr_kq_elizaSlyBar,AddBarEvents,"nskr_quest kq is JOB5_DISKS
+nskr_quest kq check elizaSlySpacerHere","AddBarEvent nskr_kq_elizaSly ""See if this spacer knows anything about Eliza"" ""A sly looking spacer is drinking alone at the bar counter.""",,,"Any pirate bar not used by the search, at search step 1"
+nskr_kq_elizaSly,DialogOptionSelected,$option == nskr_kq_elizaSly,BeginConversation nskr_kq_slySpacer true false,You approach the spacer and prepare to ask some questions.,"nskr_kq_elizaSlyAsk:""Know anything about this ""Eliza"" character?""",
+nskr_kq_elizaSlyAsk,DialogOptionSelected,$option == nskr_kq_elizaSlyAsk,,"""What, who sent you? You better not be another bloodhound from CommSec. And do be honest, I can spot a liar from orbit.""","nskr_kq_elizaSlyKesteven:""Kesteven""
+nskr_kq_elizaSlyPaying:""Does it matter if I'm paying you?""
+nskr_kq_elizaSlyEliza:""Eliza""
+nskr_kq_elizaSlyComsec:""COMSEC""
+nskr_kq_elizaSlyMyself:""I only work for myself.""",
+nskr_kq_elizaSlyKesteven,DialogOptionSelected,$option == nskr_kq_elizaSlyKesteven,FireBest nskr_kqElizaSlyGone,"The spacer looks surprised. ""Oh, wow would you look at captain conscience over here, being so honest and all. Yeah, I'm not telling you corporate fuckers anything.""",nskr_kq_elizaSlyLeave:Leave,
+nskr_kq_elizaSlyPaying,DialogOptionSelected,$option == nskr_kq_elizaSlyPaying,FireBest nskr_kqElizaSlyGone,"""You know some people can't be just bought. Not everything is solved by throwing more money at it, some people have morals."" $HeOrShe pauses for a moment as they lean forward, while pointing at you in a threatening manner. ""Not that you'd know anything about that.""",nskr_kq_elizaSlyLeave:Leave,
+nskr_kq_elizaSlyEliza,DialogOptionSelected,$option == nskr_kq_elizaSlyEliza,FireBest nskr_kqElizaSlyGone,"The spacer looks annoyed. ""Haha, very funny captain. It's pretty fucking obvious you don't work for them, I ain't going to tell you shit.""",nskr_kq_elizaSlyLeave:Leave,
+nskr_kq_elizaSlyComsec,DialogOptionSelected,$option == nskr_kq_elizaSlyComsec,"$option = nskr_kq_elizaSlyEliza 0
+FireBest DialogOptionSelected",,,"Same screen as ""Eliza"""
+nskr_kq_elizaSlyMyself,DialogOptionSelected,$option == nskr_kq_elizaSlyMyself,"AddText ""$HeOrShe turns more serious for a moment. \""I might be able to put the word out for you, you might just find what you're looking for.\""""
+FireBest nskr_kqElizaSlyGone","The spacer looks puzzled. ""No one out here *only* works for themselves, everyone of note has connections and ties.""",nskr_kq_elizaSlyLeave:Leave,
+nskr_kq_elizaSlyGone,nskr_kqElizaSlyGone,,,$HeOrShe quickly picks up $hisOrHer drink and disappears into the crowd. The conversation is over.,,Shared last line of every answer
+nskr_kq_elizaSlyLeave,DialogOptionSelected,$option == nskr_kq_elizaSlyLeave,"nskr_quest kq do elizaSlySpacerLeave
+HideVisual
+BarCMD returnFromEvent true",You decide it's best to leave.,,"Search step 2, whatever the answer"
+,,,,,,
+# Contact,,,,,,
+nskr_kq_elizaContactBar,AddBarEvents,"nskr_quest kq is JOB5_DISKS
+nskr_quest kq check elizaContactHere
+!nskr_quest kq flag ELIZA_SPACER_PAID","AddBarEvent nskr_kq_elizaContact ""See if this spacer knows anything about Eliza"" ""A $nskr_kq_pirateContact_manOrWoman in a flashy uniform is signaling you to come over to $nskr_kq_pirateContact_hisOrHer table.""",,,"Any pirate bar not used by the search, at search step 2"
+nskr_kq_elizaContactBarPaid,AddBarEvents,"nskr_quest kq is JOB5_DISKS
+nskr_quest kq check elizaContactHere
+nskr_quest kq flag ELIZA_SPACER_PAID","AddBarEvent nskr_kq_elizaContact ""See if this spacer is the one you were told about"" ""A $nskr_kq_pirateContact_manOrWoman in a flashy uniform is signaling you to come over to $nskr_kq_pirateContact_hisOrHer table.""",,,Only at the contact market the first spacer named
+nskr_kq_elizaContact,DialogOptionSelected,$option == nskr_kq_elizaContact,BeginConversation nskr_kq_pirateContact true false,"""I hear you've been asking questions about Eliza captain. We should have a talk.""",nskr_kq_elizaContactSit:Continue,
+nskr_kq_elizaContactSit,DialogOptionSelected,$option == nskr_kq_elizaContactSit,"nskr_quest kq do elizaContactMeet
+AddText ""\""You're in luck captain. Eliza herself wants to speak to you.\""""",As you sit down the $manOrWoman pours $himOrHerself a drink of dark liquid from an expensive looking bottle.,"nskr_kq_elizaContactWhere:""So, where is she?""",elizaContactMeet marks this market used
+nskr_kq_elizaContactWhere,DialogOptionSelected,$option == nskr_kq_elizaContactWhere,"nskr_quest kq do elizaPickMarket
+AddText ""The $manOrWoman grabs the ornate shot glass, looks at it intently and then chugs it before continuing. \""You should head to $nskr_kq_elizaMarketEntity in order to speak to her.\""""
+SetTextHighlights ""$nskr_kq_elizaMarketEntity""
+AddText ""\""That's all I will tell you captain. Now would you kindly leave me to my business.\"" $heOrShe begins pouring another glass, this business of $hisOrHer does seem awfully important.""",,nskr_kq_elizaContactLeave:Leave,elizaPickMarket picks Eliza's market before the text names it
+nskr_kq_elizaContactLeave,DialogOptionSelected,$option == nskr_kq_elizaContactLeave,"nskr_quest kq do elizaContactLeave
+HideVisual
+BarCMD returnFromEvent true",It's time to leave.,,"Eliza found, search step 3"
+,,,,,,
+# Intel,,,,,,
+nskr_kq_elizaContactMovedBullet,nskr_kqIntelBullets,"$nskr_intel_key == job5
+$nskr_intel_update == contactMoved","SetTextHighlightColors 255,0,0,255
+SetTextHighlights ""the contact""","With the conditions deteriorating on $nskr_kq_elizaContactFormer, the contact has moved their operations to $nskr_kq_elizaContactEntity.",,The Delve update KestevenElizaSearchModule sends when the contact's market is decivilized; the color is the pirate faction's color

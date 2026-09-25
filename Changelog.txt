@@ -83,6 +83,7 @@ Adjusted - The Enemy Unknown intel entry reports the recovered sensor data as an
 Adjusted - The Hostile Takeover intel entry reports the expedition's defeat, the timeout or being discovered as updates and stays for three days once finished
 Adjusted - The hangover after the Hostile Takeover party shows the standard credits lost receipt
 Fixed - The comms facility on Glacier now offers Leave on its first screen
+Adjusted - Paying the spacer in the search for Eliza shows the standard credits lost receipt
 
 1.0.b
 Adjusted - Severely nerfed spawn rates for Borealis, Rhea and Kingslayer

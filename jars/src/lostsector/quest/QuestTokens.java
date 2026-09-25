@@ -86,6 +86,10 @@ public final class QuestTokens implements RuleTokenReplacementGeneratorPlugin {
             put(tokens, run.id(), key + "_HimOrHer", male ? "Him" : "Her");
             put(tokens, run.id(), key + "_hisOrHer", male ? "his" : "her");
             put(tokens, run.id(), key + "_HisOrHer", male ? "His" : "Her");
+            put(tokens, run.id(), key + "_himOrHerself", male ? "himself" : "herself");
+            put(tokens, run.id(), key + "_HimOrHerself", male ? "Himself" : "Herself");
+            put(tokens, run.id(), key + "_manOrWoman", male ? "man" : "woman");
+            put(tokens, run.id(), key + "_ManOrWoman", male ? "Man" : "Woman");
         }
     }
 

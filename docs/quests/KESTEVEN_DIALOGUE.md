@@ -9,8 +9,8 @@ Java paths are relative to `jars/src/lostsector/campaign/`; `dialogue/rules/` an
 | Style | Used by | How it runs |
 |---|---|---|
 | Rules rows with a multi-verb command | The Special Operations fleet (`nskr_job4FleetDialog`); the collector (`nskr_ttCollectorDialog`); Eliza's intercept (`nskr_elizaInterceptDialog`); both alternative endings | Rows select the conversation and call a verb. The verb writes most text and options from Java strings. Several commands extend `PaginatedOptions` and take over the dialog plugin (`setupDelegateDialog`). Every non-paging option then returns to rules through `FireBest DialogOptionSelected`. |
-| Rules rows only | Every conversation with Jack, Alice and Nicholas (gates, values and game actions from `KestevenHubModule`); the job 3 party, a rules bar event (guests, drink count and bill from `KestevenPartyModule`); the Glacier facility (`KestevenGlacierModule`); fleet greetings and threats: Enigma strike group, Eliza's raided and revenge fleets, Jack's revenge fleet, the Cache guardian, the "LZ" messenger, generic Enigma comms | Text, options and scripts live in `data/campaign/rules.csv`. |
-| Java `InteractionDialogPlugin` or `BaseBarEvent` | Satellites, Cache hint, Cache core, Eliza's port, both final ending dialogs, the job 5 bar scenes, the job 4 hint wreck | `CorePlugin.pickInteractionDialogPlugin` or `PortsideBarData` opens the class. All text, options and state changes are in the Java class, using a nested `OptionId` enum. |
+| Rules rows only | Every conversation with Jack, Alice and Nicholas (gates, values and game actions from `KestevenHubModule`); the job 3 party, a rules bar event (guests, drink count and bill from `KestevenPartyModule`); the Glacier facility (`KestevenGlacierModule`); the Eliza search at pirate bars (`KestevenElizaSearchModule`); fleet greetings and threats: Enigma strike group, Eliza's raided and revenge fleets, Jack's revenge fleet, the Cache guardian, the "LZ" messenger, generic Enigma comms | Text, options and scripts live in `data/campaign/rules.csv`. |
+| Java `InteractionDialogPlugin` or `BaseBarEvent` | Satellites, Cache hint, Cache core, Eliza's port, both final ending dialogs, the Delve meeting, the job 4 hint wreck | `CorePlugin.pickInteractionDialogPlugin` or `PortsideBarData` opens the class. All text, options and state changes are in the Java class, using a nested `OptionId` enum. |
 
 ## Jack, Alice and Nicholas
 
@@ -217,6 +217,18 @@ The comms facility raid for disk #5 is the `# KESTEVEN QUESTLINE: GLACIER` block
 
 `KestevenGlacierModule` declarations: the triggers `nskr_kqGlacier` and `nskr_kqGlacierHit`; the actions `markGlacier`, `damageFleet` and `recoverGlacierDisk`; the tokens `glacierHitShip` and `glacierHitHull`.
 
+## Eliza search at pirate bars
+
+Block `# KESTEVEN QUESTLINE: ELIZA SEARCH` of `data/campaign/rules.csv`, with `kesteven/quest/KestevenElizaSearchModule` declaring its checks, actions, tokens and people. Flow and state are in [Finding Eliza](KESTEVEN_QUESTLINE.md#finding-eliza).
+
+| Conversation | Entry row (`AddBarEvents`) | Speaker | Screens and handlers |
+|---|---|---|---|
+| First spacer | `nskr_kq_elizaSpacerBar` (`check elizaSpacerHere`) | `nskr_kq_roughSpacer` | `nskr_kq_elizaSpacer` (runs `elizaSpacerOpen`) → `…Ask`, a `FireAll` menu `nskr_kqElizaSpacerOptions` whose credits option needs `check elizaSpacerAffordable` → `…Hello` or `…Credits` → `…Pay` (`elizaPickContact`, the contact line, `elizaSpacerPay` with the credits receipt, the shared insert `nskr_kqDelveUpdated`) → `…PaidLeave`; or `…Leave` |
+| Second spacer | `nskr_kq_elizaSlyBar` (`check elizaSlySpacerHere`) | `nskr_kq_slySpacer` | `nskr_kq_elizaSly` → `…Ask` with five answers (`…Kesteven`, `…Paying`, `…Eliza`, `…Comsec` as a continue chain into `…Eliza`, `…Myself`), each ending with the shared insert `nskr_kqElizaSlyGone` → `…Leave` |
+| Contact | `nskr_kq_elizaContactBar` / `…BarPaid` (`check elizaContactHere`, and `flag ELIZA_SPACER_PAID` for the second option label) | `nskr_kq_pirateContact` | `nskr_kq_elizaContact` → `…Sit` (`elizaContactMeet`) → `…Where` (`elizaPickMarket`, then the line naming the market) → `…Leave` (`elizaContactLeave`) |
+
+The blurb of the contact uses the person tokens `$nskr_kq_pirateContact_manOrWoman` and `_hisOrHer`, because no person is active while the bar lists its events; the conversations use the vanilla pronoun tokens of the active speaker. Every exit runs `HideVisual` and `BarCMD returnFromEvent true`. The intel row `nskr_kq_elizaContactMovedBullet` is the Delve update `contactMoved`.
+
 ## Fleet conversations
 
 | Fleet | Rows | Command verbs |
@@ -271,7 +283,6 @@ The party at the job 3 start market is in the `# KESTEVEN QUESTLINE: JOB 3 PARTY
 | `kesteven/quest/DataSatelliteDialog` | `CorePlugin`, satellites #3 and #4 | Disk salvage, ping, keywords | Disk count, satellite flags, wakes the guard |
 | `kesteven/quest/HintWreckDialog` | `CorePlugin`, hint wreck | Coordinates of the friendly fleet | Hint flag |
 | `kesteven/quest/DelveMeetingBarEvent` | `nskr_barEventFixer` on each bar visit at stage 15 | Meeting with Jack and Alice | Advance credits, stage 16 |
-| `kesteven/quest/ElizaSearchBarEvent`, `…Second`, `…Final` | `PortsideBarData` at pirate markets, stage 16 | Search for Eliza | Chain stage, used markets, Eliza's market |
 | `kesteven/quest/ElizaDialog` | `CorePlugin`, Eliza's market until finished | Meeting Eliza | Disks, help or raid flags |
 | `kesteven/quest/CacheDoubtDialog` | `QuestStageManager`, once in Unknown Site | Inner-voice hint | None |
 | `kesteven/quest/CacheCoreDialog` | `CorePlugin` or the guardian's fleet-interaction config | Cache core salvage | Stage 19, rewards |
@@ -288,4 +299,4 @@ The party at the job 3 start market is in the `# KESTEVEN QUESTLINE: JOB 3 PARTY
 - **Values in text:** job 1 electronics, payouts, the job 4 constellation, the Frost distance and target names are computed in Java. They must be prepared as tokens before a row displays them; see [RULES_AUTHORING.md](../RULES_AUTHORING.md#create-a-custom-text-token).
 - **Stage writes:** the full list is in [KESTEVEN_STATE.md](KESTEVEN_STATE.md#who-changes-the-stage).
 - **Java-only dialogs:** those opened by `CorePlugin` have no rules entry today. Moving them means adding a rules entry route and removing the `CorePlugin` branch.
-- **Bar events:** the Eliza bar events are saved in `PortsideBarData`; renaming or deleting the classes affects existing saves. A rules bar event saves nothing of its own; the job 3 party is the example.
+- **Bar events:** `DelveMeetingBarEvent` is the last questline Java bar event in `PortsideBarData`; renaming or deleting the class affects existing saves. A rules bar event saves nothing of its own; the job 3 party and the Eliza search are examples.

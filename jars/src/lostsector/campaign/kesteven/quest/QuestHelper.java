@@ -261,7 +261,7 @@ public class QuestHelper {
                 isValid = false;
             }
             if (!ignoreUsedMarket) {
-                if (ElizaSearchBarEvent.getUsedMarkets().contains(market.getId())) {
+                if (KestevenElizaSearchModule.usedMarkets().contains(market.getId())) {
                     isValid = false;
                 }
             }
@@ -274,7 +274,7 @@ public class QuestHelper {
         if (validMarkets.isEmpty()){
             if (ignoreUsedMarket){
                 log("ERROR no valid Eliza markets picking random pirate market");
-                return SystemHelper.getRandomFactionMarket(random, Factions.PIRATES, ElizaSearchBarEvent.getUsedMarkets());
+                return SystemHelper.getRandomFactionMarket(random, Factions.PIRATES, KestevenElizaSearchModule.usedMarkets());
             }
             log("ERROR no valid Eliza markets try again");
             return pickElizaMarket(random, true);

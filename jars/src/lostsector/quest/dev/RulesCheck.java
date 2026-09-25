@@ -49,7 +49,8 @@ public final class RulesCheck {
     private static final Set<String> FRAMEWORK_KEYS = Stream.concat(QuestText.SCRATCH_KEYS.stream(),
             Stream.of(QuestFleets.OWNER_KEY, QuestFleets.ROLE_KEY, QuestFleets.RECORD_KEY)).collect(Collectors.toUnmodifiableSet());
     // QuestTokens adds these for each quest person: $nskr_<q>_<key>_<suffix> (README "People").
-    private static final Set<String> PERSON_TOKEN_SUFFIXES = Set.of("name", "heOrShe", "HeOrShe", "himOrHer", "HimOrHer", "hisOrHer", "HisOrHer");
+    private static final Set<String> PERSON_TOKEN_SUFFIXES = Set.of("name", "heOrShe", "HeOrShe", "himOrHer", "HimOrHer", "hisOrHer", "HisOrHer",
+            "himOrHerself", "HimOrHerself", "manOrWoman", "ManOrWoman");
 
     private static final String QUEST_COMMAND = "nskr_quest";
     private static final Set<String> CONDITION_VERBS = Set.of("is", "reached", "flag", "check");

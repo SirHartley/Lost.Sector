@@ -653,7 +653,7 @@ Every key passed to `create` is declared first with `d.person(key)` in the `decl
 
 Fixed characters (Alice, Jack, Nicholas, Eliza) are created by world generation with ids in `helper/Ids`; quests look them up and never create them.
 
-Each quest person also gets name and pronoun tokens for use while they are not the active speaker: `$nskr_<q>_<key>_name`, `_heOrShe`, `_HeOrShe`, `_himOrHer`, `_HimOrHer`, `_hisOrHer`, `_HisOrHer`. They follow vanilla's `CoreRuleTokenReplacementGeneratorImpl`: the name is `getName().getFullName()`, and `isMale()` picks the male forms, anything else the female forms. The active speaker uses the vanilla tokens ([Tokens in text](../../../../docs/RULES_WRITING.md#tokens-in-text)).
+Each quest person also gets name and pronoun tokens for use while they are not the active speaker: `$nskr_<q>_<key>_name`, `_heOrShe`, `_HeOrShe`, `_himOrHer`, `_HimOrHer`, `_hisOrHer`, `_HisOrHer`, `_himOrHerself`, `_HimOrHerself`, `_manOrWoman`, `_ManOrWoman`. They follow vanilla's `CoreRuleTokenReplacementGeneratorImpl`: the name is `getName().getFullName()`, and `isMale()` picks the male forms, anything else the female forms. The active speaker uses the vanilla tokens ([Tokens in text](../../../../docs/RULES_WRITING.md#tokens-in-text)).
 
 ### Dialog entry points
 
@@ -1134,7 +1134,7 @@ Migration map for the Kesteven questline and the other systems. The owning task 
 | `campaign/kesteven/quest/KestevenFleets` builders | Builders in the Kesteven quest package returning `SimpleFleet` |
 | `campaign/kesteven/quest/KestevenPeople` | Fixed people stay in world generation; generated people move to `ctx.people()` |
 | Java dialog classes (`ElizaDialog`, `CacheCoreDialog`, `HintWreckDialog`, endings and the other questline commands) | Rows, checks, actions and claims (`nskr_kestevenQuest` done in T16 and T17: `KestevenHubModule` and the `# KESTEVEN QUESTLINE` rows; `GlacierCommsDialog` and its `CorePlugin` route in T26: `KestevenGlacierModule`, a claim and the `# KESTEVEN QUESTLINE: GLACIER` rows) |
-| `HostileTakeoverBarEvent`, `ElizaSearch*BarEvent`, `DelveMeetingBarEvent` | `AddBarEvents` rows and quest people (`HostileTakeoverBarEvent` done in T20 and T21: `KestevenPartyModule` and the `# KESTEVEN QUESTLINE: JOB 3 PARTY` rows) |
+| `HostileTakeoverBarEvent`, `ElizaSearch*BarEvent`, `DelveMeetingBarEvent` | `AddBarEvents` rows and quest people (`HostileTakeoverBarEvent` done in T20 and T21: `KestevenPartyModule` and the `# KESTEVEN QUESTLINE: JOB 3 PARTY` rows; `ElizaSearch*BarEvent` done in T27: `KestevenElizaSearchModule`) |
 | `EnemyUnknownIntel`, `HostileTakeoverIntel`, `OperationLifesaverIntel`, `TheDelveIntel`, `CacheIntel` | `QuestIntel` with intel rows (`EnemyUnknownIntel` done in T18: key `job1` of `KestevenJob1Module`; `HostileTakeoverIntel` in T19: key `job3` of `KestevenJob3Module`) |
 | `nskr_isKStage` and other stage predicates | `nskr_quest kq is` and `reached` |
 | `events/InterceptManager`, its `Saved` spawn flags, frame counters and per-fleet AI | Quest `ic` in `campaign/events/intercepts`: `InterceptEncounter` records, `onDay` rolls, roles with `FleetOrders` withdrawal and `reassign` (done in T41) |

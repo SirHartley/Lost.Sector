@@ -46,9 +46,15 @@ public final class KestevenState extends QuestState<KestevenStage> {
     int satellitesRecovered;
     int nicholasDialogStage;
     int job4FleetDialogStage;
+    // The Eliza search at pirate bars: 0 first spacer, 1 second spacer, 2 contact, 3 Eliza's market known.
     int elizaSearchStage;
     int partyDrinks;
     List<String> elizaSearchUsedMarkets = new ArrayList<>();
+    // Rolled each time the first spacer's conversation opens.
+    int elizaSpacerPrice;
+    // The contact's entity before it moved away from a decivilized market, for the move message.
+    String elizaContactFormerName;
+
     // The ship whose barrage line KestevenGlacierModule is printing; null outside its damageFleet action, never saved.
     transient FleetMemberAPI glacierHit;
 
