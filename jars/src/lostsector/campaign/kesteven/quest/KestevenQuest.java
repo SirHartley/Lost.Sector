@@ -12,8 +12,8 @@ import java.util.List;
 import java.util.Random;
 
 // KestevenHubModule serves every conversation with Jack, Alice and Nicholas, KestevenJob1Module runs job 1,
-// KestevenJob3Module and KestevenPartyModule run job 3, KestevenJob5Module the job 5 meeting and intel,
-// KestevenGlacierModule the Glacier facility and KestevenElizaSearchModule the Eliza search at pirate bars;
+// KestevenJob3Module and KestevenPartyModule run job 3, KestevenJob4Module job 4, KestevenJob5Module the job 5 meeting
+// and intel, KestevenGlacierModule the Glacier facility and KestevenElizaSearchModule the Eliza search at pirate bars;
 // QuestStageManager and the old dialog classes still run the rest of the questline on this state (T19 to T35).
 // isAvailable() keeps the default: the old code runs the questline in every campaign and treats a missing
 // Kesteven home as failure (stage 99), so the state must always exist.
@@ -33,7 +33,7 @@ public final class KestevenQuest extends Quest<KestevenStage, KestevenState> {
     @Override
     protected List<QuestModule<KestevenStage, KestevenState>> createModules() {
         return List.of(new KestevenHubModule(), new KestevenJob1Module(), new KestevenJob3Module(), new KestevenPartyModule(),
-                new KestevenJob5Module(), new KestevenGlacierModule(), new KestevenElizaSearchModule());
+                new KestevenJob4Module(), new KestevenJob5Module(), new KestevenGlacierModule(), new KestevenElizaSearchModule());
     }
 
     // Null before QuestManager.startQuests() at the end of ModPlugin.onGameLoad, which includes new-campaign generation.
@@ -99,10 +99,6 @@ public final class KestevenQuest extends Quest<KestevenStage, KestevenState> {
     }
 
     // Dialog routes of CorePlugin, until the questline claims these entities itself.
-
-    public static boolean isUnreadHintWreck(SectorEntityToken entity) {
-        return entity.getId().startsWith(QuestStageManager.JOB4_HINT_WRECK_ID_KEY) && !Quests.has(KestevenFlag.JOB4_HINT_WRECK_READ);
-    }
 
     public static boolean isDataSatellite(SectorEntityToken entity) {
         return CorePlugin.hasMemoryKeyStartsWith(QuestStageManager.ARTIFACT_KEY, entity);

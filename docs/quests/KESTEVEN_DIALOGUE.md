@@ -8,9 +8,9 @@ Java paths are relative to `jars/src/lostsector/campaign/`; `dialogue/rules/` an
 
 | Style | Used by | How it runs |
 |---|---|---|
-| Rules rows with a multi-verb command | The Special Operations fleet (`nskr_job4FleetDialog`); the collector (`nskr_ttCollectorDialog`); Eliza's intercept (`nskr_elizaInterceptDialog`); both alternative endings | Rows select the conversation and call a verb. The verb writes most text and options from Java strings. Several commands extend `PaginatedOptions` and take over the dialog plugin (`setupDelegateDialog`). Every non-paging option then returns to rules through `FireBest DialogOptionSelected`. |
-| Rules rows only | Every conversation with Jack, Alice and Nicholas (gates, values and game actions from `KestevenHubModule`); the job 3 party, a rules bar event (guests, drink count and bill from `KestevenPartyModule`); the Glacier facility (`KestevenGlacierModule`); the Eliza search at pirate bars (`KestevenElizaSearchModule`); the Delve meeting at the bar (`KestevenJob5Module`); fleet greetings and threats: Enigma strike group, Eliza's raided and revenge fleets, Jack's revenge fleet, the Cache guardian, the "LZ" messenger, generic Enigma comms | Text, options and scripts live in `data/campaign/rules.csv`. |
-| Java `InteractionDialogPlugin` or `BaseBarEvent` | Satellites, Cache hint, Cache core, Eliza's port, both final ending dialogs, the job 4 hint wreck | `CorePlugin.pickInteractionDialogPlugin` or `PortsideBarData` opens the class. All text, options and state changes are in the Java class, using a nested `OptionId` enum. |
+| Rules rows with a multi-verb command | The collector (`nskr_ttCollectorDialog`); Eliza's intercept (`nskr_elizaInterceptDialog`); both alternative endings | Rows select the conversation and call a verb. The verb writes most text and options from Java strings. Several commands extend `PaginatedOptions` and take over the dialog plugin (`setupDelegateDialog`). Every non-paging option then returns to rules through `FireBest DialogOptionSelected`. |
+| Rules rows only | Every conversation with Jack, Alice and Nicholas (gates, values and game actions from `KestevenHubModule`); the job 3 party, a rules bar event (guests, drink count and bill from `KestevenPartyModule`); the Glacier facility (`KestevenGlacierModule`); the Eliza search at pirate bars (`KestevenElizaSearchModule`); the Delve meeting at the bar (`KestevenJob5Module`); job 4: the Special Operations fleet, the Enigma strike group and the hint wreck (checks, actions and tokens from `KestevenJob4Module`, [below](#job-4-rows)); fleet greetings and threats: Eliza's raided and revenge fleets, Jack's revenge fleet, the Cache guardian, the "LZ" messenger, generic Enigma comms | Text, options and scripts live in `data/campaign/rules.csv`. |
+| Java `InteractionDialogPlugin` or `BaseBarEvent` | Satellites, Cache hint, Cache core, Eliza's port, both final ending dialogs | `CorePlugin.pickInteractionDialogPlugin` or `PortsideBarData` opens the class. All text, options and state changes are in the Java class, using a nested `OptionId` enum. |
 
 ## Jack, Alice and Nicholas
 
@@ -249,8 +249,7 @@ The in-person meeting of job 5 is a rules bar event in the `# Meeting` part of t
 
 | Fleet | Rows | Command verbs |
 |---|---|---|
-| Special Operations (job 4) | `nskr_job4FleetDialogInit`, `…Initial`, `…InitialText`, `nskr_job4FleetDialog`, `…Help`, `…HelpConfirm`, `…Exit` | `hasOption`, `isDialogStage`, `setDialogStage`, `displayDialogInitial`, `help`, `confirmHelp` |
-| Strike group (job 4) | `job4TargetInit`, `job4TargetInitial`, `job4TargetOptions`, `job4TargetContinue*`, `job4TargetEnd` | none |
+| Special Operations and strike group (job 4) | `# KESTEVEN QUESTLINE: JOB 4`; see [Job 4 rows](#job-4-rows) | `nskr_quest kq` |
 | Tri-Tachyon collector | `nskr_ttCollectorDialogInit`, `…Initial`, `…InitialText`, `…PayAll`, `…NoPay`, `…ExitFight`, `…Exit` | `hasOption`, `canPay`, `pay` |
 | Eliza after the raid | `elizaDialogInit`, `elizaDialogInitial`, `elizaDialogEnd` | none |
 | Eliza's intercept (stage 19) | `nskr_elizaInterceptDialogInit`, `…Initial`, `…InitialText`, `…HandOver`, `…ExitFightDialog`, `…ExitFightNoChip`, `nskr_elizaIntercetpDialogExit` (sic) | `aggro`, `hasOption`, `addOptions`, `handOver`, `hostile` |
@@ -260,6 +259,27 @@ The in-person meeting of job 5 is a rules bar event in the `# Meeting` part of t
 | "LZ" messenger | `MessengerFleetDialogInit`, `…Initial`, `…End` | none |
 
 Rows for `nskr_ttCollectorDialog` never pass the `setPaid` verb; its `case` falls through into `canPay`.
+
+### Job 4 rows
+
+The `# KESTEVEN QUESTLINE: JOB 4` block holds the job's conversations and intel text; `KestevenJob4Module` declares what they use.
+
+| Conversation | Entry | Rows | Structure |
+|---|---|---|---|
+| Special Operations fleet | `BeginFleetEncounter` and `OpenCommLink` on the role flag `$nskr_kq_job4SpecialOps`, at `JOB4_ACTIVE` or `JOB4_DONE`, Kesteven relationship above -0.50, transponder on | `nskr_kq_job4FleetHail` (hail until `JOB4_FRIENDLY_TALKED`), `…Open` (first talk), `…Ask` with the insert `nskr_kqJob4FleetStrikeGroup` (strike group coordinates unless `JOB4_TARGET_FOUND`), `…OpenAgain` (talked, not helped), `…Help` with the pick `nskr_kqJob4FleetHelp` (`…HelpShort` fallback, `…HelpReady` on `check job4CanHelp`), `…HelpConfirm`, `…Exit` | Plain chain; the help screen is a `FireBest` pick |
+| Strike group | `BeginFleetEncounter` and `OpenCommLink` on `$nskr_kq_job4StrikeGroup` | `nskr_kq_job4StrikeGroupHail`, `…Open`, `…Listen`, `…Ask` and `…Hello` (continue chains to `…Listen`), `…Cut` | Plain chain |
+| Hint wreck | The claimed trigger `nskr_kqHintWreck` on the first derelict of `KestevenJob4Module.placeWrecks` | `nskr_kq_hintWreckOpen`, `…Read` with the pick `nskr_kqHintWreckResult` (`…Coordinates` fallback, `…Found` on `JOB4_FRIENDLY_FOUND`), `…Leave` | Plain chain |
+
+| Kind | Name | Does |
+|---|---|---|
+| check | `job4CanHelp` | The player has at least 250 supplies and 400 fuel (`HELP_SUPPLIES`, `HELP_FUEL`) |
+| check | `job4FriendlyNamed`, `job4TargetNamed` | The friendly or enemy target entity has a name other than "Null" (intel bullet variants) |
+| action | `recordJob4FleetTalk` | Sets `JOB4_FRIENDLY_TALKED` and `JOB4_FRIENDLY_FOUND`, and `JOB4_TARGET_HINT` unless the strike group was seen or beaten |
+| action | `sendJob4FleetHome` | Moves the Special Operations fleet to role `job4SpecialOpsLeaving`, bound for `asteriaOrOutpost` |
+| action | `readHintWreck` | Sets `JOB4_HINT_WRECK_READ` and releases the wreck's claim |
+| token | `job4FriendlySystem`, `job4FriendlyEntity`, `job4TargetEntity`, `job4OutpostSystem`, `job4SearchArea`, `job4Supplies`, `job4Fuel` | Names from the job 4 targets and the Outpost; the constellation with its type (`QuestHelper.parseConstellation`); the player's supplies and fuel in whole units |
+
+The hand-over uses `AddRemoveCommodity`, `AdjustRep kesteven 5` and `AdjustRepActivePerson COOPERATIVE 10`, whose vanilla receipts replace the old custom receipt lines. The rows also use the hub's `outpostExists`, `nicholasTipGiven` and `job4TargetKnown`, the job 1 module's `kestevenHostile` and `homeName`, and the hub token `job4TargetSystem`.
 
 ## Alternative endings
 
@@ -297,7 +317,6 @@ The party at the job 3 start market is in the `# KESTEVEN QUESTLINE: JOB 3 PARTY
 | Class | Opened by | Content | State written |
 |---|---|---|---|
 | `kesteven/quest/DataSatelliteDialog` | `CorePlugin`, satellites #3 and #4 | Disk salvage, ping, keywords | Disk count, satellite flags, wakes the guard |
-| `kesteven/quest/HintWreckDialog` | `CorePlugin`, hint wreck | Coordinates of the friendly fleet | Hint flag |
 | `kesteven/quest/ElizaDialog` | `CorePlugin`, Eliza's market until finished | Meeting Eliza | Disks, help or raid flags |
 | `kesteven/quest/CacheDoubtDialog` | `QuestStageManager`, once in Unknown Site | Inner-voice hint | None |
 | `kesteven/quest/CacheCoreDialog` | `CorePlugin` or the guardian's fleet-interaction config | Cache core salvage | Stage 19, rewards |

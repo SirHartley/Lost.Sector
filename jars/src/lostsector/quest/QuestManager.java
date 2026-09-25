@@ -11,9 +11,11 @@ import com.fs.starfarer.api.campaign.FleetEncounterContextPlugin;
 import com.fs.starfarer.api.campaign.InteractionDialogAPI;
 import com.fs.starfarer.api.campaign.LocationAPI;
 import com.fs.starfarer.api.campaign.SectorEntityToken;
+import com.fs.starfarer.api.campaign.SectorEntityToken.VisibilityLevel;
 import com.fs.starfarer.api.campaign.econ.MarketAPI;
 import com.fs.starfarer.api.campaign.listeners.ColonyDecivListener;
 import com.fs.starfarer.api.campaign.listeners.CurrentLocationChangedListener;
+import com.fs.starfarer.api.campaign.listeners.DetectedEntityListener;
 import com.fs.starfarer.api.campaign.listeners.ShipRecoveryListener;
 import com.fs.starfarer.api.campaign.rules.MemoryAPI;
 import com.fs.starfarer.api.characters.PersonAPI;
@@ -36,7 +38,7 @@ import java.util.Set;
 // Transient: ModPlugin.createManagers() builds it on every load and the EFS_LIST loop registers it.
 // It is the only writer of quest stages (README "Lifecycle").
 public final class QuestManager extends BaseCampaignEventListener
-        implements EveryFrameScript, CurrentLocationChangedListener, ColonyDecivListener, ShipRecoveryListener {
+        implements EveryFrameScript, CurrentLocationChangedListener, ColonyDecivListener, ShipRecoveryListener, DetectedEntityListener {
 
     static final String STORE_KEY = "quests";
     private static final int MAX_QUEUED_CHANGES = 20;
@@ -467,6 +469,27 @@ public final class QuestManager extends BaseCampaignEventListener
                 module.onFleetGone(ctx, questFleet, reason, param);
             }
         });
+    }
+
+    // ListenerUtil.reportDetectedEntity, called by the entity's SensorContactIndicatorManager each time the player's view
+    // of it changes level. The owner key is tested first because QuestFleets.find reads the sector's memory.
+    @Override
+    public void reportDetectedEntity(SectorEntityToken entity, VisibilityLevel level) {
+        if (!(entity instanceof CampaignFleetAPI) || !entity.getMemoryWithoutUpdate().contains(QuestFleets.OWNER_KEY)) return;
+        FleetInfo info = QuestFleets.find((CampaignFleetAPI) entity);
+        if (info == null) return;
+        deliverToOwners(List.of(new QuestFleet(info)), questFleet -> new Hook() {
+            @Override
+            public <S extends Enum<S> & QuestStage, T extends QuestState<S>> void call(QuestModule<S, T> module, QuestContext<S, T> ctx) {
+                module.onFleetDetected(ctx, questFleet, level);
+            }
+        });
+    }
+
+    // DetectedEntityListener is a GenericPlugin; the manager is registered as a listener only, never picked as a plugin.
+    @Override
+    public int getHandlingPriority(Object params) {
+        return -1;
     }
 
     // The engine walks the same snapshot for its own fleet listeners (CampaignEngine.reportBattleOccurred).

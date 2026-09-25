@@ -17,19 +17,20 @@ public final class KestevenState extends QuestState<KestevenStage> {
     public static final String RANDOM_REVENGE = "kestevenQuestRandomKey";
     public static final String RANDOM_SATELLITE = "artifactKeyRandom";
     public static final String RANDOM_GLACIER = "glacierCommsKeyRandom";
-    public static final String RANDOM_HINT_WRECK = "job4HintWreckDialogRandom";
     public static final String RANDOM_ELIZA = "elizaDialogKeyRandom";
     public static final String RANDOM_CACHE_DOUBT = "cacheDoubtDialogRandom";
     public static final String RANDOM_CACHE_CORE = "coreDialogKeyRandom";
     public static final String RANDOM_KESTEVEN_ENDING = "kestevenEndingDialogKeyRandom";
     public static final String RANDOM_ELIZA_ENDING = "elizaEndingDialogKeyRandom";
     public static final String RANDOM_ALT_ENDING = "endingAltDialogKeyRandom";
-    public static final String RANDOM_JOB4_FLEET = "job4FleetDialogRandom";
     public static final String RANDOM_COLLECTOR = "ttCollectorDialogRandom";
     public static final String RANDOM_ELIZA_INTERCEPT = "elizaInterceptDialogRandom";
 
     // Started when the job 3 expedition spawns; the job fails when it passes KestevenJob3Module.TIME_LIMIT days.
     public static final String TIMER_JOB3 = "job3Expedition";
+
+    // Started when job 4 is pending; Alice offers the job once it passes KestevenJob4Module.WAIT_DAYS days.
+    public static final String TIMER_JOB4_WAIT = "job4Wait";
 
     // Picked on first use and kept.
     StarSystemAPI job1TipSystem;
@@ -45,7 +46,6 @@ public final class KestevenState extends QuestState<KestevenStage> {
     int disksRecovered;
     int satellitesRecovered;
     int nicholasDialogStage;
-    int job4FleetDialogStage;
     // The Eliza search at pirate bars: 0 first spacer, 1 second spacer, 2 contact, 3 Eliza's market known.
     int elizaSearchStage;
     int partyDrinks;
@@ -66,12 +66,9 @@ public final class KestevenState extends QuestState<KestevenStage> {
     // Frame seconds, as QuestStageManager counts them: 10 seconds are one campaign day.
     float dayCounter;
     float fleetCounter;
-    float job4WaitCounter;
     float cacheSeconds;
 
     // One-time actions of QuestStageManager.
-    boolean job4IntelAdded;
-    boolean job4FleetsSpawned;
     boolean cacheIntelAdded;
     boolean cacheGuardianSpotPicked;
     boolean cacheDoubtShown;

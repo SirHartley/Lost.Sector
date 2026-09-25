@@ -10,20 +10,21 @@ Java paths are relative to `jars/src/lostsector/campaign/`; `dialogue/rules/` an
 |---|---|
 | `# KESTEVEN QUESTLINE` rows in `data/campaign/rules.csv`, `kesteven/quest/KestevenHubModule` | Every conversation with Jack, Alice and Nicholas: offers, briefings, hand-ins, rewards, questions, the job 3 refusal, the story skip and most player-driven stage changes; the job gates and payouts ([dialogue map](KESTEVEN_DIALOGUE.md#jack-alice-and-nicholas)) |
 | `kesteven/quest/QuestStageManager` | `EveryFrameScript` in `EFS_LIST`: automatic stage changes, failure checks, intel, bar events, quest fleets and their AI, the Cache guardian timer, Eliza relocation, post-quest revenge fleets |
-| `kesteven/quest/KestevenQuest`, `KestevenStage`, `KestevenFlag`, `KestevenState` | Framework definition of quest `kq`, with the modules `KestevenHubModule`, `KestevenJob1Module`, `KestevenJob3Module`, `KestevenJob5Module`, `KestevenGlacierModule` and `KestevenElizaSearchModule`; the stage enum, the flags and the saved state ([KESTEVEN_STATE.md](KESTEVEN_STATE.md)) |
+| `kesteven/quest/KestevenQuest`, `KestevenStage`, `KestevenFlag`, `KestevenState` | Framework definition of quest `kq`, with the modules `KestevenHubModule`, `KestevenJob1Module`, `KestevenJob3Module`, `KestevenJob4Module`, `KestevenJob5Module`, `KestevenGlacierModule` and `KestevenElizaSearchModule`; the stage enum, the flags and the saved state ([KESTEVEN_STATE.md](KESTEVEN_STATE.md)) |
 | `kesteven/quest/KestevenJob1Module`, `# KESTEVEN QUESTLINE: JOB 1` rows in `data/campaign/rules.csv` | Job 1 world logic: the intel entry and its text rows, the tip system's dormant fleet, the move to stage 2 ([Job 1](#job-1-enemy-unknown-stages-0-to-6)) |
 | `kesteven/quest/KestevenElizaSearchModule`, `# KESTEVEN QUESTLINE: ELIZA SEARCH` rows | The search for Eliza at pirate bars during stage 16 ([Finding Eliza](#finding-eliza)) |
 | `kesteven/quest/KestevenJob3Module`, `# KESTEVEN QUESTLINE: JOB 3` rows | Job 3 world logic: the expedition and its outcome, the intel entry and its text rows, and the objects placed when the job is accepted ([Job 3](#job-3-hostile-takeover-stages-6-to-11)) |
+| `kesteven/quest/KestevenJob4Module`, `# KESTEVEN QUESTLINE: JOB 4` rows | Job 4 world logic: the wait, the intel entry and its text rows, the strike group, the Special Operations fleet and its conversation, the splinter patrols, the hint wreck, completion and failure ([Job 4](#job-4-operation-lifesaver-stages-11-to-14)) |
 | `kesteven/quest/KestevenJob5Module`, `# KESTEVEN QUESTLINE: JOB 5` rows | The Delve meeting at the bar, its escort guard, and the job 5 intel entry and its text rows ([Briefing and meeting](#briefing-and-meeting)) |
 | `kesteven/quest/KestevenGlacierModule`, `# KESTEVEN QUESTLINE: GLACIER` rows | The Glacier comms facility: its map marker and dialog claim, the timed raid, the barrage's fleet damage and disk #5 ([Glacier](#glacier-disk-5)) |
 | `kesteven/quest/QuestHelper` | Wrappers over `KestevenState` for the old callers: the stage as a legacy int, flags, fields and lazily picked target locations; `saveEnding()` |
 | `kesteven/quest/KestevenFleets` | Builders for every quest fleet |
 | `CorePlugin` | Opens the Java quest dialogs when the player interacts with a quest entity, deciding through `KestevenQuest` queries |
-| `kesteven/quest/*Dialog`, `kesteven/quest/*BarEvent`, `kesteven/quest/HintWreckDialog` | Java dialogs and bar events |
-| `dialogue/rules/nskr_job4FleetDialog`, `nskr_ttCollectorDialog`, `nskr_elizaInterceptDialog`, `nskr_altEndingDialogLuddic`, `nskr_altEndingDialogTT`, `nskr_isKStage`, `nskr_isAtLeastKStage` | Rules commands for the fleet conversations, endings and stage predicates |
+| `kesteven/quest/*Dialog`, `kesteven/quest/*BarEvent` | Java dialogs and bar events |
+| `dialogue/rules/nskr_ttCollectorDialog`, `nskr_elizaInterceptDialog`, `nskr_altEndingDialogLuddic`, `nskr_altEndingDialogTT`, `nskr_isKStage`, `nskr_isAtLeastKStage` | Rules commands for the fleet conversations, endings and stage predicates |
 | `kesteven/quest/ElizaRaid`, `ElizaRaidObjectiveCreator` | Ground raid for Eliza's disks |
 | `world/systems/cache/Cache` | The Cache system, guardian fleet and its fleet-interaction config |
-| `kesteven/quest/OperationLifesaverIntel`, `CacheIntel` | Intel entries of job 4 and the Cache; they read the stage and flags and never write the stage |
+| `kesteven/quest/CacheIntel` | Intel entry of the Cache; they read the stage and flags and never write the stage |
 | `kesteven/ExileManager` | Moves the quest people between Asteria and the Outpost |
 
 ## Where the quest is offered
@@ -70,7 +71,7 @@ The stage is a `KestevenStage` on the quest state, changed only by the quest man
 | 10 | Job 3 over, success or failure | `QuestStageManager`: target destroyed, timeout, or stealth broken |
 | 11 | Job 4 pending | Alice, job 3 turn-in; also job 3 skip |
 | 12 | Job 4 active | Alice, accept |
-| 13 | Job 4 done | `QuestStageManager`, friendly fleet found and strike group destroyed |
+| 13 | Job 4 done | `KestevenJob4Module`, friendly fleet found and strike group destroyed |
 | 14 | Job 5 offered by Jack | Alice, job 4 turn-in; attacking the friendly fleet also sets 14 |
 | 15 | Go to the bar | Jack, while showing the job 5 briefing |
 | 16 | Job 5 active: data disks | Leaving the Delve meeting (row `nskr_kq_delveLeave`) |
@@ -149,30 +150,41 @@ Refusing at stage 7 ("I'm not doing this.", then "yes") costs Kesteven -5 and Al
 
 ## Job 4: Operation Lifesaver (stages 11 to 14)
 
-At stage 11 `QuestStageManager` counts 300 seconds (30 days) and then sets `JOB4_WAIT_OVER`. After the wait, Alice offers the job when Kesteven relationship is at least 0.60 and either strength is above 0.80 or `JOB4_REQUIREMENT_SKIPPED` is set. Pay is 285,000 credits. Her briefing names the constellation of the friendly fleet's location, a random point in a system far from the core. If the Outpost belongs to Kesteven she also points to Nicholas. Accepting sets stage 12.
+`KestevenJob4Module` is active from stage 11 to stage 16, because the job's fleets stay in the world after the job. When stage 11 starts it starts the timer `job4Wait`; its daily tick sets `JOB4_WAIT_OVER` once the timer passes 30 days. The flag is set on the first daily tick after the 30 days. After the wait, Alice offers the job when Kesteven relationship is at least 0.60 and either strength is above 0.80 or `JOB4_REQUIREMENT_SKIPPED` is set. Pay is 285,000 credits. Her briefing names the constellation of the friendly fleet's location, a random point in a system far from the core. If the Outpost belongs to Kesteven she also points to Nicholas. Accepting sets stage 12.
 
-When stage 12 is first seen, `QuestStageManager`:
+When stage 12 starts, `KestevenJob4Module`, in the order the old code used, which keeps the questline's shared random sequence:
 
-- adds `OperationLifesaverIntel`;
-- spawns the Enigma "Strike Group" (flagship "DSRD Eye for an eye") and records its location as the job 4 enemy target;
+- shows the intel entry `job4`;
+- spawns the Enigma "Strike Group" (flagship "DSRD Eye for an eye"), role `job4StrikeGroup`, and records its location as the job 4 enemy target;
 - places data-disk satellite #4 at the enemy target;
-- spawns the Kesteven "Special Operations" fleet at the friendly target (transponder off);
-- spawns ten Enigma "Splinter" patrols;
-- places a debris field and three Kesteven derelicts near the enemy target. One derelict is the hint wreck.
+- spawns the Kesteven "Special Operations" fleet at the friendly target (transponder off), role `job4SpecialOps`;
+- spawns ten Enigma "Splinter" patrols, role `job4Splinter`;
+- places a debris field and three Kesteven derelicts near the enemy target. The first derelict is the hint wreck; its dialog is claimed with the trigger `nskr_kqHintWreck` in every stage until it is read.
+
+The builders are `KestevenFleets.job4StrikeGroup`, `job4SpecialOps` and `job4Splinter`. Every job 4 role is persistent and has `FleetOrders.withdrawWhen`: from stage 17 on (failure included), or from stage 14 on once satellite #4 is salvaged, the fleet keeps its last assignment and despawns once out of the player's sight. Until then:
+
+- the splinters and the Special Operations fleet keep their spawn assignment (`FleetOrders.keep()`);
+- the strike group also keeps it, and after chasing the player out of the player's location it stays aggressive to the player and patrols its home system again ("unknown", `FleetOrders.patrolHomeAfterChase`). Salvaging satellite #4 sends it after the player (`DataSatelliteDialog.makeHostile`, by its role flag `$nskr_kq_job4StrikeGroup`). Below 20% of its spawn strength it withdraws.
 
 Three sources lead the player on:
 
 - Nicholas describes a burst of signals from the enemy target system and records his dialogue stage.
-- The hint wreck (`HintWreckDialog`, id prefix `$job4HintWreck`) gives the friendly fleet's system.
-- The Special Operations fleet (`nskr_job4FleetDialog`, transponder must be on) tells its story, sends the strike group coordinates, and asks for 250 supplies and 400 fuel. Giving them sets `JOB4_FRIENDLY_HELPED`, and the fleet flies home.
+- The hint wreck gives the friendly fleet's system (rows `nskr_kq_hintWreck*`; the action `readHintWreck` sets `JOB4_HINT_WRECK_READ` and releases the claim, so the vanilla derelict dialog opens from then on).
+- The Special Operations fleet (transponder must be on) tells its story, sends the strike group coordinates, and asks for 250 supplies and 400 fuel. Its first conversation runs the action `recordJob4FleetTalk`: `JOB4_FRIENDLY_TALKED`, `JOB4_FRIENDLY_FOUND`, and `JOB4_TARGET_HINT` unless the strike group was already seen or beaten. Giving the supplies and fuel sets `JOB4_FRIENDLY_HELPED`, and the action `sendJob4FleetHome` moves the fleet to role `job4SpecialOpsLeaving`, which flies to `asteriaOrOutpost` ("travelling back to <market>") and despawns there.
 
-`OperationLifesaverIntel` lists each lead the player has. Its map marker points at the most precise one: the strike group once seen or once the Special Operations fleet sent its coordinates; else the friendly fleet's coordinates from the hint wreck while that fleet is not found; else the system Nicholas named; else the found friendly fleet; else the briefing's constellation. The strike group leads apply only until it is destroyed.
+The `job4` entry lists each lead the player has. Its map marker points at the most precise one: the strike group once seen or once the Special Operations fleet sent its coordinates; else the friendly fleet's coordinates from the hint wreck while that fleet is not found; else the system Nicholas named; else the found friendly fleet; else the briefing's constellation. The strike group leads apply only until it is destroyed. The module sets the marker when the job starts, whenever one of its own flags changes and once a day, so Nicholas's tip moves it on the next daily tick.
 
-Talking to the friendly fleet or seeing it sets `JOB4_FRIENDLY_FOUND`. Reducing the strike group below 20% of its strength sets `JOB4_TARGET_DESTROYED`. With both set, `QuestStageManager` sets stage 13.
+Seeing the friendly fleet or talking to it sets `JOB4_FRIENDLY_FOUND`; seeing the strike group before it is beaten sets `JOB4_TARGET_FOUND`. Sightings come from `onFleetDetected` (vanilla `DetectedEntityListener`), which reports each change of the player's view of a quest fleet. Reducing the strike group below 20% of its strength, or destroying it, sets `JOB4_TARGET_DESTROYED` and removes its mission-important marker (`onBattle`, `onLoot`, `onFleetGone`). With both flags set, the module sets stage 13 on the next unpaused frame, so a conversation that sets the last flag completes the job after it closes.
 
-If anything other than the player destroys the Special Operations fleet before it is found, `QuestStageManager` spawns a new one at the friendly target. It checks once a day at stage 12, after the destroyed fleet has left the quest fleet list; that happens once the player is out of hyperspace sensor range of it.
+If anything other than the player destroys the Special Operations fleet before it is found, the module spawns a new one at the friendly target. It checks once a day at stage 12 and waits until the player is out of hyperspace sensor range of the friendly target's system.
 
-If the player contributes to a battle against the Special Operations fleet, `QuestStageManager` sets stage 14 and `JOB4_FAILED`. The next advance turns that into stage 99 and ends the questline.
+If the player wins a fight in which the Special Operations fleet (either role) is the losing fleet and loses a ship, with any player contribution (`onLoot`), the module sets `JOB4_FAILED`, moves the stage to 14 and then, unless `ENDED` is already set, to 99 with `ENDED`, which ends the questline. The check runs while the module is active, up to stage 16.
+
+### Intel
+
+The `QuestIntel` entry `job4` (icon `job4`; tags important, accepted, missions; sort tier 2, major posting sound, Kesteven UI colors, delete button once finished, bullets in the description) shows as a campaign message when stage 12 starts. The text is in the `# KESTEVEN QUESTLINE: JOB 4` block, selected by `$nskr_intel_key == job4`: the title "Operation Lifesaver", the lead bullets, and the description, which names the search area (token `job4SearchArea`) at stage 12 and "Return to <home>." at stage 13. The module's checks `job4FriendlyNamed` and `job4TargetNamed` pick the bullet variants that name the orbited entity, as the old entry did for entities not named "Null".
+
+When stage 13 is reached the module sets the marker to `asteriaOrOutpost` and completes the entry with the update `done` ("With the threat eliminated and the Operations fleet located, you can report back to <home> to finish the job."), and on failure fails it with the update `failed` ("You attacked the Special Operations fleet. Mission failed, better not to talk to anyone about this."), each with `ui_intel_minor_message`. A completed entry ends after the vanilla delay; the module ends the entry at once when it stops (stage 17 or failure). A failure attack at stages 14 to 16 sends no message, because the entry is no longer shown there.
 
 Alice's turn-in at stage 13 grants 1 story point, 285,000 credits, a modspec, Kesteven +5 and Alice +10. If the player helped the fleet it also grants an Epoch-class prototype frigate (`nskr_epoch_empty`). Alice becomes a potential contact, Jack's importance rises to high, and S-mod removal (`nskr_modRemoval`) opens at research officials. Stage becomes 14.
 
@@ -304,8 +316,9 @@ The two alternative endings share one finished flag and are offered only at stag
 `QuestStageManager` sets stage 99 and `ENDED` when:
 
 - the Outpost cannot host Kesteven and Asteria does not exist;
-- stage is 14 and `JOB4_FAILED` is set (the player attacked the Special Operations fleet);
 - stage is 19, the UPC was handed to Eliza, and Eliza has been killed (`JOB5_FAILED`).
+
+`KestevenJob4Module` sets stage 99 and `ENDED` when the player attacks the Special Operations fleet ([Job 4](#job-4-operation-lifesaver-stages-11-to-14)).
 
 The questline option then disappears. The Cache can still be found and fought; `CacheCoreDialog` gives no questline reward in that state.
 
@@ -331,7 +344,7 @@ While the `storySkipUnlocked` setting is on, the speaker menus add a 5-story-poi
 These follow from the code and rules as written. None has been checked in game.
 
 1. **"Yes (lie)" to Alice.** It follows the same path as "Yes" and records nothing; no code reads a lie to Alice.
-2. **Operation Lifesaver system fallbacks.** `KestevenFleets.spawnJob4Target` picks the strike group's system inside the friendly target's constellation. When no other system there has two planets, `QuestHelper.getRandomSystemWithinConstellation` retries without excluding the friendly system, so both fleets can share one system; with no candidate at all it returns null and the spawn fails. `getRandomSystemFarCore`'s fallback can return a system outside any constellation, which `OperationLifesaverIntel` does not expect. Kept as is by the maintainer.
+2. **Operation Lifesaver system fallbacks.** `KestevenFleets.job4StrikeGroup` picks the strike group's system inside the friendly target's constellation. When no other system there has two planets, `QuestHelper.getRandomSystemWithinConstellation` retries without excluding the friendly system, so both fleets can share one system; with no candidate at all it returns null and the spawn fails. `getRandomSystemFarCore`'s fallback can return a system outside any constellation, which the old `OperationLifesaverIntel` did not expect; the `job4` entry then has no constellation marker and an empty search area. Kept as is by the maintainer.
 3. **Cache guardian report can move the stage back.** `KestevenQuest.reportCacheGuardianDefeated()` sets stage 18 whenever the questline has not ended and the stage is 16 or later, so a guardian defeat reported at stage 19 or 20 would return the questline to 18. Normal play defeats the guardian before stage 19.
 4. **Failure counts as late stages.** The Glacier claim keeps the old route's `stage >= 16` on legacy numbers, so its scope includes `FAILED`, and `cacheIsQuestTarget()` keeps the comparison itself; both hold after failure (legacy stage 99).
 5. **Frost guess with all disks.** Alice's confirmations at stage 16 test the disks, not the screen that offered the option. With all five disks, a Frost tip screen (both tips given, tip 2 not yet) offers "It's the <Frost>.", and choosing it gives the Cache coordinates and stage 17 (`nskr_kq_aliceCacheFound`).
@@ -339,3 +352,4 @@ These follow from the code and rules as written. None has been checked in game.
 7. **Highlight without its phrase.** Jack's job 5 briefing highlights "Go to the bar", which its text does not contain, so nothing is highlighted.
 8. **Asteria scenes at the Outpost.** The Delve meeting picks its Asteria texts whenever Asteria exists (`asteriaGenerated`), not where the questline is, so after Kesteven's exile the meeting at the Outpost describes Asteria's underground city. The old `DelveMeetingBarEvent` also showed Asteria's planet there; the escort row's `ShowLargePlanet` shows the planet of the dialog target's market instead, if it has one.
 9. **Repeated sensor message.** Every Enigma win that counts for the sensor task at stage 1 sends the `sensorData` update again, also after the package was delivered (`KestevenJob1Module.onEncounterLoot`, as the old `QuestStageManager` check did).
+10. **Story-skip strike group.** The story skip spawns the strike group, satellite #4 and the wrecks, then sets stage 17, where every job 4 fleet withdraws; the strike group despawns as soon as the player is out of its sight, so satellite #4 is unguarded.

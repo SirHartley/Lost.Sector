@@ -425,16 +425,6 @@ public class QuestHelper {
         if (state != null) state.nicholasDialogStage = stage;
     }
 
-    public static int getJob4FleetDialogStage() {
-        KestevenState state = KestevenQuest.state();
-        return state == null ? 0 : state.job4FleetDialogStage;
-    }
-
-    public static void setJob4FleetDialogStage(int stage) {
-        KestevenState state = writableState();
-        if (state != null) state.job4FleetDialogStage = stage;
-    }
-
     public static float getTtPayout() {
         KestevenState state = KestevenQuest.state();
         return state == null ? 0f : state.ttPayout;
@@ -494,13 +484,6 @@ public class QuestHelper {
     public static SectorEntityToken getJob4EnemyTarget(){
         KestevenState state = KestevenQuest.state();
         return state == null ? null : state.job4EnemyTarget;
-    }
-
-    public static SectorEntityToken setJob4EnemyTarget(SectorEntityToken loc){
-        KestevenState state = writableState();
-        if (state == null) return null;
-        state.job4EnemyTarget = loc;
-        return loc;
     }
 
     public static StarSystemAPI getJob5FrostTip(){

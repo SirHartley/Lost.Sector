@@ -247,9 +247,8 @@ final class KestevenHubModule extends QuestModule<KestevenStage, KestevenState> 
             DormantSpawner.addDormant(QuestHelper.getJob3Target(), "enigma", 45f, 50f, 0f, 1f, 1f, 1f, 1, 1);
         }
         if (BEFORE_JOB4_OBJECTS.contains(stage)) {
-            KestevenFleets.spawnJob4Target();
-            QuestHelper.spawnArtifact(QuestHelper.getJob4EnemyTarget(), 4);
-            QuestStageManager.spawnJob4Wrecks(ctx.random(KestevenState.RANDOM_QUEST));
+            KestevenJob4Module.spawnStrikeGroup(ctx);
+            KestevenJob4Module.placeWrecks(ctx);
         }
         ctx.set(KestevenFlag.SATELLITE4_RECOVERED);
         ctx.set(KestevenFlag.SATELLITE3_RECOVERED);

@@ -15,20 +15,14 @@ import com.fs.starfarer.api.impl.campaign.ids.Factions;
 import com.fs.starfarer.api.impl.campaign.ids.MemFlags;
 import com.fs.starfarer.api.impl.campaign.ids.Pings;
 import com.fs.starfarer.api.impl.campaign.intel.contacts.ContactIntel;
-import com.fs.starfarer.api.impl.campaign.terrain.DebrisFieldTerrainPlugin;
 import com.fs.starfarer.api.impl.campaign.world.MoteParticleScript;
-import com.fs.starfarer.api.util.Misc;
-import com.fs.starfarer.api.util.Pair;
 import exerelin.campaign.DiplomacyManager;
 import lostsector.campaign.kesteven.ExileManager;
 import lostsector.campaign.enigma.DormantSpawner;
-import lostsector.campaign.events.EnvironmentalStorytelling;
-import lostsector.dialogue.rules.nskr_job4FleetDialog;
 import lostsector.dialogue.rules.nskr_ttCollectorDialog;
 import lostsector.ModPlugin;
 import lostsector.helper.FleetHelper;
 import lostsector.helper.Ids;
-import lostsector.helper.MathHelper;
 import lostsector.helper.SectorLookup;
 import lostsector.world.systems.cache.Cache;
 import lostsector.helper.SystemHelper;
@@ -50,18 +44,11 @@ public class QuestStageManager extends BaseCampaignEventListener implements Ever
         JOB3_MARKET_BLACKLIST.add("eochu_bres");
         JOB3_MARKET_BLACKLIST.add("culann");
     }
-    public static final String JOB4_SPLINTER_KEY = "$KestevenQuestJob4Splinter";
-    public static final String JOB4_TARGET_KEY = "$KestevenQuestJob4Target";
-    public static final String JOB4_FRIENDLY_KEY = "$KestevenQuestJob4Friendly";
     public static final String ARTIFACT_KEY = "$kQuestArtifact";
-    public static final String JOB4_HINT_WRECK_ID_KEY = "$job4HintWreck";
     public static final String JACK_REVENGEANCE_FLEET_KEY = "$RevengeanceJack";
     public static final String REVENGEANCE_FLEET_KEY = "$RevengeanceQuestFleet";
     public static final String ELIZA_INTERCEPT_FLEET_KEY = "$InterceptPlayerElizaFleet";
 
-    public static final int SPLINTER_COUNT = 10;
-    public static final int JOB4_HELP_SUPPLIES = 250;
-    public static final int JOB4_HELP_FUEL = 400;
     //chance per day
     public static final float REVENGEANCE_CHANCE = 0.01f;
     public static final float BASE_TT_COLLECT_CHANCE = 0.03f;
@@ -106,12 +93,6 @@ public class QuestStageManager extends BaseCampaignEventListener implements Ever
             QuestHelper.setStage(99);
             QuestHelper.setEndMissions(true);
             log("ERROR sector is fucked, ending missions");
-        }
-        //kill Special Operations fleet failure
-        if (stage == 14 && QuestHelper.getCompleted(KestevenFlag.JOB4_FAILED) && !QuestHelper.getEndMissions()) {
-            QuestHelper.setStage(99);
-            QuestHelper.setEndMissions(true);
-
         }
         //kill Eliza after handing over failure
         if (stage == 19 && QuestHelper.getCompleted(KestevenFlag.CHIP_HANDED_TO_ELIZA) && QuestHelper.getCompleted(KestevenFlag.ELIZA_KILLED) && !QuestHelper.getEndMissions()) {
@@ -176,73 +157,6 @@ public class QuestStageManager extends BaseCampaignEventListener implements Ever
         //FLEETS
         List<FleetInfo> fleets = FleetHelper.getFleets(FLEET_ARRAY_KEY);
 
-        //wait for job 4
-        if (stage == 11) {
-            if (Global.getSector().isInFastAdvance()) {
-                state.job4WaitCounter += 2f*amount;
-            } else{
-                state.job4WaitCounter += amount;
-            }
-            //one day = 10f
-            if (state.job4WaitCounter>(300f)){
-                QuestHelper.setCompleted(true, KestevenFlag.JOB4_WAIT_OVER);
-                state.job4WaitCounter = 0f;
-            }
-        }
-        //start job 4
-        if (stage ==12) {
-            //Adds our intel
-            if (!state.job4IntelAdded) {
-                OperationLifesaverIntel intel4 = new OperationLifesaverIntel();
-                Global.getSector().getIntelManager().addIntel(intel4, false);
-                state.job4IntelAdded = true;
-                log("Qmanager added INTEL for " + "Operation Lifesaver");
-            }
-            //logic
-            if (!state.job4FleetsSpawned) {
-
-                //this sets job4TargetLoc
-                KestevenFleets.spawnJob4Target();
-
-                QuestHelper.spawnArtifact(QuestHelper.getJob4EnemyTarget(),4);
-                CampaignFleetAPI fleet = KestevenFleets.spawnJob4Friendly();
-                fleets.add(new FleetInfo(fleet, null, QuestHelper.getJob4FriendlyTarget()));
-                for (int x = 0; x<SPLINTER_COUNT;x++) {
-                    new Pair<>(KestevenFleets.spawnJob4Splinters(), 0f);
-                    //added to mem in the spawner
-                }
-                //hint wrecks/environmental storytelling
-                spawnJob4Wrecks(KestevenQuest.random(KestevenState.RANDOM_QUEST));
-
-                log("Qmanager spawn job4 fleets");
-                state.job4FleetsSpawned = true;
-            }
-        }
-        //job 4 logic
-        //dialog reveal logic
-        if (nskr_job4FleetDialog.getDialogStage()>=1 && !QuestHelper.getCompleted(KestevenFlag.JOB4_TARGET_FOUND) && !QuestHelper.getCompleted(KestevenFlag.JOB4_TARGET_DESTROYED)){
-
-            QuestHelper.setCompleted(true, KestevenFlag.JOB4_TARGET_HINT);
-        }
-        //job 4
-        //found friendly
-        if (nskr_job4FleetDialog.getDialogStage()>=1 && !QuestHelper.getCompleted(KestevenFlag.JOB4_FRIENDLY_FOUND)){
-
-            QuestHelper.setCompleted(true, KestevenFlag.JOB4_FRIENDLY_FOUND);
-        }
-
-        //job 4 completion
-        if (stage ==12 && QuestHelper.getCompleted(KestevenFlag.JOB4_FRIENDLY_FOUND) && QuestHelper.getCompleted(KestevenFlag.JOB4_TARGET_DESTROYED)){
-            //completion text
-            Global.getSector().getCampaignUI().addMessage("With the threat eliminated and the Operations fleet located, you can report back to "+ SectorLookup.asteriaOrOutpost().getName()+" to finish the job.",
-                    Global.getSettings().getColor("standardTextColor"),
-                    "report back to "+ SectorLookup.asteriaOrOutpost().getName(),
-                    "",
-                    Global.getSettings().getColor("yellowTextColor"),
-                    Global.getSettings().getColor("yellowTextColor"));
-
-            QuestHelper.setStage(13);
-        }
         if (stage==16) {
            //job 5 logic
            //found frost check
@@ -376,12 +290,6 @@ public class QuestStageManager extends BaseCampaignEventListener implements Ever
         }
         //mission logic
         if (state.dayCounter>10f) {
-            //job 4 cannot finish without finding the Special Operations fleet, so replace it if something else destroyed it first
-            if (stage == 12 && state.job4FleetsSpawned && !QuestHelper.getCompleted(KestevenFlag.JOB4_FRIENDLY_FOUND) && !hasFleetWithKey(fleets, JOB4_FRIENDLY_KEY)) {
-                CampaignFleetAPI fleet = KestevenFleets.spawnJob4Friendly();
-                fleets.add(new FleetInfo(fleet, null, QuestHelper.getJob4FriendlyTarget()));
-                log("Qmanager respawned job4 friendly");
-            }
             //tt vengeance spawner
             //spawn once per campaign
             if (!state.collectorSpawned) {
@@ -450,60 +358,6 @@ public class QuestStageManager extends BaseCampaignEventListener implements Ever
         QuestHelper.setCompleted(true, KestevenFlag.ELIZA_RETURNED);
     }
 
-    public static void spawnJob4Wrecks(Random random) {
-        SectorEntityToken loc = QuestHelper.getJob4EnemyTarget();
-        StarSystemAPI system = loc.getStarSystem();
-
-        //debris
-        DebrisFieldTerrainPlugin.DebrisFieldParams params_debrisField = new DebrisFieldTerrainPlugin.DebrisFieldParams(
-                350f, // field radius - should not go above 1000 for performance reasons
-                1.2f, // density, visual - affects number of debris pieces
-                10000000f, // duration in days
-                0f); // days the field will keep generating glowing pieces
-        params_debrisField.source = DebrisFieldTerrainPlugin.DebrisFieldSource.MIXED;
-        params_debrisField.baseSalvageXP = 500; // base XP for scavenging in field
-        SectorEntityToken debrisField = Misc.addDebrisField(system, params_debrisField, random);
-        debrisField.setSensorProfile(1000f);
-        debrisField.setDiscoverable(true);
-        float dist = MathHelper.getSeededRandomNumberInRange(150f, 250f, random);
-        float days = MathHelper.getSeededRandomNumberInRange(30f, 60f, random);
-        float angle = MathHelper.getSeededRandomNumberInRange(0f, 360f, random);
-        debrisField.setCircularOrbit(loc, angle, dist, days);
-        debrisField.setId("nskr_debrisField_"+random.nextLong());
-
-        //ships
-        float recoveryChance = 0.25f;
-        int count = 3;
-        for (int y=0;y<count;y++) {
-            SectorEntityToken derelict = EnvironmentalStorytelling.addDerelict(
-                    system, pickRandomVariant(random), EnvironmentalStorytelling.randomCondition(), Math.random() < recoveryChance, null
-            );
-            derelict.setCircularOrbit(loc,
-                    angle+ MathHelper.getSeededRandomNumberInRange(-45f, 45f, random),
-                    dist+ MathHelper.getSeededRandomNumberInRange(-125f, 125f, random),
-                    days+ MathHelper.getSeededRandomNumberInRange(-3f, 3f, random));
-            if (y==0) {
-                //mark one of the wrecks
-                derelict.setId(JOB4_HINT_WRECK_ID_KEY +random.nextLong());
-            }
-        }
-
-    }
-    private static String pickRandomVariant(Random random) {
-        FactionAPI faction = Global.getSector().getFaction(Ids.KESTEVEN_FACTION_ID);
-        ArrayList<String> variants = new ArrayList<>();
-        String variant = "";
-        while (variants.isEmpty()) {
-            variants = new ArrayList<>(faction.getVariantsForRole(EnvironmentalStorytelling.randomRole(random, false)));
-            variant = variants.get(MathHelper.getSeededRandomNumberInRange(0, variants.size() - 1, random));
-            //only pick kesteven ships
-            if (!Global.getSettings().getVariant(variant).getHullSpec().hasTag("kesteven")){
-                variants.clear();
-            }
-        }
-        return variant;
-    }
-
     private void spawnPing(CampaignFleetAPI pf) {
         SectorEntityToken loc = QuestHelper.getCacheFleetLoc();
         if (MathUtils.getDistance(pf.getLocation(), loc.getLocation()) > 1000f) {
@@ -512,13 +366,6 @@ public class QuestStageManager extends BaseCampaignEventListener implements Ever
             loc = pf.getContainingLocation().createToken(newLoc);
         }
         Global.getSector().addPing(loc, Pings.SENSOR_BURST);
-    }
-
-    private static boolean hasFleetWithKey(List<FleetInfo> fleets, String key) {
-        for (FleetInfo f : fleets) {
-            if (f.fleet != null && f.fleet.getMemoryWithoutUpdate().contains(key)) return true;
-        }
-        return false;
     }
 
     private void runFleetLogic(List<FleetInfo> fleets){
@@ -532,12 +379,6 @@ public class QuestStageManager extends BaseCampaignEventListener implements Ever
             f.age+=0.1f;
 
 
-            //job 4 fleet manager
-            if (fleet.getMemoryWithoutUpdate().contains(JOB4_SPLINTER_KEY) || fleet.getMemoryWithoutUpdate().contains(JOB4_TARGET_KEY) || fleet.getMemoryWithoutUpdate().contains(JOB4_FRIENDLY_KEY)) {
-                //
-                job4TargetLogic(f, fleet);
-                continue;
-            }
             //aggro dormant manager
             if (fleet.getMemoryWithoutUpdate().contains(DormantSpawner.DORMANT_KEY)){
                 boolean despawn = false;
@@ -873,103 +714,6 @@ public class QuestStageManager extends BaseCampaignEventListener implements Ever
         }
     }
 
-    private void job4TargetLogic(FleetInfo f, CampaignFleetAPI fleet) {
-        CampaignFleetAPI pf = Global.getSector().getPlayerFleet();
-        if (pf == null) return;
-
-        boolean despawn = false;
-
-        //despawn
-        if (QuestHelper.getStage()>=17 || QuestHelper.getStage()>=14 && QuestHelper.getCompleted(KestevenFlag.SATELLITE4_RECOVERED)) {
-            despawn = true;
-        }
-        //destroyed
-        if (fleet.getFleetPoints()<=0) {
-            despawn = true;
-        }
-
-        //target destroyed check
-        if (fleet.getMemoryWithoutUpdate().contains(JOB4_TARGET_KEY)){
-
-            if (fleet.getFleetPoints() < (f.strength * 0.20f)) {
-                despawn = true;
-                QuestHelper.setCompleted(true, KestevenFlag.JOB4_TARGET_DESTROYED);
-                //no longer important
-                if (fleet.getMemoryWithoutUpdate().contains(MemFlags.MEMORY_KEY_MISSION_IMPORTANT)){
-                    fleet.getMemoryWithoutUpdate().unset(MemFlags.MEMORY_KEY_MISSION_IMPORTANT);
-                }
-            }
-        }
-
-        //friendly found check
-        if (fleet.getMemoryWithoutUpdate().contains(JOB4_FRIENDLY_KEY)){
-            if (fleet.isVisibleToPlayerFleet() && !QuestHelper.getCompleted(KestevenFlag.JOB4_FRIENDLY_FOUND)){
-
-                QuestHelper.setCompleted(true, KestevenFlag.JOB4_FRIENDLY_FOUND);
-            }
-        }
-        //target found check
-        if (fleet.getMemoryWithoutUpdate().contains(JOB4_TARGET_KEY)){
-            if (fleet.isVisibleToPlayerFleet() && !QuestHelper.getCompleted(KestevenFlag.JOB4_TARGET_FOUND) && !QuestHelper.getCompleted(KestevenFlag.JOB4_TARGET_DESTROYED)){
-
-                QuestHelper.setCompleted(true, KestevenFlag.JOB4_TARGET_FOUND);
-            }
-        }
-
-        Vector2f fp = fleet.getLocationInHyperspace();
-        Vector2f pp = pf.getLocationInHyperspace();
-        float dist = MathUtils.getDistance(pp, fp);
-        if (despawn) {
-            if (dist > Global.getSettings().getMaxSensorRangeHyper()) {
-                //tracker for cleaning the list
-                removed.add(fleet);
-                fleet.despawn();
-            }
-        }
-        //stop here when defeated
-        if (despawn) return;
-        //assignment logic
-        FleetAssignmentDataAPI curr = fleet.getAI().getCurrentAssignment();
-        if (curr == null) {
-            fleet.clearAssignments();
-            fleet.addAssignment(FleetAssignment.HOLD, fleet.getContainingLocation().createToken(fleet.getLocation()), Float.MAX_VALUE, "holding");
-            log("null assignment");
-        }
-        //logic
-
-        //aggro target fleet
-        if (fleet.getMemoryWithoutUpdate().contains(JOB4_TARGET_KEY)) {
-            //reset
-            SectorEntityToken loc = QuestHelper.getJob4EnemyTarget();
-            if (fleet.getContainingLocation() != pf.getContainingLocation() && fleet.getAI().getCurrentAssignmentType() == FleetAssignment.INTERCEPT) {
-                fleet.clearAssignments();
-                //remain aggressive
-                if (!fleet.getMemoryWithoutUpdate().contains(MemFlags.MEMORY_KEY_SAW_PLAYER_WITH_TRANSPONDER_ON)) {
-                    fleet.getMemoryWithoutUpdate().set(MemFlags.MEMORY_KEY_SAW_PLAYER_WITH_TRANSPONDER_ON, true);
-                }
-                fleet.addAssignment(FleetAssignment.PATROL_SYSTEM, loc, Float.MAX_VALUE, "unknown");
-            }
-        }
-        //helped friendly fleet
-        if (fleet.getMemoryWithoutUpdate().contains(JOB4_FRIENDLY_KEY)) {
-            boolean helped = QuestHelper.getCompleted(KestevenFlag.JOB4_FRIENDLY_HELPED);
-            SectorEntityToken target = QuestHelper.getJob4FriendlyTarget();
-            //safety check
-            if (SectorLookup.asteriaOrOutpost() != null) {
-                SectorEntityToken home = SectorLookup.asteriaOrOutpost().getPrimaryEntity();
-                //go back to asteria
-                if (fleet.getContainingLocation() == target.getContainingLocation() && helped && fleet.getAI().getCurrentAssignmentType() == FleetAssignment.ORBIT_PASSIVE) {
-                    //no longer important
-                    if (fleet.getMemoryWithoutUpdate().contains(MemFlags.MEMORY_KEY_MISSION_IMPORTANT)) {
-                        fleet.getMemoryWithoutUpdate().unset(MemFlags.MEMORY_KEY_MISSION_IMPORTANT);
-                    }
-                    fleet.clearAssignments();
-                    fleet.addAssignment(FleetAssignment.GO_TO_LOCATION_AND_DESPAWN, home, Float.MAX_VALUE, "travelling back to " + SectorLookup.asteriaOrOutpost().getName());
-                }
-            }
-        }
-    }
-
     private CampaignFleetAPI vengeanceEliza(boolean intercept){
         PersonAPI eliza = KestevenPeople.getEliza();
         SectorEntityToken loc = QuestHelper.getElizaLoc();
@@ -1000,37 +744,6 @@ public class QuestStageManager extends BaseCampaignEventListener implements Ever
         Global.getSector().getImportantPeople().removePerson("nskr_opguy");
         QuestHelper.setCompleted(true, KestevenFlag.JACK_GONE);
         return fleet;
-    }
-
-    @Override
-    public void reportEncounterLootGenerated(FleetEncounterContextPlugin plugin, CargoAPI loot) {
-        CampaignFleetAPI loser = plugin.getLoser();
-        if (loser == null) return;
-        //job 4 failure
-        if (loser.getMemoryWithoutUpdate().contains(JOB4_FRIENDLY_KEY)) {
-            List<FleetEncounterContextPlugin.FleetMemberData> casualties = plugin.getLoserData().getOwnCasualties();
-
-            for (FleetEncounterContextPlugin.FleetMemberData memberData : casualties) {
-                FleetEncounterContextPlugin.Status status = memberData.getStatus();
-                if (status == FleetEncounterContextPlugin.Status.NORMAL) continue;
-                float contrib = plugin.computePlayerContribFraction();
-                if (contrib>0f) {
-                    //FAIL
-                    QuestHelper.setStage(14);
-                    if (!QuestHelper.getFailed(KestevenFlag.JOB4_FAILED)) {
-                        Global.getSector().getCampaignUI().addMessage("You attacked the Special Operations fleet. Mission failed, better not to talk to anyone about this.",
-                                Global.getSettings().getColor("standardTextColor"),
-                                "Mission failed",
-                                "",
-                                Global.getSettings().getColor("yellowTextColor"),
-                                Global.getSettings().getColor("yellowTextColor"));
-
-                        QuestHelper.setFailed(true, KestevenFlag.JOB4_FAILED);
-                    }
-                    break;
-                }
-            }
-        }
     }
 
     @Override

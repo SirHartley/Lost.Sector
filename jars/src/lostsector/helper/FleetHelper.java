@@ -348,13 +348,37 @@ public class FleetHelper {
 
     // Heads for info.target and despawns there. The assignment is issued again whenever the fleet has another one.
     public static void goToTargetAndDespawnAI(CampaignFleetAPI fleet, FleetInfo info) {
+        goToTargetAndDespawnAI(fleet, info, "returning to");
+    }
+
+    // The assignment text is textPrefix, a space and the target's market name (the entity name without a market).
+    public static void goToTargetAndDespawnAI(CampaignFleetAPI fleet, FleetInfo info, String textPrefix) {
         CampaignFleetAPI pf = Global.getSector().getPlayerFleet();
         if (fleet.getAI() == null || info.target == null) return;
         specManeuversCheck(fleet, pf, fleet.getAI().getCurrentAssignment());
         if (fleet.getAI().getCurrentAssignmentType() != FleetAssignment.GO_TO_LOCATION_AND_DESPAWN) {
             String name = info.target.getMarket() != null ? info.target.getMarket().getName() : info.target.getName();
             fleet.clearAssignments();
-            fleet.addAssignment(FleetAssignment.GO_TO_LOCATION_AND_DESPAWN, info.target, Float.MAX_VALUE, "returning to " + name);
+            fleet.addAssignment(FleetAssignment.GO_TO_LOCATION_AND_DESPAWN, info.target, Float.MAX_VALUE, textPrefix + " " + name);
+        }
+    }
+
+    // Keeps the assignment the fleet was built with; a fleet left without one holds where it is.
+    public static void keepAssignmentAI(CampaignFleetAPI fleet) {
+        if (fleet.getAI() == null) return;
+        safetyCheck(fleet, fleet.getAI().getCurrentAssignment());
+    }
+
+    // As keepAssignmentAI; a fleet that is intercepting outside the player's location remembers the player as seen
+    // with the transponder on, so it stays aggressive, and patrols the system of info.home with patrolText.
+    public static void patrolHomeAfterChaseAI(CampaignFleetAPI fleet, FleetInfo info, String patrolText) {
+        CampaignFleetAPI pf = Global.getSector().getPlayerFleet();
+        if (fleet.getAI() == null || info.home == null) return;
+        safetyCheck(fleet, fleet.getAI().getCurrentAssignment());
+        if (fleet.getContainingLocation() != pf.getContainingLocation() && fleet.getAI().getCurrentAssignmentType() == FleetAssignment.INTERCEPT) {
+            fleet.clearAssignments();
+            fleet.getMemoryWithoutUpdate().set(MemFlags.MEMORY_KEY_SAW_PLAYER_WITH_TRANSPONDER_ON, true);
+            fleet.addAssignment(FleetAssignment.PATROL_SYSTEM, info.home, Float.MAX_VALUE, patrolText);
         }
     }
 

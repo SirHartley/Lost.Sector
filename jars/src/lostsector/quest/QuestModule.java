@@ -6,6 +6,7 @@ import com.fs.starfarer.api.campaign.CampaignFleetAPI;
 import com.fs.starfarer.api.campaign.CargoAPI;
 import com.fs.starfarer.api.campaign.FleetEncounterContextPlugin;
 import com.fs.starfarer.api.campaign.LocationAPI;
+import com.fs.starfarer.api.campaign.SectorEntityToken.VisibilityLevel;
 import com.fs.starfarer.api.campaign.econ.MarketAPI;
 import com.fs.starfarer.api.fleet.FleetMemberAPI;
 
@@ -60,6 +61,10 @@ public abstract class QuestModule<S extends Enum<S> & QuestStage, T extends Ques
     }
 
     protected void onFleetGone(QuestContext<S, T> ctx, QuestFleet fleet, FleetDespawnReason reason, Object param) {
+    }
+
+    // Each change of the player's view of a fleet of this quest's roles; VisibilityLevel.NONE when it drops out of view.
+    protected void onFleetDetected(QuestContext<S, T> ctx, QuestFleet fleet, VisibilityLevel level) {
     }
 
     protected void onBattle(QuestContext<S, T> ctx, QuestFleet fleet, BattleAPI battle, CampaignFleetAPI primaryWinner) {

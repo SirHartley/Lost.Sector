@@ -171,7 +171,7 @@ public class DataSatelliteDialog implements InteractionDialogPlugin {
 				//complete
 				QuestHelper.setCompleted(true, KestevenFlag.SATELLITE3_RECOVERED);
 			} else {
-				key = QuestStageManager.JOB4_TARGET_KEY;
+				key = KestevenJob4Module.STRIKE_GROUP_FLAG;
 				number = "4";
 				//complete
 				QuestHelper.setCompleted(true, KestevenFlag.SATELLITE4_RECOVERED);
@@ -252,7 +252,7 @@ public class DataSatelliteDialog implements InteractionDialogPlugin {
 				//complete
 				QuestHelper.setCompleted(true, KestevenFlag.SATELLITE3_RECOVERED);
 			} else {
-				key = QuestStageManager.JOB4_TARGET_KEY;
+				key = KestevenJob4Module.STRIKE_GROUP_FLAG;
 				number = "4";
 				//complete
 				QuestHelper.setCompleted(true, KestevenFlag.SATELLITE4_RECOVERED);

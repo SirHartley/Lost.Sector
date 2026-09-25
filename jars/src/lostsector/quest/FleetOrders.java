@@ -5,12 +5,15 @@ import lostsector.helper.fleet.FleetInfo;
 
 import java.util.Random;
 import java.util.function.BiConsumer;
+import java.util.function.Predicate;
 
 // A definition, never saved. A behavior FleetHelper does not provide is added there first, then here.
 public final class FleetOrders {
 
     private enum Kind {
         NONE,
+        KEEP,
+        CHASE_HOME,
         INTERCEPT,
         GUARD,
         LEAVE,
@@ -26,6 +29,8 @@ public final class FleetOrders {
     private FleetHelper.GuardAttackBehaviour attack;
     private float playerInterceptChance;
     private String orbitText;
+    private String leaveText;
+    private String patrolHomeText;
     private boolean withdrawHome;
     private float prepareDays;
     private float returnAfterDays;
@@ -38,6 +43,7 @@ public final class FleetOrders {
 
     private boolean withdrawWhenBeaten;
     private float withdrawAfterDays = Float.POSITIVE_INFINITY;
+    private Predicate<FleetInfo> withdrawWhen;
 
     private FleetOrders(Kind kind) {
         this.kind = kind;
@@ -50,6 +56,8 @@ public final class FleetOrders {
         copy.attack = attack;
         copy.playerInterceptChance = playerInterceptChance;
         copy.orbitText = orbitText;
+        copy.leaveText = leaveText;
+        copy.patrolHomeText = patrolHomeText;
         copy.withdrawHome = withdrawHome;
         copy.prepareDays = prepareDays;
         copy.returnAfterDays = returnAfterDays;
@@ -60,12 +68,27 @@ public final class FleetOrders {
         copy.reinforce = reinforce;
         copy.withdrawWhenBeaten = withdrawWhenBeaten;
         copy.withdrawAfterDays = withdrawAfterDays;
+        copy.withdrawWhen = withdrawWhen;
         return copy;
     }
 
     // Vanilla assignments from SimpleFleet only.
     public static FleetOrders none() {
         return new FleetOrders(Kind.NONE);
+    }
+
+    // Keeps the assignment from SimpleFleet; a fleet left without one holds where it is ("holding").
+    public static FleetOrders keep() {
+        return new FleetOrders(Kind.KEEP);
+    }
+
+    // As keep(); after chasing the player out of the player's location it stays aggressive to the player and patrols
+    // the system of FleetInfo.home with patrolText.
+    public static FleetOrders patrolHomeAfterChase(String patrolText) {
+        if (patrolText == null) throw new IllegalArgumentException("patrol text must not be null");
+        FleetOrders orders = new FleetOrders(Kind.CHASE_HOME);
+        orders.patrolHomeText = patrolText;
+        return orders;
     }
 
     public static FleetOrders intercept(FleetHelper.InterceptBehaviour behaviour) {
@@ -86,7 +109,15 @@ public final class FleetOrders {
 
     // Goes to FleetInfo.target and despawns there; the quest sets the target before giving the fleet this role.
     public static FleetOrders leave() {
-        return new FleetOrders(Kind.LEAVE);
+        return leave("returning to");
+    }
+
+    // As leave(), with the assignment text textPrefix followed by the target's name.
+    public static FleetOrders leave(String textPrefix) {
+        if (textPrefix == null) throw new IllegalArgumentException("leave text must not be null");
+        FleetOrders orders = new FleetOrders(Kind.LEAVE);
+        orders.leaveText = textPrefix;
+        return orders;
     }
 
     // Orbit FleetInfo.target, which the quest sets after spawning; clearing it, or the fleet falling below a fifth of
@@ -155,14 +186,30 @@ public final class FleetOrders {
         return copy;
     }
 
+    // While the condition holds, checked every orders interval, the fleet gets no more orders and despawns once out of
+    // the player's sight. The condition runs in the game only.
+    public FleetOrders withdrawWhen(Predicate<FleetInfo> condition) {
+        if (condition == null) throw new IllegalArgumentException("withdraw condition must not be null");
+        FleetOrders copy = copy();
+        copy.withdrawWhen = condition;
+        return copy;
+    }
+
     // Called by QuestManager every 0.1 days, the pace FleetHelper's AI methods are written for. A withdrawing fleet
     // keeps its last assignment until it despawns. The random is the owning quest's saved "fleetOrders" sequence.
     void apply(FleetInfo info, Random random) {
-        if ((withdrawWhenBeaten && FleetHelper.isBeaten(info)) || info.age > withdrawAfterDays) {
+        if ((withdrawWhenBeaten && FleetHelper.isBeaten(info)) || info.age > withdrawAfterDays
+                || (withdrawWhen != null && withdrawWhen.test(info))) {
             FleetHelper.despawnOutOfSight(info.fleet);
             return;
         }
         switch (kind) {
+            case KEEP:
+                FleetHelper.keepAssignmentAI(info.fleet);
+                break;
+            case CHASE_HOME:
+                FleetHelper.patrolHomeAfterChaseAI(info.fleet, info, patrolHomeText);
+                break;
             case INTERCEPT:
                 FleetHelper.gotoAndInterceptPlayerAI(info.fleet, info, intercept);
                 break;
@@ -170,7 +217,7 @@ public final class FleetOrders {
                 FleetHelper.guardTargetAI(info.fleet, info, movement, attack, playerInterceptChance);
                 break;
             case LEAVE:
-                FleetHelper.goToTargetAndDespawnAI(info.fleet, info);
+                FleetHelper.goToTargetAndDespawnAI(info.fleet, info, leaveText);
                 break;
             case RAID:
                 FleetHelper.raidTargetAI(info.fleet, info, orbitText, withdrawHome, random);

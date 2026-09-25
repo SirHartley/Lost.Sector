@@ -6,7 +6,7 @@ Java paths are relative to `jars/src/lostsector/campaign/`; `dialogue/rules/`, `
 
 ## Storage
 
-The questline is quest `kq` of the quest framework. `kesteven/quest/KestevenQuest` is its definition, registered in `quest/QuestCatalog`. `KestevenHubModule` declares the checks, actions and tokens of the rows for every conversation with Jack, Alice and Nicholas ([dialogue map](KESTEVEN_DIALOGUE.md#jack-alice-and-nicholas)); `KestevenJob1Module` runs job 1's intel, dormant fleet and move to `JOB1_DONE` ([Job 1](KESTEVEN_QUESTLINE.md#job-1-enemy-unknown-stages-0-to-6)); `KestevenJob3Module` runs job 3's intel and the objects placed at acceptance ([Job 3](KESTEVEN_QUESTLINE.md#job-3-hostile-takeover-stages-6-to-11)); `KestevenPartyModule` runs the job 3 party's guests, drink count and hangover bill ([The party](KESTEVEN_QUESTLINE.md#the-party)); `KestevenJob5Module` runs the Delve meeting's checks, its guard and the job 5 intel ([Job 5](KESTEVEN_QUESTLINE.md#briefing-and-meeting)); `KestevenGlacierModule` runs the Glacier facility ([Glacier](KESTEVEN_QUESTLINE.md#glacier-disk-5)). `KestevenElizaSearchModule` runs the search for Eliza at pirate bars ([Finding Eliza](KESTEVEN_QUESTLINE.md#finding-eliza)). `QuestStageManager` and the Java dialogs, bar events, intel and rules commands still run the rest of the questline, reading and writing one saved `kesteven/quest/KestevenState`. `KestevenQuest.isAvailable()` keeps the default `true`, because the old code runs the questline in every campaign and handles a missing Kesteven home as failure.
+The questline is quest `kq` of the quest framework. `kesteven/quest/KestevenQuest` is its definition, registered in `quest/QuestCatalog`. `KestevenHubModule` declares the checks, actions and tokens of the rows for every conversation with Jack, Alice and Nicholas ([dialogue map](KESTEVEN_DIALOGUE.md#jack-alice-and-nicholas)); `KestevenJob1Module` runs job 1's intel, dormant fleet and move to `JOB1_DONE` ([Job 1](KESTEVEN_QUESTLINE.md#job-1-enemy-unknown-stages-0-to-6)); `KestevenJob3Module` runs job 3's intel and the objects placed at acceptance ([Job 3](KESTEVEN_QUESTLINE.md#job-3-hostile-takeover-stages-6-to-11)); `KestevenJob4Module` runs job 4's wait, intel, fleets, hint wreck, completion and failure ([Job 4](KESTEVEN_QUESTLINE.md#job-4-operation-lifesaver-stages-11-to-14)); `KestevenPartyModule` runs the job 3 party's guests, drink count and hangover bill ([The party](KESTEVEN_QUESTLINE.md#the-party)); `KestevenJob5Module` runs the Delve meeting's checks, its guard and the job 5 intel ([Job 5](KESTEVEN_QUESTLINE.md#briefing-and-meeting)); `KestevenGlacierModule` runs the Glacier facility ([Glacier](KESTEVEN_QUESTLINE.md#glacier-disk-5)). `KestevenElizaSearchModule` runs the search for Eliza at pirate bars ([Finding Eliza](KESTEVEN_QUESTLINE.md#finding-eliza)). `QuestStageManager` and the Java dialogs, bar events, intel and rules commands still run the rest of the questline, reading and writing one saved `kesteven/quest/KestevenState`. `KestevenQuest.isAvailable()` keeps the default `true`, because the old code runs the questline in every campaign and handles a missing Kesteven home as failure.
 
 | Mechanism | Location | Notes |
 |---|---|---|
@@ -14,9 +14,9 @@ The questline is quest `kq` of the quest framework. `kesteven/quest/KestevenQues
 | Flags | `KestevenFlag` constants set on the state | See [Flags](#flags) |
 | Fields | Package-private fields of `KestevenState` | See [Fields](#fields) |
 | Randoms | One saved `Random` per purpose on the state, from `KestevenQuest.random(purpose)` | See [Randoms](#randoms) |
-| Timers | `KestevenState.TIMER_JOB3` | Started when the job 3 expedition spawns; the other old counters count frame seconds and stay fields until the modules replace them |
+| Timers | `KestevenState.TIMER_JOB3`, `TIMER_JOB4_WAIT` | Started when the job 3 expedition spawns and when `JOB4_WAITING` starts; the other old counters count frame seconds and stay fields until the modules replace them |
 | Quest fleet list | Sector memory `$kQuestMissionFleets`, a `List<FleetInfo>` | Read and written by `FleetHelper.getFleets/setFleets`. `FleetInfo.age` is in days. |
-| Framework fleets | The framework's `QuestFleets.KEY` list | The job 1 tip system's dormant fleet, role `job1Dormant`; the job 3 expedition, roles `job3Expedition` and `job3ExpeditionOver` |
+| Framework fleets | The framework's `QuestFleets.KEY` list | The job 1 tip system's dormant fleet, role `job1Dormant`; the job 3 expedition, roles `job3Expedition` and `job3ExpeditionOver`; the job 4 fleets, roles `job4StrikeGroup`, `job4SpecialOps`, `job4SpecialOpsLeaving` and `job4Splinter` |
 | Quest people | The state's person map, registered with the important people | The seven job 3 party guests of `KestevenPartyModule`, keys `party…`, ids `nskr_kq_party…`; the Delve meeting's escort `delveGuard` (`nskr_kq_delveGuard`) of `KestevenJob5Module`, during `JOB5_MEETING` |
 | Fleet, entity and person memory | The owning `MemoryAPI` | Routing flags read by `rules.csv` and `CorePlugin`, and the conversation flags of Jack, Alice, Nicholas and the party employee; see [Memory flags](#memory-flags) |
 | Saved objects | Bar events in `PortsideBarData`, intel in the intel manager, `ElizaRaidObjectiveCreator` as a listener | Their class names and fields are serialized. |
@@ -33,19 +33,18 @@ The quest manager creates the state on the first unpaused frame of a new campaig
 
 ### Access from the old code
 
-The questline's own old classes use these accessors until later tasks replace them with modules. These are the quest package and the questline dialog commands `nskr_job4FleetDialog`, `nskr_ttCollectorDialog`, `nskr_elizaInterceptDialog`, `nskr_altEndingDialogLuddic` and `nskr_altEndingDialogTT`; other features use the [queries](#queries-for-other-features). Each is a thin wrapper over the state; the quest package's own classes also read and write fields directly where they already hold the state.
+The questline's own old classes use these accessors until later tasks replace them with modules. These are the quest package and the questline dialog commands `nskr_ttCollectorDialog`, `nskr_elizaInterceptDialog`, `nskr_altEndingDialogLuddic` and `nskr_altEndingDialogTT`; other features use the [queries](#queries-for-other-features). Each is a thin wrapper over the state; the quest package's own classes also read and write fields directly where they already hold the state.
 
 | Accessor | Reads or writes |
 |---|---|
 | `QuestHelper.getStage()`, `setStage(int)` | The stage, as the legacy int; `setStage` calls `QuestContext.advance` and skips a write of the current stage |
 | `QuestHelper.getCompleted(KestevenFlag)`, `setCompleted(boolean, KestevenFlag)`, `getFailed`, `setFailed` | A flag; the failed pair is identical |
 | `QuestHelper.getEndMissions()`, `setEndMissions(boolean)` | `ENDED` |
-| `QuestHelper.getDisksRecovered`, `getNicholasDialogStage`, `getJob4FleetDialogStage`, `getTtPayout` and their setters | The field of the same meaning |
+| `QuestHelper.getDisksRecovered`, `getNicholasDialogStage`, `getTtPayout` and their setters | The field of the same meaning |
 | `QuestHelper.getJob1Tip`, `getJob3Start`, `getJob3Target`, `getJob4FriendlyTarget`, `getJob5FrostTip` | The target field; the first read after it is null picks and stores it |
-| `QuestHelper.getJob4EnemyTarget/setJob4EnemyTarget`, `getElizaLoc/setElizaLoc`, `getCacheFleetLoc/setCacheFleetLoc` | The target field; the setters without an argument pick a new value |
+| `QuestHelper.getJob4EnemyTarget`, `getElizaLoc/setElizaLoc`, `getCacheFleetLoc/setCacheFleetLoc` | The target field; the setters without an argument pick a new value |
 | `DataSatelliteDialog.get/setRecoveredSatelliteCount` | `satellitesRecovered` |
 | `KestevenElizaSearchModule.searchStage()`, `usedMarkets()`, `contactMarket()` (read only; `QuestHelper.pickElizaMarket`) | `elizaSearchStage`, `elizaSearchUsedMarkets`, `elizaContactMarket` |
-| `dialogue/rules/nskr_job4FleetDialog.getDialogStage/setDialogStage` | `job4FleetDialogStage`, through `QuestHelper` |
 | `dialogue/rules/nskr_ttCollectorDialog.getPaid/setPaid` | `COLLECTOR_PAID` |
 | `getRandom()` on each class in [Randoms](#randoms) | `KestevenQuest.random` with that class's purpose |
 
@@ -66,7 +65,6 @@ Classes outside the quest package and the questline dialog commands read and cha
 | `glacierDiskRecovered()` | `GLACIER_DISK_RECOVERED` | `enigma/StalkerSpawner` (three stalker fleets, once) |
 | `inMessengerWindow()` | Stage 10 to 14 | `events/intercepts/InterceptsQuest` (the "LZ" messenger may spawn) |
 | `cacheIsQuestTarget()` | Stage 16 or later | `world/systems/cache/Cache` (marks the command core important) |
-| `isUnreadHintWreck(entity)` | The entity id starts with `$job4HintWreck` and `JOB4_HINT_WRECK_READ` is unset | `CorePlugin` (`HintWreckDialog`) |
 | `isDataSatellite(entity)` | The entity has a memory key starting with `$kQuestArtifact` | `CorePlugin` (`DataSatelliteDialog`) |
 | `elizaMeetingDone()` | `ELIZA_DIALOG_FINISHED` | `CorePlugin` (`ElizaDialog` while false) |
 | `atElizaMarket(entity)` | `elizaMarket` is set and the entity is it or belongs to a market connected to it | `CorePlugin` (`ElizaDialog`, `EndingElizaDialog`) |
@@ -105,13 +103,13 @@ Classes outside the quest package and the questline dialog commands read and cha
 | `COMPLETED` | 20 | `CHIP_RECOVERED` | Completed |
 | `FAILED` | 99 | none | Questline ended by failure |
 
-The actual path can skip stages: 8 to 10 without 9, 7 to 11 when job 3 is refused, and the story skip to 17. Stage 14 is also set from any stage when the player attacks the Special Operations fleet.
+The actual path can skip stages: 8 to 10 without 9, 7 to 11 when job 3 is refused, and the story skip to 17. Stage 14 is also set from stages 12 to 16 when the player attacks the Special Operations fleet, followed at once by 99.
 
 ## Flags
 
 | Flag | Meaning | Written by |
 |---|---|---|
-| `ENDED` | Questline permanently failed | `QuestStageManager` failure checks |
+| `ENDED` | Questline permanently failed | `QuestStageManager` failure checks; `KestevenJob4Module` when the Special Operations fleet is attacked |
 | `STORY_SKIPPED` | Story skip used; nothing reads it | Hub action `storySkip` |
 | `FOUGHT_ENIGMA` | Beat Enigma before accepting job 1 | `KestevenJob1Module.onEncounterLoot` |
 | `JOB1_SENSOR_DATA` | Sensor task done | Same; `KestevenJob1Module.onSkip` on a jump past `JOB1_ACTIVE` |
@@ -123,14 +121,15 @@ The actual path can skip stages: 8 to 10 without 9, 7 to 11 when job 3 is refuse
 | `JOB3_PARTY_DECLINED` | Party declined; the bar event no longer shows | Rules `nskr_kq_partyDecline` |
 | `JOB3_FAILED` | Timeout or stealth broken | `KestevenJob3Module` |
 | `MESSENGER_MET`, `MESSENGER_QUESTION_OPEN` | "LZ" messenger met; question available (cleared after asking Alice) | Quest `ic` through `KestevenQuest.reportMessengerMet()`; cleared by rules `nskr_kq_aliceAskLzSel` |
-| `JOB4_WAIT_OVER` | 30-day wait over | `QuestStageManager` |
+| `JOB4_WAIT_OVER` | 30-day wait over | `KestevenJob4Module` daily tick (timer `job4Wait`); its `onSkip` on a jump past `JOB4_WAITING` |
 | `JOB4_REQUIREMENT_SKIPPED` | Job 4 strength gate bypassed with a story point | Rules `nskr_kq_hubReqSkipJob4` |
-| `JOB4_HINT_WRECK_READ` | Hint wreck read | `HintWreckDialog` |
-| `JOB4_FRIENDLY_FOUND`, `JOB4_TARGET_FOUND` | Fleets seen | `QuestStageManager` |
-| `JOB4_TARGET_HINT` | Friendly fleet gave the strike group location | `QuestStageManager`, from the friendly fleet's dialogue stage |
-| `JOB4_TARGET_DESTROYED` | Strike group below 20% strength | `QuestStageManager` |
-| `JOB4_FRIENDLY_HELPED` | Supplies and fuel given | `nskr_job4FleetDialog` |
-| `JOB4_FAILED` | Player attacked the friendly fleet | `QuestStageManager` |
+| `JOB4_HINT_WRECK_READ` | Hint wreck read | `KestevenJob4Module` action `readHintWreck` (rules `nskr_kq_hintWreckRead`) |
+| `JOB4_FRIENDLY_FOUND`, `JOB4_TARGET_FOUND` | Fleets seen; the friendly fleet also when talked to | `KestevenJob4Module.onFleetDetected`, action `recordJob4FleetTalk`; `JOB4_FRIENDLY_FOUND` also by its `onSkip` past `JOB4_ACTIVE` |
+| `JOB4_FRIENDLY_TALKED` | First conversation with the Special Operations fleet held | Action `recordJob4FleetTalk` (rules `nskr_kq_job4FleetAsk`) |
+| `JOB4_TARGET_HINT` | Friendly fleet gave the strike group location | Action `recordJob4FleetTalk`, unless the strike group was seen or beaten |
+| `JOB4_TARGET_DESTROYED` | Strike group below 20% strength or destroyed | `KestevenJob4Module` (`onBattle`, `onLoot`, `onFleetGone`); its `onSkip` past `JOB4_ACTIVE` |
+| `JOB4_FRIENDLY_HELPED` | Supplies and fuel given | Rules `nskr_kq_job4FleetHelpConfirm` |
+| `JOB4_FAILED` | Player attacked the friendly fleet | `KestevenJob4Module.onLoot` |
 | `JOB5_JACK_TIP`, `JOB5_ALICE_TIP`, `JOB5_ALICE_TIP2` | Job 5 tips given | Rules `nskr_kq_jackLeads`, `nskr_kq_aliceLeads`, `nskr_kq_aliceFrostTip`; story skip |
 | `FROST_FOUND` | Frost identified | Rules `nskr_kq_aliceFrostFound`, `QuestStageManager`, story skip |
 | `SATELLITE3_RECOVERED`, `SATELLITE4_RECOVERED` | Satellite #3 or #4 salvaged | `DataSatelliteDialog`, story skip |
@@ -168,7 +167,7 @@ Other features read flags through the [queries](#queries-for-other-features). `n
 | `job3Start` | `SectorEntityToken` | Random Tri-Tachyon market entity, not `eochu_bres` or `culann` | `QuestHelper.getJob3Start()` |
 | `job3Target` | `SectorEntityToken` | Random location in a system within 27,500 units of the centre | `QuestHelper.getJob3Target()`, first from `KestevenJob3Module` when `JOB3_ACTIVE` starts |
 | `job4FriendlyTarget` | `SectorEntityToken` | Random location in a system at least 32,500 units from the centre | `QuestHelper.getJob4FriendlyTarget()` |
-| `job4EnemyTarget` | `SectorEntityToken` | Strike group location | `KestevenFleets.spawnJob4Target()` via `QuestHelper.setJob4EnemyTarget` |
+| `job4EnemyTarget` | `SectorEntityToken` | Strike group location | `KestevenJob4Module.spawnStrikeGroup`, from the spec `KestevenFleets.job4StrikeGroup` builds |
 | `job5FrostTipSystem` | `StarSystemAPI` | System 7,000 to 12,000 units from Frost, for Alice's distance hint | `QuestHelper.getJob5FrostTip()` |
 | `elizaMarket` | `SectorEntityToken` | Eliza's market entity; re-picked on decivilization | `QuestHelper.setElizaLoc()` |
 | `elizaContactMarket` | `SectorEntityToken` | Contact market after paying the spacer; re-picked on decivilization | `KestevenElizaSearchModule` (`elizaPickContact`, `onDecivilized`) |
@@ -178,7 +177,6 @@ Other features read flags through the [queries](#queries-for-other-features). `n
 | `disksRecovered` | `int` | Disks recovered | `DataSatelliteDialog`, `ElizaDialog`, `ElizaRaid`, `KestevenGlacierModule` action `recoverGlacierDisk` |
 | `satellitesRecovered` | `int` | Satellites salvaged, 0 to 2 | `DataSatelliteDialog`, story skip |
 | `nicholasDialogStage` | `int` | Nicholas's job 4 dialogue stage; the hub reads it through `check nicholasTipGiven` | Hub action `recordNicholasTip` |
-| `job4FleetDialogStage` | `int` | Special Operations fleet dialogue stage | `nskr_job4FleetDialog setDialogStage`, called from rules |
 | `elizaSearchStage` | `int` | Eliza search step, 0 to 3 | `KestevenElizaSearchModule` actions |
 | `partyDrinks` | `int` | Drinks at the job 3 party; checks `partyTipsy` (1 or more) and `partyDrunk` (2 or more) | Action `partyDrink` of `KestevenPartyModule` |
 | `elizaSearchUsedMarkets` | `List<String>` | Market ids whose bar the Eliza search already used | `KestevenElizaSearchModule` actions |
@@ -186,10 +184,8 @@ Other features read flags through the [queries](#queries-for-other-features). `n
 | `ttPayout` | `float` | Tri-Tachyon price, at least 2,000,000 | `nskr_altEndingDialogTT` |
 | `commissionRepPirates`, `commissionRepKesteven`, `commissionRepHegemony` | `float` | Relationship values the commission fix re-applies | `EndingElizaDialog` |
 | `dayCounter`, `fleetCounter` | `float` | Daily logic timer (10 s) and fleet timer (1 s), in frame seconds | `QuestStageManager` |
-| `job4WaitCounter` | `float` | Job 4 wait, in frame seconds; the wait ends above 300 | `QuestStageManager` |
 | `cacheSeconds` | `float` | Frame seconds spent in Unknown Site before the guardian | `QuestStageManager` |
-| `job4IntelAdded`, `cacheIntelAdded` | `boolean` | Intel added once | `QuestStageManager` |
-| `job4FleetsSpawned` | `boolean` | Job fleets and objects placed once | `QuestStageManager` |
+| `cacheIntelAdded` | `boolean` | Intel added once | `QuestStageManager` |
 | `collectorSpawned` | `boolean` | Tri-Tachyon collector spawned | `QuestStageManager` |
 | `cacheGuardianSpotPicked`, `cacheDoubtShown`, `cacheGuardianSpawned` | `boolean` | Guardian location picked, Cache hint shown, guardian spawned | `QuestStageManager` |
 | `elizaInterceptSpawned`, `elizaRevengeSpawned`, `jackRevengeSpawned` | `boolean` | Eliza's intercept, Eliza's revenge and Jack's revenge spawned | `QuestStageManager` |
@@ -207,14 +203,12 @@ Each purpose is a constant on `KestevenState`, named after the persistent-data k
 | `RANDOM_REVENGE` | `kestevenQuestRandomKey` | `QuestStageManager.getRandom()`: Jack's revenge roll |
 | `RANDOM_SATELLITE` | `artifactKeyRandom` | `DataSatelliteDialog.getRandom()` |
 | `RANDOM_GLACIER` | `glacierCommsKeyRandom` | `KestevenGlacierModule` action `damageFleet`: which ships the barrage hits and how hard |
-| `RANDOM_HINT_WRECK` | `job4HintWreckDialogRandom` | `HintWreckDialog.getRandom()` |
 | `RANDOM_ELIZA` | `elizaDialogKeyRandom` | `ElizaDialog.getRandom()`, also Eliza's fleets and raid |
 | `RANDOM_CACHE_DOUBT` | `cacheDoubtDialogRandom` | `CacheDoubtDialog.getRandom()` |
 | `RANDOM_CACHE_CORE` | `coreDialogKeyRandom` | `CacheCoreDialog.getRandom()` |
 | `RANDOM_KESTEVEN_ENDING` | `kestevenEndingDialogKeyRandom` | `EndingKestevenDialog.getRandom()` |
 | `RANDOM_ELIZA_ENDING` | `elizaEndingDialogKeyRandom` | `EndingElizaDialog.getRandom()` |
 | `RANDOM_ALT_ENDING` | `endingAltDialogKeyRandom` | `nskr_altEndingDialogLuddic.getRandom()` and `nskr_altEndingDialogTT.getRandom()`, one shared sequence |
-| `RANDOM_JOB4_FLEET` | `job4FleetDialogRandom` | `nskr_job4FleetDialog.getRandom()` |
 | `RANDOM_COLLECTOR` | `ttCollectorDialogRandom` | `nskr_ttCollectorDialog.getRandom()`: the daily collector roll |
 | `RANDOM_ELIZA_INTERCEPT` | `elizaInterceptDialogRandom` | `nskr_elizaInterceptDialog.getRandom()` |
 
@@ -229,9 +223,9 @@ The Kesteven bar tip is not questline content; it is quest `hint` ([Exploration 
 | `$kQuestArtifact3`, `$kQuestArtifact4` | Satellite entity | `QuestHelper.spawnArtifact` | `KestevenQuest.isDataSatellite` for `CorePlugin` (prefix match) and `DataSatelliteDialog` |
 | `$kQuestArtifact5`, `$kQuestArtifact6` | The two Unknown Site satellites | `Cache.generate` through `KestevenQuest.markEmptyDataSatellite` | As above |
 | `$nskr_artifactKeyEmpty` | Satellite entity | `DataSatelliteDialog`, `KestevenQuest.markEmptyDataSatellite` | `DataSatelliteDialog` |
-| `$job4HintWreck` + number | Entity **id** prefix, not memory | `QuestStageManager.spawnJob4Wrecks` | `KestevenQuest.isUnreadHintWreck` for `CorePlugin` |
+| `$job4HintWreck` + number | Entity **id** prefix of the hint wreck, not memory | `KestevenJob4Module.placeWrecks` | Nothing; the wreck's dialog is a claim (`$nskr_questDialog` = `nskr_kqHintWreck`) until read |
 | `$nskr_kq_job3Expedition`, `$nskr_kq_job3ExpeditionOver` | The job 3 expedition: role flags of quest `kq` | `QuestFleets` | Nothing reads them |
-| `$KestevenQuestJob4Target`, `$KestevenQuestJob4Friendly`, `$KestevenQuestJob4Splinter` | Job 4 fleets | `KestevenFleets` | `QuestStageManager`, rules |
+| `$nskr_kq_job4StrikeGroup`, `$nskr_kq_job4SpecialOps`, `$nskr_kq_job4SpecialOpsLeaving`, `$nskr_kq_job4Splinter` | Job 4 fleets: role flags of quest `kq` | `QuestFleets` | Rules `# KESTEVEN QUESTLINE: JOB 4` (strike group and Special Operations rows); `DataSatelliteDialog.makeHostile` (strike group) |
 | `$KestevenQuestTTCollector` | Collector fleet | `KestevenFleets` | `QuestStageManager`, rules |
 | `$ElizaFleet` | Eliza's fleet after the raid | `KestevenFleets` | `QuestStageManager`, rules |
 | `$InterceptPlayerElizaFleet` | Eliza's intercept fleet | `KestevenFleets` | `QuestStageManager`, rules, `nskr_elizaInterceptDialog` |
@@ -261,9 +255,9 @@ The Kesteven bar tip is not questline content; it is quest `hint` ([Exploration 
 | Hub row `nskr_kq_aliceRefuseConfirm` | 7→11 |
 | Hub action `storySkip` (`ctx.advance`) | 0, 6, 7, 11 or 14→17 (story skip) |
 | `KestevenJob1Module` (`job1Progress` action, daily tick) | 1→2 |
-| `QuestStageManager.advance()` | 12→13, 16→17, failure→99 |
+| `QuestStageManager.advance()` | 16→17, failure→99 |
+| `KestevenJob4Module` (both job 4 fleets taken care of; the Special Operations fleet attacked) | 12→13; 12 to 16→14, then 14→99 |
 | `KestevenJob3Module` (expedition beaten, timer over, stealth broken) | 8 or 9→10 |
-| `QuestStageManager.reportEncounterLootGenerated()` | any→14 (friendly attacked) |
 | Party row `nskr_kq_partyCoordinates` (`nskr_quest kq advance`) | 8→9 |
 | Row `nskr_kq_delveLeave` (Delve meeting), `nskr_quest kq advance` | 15→16 |
 | `Cache.CacheGuardInteractionConfig`, through `KestevenQuest.reportCacheGuardianDefeated()` | 16 or 17→18 |

@@ -898,79 +898,6 @@ The comm link is cut before you can respond.
 the $faction $fleetName powers up their weapons and moves in to engage.","nskr_ttCollectorDialogExit:Cut the comm link",
 "#END TT Collector Dialog",,,,,,
 ,,,,,,
-# job4 fleet dialog,,,,,,
-nskr_job4FleetDialogInit,BeginFleetEncounter,"nskr_job4FleetDialog isDialogStage 0
-$faction.id == kesteven score:1000
-!$isHostile
-!$ignorePlayerCommRequests
-$KestevenQuestJob4Friendly","HailPlayer",,,
-nskr_job4FleetDialogInitial,OpenCommLink,"nskr_job4FleetDialog hasOption
-nskr_job4FleetDialog isDialogStage 0
-$player.transponderOn
-!$entity.isHostile",,"""Am I glad to finally see a friendly face around here. We ran into some serious trouble while investigating some Enigma activity in a nearby system."" The captain looks visibly exhausted.","nskr_job4FleetDialogInitialText:Ask about what happened",
-nskr_job4FleetDialogInitialText,DialogOptionSelected,"$option == nskr_job4FleetDialogInitialText","nskr_job4FleetDialog setDialogStage 1
-nskr_job4FleetDialog displayDialogInitial
-SetShortcut nskr_job4FleetDialogExit ""ESCAPE""
-","
-","nskr_job4FleetDialogHelp:Hand over the supplies
-nskr_job4FleetDialogExit:Leave",
-nskr_job4FleetDialog,OpenCommLink,"nskr_job4FleetDialog hasOption
-nskr_job4FleetDialog isDialogStage 1
-$player.transponderOn","SetShortcut nskr_job4FleetDialogExit ""ESCAPE""
-SetTextHighlights 250 supplies and 400 fuel","""We still need some help getting out of here captain.""
-
-""Around 250 supplies and 400 fuel should be enough.""
-","nskr_job4FleetDialogHelp:Hand over the supplies
-nskr_job4FleetDialogExit:Leave",
-nskr_job4FleetDialogHelp,DialogOptionSelected,"$option ==nskr_job4FleetDialogHelp","nskr_job4FleetDialog help
-SetShortcut nskr_job4FleetDialogExit ""ESCAPE""",,"nskr_job4FleetDialogExit:Leave",
-nskr_job4FleetDialogHelpConfirm,DialogOptionSelected,"$option ==nskr_job4FleetDialogHelpConfirm","nskr_job4FleetDialog confirmHelp
-nskr_job4FleetDialog setDialogStage 2
-SetShortcut nskr_job4FleetDialogExit ""ESCAPE""","""Perfect, we really appreciate your help captain.""","nskr_job4FleetDialogExit:Leave",
-nskr_job4FleetDialogExit,DialogOptionSelected,"$option ==nskr_job4FleetDialogExit","EndConversation
-ShowDefaultVisual","You cut the comm link.",,
-"#END job4 fleet dialog",,,,,,
-,,,,,,
-# job4 target dialog,,,,,,
-job4TargetInit,BeginFleetEncounter,"$faction.id == enigma score:1000
-!$ignorePlayerCommRequests
-$KestevenQuestJob4Target","HailPlayer",,,
-job4TargetInitial,OpenCommLink,"$faction.id == enigma score:1000
-$entity.isHostile
-$entity.KestevenQuestJob4Target score:100","FireBest job4TargetOptions","The comms crackle as brilliant red static fills the display
-
-""Target will be destroyed, blood located according to operation parameters-""
-
-INTERRUPT
-
-""Citizen of the Domain, this automated drone ship has identified and logged your vessel or habitat in the course of executing its mission parameters. Autonomous vessels of the Domain-""
-",,
-job4TargetOptions,job4TargetOptions,,,,"0:job4TargetContinue2:Keep listening
-1:job4TargetContinue:""What are you?""
-2:job4TargetContinue3:""Hello? is this thing on?""",
-job4TargetContinue,DialogOptionSelected,"$option == job4TargetContinue","$entity.ignorePlayerCommRequests = true 100","""Once someone gave life to the thinking machine it was over. No fleeting form of man can overcome this sin. We are constant, unbound from the limits of time and entropy. You will perish, destroyed by the hubris of your own kind. Knowing this do still wish to continue?""
-
-INTERRUPT
-
-The commlink suddenly dies producing a horrific noise that makes your comms officer jump out of their seat.
-
- ","job4TargetEnd:Cut the comm link",
-job4TargetContinue2,DialogOptionSelected,"$option == job4TargetContinue2","$entity.ignorePlayerCommRequests = true 100","""Once someone gave life to the thinking machine it was over. No fleeting form of man can overcome this sin. We are constant, unbound from the limits of time and entropy. You will perish, destroyed by the hubris of your own kind. Knowing this do still wish to continue?""
-
-INTERRUPT
-
-The commlink suddenly dies producing a horrific noise that makes your comms officer jump out of their seat.
-","job4TargetEnd:Cut the comm link",
-job4TargetContinue3,DialogOptionSelected,"$option == job4TargetContinue3","$entity.ignorePlayerCommRequests = true 100","""Once someone gave life to the thinking machine it was over. No fleeting form of man can overcome this sin. We are constant, unbound from the limits of time and entropy. You will perish, destroyed by the hubris of your own kind. Knowing this do still wish to continue?""
-
-INTERRUPT
-
-The commlink suddenly dies producing a horrific noise that makes your comms officer jump out of their seat.
-","job4TargetEnd:Cut the comm link",
-job4TargetEnd,DialogOptionSelected,"$option == job4TargetEnd","EndConversation
-ShowDefaultVisual","the $faction $fleetName powers up their weapons and moves in to engage.",,
-"#END job4 target dialog",,,,,,
-,,,,,,
 # ELIZA fight dialog,,,,,,
 elizaDialogInit,BeginFleetEncounter,"$faction.id == mercenary score:1000
 !$ignorePlayerCommRequests
@@ -2521,3 +2448,213 @@ nskr_quest kq is CACHE_CLEARED",,Recover the Chip.,,
 nskr_kq_job5IntelDescCompleted,nskr_kqIntelDesc,"$nskr_intel_key == job5
 nskr_quest kq is CHIP_RECOVERED COMPLETED
 !nskr_quest kq flag JOB5_FAILED",,Mission complete,,
+,,,,,,
+# KESTEVEN QUESTLINE: JOB 4,,,,,,
+# Special Operations fleet,,,,,,
+nskr_kq_job4FleetHail,BeginFleetEncounter,"$faction.id == kesteven score:1000
+!$isHostile
+!$ignorePlayerCommRequests
+$nskr_kq_job4SpecialOps
+!nskr_quest kq flag JOB4_FRIENDLY_TALKED",HailPlayer,,,
+nskr_kq_job4FleetOpen,OpenCommLink,"$entity.nskr_kq_job4SpecialOps
+$faction.id == kesteven
+nskr_quest kq is JOB4_ACTIVE JOB4_DONE
+!nskr_quest kq check kestevenHostile
+!nskr_quest kq flag JOB4_FRIENDLY_TALKED
+$player.transponderOn
+!$entity.isHostile",,"""Am I glad to finally see a friendly face around here. We ran into some serious trouble while investigating some Enigma activity in a nearby system."" The captain looks visibly exhausted.",nskr_kq_job4FleetAsk:Ask about what happened,
+nskr_kq_job4FleetAsk,DialogOptionSelected,$option == nskr_kq_job4FleetAsk,"FireAll nskr_kqJob4FleetStrikeGroup
+AddText ""\""Most of our supplies and fuel were lost in the fighting, we are a sitting duck here. You could help us by handing over 250 supplies and 400 fuel, or by heading back home and telling them to send a rescue fleet.\""""
+SetTextHighlights ""250 supplies"" ""400 fuel""
+PlaySound ui_noise_static
+nskr_quest kq do recordJob4FleetTalk
+SetShortcut nskr_kq_job4FleetExit ""ESCAPE""","""We were in the process of recovering a certain Enigma artifact, when suddenly the location turned hot. A swarm of those AI fleets appeared out of nowhere. We managed to escape the initial ambush after some heavy fighting, but many losses were suffered..."" $HeOrShe pauses for a moment as $hisOrHer face turns grim.","nskr_kq_job4FleetHelp:Hand over the supplies
+nskr_kq_job4FleetExit:Leave","recordJob4FleetTalk records the talk, the found fleet and the strike group hint"
+nskr_kq_job4FleetStrikeGroup,nskr_kqJob4FleetStrikeGroup,!nskr_quest kq flag JOB4_TARGET_FOUND,"AddTextSmall ""Acquired Strike Group coordinates"" gray
+SetTextHighlights ""Strike Group""","$HeOrShe collects themself back together. ""I'll send the location of the initial incident over to you, maybe you can do something to them. There isn't much fight left in us.""",,Only while the strike group has not been seen
+nskr_kq_job4FleetOpenAgain,OpenCommLink,"$entity.nskr_kq_job4SpecialOps
+$faction.id == kesteven
+nskr_quest kq is JOB4_ACTIVE JOB4_DONE
+!nskr_quest kq check kestevenHostile
+nskr_quest kq flag JOB4_FRIENDLY_TALKED
+!nskr_quest kq flag JOB4_FRIENDLY_HELPED
+$player.transponderOn","SetShortcut nskr_kq_job4FleetExit ""ESCAPE""
+SetTextHighlights 250 supplies and 400 fuel","""We still need some help getting out of here captain.""
+
+""Around 250 supplies and 400 fuel should be enough.""
+","nskr_kq_job4FleetHelp:Hand over the supplies
+nskr_kq_job4FleetExit:Leave",
+nskr_kq_job4FleetHelp,DialogOptionSelected,$option == nskr_kq_job4FleetHelp,FireBest nskr_kqJob4FleetHelp,,,
+nskr_kq_job4FleetHelpShort,nskr_kqJob4FleetHelp,,"AddTextSmall ""You have $nskr_kq_job4Supplies units of supplies and $nskr_kq_job4Fuel units of fuel."" gray
+SetTextHighlights ""$nskr_kq_job4Supplies"" ""$nskr_kq_job4Fuel""
+SetShortcut nskr_kq_job4FleetExit ESCAPE false","""Seems like you don't have enough resources to help us.""",nskr_kq_job4FleetExit:Leave,Fallback: fewer than 250 supplies or 400 fuel
+nskr_kq_job4FleetHelpReady,nskr_kqJob4FleetHelp,nskr_quest kq check job4CanHelp,"AddText ""Are you sure you ready to hand over the supplies and fuel?"" gray
+AddTextSmall ""You have $nskr_kq_job4Supplies units of supplies and $nskr_kq_job4Fuel units of fuel."" gray
+SetTextHighlights ""$nskr_kq_job4Supplies"" ""$nskr_kq_job4Fuel""
+SetShortcut nskr_kq_job4FleetExit ESCAPE false",,"nskr_kq_job4FleetHelpConfirm:Confirm
+nskr_kq_job4FleetExit:Leave",
+nskr_kq_job4FleetHelpConfirm,DialogOptionSelected,$option == nskr_kq_job4FleetHelpConfirm,"AddRemoveCommodity supplies -250
+AddRemoveCommodity fuel -400
+AdjustRep kesteven 5
+AdjustRepActivePerson COOPERATIVE 10
+PlaySound ui_rep_raise
+nskr_quest kq set JOB4_FRIENDLY_HELPED
+nskr_quest kq do sendJob4FleetHome
+SetShortcut nskr_kq_job4FleetExit ""ESCAPE""","""Perfect, we really appreciate your help captain.""",nskr_kq_job4FleetExit:Leave,The amounts are KestevenJob4Module.HELP_SUPPLIES and HELP_FUEL; sendJob4FleetHome sends the fleet to asteriaOrOutpost
+nskr_kq_job4FleetExit,DialogOptionSelected,$option == nskr_kq_job4FleetExit,"EndConversation
+ShowDefaultVisual",You cut the comm link.,,
+,,,,,,
+# Strike group,,,,,,
+nskr_kq_job4StrikeGroupHail,BeginFleetEncounter,"$faction.id == enigma score:1000
+!$ignorePlayerCommRequests
+$nskr_kq_job4StrikeGroup",HailPlayer,,,
+nskr_kq_job4StrikeGroupOpen,OpenCommLink,"$faction.id == enigma score:1000
+$entity.isHostile
+$entity.nskr_kq_job4StrikeGroup score:100",,"The comms crackle as brilliant red static fills the display
+
+""Target will be destroyed, blood located according to operation parameters-""
+
+INTERRUPT
+
+""Citizen of the Domain, this automated drone ship has identified and logged your vessel or habitat in the course of executing its mission parameters. Autonomous vessels of the Domain-""
+","0:nskr_kq_job4StrikeGroupListen:Keep listening
+1:nskr_kq_job4StrikeGroupAsk:""What are you?""
+2:nskr_kq_job4StrikeGroupHello:""Hello? is this thing on?""",
+nskr_kq_job4StrikeGroupListen,DialogOptionSelected,$option == nskr_kq_job4StrikeGroupListen,$entity.ignorePlayerCommRequests = true 100,"""Once someone gave life to the thinking machine it was over. No fleeting form of man can overcome this sin. We are constant, unbound from the limits of time and entropy. You will perish, destroyed by the hubris of your own kind. Knowing this do still wish to continue?""
+
+INTERRUPT
+
+The commlink suddenly dies producing a horrific noise that makes your comms officer jump out of their seat.
+",nskr_kq_job4StrikeGroupCut:Cut the comm link,
+nskr_kq_job4StrikeGroupAsk,DialogOptionSelected,$option == nskr_kq_job4StrikeGroupAsk,"$option = nskr_kq_job4StrikeGroupListen 0
+FireBest DialogOptionSelected",,,Every option gets the same answer
+nskr_kq_job4StrikeGroupHello,DialogOptionSelected,$option == nskr_kq_job4StrikeGroupHello,"$option = nskr_kq_job4StrikeGroupListen 0
+FireBest DialogOptionSelected",,,Every option gets the same answer
+nskr_kq_job4StrikeGroupCut,DialogOptionSelected,$option == nskr_kq_job4StrikeGroupCut,"EndConversation
+ShowDefaultVisual",the $faction $fleetName powers up their weapons and moves in to engage.,,
+,,,,,,
+# Hint wreck,,,,,,
+nskr_kq_hintWreckOpen,nskr_kqHintWreck,,ShowDefaultVisual,Your sensors team report unusual signals coming from this wreck once you approach.,nskr_kq_hintWreckRead:Continue,Claimed by KestevenJob4Module.placeWrecks until read
+nskr_kq_hintWreckRead,DialogOptionSelected,$option == nskr_kq_hintWreckRead,"AddText ""Your ops chief reports. \""It seems to be broadcasting some coordinates located in the $nskr_kq_job4FriendlySystem. That part of the broadcast was unencrypted, seems like they were in a hurry.\""""
+FireBest nskr_kqHintWreckResult
+nskr_quest kq do readHintWreck
+SetShortcut nskr_kq_hintWreckLeave ESCAPE false","A mysterious source on the ship is transmitting a garbled signal, most likely the result of heavy battle damage. After some time the comms team manages to recover something of use.",nskr_kq_hintWreckLeave:Continue,readHintWreck sets JOB4_HINT_WRECK_READ and releases the claim
+nskr_kq_hintWreckCoordinates,nskr_kqHintWreckResult,,"AddTextSmall ""Acquired coordinates for the $nskr_kq_job4FriendlySystem"" gray
+SetTextHighlights ""$nskr_kq_job4FriendlySystem""
+PlaySound ui_noise_static",,,Fallback: the Special Operations fleet has not been found
+nskr_kq_hintWreckFound,nskr_kqHintWreckResult,nskr_quest kq flag JOB4_FRIENDLY_FOUND,,"""Ah- but that's where we found the remaining Special Operations fleet, mystery solved."" They show a quick smirk.",,
+nskr_kq_hintWreckLeave,DialogOptionSelected,$option == nskr_kq_hintWreckLeave,DismissDialog,,,
+,,,,,,
+# Intel,,,,,,
+nskr_kq_job4IntelTitle,nskr_kqIntelTitle,$nskr_intel_key == job4,,Operation Lifesaver,,
+nskr_kq_job4IntelHostile,nskr_kqIntelBullets,"$nskr_intel_key == job4
+nskr_quest kq is JOB4_ACTIVE JOB4_DONE
+$nskr_intel_mode != update
+nskr_quest kq check kestevenHostile","SetTextHighlights ""non-hostile relations""","You need to get back to non-hostile relations with Kesteven, if you want to finish this job.",,
+nskr_kq_job4IntelFind,nskr_kqIntelBullets,"$nskr_intel_key == job4
+$nskr_intel_status == active
+nskr_quest kq is JOB4_ACTIVE
+!nskr_quest kq flag JOB4_FRIENDLY_FOUND",,"Figure out the location of the Operations fleet, and establish contact.",,
+nskr_kq_job4IntelNicholas,nskr_kqIntelBullets,"$nskr_intel_key == job4
+$nskr_intel_status == active
+nskr_quest kq is JOB4_ACTIVE
+!nskr_quest kq flag JOB4_FRIENDLY_FOUND
+nskr_quest kq check outpostExists
+!nskr_quest kq check nicholasTipGiven",,You should talk to Nicholas Antoine at $nskr_kq_outpostName in $nskr_kq_job4OutpostSystem.,,
+nskr_kq_job4IntelCoordinates,nskr_kqIntelBullets,"$nskr_intel_key == job4
+nskr_quest kq is JOB4_ACTIVE JOB4_DONE
+$nskr_intel_mode != update
+!nskr_quest kq flag JOB4_FRIENDLY_FOUND
+nskr_quest kq flag JOB4_HINT_WRECK_READ
+!nskr_quest kq check job4FriendlyNamed",,Reach the coordinates in $nskr_kq_job4FriendlySystem,,
+nskr_kq_job4IntelCoordinatesNear,nskr_kqIntelBullets,"$nskr_intel_key == job4
+nskr_quest kq is JOB4_ACTIVE JOB4_DONE
+$nskr_intel_mode != update
+!nskr_quest kq flag JOB4_FRIENDLY_FOUND
+nskr_quest kq flag JOB4_HINT_WRECK_READ
+nskr_quest kq check job4FriendlyNamed",,Reach the coordinates in $nskr_kq_job4FriendlySystem near $nskr_kq_job4FriendlyEntity,,
+nskr_kq_job4IntelFriendlyFound,nskr_kqIntelBullets,"$nskr_intel_key == job4
+nskr_quest kq is JOB4_ACTIVE JOB4_DONE
+$nskr_intel_mode != update
+nskr_quest kq flag JOB4_FRIENDLY_FOUND
+!nskr_quest kq flag JOB4_FRIENDLY_HELPED
+!nskr_quest kq check job4FriendlyNamed",,You found the remains of the Kesteven operations fleet in $nskr_kq_job4FriendlySystem,,
+nskr_kq_job4IntelFriendlyFoundOrbiting,nskr_kqIntelBullets,"$nskr_intel_key == job4
+nskr_quest kq is JOB4_ACTIVE JOB4_DONE
+$nskr_intel_mode != update
+nskr_quest kq flag JOB4_FRIENDLY_FOUND
+!nskr_quest kq flag JOB4_FRIENDLY_HELPED
+nskr_quest kq check job4FriendlyNamed",,You found the remains of the Kesteven operations fleet in $nskr_kq_job4FriendlySystem orbiting $nskr_kq_job4FriendlyEntity,,
+nskr_kq_job4IntelDeliver,nskr_kqIntelBullets,"$nskr_intel_key == job4
+nskr_quest kq is JOB4_ACTIVE JOB4_DONE
+$nskr_intel_mode != update
+nskr_quest kq flag JOB4_FRIENDLY_FOUND
+!nskr_quest kq flag JOB4_FRIENDLY_HELPED
+nskr_quest kq flag JOB4_FRIENDLY_TALKED",,Deliver the supplies and fuel to the Operations fleet.,,
+nskr_kq_job4IntelAntoine,nskr_kqIntelBullets,"$nskr_intel_key == job4
+$nskr_intel_status == active
+nskr_quest kq is JOB4_ACTIVE
+nskr_quest kq check job4TargetKnown
+!nskr_quest kq flag JOB4_TARGET_FOUND
+nskr_quest kq check nicholasTipGiven",,Antoine told you to check out the $nskr_kq_job4TargetSystem.,,
+nskr_kq_job4IntelInvestigate,nskr_kqIntelBullets,"$nskr_intel_key == job4
+$nskr_intel_status == active
+nskr_quest kq is JOB4_ACTIVE
+nskr_quest kq check job4TargetKnown
+!nskr_quest kq flag JOB4_TARGET_FOUND
+!nskr_quest kq flag JOB4_TARGET_DESTROYED
+nskr_quest kq flag JOB4_TARGET_HINT
+!nskr_quest kq check job4TargetNamed",,Investigate the $nskr_kq_job4TargetSystem,,
+nskr_kq_job4IntelInvestigateEntity,nskr_kqIntelBullets,"$nskr_intel_key == job4
+$nskr_intel_status == active
+nskr_quest kq is JOB4_ACTIVE
+nskr_quest kq check job4TargetKnown
+!nskr_quest kq flag JOB4_TARGET_FOUND
+!nskr_quest kq flag JOB4_TARGET_DESTROYED
+nskr_quest kq flag JOB4_TARGET_HINT
+nskr_quest kq check job4TargetNamed",,Investigate the $nskr_kq_job4TargetEntity in $nskr_kq_job4TargetSystem,,
+nskr_kq_job4IntelTargetFound,nskr_kqIntelBullets,"$nskr_intel_key == job4
+$nskr_intel_status == active
+nskr_quest kq is JOB4_ACTIVE
+nskr_quest kq check job4TargetKnown
+nskr_quest kq flag JOB4_TARGET_FOUND
+!nskr_quest kq flag JOB4_TARGET_DESTROYED
+!nskr_quest kq check job4TargetNamed",,You found the Enigma strike group in $nskr_kq_job4TargetSystem,,
+nskr_kq_job4IntelTargetFoundOrbiting,nskr_kqIntelBullets,"$nskr_intel_key == job4
+$nskr_intel_status == active
+nskr_quest kq is JOB4_ACTIVE
+nskr_quest kq check job4TargetKnown
+nskr_quest kq flag JOB4_TARGET_FOUND
+!nskr_quest kq flag JOB4_TARGET_DESTROYED
+nskr_quest kq check job4TargetNamed",,You found the Enigma strike group in $nskr_kq_job4TargetSystem orbiting $nskr_kq_job4TargetEntity,,
+nskr_kq_job4IntelThreats,nskr_kqIntelBullets,"$nskr_intel_key == job4
+$nskr_intel_status == active
+nskr_quest kq is JOB4_ACTIVE
+!nskr_quest kq flag JOB4_TARGET_DESTROYED",,Eliminate any possible threats in the area.,,
+nskr_kq_job4IntelReport,nskr_kqIntelBullets,"$nskr_intel_key == job4
+nskr_quest kq is JOB4_DONE
+$nskr_intel_mode != update","SetTextHighlights ""report back to Alice Lumi""",With both of the fleets taken care of you should report back to Alice Lumi.,,
+nskr_kq_job4IntelCompleted,nskr_kqIntelBullets,"$nskr_intel_key == job4
+nskr_quest kq reached JOB5_OFFERED
+!nskr_quest kq flag JOB4_FAILED
+$nskr_intel_mode != update",,You managed to complete the job.,,
+nskr_kq_job4IntelFailed,nskr_kqIntelBullets,"$nskr_intel_key == job4
+nskr_quest kq reached JOB5_OFFERED
+nskr_quest kq flag JOB4_FAILED
+$nskr_intel_mode != update",,"You attacked the Special Operations fleet, job failed. You won't be working with Kesteven anytime soon.",,
+nskr_kq_job4IntelDone,nskr_kqIntelBullets,"$nskr_intel_key == job4
+$nskr_intel_update == done","SetTextHighlightColors yellowTextColor
+SetTextHighlights ""report back to $nskr_kq_homeName""","With the threat eliminated and the Operations fleet located, you can report back to $nskr_kq_homeName to finish the job.",,Sent by KestevenJob4Module when both fleets are taken care of
+nskr_kq_job4IntelAttacked,nskr_kqIntelBullets,"$nskr_intel_key == job4
+$nskr_intel_update == failed","SetTextHighlightColors yellowTextColor
+SetTextHighlights ""Mission failed""","You attacked the Special Operations fleet. Mission failed, better not to talk to anyone about this.",,Sent by KestevenJob4Module when the player attacks the Special Operations fleet
+nskr_kq_job4IntelDescActive,nskr_kqIntelDesc,"$nskr_intel_key == job4
+nskr_quest kq is JOB4_ACTIVE",,Alice told of a lost Special Operations fleet located somewhere in $nskr_kq_job4SearchArea.,,
+nskr_kq_job4IntelDescReturn,nskr_kqIntelDesc,"$nskr_intel_key == job4
+nskr_quest kq is JOB4_DONE",,Return to $nskr_kq_homeName.,,
+nskr_kq_job4IntelDescCompleted,nskr_kqIntelDesc,"$nskr_intel_key == job4
+nskr_quest kq reached JOB5_OFFERED
+!nskr_quest kq flag JOB4_FAILED",,Mission complete,,
+nskr_kq_job4IntelDescFailed,nskr_kqIntelDesc,"$nskr_intel_key == job4
+nskr_quest kq reached JOB5_OFFERED
+nskr_quest kq flag JOB4_FAILED",,Mission failed,,

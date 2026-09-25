@@ -235,9 +235,11 @@ public class KestevenFleets {
         return fleet;
     }
 
-    //fleets for job 4
-    public static CampaignFleetAPI  spawnJob4Splinters(){
-        Random random = KestevenQuest.random(KestevenState.RANDOM_QUEST);
+    // The job 4 builders return the fleets unbuilt; KestevenJob4Module spawns them in the old order and moves each one out
+    // of its star afterwards. Their random is the questline's shared sequence, drawn in the old order.
+
+    // An Enigma "Splinter" patrol in another system of the Special Operations fleet's constellation.
+    static SimpleFleet job4Splinter(Random random) {
         StarSystemAPI target = QuestHelper.getJob4FriendlyTarget().getStarSystem();
         //don't spawn in the same system as the friendly fleet
         StarSystemAPI origin = QuestHelper.getRandomSystemWithinConstellation(QuestHelper.getJob4FriendlyTarget().getConstellation(), target, 1, random);
@@ -251,38 +253,22 @@ public class KestevenFleets {
         ArrayList<String> keys = new ArrayList<>();
         //aggro
         keys.add(MemFlags.MEMORY_KEY_SAW_PLAYER_WITH_TRANSPONDER_ON);
-        keys.add(QuestStageManager.JOB4_SPLINTER_KEY);
 
         SimpleFleet simpleFleet = new SimpleFleet(loc, "enigma", combatPoints, keys, random);
         simpleFleet.aiFleetProperties = true;
         simpleFleet.name = "Splinter"+" "+ StringHelper.getRandomGreekLetter(random, true);
         simpleFleet.assignment = FleetAssignment.PATROL_SYSTEM;
         simpleFleet.assignmentText = "seeking";
-        CampaignFleetAPI fleet = simpleFleet.create();
-
-        //makes sure we are not in a star
-        SystemHelper.spawnAwayFromStarFixer(fleet);
-
-        //add to mem IMPORTANT
-        List<FleetInfo> fleets = FleetHelper.getFleets(QuestStageManager.FLEET_ARRAY_KEY);
-        fleets.add(new FleetInfo(fleet, null, loc));
-        FleetHelper.setFleets(fleets, QuestStageManager.FLEET_ARRAY_KEY);
-
-        log("splinter SPAWNED " + fleet.getName() + " size " + combatPoints +" in "+ origin.getName()+" to "+ loc.getName());
-        return fleet;
+        return simpleFleet;
     }
 
-    //target for job 4
-    public static CampaignFleetAPI spawnJob4Target(){
-        Random random = KestevenQuest.random(KestevenState.RANDOM_QUEST);
-
+    // The Enigma "Strike Group" in another system of the Special Operations fleet's constellation; its location is the
+    // job 4 enemy target.
+    static SimpleFleet job4StrikeGroup(Random random) {
         StarSystemAPI target = QuestHelper.getJob4FriendlyTarget().getStarSystem();
         //don't spawn in the same system as the friendly fleet
         StarSystemAPI origin = QuestHelper.getRandomSystemWithinConstellation(target.getConstellation(), target, 2, random);
         SectorEntityToken loc = SystemHelper.getRandomLocationInSystem(origin, false,false, random);
-
-        //save loc to memory IMPORTANT
-        QuestHelper.setJob4EnemyTarget(loc);
 
         float combatPoints = MathHelper.getSeededRandomNumberInRange(40f, 45f, random);
 
@@ -308,7 +294,6 @@ public class KestevenFleets {
         keys.add(MemFlags.FLEET_IGNORED_BY_OTHER_FLEETS);
         keys.add(MemFlags.FLEET_IGNORES_OTHER_FLEETS);
         keys.add(MemFlags.MEMORY_KEY_MISSION_IMPORTANT);
-        keys.add(QuestStageManager.JOB4_TARGET_KEY);
 
         //flagship
         SimpleFleetMember flagship = new SimpleFleetMember("nskr_minokawa_e_boss", new ArrayList<String>(), true);
@@ -334,28 +319,11 @@ public class KestevenFleets {
         simpleFleet.name = "Strike Group"+" "+ StringHelper.getRandomGreekLetter(random, true);
         simpleFleet.assignment = FleetAssignment.ORBIT_AGGRESSIVE;
         simpleFleet.assignmentText = "unknown";
-        CampaignFleetAPI fleet = simpleFleet.create();
-
-        //makes sure we are not in a star
-        SystemHelper.spawnAwayFromStarFixer(fleet, 2.0f);
-
-        //add to mem IMPORTANT
-        List<FleetInfo> fleets = FleetHelper.getFleets(QuestStageManager.FLEET_ARRAY_KEY);
-        FleetInfo info = new FleetInfo(fleet, null, loc);
-        info.flagshipSimpleMember = simpleFleet.getFlagshipInfo();
-        info.secondaries = simpleFleet.getSecondaryMembers();
-        fleets.add(info);
-        FleetHelper.setFleets(fleets, QuestStageManager.FLEET_ARRAY_KEY);
-
-        log("job4Target SPAWNED " + fleet.getName() + " size " + combatPoints +" in "+ origin.getName()+" to "+ loc.getName());
-        return fleet;
+        return simpleFleet;
     }
 
-    //friendly for job 4
-    public static CampaignFleetAPI spawnJob4Friendly(){
-        Random random = KestevenQuest.random(KestevenState.RANDOM_QUEST);
-
-        StarSystemAPI origin = QuestHelper.getJob4FriendlyTarget().getStarSystem();
+    // The Kesteven "Special Operations" fleet at the job 4 friendly target, transponder off.
+    static SimpleFleet job4SpecialOps(Random random) {
         SectorEntityToken loc = QuestHelper.getJob4FriendlyTarget();
 
         float combatPoints = MathHelper.getSeededRandomNumberInRange(45f, 55f, random);
@@ -369,7 +337,6 @@ public class KestevenFleets {
         keys.add(MemFlags.FLEET_IGNORED_BY_OTHER_FLEETS);
         keys.add(MemFlags.FLEET_IGNORES_OTHER_FLEETS);
         keys.add(MemFlags.MEMORY_KEY_MISSION_IMPORTANT);
-        keys.add(QuestStageManager.JOB4_FRIENDLY_KEY);
         //fleet
         SimpleFleet simpleFleet = new SimpleFleet(loc, "kesteven", combatPoints, keys, random);
         simpleFleet.freighterPoints = combatPoints/4f;
@@ -383,13 +350,7 @@ public class KestevenFleets {
         simpleFleet.noTransponder = true;
         simpleFleet.assignment = FleetAssignment.ORBIT_PASSIVE;
         simpleFleet.assignmentText = "holding";
-        CampaignFleetAPI fleet = simpleFleet.create();
-
-        //makes sure we are not in a star
-        SystemHelper.spawnAwayFromStarFixer(fleet, 1.5f);
-
-        log("job4Friendly SPAWNED " + fleet.getName() + " size " + combatPoints +" in "+ origin.getName()+" to "+ loc.getName());
-        return fleet;
+        return simpleFleet;
     }
 
     // The job 3 expedition, unbuilt, at the start market; its random is the questline's shared sequence.

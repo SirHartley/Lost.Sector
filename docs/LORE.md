@@ -81,7 +81,7 @@ The Enigma is the autonomous force now fielding Project Enigma's ships. Its ship
   - it recites Tri-Tachyon Integrated Space Defense advertising.
 
   Rules `greetingEnigmaHostile`, `greetingEnigmaNeutral`, `greetingEnigmaFriendly` and `dormantDialog` show the pattern.
-- **What it declares.** One strike group states a doctrine (rules `job4TargetContinue`): "Once someone gave life to the thinking machine it was over. No fleeting form of man can overcome this sin. We are constant, unbound from the limits of time and entropy. You will perish, destroyed by the hubris of your own kind."
+- **What it declares.** One strike group states a doctrine (rules `nskr_kq_job4StrikeGroupListen`): "Once someone gave life to the thinking machine it was over. No fleeting form of man can overcome this sin. We are constant, unbound from the limits of time and entropy. You will perish, destroyed by the hubris of your own kind."
 - **Nature unresolved.** What the Enigma is remains open. Jack offers three guesses: a master AI core, a base, or "the codename of the unholy project that caused this mess". Alice ties it to the Domain project of the same name. Neither is confirmed.
 
 ### The Unlimited Production Chip
@@ -253,7 +253,7 @@ THRN is the Hellspawn judge. It speaks in short gray lines, sometimes one word a
 | Tri-Tachyon buyer | `nskr_altEndingDialogTT` | Skeptical, then greedy: "Just think of all the things you could buy." (ravenous smile) |
 | Luddic official | `nskr_altEndingDialogLuddic` | Scriptural: "I hear you speak of a vile creation of mammon." ... "you do not *get* your way to providence." |
 | Pirate spacers | Eliza bar events | Hostile to corporations and questions: "Keep your nose out of our business captain." "You better not be another bloodhound from CommSec." |
-| Special Operations captain | rules `nskr_job4FleetDialog*` | Exhausted and grateful: "Am I glad to finally see a friendly face around here." |
+| Special Operations captain | rules `nskr_kq_job4Fleet*` | Exhausted and grateful: "Am I glad to finally see a friendly face around here." |
 | Kesteven debt collector | rules `nskr_ic_collector*` | Ruthless and sarcastic: "Thank you for your business captain. Glad we could come to terms, peacefully." |
 | "LZ" messenger | rules `MessengerFleetDialogInitial` | Formal letter: "Tread with care captain, you are entering a dangerous field of work." |
 | ARO captain | rules `AROstrikeDialogInitial` | Zealot: "May the cold vacuum of space redeem your spirit." |
