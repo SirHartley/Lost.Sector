@@ -55,9 +55,11 @@ final class KestevenJob1Module extends QuestModule<KestevenStage, KestevenState>
         d.token("job1ArtifactCount", ctx -> String.valueOf(KestevenHubModule.JOB1_ARTIFACTS));
     }
 
-    // The old intel picked the tip system on its first display, right after the job was accepted.
+    // The old intel picked the tip system on its first display, right after the job was accepted. A jump that passes the
+    // whole job, such as the story skip, picks no tip and shows no intel, as the old skip did.
     @Override
     protected void onStage(QuestContext<KestevenStage, KestevenState> ctx, KestevenStage from) {
+        if (ctx.isJump() && !isActiveIn(ctx.jumpTarget())) return;
         if (ctx.stage() == KestevenStage.JOB1_ACTIVE) {
             QuestHelper.getJob1Tip();
             ctx.intel().show(INTEL);

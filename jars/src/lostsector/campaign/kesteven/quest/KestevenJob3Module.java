@@ -68,6 +68,10 @@ final class KestevenJob3Module extends QuestModule<KestevenStage, KestevenState>
     // the questline's shared random sequence.
     @Override
     protected void onStart(QuestContext<KestevenStage, KestevenState> ctx) {
+        if (ctx.isJump() && !isActiveIn(ctx.jumpTarget())) {
+            placeLeftovers();
+            return;
+        }
         SectorEntityToken start = QuestHelper.getJob3Start();
         SectorEntityToken target = QuestHelper.getJob3Target();
         ctx.intel().show(INTEL);
@@ -85,7 +89,7 @@ final class KestevenJob3Module extends QuestModule<KestevenStage, KestevenState>
     @Override
     protected void onStage(QuestContext<KestevenStage, KestevenState> ctx, KestevenStage from) {
         if (ctx.stage() == KestevenStage.JOB3_TARGET_KNOWN) {
-            ctx.intel().setMapLocation(INTEL, ctx.state().job3Target);
+            if (ctx.intel().isShown(INTEL)) ctx.intel().setMapLocation(INTEL, ctx.state().job3Target);
         } else if (ctx.stage() == KestevenStage.JOB3_DONE) {
             withdrawExpedition(ctx);
             // Reached without the expedition's outcome, such as by a jump.
@@ -147,6 +151,14 @@ final class KestevenJob3Module extends QuestModule<KestevenStage, KestevenState>
         lines.add("expedition: " + (expedition == null ? "none" : expedition.fleet().getFleetPoints() + " of " + expedition.info().strength + " points, age " + expedition.info().age)
                 + ", withdrawing: " + ctx.fleets().get(ROLE_WITHDRAWING).size());
         lines.add("days left: " + daysLeft(ctx) + ", intel shown: " + ctx.intel().isShown(INTEL));
+    }
+
+    // A jump past the whole job leaves what job 5 finds at the target, satellite #3 and the dormant fleet, in the order
+    // and with the draws of the old story skip; no intel, expedition or countdown.
+    private static void placeLeftovers() {
+        SectorEntityToken target = QuestHelper.getJob3Target();
+        QuestHelper.spawnArtifact(target, 3);
+        DormantSpawner.addDormant(target, "enigma", 45f, 50f, 0f, 1f, 1f, 1f, 1, 1);
     }
 
     private static void succeed(QuestContext<KestevenStage, KestevenState> ctx, QuestFleet fleet) {

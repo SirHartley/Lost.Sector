@@ -282,13 +282,13 @@ Either way the meeting ends by adding Eliza to the market's comm directory and p
 
 ### Reaching the Cache
 
-At stage 16 the disk count sets `ALL_DISKS_RECOVERED` once it reaches five: `KestevenSatelliteModule.checkAllDisks` runs where the count changes (the satellite salvage, the Glacier disk, and `QuestHelper.setDisksRecovered` for Eliza and her raid) and when stage 16 starts. Alice's all-disks conversation offers "Yes" and, if the player sincerely agreed to help Eliza, "Yes (lie)". Both set `CACHE_FOUND` and stage 17 and hand over the Cache coordinates. The Cache system "Unknown Site" is reached by a transverse jump.
+At stage 16 the disk count sets `ALL_DISKS_RECOVERED` once it reaches five: `KestevenSatelliteModule.checkAllDisks` runs where the count changes (the satellite salvage, the Glacier disk, and Eliza's hand-over and raid, `KestevenElizaModule` actions `elizaHandOver` and `elizaRaid`), when stage 16 starts, and in the `onSkip` of a jump past stage 16 ([Stage jumps](KESTEVEN_STATE.md#stage-jumps)). Alice's all-disks conversation offers "Yes" and, if the player sincerely agreed to help Eliza, "Yes (lie)". Both set `CACHE_FOUND` and stage 17 and hand over the Cache coordinates. The Cache system "Unknown Site" is reached by a transverse jump.
 
 Entering Unknown Site at stage 15 or 16 sets `CACHE_FOUND` without any disks, and stage 16 becomes 17. The Eliza search runs only at stage 16, so a player who reaches the Cache early can skip Eliza and the remaining disks.
 
 `KestevenCacheModule` is active in every stage, because the guardian appears and the core can be salvaged whatever the questline's progress.
 
-- **Finding the Cache.** When the player arrives in Unknown Site (`onLocationChanged`) and on every stage change (`onStage`, for a system entered earlier), the find is recorded at stage 15 or 16 or after failure; stage 16 then moves to 17. Once `CACHE_FOUND` is set by any path (this module, Alice, the story skip), the intel entry `cache` is shown once, with the system's center as its map location. A stage jump past stage 16 sets `CACHE_FOUND` (`onSkip`).
+- **Finding the Cache.** When the player arrives in Unknown Site (`onLocationChanged`) and on every stage change (`onStage`, for a system entered earlier), the find is recorded at stage 15 or 16 or after failure; stage 16 then moves to 17. Once `CACHE_FOUND` is set by any path (this module, Alice, a stage jump), the intel entry `cache` is shown once, with the system's center as its map location. A stage jump past stage 16 sets `CACHE_FOUND` (`onSkip`); during a jump the check runs only in the target stage, so the entry shows once the jump arrives.
 - **Intel.** Title "The Cache", sort tier 2, the major posting sound, fleet log and exploration tags. Until the Chip is salvaged: the bullet "Explore the location." and the find; afterwards the five maintenance log entries. From stage 19 on, or after failure, the description has a delete button (`deletableWhen`); the entry never ends by itself.
 - **Arrival sequence.** While the player is in Unknown Site the module takes frames (`wantsFrames`, `onFrame`, unpaused only) and counts `cacheSeconds`, twice as fast during fast advance. After 35 seconds it picks the guardian's location once and opens the inner voice once (stage 16 or later while the questline runs, when no dialog or menu is showing). From 45 seconds it sends a sensor-burst ping toward that location every 6 seconds, from 75 seconds every 3 seconds. After 90 seconds it starts the Cache music (`nskr_cache_theme` on the system's memory) and spawns the guardian fleet (commander "Enigma Fragment #1", flagship "DSRD Epicenter"; role `cacheGuardian`, built by `Cache.guardianFleet`). Whenever the player is in the system, each frame has a 0.4% chance of a cache mote (`MoteParticleScript`).
 - **Guardian.** Role `cacheGuardian` with `FleetOrders.defendSystem("error #406, try again?")` and the `Cache.CacheGuardInteractionConfig` encounter: it intercepts the player in the system and orbits the center otherwise. Without prototypes or fleet points (`withdrawWhen`) it gets no more orders and despawns once out of the player's sight.
@@ -381,12 +381,11 @@ The questline option then disappears. The Cache can still be found and fought; t
 
 ## Story skip
 
-While the `storySkipUnlocked` setting is on, the speaker menus add a 5-story-point "Skip story" option at stages 0, 6, 7 and 11 (after the job 4 wait), and at stage 14 while a job 5 gate fails (rows `nskr_kq_jackOptStorySkip…`, `nskr_kq_aliceOptStorySkip…`). Its handler rows `nskr_kq_jackStorySkip` and `nskr_kq_aliceStorySkip` print the speaker's lines and fire `nskr_kqStorySkipped`, whose `KestevenHubModule` action `storySkip`:
+While the `storySkipUnlocked` setting is on, the speaker menus add a 5-story-point "Skip story" option at stages 0, 6, 7 and 11 (after the job 4 wait), and at stage 14 while a job 5 gate fails (rows `nskr_kq_jackOptStorySkip…`, `nskr_kq_aliceOptStorySkip…`). Its handler rows `nskr_kq_jackStorySkip` and `nskr_kq_aliceStorySkip` print the speaker's lines and fire `nskr_kqStorySkipped`, whose `KestevenHubModule` action `storySkip` jumps to stage 17 with `QuestManager.jump`, then clears `nskr_starfarerFromStart` and sets `STORY_SKIPPED`. The jump passes every stage between, and the modules of the passed stages set what the story assumes ([Stage jumps](KESTEVEN_STATE.md#stage-jumps)):
 
-- places the job 3 objects (satellite #3 and the dormant fleet) at stages up to 7, and the job 4 objects (strike group, satellite #4 and wrecks) at stages up to 11;
-- marks every job 5 tip and disk source as done and sets the Eliza help flags, generating Eliza if she has no market yet;
-- sets `CACHE_FOUND` and stage 17;
-- clears `nskr_starfarerFromStart` and sets `STORY_SKIPPED`.
+- a skip at stage 7 or earlier places the job 3 objects (satellite #3 and the dormant fleet), one at stage 11 or earlier the job 4 objects (strike group, satellite #4 and wrecks);
+- every job 5 tip and disk source counts as done, Eliza helped with her disks, and Eliza is generated at her market;
+- `CACHE_FOUND` is set, and the Delve and `cache` intel entries are shown at stage 17.
 
 ## Defects found by reading the source
 
@@ -401,6 +400,6 @@ These follow from the code and rules as written. None has been checked in game.
 7. **Highlight without its phrase.** Jack's job 5 briefing highlights "Go to the bar", which its text does not contain, so nothing is highlighted.
 8. **Asteria scenes at the Outpost.** The Delve meeting picks its Asteria texts whenever Asteria exists (`asteriaGenerated`), not where the questline is, so after Kesteven's exile the meeting at the Outpost describes Asteria's underground city. The old `DelveMeetingBarEvent` also showed Asteria's planet there; the escort row's `ShowLargePlanet` shows the planet of the dialog target's market instead, if it has one.
 9. **Repeated sensor message.** Every Enigma win that counts for the sensor task at stage 1 sends the `sensorData` update again, also after the package was delivered (`KestevenJob1Module.onEncounterLoot`, as the old `QuestStageManager` check did).
-10. **Story-skip strike group.** The story skip spawns the strike group, satellite #4 and the wrecks, then sets stage 17, where every job 4 fleet withdraws; the strike group despawns as soon as the player is out of its sight, so satellite #4 is unguarded.
+10. **Story-skip strike group.** The story skip's jump spawns the strike group, satellite #4 and the wrecks as it passes job 4, then reaches stage 17, where every job 4 fleet withdraws; the strike group despawns as soon as the player is out of its sight, so satellite #4 is unguarded.
 11. **Silent satellite after the story skip.** The story skip counts two satellites without emptying the placed ones, so their dialog shows no text and only Leave (`nskr_kq_satelliteSilent`); the old dialog showed no option at all and left on Escape.
 12. **No Leave on the command core's first screen.** The first visit offers only "Approach the command core"; Leave comes on the next screen.

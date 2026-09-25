@@ -19,16 +19,14 @@ import lostsector.helper.PowerLevel;
 import lostsector.helper.SectorLookup;
 import lostsector.quest.Declarations;
 import lostsector.quest.QuestContext;
+import lostsector.quest.QuestManager;
 import lostsector.quest.QuestModule;
 import lostsector.settings.Setting;
-import lostsector.world.SectorGen;
 
 import java.util.ArrayList;
-import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
-import java.util.Set;
 
 // The conversation hub with Jack, Alice and Nicholas: the gates, display values and game actions of the rows in the
 // # KESTEVEN QUESTLINE block of rules.csv (docs/quests/KESTEVEN_DIALOGUE.md). Active in every stage.
@@ -65,14 +63,6 @@ final class KestevenHubModule extends QuestModule<KestevenStage, KestevenState> 
     private static final KestevenStage[] JOB5_ON = {
             KestevenStage.JOB5_DISKS, KestevenStage.CACHE_KNOWN, KestevenStage.CACHE_CLEARED,
             KestevenStage.CHIP_RECOVERED, KestevenStage.COMPLETED, KestevenStage.FAILED};
-    // The story skip places the job 3 and job 4 objects only in the stages before the jobs place them.
-    private static final Set<KestevenStage> BEFORE_JOB3_OBJECTS = EnumSet.of(
-            KestevenStage.NOT_STARTED, KestevenStage.JOB1_ACTIVE, KestevenStage.JOB1_DONE,
-            KestevenStage.JOB3_OFFERED, KestevenStage.JOB3_BRIEFING);
-    private static final Set<KestevenStage> BEFORE_JOB4_OBJECTS = EnumSet.of(
-            KestevenStage.NOT_STARTED, KestevenStage.JOB1_ACTIVE, KestevenStage.JOB1_DONE,
-            KestevenStage.JOB3_OFFERED, KestevenStage.JOB3_BRIEFING, KestevenStage.JOB3_ACTIVE,
-            KestevenStage.JOB3_TARGET_KNOWN, KestevenStage.JOB3_DONE, KestevenStage.JOB4_WAITING);
 
     KestevenHubModule() {
         super();
@@ -137,6 +127,25 @@ final class KestevenHubModule extends QuestModule<KestevenStage, KestevenState> 
         d.token("frostName", ctx -> SectorLookup.getFrost().getName());
         d.token("frostTipConstellation", KestevenHubModule::frostTipConstellation);
         d.token("frostTipDistance", KestevenHubModule::frostTipDistance);
+    }
+
+    // The hand-ins and tips of the passed stage. Alice's job 4 turn-in also raises Jack's importance
+    // (raiseJackImportance); a jump leaves it, because the player would see it after the story skip, which never raised it.
+    @Override
+    protected void onSkip(QuestContext<KestevenStage, KestevenState> ctx) {
+        switch (ctx.stage()) {
+            case JOB1_ACTIVE:
+                ctx.set(KestevenFlag.JOB1_DATA_DELIVERED);
+                ctx.set(KestevenFlag.JOB1_ELECTRONICS_DELIVERED);
+                break;
+            case JOB5_DISKS:
+                ctx.set(KestevenFlag.JOB5_ALICE_TIP);
+                ctx.set(KestevenFlag.JOB5_ALICE_TIP2);
+                ctx.set(KestevenFlag.JOB5_JACK_TIP);
+                break;
+            default:
+                break;
+        }
     }
 
     static float fleetPower() {
@@ -239,38 +248,10 @@ final class KestevenHubModule extends QuestModule<KestevenStage, KestevenState> 
         DormantSpawner.addDormant(target, "enigma", 45f, 50f, 0f, 1f, 1f, 1f, 1, 1);
     }
 
-    // The player's story skip, unchanged from the old dialog until it moves onto QuestManager.jump.
+    // The player's story skip: a jump to CACHE_KNOWN, whose passed stages set what the skip assumes through the onSkip
+    // of their modules (docs/quests/KESTEVEN_STATE.md "Stage jumps"), then what only the skip does.
     private static void storySkip(QuestContext<KestevenStage, KestevenState> ctx) {
-        KestevenStage stage = ctx.stage();
-        if (BEFORE_JOB3_OBJECTS.contains(stage)) {
-            QuestHelper.spawnArtifact(QuestHelper.getJob3Target(), 3);
-            DormantSpawner.addDormant(QuestHelper.getJob3Target(), "enigma", 45f, 50f, 0f, 1f, 1f, 1f, 1, 1);
-        }
-        if (BEFORE_JOB4_OBJECTS.contains(stage)) {
-            KestevenJob4Module.spawnStrikeGroup(ctx);
-            KestevenJob4Module.placeWrecks(ctx);
-        }
-        ctx.set(KestevenFlag.SATELLITE4_RECOVERED);
-        ctx.set(KestevenFlag.SATELLITE3_RECOVERED);
-        ctx.state().satellitesRecovered = 2;
-        ctx.set(KestevenFlag.FROST_FOUND);
-        ctx.set(KestevenFlag.GLACIER_DISK_RECOVERED);
-        ctx.set(KestevenFlag.JOB5_ALICE_TIP);
-        ctx.set(KestevenFlag.JOB5_ALICE_TIP2);
-        ctx.set(KestevenFlag.JOB5_JACK_TIP);
-        ctx.set(KestevenFlag.ELIZA_FOUND);
-        ctx.set(KestevenFlag.ELIZA_DIALOG_FINISHED);
-        ctx.set(KestevenFlag.ELIZA_HELPED);
-        if (QuestHelper.getElizaLoc() == null) {
-            QuestHelper.setElizaLoc();
-            PersonAPI eliza = SectorGen.genEliza();
-            QuestHelper.getElizaLoc().getMarket().getCommDirectory().addPerson(eliza, 1);
-            QuestHelper.getElizaLoc().getMarket().addPerson(eliza);
-            ctx.log("Eliza loc " + QuestHelper.getElizaLoc().getMarket().getName());
-        }
-
-        ctx.set(KestevenFlag.CACHE_FOUND);
-        ctx.advance(KestevenStage.CACHE_KNOWN);
+        QuestManager.get().jump(ctx.quest(), KestevenStage.CACHE_KNOWN);
 
         // Ineligible for the hard mode completion.
         Map<String, Object> data = Global.getSector().getPersistentData();

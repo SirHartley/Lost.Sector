@@ -82,6 +82,24 @@ final class KestevenSatelliteModule extends QuestModule<KestevenStage, KestevenS
         checkAllDisks(ctx);
     }
 
+    // A jump past JOB5_DISKS has salvaged both satellites. The placed ones stay unsalvaged, as after the old story skip,
+    // which counted them the same way.
+    @Override
+    protected void onSkip(QuestContext<KestevenStage, KestevenState> ctx) {
+        if (ctx.stage() != KestevenStage.JOB5_DISKS) return;
+        KestevenState s = ctx.state();
+        if (!ctx.has(KestevenFlag.SATELLITE3_RECOVERED)) {
+            ctx.set(KestevenFlag.SATELLITE3_RECOVERED);
+            s.disksRecovered++;
+        }
+        if (!ctx.has(KestevenFlag.SATELLITE4_RECOVERED)) {
+            ctx.set(KestevenFlag.SATELLITE4_RECOVERED);
+            s.disksRecovered++;
+        }
+        s.satellitesRecovered = 2;
+        checkAllDisks(ctx);
+    }
+
     @Override
     protected void onLocationChanged(QuestContext<KestevenStage, KestevenState> ctx, LocationAPI prev, LocationAPI curr) {
         checkFrost(ctx, curr);

@@ -49,7 +49,7 @@ The framework is built on branch `quest-overhaul`; the task ids refer to the tra
 | Intel and rules text outside dialogs | `QuestIntel`, `QuestIntels`, `QuestText` | implemented; records and `close` added in T45, `deletableWhen` in T29 | T11, T45, T29 |
 | Raid objectives | `QuestRaidObjective`, `onRaidObjectives`, `d.raid`, `ctx.raidObjective` | implemented | T28 |
 | Rules check tool | `lostsector.quest.dev.RulesCheck` | implemented | T12 |
-| Dev menu and stage jumps | `nskr_questDev`, `QuestDevTools` | implemented | T13 |
+| Dev menu and stage jumps | `nskr_questDev`, `QuestDevTools`, `QuestContext.jumpTarget` | implemented; `jumpTarget` added in T34 | T13, T34 |
 | Shared modules | `lostsector.quest.modules` | `InterceptEncounter`, `PayOffEncounter` and `BountyEncounter` implemented; the others planned | T37 to T41 |
 
 Until a component is implemented, do not write code against it and do not write a substitute. Implement it in its task, or stop and report.
@@ -161,6 +161,13 @@ A module that calls `advance` inside any of these hooks queues the change; the m
 ### A stage jump
 
 `QuestManager.jump(quest, target)` serves the dev menu and the player's story skip. It walks from the current stage to the target along the `previous()` chain of the target. For the current stage and each stage on the path except the target, it calls `onSkip(ctx)` on the modules active in that stage, which set what the stage's conversations would have set (default decisions, rewards the story assumes), then performs a normal stage change to the next stage on the path. Advances queued by hooks during the walk are dropped and logged, because the jump decides the path; advances queued by the target stage's hooks apply after the jump. `ctx.isJump()` is true during the jump.
+
+The stage changes of a jump run the usual `onStart`, `onStage` and `onStop` hooks. Two tests let a hook tell what the jump is doing:
+
+- **The jump passes the whole module**: `ctx.isJump() && !isActiveIn(ctx.jumpTarget())`. The module starts and stops inside the walk, so `onStart` sets up only what later stages find in the world, such as objects the story leaves behind, and skips intel, fleets, people and timers that its stop would remove again. `KestevenJob3Module` places satellite #3 and the dormant fleet and nothing else.
+- **The jump passes this stage**: `ctx.isJump() && ctx.stage() != ctx.jumpTarget()`. The module stays active, and the hook skips what belongs to the passed stage only, such as a posting message whose text depends on the stage (`KestevenJob5Module`).
+
+`jumpTarget()` is also set while a jump resets the quest, and it is null outside a jump.
 
 A target is ahead when the current stage lies on its `previous()` chain. A jump to any other target, including the current stage, resets the quest first: every module active in the current stage stops in reverse order, marks, claims, pending opens, fleets and people of the quest are removed, its intel entries end at once, and a fresh state starts at the start stage. If the start stage is not on the target's chain (a stage such as `FAILED` whose `previous()` is null), the reset quest changes straight to the target.
 
@@ -473,6 +480,7 @@ public final class QuestContext<S, T> {
     public T state();
     public S stage();
     public boolean isJump();
+    public S jumpTarget();                  // the stage the running jump ends in; null outside a jump
 
     public void advance(S to);
     public boolean advance(S from, S to);   // false and no change when the stage is not `from`

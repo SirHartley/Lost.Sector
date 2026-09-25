@@ -73,12 +73,22 @@ final class KestevenElizaSearchModule extends QuestModule<KestevenStage, Kesteve
         d.token("elizaMarketEntity", ctx -> ctx.state().elizaMarket == null ? "" : ctx.state().elizaMarket.getName());
     }
 
-    // One person per conversation, the same at every pirate bar; the old bar events drew a new one per market.
+    // One person per conversation, the same at every pirate bar; the old bar events drew a new one per market. A jump
+    // past the search creates no one.
     @Override
     protected void onStart(QuestContext<KestevenStage, KestevenState> ctx) {
+        if (ctx.isJump() && !isActiveIn(ctx.jumpTarget())) return;
         for (String key : List.of(PERSON_SPACER, PERSON_SLY_SPACER, PERSON_CONTACT)) {
             ctx.people().create(key, Factions.PIRATES, person -> person.setPostId(Ranks.POST_GENERIC_MILITARY));
         }
+    }
+
+    // A jump past the search knows Eliza's market, picked as the contact's answer picks it (elizaPickMarket).
+    @Override
+    protected void onSkip(QuestContext<KestevenStage, KestevenState> ctx) {
+        ctx.set(KestevenFlag.ELIZA_FOUND);
+        ctx.state().elizaSearchStage = 3;
+        if (ctx.state().elizaMarket == null) QuestHelper.setElizaLoc();
     }
 
     @Override

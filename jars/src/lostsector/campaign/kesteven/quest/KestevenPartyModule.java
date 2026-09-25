@@ -49,8 +49,10 @@ final class KestevenPartyModule extends QuestModule<KestevenStage, KestevenState
     }
 
     // Genders and posts as the old bar event gave them; the text calls the engineer and the entrepreneur "two men".
+    // A jump past both stages invites no one.
     @Override
     protected void onStart(QuestContext<KestevenStage, KestevenState> ctx) {
+        if (ctx.isJump() && !isActiveIn(ctx.jumpTarget())) return;
         guest(ctx, EMPLOYEE, Gender.ANY, Ranks.POST_GENERIC_MILITARY);
         guest(ctx, ENGINEER, Gender.MALE, "kTechEngineer");
         guest(ctx, ENTREPRENEUR, Gender.MALE, Ranks.POST_ENTREPRENEUR);
@@ -58,6 +60,12 @@ final class KestevenPartyModule extends QuestModule<KestevenStage, KestevenState
         guest(ctx, PATROL_COMMANDER, Gender.MALE, Ranks.POST_PATROL_COMMANDER);
         guest(ctx, FLEET_COMMANDER, Gender.ANY, Ranks.POST_FLEET_COMMANDER);
         guest(ctx, AGENT, Gender.ANY, Ranks.POST_AGENT);
+    }
+
+    // JOB3_TARGET_KNOWN follows the party's coordinates.
+    @Override
+    protected void onSkip(QuestContext<KestevenStage, KestevenState> ctx) {
+        if (ctx.stage() == KestevenStage.JOB3_ACTIVE) ctx.set(KestevenFlag.JOB3_TARGET_DISCOVERED);
     }
 
     @Override

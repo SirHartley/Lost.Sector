@@ -69,6 +69,11 @@ public final class QuestContext<S extends Enum<S> & QuestStage, T extends QuestS
         return run.jumping;
     }
 
+    // The stage the running jump ends in; null outside a jump.
+    public S jumpTarget() {
+        return run.jumpTarget;
+    }
+
     public void advance(S to) {
         run.advance(null, to, source);
     }

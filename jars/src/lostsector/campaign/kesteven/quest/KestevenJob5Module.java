@@ -68,9 +68,12 @@ final class KestevenJob5Module extends QuestModule<KestevenStage, KestevenState>
         d.token("delveElizaSystem", ctx -> systemName(ctx.state().elizaMarket));
     }
 
-    // QuestStageManager added the old intel on the first unpaused frame at stage 16 or 17 (17 after the story skip).
+    // QuestStageManager added the old intel on the first unpaused frame at stage 16 or 17 (17 after the story skip). A
+    // jump acts only in its target stage, so the posting message describes that stage, as the story skip's did, and a
+    // passed meeting gets no guard.
     @Override
     protected void onStage(QuestContext<KestevenStage, KestevenState> ctx, KestevenStage from) {
+        if (ctx.isJump() && ctx.stage() != ctx.jumpTarget()) return;
         switch (ctx.stage()) {
             case JOB5_MEETING:
                 ctx.people().create(PERSON_GUARD, Ids.KESTEVEN_FACTION_ID, FullName.Gender.MALE, guard -> {

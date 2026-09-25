@@ -105,9 +105,11 @@ final class KestevenCacheModule extends QuestModule<KestevenStage, KestevenState
         d.action("salvageCacheCore", KestevenCacheModule::salvage);
     }
 
-    // Also covers an Unknown Site entered before stage 15 or 16, or before the questline failed.
+    // Also covers an Unknown Site entered before stage 15 or 16, or before the questline failed. A jump checks only in
+    // its target stage, after onSkip past JOB5_DISKS set CACHE_FOUND, so the entry shows once the jump arrives.
     @Override
     protected void onStage(QuestContext<KestevenStage, KestevenState> ctx, KestevenStage from) {
+        if (ctx.isJump() && ctx.stage() != ctx.jumpTarget()) return;
         StarSystemAPI cache = cacheSystem();
         checkFound(ctx, cache != null && cache.isEnteredByPlayer());
     }

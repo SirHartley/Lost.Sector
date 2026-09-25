@@ -53,14 +53,12 @@ final class KestevenGlacierModule extends QuestModule<KestevenStage, KestevenSta
         d.token("glacierHitHull", ctx -> ctx.state().glacierHit == null ? "" : ctx.state().glacierHit.getHullSpec().getHullName());
     }
 
-    // A jump past JOB5_DISKS counts the facility as done, as the story skip does, without adding to the disk count.
+    // A jump past JOB5_DISKS has found Frost and recovered the facility's disk.
     @Override
     protected void onSkip(QuestContext<KestevenStage, KestevenState> ctx) {
-        if (ctx.stage() != KestevenStage.JOB5_DISKS || ctx.has(KestevenFlag.GLACIER_DISK_RECOVERED)) return;
-        ctx.set(KestevenFlag.GLACIER_DISK_RECOVERED);
-        SectorEntityToken glacier = glacier();
-        ctx.unmark(glacier);
-        ctx.releaseDialog(glacier);
+        if (ctx.stage() != KestevenStage.JOB5_DISKS) return;
+        ctx.set(KestevenFlag.FROST_FOUND);
+        if (!ctx.has(KestevenFlag.GLACIER_DISK_RECOVERED)) recover(ctx);
     }
 
     @Override

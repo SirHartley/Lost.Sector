@@ -130,7 +130,8 @@ final class KestevenJob4Module extends QuestModule<KestevenStage, KestevenState>
                 if (!ctx.hasTimer(KestevenState.TIMER_JOB4_WAIT)) ctx.startTimer(KestevenState.TIMER_JOB4_WAIT);
                 break;
             case JOB4_ACTIVE:
-                start(ctx);
+                if (ctx.isJump() && !isActiveIn(ctx.jumpTarget())) placeForLaterStages(ctx);
+                else start(ctx);
                 break;
             case JOB4_DONE:
                 // Reached without the job's completion, such as by a jump.
@@ -144,12 +145,14 @@ final class KestevenJob4Module extends QuestModule<KestevenStage, KestevenState>
         }
     }
 
+    // The wait ends as onDay ends it. JOB4_FRIENDLY_FOUND stays unset: the hint wreck's result row reads it in every
+    // stage, and the story skip, which places the wreck, never found the Special Operations fleet.
     @Override
     protected void onSkip(QuestContext<KestevenStage, KestevenState> ctx) {
         if (ctx.stage() == KestevenStage.JOB4_WAITING) {
             ctx.set(KestevenFlag.JOB4_WAIT_OVER);
+            ctx.clearTimer(KestevenState.TIMER_JOB4_WAIT);
         } else if (ctx.stage() == KestevenStage.JOB4_ACTIVE) {
-            ctx.set(KestevenFlag.JOB4_FRIENDLY_FOUND);
             ctx.set(KestevenFlag.JOB4_TARGET_DESTROYED);
         }
     }
@@ -260,8 +263,15 @@ final class KestevenJob4Module extends QuestModule<KestevenStage, KestevenState>
         refreshMap(ctx);
     }
 
-    // The strike group and satellite #4 at the enemy target; also the story skip's (KestevenHubModule.storySkip).
-    static void spawnStrikeGroup(QuestContext<KestevenStage, KestevenState> ctx) {
+    // A jump past the whole job, such as the story skip, leaves what job 5 finds: the strike group guarding satellite #4
+    // and the wrecks, in the order and with the draws of the old story skip; no intel, Special Operations or splinters.
+    private static void placeForLaterStages(QuestContext<KestevenStage, KestevenState> ctx) {
+        spawnStrikeGroup(ctx);
+        placeWrecks(ctx);
+    }
+
+    // The strike group and satellite #4 at the enemy target.
+    private static void spawnStrikeGroup(QuestContext<KestevenStage, KestevenState> ctx) {
         SimpleFleet spec = KestevenFleets.job4StrikeGroup(ctx.random(KestevenState.RANDOM_QUEST));
         ctx.state().job4EnemyTarget = spec.loc;
         CampaignFleetAPI fleet = ctx.fleets().spawn(ROLE_STRIKE_GROUP, spec);
@@ -288,8 +298,8 @@ final class KestevenJob4Module extends QuestModule<KestevenStage, KestevenState>
     }
 
     // A debris field and three Kesteven derelicts near the enemy target; the first derelict holds the hint.
-    // Also the story skip's (KestevenHubModule.storySkip). The recovery roll keeps the old Math.random.
-    static void placeWrecks(QuestContext<KestevenStage, KestevenState> ctx) {
+    // The recovery roll keeps the old Math.random.
+    private static void placeWrecks(QuestContext<KestevenStage, KestevenState> ctx) {
         Random random = ctx.random(KestevenState.RANDOM_QUEST);
         SectorEntityToken loc = ctx.state().job4EnemyTarget;
         StarSystemAPI system = loc.getStarSystem();

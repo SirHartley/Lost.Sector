@@ -102,6 +102,8 @@ public final class QuestManager extends BaseCampaignEventListener
         boolean available;
         boolean changing;
         boolean jumping;
+        // The target of the running jump; null outside a jump.
+        S jumpTarget;
         private final List<Change<S>> queue = new ArrayList<>();
         private final Map<QuestModule<S, T>, QuestContext<S, T>> contexts = new IdentityHashMap<>();
         final QuestFleets fleets = new QuestFleets(this);
@@ -255,6 +257,7 @@ public final class QuestManager extends BaseCampaignEventListener
             List<S> path = pathTo(target);
             logInfo(id(), "jump " + state().stage + " -> " + target);
             jumping = true;
+            jumpTarget = target;
             changing = true;
             try {
                 int index = path.indexOf(state().stage);
@@ -273,6 +276,7 @@ public final class QuestManager extends BaseCampaignEventListener
                 }
             } finally {
                 jumping = false;
+                jumpTarget = null;
                 changing = false;
             }
             applyQueued();

@@ -51,6 +51,24 @@ final class KestevenElizaModule extends QuestModule<KestevenStage, KestevenState
         d.token("elizaRaidCredits", ctx -> Misc.getDGSCredits(ctx.state().elizaRaidCredits));
     }
 
+    // A jump past JOB5_DISKS has met Eliza at her port and received her two disks by agreement; the search's onSkip
+    // picked her market first.
+    @Override
+    protected void onSkip(QuestContext<KestevenStage, KestevenState> ctx) {
+        if (ctx.stage() != KestevenStage.JOB5_DISKS || ctx.has(KestevenFlag.ELIZA_DIALOG_FINISHED)) return;
+        SectorEntityToken market = ctx.state().elizaMarket;
+        if (KestevenPeople.getEliza() == null && market != null) {
+            PersonAPI eliza = SectorGen.genEliza();
+            market.getMarket().getCommDirectory().addPerson(eliza, 1);
+            market.getMarket().addPerson(eliza);
+            ctx.log("Eliza loc " + market.getMarket().getName());
+        }
+        ctx.set(KestevenFlag.ELIZA_DIALOG_FINISHED);
+        ctx.set(KestevenFlag.ELIZA_HELPED);
+        ctx.state().disksRecovered += 2;
+        KestevenSatelliteModule.checkAllDisks(ctx);
+    }
+
     // The old listener added the objective at priority 0 to every raid type, disruption included.
     @Override
     protected void onRaidObjectives(QuestContext<KestevenStage, KestevenState> ctx, MarketAPI market, SectorEntityToken entity,
@@ -114,6 +132,7 @@ final class KestevenElizaModule extends QuestModule<KestevenStage, KestevenState
     // The search set the market's marker with a plain memory flag, so it is cleared the same way.
     private static void handOver(QuestContext<KestevenStage, KestevenState> ctx) {
         ctx.state().disksRecovered += 2;
+        KestevenSatelliteModule.checkAllDisks(ctx);
         SectorEntityToken target = ctx.target();
         if (target != null) target.getMemoryWithoutUpdate().unset(MemFlags.MEMORY_KEY_MISSION_IMPORTANT);
     }
@@ -129,6 +148,7 @@ final class KestevenElizaModule extends QuestModule<KestevenStage, KestevenState
         }
         KestevenState s = ctx.state();
         s.disksRecovered += 2;
+        KestevenSatelliteModule.checkAllDisks(ctx);
         s.elizaRaidCredits = MathHelper.getSeededRandomNumberInRange(RAID_CREDITS_MIN, RAID_CREDITS_MAX, ctx.random(KestevenState.RANDOM_ELIZA));
         Global.getSector().getPlayerFleet().getCargo().getCredits().add(s.elizaRaidCredits);
         market.getPrimaryEntity().getMemoryWithoutUpdate().unset(MemFlags.MEMORY_KEY_MISSION_IMPORTANT);

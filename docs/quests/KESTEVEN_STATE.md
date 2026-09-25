@@ -107,37 +107,37 @@ The actual path can skip stages: 8 to 10 without 9, 7 to 11 when job 3 is refuse
 | `STORY_SKIPPED` | Story skip used; nothing reads it | Hub action `storySkip` |
 | `FOUGHT_ENIGMA` | Beat Enigma before accepting job 1 | `KestevenJob1Module.onEncounterLoot` |
 | `JOB1_SENSOR_DATA` | Sensor task done | Same; `KestevenJob1Module.onSkip` on a jump past `JOB1_ACTIVE` |
-| `JOB1_DATA_DELIVERED`, `JOB1_ELECTRONICS_DELIVERED` | Sensor package and electronics delivered | Rules `nskr_kq_jackJob1HandIn…` |
+| `JOB1_DATA_DELIVERED`, `JOB1_ELECTRONICS_DELIVERED` | Sensor package and electronics delivered | Rules `nskr_kq_jackJob1HandIn…`; `KestevenHubModule.onSkip` past `JOB1_ACTIVE` |
 | `JOB1_TIP_GIVEN` | Jack gave the location tip | Rules `nskr_kq_jackJob1Tip`, `nskr_kq_jackAskTipSel` |
 | `COLLECTOR_PAID` | Tri-Tachyon collector paid; nothing reads it | `KestevenCollector`, action `ttCollectorPay` (rules `nskr_kq_ttCollectorPay`) |
 | `JOB3_REFUSED` | Job 3 refused; nothing reads it | Rules `nskr_kq_aliceRefuseConfirm` |
-| `JOB3_TARGET_DISCOVERED` | Target coordinates from the party | Rules `nskr_kq_partyCoordinates` |
+| `JOB3_TARGET_DISCOVERED` | Target coordinates from the party | Rules `nskr_kq_partyCoordinates`; `KestevenPartyModule.onSkip` past `JOB3_ACTIVE` |
 | `JOB3_PARTY_DECLINED` | Party declined; the bar event no longer shows | Rules `nskr_kq_partyDecline` |
 | `JOB3_FAILED` | Timeout or stealth broken | `KestevenJob3Module` |
 | `MESSENGER_MET`, `MESSENGER_QUESTION_OPEN` | "LZ" messenger met; question available (cleared after asking Alice) | Quest `ic` through `KestevenQuest.reportMessengerMet()`; cleared by rules `nskr_kq_aliceAskLzSel` |
-| `JOB4_WAIT_OVER` | 30-day wait over | `KestevenJob4Module` daily tick (timer `job4Wait`); its `onSkip` on a jump past `JOB4_WAITING` |
+| `JOB4_WAIT_OVER` | 30-day wait over | `KestevenJob4Module` daily tick (timer `job4Wait`); its `onSkip` past `JOB4_WAITING`, which also clears the timer |
 | `JOB4_REQUIREMENT_SKIPPED` | Job 4 strength gate bypassed with a story point | Rules `nskr_kq_hubReqSkipJob4` |
 | `JOB4_HINT_WRECK_READ` | Hint wreck read | `KestevenJob4Module` action `readHintWreck` (rules `nskr_kq_hintWreckRead`) |
-| `JOB4_FRIENDLY_FOUND`, `JOB4_TARGET_FOUND` | Fleets seen; the friendly fleet also when talked to | `KestevenJob4Module.onFleetDetected`, action `recordJob4FleetTalk`; `JOB4_FRIENDLY_FOUND` also by its `onSkip` past `JOB4_ACTIVE` |
+| `JOB4_FRIENDLY_FOUND`, `JOB4_TARGET_FOUND` | Fleets seen; the friendly fleet also when talked to | `KestevenJob4Module.onFleetDetected`, action `recordJob4FleetTalk` |
 | `JOB4_FRIENDLY_TALKED` | First conversation with the Special Operations fleet held | Action `recordJob4FleetTalk` (rules `nskr_kq_job4FleetAsk`) |
 | `JOB4_TARGET_HINT` | Friendly fleet gave the strike group location | Action `recordJob4FleetTalk`, unless the strike group was seen or beaten |
 | `JOB4_TARGET_DESTROYED` | Strike group below 20% strength or destroyed | `KestevenJob4Module` (`onBattle`, `onLoot`, `onFleetGone`); its `onSkip` past `JOB4_ACTIVE` |
 | `JOB4_FRIENDLY_HELPED` | Supplies and fuel given | Rules `nskr_kq_job4FleetHelpConfirm` |
 | `JOB4_FAILED` | Player attacked the friendly fleet | `KestevenJob4Module.onLoot` |
-| `JOB5_JACK_TIP`, `JOB5_ALICE_TIP`, `JOB5_ALICE_TIP2` | Job 5 tips given | Rules `nskr_kq_jackLeads`, `nskr_kq_aliceLeads`, `nskr_kq_aliceFrostTip`; story skip |
-| `FROST_FOUND` | Frost identified | Rules `nskr_kq_aliceFrostFound`, `KestevenSatelliteModule` (entering Frost at stage 16 after tip 2), story skip |
-| `SATELLITE3_RECOVERED`, `SATELLITE4_RECOVERED` | Satellite #3 or #4 salvaged | `KestevenSatelliteModule` action `salvageSatellite`, story skip |
-| `GLACIER_DISK_RECOVERED` | Disk #5 recovered | `KestevenGlacierModule` action `recoverGlacierDisk` and `onSkip` on a jump past `JOB5_DISKS`; story skip |
-| `ALL_DISKS_RECOVERED` | At least five disks, recorded at stage 16 | `KestevenSatelliteModule.checkAllDisks`, from `salvageSatellite`, `recoverGlacierDisk`, `QuestHelper.setDisksRecovered` and the start of stage 16 |
+| `JOB5_JACK_TIP`, `JOB5_ALICE_TIP`, `JOB5_ALICE_TIP2` | Job 5 tips given | Rules `nskr_kq_jackLeads`, `nskr_kq_aliceLeads`, `nskr_kq_aliceFrostTip`; `KestevenHubModule.onSkip` past `JOB5_DISKS` |
+| `FROST_FOUND` | Frost identified | Rules `nskr_kq_aliceFrostFound`, `KestevenSatelliteModule` (entering Frost at stage 16 after tip 2), `KestevenGlacierModule.onSkip` past `JOB5_DISKS` |
+| `SATELLITE3_RECOVERED`, `SATELLITE4_RECOVERED` | Satellite #3 or #4 salvaged | `KestevenSatelliteModule` action `salvageSatellite` and `onSkip` past `JOB5_DISKS` |
+| `GLACIER_DISK_RECOVERED` | Disk #5 recovered | `KestevenGlacierModule` action `recoverGlacierDisk` and `onSkip` past `JOB5_DISKS` |
+| `ALL_DISKS_RECOVERED` | At least five disks, recorded at stage 16 | `KestevenSatelliteModule.checkAllDisks`, from `salvageSatellite`, `recoverGlacierDisk`, `elizaHandOver`, `elizaRaid`, `QuestHelper.setDisksRecovered`, the start of stage 16, and the `onSkip` past `JOB5_DISKS` of `KestevenGlacierModule`, `KestevenSatelliteModule` and `KestevenElizaModule` |
 | `ELIZA_SPACER_PAID` | Paid the spacer | `KestevenElizaSearchModule` action `elizaSpacerPay` |
-| `ELIZA_FOUND` | Eliza's market known | `KestevenElizaSearchModule` action `elizaContactLeave`, story skip |
-| `ELIZA_DIALOG_FINISHED` | Meeting at Eliza's port finished | Rules `nskr_kq_elizaDismissed`, `nskr_kq_elizaDisks`; story skip |
-| `ELIZA_HELPED` | Disks received by agreement | Rules `nskr_kq_elizaDisks`; story skip |
+| `ELIZA_FOUND` | Eliza's market known | `KestevenElizaSearchModule` action `elizaContactLeave` and `onSkip` past `JOB5_DISKS` |
+| `ELIZA_DIALOG_FINISHED` | Meeting at Eliza's port finished | Rules `nskr_kq_elizaDismissed`, `nskr_kq_elizaDisks`; `KestevenElizaModule.onSkip` past `JOB5_DISKS` |
+| `ELIZA_HELPED` | Disks received by agreement | Rules `nskr_kq_elizaDisks`; `KestevenElizaModule.onSkip` past `JOB5_DISKS` |
 | `ELIZA_AGREED_SINCERELY` | Agreed sincerely | Rules `nskr_kq_elizaAgree` |
 | `ELIZA_RAID_ENABLED` | Refused; raid enabled | Rules `nskr_kq_elizaDismissed` |
 | `ELIZA_RAIDED` | Raid done | `KestevenElizaModule` raid action `elizaRaid` |
 | `ELIZA_KILLED` | Eliza dead | `KestevenElizaFleetsModule` (`onBattle`, `onFleetGone`) |
-| `CACHE_FOUND` | Cache coordinates known | Rules `nskr_kq_aliceCacheFound`, `KestevenCacheModule` (arrival or stage change at stage 15, 16 or after failure; `onSkip` on a jump past `JOB5_DISKS`), story skip |
+| `CACHE_FOUND` | Cache coordinates known | Rules `nskr_kq_aliceCacheFound`, `KestevenCacheModule` (arrival or stage change at stage 15, 16 or after failure; `onSkip` on a jump past `JOB5_DISKS`) |
 | `CORE_SEEN`, `CHIP_SALVAGED` | Core seen; UPC salvaged | Rules `nskr_kq_coreFirst`; `KestevenCacheModule` action `salvageCacheCore`; both by `onSkip` on a jump past `CACHE_CLEARED` |
 | `ELIZA_INTERCEPT_TALKED` | Eliza's intercept fleet spoke to the player | `KestevenElizaFleetsModule` action `elizaTalked` |
 | `CHIP_HANDED_TO_ELIZA` | UPC handed to Eliza | `KestevenElizaFleetsModule` action `elizaChipHandOver` |
@@ -163,17 +163,17 @@ Other features read flags through the [queries](#queries-for-other-features). `n
 | `job4FriendlyTarget` | `SectorEntityToken` | Random location in a system at least 32,500 units from the centre | `QuestHelper.getJob4FriendlyTarget()` |
 | `job4EnemyTarget` | `SectorEntityToken` | Strike group location | `KestevenJob4Module.spawnStrikeGroup`, from the spec `KestevenFleets.job4StrikeGroup` builds |
 | `job5FrostTipSystem` | `StarSystemAPI` | System 7,000 to 12,000 units from Frost, for Alice's distance hint | `QuestHelper.getJob5FrostTip()` |
-| `elizaMarket` | `SectorEntityToken` | Eliza's market entity; re-picked on decivilization | `QuestHelper.setElizaLoc()`; `KestevenElizaModule.onDecivilized` |
+| `elizaMarket` | `SectorEntityToken` | Eliza's market entity; re-picked on decivilization | `QuestHelper.setElizaLoc()`, from `KestevenElizaSearchModule` (action `elizaPickMarket`, `onSkip` past `JOB5_DISKS`); `KestevenElizaModule.onDecivilized` |
 | `elizaContactMarket` | `SectorEntityToken` | Contact market after paying the spacer; re-picked on decivilization | `KestevenElizaSearchModule` (`elizaPickContact`, `onDecivilized`) |
 | `elizaContactFormerName` | `String` | The contact's entity name before its last move, for the move message | `KestevenElizaSearchModule.onDecivilized` |
 | `elizaFormerName` | `String` | Eliza's market entity name before her last move, for the Delve update `elizaMoved` | `KestevenElizaModule.onDecivilized` |
 | `elizaRaidCredits` | `float` | Credits the raid on Eliza's port took, for its result row (token `elizaRaidCredits`) | `KestevenElizaModule` raid action `elizaRaid` |
 | `elizaSpacerPrice` | `int` | The first spacer's price, 4,000 to 7,000, rolled each time that conversation opens | `KestevenElizaSearchModule` action `elizaSpacerOpen` |
 | `cacheGuardianSpot` | `SectorEntityToken` | Guardian spawn point in Unknown Site, picked with `RANDOM_QUEST` | `KestevenCacheModule`, after 35 seconds in the site |
-| `disksRecovered` | `int` | Disks recovered | `KestevenSatelliteModule` action `salvageSatellite`, `KestevenGlacierModule` action `recoverGlacierDisk`, `KestevenElizaModule` actions `elizaHandOver` and `elizaRaid` |
-| `satellitesRecovered` | `int` | Satellites salvaged, 0 to 2; the hub checks `noSatellite`, `oneSatellite`, `twoSatellites` read it | `KestevenSatelliteModule` action `salvageSatellite`, story skip |
+| `disksRecovered` | `int` | Disks recovered | `KestevenSatelliteModule` action `salvageSatellite`, `KestevenGlacierModule` action `recoverGlacierDisk`, `KestevenElizaModule` actions `elizaHandOver` and `elizaRaid`; the `onSkip` past `JOB5_DISKS` of the Glacier (1), satellite (1 per unsalvaged satellite) and Eliza (2) modules |
+| `satellitesRecovered` | `int` | Satellites salvaged, 0 to 2; the hub checks `noSatellite`, `oneSatellite`, `twoSatellites` read it | `KestevenSatelliteModule` action `salvageSatellite`; its `onSkip` past `JOB5_DISKS` sets 2 |
 | `nicholasDialogStage` | `int` | Nicholas's job 4 dialogue stage; the hub reads it through `check nicholasTipGiven` | Hub action `recordNicholasTip` |
-| `elizaSearchStage` | `int` | Eliza search step, 0 to 3 | `KestevenElizaSearchModule` actions |
+| `elizaSearchStage` | `int` | Eliza search step, 0 to 3 | `KestevenElizaSearchModule` actions; its `onSkip` past `JOB5_DISKS` sets 3 |
 | `partyDrinks` | `int` | Drinks at the job 3 party; checks `partyTipsy` (1 or more) and `partyDrunk` (2 or more) | Action `partyDrink` of `KestevenPartyModule` |
 | `elizaSearchUsedMarkets` | `List<String>` | Market ids whose bar the Eliza search already used | `KestevenElizaSearchModule` actions |
 | `glacierHit` | `FleetMemberAPI` | The ship whose barrage line is being printed, read by the tokens `glacierHitShip` and `glacierHitHull`; null outside the action | `KestevenGlacierModule` action `damageFleet` |
@@ -258,7 +258,8 @@ The Kesteven bar tip is not questline content; it is quest `hint` ([Exploration 
 | Hub confirmation rows, `nskr_quest kq advance` | 0→1, 2→6, 6→7, 7→8, 10→11, 11→12, 13→14, 16→17 |
 | Hub row `nskr_kq_jackJob5Brief` | 14→15 |
 | Hub row `nskr_kq_aliceRefuseConfirm` | 7→11 |
-| Hub action `storySkip` (`ctx.advance`) | 0, 6, 7, 11 or 14→17 (story skip) |
+| Hub action `storySkip` (`QuestManager.jump`) | 0, 6, 7, 11 or 14 to 17, through every stage between ([Stage jumps](#stage-jumps)) |
+| Dev menu (`nskr_questDev`, `QuestManager.jump`) | Any stage, through every stage between or after a reset |
 | `KestevenJob1Module` (`job1Progress` action, daily tick) | 1→2 |
 | `KestevenAftermathModule` (`onDay`, both mission markets lost) | any→99 |
 | `KestevenCacheModule` (`onStage`, `onLocationChanged`) | 16→17 when the Cache is found |
@@ -270,3 +271,49 @@ The Kesteven bar tip is not questline content; it is quest `hint` ([Exploration 
 | `KestevenCacheModule` action `salvageCacheCore` | 16, 17 or 18→19 |
 | Rows `nskr_kq_kestevenEndingDone` and `nskr_kq_elizaEndingDone` (`nskr_quest kq advance`) | 19→20 |
 | `KestevenAltEndingsModule` action `altEndingFallout` (`ctx.advance`) | 19→20 |
+
+## Stage jumps
+
+`QuestManager.jump` serves the dev menu and the player's story skip ([A stage jump](../../jars/src/lostsector/quest/README.md#a-stage-jump)). For every stage it passes, the modules active there run `onSkip`, which sets what that stage's conversations and events would have set. The stage changes between run the usual `onStart`, `onStage` and `onStop` hooks. A jump grants no payouts, reputation or items.
+
+### Passed stages
+
+| Passed stage | `onSkip` sets (module) | Left out, and why |
+|---|---|---|
+| `NOT_STARTED`, `JOB1_DONE`, `JOB3_OFFERED`, `JOB3_BRIEFING`, `JOB3_DONE`, `JOB5_OFFERED`, `JOB5_MEETING` | Nothing | Optional talk (`FOUGHT_ENIGMA`, `JOB1_TIP_GIVEN`, the Delve meeting's advance and Cache core marker); the job 3 refusal (`JOB3_REFUSED`, stage 7 to 11) is not on the path |
+| `JOB1_ACTIVE` | `JOB1_SENSOR_DATA` (Job 1); `JOB1_DATA_DELIVERED`, `JOB1_ELECTRONICS_DELIVERED` (hub) | |
+| `JOB3_ACTIVE` | `JOB3_TARGET_DISCOVERED` (party) | The party's drinks and hangover bill |
+| `JOB3_TARGET_KNOWN` | Nothing: the expedition counts as beaten, `JOB3_FAILED` stays unset | |
+| `JOB4_WAITING` | `JOB4_WAIT_OVER`; the timer `job4Wait` is cleared (Job 4) | `JOB4_REQUIREMENT_SKIPPED` |
+| `JOB4_ACTIVE` | `JOB4_TARGET_DESTROYED` (Job 4) | `JOB4_FRIENDLY_FOUND`: the hint wreck's result row `nskr_kq_hintWreckFound` reads it in every stage, and the story skip places the wreck without the player having found the Special Operations fleet. The optional talk and help flags (`JOB4_FRIENDLY_TALKED`, `JOB4_TARGET_HINT`, `JOB4_FRIENDLY_HELPED`) and Nicholas's tip |
+| `JOB4_DONE` | Nothing | Jack's importance (hub action `raiseJackImportance` at Alice's turn-in): vanilla's `ContactIntel` shows a contact's importance, and the story skip never raised it |
+| `JOB5_DISKS` | `JOB5_JACK_TIP`, `JOB5_ALICE_TIP`, `JOB5_ALICE_TIP2` (hub); `FROST_FOUND`, `GLACIER_DISK_RECOVERED` with its disk (Glacier); `ELIZA_FOUND`, `elizaSearchStage` 3, `elizaMarket` when unset (Eliza search); `SATELLITE3_RECOVERED`, `SATELLITE4_RECOVERED` with a disk for each satellite not yet salvaged, `satellitesRecovered` 2 (satellites); Eliza generated and added to her market when she does not exist, `ELIZA_DIALOG_FINISHED`, `ELIZA_HELPED` and her two disks (Eliza); `ALL_DISKS_RECOVERED` once the disks reach five; `CACHE_FOUND` (Cache) | Alice's satellite and Glacier markers, and her Frost tip system (`pickJob5FrostTip`), whose draw would move the story skip's Eliza market draw. The placed satellites stay unsalvaged ([defect 11](KESTEVEN_QUESTLINE.md#defects-found-by-reading-the-source)) |
+| `CACHE_KNOWN` | Nothing | The guardian stays unfought and appears when the player arrives |
+| `CACHE_CLEARED` | `CORE_SEEN`, `CHIP_SALVAGED` (Cache) | The core's rewards and the return marker |
+| `CHIP_RECOVERED` | `ELIZA_ENDING_DONE` after the hand-over to Eliza, otherwise `KESTEVEN_ENDING_DONE` (endings) | The endings' rewards, relationships and unlocked settings |
+
+A dev jump that ends in `JOB4_DONE`, `JOB5_OFFERED`, `JOB5_MEETING` or `JOB5_DISKS` starts job 4 as in play, so the strike group is still alive although `JOB4_TARGET_DESTROYED` is set, and `JOB4_FRIENDLY_FOUND` stays unset; only the dev menu reaches this state.
+
+### Hooks during a jump
+
+A module the jump passes whole, because the target is not one of its stages (`ctx.isJump() && !isActiveIn(ctx.jumpTarget())`), places only the objects later stages find. A module active in the target runs its hooks as in play.
+
+| Module | Passed whole | Target in its stages |
+|---|---|---|
+| `KestevenJob1Module` | No tip system, intel or map update | Tip picked, intel shown, completed at `JOB3_OFFERED` |
+| `KestevenJob3Module` | The target, satellite #3 and the dormant fleet there, in the old story skip's order; no start market, intel, expedition or countdown | As in play |
+| `KestevenPartyModule`, `KestevenElizaSearchModule` | No quest people | People created |
+| `KestevenJob4Module` | The strike group with satellite #4, then the wrecks, in the old story skip's order; no intel, Special Operations fleet or splinters | As in play |
+
+`KestevenJob5Module` and `KestevenCacheModule` act in `onStage` only in the jump's target stage (`ctx.stage() != ctx.jumpTarget()` returns): a passed meeting gets no guard, and the Delve and `cache` entries are shown once, with the text of the target stage.
+
+### Story skip
+
+The hub action `storySkip` jumps to `CACHE_KNOWN`, then clears `nskr_starfarerFromStart` and sets `STORY_SKIPPED`. Compared with the old skip, a single stage change to 17, the end state has:
+
+- the same flags the old skip set (`CACHE_FOUND` now from `KestevenCacheModule.onSkip`), the Delve and `cache` entries shown once at `CACHE_KNOWN` in that order, and Eliza generated at her market;
+- the job 3 objects when the skip starts at stage 7 or earlier and the job 4 objects at 11 or earlier, with the same `kestevenQuestRandom` draws in the same order: job 3 target, satellite #3, strike group, satellite #4, wrecks, Eliza's market;
+- no intel, fleets, people or timers of the passed jobs;
+- in addition, for the stages it passes: `JOB1_SENSOR_DATA`, `JOB1_DATA_DELIVERED`, `JOB1_ELECTRONICS_DELIVERED`, `JOB3_TARGET_DISCOVERED`, `JOB4_WAIT_OVER`, `JOB4_TARGET_DESTROYED`, `ALL_DISKS_RECOVERED`, `disksRecovered` 5, `elizaSearchStage` 3, and the passed stages in the state's reached set.
+
+Nothing reads the additions at `CACHE_KNOWN` or later: the job 1 flags only at `JOB1_ACTIVE` (hub rows, `job1` intel rows); `JOB3_TARGET_DISCOVERED` only in the party at stages 8 and 9, Alice's `JOB3_DONE` question and her stage 16 lead lines; `JOB4_WAIT_OVER` only at stage 11; `JOB4_TARGET_DESTROYED` only in the `job4` intel rows at stages 12 and 13 and in `KestevenJob4Module`, which stops at 17; the disk count, `ALL_DISKS_RECOVERED` and `elizaSearchStage` only in stage 16 rows, the `job5` intel rows at stage 16 and the Eliza search checks; `reached` only as `reached JOB5_OFFERED` in the `job4` intel rows. No other quest, hint or `KestevenQuest` query reads them.

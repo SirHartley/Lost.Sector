@@ -68,7 +68,7 @@ Option ids:
 | action | `grantModspec` | A random Kesteven modspec the player does not know yet, if any (purpose `kestevenQuestRandom`), through `ctx.rewards().item` |
 | action | `grantExchangePoints`, `grantEpoch`, `raiseJackImportance` | 50,000 artifact exchange points (`nskr_shipSwap.addPoints`); the `nskr_epoch_empty` frigate with the vanilla ship receipt; Jack's importance to high |
 | action | `placeJob3Leftovers` | The derelicts, debris, satellite #3 and dormant fleet at the job 3 target after a refusal |
-| action | `storySkip` | The story skip's world changes, flags and stage change to `CACHE_KNOWN` ([questline](KESTEVEN_QUESTLINE.md#story-skip)) |
+| action | `storySkip` | Jumps to `CACHE_KNOWN` with `QuestManager.jump`, then clears `nskr_starfarerFromStart` and sets `STORY_SKIPPED` ([questline](KESTEVEN_QUESTLINE.md#story-skip)) |
 | token | `playerFullName`, `job1Payout`, `job3Payout`, `job4Payout` | Player's full name; the stage payouts with `Misc.getDGSCredits`. The job 1 briefing also uses `KestevenJob1Module`'s token `job1ArtifactCount` (`JOB1_ARTIFACTS`) |
 | token | `job1TipSystem`, `job3Start`, `job3Market`, `job3TargetSystem`, `job4Constellation`, `job4TargetSystem`, `outpostName` | Names from the saved targets: tip system; job 3 start entity and its market; job 3 target system; friendly target constellation; strike group system; Outpost |
 | token | `frostName`, `frostTipConstellation`, `frostTipDistance` | Frost's name; the hint system's constellation (`QuestHelper.parseConstellation`); the distance from it to Frost times 1.5 in light-years, rounded to two decimals and printed as a Java float |
