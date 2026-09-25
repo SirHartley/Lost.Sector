@@ -31,6 +31,7 @@ public final class Declarations<S extends Enum<S> & QuestStage, T extends QuestS
     private final Set<String> triggers = new LinkedHashSet<>();
     private final Set<String> people = new LinkedHashSet<>();
     private final Map<String, IntelSpec> intels = new LinkedHashMap<>();
+    private final Map<String, String> raids = new LinkedHashMap<>();
 
     private QuestModule<S, T> declaring;
     private boolean sealed;
@@ -53,6 +54,11 @@ public final class Declarations<S extends Enum<S> & QuestStage, T extends QuestS
             String trigger = role.getValue().defeatTriggerName();
             if (trigger != null && !triggers.contains(trigger)) {
                 throw new IllegalStateException("[" + questId + "] defeat trigger " + trigger + " of role " + role.getKey() + " is not declared");
+            }
+        }
+        for (Map.Entry<String, String> raid : raids.entrySet()) {
+            if (!actions.containsKey(raid.getValue())) {
+                throw new IllegalStateException("[" + questId + "] action " + raid.getValue() + " of raid " + raid.getKey() + " is not declared");
             }
         }
     }
@@ -109,6 +115,12 @@ public final class Declarations<S extends Enum<S> & QuestStage, T extends QuestS
         return spec;
     }
 
+    // A raid objective that QuestContext.raidObjective builds; its name, tooltip and result lines come from the quest's
+    // raid rows and a successful raid runs the declared action (README "Raid objectives").
+    public void raid(String key, String action) {
+        put(raids, "raid", key, action);
+    }
+
     public Map<String, Predicate<QuestContext<S, T>>> checks() {
         return Collections.unmodifiableMap(checks);
     }
@@ -144,6 +156,15 @@ public final class Declarations<S extends Enum<S> & QuestStage, T extends QuestS
 
     public Set<String> intels() {
         return Collections.unmodifiableSet(intels.keySet());
+    }
+
+    public Set<String> raids() {
+        return Collections.unmodifiableSet(raids.keySet());
+    }
+
+    // The action a successful raid of the key runs; null for an undeclared key.
+    public String raidAction(String key) {
+        return raids.get(key);
     }
 
     IntelSpec intelDeclaration(String key) {

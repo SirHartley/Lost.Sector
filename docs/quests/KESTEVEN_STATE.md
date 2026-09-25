@@ -19,7 +19,7 @@ The questline is quest `kq` of the quest framework. `kesteven/quest/KestevenQues
 | Framework fleets | The framework's `QuestFleets.KEY` list | The job 1 tip system's dormant fleet, role `job1Dormant`; the job 3 expedition, roles `job3Expedition` and `job3ExpeditionOver`; the job 4 fleets, roles `job4StrikeGroup`, `job4SpecialOps`, `job4SpecialOpsLeaving` and `job4Splinter`; the Enigma dormant fleets woken at satellite #3, role `satelliteGuard`; the Tri-Tachyon collector, roles `ttCollector` and `ttCollectorLeaving` (record `ttCollector`) |
 | Quest people | The state's person map, registered with the important people | The seven job 3 party guests of `KestevenPartyModule`, keys `party…`, ids `nskr_kq_party…`; the Delve meeting's escort `delveGuard` (`nskr_kq_delveGuard`) of `KestevenJob5Module`, during `JOB5_MEETING` |
 | Fleet, entity and person memory | The owning `MemoryAPI` | Routing flags read by `rules.csv` and `CorePlugin`, and the conversation flags of Jack, Alice, Nicholas and the party employee; see [Memory flags](#memory-flags) |
-| Saved objects | Bar events in `PortsideBarData`, intel in the intel manager, `ElizaRaidObjectiveCreator` as a listener | Their class names and fields are serialized. |
+| Saved objects | Bar events in `PortsideBarData`, intel in the intel manager | Their class names and fields are serialized. |
 | Per installation | LunaLib settings: `settings/SettingsManager.set` and `Setting` reads | `thronesGiftUnlocked`, `hellspawnUnlocked`, `storySkipUnlocked`; shared by all campaigns |
 
 The quest manager creates the state on the first unpaused frame of a new campaign and loads it with the save afterwards. Until then:
@@ -135,13 +135,13 @@ The actual path can skip stages: 8 to 10 without 9, 7 to 11 when job 3 is refuse
 | `ELIZA_HELPED` | Disks received by agreement | Rules `nskr_kq_elizaDisks`; story skip |
 | `ELIZA_AGREED_SINCERELY` | Agreed sincerely | Rules `nskr_kq_elizaAgree` |
 | `ELIZA_RAID_ENABLED` | Refused; raid enabled | Rules `nskr_kq_elizaDismissed` |
-| `ELIZA_RAIDED` | Raid done | `ElizaRaid` |
+| `ELIZA_RAIDED` | Raid done | `KestevenElizaModule` raid action `elizaRaid` |
 | `ELIZA_KILLED` | Eliza dead | `KestevenElizaFleetsModule` (`onBattle`, `onFleetGone`) |
 | `CACHE_FOUND` | Cache coordinates known | Rules `nskr_kq_aliceCacheFound`, `QuestStageManager`, story skip |
 | `CORE_SEEN`, `CHIP_SALVAGED` | Core seen; UPC salvaged | `CacheCoreDialog` |
 | `ELIZA_INTERCEPT_TALKED` | Eliza's intercept fleet spoke to the player | `KestevenElizaFleetsModule` action `elizaTalked` |
 | `CHIP_HANDED_TO_ELIZA` | UPC handed to Eliza | `KestevenElizaFleetsModule` action `elizaChipHandOver` |
-| `ELIZA_RETURNED` | Eliza back at her market | `QuestStageManager.respawnEliza`, called by `KestevenElizaFleetsModule.onFleetGone` |
+| `ELIZA_RETURNED` | Eliza back at her market | `KestevenElizaModule.respawnEliza`, called by `KestevenElizaFleetsModule.onFleetGone` |
 | `JOB5_FAILED` | Eliza killed after the handover | `KestevenElizaFleetsModule` |
 | `KESTEVEN_ENDING_DONE` | Kesteven ending done | Rules `nskr_kq_kestevenEndingDone`; `KestevenEndingsModule.onSkip` on a jump past `CHIP_RECOVERED` without the hand-over |
 | `ELIZA_ENDING_DONE` | Eliza ending done | Rules `nskr_kq_elizaEndingDone`; `KestevenEndingsModule.onSkip` on a jump past `CHIP_RECOVERED` after the hand-over |
@@ -167,9 +167,10 @@ Other features read flags through the [queries](#queries-for-other-features). `n
 | `elizaContactMarket` | `SectorEntityToken` | Contact market after paying the spacer; re-picked on decivilization | `KestevenElizaSearchModule` (`elizaPickContact`, `onDecivilized`) |
 | `elizaContactFormerName` | `String` | The contact's entity name before its last move, for the move message | `KestevenElizaSearchModule.onDecivilized` |
 | `elizaFormerName` | `String` | Eliza's market entity name before her last move, for the Delve update `elizaMoved` | `KestevenElizaModule.onDecivilized` |
+| `elizaRaidCredits` | `float` | Credits the raid on Eliza's port took, for its result row (token `elizaRaidCredits`) | `KestevenElizaModule` raid action `elizaRaid` |
 | `elizaSpacerPrice` | `int` | The first spacer's price, 4,000 to 7,000, rolled each time that conversation opens | `KestevenElizaSearchModule` action `elizaSpacerOpen` |
 | `cacheGuardianSpot` | `SectorEntityToken` | Guardian spawn point in Unknown Site | `QuestHelper.setCacheFleetLoc()` |
-| `disksRecovered` | `int` | Disks recovered | `KestevenSatelliteModule` action `salvageSatellite`, `KestevenGlacierModule` action `recoverGlacierDisk`, `KestevenElizaModule` action `elizaHandOver`; `ElizaRaid` through `QuestHelper.setDisksRecovered` |
+| `disksRecovered` | `int` | Disks recovered | `KestevenSatelliteModule` action `salvageSatellite`, `KestevenGlacierModule` action `recoverGlacierDisk`, `KestevenElizaModule` actions `elizaHandOver` and `elizaRaid` |
 | `satellitesRecovered` | `int` | Satellites salvaged, 0 to 2; the hub checks `noSatellite`, `oneSatellite`, `twoSatellites` read it | `KestevenSatelliteModule` action `salvageSatellite`, story skip |
 | `nicholasDialogStage` | `int` | Nicholas's job 4 dialogue stage; the hub reads it through `check nicholasTipGiven` | Hub action `recordNicholasTip` |
 | `elizaSearchStage` | `int` | Eliza search step, 0 to 3 | `KestevenElizaSearchModule` actions |

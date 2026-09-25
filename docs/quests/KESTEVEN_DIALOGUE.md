@@ -371,9 +371,10 @@ The meeting at Eliza's market is in the `# KESTEVEN QUESTLINE: ELIZA` block. Flo
 | Meeting to the first question | Plain chain | `nskr_kq_elizaMeet` (`do elizaMeet`), `…Escort`, `…Office` (`ShowPersonVisual false nskr_anarchist`); `…Sit` and `…Stand` (sets `$nskr_kq_elizaStood`, expiry 0) fire `nskr_kqElizaCache`. |
 | Who should wield the power | Handlers with a shared insert | `nskr_kq_elizaChip`, `…NotReally`, `…NotTelling` fire `nskr_kqElizaPower`. |
 | Neutral, dislike and her plans | Plain chains with shared inserts | `nskr_kq_elizaUnsure`; `…NoPolitics` and `…SayNothing` fire `nskr_kqElizaKillingMachine`; `…Kesteven` and `…NotYou` fire `nskr_kqElizaPropaganda`; `…WhatPower`, `…HowGood`, `…Violence`; `…NoDifferent` and `…NoTerrorists` fire `nskr_kqElizaComsec`. Each handler's own Options column holds its option set; one option id serves every label the old dialog gave the same outcome. |
-| Refusal | Handlers with a shared insert | `nskr_kq_elizaRefuse` and `…Silent` fire `nskr_kqElizaFarGone`; `nskr_kq_elizaDismissed` fires `nskr_kqElizaStoodLine`, sets `ELIZA_DIALOG_FINISHED` and `ELIZA_RAID_ENABLED`, runs `elizaEnableRaid` and `elizaToPort`; `…ThrownOut` (`HideVisual`) ends with `defaultLeave`. |
+| Refusal | Handlers with a shared insert | `nskr_kq_elizaRefuse` and `…Silent` fire `nskr_kqElizaFarGone`; `nskr_kq_elizaDismissed` fires `nskr_kqElizaStoodLine`, sets `ELIZA_DIALOG_FINISHED` and `ELIZA_RAID_ENABLED`, runs `elizaToPort`; `…ThrownOut` (`HideVisual`) ends with `defaultLeave`. |
 | Agreement | Handlers with shared inserts | `nskr_kq_elizaJoin` and `…BackHer` fire `nskr_kqElizaRight`; `…ReallyRight` and `…Together` fire `nskr_kqElizaOffer`; `…Agree` and `…AgreeLie` fire `nskr_kqElizaMonitoring` and `nskr_kqElizaDisks` (flags, `elizaHandOver`, receipts, `elizaToPort`, `defaultLeave`). |
 | Her move | Delve update | `nskr_kq_elizaMovedBullet` on `nskr_kqIntelBullets` for update `elizaMoved`; the other job 5 bullets exclude that update. |
+| The raid | Raid objective rows | `nskr_kq_elizaRaidName` (`nskr_kqRaidName`), `nskr_kq_elizaRaidTooltip` (`nskr_kqRaidTooltip`) and the result lines `…RaidDisk2`, `…RaidDisk1`, `…RaidCredits` (`nskr_kqRaidResult`), selected by `$nskr_raid_key == elizaDisks`. |
 
 ## The Kesteven and Eliza endings
 
@@ -394,7 +395,6 @@ The insert rows' checks read a relationship before their own action lowers it, b
 |---|---|---|---|
 | `kesteven/quest/CacheDoubtDialog` | `QuestStageManager`, once in Unknown Site | Inner-voice hint | None |
 | `kesteven/quest/CacheCoreDialog` | `CorePlugin` or the guardian's fleet-interaction config | Cache core salvage | Stage 19, rewards |
-| `kesteven/quest/ElizaRaid` | Raid menu at Eliza's market | Raid objective | Disks, Eliza's fleet |
 
 `CacheCoreDialog` shows the options it needs; their text blocks are sequential `addPara` calls keyed by `OptionId`.
 

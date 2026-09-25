@@ -24,7 +24,7 @@ This guide does not govern:
 - [Package layout](#package-layout)
 - [Lifecycle](#lifecycle)
 - [Making a quest](#making-a-quest)
-- [Reference](#reference): [Quest and stages](#quest-and-stages), [QuestState](#queststate), [QuestModule](#questmodule), [Declarations](#declarations), [QuestContext](#questcontext), [QuestManager](#questmanager), [Queries from other features](#queries-from-other-features), [Events](#events), [Fleets](#fleets), [People](#people), [Dialog entry points](#dialog-entry-points), [Bar events](#bar-events), [Intel](#intel), [Tokens](#tokens), [Rewards and receipts](#rewards-and-receipts), [Random, timers and marks](#random-timers-and-marks), [The quest command](#the-quest-command), [Dev tools](#dev-tools), [Rules check tool](#rules-check-tool)
+- [Reference](#reference): [Quest and stages](#quest-and-stages), [QuestState](#queststate), [QuestModule](#questmodule), [Declarations](#declarations), [QuestContext](#questcontext), [QuestManager](#questmanager), [Queries from other features](#queries-from-other-features), [Events](#events), [Fleets](#fleets), [People](#people), [Dialog entry points](#dialog-entry-points), [Bar events](#bar-events), [Intel](#intel), [Raid objectives](#raid-objectives), [Tokens](#tokens), [Rewards and receipts](#rewards-and-receipts), [Random, timers and marks](#random-timers-and-marks), [The quest command](#the-quest-command), [Dev tools](#dev-tools), [Rules check tool](#rules-check-tool)
 - [Rules contract](#rules-contract)
 - [Shared modules](#shared-modules)
 - [Save compatibility](#save-compatibility)
@@ -47,6 +47,7 @@ The framework is built on branch `quest-overhaul`; the task ids refer to the tra
 | Presentation spec (vanilla commands per effect) | [DIALOGUE.md](../../../../docs/DIALOGUE.md#presentation-in-rules) | implemented | T09 |
 | Gap verbs: `confirm`, `engage` | `nskr_quest` | implemented | T10 |
 | Intel and rules text outside dialogs | `QuestIntel`, `QuestIntels`, `QuestText` | implemented; records and `close` added in T45 | T11, T45 |
+| Raid objectives | `QuestRaidObjective`, `onRaidObjectives`, `d.raid`, `ctx.raidObjective` | implemented | T28 |
 | Rules check tool | `lostsector.quest.dev.RulesCheck` | implemented | T12 |
 | Dev menu and stage jumps | `nskr_questDev`, `QuestDevTools` | implemented | T13 |
 | Shared modules | `lostsector.quest.modules` | `InterceptEncounter`, `PayOffEncounter` and `BountyEncounter` implemented; the others planned | T37 to T41 |
@@ -403,6 +404,8 @@ public abstract class QuestModule<S, T> {
     protected void onDecivilized(QuestContext<S, T> ctx, MarketAPI market, boolean fullyDestroyed);
     protected void onReputationChange(QuestContext<S, T> ctx, String factionId, float delta);
     protected void onShipsRecovered(QuestContext<S, T> ctx, List<FleetMemberAPI> ships);
+    protected void onRaidObjectives(QuestContext<S, T> ctx, MarketAPI market, SectorEntityToken entity,
+            List<GroundRaidObjectivePlugin> objectives, RaidType type, int marineTokens, int priority);
 
     protected void devInfo(QuestContext<S, T> ctx, List<String> lines);
 }
@@ -425,6 +428,7 @@ public abstract class QuestModule<S, T> {
 | `onDecivilized` | Any colony is decivilized | Losing a quest location |
 | `onReputationChange` | The player's relationship with a faction changes through the reputation system | Caps on a relationship after a story choice |
 | `onShipsRecovered` | The player recovers ships, after a battle or from a derelict | Changing recovered quest hulls |
+| `onRaidObjectives` | A raid menu lists its objectives, once per priority 0 to 9 | Adding a [raid objective](#raid-objectives) |
 | `devInfo` | The dev menu shows the quest | One line per value worth checking |
 
 Every hook has an empty default. Hooks run only while the module is active, except `onSkip`, which runs for the skipped stage. A module handles its own events and does not call another module; shared work goes into the state, a declared action, or a shared module.
@@ -443,6 +447,7 @@ public final class Declarations<S, T> {
     public void role(String name, FleetRole role);
     public void person(String key);
     public IntelSpec intel(String key, String icon, String... tags);   // options: see Intel
+    public void raid(String key, String action);                       // see Raid objectives
     public void trigger(String trigger);
 }
 ```
@@ -455,6 +460,7 @@ public final class Declarations<S, T> {
 | `role` | Fleet memory flag `$nskr_<q>_<role>` | While fleets of the role exist | See [Fleets](#fleets). |
 | `person` | Person tokens `$nskr_<q>_<key>_name` and the pronoun tokens; person id `nskr_<q>_<key>` | While the person exists | Required for every quest person key. See [People](#people). |
 | `intel` | Intel rows keyed by `$nskr_intel_key` | When shown | See [Intel](#intel). |
+| `raid` | Raid rows keyed by `$nskr_raid_key` | When a module adds the objective | The action must be declared. See [Raid objectives](#raid-objectives). |
 | `trigger` | Rows on that trigger | When Java fires it | Every trigger that Java opens, claims or reads text from. The check tool treats it as fired. |
 
 Extra rules arguments reach the lambda through `ctx.args()`. Prefer a separate named check over arguments; use arguments only for real parameters such as an amount.
@@ -500,6 +506,7 @@ public final class QuestContext<S, T> {
     public TextPanelAPI textPanel();             // null outside a dialog
     public List<String> args();                  // extra rules arguments, empty from Java
     public String intelRecord();                 // record of the intel entry whose rows are read; null otherwise
+    public GroundRaidObjectivePlugin raidObjective(String key, MarketAPI market, RaidDangerLevel danger, String iconCommodityId);
 
     public void log(String message);
 }
@@ -548,6 +555,7 @@ The manager implements the vanilla callbacks below and routes each to the hooks 
 | `reportColonyDecivilized(market, fullyDestroyed)` | `ColonyDecivListener` | `onDecivilized` | All active modules |
 | `reportPlayerReputationChange(factionId, delta)` | `CampaignEventListener` | `onReputationChange` | All active modules |
 | `reportShipsRecovered(ships, dialog)` | `ShipRecoveryListener` | `onShipsRecovered` | All active modules |
+| `modifyRaidObjectives(market, entity, objectives, type, marineTokens, priority)` | `GroundRaidObjectivesListener` | `onRaidObjectives` | All active modules |
 
 Delivery order is quest order in `QuestCatalog`, then module order. A stage change during delivery takes effect at once: each module's activity is checked when its turn comes, so a module that became inactive does not receive the rest of that event and one that became active does. Unavailable quests and quests without state receive nothing, which includes events that arrive during a load before `startQuests()`. `EconomyTickListener` is not a daily tick (it fires about every three days) and is not used.
 
@@ -777,6 +785,28 @@ public final class QuestText {
 
 `QuestText` also holds the scratch keys, trigger suffixes and mode values as constants, which the [rules check tool](#rules-check-tool) reads. It matches with `RulesAPI.getBestMatching` and `getAllMatching` with a null dialog, picks each row's text with `RuleAPI.pickText()` and replaces tokens with `performTokenReplacement(ruleId, text, null, memoryMap)`; [Rules text outside a dialog](../../../../docs/RULES_AUTHORING.md#rules-text-outside-a-dialog) has the verified engine behavior. A check lambda or command that throws during matching is not caught.
 
+### Raid objectives
+
+A quest adds an objective to a raid menu from the `onRaidObjectives` hook; its name, tooltip and result lines are rows, and a successful raid runs a declared action. The framework class is `QuestRaidObjective`, a vanilla goal objective (`AbstractGoalGroundRaidObjectivePluginImpl`).
+
+```java
+d.raid("elizaDisks", "elizaRaid");            // in declare(); the action is declared with d.action
+
+protected void onRaidObjectives(QuestContext<S, T> ctx, MarketAPI market, SectorEntityToken entity,
+        List<GroundRaidObjectivePlugin> objectives, RaidType type, int marineTokens, int priority) {
+    if (priority != 0 || market == null || !raidOpen(ctx, market)) return;
+    GroundRaidObjectivePlugin raid = ctx.raidObjective("elizaDisks", market, RaidDangerLevel.EXTREME, "nskr_electronics");
+    if (raid != null) objectives.add(raid);
+}
+```
+
+- **Routing.** `QuestManager` implements `GroundRaidObjectivesListener` and is registered like its other listeners. `MarketCMD` calls `ListenerUtil.modifyRaidObjectives` ten times per menu, with priority 0 to 9 (`raidValuable`, `raidDisrupt`, and `CUSTOM_ONLY` for a non-market raid), and the hook passes each call to every active module. A module adds its objective in one of those calls, normally priority 0, and decides from `type` whether disruption or custom raids get it. `reportRaidObjectivesAchieved` is not routed: it comes after the XP line and after any Continue.
+- **Declaration.** `d.raid(key, action)` names the rows' key and the action; the definition throws when the action is not declared. `ctx.raidObjective` logs an error and returns null for an undeclared key. The danger level and the icon are passed when the objective is built, because `RaidDangerLevel`'s static initializer calls `Misc` and definitions must stay pure ([Quest and stages](#quest-and-stages)).
+- **Vanilla behavior kept.** `AbstractGoalGroundRaidObjectivePluginImpl` (0.98a-RC8 `sources-api/impl.campaign.java`) needs the danger's `marineTokens`, has no quantity, value, cargo or fuel, a projected value of 0, sorts at `QUANTITY_SORT_TIER_1` plus the name's hash, and shows no Continue before the result. The icon is the stack of `iconCommodityId` (`getStackForIcon`), none when null. The objective holds only the quest id, the key, the icon id and the market; `MarketCMD` keeps it while the raid menu is open.
+- **Name and tooltip.** `getName` is the best `nskr_<q>RaidName` row, `createTooltip` prints every matching `nskr_<q>RaidTooltip` row with `addPara(text, 10f)` in the tooltip's paragraph color, and `hasTooltip` is true when one matches. A missing name row logs an error and shows the key.
+- **Result.** `MarketCMD.raidConfirm` calls `performRaid` for each picked objective after the losses, reputation and stability lines and before the XP line. With marines assigned, the objective runs the declared action with a context on the current interaction dialog and its plugin's memory map (the rules dialog that runs `MarketCMD raidConfirm`), under the rule `do` follows: only while the declaring module is active. It then prints every matching `nskr_<q>RaidResult` row in the small insignia font and gray, with the row's highlights, as vanilla receipts. The action runs first so result rows can show values it stored, through tokens. `performRaid` returns 0 XP, as a goal objective with no projected value does.
+- **Rows.** Before matching, `QuestText.raidMemory(key)` writes `$nskr_raid_key` into a scratch local memory. The rows follow the intel row rules: conditions are memory keys and `nskr_quest` condition verbs, Options are ignored, the Script is read only for `SetTextHighlights`, `Highlight` and `SetTextHighlightColors`, quest token values are highlighted, and the name is not highlighted. Text goes to `addPara` or `addParagraph` overloads that do not run `String.format`.
+
 ### Tokens
 
 `QuestTokens` is a `RuleTokenReplacementGeneratorPlugin`. For a rule whose id starts with `nskr_<q>_`, it returns every token declared by quest `<q>` as `$nskr_<q>_<name>`, plus the person tokens of that quest's people. It returns nothing for other rule ids, so tokens work only in the quest's own rows.
@@ -921,15 +951,15 @@ Findings about definitions rather than rows show `-` as the line and `(quest <q>
 | `unreachable` | error / warning | A trigger with mod rows that nothing fires, reported once at its first row. An error for a quest's trigger (`nskr_<q>` followed by an upper-case letter or `_`), a warning otherwise |
 | `handler` | error | An option id from the Options column, an `AddBarEvent` call or a `$option = <id>` line without a `DialogOptionSelected` or `NewGameOptionSelected` row testing `$option == <id>`, in the mod or vanilla |
 | `case` | warning | A trigger or memory key of a mod row that differs only by case from another trigger or key in the mod, vanilla or the engine list |
-| `unwritten` | warning | A `$nskr_` key read in Conditions, Script, Text or option labels that no mod row writes, that no Java string literal under `jars/src` names, and that is not an intel scratch key, a `QuestFleets` fleet key (`OWNER_KEY`, `ROLE_KEY`, `RECORD_KEY`), the role flag `$nskr_<q>_<role>` of a declared role, or a quest token |
-| `identical` | warning | Two rows on one trigger with the same condition lines in any order, unless both notes contain `variant`. Triggers fired with `FireAll` by a row, by vanilla rows or by the engine, and the `IntelBullets` and `IntelDesc` triggers, are skipped, because every match runs there |
-| `intel` | error / warning | A command other than `nskr_quest` in the Conditions of an intel row / Options in an intel row, which are ignored; a Script line other than `SetTextHighlights`, `Highlight` or `SetTextHighlightColors`, which never runs; a highlight line in a title row, which is not highlighted |
+| `unwritten` | warning | A `$nskr_` key read in Conditions, Script, Text or option labels that no mod row writes, that no Java string literal under `jars/src` names, and that is not an intel or raid scratch key, a `QuestFleets` fleet key (`OWNER_KEY`, `ROLE_KEY`, `RECORD_KEY`), the role flag `$nskr_<q>_<role>` of a declared role, or a quest token |
+| `identical` | warning | Two rows on one trigger with the same condition lines in any order, unless both notes contain `variant`. Triggers fired with `FireAll` by a row, by vanilla rows or by the engine, and the `IntelBullets`, `IntelDesc`, `RaidTooltip` and `RaidResult` triggers, are skipped, because every match runs there |
+| `intel` | error / warning | A command other than `nskr_quest` in the Conditions of an intel or raid row / Options in such a row, which are ignored; a Script line other than `SetTextHighlights`, `Highlight` or `SetTextHighlightColors`, which never runs; a highlight line in a title or raid name row, which is not highlighted |
 | `naming` | error / warning | In quest rows (id `nskr_<q>_`): a `$global.` write / a `$nskr_` write other than `$nskr_<q>_<name>` on local memory or `$player.nskr_<name>`; a row on a quest's trigger whose id does not start with `nskr_<q>_` |
 | `definitions` | error | `QuestCatalog.create()` throws, including when a definition calls the game ([Definitions are pure](#quest-and-stages)) |
 
 Quest checks use only the quests `QuestCatalog` returns. A `$nskr_<x>_` name whose `<x>` is not a quest id is treated as an ordinary memory key, because legacy keys share that shape, so the tool cannot report an unknown quest id inside a token.
 
-**What counts as fired.** A trigger is fired when a mod row fires it with `FireAll` or `FireBest`; when the engine list in `VanillaRules.ENGINE` names it; when it ends with a hub mission suffix (`_blurb`, `_option`, `_blurbBar`, `_optionBar`, `_startBar`); when vanilla rows use or fire it; when a quest declares it, which includes every role's defeat trigger because `Declarations` refuses an undeclared one; when it is an [intel trigger](#intel) of a quest; or, for triggers that do not belong to a quest, when a Java string literal under `jars/src` equals it, which covers legacy code that fires its own triggers. A quest's own trigger counts only when declared.
+**What counts as fired.** A trigger is fired when a mod row fires it with `FireAll` or `FireBest`; when the engine list in `VanillaRules.ENGINE` names it; when it ends with a hub mission suffix (`_blurb`, `_option`, `_blurbBar`, `_optionBar`, `_startBar`); when vanilla rows use or fire it; when a quest declares it, which includes every role's defeat trigger because `Declarations` refuses an undeclared one; when it is an [intel trigger](#intel) or a [raid objective trigger](#raid-objectives) of a quest; or, for triggers that do not belong to a quest, when a Java string literal under `jars/src` equals it, which covers legacy code that fires its own triggers. A quest's own trigger counts only when declared.
 
 **Vanilla lists.** `VanillaRules.ENGINE` lists every trigger the 0.98a-RC8 game code fires or opens with a literal name (`FireBest.fire`, `FireAll.fire`, the dialog plugins' `fireBest` and `fireAll`, `getBestMatching`, `RuleBasedInteractionDialogPluginImpl`), each with its bundle file and line in the `starsector-knowledge` sources; triggers vanilla fires from variables, such as defeat triggers, are covered because vanilla rows use them. `VanillaRules.COMMAND_PACKAGES` is vanilla's `ruleCommandPackages`. `vanilla-rules-index.txt`, next to the tool, lists the triggers vanilla rows use, the literal `FireAll` and `FireBest` targets in vanilla rows, the option ids vanilla rows handle and the memory keys vanilla rows use. The tool reads it from the repository at run time. Regenerate it from a game version's `starsector-core/data/campaign/rules.csv`:
 
@@ -955,7 +985,7 @@ Where each kind of value lives, for quest content. The general table is in [Stat
 | What a fleet is for | Fleet memory, written by `QuestFleets` | `$nskr_<q>_<role>` |
 | Knowledge several quests share | `$player.nskr_<name>`, only when two quests read it | Rows |
 | Computed display values | Tokens | `$nskr_<q>_<token>` |
-| Intel text selection | Scratch memory written by `QuestText` | `$nskr_intel_*` |
+| Intel and raid text selection | Scratch memory written by `QuestText` | `$nskr_intel_*`, `$nskr_raid_key` |
 | `$global` | Nothing | None |
 
 Naming, extending [Layout and naming](../../../../docs/RULES_WRITING.md#layout-and-naming):
@@ -1132,7 +1162,7 @@ Do not add a framework feature that only one quest could ever use; keep that in 
 | Duplicate today | Replaced by |
 |---|---|
 | `QuestHelper.getFailed`/`setFailed` and `getCompleted`/`setCompleted`, identical bodies | Flags on the state |
-| Three hand-written seeded `Random` accessors (`ElizaDialog`, `CacheDoubtDialog`, `CacheCoreDialog`) | `ctx.random(purpose)` |
+| Two hand-written seeded `Random` accessors (`CacheDoubtDialog`, `CacheCoreDialog`) | `ctx.random(purpose)` |
 | `nskr_ttCollectorDialog`, the second copy of the loan collector's encounter | `PayOffEncounter` and rows (done in T32: `KestevenCollector` in quest `kq`) |
 | Intel classes that register themselves and poll in `advanceImpl` | `QuestIntel` and intel rows |
 | The spawn-and-register tail repeated across `KestevenFleets` spawners | `ctx.fleets().spawn` |
@@ -1151,7 +1181,7 @@ Migration map for the Kesteven questline and the other systems. The owning task 
 | `QuestHelper` questline getters and setters | `KestevenState` fields and `KestevenQuest` queries |
 | `campaign/kesteven/quest/KestevenFleets` builders | Builders in the Kesteven quest package returning `SimpleFleet` |
 | `campaign/kesteven/quest/KestevenPeople` | Fixed people stay in world generation; generated people move to `ctx.people()` |
-| Java dialog classes (`CacheCoreDialog`, endings and the other questline commands) | Rows, checks, actions and claims (`nskr_kestevenQuest` done in T16 and T17: `KestevenHubModule` and the `# KESTEVEN QUESTLINE` rows; `GlacierCommsDialog` and its `CorePlugin` route in T26: `KestevenGlacierModule`, a claim and the `# KESTEVEN QUESTLINE: GLACIER` rows; `DataSatelliteDialog` and its route in T25: `KestevenSatelliteModule`, a claim on every satellite and the `# KESTEVEN QUESTLINE: SATELLITES` rows); `HintWreckDialog` and `nskr_job4FleetDialog` in T22 and T23: a claim and role rows of `KestevenJob4Module`; `ElizaDialog` and its `CorePlugin` route in T28: `KestevenElizaModule` and the `# KESTEVEN QUESTLINE: ELIZA` rows on `OpenInteractionDialog`; `nskr_elizaInterceptDialog` in T31: `KestevenElizaFleetsModule`, fleet roles and the `# KESTEVEN QUESTLINE: ELIZA FLEETS` rows; `EndingKestevenDialog`, `EndingElizaDialog` and their `CorePlugin` routes also in T31: `KestevenEndingsModule` and the `# KESTEVEN QUESTLINE: ENDINGS` rows on `OpenInteractionDialog`) |
+| Java dialog classes (`CacheCoreDialog`, endings and the other questline commands) | Rows, checks, actions and claims (`nskr_kestevenQuest` done in T16 and T17: `KestevenHubModule` and the `# KESTEVEN QUESTLINE` rows; `GlacierCommsDialog` and its `CorePlugin` route in T26: `KestevenGlacierModule`, a claim and the `# KESTEVEN QUESTLINE: GLACIER` rows; `DataSatelliteDialog` and its route in T25: `KestevenSatelliteModule`, a claim on every satellite and the `# KESTEVEN QUESTLINE: SATELLITES` rows); `HintWreckDialog` and `nskr_job4FleetDialog` in T22 and T23: a claim and role rows of `KestevenJob4Module`; `ElizaDialog` and its `CorePlugin` route in T28: `KestevenElizaModule` and the `# KESTEVEN QUESTLINE: ELIZA` rows on `OpenInteractionDialog`; `ElizaRaid` and its listener `ElizaRaidObjectiveCreator` in T28: raid objective `elizaDisks` of `KestevenElizaModule`; `nskr_elizaInterceptDialog` in T31: `KestevenElizaFleetsModule`, fleet roles and the `# KESTEVEN QUESTLINE: ELIZA FLEETS` rows; `EndingKestevenDialog`, `EndingElizaDialog` and their `CorePlugin` routes also in T31: `KestevenEndingsModule` and the `# KESTEVEN QUESTLINE: ENDINGS` rows on `OpenInteractionDialog`) |
 | `HostileTakeoverBarEvent`, `ElizaSearch*BarEvent`, `DelveMeetingBarEvent` | `AddBarEvents` rows and quest people (`HostileTakeoverBarEvent` done in T20 and T21: `KestevenPartyModule` and the `# KESTEVEN QUESTLINE: JOB 3 PARTY` rows; `ElizaSearch*BarEvent` done in T27: `KestevenElizaSearchModule`; `DelveMeetingBarEvent` and `nskr_barEventFixer` done in T24: `KestevenJob5Module` and the `# KESTEVEN QUESTLINE: JOB 5` rows) |
 | `EnemyUnknownIntel`, `HostileTakeoverIntel`, `OperationLifesaverIntel`, `TheDelveIntel`, `CacheIntel` | `QuestIntel` with intel rows (`EnemyUnknownIntel` done in T18: key `job1` of `KestevenJob1Module`; `HostileTakeoverIntel` in T19: key `job3` of `KestevenJob3Module`; `TheDelveIntel` in T24: key `job5` of `KestevenJob5Module`); `OperationLifesaverIntel` in T22: key `job4` of `KestevenJob4Module`) |
 | `nskr_isKStage` and other stage predicates | `nskr_quest kq is` and `reached` |

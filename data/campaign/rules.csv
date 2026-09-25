@@ -2709,7 +2709,6 @@ AddText ""\""But I'll be getting those disks from you soon enough, one way or an
 AddText ""She points towards the door, grabs the notebook on the desk and turns to face away from you. \""Now get out, while you still can!\"" The large chair blocks your view of her.""
 nskr_quest kq set ELIZA_DIALOG_FINISHED
 nskr_quest kq set ELIZA_RAID_ENABLED
-nskr_quest kq do elizaEnableRaid
 nskr_quest kq do elizaToPort
 SetShortcut nskr_kq_elizaThrownOut ESCAPE",,nskr_kq_elizaThrownOut:Leave,
 nskr_kq_elizaStoodLine,nskr_kqElizaStoodLine,$nskr_kq_elizaStood,"AddText ""For the love of ludd she just keeps going. Your legs are starting to hurt a little, you really should have taken that seat."" gray",,,
@@ -2781,6 +2780,13 @@ nskr_kq_ttCollectorFight,DialogOptionSelected,$option == nskr_kq_ttCollectorFigh
 The comm link is cut before you can respond.
 
 the $faction $fleetName powers up their weapons and moves in to engage.",nskr_kq_ttCollectorExit:Cut the comm link,
+,,,,,,
+# Raid,,,,,,
+nskr_kq_elizaRaidName,nskr_kqRaidName,$nskr_raid_key == elizaDisks,,Data Disks,,Name of the raid objective KestevenElizaModule adds at her port after the refusal
+nskr_kq_elizaRaidTooltip,nskr_kqRaidTooltip,$nskr_raid_key == elizaDisks,,"Take the Data Disks from Eliza's compound, by force.",,
+nskr_kq_elizaRaidDisk2,nskr_kqRaidResult,$nskr_raid_key == elizaDisks,"SetTextHighlights ""Data Disk #2""",Acquired Data Disk #2,,
+nskr_kq_elizaRaidDisk1,nskr_kqRaidResult,$nskr_raid_key == elizaDisks,"SetTextHighlights ""Data Disk #1""",Acquired Data Disk #1,,
+nskr_kq_elizaRaidCredits,nskr_kqRaidResult,$nskr_raid_key == elizaDisks,,Acquired $nskr_kq_elizaRaidCredits from miscellaneous valuables,,The credits token is highlighted as a quest token value
 ,,,,,,
 # KESTEVEN QUESTLINE: ELIZA FLEETS,,,,,,
 # Raided fleet,,,,,,

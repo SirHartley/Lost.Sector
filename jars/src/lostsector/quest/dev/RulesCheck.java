@@ -44,10 +44,10 @@ public final class RulesCheck {
     private static final String JAVA_SOURCES = "jars/src";
     private static final String OWN_SOURCES = "lostsector/quest/dev";
 
-    // Scratch keys QuestText writes before it matches intel rows (README "Intel") and the fleet memory keys QuestFleets
-    // writes on spawn; role flags $nskr_<q>_<role> are added per declared role.
+    // Scratch keys QuestText writes before it matches intel and raid rows (README "Intel", "Raid objectives") and the
+    // fleet memory keys QuestFleets writes on spawn; role flags $nskr_<q>_<role> are added per declared role.
     private static final Set<String> FRAMEWORK_KEYS = Stream.concat(QuestText.SCRATCH_KEYS.stream(),
-            Stream.of(QuestFleets.OWNER_KEY, QuestFleets.ROLE_KEY, QuestFleets.RECORD_KEY)).collect(Collectors.toUnmodifiableSet());
+            Stream.of(QuestText.RAID_KEY, QuestFleets.OWNER_KEY, QuestFleets.ROLE_KEY, QuestFleets.RECORD_KEY)).collect(Collectors.toUnmodifiableSet());
     // QuestTokens adds these for each quest person: $nskr_<q>_<key>_<suffix> (README "People").
     private static final Set<String> PERSON_TOKEN_SUFFIXES = Set.of("name", "heOrShe", "HeOrShe", "himOrHer", "HimOrHer", "hisOrHer", "HisOrHer",
             "himOrHerself", "HimOrHerself", "manOrWoman", "ManOrWoman");
@@ -654,11 +654,15 @@ public final class RulesCheck {
         return triggers;
     }
 
-    // QuestText reads these for every quest; the IntelBullets and IntelDesc triggers select every matching row.
+    // QuestText reads these for every quest: the intel and raid objective triggers. IntelBullets, IntelDesc,
+    // RaidTooltip and RaidResult select every matching row.
     private Set<String> intelTriggers(boolean allMatchingOnly) {
         Set<String> triggers = new HashSet<>();
         for (String id : quests.keySet()) {
             for (String suffix : allMatchingOnly ? QuestText.ALL_MATCHING_SUFFIXES : QuestText.SUFFIXES) {
+                triggers.add(QuestText.trigger(id, suffix));
+            }
+            for (String suffix : allMatchingOnly ? QuestText.RAID_ALL_MATCHING_SUFFIXES : QuestText.RAID_SUFFIXES) {
                 triggers.add(QuestText.trigger(id, suffix));
             }
         }
@@ -879,31 +883,32 @@ public final class RulesCheck {
         return local.startsWith("$nskr_" + quest + "_");
     }
 
-    // Intel rows are matched outside any dialog; their Options are ignored and their Script is read only for
-    // SetTextHighlights and SetTextHighlightColors lines (QuestText).
+    // Intel and raid objective rows are matched outside any dialog; their Options are ignored and their Script is read
+    // only for SetTextHighlights and SetTextHighlightColors lines (QuestText).
 
     private void checkIntelRows() {
         Set<String> intel = intelTriggers(false);
         Set<String> titles = new HashSet<>();
         for (String id : quests.keySet()) {
             titles.add(QuestText.trigger(id, QuestText.TITLE));
+            titles.add(QuestText.trigger(id, QuestText.RAID_NAME));
         }
         for (ParsedRow row : rows) {
             if (!intel.contains(row.trigger())) continue;
             if (!row.row().options().isBlank()) {
-                add(Severity.WARN, "intel", row, "intel rows ignore Options");
+                add(Severity.WARN, "intel", row, "intel and raid rows ignore Options");
             }
             for (RuleExpression e : row.script()) {
                 boolean highlight = e.isCommand("SetTextHighlights") || e.isCommand("Highlight") || e.isCommand("SetTextHighlightColors");
                 if (!highlight) {
-                    add(Severity.WARN, "intel", row, "intel rows run no Script; only SetTextHighlights and SetTextHighlightColors lines are read: " + e.source);
+                    add(Severity.WARN, "intel", row, "intel and raid rows run no Script; only SetTextHighlights and SetTextHighlightColors lines are read: " + e.source);
                 } else if (titles.contains(row.trigger())) {
-                    add(Severity.WARN, "intel", row, "intel titles are not highlighted; " + e.command + " is ignored");
+                    add(Severity.WARN, "intel", row, "intel titles and raid names are not highlighted; " + e.command + " is ignored");
                 }
             }
             for (RuleExpression e : row.conditions()) {
                 if (e.command != null && !e.command.equals(QUEST_COMMAND)) {
-                    add(Severity.ERROR, "intel", row, "command " + e.command + " in an intel row; intel rows use memory keys and nskr_quest only");
+                    add(Severity.ERROR, "intel", row, "command " + e.command + " in an intel or raid row; these rows use memory keys and nskr_quest only");
                 }
             }
         }

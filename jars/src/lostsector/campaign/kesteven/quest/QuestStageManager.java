@@ -222,17 +222,6 @@ public class QuestStageManager extends BaseCampaignEventListener implements Ever
         }
     }
 
-    // Called by KestevenElizaFleetsModule when Eliza's fleet takes her home; T28 moves it with Eliza's port.
-    static void respawnEliza(SectorEntityToken loc) {
-        PersonAPI eliza = KestevenPeople.getEliza();
-        //add eliza to market
-        loc.getMarket().getCommDirectory().addPerson(eliza,1);
-        loc.getMarket().addPerson(eliza);
-
-        //check for ending
-        QuestHelper.setCompleted(true, KestevenFlag.ELIZA_RETURNED);
-    }
-
     private void spawnPing(CampaignFleetAPI pf) {
         SectorEntityToken loc = QuestHelper.getCacheFleetLoc();
         if (MathUtils.getDistance(pf.getLocation(), loc.getLocation()) > 1000f) {

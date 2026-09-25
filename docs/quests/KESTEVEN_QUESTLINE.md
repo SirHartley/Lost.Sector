@@ -9,7 +9,7 @@ Java paths are relative to `jars/src/lostsector/campaign/`; `dialogue/rules/` an
 | Owner | Role |
 |---|---|
 | `# KESTEVEN QUESTLINE` rows in `data/campaign/rules.csv`, `kesteven/quest/KestevenHubModule` | Every conversation with Jack, Alice and Nicholas: offers, briefings, hand-ins, rewards, questions, the job 3 refusal, the story skip and most player-driven stage changes; the job gates and payouts ([dialogue map](KESTEVEN_DIALOGUE.md#jack-alice-and-nicholas)) |
-| `kesteven/quest/QuestStageManager` | `EveryFrameScript` in `EFS_LIST`: automatic stage changes, failure checks, intel, bar events, quest fleets and their AI, the Cache guardian timer, Eliza relocation, post-quest revenge fleets |
+| `kesteven/quest/QuestStageManager` | `EveryFrameScript` in `EFS_LIST`: automatic stage changes, failure checks, intel, bar events, quest fleets and their AI, the Cache guardian timer, post-quest revenge fleets |
 | `kesteven/quest/KestevenQuest`, `KestevenStage`, `KestevenFlag`, `KestevenState` | Framework definition of quest `kq`, with the modules `KestevenHubModule`, `KestevenJob1Module`, `KestevenJob3Module`, `KestevenJob4Module`, `KestevenJob5Module`, `KestevenGlacierModule`, `KestevenElizaSearchModule`, `KestevenSatelliteModule`, `KestevenElizaModule`, `KestevenElizaFleetsModule`, `KestevenEndingsModule`, `KestevenAltEndingsModule` and the Tri-Tachyon collector's shared modules (`KestevenCollector`); the stage enum, the flags and the saved state ([KESTEVEN_STATE.md](KESTEVEN_STATE.md)) |
 | `kesteven/quest/KestevenJob1Module`, `# KESTEVEN QUESTLINE: JOB 1` rows in `data/campaign/rules.csv` | Job 1 world logic: the intel entry and its text rows, the tip system's dormant fleet, the move to stage 2 ([Job 1](#job-1-enemy-unknown-stages-0-to-6)) |
 | `kesteven/quest/KestevenElizaFleetsModule`, `# KESTEVEN QUESTLINE: ELIZA FLEETS` rows | Eliza's fleets after the raid, for the chip and for revenge, their conversations and `ELIZA_KILLED` ([Eliza's fleets](#elizas-fleets)) |
@@ -23,12 +23,11 @@ Java paths are relative to `jars/src/lostsector/campaign/`; `dialogue/rules/` an
 | `kesteven/quest/KestevenAltEndingsModule`, `# KESTEVEN QUESTLINE: ALTERNATIVE ENDINGS` rows | The Luddic and Tri-Tachyon endings ([Stage 19](#stage-19-who-receives-the-chip)) |
 | `kesteven/quest/QuestHelper` | Wrappers over `KestevenState` for the old callers: the stage as a legacy int, flags, fields and lazily picked target locations; `saveEnding()` |
 | `kesteven/quest/KestevenFleets` | Builders for every quest fleet |
-| `kesteven/quest/KestevenElizaModule`, `# KESTEVEN QUESTLINE: ELIZA` rows | The meeting at Eliza's port ([Eliza's port](#elizas-port)) |
+| `kesteven/quest/KestevenElizaModule`, `# KESTEVEN QUESTLINE: ELIZA` rows | The meeting at Eliza's port, the raid for her disks and her move after decivilization ([Eliza's port](#elizas-port)) |
 | `kesteven/quest/KestevenEndingsModule`, `# KESTEVEN QUESTLINE: ENDINGS` rows | The Kesteven and Eliza endings: their checks, rewards and relationship changes, and the commission restore after the Eliza ending ([endings](#the-kesteven-and-eliza-endings)) |
 | `CorePlugin` | Opens the Java quest dialogs when the player interacts with a quest entity, deciding through `KestevenQuest` queries |
 | `kesteven/quest/*Dialog`, `kesteven/quest/*BarEvent` | Java dialogs and bar events |
 | `dialogue/rules/nskr_isKStage`, `nskr_isAtLeastKStage` | Rules stage predicates |
-| `kesteven/quest/ElizaRaid`, `ElizaRaidObjectiveCreator` | Ground raid for Eliza's disks |
 | `world/systems/cache/Cache` | The Cache system, guardian fleet and its fleet-interaction config |
 | `kesteven/quest/CacheIntel` | Intel entry of the Cache; they read the stage and flags and never write the stage |
 | `kesteven/ExileManager` | Moves the quest people between Asteria and the Outpost |
@@ -278,7 +277,7 @@ Until the meeting has finished once (`ELIZA_DIALOG_FINISHED`), the rules row `ns
 
 - **Agree, sincerely:** disks #1 and #2 (action `elizaHandOver`, which also clears the market's `$missionImportant`), `ELIZA_HELPED`, and `ELIZA_AGREED_SINCERELY`.
 - **Agree while lying:** disks #1 and #2 and `ELIZA_HELPED` only.
-- **Refuse:** `ELIZA_RAID_ENABLED`. The action `elizaEnableRaid` registers `ElizaRaidObjectiveCreator` with the listener manager (saved), which then adds an extreme "Data Disks" raid objective at her market. The raid grants disks #1 and #2 and 30,000 to 40,000 credits, removes Eliza from the market, and spawns her "Merc Armada", which hunts the player. Destroying her flagship sets `ELIZA_KILLED` and removes her from important people.
+- **Refuse:** `ELIZA_RAID_ENABLED`. From then until `ELIZA_RAIDED`, `KestevenElizaModule.onRaidObjectives` adds the quest raid objective `elizaDisks` at priority 0 to every raid menu at her market, disruption raids included: extreme danger, the Artifact Electronics icon (`nskr_electronics`), and name, tooltip and result lines from the `# Raid` rows of the ELIZA block ([Raid objectives](../../jars/src/lostsector/quest/README.md#raid-objectives)). A raid with marines on it runs the action `elizaRaid`: disks #1 and #2, 30,000 to 40,000 credits (a float from `RANDOM_ELIZA`, added directly and shown by the result row through the token `elizaRaidCredits`), the market's `$missionImportant` cleared, Eliza removed from the market, `ELIZA_RAIDED`, and her "Merc Armada" (`KestevenElizaFleetsModule.spawnRaided`, same random), which hunts the player. The objective gives no XP. Destroying her flagship sets `ELIZA_KILLED` and removes her from important people.
 
 Either way the meeting ends by adding Eliza to the market's comm directory and people (action `elizaToPort`), so she can be contacted there afterwards.
 
@@ -338,7 +337,7 @@ The two alternative endings share one finished flag and are offered only at stag
 
 | Role | Spawned | Orders |
 |---|---|---|
-| `elizaRaided` | By `ElizaRaid` through `KestevenFleets.spawnElizaFleet`, after the raid on her market | Intercept the player (`AROUND`) |
+| `elizaRaided` | By `KestevenElizaModule`'s raid action through `spawnRaided`, after the raid on her market | Intercept the player (`AROUND`) |
 | `elizaIntercept` | Once, on the first day at stage 19 with `ELIZA_HELPED`, at Eliza's market, which she leaves | Intercept the player (`DIRECT`) |
 | `elizaReturning` | The intercept fleet after the hand-over, with Eliza's market as `FleetInfo.target` | `leave()`: fly home and despawn there |
 | `elizaRevenge` | Once, the day after `ELIZA_BETRAYED`, at Eliza's market, which she leaves; Eliza -75 | Intercept the player (`AROUND`) |

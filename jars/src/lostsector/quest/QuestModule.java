@@ -6,9 +6,12 @@ import com.fs.starfarer.api.campaign.CampaignFleetAPI;
 import com.fs.starfarer.api.campaign.CargoAPI;
 import com.fs.starfarer.api.campaign.FleetEncounterContextPlugin;
 import com.fs.starfarer.api.campaign.LocationAPI;
+import com.fs.starfarer.api.campaign.SectorEntityToken;
 import com.fs.starfarer.api.campaign.SectorEntityToken.VisibilityLevel;
 import com.fs.starfarer.api.campaign.econ.MarketAPI;
 import com.fs.starfarer.api.fleet.FleetMemberAPI;
+import com.fs.starfarer.api.impl.campaign.graid.GroundRaidObjectivePlugin;
+import com.fs.starfarer.api.impl.campaign.rulecmd.salvage.MarketCMD.RaidType;
 
 import java.util.HashSet;
 import java.util.List;
@@ -85,6 +88,12 @@ public abstract class QuestModule<S extends Enum<S> & QuestStage, T extends Ques
     }
 
     protected void onShipsRecovered(QuestContext<S, T> ctx, List<FleetMemberAPI> ships) {
+    }
+
+    // Each time a raid menu lists its objectives: MarketCMD calls it with priority 0 to 9. Add objectives from
+    // ctx.raidObjective in one of those calls, normally priority 0.
+    protected void onRaidObjectives(QuestContext<S, T> ctx, MarketAPI market, SectorEntityToken entity,
+                                    List<GroundRaidObjectivePlugin> objectives, RaidType type, int marineTokens, int priority) {
     }
 
     protected void devInfo(QuestContext<S, T> ctx, List<String> lines) {

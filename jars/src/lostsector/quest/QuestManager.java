@@ -16,10 +16,13 @@ import com.fs.starfarer.api.campaign.econ.MarketAPI;
 import com.fs.starfarer.api.campaign.listeners.ColonyDecivListener;
 import com.fs.starfarer.api.campaign.listeners.CurrentLocationChangedListener;
 import com.fs.starfarer.api.campaign.listeners.DetectedEntityListener;
+import com.fs.starfarer.api.campaign.listeners.GroundRaidObjectivesListener;
 import com.fs.starfarer.api.campaign.listeners.ShipRecoveryListener;
 import com.fs.starfarer.api.campaign.rules.MemoryAPI;
 import com.fs.starfarer.api.characters.PersonAPI;
 import com.fs.starfarer.api.fleet.FleetMemberAPI;
+import com.fs.starfarer.api.impl.campaign.graid.GroundRaidObjectivePlugin;
+import com.fs.starfarer.api.impl.campaign.rulecmd.salvage.MarketCMD.RaidType;
 import com.fs.starfarer.api.util.Misc;
 import lostsector.ModPlugin;
 import lostsector.helper.fleet.FleetInfo;
@@ -34,11 +37,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.Set;
+import java.util.function.Consumer;
 
 // Transient: ModPlugin.createManagers() builds it on every load and the EFS_LIST loop registers it.
 // It is the only writer of quest stages (README "Lifecycle").
 public final class QuestManager extends BaseCampaignEventListener
-        implements EveryFrameScript, CurrentLocationChangedListener, ColonyDecivListener, ShipRecoveryListener, DetectedEntityListener {
+        implements EveryFrameScript, CurrentLocationChangedListener, ColonyDecivListener, ShipRecoveryListener, DetectedEntityListener,
+        GroundRaidObjectivesListener {
 
     static final String STORE_KEY = "quests";
     private static final int MAX_QUEUED_CHANGES = 20;
@@ -597,6 +602,24 @@ public final class QuestManager extends BaseCampaignEventListener
         });
     }
 
+    // ListenerUtil.modifyRaidObjectives, from MarketCMD's raid menus, once per priority 0 to 9.
+    @Override
+    public void modifyRaidObjectives(MarketAPI market, SectorEntityToken entity, List<GroundRaidObjectivePlugin> objectives, RaidType type,
+                                     int marineTokens, int priority) {
+        deliver(new Hook() {
+            @Override
+            public <S extends Enum<S> & QuestStage, T extends QuestState<S>> void call(QuestModule<S, T> module, QuestContext<S, T> ctx) {
+                module.onRaidObjectives(ctx, market, entity, objectives, type, marineTokens, priority);
+            }
+        });
+    }
+
+    // A quest raid objective runs its action from performRaid, not from here: this report comes after the XP line and,
+    // for objectives that ask for it, after a Continue.
+    @Override
+    public void reportRaidObjectivesAchieved(RaidResultData data, InteractionDialogAPI dialog, Map<String, MemoryAPI> memoryMap) {
+    }
+
     private void deliver(Hook hook) {
         for (int i = 0; i < order.size(); i++) {
             order.get(i).deliver(hook);
@@ -657,6 +680,35 @@ public final class QuestManager extends BaseCampaignEventListener
             return null;
         }
         return dialogContext(run, ruleId, dialog, memoryMap, args);
+    }
+
+    // QuestRaidObjective.performRaid: the raid's declared action, with the raid dialog, under the same rule as `do`:
+    // only while its declaring module is active. False when it did not run.
+    boolean runRaidAction(String questId, String key, InteractionDialogAPI dialog, Map<String, MemoryAPI> memoryMap) {
+        Run<?, ?> run = runs.get(questId);
+        if (run == null || run.state() == null) {
+            logError(questId, "raid " + key + ": unknown quest or no state");
+            return false;
+        }
+        return runRaidAction(run, key, dialog, memoryMap);
+    }
+
+    private static <S extends Enum<S> & QuestStage, T extends QuestState<S>> boolean runRaidAction(
+            Run<S, T> run, String key, InteractionDialogAPI dialog, Map<String, MemoryAPI> memoryMap) {
+        String name = run.quest.declarations().raidAction(key);
+        QuestContext<S, T> ctx = new QuestContext<>(run, "raid " + key, "raid " + key, dialog, memoryMap, List.of());
+        if (name == null) {
+            ctx.error("raid " + key + " is not declared");
+            return false;
+        }
+        Consumer<QuestContext<S, T>> action = run.quest.declarations().actions().get(name);
+        QuestModule<S, T> module = run.quest.declarations().actionModule(name);
+        if (!module.isActiveIn(run.state().stage)) {
+            ctx.error("action " + name + " of raid " + key + " skipped: " + module.getClass().getSimpleName() + " is not active in " + run.state().stage);
+            return false;
+        }
+        action.accept(ctx);
+        return true;
     }
 
     private static <S extends Enum<S> & QuestStage, T extends QuestState<S>> QuestContext<S, T> dialogContext(

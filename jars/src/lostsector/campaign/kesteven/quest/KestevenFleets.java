@@ -91,12 +91,6 @@ public class KestevenFleets {
         return simpleFleet;
     }
 
-    // The fleet Eliza leads after the raid on her market, for ElizaRaid until it moves to the quest; the other two Eliza
-    // fleets are spawned by KestevenElizaFleetsModule, and the flags are kept for that one caller.
-    public static CampaignFleetAPI spawnElizaFleet(SectorEntityToken loc, PersonAPI eliza, Random random, boolean revengeance, boolean intercept) {
-        return KestevenElizaFleetsModule.spawnRaided(loc, eliza, random);
-    }
-
     //JACK FLEET
     public static CampaignFleetAPI spawnJackFleet(SectorEntityToken loc, PersonAPI jack, Random random) {
 

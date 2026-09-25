@@ -26,8 +26,9 @@ import lostsector.quest.QuestModule;
 import java.util.List;
 import java.util.Random;
 
-// Eliza's three fleets: the one she leads after the raid on her market (spawned by ElizaRaid), the one that intercepts
-// the player for the chip at CHIP_RECOVERED, and the one she sends after a player who took her market after her ending.
+// Eliza's three fleets: the one she leads after the raid on her market (spawned by KestevenElizaModule's raid action),
+// the one that intercepts the player for the chip at CHIP_RECOVERED, and the one she sends after a player who took her
+// market after her ending.
 // Losing Eliza aboard sets ELIZA_KILLED. The comm conversations are the # KESTEVEN QUESTLINE: ELIZA FLEETS rows.
 // Active in every stage, as the old fleet logic ran whatever the stage.
 final class KestevenElizaFleetsModule extends QuestModule<KestevenStage, KestevenState> {
@@ -115,7 +116,7 @@ final class KestevenElizaFleetsModule extends QuestModule<KestevenStage, Kesteve
             return;
         }
         if ((fleet.isRole(ROLE_INTERCEPT) || fleet.isRole(ROLE_RETURNING)) && ctx.state().elizaMarket != null) {
-            QuestStageManager.respawnEliza(ctx.state().elizaMarket);
+            KestevenElizaModule.respawnEliza(ctx, ctx.state().elizaMarket);
             ctx.log("Eliza is back at her market");
         }
     }
@@ -131,10 +132,9 @@ final class KestevenElizaFleetsModule extends QuestModule<KestevenStage, Kesteve
         lines.add("intercept spawned " + ctx.state().elizaInterceptSpawned + ", revenge spawned " + ctx.state().elizaRevengeSpawned);
     }
 
-    // ElizaRaid's fleet, through KestevenFleets.spawnElizaFleet, with the random ElizaRaid passes.
-    static CampaignFleetAPI spawnRaided(SectorEntityToken loc, PersonAPI eliza, Random random) {
-        QuestContext<KestevenStage, KestevenState> ctx = KestevenQuest.context();
-        return ctx == null ? null : spawn(ctx, ROLE_RAIDED, loc, eliza, random, true);
+    // The fleet Eliza leads after the raid on her port, from KestevenElizaModule's raid action with its random.
+    static CampaignFleetAPI spawnRaided(QuestContext<KestevenStage, KestevenState> ctx, SectorEntityToken loc, PersonAPI eliza, Random random) {
+        return spawn(ctx, ROLE_RAIDED, loc, eliza, random, true);
     }
 
     private static void spawnFromMarket(QuestContext<KestevenStage, KestevenState> ctx, String role, boolean hostile) {

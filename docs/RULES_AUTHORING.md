@@ -114,7 +114,7 @@ For Java-authored text, plain `textPanel.addPara()` does not imply rules substit
 
 ## Rules text outside a dialog
 
-Java can match rows and read their text without an open dialog, as the quest framework's `QuestText` does for intel entries ([quest framework, Intel](../jars/src/lostsector/quest/README.md#intel)). Verified in the 0.98a-RC8 source; bundle line numbers refer to `starsector-knowledge`:
+Java can match rows and read their text without an open dialog, as the quest framework's `QuestText` does for intel entries and raid objectives ([quest framework, Intel](../jars/src/lostsector/quest/README.md#intel), [Raid objectives](../jars/src/lostsector/quest/README.md#raid-objectives)). Verified in the 0.98a-RC8 source; bundle line numbers refer to `starsector-knowledge`:
 
 - **Matching.** `RulesAPI.getBestMatching(currentRule, trigger, dialog, memoryMap)` and `getAllMatching(...)` accept a null dialog: `Rules` passes it unchanged to every condition's `isTrueFor(ruleId, dialog, memoryMap)` and reads nothing else from it (`sources-obf/campaign.rules.java` 434–478 and 480–549). A memory condition needs only the map. A command condition receives the null dialog; when the command throws, the expression rethrows the exception if the dialog is null, where with a dialog it prints the message and counts the line as failed (921–945). Rows matched this way therefore use only memory conditions and commands that never touch the dialog.
 - **Order.** `getAllMatching` returns the matches in load order within the trigger and ignores scores; `getBestMatching` sums condition scores and picks at random among the highest (540–542). Both skip the row whose id equals `currentRule`.

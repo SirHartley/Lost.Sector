@@ -17,7 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-// Rules text read outside any dialog (README "Intel"). Rows are matched with a null dialog; the engine evaluates
+// Rules text read outside any dialog: intel entries (README "Intel") and raid objectives (README "Raid objectives"). Rows are matched with a null dialog; the engine evaluates
 // their conditions as written, and a command that throws is not caught, so these rows use only memory keys and
 // nskr_quest condition verbs. Script and Options of the matched rows never run; SetTextHighlights and
 // SetTextHighlightColors lines in the Script are read as highlight declarations. The rules check tool reads the
@@ -39,6 +39,15 @@ public final class QuestText {
     public static final List<String> SUFFIXES = List.of(TITLE, BULLETS, DESC);
     // Every matching row of these triggers is shown; the title is a best match.
     public static final List<String> ALL_MATCHING_SUFFIXES = List.of(BULLETS, DESC);
+
+    // Raid objective rows: nskr_<q> followed by a raid suffix, selected by the raid key. The name is a best match; the
+    // tooltip and the result print every matching row.
+    public static final String RAID_KEY = "$nskr_raid_key";
+    public static final String RAID_NAME = "RaidName";
+    public static final String RAID_TOOLTIP = "RaidTooltip";
+    public static final String RAID_RESULT = "RaidResult";
+    public static final List<String> RAID_SUFFIXES = List.of(RAID_NAME, RAID_TOOLTIP, RAID_RESULT);
+    public static final List<String> RAID_ALL_MATCHING_SUFFIXES = List.of(RAID_TOOLTIP, RAID_RESULT);
 
     // Values of $nskr_intel_mode.
     public static final String MODE_LIST = "list";
@@ -95,6 +104,17 @@ public final class QuestText {
         local.set(STATUS, status);
         local.set(UPDATE, update == null ? "" : update);
         local.set(MODE, mode);
+        Map<String, MemoryAPI> memoryMap = new HashMap<>();
+        memoryMap.put(MemKeys.LOCAL, local);
+        memoryMap.put(MemKeys.PLAYER, Global.getSector().getCharacterData().getMemoryWithoutUpdate());
+        memoryMap.put(MemKeys.GLOBAL, Global.getSector().getMemoryWithoutUpdate());
+        return memoryMap;
+    }
+
+    // The memory map raid objective rows are matched with: a scratch local memory holding the raid key, as for intel.
+    public static Map<String, MemoryAPI> raidMemory(String key) {
+        MemoryAPI local = Global.getFactory().createMemory();
+        local.set(RAID_KEY, key);
         Map<String, MemoryAPI> memoryMap = new HashMap<>();
         memoryMap.put(MemKeys.LOCAL, local);
         memoryMap.put(MemKeys.PLAYER, Global.getSector().getCharacterData().getMemoryWithoutUpdate());

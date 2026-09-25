@@ -56,6 +56,8 @@ public final class KestevenState extends QuestState<KestevenStage> implements In
     // The contact's and Eliza's entities before they moved away from a decivilized market, for the move messages.
     String elizaContactFormerName;
     String elizaFormerName;
+    // Credits the raid on Eliza's port took, for its result row.
+    float elizaRaidCredits;
 
     // The ship whose barrage line KestevenGlacierModule is printing; null outside its damageFleet action, never saved.
     transient FleetMemberAPI glacierHit;

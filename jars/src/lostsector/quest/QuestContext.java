@@ -4,9 +4,12 @@ import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.InteractionDialogAPI;
 import com.fs.starfarer.api.campaign.SectorEntityToken;
 import com.fs.starfarer.api.campaign.TextPanelAPI;
+import com.fs.starfarer.api.campaign.econ.MarketAPI;
 import com.fs.starfarer.api.campaign.rules.MemKeys;
 import com.fs.starfarer.api.campaign.rules.MemoryAPI;
 import com.fs.starfarer.api.characters.PersonAPI;
+import com.fs.starfarer.api.impl.campaign.graid.GroundRaidObjectivePlugin;
+import com.fs.starfarer.api.impl.campaign.rulecmd.salvage.MarketCMD.RaidDangerLevel;
 import com.fs.starfarer.api.util.Misc;
 
 import java.util.LinkedHashSet;
@@ -204,6 +207,16 @@ public final class QuestContext<S extends Enum<S> & QuestStage, T extends QuestS
     public QuestIntels intel() {
         if (intels == null) intels = new QuestIntels(this);
         return intels;
+    }
+
+    // A raid objective declared with d.raid, for onRaidObjectives to add; null (logged) for an undeclared key.
+    // iconCommodityId: the commodity whose icon the raid menu shows; null for none.
+    public GroundRaidObjectivePlugin raidObjective(String key, MarketAPI market, RaidDangerLevel danger, String iconCommodityId) {
+        if (run.quest.declarations().raidAction(key) == null) {
+            error("raid " + key + " is not declared");
+            return null;
+        }
+        return new QuestRaidObjective(run.id(), key, market, danger, iconCommodityId);
     }
 
     // Bound to this context's dialog, which decides whether receipts are printed.
