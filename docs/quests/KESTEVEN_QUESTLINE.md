@@ -254,7 +254,7 @@ The questline option then disappears. The Cache can still be found and fought; `
 | Event | Owner | When | What |
 |---|---|---|---|
 | Tri-Tachyon collector | `QuestStageManager`, `KestevenFleets.spawnCollectorFleet`, `nskr_ttCollectorDialog` | Once; stages 2 to 15; the player carries at least 50 Artifact Electronics, is in hyperspace within 25,000 units of the centre; 3% per day | "Black Ops" demands all Artifact Electronics; paying sends it home |
-| "LZ" messenger | `events/InterceptManager`, rules `MessengerFleetDialog*` | Once; stages 10 to 14 (`KestevenQuest.inMessengerWindow()`); hyperspace near the core; 4% per day | Anonymous warning signed "LZ"; `KestevenQuest.reportMessengerMet()` unlocks "LZ" questions for Alice and in `DelveMeetingBarEvent` |
+| "LZ" messenger | Quest `ic` ([intercept fleets](CONTRACTS_AND_BOUNTIES.md#intercept-fleets)), rules `nskr_ic_messenger*` in `# INTERCEPTS` | Once; stages 10 to 14 (`KestevenQuest.inMessengerWindow()`); hyperspace near the core; 4% per day | Anonymous warning signed "LZ"; opening its comm link calls `KestevenQuest.reportMessengerMet()`, which unlocks "LZ" questions for Alice and in `DelveMeetingBarEvent` |
 | Exile | `kesteven/ExileManager` | Daily | If Asteria is lost while the Outpost is Kesteven's, the quest people move to the Outpost and back when Asteria returns |
 
 ## Story skip

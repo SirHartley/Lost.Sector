@@ -39,7 +39,7 @@ public final class QuestManager extends BaseCampaignEventListener
     private static final int MAX_QUEUED_CHANGES = 20;
     // Clock timestamps are milliseconds with 86,400,000 per game day: CampaignClock.getElapsedDaysSince divides by 8.64E7.
     static final long TIMESTAMP_PER_DAY = 86_400_000L;
-    // FleetHelper's AI methods are written for this pace, as QuestStageManager and InterceptManager call them.
+    // FleetHelper's AI methods are written for this pace, as QuestStageManager calls them.
     private static final float ORDERS_INTERVAL_DAYS = 0.1f;
 
     private static final Hook DAY = new Hook() {

@@ -1,6 +1,6 @@
 # Contracts and bounties
 
-The repeatable Kesteven contracts and the four named bounty fleets. The bounties are one-off fleets with an intel entry and a reward, not quests with stages. Java paths are relative to `jars/src/lostsector/campaign/`; `dialogue/rules/` and `combat/` paths are relative to `jars/src/lostsector/`.
+The repeatable Kesteven contracts, the four named bounty fleets and the intercept fleets of quest `ic`. The bounties are one-off fleets with an intel entry and a reward, not quests with stages. Java paths are relative to `jars/src/lostsector/campaign/`; `dialogue/rules/` and `combat/` paths are relative to `jars/src/lostsector/`.
 
 ## Contracts
 
@@ -71,6 +71,20 @@ Other pieces:
 - **Rules conversations.** Comm rows `abyssDialog`, `eternityDialog`, `pkDialog*` and `mothershipDialog*` hold the fleets' voice. The Mothership comm offers "Try to shut down the AI", which fails.
 - **Mothership planets.** `CorePlugin` routes both planets to `MothershipInteractionBlocker` until the fleet has been beaten. The Mothership's fleet-interaction config records `nskr_mothershipKeySpawnedWreck` when its flagship is gone. `nskr_mothershipKeyCompleted` marks the bounty done.
 - **Peacekeepers.** The Rorqual flagship is the bounty (`RorqualSpawner.hasRorqual`, which tracks the ship `SimpleFleet` created as flagship). `BountyLoot` pays when the Rorqual is gone after a battle the player won, even if escorts survive. Once it is gone, the spawner also clears the loot flag at its next daily check and the fleet despawns out of sensor range; if someone else destroyed it, `RorqualIntel` reports the chance missed. `events/DerelictTeaserSpawner` places a Rorqual derelict as a teaser.
-- **ARO strike group.** `events/InterceptManager` can spawn an ARO strike group when the player's fleet contains Abyss bounty ships (`AbyssSpawner.hasBountyShips`).
+- **ARO strike group.** Quest `ic` can send an ARO strike group after a player whose fleet contains Abyss bounty ships; see [Intercept fleets](#intercept-fleets).
 
 None of the bounties has stages, dialogue choices that change state, or a failure path beyond another party killing the Peacekeepers.
+
+## Intercept fleets
+
+Record quest `ic` (`events/intercepts/InterceptsQuest`) sends three fleets after the player in hyperspace. It has one stage, `RUNNING`, no flags, and one [`InterceptEncounter`](../../jars/src/lostsector/quest/README.md#interceptencounter) module per fleet. Each record in `InterceptsState.intercepts` counts its spawns; all three encounters are one-shot, so a record with a spawn never rolls again.
+
+| Record and role | Daily roll, once per campaign | Fleet | Orders |
+|---|---|---|---|
+| `aro` | 1% while the player is in hyperspace within 25,000 of the center and carries Abyss bounty ships (`AbyssSpawner.hasBountyShips`) | "ARO Strike Group": Luddic Church doctrine, 110 to 130 points, flies as mercenaries, hostile, no reputation impact | Intercept around the player; withdraws when beaten or after 45 days |
+| `messenger`, then `messengerLeaving` | 4% while `KestevenQuest.inMessengerWindow()` (stages 10 to 14) and the player is in hyperspace within 25,000 of the center | "Merc Messenger": pirate doctrine, 50 to 70 points, flies as mercenaries | Intercepts the player directly. Once the player has opened its comm link, it leaves for a random pirate market and despawns there. Withdraws when beaten or after 20 days, in either role |
+| `autoHunter`, then `autoHunterGuard` | 1% while the player is in hyperspace within 50,000 of the center, has at least 75 deployment points of automated ships (`automated` or SotF's `sotf_sierrasconcord`), and the player faction's relationship with the Luddic Path is below 0 | "Hunter Fanatics": Luddic Path, 70 to 80 points, half the ships and the flagship with `nskr_machineSpirit` | Intercepts around the player for 30 days, then orbits a random Luddic Path market, intercepting the player with a 1% chance per order tick while it sees them; withdraws when beaten |
+
+Point budgets scale with `PowerLevel` and `Difficulty.scriptedFleetMult()`. A fleet spawns at the edge of the player's sensor range. A withdrawing fleet gets no more orders and despawns once it is farther from the player than the maximum hyperspace sensor range; "beaten" means below a quarter of its spawn fleet points.
+
+Rules rows are in the `# INTERCEPTS` block. The ARO group and the messenger hail the player on `BeginFleetEncounter`; their comm links (`OpenCommLink`) show a speech, set `$entity.ignorePlayerCommRequests` for 100 days and offer "Cut the comm link". The messenger's speech is the shared insert `nskr_icMessengerMessage`, reached from both of its roles; its script runs `nskr_quest ic do messengerMet`, which calls `KestevenQuest.reportMessengerMet()` and switches the fleet to `messengerLeaving`. The Auto-Hunter has no rows and uses the vanilla Luddic Path encounter.

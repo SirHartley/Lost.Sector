@@ -7,6 +7,7 @@ import lostsector.campaign.kesteven.BlackOpsManager;
 import lostsector.campaign.kesteven.KestevenScavenger;
 
 import com.fs.starfarer.api.Global;
+import com.fs.starfarer.api.campaign.CampaignEventListener.FleetDespawnReason;
 import com.fs.starfarer.api.campaign.CampaignFleetAPI;
 import com.fs.starfarer.api.campaign.FleetAssignment;
 import com.fs.starfarer.api.campaign.ai.CampaignFleetAIAPI;
@@ -26,7 +27,6 @@ import lostsector.campaign.bounties.abyss.AbyssSpawner;
 import lostsector.campaign.bounties.eternity.EternitySpawner;
 import lostsector.campaign.bounties.mothership.MothershipSpawner;
 import lostsector.campaign.bounties.peacekeepers.RorqualSpawner;
-import lostsector.campaign.events.InterceptManager;
 import lostsector.campaign.kesteven.loans.LoanShark;
 import lostsector.helper.fleet.FleetInfo;
 import lostsector.campaign.kesteven.quest.QuestStageManager;
@@ -350,6 +350,34 @@ public class FleetHelper {
         PLAYER
     }
 
+    // Heads for info.target and despawns there. The assignment is issued again whenever the fleet has another one.
+    public static void goToTargetAndDespawnAI(CampaignFleetAPI fleet, FleetInfo info) {
+        CampaignFleetAPI pf = Global.getSector().getPlayerFleet();
+        if (fleet.getAI() == null || info.target == null) return;
+        specManeuversCheck(fleet, pf, fleet.getAI().getCurrentAssignment());
+        if (fleet.getAI().getCurrentAssignmentType() != FleetAssignment.GO_TO_LOCATION_AND_DESPAWN) {
+            String name = info.target.getMarket() != null ? info.target.getMarket().getName() : info.target.getName();
+            fleet.clearAssignments();
+            fleet.addAssignment(FleetAssignment.GO_TO_LOCATION_AND_DESPAWN, info.target, Float.MAX_VALUE, "returning to " + name);
+        }
+    }
+
+    // Below a quarter of the fleet points it spawned with, the threshold defeatedCheck also uses.
+    public static boolean isBeaten(FleetInfo info) {
+        return info.fleet.getFleetPoints() * 4.0f < info.strength;
+    }
+
+    // Despawns the fleet only when it is farther from the player than the maximum hyperspace sensor range, so the
+    // player never sees it vanish. True when it despawned.
+    public static boolean despawnOutOfSight(CampaignFleetAPI fleet) {
+        CampaignFleetAPI pf = Global.getSector().getPlayerFleet();
+        if (pf == null) return false;
+        float dist = MathUtils.getDistance(pf.getLocationInHyperspace(), fleet.getLocationInHyperspace());
+        if (dist <= Global.getSettings().getMaxSensorRangeHyper()) return false;
+        fleet.despawn(FleetDespawnReason.PLAYER_FAR_AWAY, null);
+        return true;
+    }
+
     public static FleetMemberAPI generateShip(String variant, boolean noAutofit, boolean alwaysRecover) {
         return generateShip(variant, noAutofit, alwaysRecover, new ArrayList<String>());
     }
@@ -463,7 +491,6 @@ public class FleetHelper {
         FLEET_ARRAY_KEYS.add(GuardSpawner.FLEET_ARRAY_KEY);
         FLEET_ARRAY_KEYS.add(AbyssSpawner.FLEET_ARRAY_KEY);
         FLEET_ARRAY_KEYS.add(RorqualSpawner.FLEET_ARRAY_KEY);
-        FLEET_ARRAY_KEYS.add(InterceptManager.FLEET_ARRAY_KEY);
         FLEET_ARRAY_KEYS.add(BlackOpsManager.FLEET_ARRAY_KEY);
         FLEET_ARRAY_KEYS.add(LoanShark.FLEET_ARRAY_KEY);
         FLEET_ARRAY_KEYS.add(MothershipSpawner.FLEET_ARRAY_KEY);

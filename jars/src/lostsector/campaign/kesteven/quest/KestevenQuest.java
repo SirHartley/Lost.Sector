@@ -139,7 +139,7 @@ public final class KestevenQuest extends Quest<KestevenStage, KestevenState> {
 
     // Actions for features outside the questline.
 
-    // InterceptManager's "LZ" messenger, until the messenger moves into the questline.
+    // The "LZ" messenger of quest ic (campaign/events/intercepts), when the player opens its comm link.
     public static void reportMessengerMet() {
         if (Quests.has(KestevenFlag.MESSENGER_MET)) return;
         QuestContext<KestevenStage, KestevenState> ctx = context();

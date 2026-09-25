@@ -111,6 +111,30 @@ public final class QuestFleets {
         return null;
     }
 
+    // The fleet takes the orders, flag, config and defeat trigger of another declared role of this quest; the old
+    // role's flag, config and defeat trigger are removed. Owner, record and FleetInfo stay.
+    public void reassign(QuestFleet fleet, String role) {
+        FleetRole declared = declaredRole(role);
+        if (declared == null || fleet == null) return;
+        if (!run.id().equals(fleet.owner()) || find(fleet.fleet()) == null) {
+            QuestManager.logError(run.id(), "reassign to role " + role + " refused: not a fleet of this quest");
+            return;
+        }
+        String old = fleet.role();
+        if (role.equals(old)) return;
+        CampaignFleetAPI campaignFleet = fleet.fleet();
+        MemoryAPI memory = campaignFleet.getMemoryWithoutUpdate();
+        FleetRole oldDeclared = run.quest.declarations().roles().get(old);
+        if (old != null) memory.unset(roleFlag(run.id(), old));
+        if (oldDeclared != null && oldDeclared.configGen() != null) memory.unset(MemFlags.FLEET_INTERACTION_DIALOG_CONFIG_OVERRIDE_GEN);
+        if (oldDeclared != null && oldDeclared.defeatTriggerName() != null) Misc.removeDefeatTrigger(campaignFleet, oldDeclared.defeatTriggerName());
+        memory.set(ROLE_KEY, role);
+        memory.set(roleFlag(run.id(), role), true);
+        if (declared.configGen() != null) memory.set(MemFlags.FLEET_INTERACTION_DIALOG_CONFIG_OVERRIDE_GEN, declared.configGen());
+        if (declared.defeatTriggerName() != null) Misc.addDefeatTrigger(campaignFleet, declared.defeatTriggerName());
+        QuestManager.logInfo(run.id(), "reassign " + old + " -> " + role + ": " + campaignFleet.getName());
+    }
+
     private FleetRole declaredRole(String role) {
         FleetRole declared = run.quest.declarations().roles().get(role);
         if (declared == null) QuestManager.logError(run.id(), "role " + role + " is not declared");

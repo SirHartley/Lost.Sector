@@ -49,7 +49,7 @@ The framework is built on branch `quest-overhaul`; the task ids refer to the tra
 | Intel and rules text outside dialogs | `QuestIntel`, `QuestText` | planned | T11 |
 | Rules check tool | `lostsector.quest.dev.RulesCheck` | implemented | T12 |
 | Dev menu and stage jumps | `nskr_questDev`, `QuestDevTools` | implemented | T13 |
-| Shared modules | `lostsector.quest.modules` | planned | T37 to T41 |
+| Shared modules | `lostsector.quest.modules` | `InterceptEncounter` implemented; the others planned | T37 to T41 |
 
 Until a component is implemented, do not write code against it and do not write a substitute. Implement it in its task, or stop and report.
 
@@ -371,7 +371,7 @@ The framework owns these fields and writes them only through the manager and the
 
 The subclass adds the quest's own data as package-private fields: targets as `SectorEntityToken`, `MarketAPI` or `PersonAPI` references, counters, amounts and chosen options. A record quest keeps a `Map<String, Record>` of its own record class and shows it through `devInfo`. Rules:
 
-- Only saved-safe types: primitives, `String`, enums, `java.util` collections, game references (entity, fleet, market, person, faction id strings), `java.util.Random`, and plain classes of the quest's own package. No lambdas, anonymous classes, dialogs, UI objects or transient managers.
+- Only saved-safe types: primitives, `String`, enums, `java.util` collections, game references (entity, fleet, market, person, faction id strings), `java.util.Random`, plain classes of the quest's own package, and the record classes of the [shared modules](#shared-modules) the quest uses. No lambdas, anonymous classes, dialogs, UI objects or transient managers.
 - Pick a value once, when the stage that needs it starts, and store it. Rows and tokens only read. An offer never rerolls because a screen was opened.
 - Store amounts as numbers and format them in tokens.
 - A field that only one conversation reads about its own speaker is not state; see [Rules contract](#rules-contract).
@@ -562,6 +562,7 @@ public final class QuestFleets {
     public List<QuestFleet> get(String role);
     public QuestFleet first(String role);                                 // null when none
     public void despawn(String role);
+    public void reassign(QuestFleet fleet, String role);                  // another declared role of the same quest
 }
 
 public final class FleetRole {
@@ -575,6 +576,9 @@ public final class FleetOrders {
     public static FleetOrders none();                 // vanilla assignments from SimpleFleet only
     public static FleetOrders intercept(FleetHelper.InterceptBehaviour behaviour);
     public static FleetOrders guard(FleetHelper.GuardMovementBehaviour movement, FleetHelper.GuardAttackBehaviour attack, float playerInterceptChance);
+    public static FleetOrders leave();                // go to FleetInfo.target and despawn there
+    public FleetOrders withdrawWhenBeaten();          // copies; see Withdrawal below
+    public FleetOrders withdrawAfter(float days);
 }
 
 public final class QuestFleet {
@@ -587,13 +591,15 @@ public final class QuestFleet {
 }
 ```
 
-`spawn` calls `spec.create()`, builds the `FleetInfo` with `getFlagshipInfo()` and `getSecondaryMembers()` (home `spec.loc`, no target), writes `OWNER_KEY`, `ROLE_KEY`, `RECORD_KEY` and the role flag `$nskr_<q>_<role>` = `true` to fleet memory, applies the role's config (`MemFlags.FLEET_INTERACTION_DIALOG_CONFIG_OVERRIDE_GEN`) and defeat trigger (`Misc.addDefeatTrigger`), and adds the `FleetInfo` to the `KEY` list through `FleetHelper.getFleets` and `setFleets`. `adopt` does the same for a fleet built elsewhere, with no flagship data and no home; adopting a fleet that is already a quest fleet logs an error. `spawn` and `adopt` for an undeclared role log an error and return null without building. The builder only configures the `SimpleFleet`; it never registers, logs or stores the fleet.
+`spawn` calls `spec.create()`, builds the `FleetInfo` with `getFlagshipInfo()` and `getSecondaryMembers()` (home `spec.loc`, no target), writes `OWNER_KEY`, `ROLE_KEY`, `RECORD_KEY` and the role flag `$nskr_<q>_<role>` = `true` to fleet memory, applies the role's config (`MemFlags.FLEET_INTERACTION_DIALOG_CONFIG_OVERRIDE_GEN`) and defeat trigger (`Misc.addDefeatTrigger`), and adds the `FleetInfo` to the `KEY` list through `FleetHelper.getFleets` and `setFleets`. `adopt` does the same for a fleet built elsewhere, with no flagship data and no home; adopting a fleet that is already a quest fleet logs an error. `spawn` and `adopt` for an undeclared role log an error and return null without building. The builder only configures the `SimpleFleet`; it never registers, logs or stores the fleet. `reassign` gives a fleet of this quest another declared role, when its purpose changes (a messenger that leaves after its message, a hunter that gives up and guards): it unsets the old role flag, the old role's config and its defeat trigger (`Misc.removeDefeatTrigger`), then writes `ROLE_KEY`, the new role flag, config and defeat trigger. Owner, record, `FleetInfo` and its age stay; the next orders interval applies the new role's orders. Rows keyed on the old role flag stop matching, so a conversation that must reach the fleet in both roles tests both flags.
 
 The `KEY` list in sector memory is the only saved fleet data. Owner, role and record live in fleet memory; `FleetRole` and `FleetOrders` are definitions, and each fleet's orders are looked up from its quest's role declaration by those keys. `QuestFleet` is a view built when needed.
 
 - **Load checks.** `FleetRole.config` throws unless the generator is a named top-level or static nested class, because fleet memory saves it; a lambda, anonymous, local or inner class would drag its enclosing objects into the save. A role's defeat trigger must also be declared with `d.trigger`, or the definition throws at load.
 
-- **Orders.** Every 0.1 days of campaign time (`Misc.getDays(amount)`, unpaused frames), the manager reads the list and applies each live fleet's `FleetOrders` by calling `FleetHelper.gotoAndInterceptPlayerAI` or `FleetHelper.guardTargetAI`, the cadence the old questline and `InterceptManager` use and the one those methods are written for. The list is read once per interval, not every frame, because `FleetHelper.getFleets` goes through the sector's `getMemory()`, which runs every campaign plugin's `updateGlobalFacts`. Orders do not depend on the quest being available. A fleet whose quest or role is unknown gets no orders and is logged once. The manager also advances `FleetInfo.age` in days. A behavior these two methods do not provide is added to `FleetHelper`, then to `FleetOrders`; never to a quest.
+- **Orders.** Every 0.1 days of campaign time (`Misc.getDays(amount)`, unpaused frames), the manager reads the list and applies each live fleet's `FleetOrders` by calling `FleetHelper.gotoAndInterceptPlayerAI`, `FleetHelper.guardTargetAI` or, for `leave()`, `FleetHelper.goToTargetAndDespawnAI`, the cadence the old questline and the old intercept fleets use and the one those methods are written for. The list is read once per interval, not every frame, because `FleetHelper.getFleets` goes through the sector's `getMemory()`, which runs every campaign plugin's `updateGlobalFacts`. Orders do not depend on the quest being available. A fleet whose quest or role is unknown gets no orders and is logged once. The manager also advances `FleetInfo.age` in days. A behavior these two methods do not provide is added to `FleetHelper`, then to `FleetOrders`; never to a quest.
+- **Withdrawal.** `withdrawWhenBeaten()` (below a quarter of the spawn strength, `FleetHelper.isBeaten`) and `withdrawAfter(days)` (`FleetInfo.age` above the days) replace the orders with `FleetHelper.despawnOutOfSight`: the fleet keeps its last assignment and despawns with `PLAYER_FAR_AWAY` once it is farther from the player than `getMaxSensorRangeHyper()`, measured between `getLocationInHyperspace()` positions. The despawn reaches `onFleetGone`. This is the rule the old spawners check before their fleet AI.
+- **Leaving.** `leave()` issues `GO_TO_LOCATION_AND_DESPAWN` to `FleetInfo.target` with the text "returning to <market name>" (the entity name without a market) whenever the fleet has another assignment, after the same `STANDING_DOWN` handling as the other two methods. It does nothing while the target is null, so the quest sets the target before the fleet takes the role.
 - **Despawn routing.** `reportFleetDespawned` removes a registered fleet from the list and calls `onFleetGone` on its quest's active modules. Every despawn the game makes uses this path: destroyed in battle, `NO_MEMBERS`, reaching a destination, or despawned by other code.
 - **Cleanup.** Fleets of a role are despawned when the module declaring the role stops, unless the role is `persistent()`, and a reset removes all of the quest's fleets. The same happens for `ctx.fleets().despawn(role)`. The framework removes these fleets from the list first and then calls `despawn(FleetDespawnReason.OTHER, null)`, so its own removals do not reach `onFleetGone`: the quest asked for them, and the stopping module is no longer active anyway. Vanilla `despawn` fades the fleet out where it is.
 - **Battles and loot.** `onBattle` goes once per quest fleet in `battle.getSnapshotBothSides()`, the list the engine walks for its own fleet listeners. Vanilla reports the battle before it despawns emptied fleets (`FleetEncounterContext` for player battles, `Battle.doAutoresolveRound` before `removeEmptyFleets`), so `onBattle` comes before `onFleetGone`. `onLoot` goes once per quest fleet in `plugin.getBattle().getNonPlayerSideSnapshot()`, the side the loot comes from; `FleetInteractionDialogPluginImpl` reports the loot before `applyAfterBattleEffectsIfThereWasABattle` despawns the defeated fleets. Fleet events go to the owning quests in `QuestCatalog` order, then in the order of the fleets.
@@ -886,9 +892,36 @@ Behavior used by more than one quest lives once in `lostsector.quest.modules`, c
 |---|---|---|---|
 | `PayOffEncounter` | Loan collector, Tri-Tachyon collector | A hostile fleet that demands payment in credits or cargo; pay, part pay or fight | planned, T37 |
 | `BountyEncounter` | Abyss, Eternity, Mothership, Peacekeepers | Spawn, first sighting, intel, completion, reward, shared text slots | planned, T39 |
-| `InterceptEncounter` | ARO strike, "LZ" messenger, Auto-Hunter | Daily roll, spawn near the player, intercept orders | planned, T41 |
+| [`InterceptEncounter`](#interceptencounter) | ARO strike, "LZ" messenger, Auto-Hunter (quest `ic`); planned for the loan collector and the Tri-Tachyon collector | Daily roll, spawn near the player, the orders of its role, an optional second role | implemented, T41 |
 
-The task that builds a shared module documents its constructor and behavior here.
+The task that builds a shared module documents its constructor and behavior here. A shared module that keeps data defines a saved record class and an interface the quest's state implements to hold the records.
+
+### InterceptEncounter
+
+One kind of fleet that appears near the player and hunts them. A quest adds one instance per kind; quest `ic` (`campaign/events/intercepts/InterceptsQuest`) is the example.
+
+```java
+public final class InterceptEncounter<S, T extends QuestState<S> & InterceptEncounter.Host> extends QuestModule<S, T> {
+    public enum Repeat { ONCE, REPEATING }
+    public interface Host { Map<String, Record> intercepts(); }   // the state creates the map; the module fills it
+    public static final class Record { public int spawns(); }      // saved in the state
+
+    @SafeVarargs public InterceptEncounter(String id, String role, FleetRole fleetRole, Repeat repeat, float dailyChance,
+            Predicate<QuestContext<S, T>> condition, BiFunction<SectorEntityToken, Random, SimpleFleet> builder, S... stages);
+    public InterceptEncounter<S, T> finish(BiConsumer<CampaignFleetAPI, Random> finish);
+    public InterceptEncounter<S, T> switchAfter(float days, String role, FleetRole fleetRole, Function<Random, SectorEntityToken> target);
+    public InterceptEncounter<S, T> switchOnAction(String action, String role, FleetRole fleetRole,
+            Function<Random, SectorEntityToken> target, Consumer<QuestContext<S, T>> onAction);
+    public static boolean playerInHyperspaceWithin(float distanceFromCenter);
+}
+```
+
+- **Identity.** `id` names the record in `Host.intercepts()`, the random purposes `roll:<id>`, `fleet:<id>` and `target:<id>`, and the record id of its fleets. `role` and `fleetRole` are declared as a role of the quest. No stages: active in every stage.
+- **Daily roll.** In `onDay`, when a player fleet exists: a `ONCE` encounter whose record has a spawn, or a `REPEATING` encounter with a live fleet in either of its roles, does nothing. Otherwise, when `condition` holds, one draw from `roll:<id>` below `dailyChance` spawns the fleet. Conditions run only in the game.
+- **Spawn.** The builder gets a token at the player's position and the `fleet:<id>` random and returns the fleet unbuilt; `ctx.fleets().spawn(role, id, spec)` builds and registers it. The module then moves it to a random point at 0.9 times the sum of the player's sensor strength and the fleet's sensor profile from the player, faces it randomly, runs `finish` (faction changes, hullmods) and `FleetHelper.update`, all with the same random, and counts the spawn in the record.
+- **Second role.** At most one. `switchAfter` switches every fleet of the first role whose `FleetInfo.age` has reached the days, checked in `onDay`. `switchOnAction` declares the action: run from a dialog whose target is a fleet of the encounter, it calls `onAction`, then switches the fleet if it still has the first role; any other target is logged and ignored. A switch first sets `FleetInfo.target` from `target` with the `target:<id>` random (for `guard` or `leave()` orders), then calls `ctx.fleets().reassign`.
+- **Payment encounters.** A collector can use the same module: its role carries the fleet's config and hostility, its rows test the role flag, and a `switchOnAction` action sends it home after payment. The payment itself belongs to `PayOffEncounter`.
+- **Dev info.** One line per encounter: spawns, and each live fleet's role and age.
 
 ## Save compatibility
 
@@ -945,6 +978,7 @@ Migration map for the Kesteven questline and the other systems. The owning task 
 | `HostileTakeoverBarEvent`, `ElizaSearch*BarEvent`, `DelveMeetingBarEvent`, `KestevenTipBarEvent` | `AddBarEvents` rows and quest people |
 | `EnemyUnknownIntel`, `HostileTakeoverIntel`, `OperationLifesaverIntel`, `TheDelveIntel`, `CacheIntel` | `QuestIntel` with intel rows |
 | `nskr_isKStage` and other stage predicates | `nskr_quest kq is` and `reached` |
+| `events/InterceptManager`, its `Saved` spawn flags, frame counters and per-fleet AI | Quest `ic` in `campaign/events/intercepts`: `InterceptEncounter` records, `onDay` rolls, roles with `FleetOrders` withdrawal and `reassign` (done in T41) |
 | Outside readers (`ContractManager`, the kiosk commands, `StalkerSpawner`, `InterceptManager`, `BlackOpsManager`, `Cache`, `CorePlugin`) | `Quests` and `KestevenQuest` queries (done in T15; see [KESTEVEN_STATE.md](../../../../docs/quests/KESTEVEN_STATE.md)) |
 
 ## Outside the framework

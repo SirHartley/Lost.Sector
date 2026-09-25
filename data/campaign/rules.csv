@@ -354,19 +354,6 @@ jackRevengeanceDialogEnd,DialogOptionSelected,"$option == jackRevengeanceDialogE
 ShowDefaultVisual","the $faction $fleetName powers up their weapons and moves in to engage.",,
 "#END JACK revengeance dialog",,,,,,
 ,,,,,,
-# MESSENGER dialog,,,,,,
-MessengerFleetDialogInit,BeginFleetEncounter,"$faction.id == mercenary score:1000
-!$ignorePlayerCommRequests
-$nskr_interceptManagerMessengerFleet","HailPlayer",,,
-MessengerFleetDialogInitial,OpenCommLink,"$faction.id == mercenary score:1000
-$entity.nskr_interceptManagerMessengerFleet score:100","$entity.ignorePlayerCommRequests = true 100
-$entity.nskr_interceptManagerMessengerTalked = true","The captain quickly introduces themselves as some sort of messenger for someone who wishes to remain anonymous. ""Ahem- "" Tread with care captain, you are entering a dangerous field of work. Many have tried and perished foolishly, in the pursuit of this knowledge. And I will be evaluating your actions captain, we might just meet in the future if you are deemed worthy. Signed ""LZ"" "" The message is delivered, $heOrShe swiftly ends the conversation.
-
-The comm link is cut before you have a chance to respond.","MessengerFleetDialogEnd:Cut the comm link",
-MessengerFleetDialogEnd,DialogOptionSelected,"$option == MessengerFleetDialogEnd","EndConversation
-ShowDefaultVisual","the $fleetName assumes a neutral posture.",,
-"#END MESSENGER dialog",,,,,,
-,,,,,,
 # ELIZA INTERCEPT dialog,,,,,,
 nskr_elizaInterceptDialogInit,BeginFleetEncounter,"$faction.id == mercenary score:1000
 !$ignorePlayerCommRequests
@@ -554,18 +541,31 @@ You are not [omega]
 ,,,,,,
 # MISC EVENTS,,,,,,
 ,,,,,,
-# ARO STRIKE dialog,,,,,,
-AROstrikeDialogInit,BeginFleetEncounter,"$faction.id == mercenary score:1000
+# INTERCEPTS,,,,,,
+nskr_ic_aroHail,BeginFleetEncounter,"$faction.id == mercenary score:1000
 !$ignorePlayerCommRequests
-$nskr_interceptManagerAROfleet","HailPlayer",,,
-AROstrikeDialogInitial,OpenCommLink,"$faction.id == mercenary score:1000
+$nskr_ic_aro",HailPlayer,,,
+nskr_ic_aroOpen,OpenCommLink,"$faction.id == mercenary score:1000
 $entity.isHostile
-$entity.nskr_interceptManagerAROfleet score:100","$entity.ignorePlayerCommRequests = true 100","The captain looks at you with intense conviction. ""All those who bear the Remnant scourge will be purged by fire. You can not even begin to understand the forces you play with captain. May the cold vacuum of space redeem your spirit."" $HeOrShe seems uninterested in receiving any response to their speech.
+$entity.nskr_ic_aro score:100",$entity.ignorePlayerCommRequests = true 100,"The captain looks at you with intense conviction. ""All those who bear the Remnant scourge will be purged by fire. You can not even begin to understand the forces you play with captain. May the cold vacuum of space redeem your spirit."" $HeOrShe seems uninterested in receiving any response to their speech.
 
-The comm link is cut before you have a chance to respond.","AROstrikeDialogEnd:Cut the comm link",
-AROstrikeDialogEnd,DialogOptionSelected,"$option == AROstrikeDialogEnd","EndConversation
-ShowDefaultVisual","the $fleetName powers up their weapons and moves in to engage.",,
-"#END ARO STRIKE dialog",,,,,,
+The comm link is cut before you have a chance to respond.",nskr_ic_aroCut:Cut the comm link,
+nskr_ic_aroCut,DialogOptionSelected,$option == nskr_ic_aroCut,"ShowDefaultVisual
+EndConversation",the $fleetName powers up their weapons and moves in to engage.,,
+,,,,,,
+nskr_ic_messengerHail,BeginFleetEncounter,"$faction.id == mercenary score:1000
+!$ignorePlayerCommRequests
+$nskr_ic_messenger",HailPlayer,,,
+nskr_ic_messengerOpen,OpenCommLink,"$faction.id == mercenary score:1000
+$entity.nskr_ic_messenger score:100",FireBest nskr_icMessengerMessage,,,
+nskr_ic_messengerLeavingOpen,OpenCommLink,"$faction.id == mercenary score:1000
+$entity.nskr_ic_messengerLeaving score:100",FireBest nskr_icMessengerMessage,,,The messenger repeats its message after it has turned to leave.
+nskr_ic_messengerMessage,nskr_icMessengerMessage,,"$entity.ignorePlayerCommRequests = true 100
+nskr_quest ic do messengerMet","The captain quickly introduces themselves as some sort of messenger for someone who wishes to remain anonymous. ""Ahem- "" Tread with care captain, you are entering a dangerous field of work. Many have tried and perished foolishly, in the pursuit of this knowledge. And I will be evaluating your actions captain, we might just meet in the future if you are deemed worthy. Signed ""LZ"" "" The message is delivered, $heOrShe swiftly ends the conversation.
+
+The comm link is cut before you have a chance to respond.",nskr_ic_messengerCut:Cut the comm link,
+nskr_ic_messengerCut,DialogOptionSelected,$option == nskr_ic_messengerCut,"ShowDefaultVisual
+EndConversation",the $fleetName assumes a neutral posture.,,
 ,,,,,,
 # DEBT collector dialog,,,,,,
 nskr_loanSharkDialogInit,BeginFleetEncounter,"$faction.id == kesteven score:1000

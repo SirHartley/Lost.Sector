@@ -9,7 +9,8 @@ public final class FleetOrders {
     private enum Kind {
         NONE,
         INTERCEPT,
-        GUARD
+        GUARD,
+        LEAVE
     }
 
     private final Kind kind;
@@ -18,13 +19,24 @@ public final class FleetOrders {
     private final FleetHelper.GuardAttackBehaviour attack;
     private final float playerInterceptChance;
 
+    private final boolean withdrawWhenBeaten;
+    private final float withdrawAfterDays;
+
     private FleetOrders(Kind kind, FleetHelper.InterceptBehaviour intercept, FleetHelper.GuardMovementBehaviour movement,
-                        FleetHelper.GuardAttackBehaviour attack, float playerInterceptChance) {
+                        FleetHelper.GuardAttackBehaviour attack, float playerInterceptChance,
+                        boolean withdrawWhenBeaten, float withdrawAfterDays) {
         this.kind = kind;
         this.intercept = intercept;
         this.movement = movement;
         this.attack = attack;
         this.playerInterceptChance = playerInterceptChance;
+        this.withdrawWhenBeaten = withdrawWhenBeaten;
+        this.withdrawAfterDays = withdrawAfterDays;
+    }
+
+    private FleetOrders(Kind kind, FleetHelper.InterceptBehaviour intercept, FleetHelper.GuardMovementBehaviour movement,
+                        FleetHelper.GuardAttackBehaviour attack, float playerInterceptChance) {
+        this(kind, intercept, movement, attack, playerInterceptChance, false, Float.POSITIVE_INFINITY);
     }
 
     // Vanilla assignments from SimpleFleet only.
@@ -42,14 +54,38 @@ public final class FleetOrders {
         return new FleetOrders(Kind.GUARD, null, movement, attack, playerInterceptChance);
     }
 
-    // Called by QuestManager every 0.1 days, the pace FleetHelper's AI methods are written for.
+    // Goes to FleetInfo.target and despawns there; the quest sets the target before giving the fleet this role.
+    public static FleetOrders leave() {
+        return new FleetOrders(Kind.LEAVE, null, null, null, 0f);
+    }
+
+    // Below a quarter of its spawn strength the fleet gets no more orders and despawns once out of the player's sight.
+    public FleetOrders withdrawWhenBeaten() {
+        return new FleetOrders(kind, intercept, movement, attack, playerInterceptChance, true, withdrawAfterDays);
+    }
+
+    // Older than the given days (FleetInfo.age), the fleet gets no more orders and despawns once out of the player's sight.
+    public FleetOrders withdrawAfter(float days) {
+        if (!(days > 0f)) throw new IllegalArgumentException("withdraw days must be positive");
+        return new FleetOrders(kind, intercept, movement, attack, playerInterceptChance, withdrawWhenBeaten, days);
+    }
+
+    // Called by QuestManager every 0.1 days, the pace FleetHelper's AI methods are written for. A withdrawing fleet
+    // keeps its last assignment until it despawns.
     void apply(FleetInfo info) {
+        if ((withdrawWhenBeaten && FleetHelper.isBeaten(info)) || info.age > withdrawAfterDays) {
+            FleetHelper.despawnOutOfSight(info.fleet);
+            return;
+        }
         switch (kind) {
             case INTERCEPT:
                 FleetHelper.gotoAndInterceptPlayerAI(info.fleet, info, intercept);
                 break;
             case GUARD:
                 FleetHelper.guardTargetAI(info.fleet, info, movement, attack, playerInterceptChance);
+                break;
+            case LEAVE:
+                FleetHelper.goToTargetAndDespawnAI(info.fleet, info);
                 break;
             default:
                 break;

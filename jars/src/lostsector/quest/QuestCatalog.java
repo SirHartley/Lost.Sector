@@ -1,5 +1,6 @@
 package lostsector.quest;
 
+import lostsector.campaign.events.intercepts.InterceptsQuest;
 import lostsector.campaign.kesteven.quest.KestevenQuest;
 
 import java.util.HashSet;
@@ -16,7 +17,7 @@ public final class QuestCatalog {
     }
 
     public static List<Quest<?, ?>> create() {
-        return build(List.of(new KestevenQuest()));
+        return build(List.of(new KestevenQuest(), new InterceptsQuest()));
     }
 
     // Definition errors throw here, during load, so the first dev run finds them.

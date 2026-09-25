@@ -61,7 +61,7 @@ Classes outside the quest package and the questline dialog commands read and cha
 | `researchServicesClosed()` | `CHIP_HANDED_TO_ELIZA` or `ALT_ENDING_DONE` | `nskr_shipSwap` and `nskr_modRemoval` (`hasOption` false) |
 | `isJackGone()` | `JACK_GONE` | `kesteven/ExileManager` (Jack is not moved) |
 | `glacierDiskRecovered()` | `GLACIER_DISK_RECOVERED` | `enigma/StalkerSpawner` (three stalker fleets, once) |
-| `inMessengerWindow()` | Stage 10 to 14 | `events/InterceptManager` (the "LZ" messenger may spawn) |
+| `inMessengerWindow()` | Stage 10 to 14 | `events/intercepts/InterceptsQuest` (the "LZ" messenger may spawn) |
 | `delveMeetingDue()` | Stage 15 | `dialogue/rules/nskr_barEventFixer` (adds `DelveMeetingBarEvent`) |
 | `cacheIsQuestTarget()` | Stage 16 or later | `world/systems/cache/Cache` (marks the command core important) |
 | `isUnreadHintWreck(entity)` | The entity id starts with `$job4HintWreck` and `JOB4_HINT_WRECK_READ` is unset | `CorePlugin` (`HintWreckDialog`) |
@@ -74,7 +74,7 @@ Classes outside the quest package and the questline dialog commands read and cha
 
 | Action | Does | Caller |
 |---|---|---|
-| `reportMessengerMet()` | Sets `MESSENGER_MET` and `MESSENGER_QUESTION_OPEN` unless `MESSENGER_MET` is set | `events/InterceptManager`, each fleet tick after the messenger fleet was talked to |
+| `reportMessengerMet()` | Sets `MESSENGER_MET` and `MESSENGER_QUESTION_OPEN` unless `MESSENGER_MET` is set | `events/intercepts/InterceptsQuest`, through the `messengerMet` action when the player opens the messenger's comm link |
 | `reportCacheGuardianDefeated()` | Stage 18 through `QuestHelper.setStage`, unless `ENDED` is set or the stage is below 16 | `Cache.CacheGuardInteractionConfig.notifyLeave` |
 | `markEmptyDataSatellite(entity, number)` | Sets `$kQuestArtifact<number>` and `$nskr_artifactKeyEmpty` on the entity; no state | `Cache.generate`, satellites 5 and 6 |
 
@@ -121,7 +121,7 @@ The actual path can skip stages: 8 to 10 without 9, 7 to 11 when job 3 is refuse
 | `JOB3_REFUSED` | Job 3 refused; nothing reads it | `nskr_kestevenQuest.confirmSkip` |
 | `JOB3_TARGET_DISCOVERED` | Target coordinates from the bar | `HostileTakeoverBarEvent` |
 | `JOB3_FAILED` | Timeout or stealth broken | `QuestStageManager` |
-| `MESSENGER_MET`, `MESSENGER_QUESTION_OPEN` | "LZ" messenger met; question available (cleared after asking Alice) | `events/InterceptManager` through `KestevenQuest.reportMessengerMet()`; cleared by `nskr_kestevenQuest` |
+| `MESSENGER_MET`, `MESSENGER_QUESTION_OPEN` | "LZ" messenger met; question available (cleared after asking Alice) | Quest `ic` through `KestevenQuest.reportMessengerMet()`; cleared by `nskr_kestevenQuest` |
 | `JOB4_WAIT_OVER` | 30-day wait over | `QuestStageManager` |
 | `JOB4_REQUIREMENT_SKIPPED` | Job 4 strength gate bypassed with a story point | `nskr_kestevenQuest` |
 | `JOB4_HINT_WRECK_READ` | Hint wreck read | `HintWreckDialog` |
@@ -233,7 +233,7 @@ Each purpose is a constant on `KestevenState`, named after the persistent-data k
 | `$CacheGuardianFleet` (`Cache.CACHE_FLEET_KEY`) | Guardian fleet | `Cache` | `QuestStageManager`, `CacheBossTauntPlugin`, rules |
 | `$EnigmaDormantFleet` (`DormantSpawner.DORMANT_KEY`) | Dormant fleets at quest locations | `DormantSpawner.addDormant` | `DataSatelliteDialog.makeHostile`, `QuestStageManager` |
 | `$nskr_altEndingDialogLockedToPerson` | The official in either alternative ending | Alternative endings | Alternative endings |
-| `$nskr_interceptManagerMessengerFleet`, `$nskr_interceptManagerMessengerTalked` | Messenger fleet | `InterceptManager`, rules | `InterceptManager` |
+| `$nskr_ic_messenger`, `$nskr_ic_messengerLeaving` | Messenger fleet role flags of quest `ic` | `QuestFleets` | Rules `# INTERCEPTS` |
 
 ## Who changes the stage
 
