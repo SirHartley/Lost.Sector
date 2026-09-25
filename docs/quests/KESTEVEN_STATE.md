@@ -6,7 +6,7 @@ Java paths are relative to `jars/src/lostsector/campaign/`; `dialogue/rules/`, `
 
 ## Storage
 
-The questline is quest `kq` of the quest framework. `kesteven/quest/KestevenQuest` is its definition, registered in `quest/QuestCatalog`. Its only module, `KestevenHubModule`, declares the checks, action and tokens of the conversation hub rows ([dialogue map](KESTEVEN_DIALOGUE.md#jack-alice-and-nicholas)). `QuestStageManager` and the Java dialogs, bar events, intel and rules commands still run the rest of the questline, reading and writing one saved `kesteven/quest/KestevenState`. `KestevenQuest.isAvailable()` keeps the default `true`, because the old code runs the questline in every campaign and handles a missing Kesteven home as failure.
+The questline is quest `kq` of the quest framework. `kesteven/quest/KestevenQuest` is its definition, registered in `quest/QuestCatalog`. `KestevenHubModule` declares the checks, action and tokens of the conversation hub rows ([dialogue map](KESTEVEN_DIALOGUE.md#jack-alice-and-nicholas)); `KestevenJob1Module` runs job 1's intel, dormant fleet and move to `JOB1_DONE` ([Job 1](KESTEVEN_QUESTLINE.md#job-1-enemy-unknown-stages-0-to-6)). `QuestStageManager` and the Java dialogs, bar events, intel and rules commands still run the rest of the questline, reading and writing one saved `kesteven/quest/KestevenState`. `KestevenQuest.isAvailable()` keeps the default `true`, because the old code runs the questline in every campaign and handles a missing Kesteven home as failure.
 
 | Mechanism | Location | Notes |
 |---|---|---|
@@ -16,6 +16,7 @@ The questline is quest `kq` of the quest framework. `kesteven/quest/KestevenQues
 | Randoms | One saved `Random` per purpose on the state, from `KestevenQuest.random(purpose)` | See [Randoms](#randoms) |
 | Timers | None | The old counters count frame seconds and stay fields until the modules replace them |
 | Quest fleet list | Sector memory `$kQuestMissionFleets`, a `List<FleetInfo>` | Read and written by `FleetHelper.getFleets/setFleets`. `FleetInfo.age` is in days. |
+| Framework fleets | The framework's `QuestFleets.KEY` list | The job 1 tip system's dormant fleet, role `job1Dormant` |
 | Fleet, entity and person memory | The owning `MemoryAPI` | Routing flags read by `rules.csv` and `CorePlugin`, and the conversation flags of Jack, Alice and Nicholas; see [Memory flags](#memory-flags) |
 | Saved objects | Bar events in `PortsideBarData`, intel in the intel manager, `ElizaRaidObjectiveCreator` as a listener | Their class names and fields are serialized. |
 | Per installation | LunaLib settings: `settings/SettingsManager.set` and `Setting` reads | `thronesGiftUnlocked`, `hellspawnUnlocked`, `storySkipUnlocked`; shared by all campaigns |
@@ -114,7 +115,7 @@ The actual path can skip stages: 8 to 10 without 9, 7 to 11 when job 3 is refuse
 | `ENDED` | Questline permanently failed | `QuestStageManager` failure checks |
 | `STORY_SKIPPED` | Story skip used; nothing reads it | `nskr_kestevenQuest` story skip |
 | `FOUGHT_ENIGMA` | Beat Enigma before accepting job 1 | `QuestStageManager.reportEncounterLootGenerated` |
-| `JOB1_SENSOR_DATA` | Sensor task done | Same |
+| `JOB1_SENSOR_DATA` | Sensor task done | Same; `KestevenJob1Module.onSkip` on a jump past `JOB1_ACTIVE` |
 | `JOB1_DATA_DELIVERED`, `JOB1_ELECTRONICS_DELIVERED` | Sensor package and electronics delivered | `nskr_kestevenQuest` |
 | `JOB1_TIP_GIVEN` | Jack gave the location tip | `nskr_kestevenQuest` briefing; rules `nskr_kq_jackAskTipSel` |
 | `COLLECTOR_PAID` | Tri-Tachyon collector paid | `nskr_ttCollectorDialog` |
@@ -163,7 +164,7 @@ Other features read flags through the [queries](#queries-for-other-features). `n
 
 | Field | Type | Meaning | Written by |
 |---|---|---|---|
-| `job1TipSystem` | `StarSystemAPI` | System with an Enigma base; the first pick also adds a dormant Enigma fleet there | `QuestHelper.getJob1Tip()`, from the hub action `pickJob1Tip` and the job 1 briefing |
+| `job1TipSystem` | `StarSystemAPI` | System with an Enigma base; the first pick also adds a dormant Enigma fleet there, adopted as role `job1Dormant` | `QuestHelper.getJob1Tip()`, from the hub action `pickJob1Tip`, the job 1 briefing and `KestevenJob1Module` when `JOB1_ACTIVE` starts |
 | `job3Start` | `SectorEntityToken` | Random Tri-Tachyon market entity, not `eochu_bres` or `culann` | `QuestHelper.getJob3Start()` |
 | `job3Target` | `SectorEntityToken` | Random location in a system within 27,500 units of the centre | `QuestHelper.getJob3Target()` |
 | `job4FriendlyTarget` | `SectorEntityToken` | Random location in a system at least 32,500 units from the centre | `QuestHelper.getJob4FriendlyTarget()` |
@@ -184,7 +185,7 @@ Other features read flags through the [queries](#queries-for-other-features). `n
 | `job4WaitCounter` | `float` | Job 4 wait, in frame seconds; the wait ends above 300 | `QuestStageManager` |
 | `cacheSeconds` | `float` | Frame seconds spent in Unknown Site before the guardian | `QuestStageManager` |
 | `job3TimeLeft` | `float` | Starts at 90 and loses 0.1 per quest fleet tick while the expedition exists; `HostileTakeoverIntel` shows it | `QuestStageManager.job3TargetLogic` |
-| `job1IntelAdded`, `job3IntelAdded`, `job4IntelAdded`, `job5IntelAdded`, `cacheIntelAdded` | `boolean` | Intel added once | `QuestStageManager` |
+| `job3IntelAdded`, `job4IntelAdded`, `job5IntelAdded`, `cacheIntelAdded` | `boolean` | Intel added once | `QuestStageManager` |
 | `job3FleetSpawned`, `job4FleetsSpawned` | `boolean` | Job fleets and objects placed once | `QuestStageManager` |
 | `collectorSpawned` | `boolean` | Tri-Tachyon collector spawned | `QuestStageManager` |
 | `cacheGuardianSpotPicked`, `cacheDoubtShown`, `cacheGuardianSpawned` | `boolean` | Guardian location picked, Cache hint shown, guardian spawned | `QuestStageManager` |
@@ -232,6 +233,7 @@ Each purpose is a constant on `KestevenState`, named after the persistent-data k
 | `$RevengeanceQuestFleet`, `$RevengeanceJack` | Revenge fleets | `KestevenFleets` | `QuestStageManager`, rules |
 | `$CacheGuardianFleet` (`Cache.CACHE_FLEET_KEY`) | Guardian fleet | `Cache` | `QuestStageManager`, `CacheBossTauntPlugin`, rules |
 | `$EnigmaDormantFleet` (`DormantSpawner.DORMANT_KEY`) | Dormant fleets at quest locations | `DormantSpawner.addDormant` | `DataSatelliteDialog.makeHostile`, `QuestStageManager` |
+| `$nskr_kq_job1Dormant` | The job 1 tip system's dormant fleet: role flag of quest `kq` | `QuestFleets.adopt`, from `QuestHelper.getJob1Tip()` | Nothing reads it yet |
 | `$nskr_altEndingDialogLockedToPerson` | The official in either alternative ending | Alternative endings | Alternative endings |
 | `$nskr_ic_messenger`, `$nskr_ic_messengerLeaving` | Messenger fleet role flags of quest `ic` | `QuestFleets` | Rules `# INTERCEPTS` |
 | `$nskr_kq_introduced` | Jack, Alice or Nicholas, each their own; no expiry | Hub introduction rows `nskr_kq_jackIntro`, `nskr_kq_aliceIntro`, `nskr_kq_nicholasIntro` | Hub greeting rows |
@@ -247,7 +249,8 @@ Each purpose is a constant on `KestevenState`, named after the persistent-data k
 | `nskr_kestevenQuest.showQuestInfoAndPrepare()` | 14→15 |
 | `nskr_kestevenQuest.confirmSkip()` | 7→11 |
 | `nskr_kestevenQuest.SkipStoryOptionPicked()` | 0, 6, 7, 11 or 14→17 (story skip) |
-| `QuestStageManager.advance()` | 1→2, 12→13, 16→17, failure→99 |
+| `KestevenJob1Module` (`job1Progress` action, daily tick) | 1→2 |
+| `QuestStageManager.advance()` | 12→13, 16→17, failure→99 |
 | `QuestStageManager.job3TargetLogic()` | 8 or 9→10 |
 | `QuestStageManager.reportEncounterLootGenerated()` | 8 or 9→10 (stealth broken), any→14 (friendly attacked) |
 | `HostileTakeoverBarEvent` | 8→9 |

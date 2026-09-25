@@ -128,15 +128,6 @@ public class QuestStageManager extends BaseCampaignEventListener implements Ever
         //////////////////
         //done while paused
         //////////////////
-        //finish job1
-        if (stage ==1) {
-            boolean delivered = QuestHelper.getCompleted(KestevenFlag.JOB1_ELECTRONICS_DELIVERED);
-            boolean deliveredData = QuestHelper.getCompleted(KestevenFlag.JOB1_DATA_DELIVERED);
-            //finished tasks
-            if (delivered && deliveredData) {
-                QuestHelper.setStage(2);
-            }
-        }
         //start job5
         if (stage ==15) {
             //cache found check
@@ -211,17 +202,6 @@ public class QuestStageManager extends BaseCampaignEventListener implements Ever
         //FLEETS
         List<FleetInfo> fleets = FleetHelper.getFleets(FLEET_ARRAY_KEY);
 
-        //start job 1
-        if (stage ==1) {
-            //Adds our intel
-            if (!state.job1IntelAdded) {
-                EnemyUnknownIntel intel1 = new EnemyUnknownIntel();
-                Global.getSector().getIntelManager().addIntel(intel1, false);
-                state.job1IntelAdded = true;
-                log("Qmanager added INTEL for " + "Enemy Unknown");
-            }
-            //logic
-        }
         //wait for job 4
         if (stage == 11) {
             if (Global.getSector().isInFastAdvance()) {
@@ -1201,6 +1181,8 @@ public class QuestStageManager extends BaseCampaignEventListener implements Ever
     public void reportEncounterLootGenerated(FleetEncounterContextPlugin plugin, CargoAPI loot) {
         CampaignFleetAPI loser = plugin.getLoser();
         if (loser == null) return;
+        // TODO T18: move to KestevenJob1Module once the quest framework routes encounter loot of fleets that are not
+        // quest fleets; onLoot sees only quest fleets.
         //job 1 completion check and has fought enigma dialog check
         if (stage<=1 && loser.getFaction().getId().equals("enigma")) {
             List<FleetEncounterContextPlugin.FleetMemberData> casualties = plugin.getLoserData().getOwnCasualties();

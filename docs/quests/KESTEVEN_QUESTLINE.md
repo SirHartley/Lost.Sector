@@ -11,7 +11,8 @@ Java paths are relative to `jars/src/lostsector/campaign/`; `dialogue/rules/` an
 | `# KESTEVEN QUESTLINE` rows in `data/campaign/rules.csv`, `kesteven/quest/KestevenHubModule` | The conversation hub with Jack, Alice and Nicholas: entry option, greetings, introductions, status lines, menus, questions and the story point requirement skip ([dialogue map](KESTEVEN_DIALOGUE.md#jack-alice-and-nicholas)) |
 | `dialogue/rules/nskr_kestevenQuest` | Briefings, hand-ins, rewards, the job 3 refusal, the story skip and most player-driven stage changes, called from the hub rows |
 | `kesteven/quest/QuestStageManager` | `EveryFrameScript` in `EFS_LIST`: automatic stage changes, failure checks, intel, bar events, quest fleets and their AI, the Cache guardian timer, Eliza relocation, post-quest revenge fleets |
-| `kesteven/quest/KestevenQuest`, `KestevenStage`, `KestevenFlag`, `KestevenState` | Framework definition of quest `kq`, whose only module is `KestevenHubModule`; the stage enum, the flags and the saved state ([KESTEVEN_STATE.md](KESTEVEN_STATE.md)) |
+| `kesteven/quest/KestevenQuest`, `KestevenStage`, `KestevenFlag`, `KestevenState` | Framework definition of quest `kq`, with the modules `KestevenHubModule` and `KestevenJob1Module`; the stage enum, the flags and the saved state ([KESTEVEN_STATE.md](KESTEVEN_STATE.md)) |
+| `kesteven/quest/KestevenJob1Module`, `# KESTEVEN QUESTLINE: JOB 1` rows in `data/campaign/rules.csv` | Job 1 world logic: the intel entry and its text rows, the tip system's dormant fleet, the move to stage 2 ([Job 1](#job-1-enemy-unknown-stages-0-to-6)) |
 | `kesteven/quest/QuestHelper` | Wrappers over `KestevenState` for the old callers: the stage as a legacy int, flags, fields and lazily picked target locations; `saveEnding()` |
 | `kesteven/quest/KestevenFleets` | Builders for every quest fleet |
 | `CorePlugin` | Opens the Java quest dialogs when the player interacts with a quest entity, deciding through `KestevenQuest` queries |
@@ -19,7 +20,7 @@ Java paths are relative to `jars/src/lostsector/campaign/`; `dialogue/rules/` an
 | `dialogue/rules/nskr_job4FleetDialog`, `nskr_ttCollectorDialog`, `nskr_elizaInterceptDialog`, `nskr_altEndingDialogLuddic`, `nskr_altEndingDialogTT`, `nskr_barEventFixer`, `nskr_isKStage`, `nskr_isAtLeastKStage` | Rules commands for the fleet conversations, endings and stage predicates |
 | `kesteven/quest/ElizaRaid`, `ElizaRaidObjectiveCreator` | Ground raid for Eliza's disks |
 | `world/systems/cache/Cache` | The Cache system, guardian fleet and its fleet-interaction config |
-| `kesteven/quest/EnemyUnknownIntel`, `HostileTakeoverIntel`, `OperationLifesaverIntel`, `TheDelveIntel`, `CacheIntel` | Intel entries; they read the stage and flags and never write the stage |
+| `kesteven/quest/HostileTakeoverIntel`, `OperationLifesaverIntel`, `TheDelveIntel`, `CacheIntel` | Intel entries of jobs 3 to 5 and the Cache; they read the stage and flags and never write the stage |
 | `kesteven/ExileManager` | Moves the quest people between Asteria and the Outpost |
 
 ## Where the quest is offered
@@ -58,7 +59,7 @@ The stage is a `KestevenStage` on the quest state, changed only by the quest man
 |---|---|---|
 | 0 | Not started | Start stage; the quest manager creates the state on the first unpaused frame of a new campaign |
 | 1 | Job 1 active | Jack, accept (`quest()`) |
-| 2 | Job 1 tasks done | `QuestStageManager`, when both deliveries are recorded |
+| 2 | Job 1 tasks done | `KestevenJob1Module`, when both deliveries are recorded |
 | 6 | Job 3 offered by Jack | Jack, job 1 turn-in |
 | 7 | Talk to Alice | Jack, job 3 briefing |
 | 8 | Job 3 active | Alice, accept |
@@ -80,14 +81,20 @@ The stage is a `KestevenStage` on the quest state, changed only by the quest man
 
 Jack offers two tasks for 155,000 credits:
 
-1. Win a battle against an Enigma fleet while destroying at least one ship. `QuestStageManager.reportEncounterLootGenerated` counts Enigma casualties weighted by the player's contribution and sets `JOB1_SENSOR_DATA` when the sum reaches 1.
+1. Win a battle against an Enigma fleet while destroying at least one ship. `QuestStageManager.reportEncounterLootGenerated` counts Enigma casualties weighted by the player's contribution and sets `JOB1_SENSOR_DATA` when the sum reaches 1. It stays there until the quest framework routes encounter loot of fleets that are not quest fleets; `onLoot` sees only quest fleets.
 2. Deliver 70 Artifact Electronics (`nskr_electronics`).
 
-The `KestevenHubModule` action `pickJob1Tip` (`QuestHelper.getJob1Tip()`) runs when the player opens Jack's questions at stage 0, or his menu at stage 1 with neither task done and no tip given. The first run picks a system with an Enigma base and places a dormant Enigma fleet there. Jack gives the system through "How am I supposed to find them?": a question at stage 0, a menu option leading to the briefing at stage 1. Either sets `JOB1_TIP_GIVEN`.
+The tip system is picked once by `QuestHelper.getJob1Tip()`: from the `KestevenHubModule` action `pickJob1Tip` when the player opens Jack's questions at stage 0, or his menu at stage 1 with neither task done and no tip given, and from `KestevenJob1Module` when stage 1 starts. The pick chooses a system with an Enigma base and places a dormant Enigma fleet there, which the quest adopts as role `job1Dormant` (`FleetOrders.none()`, persistent, so it outlives the job). Jack gives the system through "How am I supposed to find them?": a question at stage 0, a menu option leading to the briefing at stage 1. Either sets `JOB1_TIP_GIVEN`.
 
-Jack takes each delivery when the player has it (`JOB1_DATA_DELIVERED`, `JOB1_ELECTRONICS_DELIVERED`). `QuestStageManager` then moves stage 1 to 2. Turning in at stage 2 grants a Kesteven hullmod modspec (an unknown one of `nskr_inertial`, `nskr_volatile`, `nskr_bigBats`, `nskr_criticalArmor` if possible), 155,000 credits, Kesteven +5 and Jack +10, and sets stage 6.
+Jack takes each delivery when the player has it (`JOB1_DATA_DELIVERED`, `JOB1_ELECTRONICS_DELIVERED`). `KestevenJob1Module` then moves stage 1 to 2: its action `job1Progress` does it at once, and its daily tick catches a delivery no row reported. Nothing calls `job1Progress` yet: the hand-ins in `nskr_kestevenQuest` only set the flags, so the move and a new map marker after the tip wait for the next campaign day. Turning in at stage 2 grants a Kesteven hullmod modspec (an unknown one of `nskr_inertial`, `nskr_volatile`, `nskr_bigBats`, `nskr_criticalArmor` if possible), 155,000 credits, Kesteven +5 and Jack +10, and sets stage 6.
 
-Winning against Enigma before accepting sets `FOUGHT_ENIGMA`, which changes one of Jack's answers. `EnemyUnknownIntel` is added once at stage 1.
+Winning against Enigma before accepting sets `FOUGHT_ENIGMA`, which changes one of Jack's answers.
+
+### Intel
+
+`KestevenJob1Module` is active at stages 1 and 2. When stage 1 starts it shows the `QuestIntel` entry `job1` (icon `job1`; tags important, accepted, missions) as a campaign message, and it ends the entry at once when the stage leaves 2, including on failure. Its map marker is the tip system's hyperspace anchor once the tip was given and the system still has an Enigma base, otherwise `asteriaOrOutpost`; the module sets it when stage 1 starts, in `job1Progress` and once a day.
+
+The text is in the `# KESTEVEN QUESTLINE: JOB 1` block, selected by `$nskr_intel_key == job1`: the title "Enemy Unknown" (`nskr_kqIntelTitle`), one bullet per open task (`nskr_kqIntelBullets`) and the description (`nskr_kqIntelDesc`). The description repeats the bullets as paragraphs after its first line, because `QuestIntel` shows no bullets in the description panel. The rows use the module's checks `job1Hostile` (Kesteven relationship at most -0.50) and `job1TipBase` (the tip system has an Enigma base), the tokens `job1HomeName` (`asteriaOrOutpost` name) and `job1ArtifactCount` (`nskr_kestevenQuest.JOB1_ARTIFACTS`), and the hub's `job1TipSystem`.
 
 ## Job 3: Hostile Takeover (stages 6 to 11)
 

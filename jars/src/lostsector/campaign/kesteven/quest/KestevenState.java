@@ -59,7 +59,6 @@ public final class KestevenState extends QuestState<KestevenStage> {
     float job3TimeLeft = QuestStageManager.JOB3_TIME_LIMIT;
 
     // One-time actions of QuestStageManager.
-    boolean job1IntelAdded;
     boolean job3IntelAdded;
     boolean job3FleetSpawned;
     boolean job4IntelAdded;

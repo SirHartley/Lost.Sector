@@ -439,9 +439,11 @@ public class QuestHelper {
             if (sys==null) return null;
 
             state.job1TipSystem = sys;
-            //add dormant
-            DormantSpawner.addDormant(SystemHelper.getRandomLocationInSystem(sys ,true,false, nskr_kestevenQuest.getRandom()),
+            SectorEntityToken dormant = DormantSpawner.addDormant(SystemHelper.getRandomLocationInSystem(sys ,true,false, nskr_kestevenQuest.getRandom()),
                     "enigma", 20f);
+            if (dormant instanceof CampaignFleetAPI) {
+                KestevenQuest.context().fleets().adopt(KestevenJob1Module.ROLE_TIP_DORMANT, (CampaignFleetAPI) dormant);
+            }
         }
 
         return state.job1TipSystem;

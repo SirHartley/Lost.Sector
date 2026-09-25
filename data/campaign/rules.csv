@@ -1381,3 +1381,48 @@ SetShortcut nskr_bs_leaveAlarm ESCAPE","You give the order, and shortly the alar
 Get ready to defend the location.",nskr_bs_leaveAlarm:Leave,
 nskr_bs_leaveAlarmSel,DialogOptionSelected,$option == nskr_bs_leaveAlarm,"PlaySound ui_sensor_burst_on
 DismissDialog",,,
+,,,,,,
+# KESTEVEN QUESTLINE: JOB 1,,,,,,
+nskr_kq_job1IntelTitle,nskr_kqIntelTitle,$nskr_intel_key == job1,,Enemy Unknown,,
+nskr_kq_job1IntelHostile,nskr_kqIntelBullets,"$nskr_intel_key == job1
+nskr_quest kq is JOB1_ACTIVE JOB1_DONE
+nskr_quest kq check job1Hostile",,"You need to get back to non-hostile relations with Kesteven, if you want to finish this job.",,
+nskr_kq_job1IntelSensors,nskr_kqIntelBullets,"$nskr_intel_key == job1
+nskr_quest kq is JOB1_ACTIVE
+!nskr_quest kq flag JOB1_SENSOR_DATA",,"Locate any of the unknown AI force, and run the custom sensors package while engaging them.",,
+nskr_kq_job1IntelData,nskr_kqIntelBullets,"$nskr_intel_key == job1
+nskr_quest kq is JOB1_ACTIVE
+nskr_quest kq flag JOB1_SENSOR_DATA
+!nskr_quest kq flag JOB1_DATA_DELIVERED",,"With the data gathered, you should return to Jack Lapua in $nskr_kq_job1HomeName to deliver the package.",,
+nskr_kq_job1IntelElectronics,nskr_kqIntelBullets,"$nskr_intel_key == job1
+nskr_quest kq is JOB1_ACTIVE
+!nskr_quest kq flag JOB1_ELECTRONICS_DELIVERED",,"Search for more AI activity, and recover the electronics once you've defeated them. Once you have $nskr_kq_job1ArtifactCount Artifact Electronics deliver them to Jack Lapua in $nskr_kq_job1HomeName.",,
+nskr_kq_job1IntelTip,nskr_kqIntelBullets,"$nskr_intel_key == job1
+nskr_quest kq is JOB1_ACTIVE
+nskr_quest kq flag JOB1_TIP_GIVEN
+nskr_quest kq check job1TipBase",,Investigate the $nskr_kq_job1TipSystem.,,
+nskr_kq_job1IntelTasksDone,nskr_kqIntelBullets,"$nskr_intel_key == job1
+nskr_quest kq is JOB1_DONE",,You have completed the tasks. Talk to Jack Lapua to finish the job.,,
+nskr_kq_job1IntelDescActive,nskr_kqIntelDesc,"$nskr_intel_key == job1
+nskr_quest kq is JOB1_ACTIVE",,"Jack Lapua gave you a set of tasks to complete, involving an unknown AI threat.",,
+nskr_kq_job1IntelDescDone,nskr_kqIntelDesc,"$nskr_intel_key == job1
+nskr_quest kq is JOB1_DONE",,Return to $nskr_kq_job1HomeName.,,
+nskr_kq_job1IntelDescHostile,nskr_kqIntelDesc,"$nskr_intel_key == job1
+nskr_quest kq is JOB1_ACTIVE JOB1_DONE
+nskr_quest kq check job1Hostile",,"You need to get back to non-hostile relations with Kesteven, if you want to finish this job.",,Same text as bullet nskr_kq_job1IntelHostile: the description panel shows no bullets
+nskr_kq_job1IntelDescSensors,nskr_kqIntelDesc,"$nskr_intel_key == job1
+nskr_quest kq is JOB1_ACTIVE
+!nskr_quest kq flag JOB1_SENSOR_DATA",,"Locate any of the unknown AI force, and run the custom sensors package while engaging them.",,Same text as bullet nskr_kq_job1IntelSensors: the description panel shows no bullets
+nskr_kq_job1IntelDescData,nskr_kqIntelDesc,"$nskr_intel_key == job1
+nskr_quest kq is JOB1_ACTIVE
+nskr_quest kq flag JOB1_SENSOR_DATA
+!nskr_quest kq flag JOB1_DATA_DELIVERED",,"With the data gathered, you should return to Jack Lapua in $nskr_kq_job1HomeName to deliver the package.",,Same text as bullet nskr_kq_job1IntelData: the description panel shows no bullets
+nskr_kq_job1IntelDescElectronics,nskr_kqIntelDesc,"$nskr_intel_key == job1
+nskr_quest kq is JOB1_ACTIVE
+!nskr_quest kq flag JOB1_ELECTRONICS_DELIVERED",,"Search for more AI activity, and recover the electronics once you've defeated them. Once you have $nskr_kq_job1ArtifactCount Artifact Electronics deliver them to Jack Lapua in $nskr_kq_job1HomeName.",,Same text as bullet nskr_kq_job1IntelElectronics: the description panel shows no bullets
+nskr_kq_job1IntelDescTip,nskr_kqIntelDesc,"$nskr_intel_key == job1
+nskr_quest kq is JOB1_ACTIVE
+nskr_quest kq flag JOB1_TIP_GIVEN
+nskr_quest kq check job1TipBase",,Investigate the $nskr_kq_job1TipSystem.,,Same text as bullet nskr_kq_job1IntelTip: the description panel shows no bullets
+nskr_kq_job1IntelDescTasksDone,nskr_kqIntelDesc,"$nskr_intel_key == job1
+nskr_quest kq is JOB1_DONE",,You have completed the tasks. Talk to Jack Lapua to finish the job.,,Same text as bullet nskr_kq_job1IntelTasksDone: the description panel shows no bullets
