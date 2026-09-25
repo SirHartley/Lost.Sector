@@ -60,12 +60,12 @@ The default. The row that handles a click holds the next screen's text and its o
 ```text
 id: nskr_ex_brief1        trigger: DialogOptionSelected   conditions: $option == nskr_ex_brief1
 text:    (first beat)
-options: 10:nskr_ex_brief2:Continue
+options: nskr_ex_brief2:Continue
 
 id: nskr_ex_brief2        trigger: DialogOptionSelected   conditions: $option == nskr_ex_brief2
 text:    (second beat)
-options: 10:nskr_ex_accept:"I'll do it."
-         20:nskr_ex_decline:"Not interested."
+options: nskr_ex_accept:"I'll do it."
+         nskr_ex_decline:"Not interested."
 ```
 
 Use it for scenes, briefings, cutscenes and any exchange whose next screen does not depend on state. SotF's Elysium sequence (`sotfHFinaleElysium1` to `6`) and most of its Wendigo encounter are plain chains. When one option of a fixed screen depends on state, keep the plain chain and gate that one option with `SetEnabled` or a `RemoveOption` row, or switch the screen to a `FireAll` menu.
@@ -79,13 +79,13 @@ id: nskr_ex_ask           trigger: DialogOptionSelected   conditions: $option ==
 script:  FireAll nskr_exQuestions
 
 id: nskr_ex_qPay          trigger: nskr_exQuestions       conditions: !$nskr_ex_askedPay
-options: 10:nskr_ex_pay:"What does it pay?"
+options: nskr_ex_pay:"What does it pay?"
 
 id: nskr_ex_qRisk         trigger: nskr_exQuestions       conditions: !$nskr_ex_askedRisk
-options: 20:nskr_ex_risk:"How dangerous is it?"
+options: nskr_ex_risk:"How dangerous is it?"
 
 id: nskr_ex_qBack         trigger: nskr_exQuestions
-options: 90:nskr_ex_back:"That's all."
+options: 100:nskr_ex_back:"That's all."
 
 id: nskr_ex_pay           trigger: DialogOptionSelected   conditions: $option == nskr_ex_pay
 text:    (the answer)
@@ -95,7 +95,7 @@ script:  $nskr_ex_askedPay = true
 
 Use it for question hubs, topic lists, service menus and bargaining menus: any list the player comes back to. SotF examples: `APomiInitialOpts` (a quest offer's questions), `SierraConvOptions` (a hub character), `sotfWendigoCHoffers` (a bargaining menu). Vanilla's `PopulateOptions` is the same pattern for market, person and fleet menus.
 
-- Give every option an explicit order so the menu reads the same each time. An option written as `id:text` has order 0 and sorts above everything else.
+- Options without an order show in the order their rows are written. Give an explicit order only to move one, typically `100:defaultLeave:Leave` to the bottom; see [Options](#options).
 - Keep one row that always matches, such as Back or Leave, so the menu is never empty.
 - Mark read answers with a flag on the speaker ([State](#state-and-memory-keys)) or disable them with `SetEnabled`; do not rely on the player remembering.
 
@@ -119,7 +119,7 @@ Use it for greetings, status lines, reactions to reputation or past choices, and
 - Give the fallback row fewer condition lines than every specific row, often none, so it wins only when nothing specific matches.
 - Use `score:N` only to make one row win regardless of how many lines the others have, as vanilla's `defaultGreetingIgnore` does with `$temporarilyIgnoreYou score:10`.
 - Two specific rows that can match together must not have the same score unless a random choice between them is wanted. Add the condition that separates them, or give one a higher score.
-- Equal rows for random variety are deliberate; say so in the notes column.
+- Equal rows for random variety are deliberate; a note in the notes column tells the next writer so (a Lost.Sector addition; SotF leaves the column empty).
 - `FireBest <trigger> true` keeps the current options and adds the winner's. Vanilla uses it to list several missions' options on one screen.
 
 ### Continue chain
@@ -135,7 +135,7 @@ Use it to run a screen's logic after a script step without adding a throwaway bu
 
 ### Text inserts
 
-Several rows on one private trigger each add a paragraph when their own condition holds; `FireAll` shows every one that applies, in load order. Vanilla's `RelLevelMoreDescription` adds faction-specific lines under the relationship description this way. Use it for status summaries or fallout descriptions built from independent facts. The rows carry text only, no options.
+Several rows on one private trigger each add a paragraph when their own condition holds; `FireAll` shows every one that applies, in load order. SotF's `sotfOmiLabInterests` adds one paragraph per officer the player has; vanilla's `RelLevelMoreDescription` adds faction-specific lines under the relationship description. Use it for status summaries or fallout descriptions built from independent facts. The rows carry text only, no options.
 
 ### Shared insert
 
@@ -164,7 +164,7 @@ These catch.release cases show Java doing a row's job. Avoid them:
 
 - A `FireAll` menu for a linear scene. If the options never change, use a plain chain.
 - A private trigger with a single row that only holds options or text the calling row could hold.
-- `FireAll` or `FireBest` in Conditions. Either runs in full during matching: it prints text, replaces options and runs scripts while the engine is still choosing a row.
+- `FireAll` or `FireBest` in Conditions. Either runs in full during matching: it prints text, replaces options and runs scripts while the engine is still choosing a row. SotF never does it. Vanilla does it only in a few mission-return greetings (`gaDAMissionReturn`: `Call $global.gaDA_ref updateData` and `FireBest ASEBMissionReturn` in Conditions) to run a step before the greeting text is chosen, and that works only because the fired trigger always matches.
 - The same paragraph copied into several rows. Use a shared insert or a continue chain.
 - A menu option row that changes state. It runs every time the menu is built.
 
@@ -179,6 +179,7 @@ A conversation starts from a trigger that vanilla or Java fires. Add rows to it;
 | Opening a comm link with a fleet | The fleet encounter's embedded rules dialog makes the commander active and fires `FireBest OpenCommLink`; if nothing matches, the player sees static | An `OpenCommLink` row conditioned on the fleet flag its spawner set, such as `$entity.nskr_x` |
 | A fleet encounter | The fleet encounter fires `BeginFleetEncounter` on open, and again after `EndConversation` | A `BeginFleetEncounter` row conditioned on the fleet flag |
 | A station or custom entity | The standard rules dialog fires `OpenInteractionDialog`; vanilla `defaultOpenDialog` is the fallback | An `OpenInteractionDialog` row conditioned on the entity, such as `$customType == <type>` |
+| A salvageable object or campaign objective (relay, sensor array, derelict station) | Vanilla `cob_openDialog` (`OpenInteractionDialog`, `$tag:objective`) fires `FireAll COB_AddOptions`, then `FireBest COB_DisableOptionsIfNeeded` and `FireAll COB_DisableIndividualOptions` | A `COB_AddOptions` row for an extra option, as SotF's `sotfStationOptions` does; the disable triggers to block vanilla options |
 | A bar event | `BarCMD` fires `FireAll AddBarEvents`; `AddBarEvent <optionId> "option" "blurb"` queues the blurb and option, which `BarCMD` then shows | An `AddBarEvents` row with `AddBarEvent`; the handler on `DialogOptionSelected`; return with `BarCMD returnFromEvent` |
 | A hub mission offered by a contact | `<missionId>_blurb` and `<missionId>_option`, each fired with `FireBest ... true` | The blurb and option rows; the offer row sets `$missionId = <missionId>` and calls `Call $<ref> ...` |
 | A hub mission offered at the bar | `<missionId>_blurbBar` and `<missionId>_optionBar`, with the mission's person as `$local` | The same shape as the contact offer |
@@ -276,19 +277,19 @@ Versions of a line separated by a line containing only `OR` are picked at random
 
 `SetTextHighlights` and `SetTextHighlightColors` color phrases in the last paragraph shown, in the order they appear. Put them in the Script of the row whose Text they decorate, before any `AddText` in that Script. Repeat a phrase for each occurrence. See [Shared text presentation](DIALOGUE.md#shared-text-presentation).
 
-After the prose, a short small-font line can state a mechanical consequence the prose does not: `AddTextSmall "Kesteven will remember this." gray`. Real grants use the vanilla receipt commands, which print their own receipts; see [Receipts](#receipts).
+After the prose, small gray text can state a mechanical consequence the prose does not. SotF writes it as an indented list: `AddTextSmall "    - Progress made\n    - Its scorn grows" textGrayColor` (`sotfHauntedPenult4`). Real grants use the vanilla receipt commands, which print their own receipts; see [Receipts](#receipts).
 
 ## Options
 
 - **Options column** for every option whose label is known in advance. Format `order:id:text`. Lower order shows higher.
-- **Order.** Always write an order; `id:text` means order 0. Space content options (10, 20, 30) so a row can slot in later; Leave at 100, as vanilla and SotF write `100:defaultLeave:Leave`.
+- **Order.** Normally leave it out, as 94% of SotF's and vanilla's options do: `id:text` has order 0, and equal orders show in the order the rows and lines are written. Write an order only to move an option away from that position, for example `100:defaultLeave:Leave` to keep Leave last in a menu assembled from several rows.
 - **No colons in labels.** The loader splits the line on every colon: a colon in an `id:text` label stops the file loading, and in `order:id:text` the label is cut at the next colon.
 - **Labels.** Spoken options in quotation marks, actions without; see [Dialogue and player options](LORE.md#dialogue-and-player-options). Add a bracketed note only where the words hide the consequence: `(lie)`, `(decline)`, `(attack)`. SotF does this on under 5% of its options. Labels get token replacement.
-- **Ids.** `nskr_<feature>_<purpose>`, never starting with `$`. The handler row's id is the option id.
-- **Handlers.** Every option id needs a `DialogOptionSelected` row, except `defaultLeave`, which vanilla handles. A click with no handler prints a red error and an "Exit dialog" option.
+- **Ids.** `nskr_<feature>_<purpose>`, never starting with `$`. Name the handler row after the option it answers so a search finds both; SotF adds a suffix (option `sotfDKOME_askHire`, handler `sotfDKOMEaskHireSel`). The handler's condition is `$option == <optionId>`.
+- **Handlers.** Every option id needs a `DialogOptionSelected` row, except the ids vanilla already handles: `defaultLeave` and the `cutCommLink` family (see [Exits and returns](#exits-and-returns)). A click with no handler prints a red error and an "Exit dialog" option, unless the option went through a confirmation such as a story point option.
 - **Unavailable choices.** Keep the option and disable it when the player should see what is possible: `SetEnabled <id> false`, then `SetTooltip <id> "Requires 10 supplies."`, with `SetTooltipHighlights` and `SetTooltipHighlightColors` for the numbers. Hide it with a condition when the player should not know about it yet.
 - **Decorating an option.** `SetEnabled`, `SetTooltip`, `SetOptionColor`, `SetOptionText`, `SetShortcut` and `RemoveOption` do nothing if the option does not exist yet. Put them in the Script of the row that adds the option, or later.
-- **Story point options.** `SetStoryOption <id> <points> <bonusXPKey> <sound> "<log text>"`, with the key registered under `bonusXP` in `data/config/settings.json`. It colors the option, adds the cost to its label, adds the confirmation and disables it when the player cannot pay. Always pass at least four arguments: with exactly three, the command reads them as `<id> <sound> <log text>` and charges one point. `leadership`, `combat`, `industry` and `technology` are accepted as sounds. Do not add `SetStoryColor` to the same option.
+- **Story point options.** `SetStoryOption <id> <points> <bonusXPKey> <sound> "<log text>"`, with the key registered under `bonusXP` in `data/config/settings.json`. It colors the option, adds the cost to its label, adds the confirmation and disables it when the player cannot pay. Always pass at least four arguments: with exactly three, the command reads them as `<id> <sound> <log text>` and charges one point. `leadership`, `combat`, `industry`, `technology`, `general` and `generic` are accepted as sounds; SotF uses `general`. Do not add `SetStoryColor` to the same option.
 - **Dev options.** An option id starting with `(dev)` only appears in dev mode.
 
 ## Exits and returns
@@ -301,7 +302,7 @@ After the prose, a short small-font line can state a mechanical consequence the 
 | Back to a parent menu inside the conversation | A custom option such as `nskr_ex_back` whose handler fires the parent menu. Bind Escape with `SetShortcut nskr_ex_back ESCAPE` when it is the screen's way out. |
 | Leave a bar event | `BarCMD returnFromEvent`. |
 
-- `EndConversation` leaves the last portrait on screen; vanilla calls `ShowDefaultVisual` first. `EndConversation NO_CONTINUE` shows the default visual itself and, on a fleet, skips the Continue step. `EndConversation DO_NOT_FIRE` does not rebuild the menu. `EndConversation` does nothing in a dialog that is not rules based.
+- `EndConversation` leaves the last portrait on screen; vanilla calls `ShowDefaultVisual` first. `EndConversation NO_CONTINUE` shows the default visual itself and, on a fleet, skips the Continue step. `EndConversation DO_NOT_FIRE` does not rebuild the menu. In a dialog that is not rules based, `EndConversation` neither clears the person nor rebuilds a menu.
 - `DismissDialog` closes the window. Leaving a fleet encounter needs its battle cleaned up first; see [Fleet and bar exits](RULES.md#fleet-and-bar-exits).
 - Every screen needs a way forward or out, including refusal, lack of money and completed hand-ins. See [Navigation](DIALOGUE.md#navigation).
 
@@ -332,19 +333,19 @@ A hub mission is its own command target: `Call $<ref> <action>`. Every hub missi
 
 ## Layout and naming
 
-- **One block per feature.** A `# FEATURE NAME` row opens it and `#END FEATURE NAME` closes it; rows whose id starts with `#` are skipped by the loader. Long quests get sub-headers along their stages, as SotF's `# THE HAUNTED` block does.
+- **One block per feature.** A `# FEATURE NAME` row opens it and blank rows end it, as in SotF and vanilla; rows whose id starts with `#` are skipped by the loader. Existing Lost.Sector blocks also carry `#END` rows; new blocks do not need them. Long quests get sub-headers along their stages, as SotF's `# THE HAUNTED` block does.
 - **Play order.** Within a block, the entry row first, then each beat in the order the player meets it. A menu's option rows sit together, directly above their handler rows, in the same order.
 - **Blank rows** separate conversations and menus.
 - **Rule ids** `nskr_<feature>_<purpose>`: sequential numbers for a strictly linear scene (`..._brief1`, `..._brief2`), short names for branches. The loader only rejects a duplicate id under the same trigger, so keep every id unique yourself.
-- **Private triggers** `nskr_<feature><Purpose>`: `...Options` for menus, `...Greeting` or `...Text` for picks and inserts.
-- **Comments.** A `#` line inside Conditions, Script or Options is skipped; use it for a non-obvious line, as SotF's `# removes map` explains a bare `ShowPersonVisual`. Use the notes column for why a score exists or which rows are deliberate random variants. Keep jokes and history out.
+- **Private triggers** `nskr_<feature><Purpose>`: `...Options` for menus, `...Greeting` or `...Text` for picks and inserts, and a plain descriptive name for a shared insert or side effect, as SotF's `sotfLearnAboutDustkeepers`.
+- **Comments.** A `#` line inside Conditions, Script or Options is skipped; use it for a non-obvious line, as SotF's `# removes map` explains a bare `ShowPersonVisual`. The notes column can say why a score exists or which rows are deliberate random variants; SotF leaves it empty, so this is a Lost.Sector addition. Keep jokes and history out.
 
 ## Review checklist
 
 - **Structure.** Each screen uses the structure that fits it. No menu for a linear scene, no copied paragraphs.
 - **Conditions.** Every `FireBest` trigger has a fallback and no accidental ties. Only real operators. No `FireAll` or `FireBest` in Conditions. Condition commands change nothing.
 - **Triggers and keys.** Every fired trigger has rows with exactly that spelling. Every key is read and written with the same spelling and scope.
-- **Options.** Every option has an order and a handler, and no colon in its label. Every menu has an option that always shows. Every screen has a way out. Decorating commands run after their option exists.
+- **Options.** Every option has a handler and no colon in its label. Every menu has an option that always shows. Every screen has a way out. Decorating commands run after their option exists.
 - **State.** Quest state comes from its owner. Conversation flags sit on the speaker. Display values have expiry `0`. Menu option rows change nothing.
 - **Text.** No leftover tokens, internal ids or `.0` numbers on screen. Highlights match what is shown. Paragraphs are short.
 - **CSV.** The file round-trips byte for byte, every row has seven columns, and no Conditions or Script line holds only spaces; see [Editing and validation](RULES.md#editing-and-validation).

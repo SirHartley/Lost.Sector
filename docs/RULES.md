@@ -20,8 +20,8 @@ For the preserved engine discussion, see [rules/engine_workflow.md](rules/engine
 - **id** — unique rule id. Prefix with `nskr_` to avoid collisions with other mods. The loader skips rows with an empty id and rows whose id starts with `#` (comment or disabled rows). It rejects a duplicate id only under the same trigger; the same id under two triggers loads without error, so keep ids unique yourself. Separate rows do not continue the previous rule.
 - **trigger** — a bucket that groups rules, not "fires when." The engine fetches all rules for a trigger and filters via conditions. Common triggers:
   - Dialog flow: `OpenInteractionDialog` (default initial trigger of the standard rules dialog), `PopulateOptions`, `DialogOptionSelected`. The simulator guide's `DialogStart` is not fired anywhere in this build.
-  - Fleet encounters: `BeginFleetEncounter`, `FleetEncounterResolved`, `OpenCommLink`
-  - Markets/bars: `BarPrintDesc`, `BarEncounterOption`, `TradePanelFlavorText`, `RelationshipLevelDesc`
+  - Fleet encounters: `BeginFleetEncounter`, `BeginFleetEncounter2`, `OpenCommLink`
+  - Markets/bars: `MarketPostOpen`, `MarketPostDock`, `AddBarEvents`, `BarPrintDesc`, `TradePanelFlavorText`, `RelationshipLevelDesc`
   - Salvage/raids: `BeginSalvage`, custom triggers like `BeatDefendersContinue`
   - Custom mod-defined triggers via `FireAll nskr_shipSwapMenu` from code/script.
 - **conditions** — newline-separated predicate expressions. ALL must pass for the rule to match; they are checked top to bottom and matching stops at the first failure. Empty = always matches. See Operators section below. Append `score:N` to a condition line for priority in `getBestMatching`. Lines starting with `#` are comments.
@@ -35,7 +35,7 @@ Conditions and commands reference memory through dotted scopes:
 
 | Scope | Meaning | Persistence |
 |---|---|---|
-| `$global.*` | Sector-wide state (`Global.getSector().getMemoryWithoutUpdate()`) | Campaign-long |
+| `$global.*` | Sector-wide state (`Global.getSector().getMemory()` in the standard rules dialog, which also refreshes global facts) | Campaign-long |
 | `$player.*` | Player character-data memory in the standard rules dialog | Owner persists; individual keys may expire |
 | `$market.*` | Current market being interacted with | Per-market |
 | `$faction.*` | Faction of the interaction target | Derived at runtime |
@@ -225,7 +225,7 @@ Check displayed highlight occurrences using [DIALOGUE.md](DIALOGUE.md#shared-tex
 
 ## Fleet and bar exits
 
-`EndConversation` ends the current person or comm conversation inside the open dialog. In a rules-based dialog it clears the active person and then rebuilds the base menu: a fleet dialog calls reinit, which can fire `BeginFleetEncounter` again; a market or person dialog fires `FireBest MarketPostOpen` when the market has not been docked yet (no `$menuState`), otherwise `FireAll PopulateOptions`. `DO_NOT_FIRE`, or `$doNotFireOnConvEnd` on local memory, skips the rebuild. `NO_CONTINUE` shows the default visual at once and, on a fleet, skips the Continue step before `BeginFleetEncounter`. Without `NO_CONTINUE` the last portrait stays on screen, which is why vanilla's comm-link exits run `ShowDefaultVisual` first. In a dialog whose plugin is not rules based it does nothing. Use it on a fleet only when rebuilding fleet/combat options is the intended result.
+`EndConversation` ends the current person or comm conversation inside the open dialog. In a rules-based dialog it clears the active person and then rebuilds the base menu: a fleet dialog calls reinit, which can fire `BeginFleetEncounter` again; a market or person dialog fires `FireBest MarketPostOpen` when the market has not been docked yet (no `$menuState`), otherwise `FireAll PopulateOptions`. `DO_NOT_FIRE`, or `$doNotFireOnConvEnd` on local memory, skips the rebuild. `NO_CONTINUE` shows the default visual at once and, on a fleet, skips the Continue step before `BeginFleetEncounter`. Without `NO_CONTINUE` the last portrait stays on screen, which is why vanilla's comm-link exits run `ShowDefaultVisual` first. In a dialog whose plugin is not rules based it clears no person and rebuilds no menu. Use it on a fleet only when rebuilding fleet/combat options is the intended result.
 
 `DismissDialog` alone does not clean up a fleet encounter's BattleAPI. Lost.Sector has no shared teardown verb yet. When a route must leave a fleet encounter, check that `dialog.getPlugin()` is a `FleetInteractionDialogPluginImpl`, call its `cleanUpBattle()`, then `dialog.dismiss()`. Put this on the owning command as a verb that is also safe for non-fleet interactions.
 
