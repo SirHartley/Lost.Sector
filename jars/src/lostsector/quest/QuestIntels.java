@@ -3,6 +3,7 @@ package lostsector.quest;
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.SectorEntityToken;
 import com.fs.starfarer.api.campaign.comm.IntelInfoPlugin;
+import lostsector.helper.UiSounds;
 
 import java.util.Locale;
 
@@ -19,7 +20,7 @@ public final class QuestIntels {
     // No-op while the key has an active entry. A completed or failed entry still counting down its end delay does not
     // count, so the key can be shown again at once.
     public void show(String key) {
-        Declarations.Intel declared = ctx.quest().declarations().intelDeclaration(key);
+        IntelSpec declared = ctx.quest().declarations().intelDeclaration(key);
         if (declared == null) {
             ctx.error("intel " + key + " is not declared");
             return;
@@ -30,16 +31,22 @@ public final class QuestIntels {
             return;
         }
         QuestIntel intel = new QuestIntel(ctx.quest().id(), key, declared.icon, declared.tags);
-        // The intel manager does not advance its entries; as a sector script the entry counts down its end delay,
-        // and the sector drops the script once isDone() (the entry has ended) is true.
-        Global.getSector().getIntelManager().addIntel(intel, false, ctx.textPanel());
+        if (declared.isImportant()) intel.setImportant(true);
+        // The intel manager does not advance its entries; as a sector script the entry counts down its end delay, and
+        // the sector drops the script once isDone() (the entry has ended) is true.
+        intel.post(ctx.textPanel());
         Global.getSector().addScript(intel);
         ctx.log("intel " + key + " shown");
     }
 
     public void update(String key, String updateKey) {
+        update(key, updateKey, null);
+    }
+
+    // The message plays the sound (a sounds.json id, such as ui_rep_raise) instead of the standard update sound.
+    public void update(String key, String updateKey, String sound) {
         QuestIntel intel = require(key, "update");
-        if (intel != null) intel.update(updateKey, ctx.textPanel());
+        if (intel != null) intel.update(updateKey, sound(sound), ctx.textPanel());
     }
 
     public void setMapLocation(String key, SectorEntityToken entity) {
@@ -49,11 +56,19 @@ public final class QuestIntels {
 
     // Status completed, an update message, then the vanilla end delay (BaseIntelPlugin.getBaseDaysAfterEnd).
     public void complete(String key) {
-        finish(key, QuestIntel.Status.COMPLETED);
+        complete(key, "", null);
+    }
+
+    public void complete(String key, String updateKey, String sound) {
+        finish(key, QuestIntel.Status.COMPLETED, updateKey, sound);
     }
 
     public void fail(String key) {
-        finish(key, QuestIntel.Status.FAILED);
+        fail(key, "", null);
+    }
+
+    public void fail(String key, String updateKey, String sound) {
+        finish(key, QuestIntel.Status.FAILED, updateKey, sound);
     }
 
     // Ends every entry of the key at once, including one counting down its end delay.
@@ -79,10 +94,10 @@ public final class QuestIntels {
         }
     }
 
-    private void finish(String key, QuestIntel.Status status) {
+    private void finish(String key, QuestIntel.Status status, String updateKey, String sound) {
         QuestIntel intel = require(key, status.name().toLowerCase(Locale.ROOT));
         if (intel == null) return;
-        intel.finish(status, ctx.textPanel());
+        intel.finish(status, updateKey, sound(sound), ctx.textPanel());
         ctx.log("intel " + key + " " + status.name().toLowerCase(Locale.ROOT));
     }
 
@@ -98,6 +113,13 @@ public final class QuestIntels {
             QuestIntel intel = (QuestIntel) plugin;
             if (!intel.isEnding() && intel.questId().equals(ctx.quest().id()) && intel.key().equals(key)) return intel;
         }
+        return null;
+    }
+
+    // Null keeps the standard sound; an unknown id is logged and replaced by it.
+    private String sound(String sound) {
+        if (sound == null || UiSounds.exists(sound)) return sound;
+        ctx.error("intel message sound " + sound + " is not in sounds.json; the standard sound plays");
         return null;
     }
 

@@ -1,6 +1,7 @@
 package lostsector.quest;
 
 import com.fs.starfarer.api.Global;
+import com.fs.starfarer.api.campaign.FactionAPI;
 import com.fs.starfarer.api.campaign.SectorEntityToken;
 import com.fs.starfarer.api.campaign.TextPanelAPI;
 import com.fs.starfarer.api.campaign.rules.MemoryAPI;
@@ -41,8 +42,14 @@ public final class QuestIntel extends BaseIntelPlugin {
     // The intel list calls setTagsForSort on every listed entry right before sorting it by getSortString, so the
     // title is read once per sort instead of once per comparison.
     private transient String sortTitle;
+    // The sound of the message being sent; both message paths read getCommMessageSound() while they build it.
+    private transient String messageSound;
+    // True while a posting or update message is built. The campaign message list builds it with ListInfoMode.MESSAGES,
+    // a dialog's text panel (IntelManager.addIntelToTextPanel) with ListInfoMode.INTEL, so the mode alone cannot tell.
+    private transient boolean inMessage;
     private transient boolean reportedMissingState;
     private transient boolean reportedMissingTitle;
+    private transient boolean reportedMissingFaction;
 
     QuestIntel(String questId, String key, String icon, List<String> tags) {
         this.questId = questId;
@@ -68,15 +75,42 @@ public final class QuestIntel extends BaseIntelPlugin {
     }
 
     // An update message; its rows see the update key in $nskr_intel_update. BaseIntelPlugin keeps the key in the
-    // transient listInfoParam only while the message is built.
-    void update(String updateKey, TextPanelAPI textPanel) {
-        sendUpdateIfPlayerHasIntel(updateKey == null ? "" : updateKey, textPanel);
+    // transient listInfoParam only while the message is built. A null sound keeps the standard update sound.
+    void update(String updateKey, String sound, TextPanelAPI textPanel) {
+        messageSound = sound;
+        inMessage = true;
+        try {
+            sendUpdateIfPlayerHasIntel(updateKey == null ? "" : updateKey, textPanel);
+        } finally {
+            messageSound = null;
+            inMessage = false;
+        }
     }
 
-    void finish(Status status, TextPanelAPI textPanel) {
+    // Adds the entry; the posting message goes to the text panel when there is one, else to the campaign messages.
+    void post(TextPanelAPI textPanel) {
+        inMessage = true;
+        try {
+            Global.getSector().getIntelManager().addIntel(this, false, textPanel);
+        } finally {
+            inMessage = false;
+        }
+    }
+
+    void finish(Status status, String updateKey, String sound, TextPanelAPI textPanel) {
         this.status = status;
-        update("", textPanel);
+        IntelSpec spec = spec();
+        if (spec != null && spec.isImportant()) setImportant(false);
+        update(updateKey, sound, textPanel);
         endAfterDelay();
+    }
+
+    // The declaration's options, read when displayed so that definitions stay unsaved; null when the quest or key is
+    // no longer declared.
+    private IntelSpec spec() {
+        QuestManager manager = QuestManager.get();
+        Quest<?, ?> quest = manager == null ? null : manager.quest(questId);
+        return quest == null ? null : quest.declarations().intelDeclaration(key);
     }
 
     // Text
@@ -107,9 +141,13 @@ public final class QuestIntel extends BaseIntelPlugin {
         return sortTitle;
     }
 
+    // The small insignia title font of the old Lost.Sector intel classes and of vanilla's large mission titles
+    // (BaseHubMission.createIntelInfo with setUseLargeFontInMissionList).
     @Override
     public void createIntelInfo(TooltipMakerAPI info, ListInfoMode mode) {
+        info.setParaSmallInsignia();
         info.addPara(title(mode(mode)), getTitleColor(mode), 0f);
+        info.setParaFontDefault();
         addBulletPoints(info, mode);
     }
 
@@ -122,11 +160,18 @@ public final class QuestIntel extends BaseIntelPlugin {
         }
     }
 
+    // Paragraphs, then the bullets of an entry declared with descriptionBullets(), then the delete button of a
+    // deletable entry that is completed or failed. BaseIntelPlugin.buttonPressConfirmed handles the button
+    // (endImmediately, recreateIntelUI) after its confirmation prompt.
     @Override
     public void createSmallDescription(TooltipMakerAPI info, float width, float height) {
         for (QuestText.Line line : lines(QuestText.DESC, QuestText.MODE_DESC)) {
             add(info, line, Misc.getTextColor(), PARAGRAPH_PAD);
         }
+        IntelSpec spec = spec();
+        if (spec == null) return;
+        if (spec.hasDescriptionBullets()) addBulletPoints(info, ListInfoMode.IN_DESC);
+        if (spec.isDeletable() && status != Status.ACTIVE) addDeleteButton(info, width);
     }
 
     // addPara with highlight arguments runs String.format on the text; this overload does not, so a '%' in a row
@@ -135,7 +180,7 @@ public final class QuestIntel extends BaseIntelPlugin {
         LabelAPI label = info.addPara(line.text, color, pad);
         if (line.highlights.length == 0) return;
         label.setHighlight(line.highlights);
-        label.setHighlightColor(Misc.getHighlightColor());
+        label.setHighlightColors(line.colors);
     }
 
     private String title(String mode) {
@@ -170,8 +215,9 @@ public final class QuestIntel extends BaseIntelPlugin {
         return QuestText.intelMemory(key, status.name().toLowerCase(Locale.ROOT), update instanceof String ? (String) update : "", mode);
     }
 
-    // MESSAGES covers the posting message and every update; IN_DESC is not used by the core UI.
-    private static String mode(ListInfoMode mode) {
+    // MESSAGES covers a campaign message the UI builds again later; IN_DESC is the description's bullets.
+    private String mode(ListInfoMode mode) {
+        if (inMessage) return QuestText.MODE_UPDATE;
         switch (mode) {
             case MESSAGES:
                 return QuestText.MODE_UPDATE;
@@ -185,6 +231,33 @@ public final class QuestIntel extends BaseIntelPlugin {
     }
 
     // Presentation
+
+    @Override
+    public IntelSortTier getSortTier() {
+        IntelSpec spec = spec();
+        if (spec == null || spec.tierOrNull() == null || isEnding() || isEnded()) return super.getSortTier();
+        return spec.tierOrNull();
+    }
+
+    @Override
+    public String getCommMessageSound() {
+        if (messageSound != null) return messageSound;
+        IntelSpec spec = spec();
+        if (!isSendingUpdate() && spec != null && spec.isMajorPosting()) return getSoundMajorPosting();
+        return super.getCommMessageSound();
+    }
+
+    @Override
+    public FactionAPI getFactionForUIColors() {
+        IntelSpec spec = spec();
+        String factionId = spec == null ? null : spec.factionIdOrNull();
+        FactionAPI faction = factionId == null ? null : Global.getSector().getFaction(factionId);
+        if (factionId != null && faction == null && !reportedMissingFaction) {
+            reportedMissingFaction = true;
+            QuestManager.logError(questId, "intel " + key + ": unknown faction " + factionId + "; the player's colors are used");
+        }
+        return faction == null ? super.getFactionForUIColors() : faction;
+    }
 
     @Override
     public String getIcon() {

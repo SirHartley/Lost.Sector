@@ -29,7 +29,7 @@ final class KestevenJob1Module extends QuestModule<KestevenStage, KestevenState>
 
     @Override
     protected void declare(Declarations<KestevenStage, KestevenState> d) {
-        d.intel(INTEL, "job1", Tags.INTEL_IMPORTANT, Tags.INTEL_ACCEPTED, Tags.INTEL_MISSIONS);
+        d.intel(INTEL, "job1", Tags.INTEL_IMPORTANT, Tags.INTEL_ACCEPTED, Tags.INTEL_MISSIONS).descriptionBullets();
         d.role(ROLE_TIP_DORMANT, FleetRole.of(FleetOrders.none()).persistent());
 
         // The job 3 intel rows read it too.

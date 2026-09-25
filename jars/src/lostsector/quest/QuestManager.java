@@ -481,15 +481,23 @@ public final class QuestManager extends BaseCampaignEventListener
         });
     }
 
-    // Loot comes from the side the player fought; vanilla reports it before the after-battle despawns.
+    // Loot comes from the side the player fought; vanilla reports it before the after-battle despawns. The quest fleets'
+    // owners get onLoot first, then every active module gets onEncounterLoot, for any encounter.
     @Override
     public void reportEncounterLootGenerated(FleetEncounterContextPlugin plugin, CargoAPI loot) {
         BattleAPI battle = plugin == null ? null : plugin.getBattle();
-        if (battle == null || !battle.hasSnapshots()) return;
-        deliverToOwners(questFleetsIn(battle.getNonPlayerSideSnapshot()), questFleet -> new Hook() {
+        if (battle != null && battle.hasSnapshots()) {
+            deliverToOwners(questFleetsIn(battle.getNonPlayerSideSnapshot()), questFleet -> new Hook() {
+                @Override
+                public <S extends Enum<S> & QuestStage, T extends QuestState<S>> void call(QuestModule<S, T> module, QuestContext<S, T> ctx) {
+                    module.onLoot(ctx, questFleet, plugin, loot);
+                }
+            });
+        }
+        deliver(new Hook() {
             @Override
             public <S extends Enum<S> & QuestStage, T extends QuestState<S>> void call(QuestModule<S, T> module, QuestContext<S, T> ctx) {
-                module.onLoot(ctx, questFleet, plugin, loot);
+                module.onEncounterLoot(ctx, plugin, loot);
             }
         });
     }

@@ -5,7 +5,13 @@ import com.fs.starfarer.api.campaign.rules.MemKeys;
 import com.fs.starfarer.api.campaign.rules.MemoryAPI;
 import com.fs.starfarer.api.campaign.rules.RuleAPI;
 import com.fs.starfarer.api.campaign.rules.RulesAPI;
+import com.fs.starfarer.api.impl.campaign.rulecmd.Highlight;
+import com.fs.starfarer.api.impl.campaign.rulecmd.SetTextHighlightColors;
+import com.fs.starfarer.api.impl.campaign.rulecmd.SetTextHighlights;
+import com.fs.starfarer.api.util.Misc;
+import com.fs.starfarer.api.util.Misc.Token;
 
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -13,7 +19,8 @@ import java.util.Map;
 
 // Rules text read outside any dialog (README "Intel"). Rows are matched with a null dialog; the engine evaluates
 // their conditions as written, and a command that throws is not caught, so these rows use only memory keys and
-// nskr_quest condition verbs. Script and Options of the matched rows never run. The rules check tool reads the
+// nskr_quest condition verbs. Script and Options of the matched rows never run; SetTextHighlights and
+// SetTextHighlightColors lines in the Script are read as highlight declarations. The rules check tool reads the
 // constants below; this class must stay loadable without the game (no game calls in static initializers).
 public final class QuestText {
 
@@ -40,15 +47,33 @@ public final class QuestText {
 
     private static final String TOKEN_MARK = "$nskr_";
 
-    // One matched row's text after token replacement, with the quest token values it shows in text order.
+    // One matched row's text after token replacement, with its highlighted phrases in text order and their colors.
     public static final class Line {
 
         public final String text;
         public final String[] highlights;
+        public final Color[] colors;
 
-        Line(String text, String[] highlights) {
+        Line(String text, String[] highlights, Color[] colors) {
             this.text = text;
             this.highlights = highlights;
+            this.colors = colors;
+        }
+    }
+
+    // A phrase found in the final text.
+    private static final class Mark {
+
+        final int start;
+        final int end;
+        final String phrase;
+        final Color color;
+
+        Mark(int start, String phrase, Color color) {
+            this.start = start;
+            this.end = start + phrase.length();
+            this.phrase = phrase;
+            this.color = color;
         }
     }
 
@@ -79,7 +104,7 @@ public final class QuestText {
     public static String title(String trigger, Map<String, MemoryAPI> memoryMap) {
         RulesAPI rules = Global.getSector().getRules();
         RuleAPI rule = rules.getBestMatching(null, trigger, null, memoryMap);
-        Line line = rule == null ? null : line(rules, rule, replacementMemory(memoryMap), false);
+        Line line = rule == null ? null : line(rules, rule, memoryMap, replacementMemory(memoryMap), false);
         return line == null ? null : line.text;
     }
 
@@ -91,7 +116,7 @@ public final class QuestText {
         if (matches.isEmpty()) return lines;
         Map<String, MemoryAPI> replacement = replacementMemory(memoryMap);
         for (RuleAPI rule : matches) {
-            Line line = line(rules, rule, replacement, true);
+            Line line = line(rules, rule, memoryMap, replacement, true);
             if (line != null) lines.add(line);
         }
         return lines;
@@ -106,20 +131,31 @@ public final class QuestText {
         return replacement;
     }
 
-    private static Line line(RulesAPI rules, RuleAPI rule, Map<String, MemoryAPI> replacement, boolean highlight) {
+    private static Line line(RulesAPI rules, RuleAPI rule, Map<String, MemoryAPI> memoryMap, Map<String, MemoryAPI> replacement,
+                             boolean highlight) {
         String raw = rule.pickText();
         if (raw == null || raw.isBlank()) return null;
         // Vanilla's and the framework's generator keys and every memory token start with '$'.
-        if (raw.indexOf('$') < 0) return new Line(raw, new String[0]);
-        String[] highlights = highlight && raw.contains(TOKEN_MARK)
-                ? highlights(raw, QuestTokens.values(rule.getId(), replacement, null))
-                : new String[0];
-        return new Line(rules.performTokenReplacement(rule.getId(), raw, null, replacement), highlights);
+        String text = raw.indexOf('$') < 0 ? raw : rules.performTokenReplacement(rule.getId(), raw, null, replacement);
+        if (!highlight) return new Line(text, new String[0], new Color[0]);
+        List<Mark> marks = new ArrayList<>();
+        if (raw.contains(TOKEN_MARK)) {
+            List<String> values = tokenValues(raw, QuestTokens.values(rule.getId(), replacement, null));
+            find(text, values, List.of(Misc.getHighlightColor()), marks);
+        }
+        declaredHighlights(rules, rule, text, memoryMap, replacement, marks);
+        marks.sort((a, b) -> Integer.compare(a.start, b.start));
+        String[] phrases = new String[marks.size()];
+        Color[] colors = new Color[marks.size()];
+        for (int i = 0; i < marks.size(); i++) {
+            phrases[i] = marks.get(i).phrase;
+            colors[i] = marks.get(i).color;
+        }
+        return new Line(text, phrases, colors);
     }
 
-    // The value of every quest token in the raw text, once per occurrence and in text order, which is the order
-    // LabelAPI.setHighlight searches in. Empty values are skipped.
-    private static String[] highlights(String raw, Map<String, String> tokens) {
+    // The value of every quest token in the raw text, once per occurrence and in text order. Empty values are skipped.
+    private static List<String> tokenValues(String raw, Map<String, String> tokens) {
         List<String> found = new ArrayList<>();
         for (int at = raw.indexOf(TOKEN_MARK); at >= 0; at = raw.indexOf(TOKEN_MARK, at + 1)) {
             String longest = null;
@@ -130,6 +166,56 @@ public final class QuestText {
             String value = tokens.get(longest);
             if (!value.isEmpty()) found.add(value);
         }
-        return found.toArray(new String[0]);
+        return found;
+    }
+
+    // SetTextHighlights (and its subclass Highlight) and SetTextHighlightColors lines, read without running them. Each
+    // argument resolves as in the commands: SetTextHighlights reads Token.getStringWithTokenReplacement, which is
+    // getString(memoryMap) followed by performTokenReplacement; SetTextHighlightColors reads Token.getColor(memoryMap).
+    // Declared phrases replace token highlights they overlap.
+    private static void declaredHighlights(RulesAPI rules, RuleAPI rule, String text, Map<String, MemoryAPI> memoryMap,
+                                           Map<String, MemoryAPI> replacement, List<Mark> marks) {
+        List<String> phrases = new ArrayList<>();
+        List<Color> colors = new ArrayList<>();
+        for (RuleScript.Command command : RuleScript.commands(rule)) {
+            if (command.className.equals(SetTextHighlights.class.getName()) || command.className.equals(Highlight.class.getName())) {
+                for (Token token : command.params) {
+                    String phrase = token.getString(memoryMap);
+                    if (phrase == null) continue;
+                    phrase = rules.performTokenReplacement(rule.getId(), phrase, null, replacement);
+                    if (!phrase.isEmpty()) phrases.add(phrase);
+                }
+            } else if (command.className.equals(SetTextHighlightColors.class.getName())) {
+                for (Token token : command.params) {
+                    colors.add(token.getColor(memoryMap));
+                }
+            }
+        }
+        if (phrases.isEmpty()) return;
+        List<Mark> declared = new ArrayList<>();
+        find(text, phrases, colors.isEmpty() ? List.of(Misc.getHighlightColor()) : colors, declared);
+        marks.removeIf(mark -> overlaps(mark, declared));
+        marks.addAll(declared);
+    }
+
+    // Each phrase is searched after the previous one, as LabelAPI.setHighlight does. Phrase i takes color i; phrases past
+    // the list take the last color, which SetTextHighlightColors sets as the paragraph's highlight color.
+    private static void find(String text, List<String> phrases, List<Color> colors, List<Mark> marks) {
+        int from = 0;
+        for (int i = 0; i < phrases.size(); i++) {
+            String phrase = phrases.get(i);
+            int at = text.indexOf(phrase, from);
+            if (at < 0) continue;
+            Color color = colors.get(Math.min(i, colors.size() - 1));
+            marks.add(new Mark(at, phrase, color == null ? Misc.getHighlightColor() : color));
+            from = at + phrase.length();
+        }
+    }
+
+    private static boolean overlaps(Mark mark, List<Mark> others) {
+        for (Mark other : others) {
+            if (mark.start < other.end && other.start < mark.end) return true;
+        }
+        return false;
     }
 }

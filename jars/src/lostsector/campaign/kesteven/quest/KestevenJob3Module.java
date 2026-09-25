@@ -24,7 +24,7 @@ final class KestevenJob3Module extends QuestModule<KestevenStage, KestevenState>
 
     @Override
     protected void declare(Declarations<KestevenStage, KestevenState> d) {
-        d.intel(INTEL, "job3", Tags.INTEL_IMPORTANT, Tags.INTEL_ACCEPTED, Tags.INTEL_MISSIONS);
+        d.intel(INTEL, "job3", Tags.INTEL_IMPORTANT, Tags.INTEL_ACCEPTED, Tags.INTEL_MISSIONS).descriptionBullets();
 
         d.check("job3TimeLeft", ctx -> ctx.state().job3TimeLeft > 0f);
 

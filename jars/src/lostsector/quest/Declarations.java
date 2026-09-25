@@ -30,22 +30,10 @@ public final class Declarations<S extends Enum<S> & QuestStage, T extends QuestS
     private final Map<String, QuestModule<S, T>> roleModules = new HashMap<>();
     private final Set<String> triggers = new LinkedHashSet<>();
     private final Set<String> people = new LinkedHashSet<>();
-    private final Map<String, Intel> intels = new LinkedHashMap<>();
+    private final Map<String, IntelSpec> intels = new LinkedHashMap<>();
 
     private QuestModule<S, T> declaring;
     private boolean sealed;
-
-    // An intel entry key's icon (a key under graphics.campaignMissions in settings.json) and its intel tags.
-    static final class Intel {
-
-        final String icon;
-        final List<String> tags;
-
-        Intel(String icon, List<String> tags) {
-            this.icon = icon;
-            this.tags = tags;
-        }
-    }
 
     Declarations(String questId) {
         this.questId = questId;
@@ -58,6 +46,9 @@ public final class Declarations<S extends Enum<S> & QuestStage, T extends QuestS
         }
         declaring = null;
         sealed = true;
+        for (IntelSpec intel : intels.values()) {
+            intel.freeze();
+        }
         for (Map.Entry<String, FleetRole> role : roles.entrySet()) {
             String trigger = role.getValue().defeatTriggerName();
             if (trigger != null && !triggers.contains(trigger)) {
@@ -107,12 +98,15 @@ public final class Declarations<S extends Enum<S> & QuestStage, T extends QuestS
         }
     }
 
-    // An intel entry that QuestIntels shows; its text comes from the quest's intel rows (README "Intel").
-    public void intel(String key, String icon, String... tags) {
+    // An intel entry that QuestIntels shows; its text comes from the quest's intel rows (README "Intel"). The returned
+    // spec takes the entry's presentation options.
+    public IntelSpec intel(String key, String icon, String... tags) {
         if (icon == null || icon.isBlank() || tags == null || Arrays.asList(tags).contains(null)) {
             throw new IllegalArgumentException("[" + questId + "] intel " + key + " needs an icon and non-null tags");
         }
-        put(intels, "intel", key, new Intel(icon, List.of(tags)));
+        IntelSpec spec = new IntelSpec(questId, key, icon, List.of(tags));
+        put(intels, "intel", key, spec);
+        return spec;
     }
 
     public Map<String, Predicate<QuestContext<S, T>>> checks() {
@@ -152,7 +146,7 @@ public final class Declarations<S extends Enum<S> & QuestStage, T extends QuestS
         return Collections.unmodifiableSet(intels.keySet());
     }
 
-    Intel intelDeclaration(String key) {
+    IntelSpec intelDeclaration(String key) {
         return intels.get(key);
     }
 

@@ -398,6 +398,7 @@ public abstract class QuestModule<S, T> {
     protected void onFleetGone(QuestContext<S, T> ctx, QuestFleet fleet, FleetDespawnReason reason, Object param);
     protected void onBattle(QuestContext<S, T> ctx, QuestFleet fleet, BattleAPI battle, CampaignFleetAPI primaryWinner);
     protected void onLoot(QuestContext<S, T> ctx, QuestFleet fleet, FleetEncounterContextPlugin plugin, CargoAPI loot);
+    protected void onEncounterLoot(QuestContext<S, T> ctx, FleetEncounterContextPlugin plugin, CargoAPI loot);
     protected void onDecivilized(QuestContext<S, T> ctx, MarketAPI market, boolean fullyDestroyed);
     protected void onShipsRecovered(QuestContext<S, T> ctx, List<FleetMemberAPI> ships);
 
@@ -417,6 +418,7 @@ public abstract class QuestModule<S, T> {
 | `onFleetGone` | A fleet of one of this quest's roles despawns | Victory, loss, escape |
 | `onBattle` | A battle involving a fleet of this quest's roles | Partial defeats, player participation |
 | `onLoot` | Loot is generated from an encounter with this quest's fleet | Adding quest items to loot |
+| `onEncounterLoot` | Loot is generated from any encounter, whoever the player fought | Checks on every fight, such as a task done while engaging a faction |
 | `onDecivilized` | Any colony is decivilized | Losing a quest location |
 | `onShipsRecovered` | The player recovers ships, after a battle or from a derelict | Changing recovered quest hulls |
 | `devInfo` | The dev menu shows the quest | One line per value worth checking |
@@ -436,7 +438,7 @@ public final class Declarations<S, T> {
     public void token(String name, Function<QuestContext<S, T>, String> token);
     public void role(String name, FleetRole role);
     public void person(String key);
-    public void intel(String key, String icon, String... tags);
+    public IntelSpec intel(String key, String icon, String... tags);   // options: see Intel
     public void trigger(String trigger);
 }
 ```
@@ -536,7 +538,7 @@ The manager implements the vanilla callbacks below and routes each to the hooks 
 | `reportCurrentLocationChanged(prev, curr)` | `CurrentLocationChangedListener` | `onLocationChanged` | All active modules |
 | `reportFleetDespawned(fleet, reason, param)` | `CampaignEventListener` | `onFleetGone` | Active modules of the fleet's owning quest |
 | `reportBattleOccurred(primaryWinner, battle)` | `CampaignEventListener` | `onBattle` | Owning quests of every quest fleet in the battle |
-| `reportEncounterLootGenerated(plugin, loot)` | `CampaignEventListener` | `onLoot` | Owning quests of the quest fleets on the side the player fought |
+| `reportEncounterLootGenerated(plugin, loot)` | `CampaignEventListener` | `onLoot`, then `onEncounterLoot` | `onLoot`: owning quests of the quest fleets on the side the player fought; `onEncounterLoot`: all active modules |
 | `reportColonyDecivilized(market, fullyDestroyed)` | `ColonyDecivListener` | `onDecivilized` | All active modules |
 | `reportShipsRecovered(ships, dialog)` | `ShipRecoveryListener` | `onShipsRecovered` | All active modules |
 
@@ -548,6 +550,7 @@ Delivery order is quest order in `QuestCatalog`, then module order. A stage chan
 - **Registration.** Implementing a listener interface on `QuestManager` is enough. The `EFS_LIST` loop calls `getListenerManager().addListener(script, true)`; vanilla's `ListenerManager` files the object under every class and interface it implements (`FastIterationClassifier.classify`), and `ListenerUtil` fetches listeners by interface. `beforeGameSave` removes the object and `afterGameSave` adds it again.
 - **Decivilization.** Only `reportColonyDecivilized` is routed. `DecivTracker.decivilize` fires `reportColonyAboutToBeDecivilized` earlier in the same call, before the market leaves the economy; the manager ignores it.
 - **Recovery.** `ListenerUtil.reportShipsRecovered` calls every `ShipRecoveryListener` in the listener manager. `FleetInteractionDialogPluginImpl` calls it after the post-battle recovery picker, and `ShipRecoverySpecial` after recovering a derelict. The dialog argument is not passed on; the hook context has no dialog.
+- **Encounter loot.** The only caller of `reportEncounterLootGenerated` is `FleetInteractionDialogPluginImpl` at `CONTINUE_LOOT` (0.98a-RC8 `sources-api/impl.campaign.java` 14119), so `onEncounterLoot` comes once for every loot screen of a fleet encounter, with or without quest fleets. It is delivered after `onLoot`. The hook context has no dialog.
 - **Loot before battle.** For a player battle, `FleetInteractionDialogPluginImpl` reports the loot (`CONTINUE_LOOT`, "Pick through the wreckage") after the recovery screen, and reports the battle later, from `applyAfterBattleEffectsIfThereWasABattle` when the loot screen closes; so `onLoot` sees the player's fleet after recovery and comes before `onBattle`. Loot is reported only when it is not empty.
 
 To add a callback, follow [Extending the framework](#extending-the-framework): implement it on `QuestManager`, add a hook with an empty default, route it through the manager's `deliver` helper (all quests) or `deliverToOwners` (each quest fleet's event to its owning quest), and add a row here.
@@ -678,37 +681,52 @@ One generic class shows every quest's intel entries. Its text comes from rules r
 
 ```java
 public final class QuestIntels {
-    public void show(String key);                                 // adds the entry; no-op when shown
-    public void update(String key, String updateKey);             // sends an update message
+    public void show(String key);                                             // adds the entry; no-op when shown
+    public void update(String key, String updateKey);                         // sends an update message
+    public void update(String key, String updateKey, String sound);           // with a sounds.json id instead of the update sound
     public void setMapLocation(String key, SectorEntityToken entity);
-    public void complete(String key);                             // status completed, update, ends after the vanilla delay
-    public void fail(String key);                                 // status failed, update, ends after the vanilla delay
-    public void end(String key);                                  // ends at once
+    public void complete(String key);                                         // status completed, update, ends after the vanilla delay
+    public void complete(String key, String updateKey, String sound);
+    public void fail(String key);                                             // status failed, update, ends after the vanilla delay
+    public void fail(String key, String updateKey, String sound);
+    public void end(String key);                                              // ends at once
     public boolean isShown(String key);
+}
+
+public final class IntelSpec {                        // returned by d.intel; options are set in declare() only
+    public IntelSpec tier(IntelSortTier tier);        // sort tier while active; default TIER_3
+    public IntelSpec majorPosting();                  // posting message with getSoundMajorPosting()
+    public IntelSpec important();                     // important when shown, unmarked when completed or failed
+    public IntelSpec deletable();                     // delete button in the description once completed or failed
+    public IntelSpec descriptionBullets();            // the bullets also in the description, after the paragraphs
+    public IntelSpec faction(String factionId);       // getFactionForUIColors; default the player's faction
 }
 ```
 
-`ctx.intel()` returns the `QuestIntels` of the context; like `ctx.rewards()` it is bound to the context's dialog. Keys are declared with `d.intel(key, icon, tags...)`: the key follows the declaration name rules, the icon is a key under `graphics.campaignMissions` in `data/config/settings.json`, and the tags are intel tags such as `Tags.INTEL_MISSIONS`. A duplicate key, a blank icon or a null tag throws at load.
+`ctx.intel()` returns the `QuestIntels` of the context; like `ctx.rewards()` it is bound to the context's dialog. Keys are declared with `d.intel(key, icon, tags...)`: the key follows the declaration name rules, the icon is a key under `graphics.campaignMissions` in `data/config/settings.json`, and the tags are intel tags such as `Tags.INTEL_MISSIONS`. A duplicate key, a blank icon or a null tag throws at load, as does an option set after `declare`, a null or `TIER_COMPLETED` tier or a blank faction id. `QuestIntel` copies the icon and tags when shown and reads the options from the declaration when displayed, so changed options apply to entries already in a save.
 
 - **`show`** adds a `QuestIntel` with `IntelManagerAPI.addIntel(intel, false, textPanel)`: with a dialog open, the posting message prints in its text panel; without one, the game posts a campaign message. It also adds the entry as a sector script, because the intel manager does not advance its entries: the script counts down the vanilla end delay, and the sector drops it once the entry has ended (`isDone()`). `advanceImpl` does nothing. `show` is a no-op while the key has an active entry. An undeclared key, or an icon that `SettingsAPI.getSpriteName("campaignMissions", icon)` does not find, logs an error and shows nothing.
 - **Active entry.** An entry is active until `complete`, `fail` or `end`. `isShown` is true only for an active entry, so a completed entry still counting down its delay does not stop `show` from adding a new one.
-- **`update`** sends an update message through `sendUpdateIfPlayerHasIntel(updateKey, textPanel)`: in the dialog's text panel when one is open, otherwise as a campaign message, which the game sends only for an entry the player has and that is not hidden. `complete` and `fail` set the status, send an update with an empty update key and call `endAfterDelay()` (`BaseIntelPlugin.getBaseDaysAfterEnd()`, 3 days). `end` calls `endImmediately()` on every entry of the key, active or ending; the intel manager removes ended entries on its next unpaused advance. `update`, `setMapLocation`, `complete` and `fail` on a key without an active entry log an error and do nothing.
+- **`update`** sends an update message through `sendUpdateIfPlayerHasIntel(updateKey, textPanel)`: in the dialog's text panel when one is open, otherwise as a campaign message, which the game sends only for an entry the player has and that is not hidden. `complete` and `fail` set the status, send an update (with an empty update key unless one is given) and call `endAfterDelay()` (`BaseIntelPlugin.getBaseDaysAfterEnd()`, 3 days). `end` calls `endImmediately()` on every entry of the key, active or ending; the intel manager removes ended entries on its next unpaused advance. `update`, `setMapLocation`, `complete` and `fail` on a key without an active entry log an error and do nothing.
+- **Messages.** Both message paths read the entry's `getCommMessageSound()` and build the message at once: the campaign message list (`CampaignUIAPI.addMessage` with the intel) plays the sound and builds a widget that calls `createIntelInfo(MESSAGES)`; `IntelManager.addIntelToTextPanel` plays it and builds the intel list's item widget, which calls `createIntelInfo(INTEL)` (0.98a-RC8 `sources-obf/campaign.comms.java` 3529-3541 and 163-172; 5811-5829 and 6450-6479). `QuestIntel` marks the entry while `show` or an update sends a message, so its rows see mode `update` on both paths. A `sound` argument replaces the update sound for that one message; null keeps it, and an id that is not a top-level key of the merged `sounds.json` is logged and replaced by it. Without an argument the posting message plays `ui_intel_something_posted`, or `ui_intel_major_posted` with `majorPosting()`, and updates play `ui_intel_update`, as `BaseIntelPlugin.getCommMessageSound` does. A message that reports a payment or a loss, which the old intel classes sent as a plain campaign message with `ui_rep_raise` or `ui_rep_drop`, is an update with that sound and its text in an update row, as vanilla's `PersonBountyIntel` reports its payment as an update bullet ("%s received"); the framework has no plain-message helper, because its text would need a trigger and a text path of its own.
+- **Presentation.** The title uses the small insignia font (`setParaSmallInsignia`, then `setParaFontDefault` before the bullets), as the old Lost.Sector intel classes and vanilla's large mission titles (`BaseHubMission` with `setUseLargeFontInMissionList`) do. Bullets keep `BaseIntelPlugin.getBulletColorForMode`: gray in the intel list, text color in the map tooltip, messages and description, as vanilla missions do (`BaseHubMission.addBulletPoints`); the old classes used gray everywhere. `tier` applies while the entry is active; an ending entry sorts as `TIER_COMPLETED`, as `BaseHubMission.getSortTier` does (the old classes returned `TIER_2`). `important()` follows `BaseHubMission.accept` and `endSuccess`/`endFailure`. `deletable()` adds `addDeleteButton(info, width)` at the end of the description once the entry is completed or failed, as the old classes did after their job; `BaseIntelPlugin` shows the confirmation prompt and ends the entry at once. `faction` falls back to the player's faction, with an error logged once, for an unknown id.
 - **Map location.** `setMapLocation` stores the entity on the entry; `getMapLocation` returns it, and vanilla derives the `Local` tag from it.
 - **Reset.** A quest [reset](#a-stage-jump) ends every entry of the quest at once.
-- **Saved fields.** The intel manager and the sector's script list save the entry, so `QuestIntel` holds only the quest id, the key, the icon, the tags, the status (`QuestIntel.Status`) and the map entity, and reads its quest's state and rows when displayed. The update key lives in `BaseIntelPlugin`'s transient `listInfoParam` while a message is built. When the quest has no state, the entry shows its key as the title, matches no rows and logs once per entry and load.
+- **Saved fields.** The intel manager and the sector's script list save the entry, so `QuestIntel` holds only the quest id, the key, the icon, the tags, the status (`QuestIntel.Status`) and the map entity, and reads its quest's state, declaration and rows when displayed. The update key lives in `BaseIntelPlugin`'s transient `listInfoParam` while a message is built, the message sound in a transient field. When the quest has no state, the entry shows its key as the title, matches no rows and logs once per entry and load.
 
 Text rows, read with `QuestText` outside any dialog:
 
 | Trigger | Matching | Shows |
 |---|---|---|
 | `nskr_<q>IntelTitle` | Best match | The entry's title in the list, map tooltip, messages and description panel |
-| `nskr_<q>IntelBullets` | Every matching row, one bullet each | Bullets in the list, the map tooltip and messages |
+| `nskr_<q>IntelBullets` | Every matching row, one bullet each | Bullets in the list, the map tooltip and messages, and with `descriptionBullets()` in the description |
 | `nskr_<q>IntelDesc` | Every matching row, one paragraph each, in file order | The description panel |
 
-Before matching, `QuestText` writes these keys into a scratch local memory: `$nskr_intel_key` (the entry key), `$nskr_intel_status` (`active`, `completed` or `failed`), `$nskr_intel_update` (the update key, empty otherwise) and `$nskr_intel_mode`. The mode is `list` for the intel list (`ListInfoMode.INTEL`) and the sort title, `tooltip` for the map tooltip (`MAP_TOOLTIP`), `update` for every message (`MESSAGES`: the posting message, updates, completion and failure) and `desc` for the description panel and its title (`IN_DESC` too). Rows select with these keys and with `nskr_quest` conditions. Rows under these triggers must use only conditions that work without a dialog: memory keys and `nskr_quest` condition verbs. Their Script and Options columns are ignored.
+Before matching, `QuestText` writes these keys into a scratch local memory: `$nskr_intel_key` (the entry key), `$nskr_intel_status` (`active`, `completed` or `failed`), `$nskr_intel_update` (the update key, empty otherwise) and `$nskr_intel_mode`. The mode is `list` for the intel list (`ListInfoMode.INTEL`) and the sort title, `tooltip` for the map tooltip (`MAP_TOOLTIP`), `update` for every message: the posting message, updates, completion and failure, in the campaign messages or a dialog's text panel (see Messages above), and a campaign message the UI builds again later (`MESSAGES`), and `desc` for the description panel, its title and its bullets (`IN_DESC`). Rows select with these keys and with `nskr_quest` conditions. Rows under these triggers must use only conditions that work without a dialog: memory keys and `nskr_quest` condition verbs. Their Options are ignored and their Script never runs; `SetTextHighlights` (or `Highlight`) and `SetTextHighlightColors` lines in it are read as highlight declarations.
 
 - **Memory.** Matching uses `local` (the scratch memory), `player` and `global`; player and global memory are read with `getMemoryWithoutUpdate()`, without the campaign plugins' fact refresh. Token replacement gets the scratch memory only, so `$player.` and `$global.` keys are not replaced in intel text; show computed values with [tokens](#tokens).
-- **Text.** Rows with blank text are skipped. The title is not highlighted; in bullets and paragraphs, each quest token value is highlighted in `Misc.getHighlightColor()`. Text goes to `addPara(text, color, pad)`, which does not run `String.format`, so `%` shows as written.
+- **Text.** Rows with blank text are skipped. Text goes to `addPara(text, color, pad)`, which does not run `String.format`, so `%` shows as written.
+- **Highlights.** The title is not highlighted. In bullets and paragraphs, each quest token value is highlighted in `Misc.getHighlightColor()`, and the row's `SetTextHighlights` phrases are highlighted as in a dialog: each argument is read as the command reads it (`Token.getString` with the matching memory, then token replacement, so a quest token is quoted: `SetTextHighlights "$nskr_bounty_abyssPayout"`), and phrase *i* takes the *i*-th `SetTextHighlightColors` color, phrases past the list the last color, or the highlight color without the line. The phrases are searched in the final text in the order written; a declared phrase replaces a token highlight it overlaps. Order the two commands as in dialog rows (colors first); the check tool reports the other order. `QuestText` reads the commands through `RuleScript` ([Rules text outside a dialog](../../../../docs/RULES_AUTHORING.md#rules-text-outside-a-dialog)); when that fails, it logs once and shows token highlights only.
 - **Stable text.** The intel UI builds entries again whenever it redraws them, and the engine picks at random among title rows with equal scores and among `OR` variants each time. Title rows must not tie, and intel rows do not use `OR` variants.
 - **Cost.** The intel list reads each entry's title once per sort: it calls `setTagsForSort` on every listed entry right before sorting by `getSortString`, and `QuestIntel` keeps the title from that call until the next one. Every other call reads the rows again. The core UI calls found in the 0.98a-RC8 source build a list item (`recreate`), a map tooltip (`createImpl`) or a message; whether the map tooltip is rebuilt every frame while hovered was not determined.
 
@@ -721,7 +739,8 @@ public final class QuestText {
 
     public static final class Line {
         public final String text;           // after token replacement
-        public final String[] highlights;   // quest token values, once per occurrence, in text order
+        public final String[] highlights;   // highlighted phrases, once per occurrence, in text order
+        public final Color[] colors;        // their colors
     }
 }
 ```
@@ -873,7 +892,7 @@ Findings about definitions rather than rows show `-` as the line and `(quest <q>
 | `case` | warning | A trigger or memory key of a mod row that differs only by case from another trigger or key in the mod, vanilla or the engine list |
 | `unwritten` | warning | A `$nskr_` key read in Conditions, Script, Text or option labels that no mod row writes, that no Java string literal under `jars/src` names, and that is not an intel scratch key, a `QuestFleets` fleet key (`OWNER_KEY`, `ROLE_KEY`, `RECORD_KEY`), the role flag `$nskr_<q>_<role>` of a declared role, or a quest token |
 | `identical` | warning | Two rows on one trigger with the same condition lines in any order, unless both notes contain `variant`. Triggers fired with `FireAll` by a row, by vanilla rows or by the engine, and the `IntelBullets` and `IntelDesc` triggers, are skipped, because every match runs there |
-| `intel` | error / warning | A command other than `nskr_quest` in the Conditions of an intel row / Script or Options in an intel row, which are ignored |
+| `intel` | error / warning | A command other than `nskr_quest` in the Conditions of an intel row / Options in an intel row, which are ignored; a Script line other than `SetTextHighlights`, `Highlight` or `SetTextHighlightColors`, which never runs; a highlight line in a title row, which is not highlighted |
 | `naming` | error / warning | In quest rows (id `nskr_<q>_`): a `$global.` write / a `$nskr_` write other than `$nskr_<q>_<name>` on local memory or `$player.nskr_<name>`; a row on a quest's trigger whose id does not start with `nskr_<q>_` |
 | `definitions` | error | `QuestCatalog.create()` throws, including when a definition calls the game ([Definitions are pure](#quest-and-stages)) |
 

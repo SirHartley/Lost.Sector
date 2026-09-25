@@ -68,6 +68,10 @@ public abstract class QuestModule<S extends Enum<S> & QuestStage, T extends Ques
     protected void onLoot(QuestContext<S, T> ctx, QuestFleet fleet, FleetEncounterContextPlugin plugin, CargoAPI loot) {
     }
 
+    // Every encounter's loot, whoever the player fought; onLoot is for the quest's own fleets.
+    protected void onEncounterLoot(QuestContext<S, T> ctx, FleetEncounterContextPlugin plugin, CargoAPI loot) {
+    }
+
     protected void onDecivilized(QuestContext<S, T> ctx, MarketAPI market, boolean fullyDestroyed) {
     }
 

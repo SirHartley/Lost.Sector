@@ -878,14 +878,27 @@ public final class RulesCheck {
         return local.startsWith("$nskr_" + quest + "_");
     }
 
-    // Intel rows are matched outside any dialog; their Script and Options are ignored.
+    // Intel rows are matched outside any dialog; their Options are ignored and their Script is read only for
+    // SetTextHighlights and SetTextHighlightColors lines (QuestText).
 
     private void checkIntelRows() {
         Set<String> intel = intelTriggers(false);
+        Set<String> titles = new HashSet<>();
+        for (String id : quests.keySet()) {
+            titles.add(QuestText.trigger(id, QuestText.TITLE));
+        }
         for (ParsedRow row : rows) {
             if (!intel.contains(row.trigger())) continue;
-            if (!row.row().script().isBlank() || !row.row().options().isBlank()) {
-                add(Severity.WARN, "intel", row, "intel rows ignore Script and Options");
+            if (!row.row().options().isBlank()) {
+                add(Severity.WARN, "intel", row, "intel rows ignore Options");
+            }
+            for (RuleExpression e : row.script()) {
+                boolean highlight = e.isCommand("SetTextHighlights") || e.isCommand("Highlight") || e.isCommand("SetTextHighlightColors");
+                if (!highlight) {
+                    add(Severity.WARN, "intel", row, "intel rows run no Script; only SetTextHighlights and SetTextHighlightColors lines are read: " + e.source);
+                } else if (titles.contains(row.trigger())) {
+                    add(Severity.WARN, "intel", row, "intel titles are not highlighted; " + e.command + " is ignored");
+                }
             }
             for (RuleExpression e : row.conditions()) {
                 if (e.command != null && !e.command.equals(QUEST_COMMAND)) {
