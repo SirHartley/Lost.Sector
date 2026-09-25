@@ -1,7 +1,10 @@
 package lostsector.quest;
 
 import com.fs.starfarer.api.campaign.CampaignEventListener.FleetDespawnReason;
+import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.CampaignFleetAPI;
+import com.fs.starfarer.api.campaign.InteractionDialogAPI;
+import com.fs.starfarer.api.impl.campaign.FleetInteractionDialogPluginImpl;
 import com.fs.starfarer.api.campaign.rules.MemoryAPI;
 import com.fs.starfarer.api.impl.campaign.ids.MemFlags;
 import com.fs.starfarer.api.util.Misc;
@@ -86,6 +89,26 @@ public final class QuestFleets {
 
     public void despawn(String role) {
         despawnWhere(role::equals);
+    }
+
+    // Hands the open dialog to the fleet encounter with the quest's first fleet of the role, as vanilla's
+    // SalvageDefenderInteraction does: target, then setPlugin, then init. The no-argument FleetInteractionDialogPluginImpl
+    // reads its FIDConfig from the fleet's MemFlags.FLEET_INTERACTION_DIALOG_CONFIG_OVERRIDE_GEN, which register() set
+    // from the role, so the encounter is the one the player gets by clicking the fleet. Null on success, else the problem.
+    String engage(String role, InteractionDialogAPI dialog) {
+        if (declaredRole(role) == null) return "role " + role + " is not declared";
+        QuestFleet fleet = first(role);
+        if (fleet == null) return "no fleet of role " + role;
+        CampaignFleetAPI player = Global.getSector().getPlayerFleet();
+        if (!fleet.fleet().isAlive() || player == null || fleet.fleet().getContainingLocation() != player.getContainingLocation()) {
+            return fleet.fleet().getName() + " is not in the player's location";
+        }
+        dialog.setInteractionTarget(fleet.fleet());
+        FleetInteractionDialogPluginImpl plugin = new FleetInteractionDialogPluginImpl();
+        dialog.setPlugin(plugin);
+        plugin.init(dialog);
+        QuestManager.logInfo(run.id(), "engage " + role + ": " + fleet.fleet().getName());
+        return null;
     }
 
     private FleetRole declaredRole(String role) {

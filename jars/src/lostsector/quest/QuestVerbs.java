@@ -1,5 +1,6 @@
 package lostsector.quest;
 
+import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.InteractionDialogAPI;
 import com.fs.starfarer.api.campaign.rules.MemoryAPI;
 
@@ -22,10 +23,7 @@ public final class QuestVerbs {
             return false;
         }
         String questId = words.get(0);
-        if (QuestCatalog.QUEST_INDEPENDENT_VERBS.contains(questId)) {
-            QuestContext.report("?", ruleId, dialog, "nskr_quest " + questId + " is not implemented yet");
-            return false;
-        }
+        if (questId.equals("confirm")) return confirm(ruleId, dialog, words.subList(1, words.size()), memoryMap);
         QuestManager manager = QuestManager.get();
         QuestManager.Run<?, ?> run = manager == null ? null : manager.run(questId);
         if (run == null) {
@@ -102,13 +100,44 @@ public final class QuestVerbs {
                 action.accept(ctx);
                 return true;
             }
-            case "engage":
-                ctx.error("nskr_quest " + run.id() + " engage is not implemented yet");
-                return false;
+            case "engage": {
+                if (args.size() != 1) return usage(ctx, "engage <role>");
+                if (dialog == null) {
+                    ctx.error("engage needs a dialog");
+                    return false;
+                }
+                String problem = run.fleets.engage(args.get(0), dialog);
+                if (problem != null) {
+                    ctx.error("engage " + args.get(0) + " refused: " + problem);
+                    return false;
+                }
+                return true;
+            }
             default:
                 ctx.error("unknown verb " + verb);
                 return false;
         }
+    }
+
+    // A yes/no prompt on an option that already exists; the text gets token replacement as SetTooltip does.
+    // addOptionConfirmation silently ignores an unknown option id, so the verb checks hasOption first.
+    private static boolean confirm(String ruleId, InteractionDialogAPI dialog, List<String> args, Map<String, MemoryAPI> memoryMap) {
+        if (args.size() != 4 || args.stream().anyMatch(java.util.Objects::isNull)) {
+            QuestContext.report("confirm", ruleId, dialog, "usage: nskr_quest confirm <optionId> \"<text>\" \"<yes>\" \"<no>\"");
+            return false;
+        }
+        if (dialog == null) {
+            QuestContext.report("confirm", ruleId, dialog, "confirm needs a dialog");
+            return false;
+        }
+        String optionId = args.get(0);
+        if (!dialog.getOptionPanel().hasOption(optionId)) {
+            QuestContext.report("confirm", ruleId, dialog, "option " + optionId + " does not exist yet; confirm it in the row that adds it or later");
+            return false;
+        }
+        String text = Global.getSector().getRules().performTokenReplacement(ruleId, args.get(1), dialog.getInteractionTarget(), memoryMap);
+        dialog.getOptionPanel().addOptionConfirmation(optionId, text, args.get(2), args.get(3));
+        return true;
     }
 
     private static <S extends Enum<S> & QuestStage> S stage(QuestContext<S, ?> ctx, String name) {

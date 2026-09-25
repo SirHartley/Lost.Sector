@@ -54,7 +54,7 @@ public final class RulesCheck {
 
     private static final String QUEST_COMMAND = "nskr_quest";
     private static final Set<String> CONDITION_VERBS = Set.of("is", "reached", "flag", "check");
-    private static final Set<String> SCRIPT_VERBS = Set.of("advance", "set", "clear", "do");
+    private static final Set<String> SCRIPT_VERBS = Set.of("advance", "set", "clear", "do", "engage");
     // Their first argument names a key to remove or re-time; it is not a read.
     private static final Set<String> KEY_COMMANDS = Set.of("unset", "unsetAll", "expire");
     private static final String OPTION_PREFIX_COMMAND = "nskr_optionStartsWith";
@@ -359,6 +359,11 @@ public final class RulesCheck {
             }
         }
         String questId = params.get(0).text();
+        if (questId.equals("confirm")) {
+            if (condition) add(Severity.ERROR, "quest-call", row, call + ": confirm belongs in Script");
+            if (params.size() != 5) add(Severity.ERROR, "quest-call", row, call + ": confirm needs an option id, a text and both labels");
+            return;
+        }
         String verb = params.get(1).text();
         List<String> args = new ArrayList<>();
         for (Token token : params.subList(2, params.size())) {
@@ -385,6 +390,7 @@ public final class RulesCheck {
             case "flag", "set", "clear" -> checkOne(row, call, "flag", args, quest.flags());
             case "check" -> checkDeclared(row, call, "check", args, quest.checks());
             case "do" -> checkDeclared(row, call, "action", args, quest.actions());
+            case "engage" -> checkOne(row, call, "role", args, quest.roles());
             case "advance" -> {
                 if (args.size() != 2) {
                     add(Severity.ERROR, "quest-call", row, call + ": advance needs FROM and TO stages");

@@ -51,11 +51,6 @@ public class nskr_thronesGift extends BaseCommandPlugin {
             case "pick":
                 pick(dialog, memoryMap, params.get(1).getString(memoryMap), params.get(2).getString(memoryMap), params.get(3).getString(memoryMap));
                 return true;
-            case "confirm":
-                dialog.getOptionPanel().addOptionConfirmation(params.get(1).getString(memoryMap),
-                        params.get(2).getStringWithTokenReplacement(ruleId, dialog, memoryMap),
-                        params.get(3).getString(memoryMap), params.get(4).getString(memoryMap));
-                return true;
             case "automate": {
                 FleetMemberAPI member = getPicked(local);
                 if (member == null) {

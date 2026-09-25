@@ -83,7 +83,7 @@ Quest dialogue is written in `rules.csv`, and its presentation uses vanilla comm
 
 ### Confirmations
 
-An option that cannot be undone gets a prompt: `nskr_quest confirm <optionId> "Are you sure? This cannot be reversed." "Confirm" "Cancel"` in the Script of the row that adds the option, after the option exists. Both labels are required. The option's handler is unchanged: confirming fires `DialogOptionSelected` as a normal click does; declining leaves the screen as it was. The verb is added in T10 of the quest overhaul; until then see the framework [Status](../jars/src/lostsector/quest/README.md#status). Story-point options get their prompt from `SetStoryOption` and need nothing else.
+An option that cannot be undone gets a prompt: `nskr_quest confirm <optionId> "Are you sure? This cannot be reversed." "Confirm" "Cancel"` in the Script of the row that adds the option, after the option exists. Both labels are required. The option's handler is unchanged: confirming fires `DialogOptionSelected` as a normal click does; declining leaves the screen as it was. If the option does not exist yet, the verb logs an error and adds nothing. Story-point options get their prompt from `SetStoryOption` and need nothing else.
 
 ### Receipts
 
