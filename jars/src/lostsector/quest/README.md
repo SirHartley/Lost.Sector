@@ -44,7 +44,8 @@ The framework is built on branch `quest-overhaul`; the task ids refer to the tra
 | Events: listeners, daily tick, frame hook | `QuestManager` | implemented | T06 |
 | Fleets | `QuestFleets`, `QuestFleet`, `FleetRole`, `FleetOrders` | planned | T07 |
 | Rules command, tokens, people, rewards | `nskr_quest`, `QuestTokens`, `QuestPeople`, `QuestRewards` | planned | T08 |
-| Presentation verbs, if T09 finds gaps vanilla commands leave | `nskr_quest` | planned | T09, T10 |
+| Presentation spec (vanilla commands per effect) | [DIALOGUE.md](../../../../docs/DIALOGUE.md#presentation-in-rules) | implemented | T09 |
+| Gap verbs: `confirm`, `engage` | `nskr_quest` | planned | T10 |
 | Intel and rules text outside dialogs | `QuestIntel`, `QuestText` | planned | T11 |
 | Rules check tool | `lostsector.quest.dev.RulesCheck` | planned | T12 |
 | Dev menu and stage jumps | `nskr_questDev` | planned | T13 |
@@ -715,7 +716,9 @@ Each applies the grant and prints the vanilla receipt when a dialog is open. Out
 - Condition verbs never change state and never touch the dialog, so they work in intel rows.
 - `advance` names both stages so the row states which change it makes and cannot fire twice.
 - The command adds no options and prints no text.
-- Presentation (portraits, speaker changes, map markers, highlights, small text) uses vanilla commands; see [COMMANDS.md](../../../../docs/rules-reference/COMMANDS.md). A presentation verb is added here only when T09 shows vanilla has no command for it.
+- Presentation (portraits, speaker changes, map markers, highlights, small text, images, sounds) uses vanilla commands; [Presentation in rules](../../../../docs/DIALOGUE.md#presentation-in-rules) names the command for each effect. T09 found two gaps, which T10 adds as verbs:
+  - `nskr_quest confirm <optionId> "<text>" "<yes>" "<no>"`: a plain yes/no prompt on an option that already exists, through `OptionPanelAPI.addOptionConfirmation(optionId, text, yes, no)`. Quest-independent: the second token is the verb, so no quest id may be `confirm` or `engage`.
+  - `nskr_quest <q> engage <role>`: start the fleet encounter with the quest's fleet of that role from an entity dialog (a guarded planet, a blacksite, a cache), using the role's `FleetRole.config`. T10 specifies the exact behavior after verifying vanilla's entity-to-fleet hand-off.
 
 ### Dev tools
 
