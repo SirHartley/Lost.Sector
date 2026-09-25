@@ -741,6 +741,7 @@ Which rule id reaches the generator, verified in the 0.98a-RC8 source:
 
 So an option label with a quest token belongs in a row that a quest row reaches with `FireAll` or `FireBest`, as in the [example](#making-a-quest) (`nskr_ex_captainOpen` fires `nskr_exCaptainOptions`). A plain-chain handler row whose own Options column needs a token fires a private option trigger instead.
 - A token cannot be a command argument: commands read memory, not tokens. A computed amount is granted by an action ([Rewards](#rewards-and-receipts)).
+- In the commands above that replace tokens in their arguments, quote the token: `SetTextHighlights "$nskr_kq_job3Start"`. `Misc.tokenize` makes an unquoted `$` word a variable, and `Token.getStringWithTokenReplacement` first reads a variable from memory, which holds no token, so the argument is null and the command skips it. A quoted word is a literal even when it starts with `$`, and its text then gets token replacement (0.98a-RC8: `Misc.tokenize` and `Token.getString` in `sources-api/util.java`, `SetTextHighlights` in `sources-api/impl.campaign.java`). The check tool reports the unquoted form as a token read.
 - No token name may be a prefix of another token name in the same quest (`pay` and `payout`); the check tool reports it.
 - Rows never assign a key with a token's name.
 
@@ -826,7 +827,7 @@ java -cp "<build output>:<compile jars>" lostsector.quest.dev.RulesCheck <reposi
 It prints one line per finding, sorted by CSV line, then a summary with counts per check:
 
 ```
-ERROR data/campaign/rules.csv:27 nskr_kestevenQuestContinue [handler] option nskr_kestevenQuestStart has no DialogOptionSelected row with $option == nskr_kestevenQuestStart
+ERROR data/campaign/rules.csv:120 nskr_ex_captainOptAccept [handler] option nskr_ex_captainAccept has no DialogOptionSelected row with $option == nskr_ex_captainAccept
 ```
 
 Findings about definitions rather than rows show `-` as the line and `(quest <q>)` as the id. The exit status is 1 when there is an error, 0 when there are only warnings or none, and 2 for a usage or input problem.
@@ -856,7 +857,7 @@ Findings about definitions rather than rows show `-` as the line and `(quest <q>
 | `declared-trigger` | error | A trigger declared with `d.trigger(...)` that no row uses |
 | `fire-target` | error | A literal `FireAll` or `FireBest` target that no mod or vanilla row uses |
 | `unreachable` | error / warning | A trigger with mod rows that nothing fires, reported once at its first row. An error for a quest's trigger (`nskr_<q>` followed by an upper-case letter or `_`), a warning otherwise |
-| `handler` | error | An option id from the Options column, an `AddBarEvent` call or a `$option = <id>` line without a `DialogOptionSelected` or `NewGameOptionSelected` row testing `$option == <id>`, in the mod or vanilla, or a `nskr_optionStartsWith` handler whose prefix matches |
+| `handler` | error | An option id from the Options column, an `AddBarEvent` call or a `$option = <id>` line without a `DialogOptionSelected` or `NewGameOptionSelected` row testing `$option == <id>`, in the mod or vanilla |
 | `case` | warning | A trigger or memory key of a mod row that differs only by case from another trigger or key in the mod, vanilla or the engine list |
 | `unwritten` | warning | A `$nskr_` key read in Conditions, Script, Text or option labels that no mod row writes, that no Java string literal under `jars/src` names, and that is not an intel scratch key, a `QuestFleets` fleet key (`OWNER_KEY`, `ROLE_KEY`, `RECORD_KEY`), the role flag `$nskr_<q>_<role>` of a declared role, or a quest token |
 | `identical` | warning | Two rows on one trigger with the same condition lines in any order, unless both notes contain `variant`. Triggers fired with `FireAll` by a row, by vanilla rows or by the engine, and the `IntelBullets` and `IntelDesc` triggers, are skipped, because every match runs there |

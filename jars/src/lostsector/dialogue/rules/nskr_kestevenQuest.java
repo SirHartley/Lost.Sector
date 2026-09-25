@@ -3,7 +3,6 @@ package lostsector.dialogue.rules;
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.*;
 import com.fs.starfarer.api.campaign.econ.MarketAPI;
-import com.fs.starfarer.api.campaign.rules.MemKeys;
 import com.fs.starfarer.api.campaign.rules.MemoryAPI;
 import com.fs.starfarer.api.characters.PersonAPI;
 import com.fs.starfarer.api.combat.ShipAPI;
@@ -13,11 +12,9 @@ import com.fs.starfarer.api.impl.campaign.intel.contacts.ContactIntel;
 import com.fs.starfarer.api.impl.campaign.procgen.Constellation;
 import com.fs.starfarer.api.impl.campaign.procgen.StarSystemGenerator;
 import com.fs.starfarer.api.impl.campaign.rulecmd.PaginatedOptions;
-import com.fs.starfarer.api.impl.campaign.rulecmd.SetStoryOption;
 import com.fs.starfarer.api.impl.campaign.rulecmd.salvage.special.ShipRecoverySpecial;
 import com.fs.starfarer.api.impl.campaign.terrain.DebrisFieldTerrainPlugin;
 import com.fs.starfarer.api.loading.HullModSpecAPI;
-import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import com.fs.starfarer.api.util.Misc;
 import com.fs.starfarer.api.util.Misc.Token;
 import lostsector.campaign.kesteven.quest.DataSatelliteDialog;
@@ -27,7 +24,6 @@ import lostsector.campaign.kesteven.quest.QuestHelper;
 import lostsector.campaign.kesteven.quest.KestevenQuest;
 import lostsector.campaign.kesteven.quest.KestevenState;
 import lostsector.ModPlugin;
-import lostsector.settings.Setting;
 import lostsector.helper.Ids;
 import lostsector.helper.MathHelper;
 import lostsector.campaign.enigma.DormantSpawner;
@@ -51,10 +47,7 @@ public class nskr_kestevenQuest extends PaginatedOptions {
 	//handles dialogue and rules.csv for the quest line
 	// Adapted from Nexerelin.
 	public static final String DIALOG_OPTION_PREFIX = "nskr_kestevenQuest_pick_";
-	public static final String DIALOG_OPTION_PREFIX_REQ_SKIP = "nskr_kestevenQuest_story_pick_";
-	public static final String DIALOG_OPTION_PREFIX_STORY_SKIP = "nskr_kestevenQuest_story_skip_pick_";
 	public static final String DIALOG_OPTION_EXTRA_START_PREFIX = "nskr_kestevenQuest_extraStart_";
-	public static final String DIALOG_OPTION_EXTRA_PREFIX = "nskr_kestevenQuest_extra_";
 
 	public static final int JOB1_ARTIFACTS = 70;
 	public static final int STAGE1_PAYOUT = 155000;
@@ -73,15 +66,11 @@ public class nskr_kestevenQuest extends PaginatedOptions {
 
 	private int stage = 0;
 	private int diskCount = 0;
-	private float relation = 0;
-	// PowerLevel scans the whole player fleet; only the strength gates and job briefings need it.
+	// PowerLevel scans the whole player fleet; only the job 3 and job 4 briefings read it.
 	private Float power = null;
 	private SectorEntityToken job4TargetLoc = null;
 	private boolean job1tip = false;
-	private boolean foughtEnigma = false;
 	private boolean failedJob3 = false;
-	private boolean eMessenger = false;
-	private boolean job4wait = false;
 	private boolean helped = false;
 	// When set, ESC also selects the DIALOG_OPTION_PREFIX option.
 	private boolean extraEsc = false;
@@ -97,7 +86,6 @@ public class nskr_kestevenQuest extends PaginatedOptions {
 
 	private PersonAPI jack;
 	private PersonAPI alice;
-	private PersonAPI nick;
 
 	protected CampaignFleetAPI playerFleet;
 	protected SectorEntityToken entity;
@@ -147,28 +135,12 @@ public class nskr_kestevenQuest extends PaginatedOptions {
 	public boolean execute(String ruleId, InteractionDialogAPI dialog, List<Token> params, Map<String, MemoryAPI> memoryMap) 
 	{
 		String arg = params.get(0).getString(memoryMap);
-		// A PopulateOptions condition, checked on every options refresh; keep it free of setupVars().
-		if (arg.equals("hasOption")) return validMarket(dialog.getInteractionTarget().getMarket());
 		setupVars(dialog, memoryMap);
 
 		switch (arg)
 		{
-			case "init":
-				break;
-			case "getStage":
-				setupDelegateDialog(dialog);
-				showOptions();
-				addStageOptions();
-				extraEsc = false;
-				break;
 			case "advanceStage":
 				showOptions();
-				showQuestInfoAndPrepare(dialog.getTextPanel());
-				extraEsc = false;
-				break;
-			case "advanceStageReqSkip":
-				showOptions();
-				SPOptionPicked();
 				showQuestInfoAndPrepare(dialog.getTextPanel());
 				extraEsc = false;
 				break;
@@ -176,15 +148,6 @@ public class nskr_kestevenQuest extends PaginatedOptions {
 				showOptions();
 				SkipStoryOptionPicked();
 				extraEsc = false;
-				break;
-			case "extraDialogueStart":
-				showOptions();
-				extraDialogueStart();
-				extraEsc = true;
-				break;
-			case "extraDialogue":
-				int index = Integer.parseInt(memoryMap.get(MemKeys.LOCAL).getString("$option").substring(DIALOG_OPTION_EXTRA_PREFIX.length()));
-				extraDialogue(index);
 				break;
 			case "skip":
 				showOptions();
@@ -200,19 +163,6 @@ public class nskr_kestevenQuest extends PaginatedOptions {
 		}
 		updateOptions();
 		return true;
-	}
-	
-	/**
-	 * To be called only when paginated dialog options are required. 
-	 * Otherwise we get nested dialogs that take multiple clicks of the exit option to actually exit.
-	 * @param dialog
-	 */
-	protected void setupDelegateDialog(InteractionDialogAPI dialog)
-	{
-		originalPlugin = dialog.getPlugin();  
-
-		dialog.setPlugin(this);  
-		init(dialog);
 	}
 	
 	protected void setupVars(InteractionDialogAPI dialog, Map<String, MemoryAPI> memoryMap)
@@ -235,16 +185,11 @@ public class nskr_kestevenQuest extends PaginatedOptions {
 
 		jack = KestevenPeople.getJack();
 		alice = KestevenPeople.getAlice();
-		nick = KestevenPeople.getNick();
 
 		power = null;
 		stage = QuestHelper.getStage();
-		relation = Global.getSector().getPlayerFaction().getRelationship("kesteven");
-		foughtEnigma = QuestHelper.getCompleted(KestevenFlag.FOUGHT_ENIGMA);
 		job1tip = QuestHelper.getCompleted(KestevenFlag.JOB1_TIP_GIVEN);
 		failedJob3 = QuestHelper.getFailed(KestevenFlag.JOB3_FAILED);
-		eMessenger = QuestHelper.getCompleted(KestevenFlag.MESSENGER_QUESTION_OPEN);
-		job4wait = QuestHelper.getCompleted(KestevenFlag.JOB4_WAIT_OVER);
 		job4TargetLoc = QuestHelper.getJob4EnemyTarget();
 		helped = QuestHelper.getCompleted(KestevenFlag.JOB4_FRIENDLY_HELPED);
 
@@ -264,8 +209,13 @@ public class nskr_kestevenQuest extends PaginatedOptions {
 	}
 	
 	private float getPower() {
-		if (power == null) power = Global.getSettings().isDevMode() ? 2f : PowerLevel.get(0.2f, 0f, 2f);
+		if (power == null) power = fleetPower();
 		return power;
+	}
+
+	// The strength compared with the JOB*_POWER gates, here and in KestevenHubModule.
+	public static float fleetPower() {
+		return Global.getSettings().isDevMode() ? 2f : PowerLevel.get(0.2f, 0f, 2f);
 	}
 
 	public void updateOptions() {
@@ -277,356 +227,6 @@ public class nskr_kestevenQuest extends PaginatedOptions {
 		if(extraEsc) {
 			dialog.getOptionPanel().setShortcut(DIALOG_OPTION_PREFIX, Keyboard.KEY_ESCAPE, false, false, false, false);
 		}
-	}
-
-	/**
-	 * Adds the dialog options.
-	 */
-	protected void addStageOptions()
-	{
-		dialog.getOptionPanel().clearOptions();
-		String desc = "";
-		String jobText = "\"There are no new jobs available at the moment.\"";
-		String optId = DIALOG_OPTION_PREFIX;
-		boolean aliceIntro = QuestHelper.getCompleted(KestevenFlag.ALICE_INTRODUCED);
-		boolean jackIntro = QuestHelper.getCompleted(KestevenFlag.JACK_INTRODUCED);
-
-		//Jack Lapua dialogue
-		if (person==jack) {
-			//top start text
-			if(jackIntro)text.addPara("\"Hmmm. Let me check around.\"");
-			//job 1
-			if (stage == 0) {
-				if (relation < JOB1_REP) {
-					jobText = "\"I do have a job for you, captain, but the board only hands these to captains in good standing with Kesteven. Build up your reputation with us and I'll see what I can do.\"";
-				} else {
-					desc = "Enemy Unknown";
-					jobText = "\"There is a new job available at the moment, are you interested?\"";
-				}
-				addStorySkipOption();
-			}
-			//job 1 accepted
-			if (stage == 1 && job1tip) {
-				jobText = "\"I've already given you the tasks. Finish one first, then we can talk.\"";
-			}
-			if (stage == 1 && !sensored && !cargo && !job1tip && QuestHelper.getJob1Tip()!=null) {
-				jobText = "\"What's up captain. Have you had any luck with the job?\"";
-				desc = "\"How am I supposed to find them?\"";
-			}
-			//job 1 task 1 completed
-			if (stage == 1 && sensored && !deliveredData) {
-				desc = "Hand over the package";
-				jobText = "\"You have the sensor package? Perfect, now hand it over.\"";
-			}
-			//job 1 task 2 completed
-			if (stage == 1 && cargo && !delivered) {
-				desc = "Hand over the electronics";
-				jobText = "\"You have the cargo? Excellent work.\"";
-			}
-			//job 1 task 1&2 completed BOTH
-			if (stage == 1 && cargo && !delivered && sensored && !deliveredData) {
-				desc = "Hand over everything";
-				jobText = "\"You have both the cargo and the sensor package? Impressive.\"";
-			}
-			//job 1 ready to complete
-			if (stage == 2) {
-				desc = "\"I've done everything.\"";
-				jobText = "\"Are you finished with the tasks?\"";
-			}
-			//job 3 wait
-			if (stage == 3) {
-				jobText = "\"There's nothing urgent at the moment. Come back later for more work.\"";
-			}
-			//job 3 jack
-			if (stage == 6) {
-				if (relation < JOB3_REP) {
-					jobText = "\"There's another job waiting, captain, but the board wants someone in better standing with Kesteven. Improve that and come back.\"";
-				} else if (getPower() > JOB3_POWER) {
-					desc = "Hostile Takeover";
-					jobText = "\"There is a new job available at the moment, are you interested?\"";
-				} else {
-					jobText = "\"There is a new job available at the moment, but we require someone more qualified. Come back later with a proper fleet.\"";
-					addSkipOption();
-				}
-				addStorySkipOption();
-			}
-			//job 3 in progress jack
-			if (stage == 7) {
-				jobText = "\"I told you to go talk to Alice.\"";
-			}
-			//job 3 in progress jack
-			if (stage == 8 || stage == 9 || stage == 10) {
-				jobText = "\"You're already working for Alice.\"";
-			}
-			//job 4 available
-			if (stage == 11 && job4wait) {
-				jobText = "\"I hear that Alice has more work available.\"";
-			}
-			//job 4 in progress jack
-			if (stage == 12 || stage == 13) {
-				jobText = "\"You're already working for Alice.\"";
-			}
-			//job 5 start
-			if (stage == 14) {
-				if (relation < JOB5_REP) {
-					jobText = "\"I have work for you, but not while your standing with Kesteven is this poor. Fix that, then we'll talk.\"";
-					addStorySkipOption();
-				} else if (getPower() > JOB5_POWER) {
-					desc = "\"I'm listening.\"";
-					jobText = "\"There is something important we need you to work on. We should discuss it in detail.\"";
-				} else {
-					jobText = "\"There is a new job available at the moment, but we require someone more qualified. Come back later with a proper fleet.\"";
-					addSkipOption();
-					addStorySkipOption();
-				}
-			}
-			//go to bar
-			if (stage == 15) {
-				jobText = "\"I said, head to the bar.\"";
-			}
-			//job 5 start tip
-			if (stage == 16 && !jackTip && !allDisks) {
-				desc = "\"Okay\"";
-				jobText = "\"Let's discuss the leads we have.\"";
-			}
-			//job 5 in progress
-			if (stage == 16 || stage == 17|| stage == 18|| stage == 19) {
-				if (jackTip) {
-					jobText = "\"There's nothing new to report " + player.getName().getFirst() + ".\"";
-				}
-			}
-			//job 5 tip 2 go to Alice
-			if (stage == 16 && jackTip && aliceTip && !aliceTip2 && DataSatelliteDialog.getRecoveredSatelliteCount()>=2 && !allDisks) {
-				jobText = "\"I hear Alice wants to talk to you.\"";
-			}
-			//job5 all disks
-			if (stage == 16 && allDisks) {
-				jobText = "\"I see you have all the disks. You should go and talk to Alice about them.\"";
-			}
-			//job5 finished
-			if (stage == 20){
-				jobText = "\"Nothing new has popped up "+player.getName().getFirst()+".\"";
-			}
-		}
-		//Alice Lumi dialogue
-		if (person==alice){
-			//not introduced yet
-			if (stage <= 6) {
-				jobText = "\"Why are you contacting me? I am busy with work.\"";
-			}
-			//top start text
-			if (stage >= 7) {
-				if(aliceIntro)text.addPara("\"Oh, you're here.\"");
-			}
-			//job 3 start alice
-			if (stage == 7) {
-				desc = "Hostile Takeover";
-				jobText = "\"So you finally showed up. Jack has already told me all about you. He doesn't just send any spacer goon over to me, so I have high expectations for you "+player.getName().getFullName()+".\"";
-				addStorySkipOption();
-			}
-			//job 3 in progress alice
-			if (stage == 8 || stage == 9) {
-				jobText = "\"Why are you still here?\" She scoffs. \"Get to work, this is time sensitive remember?\"";
-			}
-			//job 3 completed
-			if (stage == 10 && !failedJob3) {
-				desc = "Hand over your AAR";
-				jobText = "\"My intel suggests you were successful in sabotaging Tri-Tachyon.\"";
-			}
-			//job 3 failed
-			if (stage == 10 && failedJob3) {
-				desc = "Hand over your AAR";
-				jobText = "\"My intel suggests you weren't successful in sabotaging Tri-Tachyon.\"";
-			}
-			//job 4 start after the wait; JOB4_REQUIREMENT_SKIPPED keeps a story point strength bypass across visits
-			if (stage == 11 && job4wait) {
-				if (relation < JOB4_REP) {
-					jobText = "\"There's more work, captain, but the board won't sign off on it with your current standing at Kesteven. Improve it and come back.\"";
-				} else if (QuestHelper.getCompleted(KestevenFlag.JOB4_REQUIREMENT_SKIPPED) || getPower() > JOB4_POWER) {
-					desc = "Operation Lifesaver";
-					jobText = "\"There is a new job available at the moment, are you interested?\"";
-				} else {
-					jobText = "\"There is a new job available at the moment, but we require someone more qualified. Come back later with a proper fleet.\"";
-					addSkipOption();
-				}
-				addStorySkipOption();
-			}
-			//job 4 in progress
-			if (stage == 12) {
-				jobText = "\"Why are you still here? Get to work.\"";
-			}
-			//job 4 completed no help
-			if (stage == 13 && !helped) {
-				desc = "Hand over the fleets coordinates and your combat log";
-				jobText = "\"Did you complete the operational objectives?\"";
-			}
-			//job 4 completed helped
-			if (stage == 13 && helped) {
-				desc = "Hand over your operational report";
-				jobText = "\"Did you complete the operational objectives?\"";
-			}
-			//job 5 go to jack
-			if (stage == 14) {
-				jobText = "\"Yes, there is something important. Go talk to Jack about it.\"";
-			}
-			//go to bar
-			if (stage == 15) {
-				jobText = "\"You should be heading to the bar. Do you always struggle with basic instructions?\"";
-			}
-			//job 5 start tip
-			if (stage == 16 && !aliceTip && !allDisks) {
-				desc = "\"Okay\"";
-				jobText = "\"Let's talk about the leads we have.\"";
-			}
-			//job 5 in progress
-			if (stage == 16 || stage == 17|| stage == 18|| stage == 19) {
-				if (aliceTip) {
-					jobText = "\"I already told you everything, get to work.\"";
-				}
-			}
-			//job 5 tip 2
-			if (stage == 16 && jackTip && aliceTip && !aliceTip2 && DataSatelliteDialog.getRecoveredSatelliteCount()>=2 && !allDisks) {
-				desc = "Continue";
-				jobText = "\"There's something new we should discuss.\"";
-			}
-			//job5 all disks
-			if (stage == 16 && allDisks) {
-				desc = "Continue";
-				jobText = "\"I hear you have all the disks. Let's get to work then.\"";
-			}
-			//job5 finished
-			if (stage == 20){
-				jobText = "\"Sadly there's nothing new to report captain.\"";
-			}
-		}
-		//Nicholas Antoine dialog
-		if (person==nick) {
-			//top start text
-			text.addPara("\"Um, welcome captain.\"");
-			//not introduced yet
-			if (stage<=11) {
-				jobText = "\"You know, I am not expecting anyone. Please leave me to my work.\"";
-			}
-			//job4 tip dialogue
-			//make sure target exists
-			if (job4TargetLoc!=null) {
-				if (stage == 12 && QuestHelper.getNicholasDialogStage() == 0) {
-					desc = "\"Tell me what you know.\"";
-					jobText = "\"Uhhh. Are you here to talk about the missing Special Operations fleet?\"";
-				}
-			}
-			//null backup
-			else if (stage == 12) {
-				jobText = "\"...There is nothing new to report captain.\"";
-			}
-			//already tipped
-			if (stage==12 && QuestHelper.getNicholasDialogStage()>=1) {
-				jobText = "\"...There is nothing new to report captain.\"";
-			}
-			//no quest
-			if (stage>=13) {
-				jobText = "\"You know, I am not expecting anyone. Please leave me to my work.\"";
-			}
-		}
-		//first time descriptor text
-		//one time
-		//jack
-		if (person==jack && stage>=0 && !jackIntro){
-			text.addPara("On the holodisplay you are met with a charismatic smile from officer Lapua. A well groomed man, his manners have that corporate superficiality down to a perfection.");
-			text.addPara("\"What can I do for you captain?\"");
-			QuestHelper.setCompleted(true, KestevenFlag.JACK_INTRODUCED);
-		}
-		//alice
-		if (person==alice && stage>=7 && !aliceIntro){
-			text.addPara("A woman is staring at you through the holodisplay, her expression is unchanging. Manager Lumi is intently analyzing every part of your visage.");
-			text.addPara("\"Ahh, yes it's you.\"");
-			QuestHelper.setCompleted(true, KestevenFlag.ALICE_INTRODUCED);
-		}
-		//nick
-		boolean nickIntro = QuestHelper.getCompleted(KestevenFlag.NICHOLAS_INTRODUCED);
-		if (person==nick && stage>=12 && !nickIntro){
-			text.addPara("Nicholas is rather reserved when it comes to talking. It is clear he works on the computer side of communications.");
-			QuestHelper.setCompleted(true, KestevenFlag.NICHOLAS_INTRODUCED);
-		}
-
-		//adds the text
-		if (desc.length()>0){
-			text.setFontSmallInsignia();
-			text.setFontInsignia();
-
-			String str = desc;
-			dialog.getOptionPanel().addOption(str, optId);
-
-			text.addPara(jobText);
-		} else {
-			text.setFontSmallInsignia();
-			text.setFontInsignia();
-			text.addPara(jobText);
-		}
-
-		dialog.getOptionPanel().addOption("Back", "nskr_kestevenQuestExit");
-	}
-
-	protected void addSkipOption(){
-
-		dialog.getOptionPanel().addOption("I believe you'll find me more than capable.", DIALOG_OPTION_PREFIX_REQ_SKIP);
-		dialog.makeStoryOption(DIALOG_OPTION_PREFIX_REQ_SKIP,1,1.00f,"ui_char_spent_story_point");
-		//tooltip
-		dialog.getOptionPanel().addOptionTooltipAppender(DIALOG_OPTION_PREFIX_REQ_SKIP, new OptionPanelAPI.OptionTooltipCreator() {
-			public void createTooltip(TooltipMakerAPI tooltip, boolean hadOtherText) {
-				float opad = 10f;
-				float initPad = 0f;
-				if (hadOtherText) initPad = opad;
-				tooltip.addStoryPointUseInfo(initPad, 1, 1f, false);
-				int sp = Global.getSector().getPlayerStats().getStoryPoints();
-				String points = "points";
-				if (sp == 1) points = "point";
-				tooltip.addPara("You have %s " + Misc.STORY + " " + points + ".", opad,
-						Misc.getStoryOptionColor(), "" + sp);
-			}
-		});
-		//pop up
-		dialog.getOptionPanel().addOptionConfirmation(DIALOG_OPTION_PREFIX_REQ_SKIP,
-				new SetStoryOption.BaseOptionStoryPointActionDelegate(dialog,
-						new SetStoryOption.StoryOptionParams(DIALOG_OPTION_PREFIX_REQ_SKIP,1,"nskr_skipRequirement","ui_char_spent_story_point","Skipped quest reqs.")));
-
-	}
-
-	protected void SPOptionPicked(){
-		text.setFontInsignia();
-
-		Global.getSoundPlayer().playUISound("ui_char_spent_story_point",1f,1f);
-
-		//save skip to mem, only required for job4
-		if (stage==11){
-			QuestHelper.setCompleted(true, KestevenFlag.JOB4_REQUIREMENT_SKIPPED);
-		}
-	}
-
-	protected void addStorySkipOption(){
-		if (!Setting.STORY_SKIP_UNLOCKED.getBoolean()) return;
-
-		dialog.getOptionPanel().addOption("You are looking for the Cache and the UPC, right? I think I can help. (Skip story)", DIALOG_OPTION_PREFIX_STORY_SKIP);
-		dialog.makeStoryOption(DIALOG_OPTION_PREFIX_STORY_SKIP,5,0.00f,"ui_char_spent_story_point");
-		//tooltip
-		dialog.getOptionPanel().addOptionTooltipAppender(DIALOG_OPTION_PREFIX_STORY_SKIP, new OptionPanelAPI.OptionTooltipCreator() {
-			public void createTooltip(TooltipMakerAPI tooltip, boolean hadOtherText) {
-				float opad = 10f;
-				float initPad = 0f;
-				if (hadOtherText) initPad = opad;
-				tooltip.addStoryPointUseInfo(initPad, 5, 0f, false);
-				int sp = Global.getSector().getPlayerStats().getStoryPoints();
-				String points = "points";
-				if (sp == 1) points = "point";
-				tooltip.addPara("You have %s " + Misc.STORY + " " + points + ".", opad,
-						Misc.getStoryOptionColor(), "" + sp);
-			}
-		});
-		//pop up
-		dialog.getOptionPanel().addOptionConfirmation(DIALOG_OPTION_PREFIX_STORY_SKIP,
-				new SetStoryOption.BaseOptionStoryPointActionDelegate(dialog,
-						new SetStoryOption.StoryOptionParams(DIALOG_OPTION_PREFIX_STORY_SKIP,5,"nskr_skipStory","ui_char_spent_story_point","Skipped story.")));
-
 	}
 
 	protected void SkipStoryOptionPicked(){
@@ -1115,227 +715,6 @@ public class nskr_kestevenQuest extends PaginatedOptions {
 
 		if (!noLeave) dialog.getOptionPanel().addOption("Back", "nskr_kestevenQuestExit");
 	}
-	protected void extraDialogueStart()
-	{
-		dialog.getOptionPanel().clearOptions();
-		Color h = Misc.getHighlightColor();
-		Color g = Misc.getGrayColor();
-		Color tc = Misc.getTextColor();
-		float pad = 3f;
-		float opad = 10f;
-		String desc = "";
-		String str = "";
-
-		if (person==jack) {
-			//job 1 start jack
-			if (stage == 0) {
-				if (QuestHelper.getJob1Tip()!=null) dialog.getOptionPanel().addOption("\"How am I supposed to find them?\"", DIALOG_OPTION_EXTRA_PREFIX+"0");
-				dialog.getOptionPanel().addOption("\"Rogue AI?\"", DIALOG_OPTION_EXTRA_PREFIX+"1");
-				if (!foughtEnigma) dialog.getOptionPanel().addOption("\"The ships?\"", DIALOG_OPTION_EXTRA_PREFIX+"2");
-				dialog.getOptionPanel().addOption("\"Artifact Electronics?\"", DIALOG_OPTION_EXTRA_PREFIX+"3");
-				dialog.getOptionPanel().addOption("\"What about the AI Cores?\"", DIALOG_OPTION_EXTRA_PREFIX+"4");
-				if (foughtEnigma) dialog.getOptionPanel().addOption("\"I've already fought them.\"", DIALOG_OPTION_EXTRA_PREFIX+"5");
-			}
-			//job 1 complete jack
-			if (stage == 2) {
-				dialog.getOptionPanel().addOption("\"What are you actually doing with this equipment?\"", DIALOG_OPTION_EXTRA_PREFIX+"0");
-				dialog.getOptionPanel().addOption("\"Enigma AI?\"", DIALOG_OPTION_EXTRA_PREFIX+"1");
-				dialog.getOptionPanel().addOption("\"Next job?\"", DIALOG_OPTION_EXTRA_PREFIX + "2");
-			}
-		}
-
-		if (person==alice) {
-			//job 3 start alice
-			if (stage == 7) {
-				dialog.getOptionPanel().addOption("\"How do I know where to go?\"", DIALOG_OPTION_EXTRA_PREFIX+"0");
-				dialog.getOptionPanel().addOption("\"So I'm on my own for this?\"", DIALOG_OPTION_EXTRA_PREFIX+"1");
-				dialog.getOptionPanel().addOption("\"Is this really necessary?\"", DIALOG_OPTION_EXTRA_PREFIX+"2");
-				dialog.getOptionPanel().addOption("\"I'm not doing this.\"", DIALOG_OPTION_EXTRA_PREFIX+"3");
-			}
-			//job 3 complete alice
-			if (stage == 10) {
-				if (QuestHelper.getCompleted(KestevenFlag.JOB3_TARGET_DISCOVERED))dialog.getOptionPanel().addOption("\"Know anything about the target?\" (Send over the coordinates)", DIALOG_OPTION_EXTRA_PREFIX + "0");
-				dialog.getOptionPanel().addOption("\"Next job?\"", DIALOG_OPTION_EXTRA_PREFIX + "1");
-			}
-			//job 4 start alice
-			if (stage == 11) {
-				dialog.getOptionPanel().addOption("\"Special Operations fleet?\"", DIALOG_OPTION_EXTRA_PREFIX+"0");
-				dialog.getOptionPanel().addOption("\"Possible threats?\"", DIALOG_OPTION_EXTRA_PREFIX+"1");
-				dialog.getOptionPanel().addOption("\"Supplies and fuel?\"", DIALOG_OPTION_EXTRA_PREFIX+"2");
-				dialog.getOptionPanel().addOption("\"Nicholas Antoine?\"", DIALOG_OPTION_EXTRA_PREFIX+"3");
-				if (eMessenger) dialog.getOptionPanel().addOption("Ask about the \"LZ\" character", DIALOG_OPTION_EXTRA_PREFIX+"4");
-			}
-			//job 4 complete alice
-			if (stage == 13) {
-				dialog.getOptionPanel().addOption("\"What was the Operations fleet's goal?\"", DIALOG_OPTION_EXTRA_PREFIX+"0");
-				dialog.getOptionPanel().addOption("\"Why are you so interested in this Enigma AI?\"", DIALOG_OPTION_EXTRA_PREFIX + "1");
-				dialog.getOptionPanel().addOption("\"The Artifact?\"", DIALOG_OPTION_EXTRA_PREFIX+"2");
-				if (eMessenger) dialog.getOptionPanel().addOption("Ask about the \"LZ\" character", DIALOG_OPTION_EXTRA_PREFIX+"3");
-			}
-		}
-
-		if (str.length()>0) {
-			text.addPara(str);
-		}
-		text.setFontSmallInsignia();
-		text.setFontInsignia();
-
-		dialog.getOptionPanel().addOption("Back", DIALOG_OPTION_PREFIX);
-	}
-
-	protected void extraDialogue(int index)
-	{
-		Color h = Misc.getHighlightColor();
-		Color g = Misc.getGrayColor();
-		Color tc = Misc.getTextColor();
-		float pad = 3f;
-		float opad = 10f;
-		String hl = "";
-		String str = "";
-
-		if (person==jack) {
-			//job 1 start jack
-			if (stage == 0) {
-				if (index==0){
-					if (QuestHelper.getJob1Tip()!=null) {
-						StarSystemAPI loc = QuestHelper.getJob1Tip();
-						str = "\"Our best lead is the " + loc.getName() + ". You should start from there.\"";
-						hl = loc.getName();
-						QuestHelper.setCompleted(true, KestevenFlag.JOB1_TIP_GIVEN);
-						dialog.getOptionPanel().setEnabled(DIALOG_OPTION_EXTRA_PREFIX + "0", false);
-					}
-				}
-				if (index==1){
-					str = "\"Basically all the reports claim that automated ships of some sort are behind these attacks. Usually deploying a collection of advanced technologies never before seen the sector.\" " +
-							"He looks particularly skeptical.";
-					dialog.getOptionPanel().setEnabled(DIALOG_OPTION_EXTRA_PREFIX+"1", false);
-				}
-				if (index==2){
-					str = "\"The unmatched capabilities of these rumored ships is truly a marvel of engineering, although it's not even clear who or what is behind this technology.\"";
-					dialog.getOptionPanel().setEnabled(DIALOG_OPTION_EXTRA_PREFIX+"2", false);
-				}
-				if (index==3){
-					str = "\"The ships are said to have a peculiar construction that no other ship has in the sector. Said to be real works of art...\"" +
-							" A sly smile appears on his face. \"Well, when they're not trying to blow you into pieces.\"";
-					dialog.getOptionPanel().setEnabled(DIALOG_OPTION_EXTRA_PREFIX+"3", false);
-				}
-				if (index==4){
-					str = "\"We are required to turn them over to the Hegemony as participants of the AI war treaties.\" There's a hint of disappointment in his words. " +
-							"\"But thankfully everything else recovered is free game for us.\"";
-					dialog.getOptionPanel().setEnabled(DIALOG_OPTION_EXTRA_PREFIX+"4", false);
-				}
-				if (index==5){
-					str = "\"Damn impressive captain, well if what you say is true that is.\" " +
-							"He pauses then checks your composure to see if you're telling the truth. He seems to like the result and continues. \"You should have no problem completing the mission then.\"";
-					dialog.getOptionPanel().setEnabled(DIALOG_OPTION_EXTRA_PREFIX+"5", false);
-				}
-			}
-			//job 1 complete jack
-			if (stage == 2) {
-				if (index == 0) {
-					str = "\"That's classified information captain. I'm sure you'll understand.\"";
-					dialog.getOptionPanel().setEnabled(DIALOG_OPTION_EXTRA_PREFIX+"0", false);
-				}
-				if (index == 1) {
-					str = "\"Enigma is one of the few words we can decipher from their transmissions. It is unclear what it actually means though.\" He pauses for a moment."+
-							"\"It could be some sort of master AI core, or the name of their base of operations, or \" " +
-							"He pauses again to think. \"It's just the codename of the unholy project that caused this mess.\"";
-					dialog.getOptionPanel().setEnabled(DIALOG_OPTION_EXTRA_PREFIX+"1", false);
-				}
-				if (index==2){
-					str = "He nods in approval. \"We do have more work for you, come talk to me later.\"";
-					dialog.getOptionPanel().setEnabled(DIALOG_OPTION_EXTRA_PREFIX+"2", false);
-				}
-			}
-		}
-		if (person==alice) {
-			//job 3 start alice
-			if (stage == 7) {
-				if (index==0){
-					SectorEntityToken loc = QuestHelper.getJob3Start();
-					str = "\"I'd suggest starting at "+loc.getName()+". You'll figure out the rest captain, you have serious talent when it comes to this type of work, or so I hear.\"";
-					hl = loc.getName();
-					dialog.getOptionPanel().setEnabled(DIALOG_OPTION_EXTRA_PREFIX+"0", false);
-				}
-				if (index==1){
-					str = "\"This is a covert operation. If someone asks you don't know me, and so on.\"";
-					dialog.getOptionPanel().setEnabled(DIALOG_OPTION_EXTRA_PREFIX+"1", false);
-				}
-				if (index==2){
-					str = "\"Yes, we can't risk Tri-Tachyon interfering in our business. Between you and me, I know they're somehow behind this Enigma activity.\"";
-					dialog.getOptionPanel().setEnabled(DIALOG_OPTION_EXTRA_PREFIX+"2", false);
-				}
-				//job3 skip dialog
-				if (index==3){
-				}
-			}
-			//job 3 finish alice
-			if (stage == 10) {
-				if (index == 0) {
-					str = "You send the coordinates you acquired over to her. \"Interesting...\" She makes a few quick searches on her datapad. \"The system has been marked as a possible Enigma site in our database. " +
-							"Those sly bastards were definitely up to something.\"";
-					dialog.getOptionPanel().setEnabled(DIALOG_OPTION_EXTRA_PREFIX+"0", false);
-				}
-				if (index == 1) {
-					str = "\"I don't have any urgent work at the moment. But in a month or so that might change.\"";
-					dialog.getOptionPanel().setEnabled(DIALOG_OPTION_EXTRA_PREFIX+"1", false);
-				}
-			}
-			//job 4 start alice
-			if (stage == 11) {
-				if (index==0){
-					str = "\"We sent a fleet with some special equipment to try and track down a certain Enigma lead, seems like something has gone wrong though.\"";
-					dialog.getOptionPanel().setEnabled(DIALOG_OPTION_EXTRA_PREFIX+"0", false);
-				}
-				if (index==1){
-					str = "\"Could be an act of counter-sabotage from \" Her expression turns sour. \"Tri-Tachyon, or worse a direct Enigma attack, we can't know yet.\"";
-					dialog.getOptionPanel().setEnabled(DIALOG_OPTION_EXTRA_PREFIX+"1", false);
-				}
-				if (index==2){
-					str = "\"They might have taken heavy losses and be in need of assistance. It never hurts to be prepared.\"";
-					dialog.getOptionPanel().setEnabled(DIALOG_OPTION_EXTRA_PREFIX+"2", false);
-				}
-				if (index==3){
-					str = "\"He works in communications, very skilled in the field. There must something useful he knows.\"";
-					dialog.getOptionPanel().setEnabled(DIALOG_OPTION_EXTRA_PREFIX+"3", false);
-				}
-				if (index==4){
-					str = "\"Ah yes, of course...\" Her eyes narrow to show disdain. \"No one important, we will deal with this \"LZ\" in time.\"";
-					dialog.getOptionPanel().setEnabled(DIALOG_OPTION_EXTRA_PREFIX+"4", false);
-					//don't show up again
-					QuestHelper.setCompleted(false, KestevenFlag.MESSENGER_QUESTION_OPEN);
-				}
-			}
-			//job 4 complete alice
-			if (stage == 13) {
-				if (index == 0) {
-					str = "\"After learning the location of a possible Enigma artifact, we sent the Operations fleet over to investigate.\" She seems vaguely regretful. \"It's clear we should have been more prepared though.\"";
-					dialog.getOptionPanel().setEnabled(DIALOG_OPTION_EXTRA_PREFIX+"0", false);
-				}
-				if (index == 1) {
-					str = "Her tone turns unusually passionate. \"You do see how advanced this \"Enigma\" technology is? With even a fraction of this power unlocked, one could have total supremacy over this sector. We should not just idly wait for other factions to take the lead in this race.\"";
-					dialog.getOptionPanel().setEnabled(DIALOG_OPTION_EXTRA_PREFIX+"1", false);
-				}
-				if (index == 2) {
-					str = "\"These \"Artifacts\" aren't physical objects per say, more like collections of valuable data. Hidden in old comm satellite networks, and such. This data is invaluable for anyone trying to understand what this \"Enigma\" truly is, and where it comes from.\"";
-					dialog.getOptionPanel().setEnabled(DIALOG_OPTION_EXTRA_PREFIX+"2", false);
-				}
-				if (index==3){
-					str = "\"Ah yes, of course...\" Her eyes narrow to show disdain. \"No one important, we will deal with this \"LZ\" in time.\"";
-					dialog.getOptionPanel().setEnabled(DIALOG_OPTION_EXTRA_PREFIX+"3", false);
-					//don't show up again
-					QuestHelper.setCompleted(false, KestevenFlag.MESSENGER_QUESTION_OPEN);
-				}
-			}
-		}
-
-		if (str.length()>0) {
-			text.addPara(str,tc,h,hl,"");
-		}
-		text.setFontSmallInsignia();
-		text.setFontInsignia();
-	}
-
 	protected void skip() {
 		Color h = Misc.getHighlightColor();
 		Color g = Misc.getGrayColor();
@@ -1669,16 +1048,6 @@ public class nskr_kestevenQuest extends PaginatedOptions {
 		} else {
 			return Global.getSettings().getHullModSpec(MODS.get(MathHelper.getSeededRandomNumberInRange(0,MODS.size()-1, getRandom())));
 		}
-	}
-
-	//
-	public static boolean validMarket(MarketAPI market)
-	{
-		if (market==null) return false;
-		if (Global.getSector().getPlayerFaction().getRelationship(Ids.KESTEVEN_FACTION_ID)<=-0.5f) return false;
-		if (QuestHelper.getEndMissions()) return false;
-
-		return market.getFaction().getId().equals("kesteven");
 	}
 
 	public static Random getRandom() {

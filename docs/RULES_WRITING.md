@@ -200,7 +200,7 @@ Every line of the Conditions cell must pass. Lines are checked top to bottom and
 - **Scopes.** Write the scope when the key is not on `$local`: `$player.nskr_x`, `$global.nskr_x`, `$entity.nskr_x`. An absent scope falls back to local and silently reads a key literally named `$entity.nskr_x` there.
 - **Commands.** A command in Conditions answers a question: `PlayerHasCargo supplies 10`, `nskr_isBaseOfficial command`. `!Command args` negates it. Condition commands run for every candidate row on every matching round, so they must be cheap and must not change state, grant anything or roll a new random target.
 - **Specificity.** In a `FireBest` trigger, rows compete by their summed score; see [FireBest pick](#firebest-pick). `FireAll` ignores scores.
-- **Quest state.** Ask the owner with a condition verb (`nskr_kestevenQuest ...`) or a mission reference instead of copying quest state into memory for rules to read.
+- **Quest state.** Ask the owner with a condition verb (`nskr_quest kq check job3Fleet`) or a mission reference instead of copying quest state into memory for rules to read.
 - **Case.** Keys and trigger names are case sensitive. `$nskr_x` and `$nskr_X` are different keys; a `FireAll` on a misspelled trigger finds no rows and shows nothing. SotF ships this bug: two rows fire `sotfWendigoCHOffers` while the menu's rows use `sotfWendigoCHoffers`.
 
 ## Script
@@ -231,7 +231,7 @@ Decide where each fact lives before writing rows.
 
 | Fact | Owner | Example |
 |---|---|---|
-| Quest progress, targets, timers, decisions, counters | The quest's Java owner (a mission, intel or manager), read through a command verb or a mission reference | `nskr_kestevenQuest getStage`; a hub mission's `$<missionId>_stage` |
+| Quest progress, targets, timers, decisions, counters | The quest's Java owner (a mission, intel or manager), read through a command verb or a mission reference | `nskr_quest kq is JOB3_BRIEFING`; a hub mission's `$<missionId>_stage` |
 | "Already asked", "already introduced" and other conversation flags | The speaker's own memory: an unscoped key while the person is active | `$nskr_ex_askedPay` |
 | What a fleet is for | The fleet's memory, set by its spawner | `$debtCollector` |
 | Something the player knows, shared by several conversations | `$player` | SotF `$player.sotf_knowDustkeepers` |
@@ -276,7 +276,7 @@ Versions of a line separated by a line containing only `OR` are picked at random
 
 ### Highlights and small text
 
-`SetTextHighlights` and `SetTextHighlightColors` color phrases in the last paragraph shown, in the order they appear. Arguments get token replacement, so `SetTextHighlights $nskr_x_amount` highlights the displayed value. Color arguments (`SetTextHighlightColors`, `AddText`, `AddTextSmall`, `SetOptionColor`) accept `highlight` or `h`, `good`, `bad`, `gray` or `grey`, `story`, a faction id (its base UI color), an `r,g,b,a` literal, a color name from `settings.json`, or a variable holding a `Color` (`Token.getColor` in `sources-api/util.java`). `bad` is `textEnemyColor`; unlike `Misc.getNegativeHighlightColor()` it does not turn blue in colorblind mode. Put them in the Script of the row whose Text they decorate, before any `AddText` in that Script. Repeat a phrase for each occurrence. See [Shared text presentation](DIALOGUE.md#shared-text-presentation).
+`SetTextHighlights` and `SetTextHighlightColors` color phrases in the last paragraph shown, in the order they appear. Arguments get token replacement, so `SetTextHighlights $nskr_x_amount` highlights the displayed value of a memory key; a quest token must be quoted, `SetTextHighlights "$nskr_kq_job3Start"`, because an unquoted `$` argument is read from memory ([Tokens](../jars/src/lostsector/quest/README.md#tokens)). Color arguments (`SetTextHighlightColors`, `AddText`, `AddTextSmall`, `SetOptionColor`) accept `highlight` or `h`, `good`, `bad`, `gray` or `grey`, `story`, a faction id (its base UI color), an `r,g,b,a` literal, a color name from `settings.json`, or a variable holding a `Color` (`Token.getColor` in `sources-api/util.java`). `bad` is `textEnemyColor`; unlike `Misc.getNegativeHighlightColor()` it does not turn blue in colorblind mode. Put them in the Script of the row whose Text they decorate, before any `AddText` in that Script. Repeat a phrase for each occurrence. See [Shared text presentation](DIALOGUE.md#shared-text-presentation).
 
 After the prose, small gray text can state a mechanical consequence the prose does not. SotF writes it as an indented list: `AddTextSmall "    - Progress made\n    - Its scorn grows" textGrayColor` (`sotfHauntedPenult4`). Real grants use the vanilla receipt commands, which print their own receipts; see [Receipts](#receipts).
 

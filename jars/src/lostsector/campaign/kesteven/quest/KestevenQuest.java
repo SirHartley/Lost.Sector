@@ -11,7 +11,8 @@ import lostsector.quest.Quests;
 import java.util.List;
 import java.util.Random;
 
-// No modules yet: QuestStageManager and the old dialog classes still run the questline on this state (T16 to T35).
+// KestevenHubModule holds the gates of the conversation hub; QuestStageManager and the old dialog classes still run
+// the rest of the questline on this state (T17 to T35).
 // isAvailable() keeps the default: the old code runs the questline in every campaign and treats a missing
 // Kesteven home as failure (stage 99), so the state must always exist.
 public final class KestevenQuest extends Quest<KestevenStage, KestevenState> {
@@ -29,7 +30,7 @@ public final class KestevenQuest extends Quest<KestevenStage, KestevenState> {
 
     @Override
     protected List<QuestModule<KestevenStage, KestevenState>> createModules() {
-        return List.of();
+        return List.of(new KestevenHubModule());
     }
 
     // Null before QuestManager.startQuests() at the end of ModPlugin.onGameLoad, which includes new-campaign generation.

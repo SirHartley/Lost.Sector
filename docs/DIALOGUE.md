@@ -61,7 +61,7 @@ Quest dialogue is written in `rules.csv`, and its presentation uses vanilla comm
 
 ### Highlights
 
-`SetTextHighlights "phrase" ...` colours phrases in the last paragraph, in order, one argument per occurrence; `SetTextHighlightColors highlight bad` when the colours differ. Put them in the Script of the row whose Text they decorate, before any `AddText`. Tokens are allowed in the arguments.
+`SetTextHighlights "phrase" ...` colours phrases in the last paragraph, in order, one argument per occurrence; `SetTextHighlightColors highlight bad` when the colours differ. Put them in the Script of the row whose Text they decorate, before any `AddText`. Tokens are allowed in the arguments; a quest token must be quoted, `SetTextHighlights "$nskr_kq_job3Start"` ([Tokens](../jars/src/lostsector/quest/README.md#tokens)).
 
 ### Small and gray text
 

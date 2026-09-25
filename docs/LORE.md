@@ -155,7 +155,7 @@ These instructions describe how the existing mod text is written. They govern pl
 
 Jack is Kesteven's space operations officer at Asteria (`nskr_opguy`), the questline's first contact and later a contact.
 
-**Voice.** Charismatic and corporate: "a charismatic smile ... his manners have that corporate superficiality down to a perfection" (`nskr_kestevenQuest`, introduction). In person he is tall and inviting, with "a big - and mostly genuine smile" (`DelveMeetingBarEvent`). He becomes a salesman when the player hesitates, turns commanding when the stakes rise, and enjoys winning.
+**Voice.** Charismatic and corporate: "a charismatic smile ... his manners have that corporate superficiality down to a perfection" (`nskr_kq_jackIntro`). In person he is tall and inviting, with "a big - and mostly genuine smile" (`DelveMeetingBarEvent`). He becomes a salesman when the player hesitates, turns commanding when the stakes rise, and enjoys winning.
 
 - On Kesteven's mission (`DelveMeetingBarEvent`): "Think about it, Asteria is one of the last great bastions of equality and democracy. We are very much in a unique position to drive progress in this sector." This shows the sincere-sounding corporate pitch; he believes it, and the setting's own descriptions undercut it.
 - On Eliza's death (`nskr_kestevenQuest`, job 5 tip): "I hear you managed to already take out Eliza for good, very impressive captain." The narration adds "There is a sinister smile on his face, you seem to have made his day." His warmth has a hard edge.
@@ -186,7 +186,7 @@ Alice is Kesteven's R&D manager (`nskr_researcher`): the job 3 and job 4 contact
 
 Nicholas works in Kesteven intelligence and communications at the Outpost (`nskr_intelligence`) and appears in job 4.
 
-**Voice.** Reserved and hesitant, full of fillers and self-corrections. He worries about equipment: "Um, welcome captain." ... "So, the fleet was instructed to send encrypted hyperwave signals using rather expensive Domain comms equipment. You know I hope they didn't lose that stuff..." ... "There's this one thing. uhh-" (`nskr_kestevenQuest`, stage 12).
+**Voice.** Reserved and hesitant, full of fillers and self-corrections. He worries about equipment: "Um, welcome captain." ... "So, the fleet was instructed to send encrypted hyperwave signals using rather expensive Domain comms equipment. You know I hope they didn't lose that stuff..." ... "There's this one thing. uhh-" (`nskr_kq_nicholasGreeting`, stage 12).
 
 ### Michael Roux
 

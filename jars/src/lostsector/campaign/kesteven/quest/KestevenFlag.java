@@ -5,9 +5,6 @@ public enum KestevenFlag {
 
     ENDED,
     STORY_SKIPPED,
-    JACK_INTRODUCED,
-    ALICE_INTRODUCED,
-    NICHOLAS_INTRODUCED,
 
     FOUGHT_ENIGMA,
     JOB1_SENSOR_DATA,

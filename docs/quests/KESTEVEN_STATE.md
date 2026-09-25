@@ -6,7 +6,7 @@ Java paths are relative to `jars/src/lostsector/campaign/`; `dialogue/rules/`, `
 
 ## Storage
 
-The questline is quest `kq` of the quest framework. `kesteven/quest/KestevenQuest` is its definition, registered in `quest/QuestCatalog`. It has no modules yet: `QuestStageManager` and the Java dialogs, bar events, intel and rules commands still run the questline, reading and writing one saved `kesteven/quest/KestevenState`. `KestevenQuest.isAvailable()` keeps the default `true`, because the old code runs the questline in every campaign and handles a missing Kesteven home as failure.
+The questline is quest `kq` of the quest framework. `kesteven/quest/KestevenQuest` is its definition, registered in `quest/QuestCatalog`. Its only module, `KestevenHubModule`, declares the checks, action and tokens of the conversation hub rows ([dialogue map](KESTEVEN_DIALOGUE.md#jack-alice-and-nicholas)). `QuestStageManager` and the Java dialogs, bar events, intel and rules commands still run the rest of the questline, reading and writing one saved `kesteven/quest/KestevenState`. `KestevenQuest.isAvailable()` keeps the default `true`, because the old code runs the questline in every campaign and handles a missing Kesteven home as failure.
 
 | Mechanism | Location | Notes |
 |---|---|---|
@@ -16,7 +16,7 @@ The questline is quest `kq` of the quest framework. `kesteven/quest/KestevenQues
 | Randoms | One saved `Random` per purpose on the state, from `KestevenQuest.random(purpose)` | See [Randoms](#randoms) |
 | Timers | None | The old counters count frame seconds and stay fields until the modules replace them |
 | Quest fleet list | Sector memory `$kQuestMissionFleets`, a `List<FleetInfo>` | Read and written by `FleetHelper.getFleets/setFleets`. `FleetInfo.age` is in days. |
-| Fleet, entity and person memory | The owning `MemoryAPI` | Routing flags read by `rules.csv` and `CorePlugin`; see [Memory flags](#memory-flags) |
+| Fleet, entity and person memory | The owning `MemoryAPI` | Routing flags read by `rules.csv` and `CorePlugin`, and the conversation flags of Jack, Alice and Nicholas; see [Memory flags](#memory-flags) |
 | Saved objects | Bar events in `PortsideBarData`, intel in the intel manager, `ElizaRaidObjectiveCreator` as a listener | Their class names and fields are serialized. |
 | Per installation | LunaLib settings: `settings/SettingsManager.set` and `Setting` reads | `thronesGiftUnlocked`, `hellspawnUnlocked`, `storySkipUnlocked`; shared by all campaigns |
 
@@ -26,7 +26,8 @@ The quest manager creates the state on the first unpaused frame of a new campaig
 - the [queries for other features](#queries-for-other-features) read every flag as unset and the stage as `NOT_STARTED`;
 - writes through the wrappers and `KestevenQuest.reportMessengerMet()` log an error through the quest manager and change nothing;
 - `KestevenQuest.random(purpose)` throws;
-- `QuestStageManager.advance()` returns at once.
+- `QuestStageManager.advance()` returns at once;
+- `nskr_quest kq` conditions fail and log an error, so the hub's "Chat about operations work" option does not show.
 
 ### Access from the old code
 
@@ -112,18 +113,17 @@ The actual path can skip stages: 8 to 10 without 9, 7 to 11 when job 3 is refuse
 |---|---|---|
 | `ENDED` | Questline permanently failed | `QuestStageManager` failure checks |
 | `STORY_SKIPPED` | Story skip used; nothing reads it | `nskr_kestevenQuest` story skip |
-| `JACK_INTRODUCED`, `ALICE_INTRODUCED`, `NICHOLAS_INTRODUCED` | One-time introduction text shown | `nskr_kestevenQuest` |
 | `FOUGHT_ENIGMA` | Beat Enigma before accepting job 1 | `QuestStageManager.reportEncounterLootGenerated` |
 | `JOB1_SENSOR_DATA` | Sensor task done | Same |
 | `JOB1_DATA_DELIVERED`, `JOB1_ELECTRONICS_DELIVERED` | Sensor package and electronics delivered | `nskr_kestevenQuest` |
-| `JOB1_TIP_GIVEN` | Jack gave the location tip | `nskr_kestevenQuest` |
+| `JOB1_TIP_GIVEN` | Jack gave the location tip | `nskr_kestevenQuest` briefing; rules `nskr_kq_jackAskTipSel` |
 | `COLLECTOR_PAID` | Tri-Tachyon collector paid | `nskr_ttCollectorDialog` |
 | `JOB3_REFUSED` | Job 3 refused; nothing reads it | `nskr_kestevenQuest.confirmSkip` |
 | `JOB3_TARGET_DISCOVERED` | Target coordinates from the bar | `HostileTakeoverBarEvent` |
 | `JOB3_FAILED` | Timeout or stealth broken | `QuestStageManager` |
-| `MESSENGER_MET`, `MESSENGER_QUESTION_OPEN` | "LZ" messenger met; question available (cleared after asking Alice) | Quest `ic` through `KestevenQuest.reportMessengerMet()`; cleared by `nskr_kestevenQuest` |
+| `MESSENGER_MET`, `MESSENGER_QUESTION_OPEN` | "LZ" messenger met; question available (cleared after asking Alice) | Quest `ic` through `KestevenQuest.reportMessengerMet()`; cleared by rules `nskr_kq_aliceAskLzSel` |
 | `JOB4_WAIT_OVER` | 30-day wait over | `QuestStageManager` |
-| `JOB4_REQUIREMENT_SKIPPED` | Job 4 strength gate bypassed with a story point | `nskr_kestevenQuest` |
+| `JOB4_REQUIREMENT_SKIPPED` | Job 4 strength gate bypassed with a story point | Rules `nskr_kq_hubReqSkipJob4` |
 | `JOB4_HINT_WRECK_READ` | Hint wreck read | `HintWreckDialog` |
 | `JOB4_FRIENDLY_FOUND`, `JOB4_TARGET_FOUND` | Fleets seen | `QuestStageManager` |
 | `JOB4_TARGET_HINT` | Friendly fleet gave the strike group location | `QuestStageManager`, from the friendly fleet's dialogue stage |
@@ -163,7 +163,7 @@ Other features read flags through the [queries](#queries-for-other-features). `n
 
 | Field | Type | Meaning | Written by |
 |---|---|---|---|
-| `job1TipSystem` | `StarSystemAPI` | System with an Enigma base; the first pick also adds a dormant Enigma fleet there | `QuestHelper.getJob1Tip()` |
+| `job1TipSystem` | `StarSystemAPI` | System with an Enigma base; the first pick also adds a dormant Enigma fleet there | `QuestHelper.getJob1Tip()`, from the hub action `pickJob1Tip` and the job 1 briefing |
 | `job3Start` | `SectorEntityToken` | Random Tri-Tachyon market entity, not `eochu_bres` or `culann` | `QuestHelper.getJob3Start()` |
 | `job3Target` | `SectorEntityToken` | Random location in a system within 27,500 units of the centre | `QuestHelper.getJob3Target()` |
 | `job4FriendlyTarget` | `SectorEntityToken` | Random location in a system at least 32,500 units from the centre | `QuestHelper.getJob4FriendlyTarget()` |
@@ -174,7 +174,7 @@ Other features read flags through the [queries](#queries-for-other-features). `n
 | `cacheGuardianSpot` | `SectorEntityToken` | Guardian spawn point in Unknown Site | `QuestHelper.setCacheFleetLoc()` |
 | `disksRecovered` | `int` | Disks recovered | `DataSatelliteDialog`, `ElizaDialog`, `ElizaRaid`, `GlacierCommsDialog` |
 | `satellitesRecovered` | `int` | Satellites salvaged, 0 to 2 | `DataSatelliteDialog`, story skip |
-| `nicholasDialogStage` | `int` | Nicholas's job 4 dialogue stage | `nskr_kestevenQuest` |
+| `nicholasDialogStage` | `int` | Nicholas's job 4 dialogue stage; the hub reads it through `check nicholasTipGiven` | `nskr_kestevenQuest` |
 | `job4FleetDialogStage` | `int` | Special Operations fleet dialogue stage | `nskr_job4FleetDialog setDialogStage`, called from rules |
 | `elizaSearchStage` | `int` | Eliza bar chain stage, 0 to 3 | Eliza bar events |
 | `elizaSearchUsedMarkets` | `List<String>` | Market ids already used by the Eliza bar chain | Eliza bar events |
@@ -234,6 +234,8 @@ Each purpose is a constant on `KestevenState`, named after the persistent-data k
 | `$EnigmaDormantFleet` (`DormantSpawner.DORMANT_KEY`) | Dormant fleets at quest locations | `DormantSpawner.addDormant` | `DataSatelliteDialog.makeHostile`, `QuestStageManager` |
 | `$nskr_altEndingDialogLockedToPerson` | The official in either alternative ending | Alternative endings | Alternative endings |
 | `$nskr_ic_messenger`, `$nskr_ic_messengerLeaving` | Messenger fleet role flags of quest `ic` | `QuestFleets` | Rules `# INTERCEPTS` |
+| `$nskr_kq_introduced` | Jack, Alice or Nicholas, each their own; no expiry | Hub introduction rows `nskr_kq_jackIntro`, `nskr_kq_aliceIntro`, `nskr_kq_nicholasIntro` | Hub greeting rows |
+| `$nskr_kq_asked<Topic>` (`askedRogueAi`, `askedShips`, `askedElectronics`, `askedCores`, `askedFought`, `askedEquipment`, `askedEnigma`, `askedNextJob` on Jack; `askedWhere`, `askedAlone`, `askedNecessary`, `askedTarget`, `askedNextJob`, `askedSpecOps`, `askedThreats`, `askedSupplies`, `askedNicholas`, `askedGoal`, `askedInterest`, `askedArtifact` on Alice) | The speaker; no expiry | Hub answer rows `nskr_kq_<speaker>Ask<Topic>Sel` | Hub question rows, which hide an asked question |
 
 ## Who changes the stage
 
