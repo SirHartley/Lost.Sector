@@ -4,14 +4,12 @@ import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.CampaignFleetAPI;
 import com.fs.starfarer.api.campaign.FactionAPI;
 import com.fs.starfarer.api.campaign.SectorEntityToken;
-import com.fs.starfarer.api.impl.campaign.RuleBasedInteractionDialogPluginImpl;
 import com.fs.starfarer.api.impl.campaign.intel.BaseIntelPlugin;
 import com.fs.starfarer.api.ui.ButtonAPI;
 import com.fs.starfarer.api.ui.IntelUIAPI;
 import com.fs.starfarer.api.ui.SectorMapAPI;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import com.fs.starfarer.api.util.Misc;
-import lostsector.dialogue.rules.nskr_thronesGift;
 
 import java.awt.*;
 import java.util.Set;
@@ -110,11 +108,7 @@ public class ThronesGiftIntel extends BaseIntelPlugin {
     @Override
     public void buttonPressConfirmed(Object buttonId, IntelUIAPI ui) {
         if (buttonId == BUTTON_OPEN) {
-            // what ui.showDialog(target, trigger) builds, plus the intel UI for nskr_thronesGift refreshIntel;
-            // a null target becomes a location token with its own empty memory
-            RuleBasedInteractionDialogPluginImpl plugin = new RuleBasedInteractionDialogPluginImpl(nskr_thronesGift.PICK_TRIGGER);
-            plugin.setCustom1(ui);
-            ui.showDialog(null, plugin);
+            ui.showDialog(null, new AutomateDialog(ui));
         }
 
         super.buttonPressConfirmed(buttonId, ui);

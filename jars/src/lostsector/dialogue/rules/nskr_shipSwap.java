@@ -27,11 +27,13 @@ import lostsector.helper.StringHelper;
 import lostsector.helper.MathHelper;
 import lostsector.helper.SectorLookup;
 import org.apache.log4j.Logger;
+import org.lwjgl.input.Keyboard;
 
 import java.awt.*;
 import java.util.List;
 import java.util.*;
 
+// TODO: replace this menu with a custom UI panel (docs/UI.md).
 public class nskr_shipSwap extends BaseCommandPlugin {
 
 	public static final String POINTS_KEY = "$nskr_shipSwapPoints";
@@ -47,14 +49,10 @@ public class nskr_shipSwap extends BaseCommandPlugin {
 	// Local display values for rules text, written with expiry 0.
 	public static final String POINTS_DISPLAY_KEY = "$nskr_shipSwap_points";
 	public static final String POINTS_STR_KEY = "$nskr_shipSwap_pointsStr";
-	public static final String COST_STR_KEY = "$nskr_shipSwap_costStr";
-	public static final String ITEM_NAME_KEY = "$nskr_shipSwap_itemName";
 
-	public static final String PICKED_TRIGGER = "nskr_shipSwapPicked";
-	public static final String PICK_CANCELLED_TRIGGER = "nskr_shipSwapPickCancelled";
-	public static final String PICKED_HULL_TRIGGER = "nskr_shipSwapPickedHull";
-	public static final String PICKED_WEAPON_TRIGGER = "nskr_shipSwapPickedWeapon";
 	public static final String SOLD_TRIGGER = "nskr_shipSold";
+	public static final String RETURN_OPTION = "nskr_shipSwapMenuReturn";
+	public static final String CONFIRM_OPTION = "nskr_shipSwapConfirmPurchase";
 	
 	// Things that count for trade-in
 	public static final Set<String> ALLOWED_IDS = new HashSet<>(Arrays.asList("nskr_electronics"));
@@ -84,24 +82,23 @@ public class nskr_shipSwap extends BaseCommandPlugin {
 				break;
 			case "hasOption":
 				return validMarket(entity.getMarket());
-			case "prepareStock":
-				getStock(market.getMemoryWithoutUpdate());
-				break;
-			case "hasStock":
-				return hasStock(PurchaseType.valueOf(params.get(1).getString(memoryMap)));
 			case "getShipForSale":
 				setToPurchase(new ArrayList<String>());
-				showShipPicker();
+				if (hasStock(PurchaseType.SHIP)) {
+					showShipPicker();
+					dialog.getVisualPanel().showPersonInfo(person, false);
+				} else {
+					showNoStock("\"Looks like we don't have any ships in stock at the moment.\"");
+				}
 				break;
 			case "getGunForSale":
 				setToPurchase(new ArrayList<String>());
-				showGunPicker();
+				if (hasStock(PurchaseType.WEAPON)) {
+					showGunPicker();
+				} else {
+					showNoStock("\"Looks like we don't have any weapons in stock at the moment.\"");
+				}
 				break;
-			case "listPicked":
-				listPicked();
-				break;
-			case "canAfford":
-				return canAfford();
 			case "sell":
 				selectArtifacts();
 				break;
@@ -144,16 +141,31 @@ public class nskr_shipSwap extends BaseCommandPlugin {
 		memoryMap.get(MemKeys.LOCAL).set(POINTS_STR_KEY, Misc.getWithDGS((int)points) + "", 0);
 	}
 
-	/**
-	 * Reads the stock only after {@code prepareStock}: a condition must not generate it.
-	 */
 	protected boolean hasStock(PurchaseType type) {
-		MemoryAPI mem = market.getMemoryWithoutUpdate();
-		if (!mem.contains(STOCK_ARRAY_KEY)) return false;
-		for (PurchaseInfo item : getStock(mem)) {
+		for (PurchaseInfo item : getStock(market.getMemoryWithoutUpdate())) {
 			if (item.type == type) return true;
 		}
 		return false;
+	}
+
+	// The handler rows of the purchase screens have no options of their own, so the command replaces the menu.
+	protected void setOptions(String... labelsAndIds) {
+		OptionPanelAPI options = dialog.getOptionPanel();
+		options.clearOptions();
+		for (int i = 0; i < labelsAndIds.length; i += 2) {
+			options.addOption(labelsAndIds[i], labelsAndIds[i + 1]);
+		}
+		options.setShortcut(RETURN_OPTION, Keyboard.KEY_ESCAPE, false, false, false, true);
+	}
+
+	protected void showNoStock(String line) {
+		text.addParagraph(line);
+		setOptions("Back", RETURN_OPTION);
+	}
+
+	protected void showPickCancelled() {
+		text.addParagraph("\"Don't want anything? Shame.\"");
+		setOptions("Go back", RETURN_OPTION);
 	}
 	
 	protected void selectArtifacts() {
@@ -247,7 +259,7 @@ public class nskr_shipSwap extends BaseCommandPlugin {
 
 					@Override
 					public void cancelledFleetMemberPicking() {
-						FireBest.fire(null, dialog, memoryMap, PICK_CANCELLED_TRIGGER);
+						showPickCancelled();
 					}
 				});
 	}
@@ -280,7 +292,7 @@ public class nskr_shipSwap extends BaseCommandPlugin {
 					}
 					@Override
 					public void cancelledCargoSelection() {
-						FireBest.fire(null, dialog, memoryMap, PICK_CANCELLED_TRIGGER);
+						showPickCancelled();
 					}
 
 					@Override
@@ -309,35 +321,40 @@ public class nskr_shipSwap extends BaseCommandPlugin {
 				});
 	}
 
-	/**
-	 * Picker callbacks run after the command has returned, so they fire the rules triggers themselves.
-	 */
+	// Picker callbacks run after the command has returned, so they print the result and set the options themselves.
 	protected void showPicked(List<String> toPurchase) {
 		setToPurchase(toPurchase);
-		FireBest.fire(null, dialog, memoryMap, toPurchase.isEmpty() ? PICK_CANCELLED_TRIGGER : PICKED_TRIGGER);
-	}
-
-	/**
-	 * Shows one rules line per picked item, then writes the total cost for the summary row.
-	 */
-	protected void listPicked() {
-		MemoryAPI local = memoryMap.get(MemKeys.LOCAL);
-		List<String> toPurchase = getToPurchase();
+		if (toPurchase.isEmpty()) {
+			showPickCancelled();
+			return;
+		}
+		Color g = Misc.getGrayColor();
+		text.setFontSmallInsignia();
 		for (String id : toPurchase) {
 			WeaponSpecAPI weapon = getWeaponSpec(id);
 			if (weapon != null) {
-				local.set(ITEM_NAME_KEY, weapon.getWeaponName(), 0);
-				FireBest.fire(null, dialog, memoryMap, PICKED_WEAPON_TRIGGER);
+				text.addParagraph(weapon.getWeaponName(), g);
 			} else {
-				local.set(ITEM_NAME_KEY, createHull(id).getHullSpec().getHullName(), 0);
-				FireBest.fire(null, dialog, memoryMap, PICKED_HULL_TRIGGER);
+				text.addParagraph(createHull(id).getHullSpec().getHullName() + "-Class", g);
 			}
 		}
-		local.set(COST_STR_KEY, Misc.getWithDGS(getCost(toPurchase)) + "", 0);
+		String costStr = Misc.getWithDGS(getCost(toPurchase)) + "";
+		text.addParagraph("This will cost " + costStr + " points.");
+		text.highlightInLastPara(costStr);
+		String pointsStr = Misc.getWithDGS((int) points) + "";
+		text.addParagraph("You have " + pointsStr + " points.");
+		text.highlightInLastPara(pointsStr);
+		text.setFontInsignia();
+
+		if (canAfford(toPurchase)) {
+			setOptions("Make the purchase", CONFIRM_OPTION, "\"Never mind.\"", RETURN_OPTION);
+		} else {
+			text.addParagraph("You can not afford this transaction.");
+			setOptions("Go back", RETURN_OPTION);
+		}
 	}
 
-	protected boolean canAfford() {
-		List<String> toPurchase = getToPurchase();
+	protected boolean canAfford(List<String> toPurchase) {
 		int cost = getCost(toPurchase);
 		if (containsWeapon(toPurchase)) return points > cost;
 		return points >= cost;
@@ -386,11 +403,15 @@ public class nskr_shipSwap extends BaseCommandPlugin {
 		text.addPara(str, Misc.getNegativeHighlightColor(), Misc.getHighlightColor(), costStr);
 		text.setFontInsignia();
 
+		dialog.getVisualPanel().showPersonInfo(person, false);
+
 		Global.getSoundPlayer().playUISound("ui_rep_raise",1f,1f);
 		
 		// remove purchased from array
 		stock.removeAll(toRemove);
 		setStock(mem, stock, false);
+
+		setOptions("Go back", RETURN_OPTION);
 	}
 
 	/**

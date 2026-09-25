@@ -956,6 +956,7 @@ Findings about definitions rather than rows show `-` as the line and `(quest <q>
 | `command` | error | A command that is not a class in the vanilla `ruleCommandPackages` or the mod's `data/config/settings.json` list. Only the class file is looked up; no class is loaded |
 | `option-format` | error | A colon in an option label (load failure for `id:text`, cut label for `order:id:text`), a line that is neither form, an option id starting with `$` |
 | `highlight-order` | error | A `SetTextHighlightColors` line that follows `SetTextHighlights` (or `Highlight`) in one Script with only highlight commands between them. `SetTextHighlightColors` calls `highlightInLastPara(color, "")`, which replaces the paragraph's phrases, so the earlier phrases are lost ([Highlights](../../../../docs/RULES_WRITING.md#highlights-and-small-text)). Any other command may add a paragraph and ends the pair |
+| `text-cell` | warning | A plain `AddText` (one literal argument, no `OR`) that nothing before it in the Script requires: every earlier line is a highlight command, a portrait, picture or map command, a sound, an option decoration, an assignment, `unset` or `expire` of a key the text does not name, or `BeginConversation` when the text holds no `$`. Such a paragraph belongs in the Text cell ([Where text goes](../../../../docs/RULES_WRITING.md#where-text-goes)). Not reported: intel and raid rows, a row whose Text cell has `OR` variants, and a row with an empty Text cell whose Script has a highlight line before its first `AddText`. `AddText` in the notes column, with the reason, keeps the line |
 | `text-cr` | warning | A carriage return in Text, which stops `OR` variants from splitting |
 | `fire-in-conditions` | error | `FireAll` or `FireBest` in Conditions |
 | `quest-call` | error | In `nskr_quest` calls: an unknown quest id, verb, stage, flag, check, action or role (`engage`); `confirm` without an option id, a text and both labels; a verb in the wrong column; the wrong number of arguments. A `$variable` argument is a warning, because it is not checked |
@@ -1195,15 +1196,14 @@ The old quest code is gone. This table maps each removed owner to its current on
 | Bounty spawners (`AbyssSpawner`, `EternitySpawner`, `MothershipSpawner`, `RorqualSpawner`), `AbyssIntel`, `UmbraIntel`, `MothershipIntel`, `RorqualIntel`, `MothershipInteractionBlocker`, `BountyLoot` | Quest `bounty` in `campaign/bounties` (`BountyEncounter`); `HeliosSite` stays world generation |
 | `HintManager`, `HintIntel`, `KestevenTipBarEventCreator`, `KestevenTipBarEvent`, `KestevenTipIntel`, `FrostIntel` | Record quest `hint` in `campaign/events/hints` |
 | `HellSpawnJudgementDialog`, `HellSpawnJudgementWarning` | Quest `hs` and the `# HELLSPAWN` rows |
-| `AutomateDialog` | `nskr_thronesGift` and the `# THRONES GIFT` rows |
 | Separate fleet lists for quest content | One `QuestFleets` list. The world spawners (`HyperspaceEnigmaSpawner`, `StalkerSpawner`, `KestevenScavenger`, `GuardSpawner`, `BlackOpsManager`) keep their own lists, because their fleets are not quest content |
 
 ## Outside the framework
 
 | Content | Owner | Relation to the framework |
 |---|---|---|
-| Kesteven contracts | Vanilla `BaseHubMission` in `campaign/kesteven/contracts` | Reads quest queries only. Its stages are a mission enum; its offer text is keyed by `$missionId` ([Hub missions](../../../../docs/RULES_AUTHORING.md#reuse-a-mission-object-through-call)). |
-| Debt menu, ship swap, S-mod removal, artifact exchange, Throne's Gift automation | Their own commands in `dialogue/rules` and their managers | Services, not quests. Their text and fixed options are rows; the commands keep the pickers, the game actions and their receipts ([project routing](../../../../docs/RULES.md#project-routing)). |
+| Kesteven contracts | Vanilla `BaseHubMission` in `campaign/kesteven/contracts` | Reads quest queries only. Its stages are a mission enum; its blurb and offer text are printed by `ContractsMission` through `Call $nskr_contracts_ref` ([Hub missions](../../../../docs/RULES_AUTHORING.md#reuse-a-mission-object-through-call)). |
+| Debt menu, artifact exchange, S-mod removal, Throne's Gift automation | Their own commands in `dialogue/rules` and their managers; Throne's Gift automation is the Java dialog `starts/thronesgift/AutomateDialog`, opened from `ThronesGiftIntel` | Services, not quests. Their text is Java: the commands print option lists, previews, picker results, confirmations and receipts, and the rows keep the entry options, the service menus and the handlers that call the commands ([project routing](../../../../docs/RULES.md#project-routing)). |
 | Hellspawn judgement battle | `HellSpawnJudgementInteraction`, a fleet encounter plugin in `starts/hellspawn` | Hellspawn's state, stages and text use the framework; the encounter keeps its Java and takes its lines from rows with `FireBest`. The Gate Conduit ability's encounter (`HellSpawnAbilityInteraction`) is not quest content. |
 | Enigma greetings and patrol rows | Faction dialogue in `rules.csv` | Not quest content. |
 

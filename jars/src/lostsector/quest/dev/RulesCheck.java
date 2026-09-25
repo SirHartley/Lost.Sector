@@ -59,6 +59,19 @@ public final class RulesCheck {
     private static final Set<String> KEY_COMMANDS = Set.of("unset", "unsetAll", "expire");
     private static final String OPTION_PREFIX_COMMAND = "nskr_optionStartsWith";
 
+    // Commands that neither print nor change what a later paragraph's tokens read (0.98a-RC8 rulecmd sources), so a
+    // plain AddText after them could have been part of the row's Text cell (RULES_WRITING "Where text goes").
+    private static final Set<String> TEXT_NEUTRAL_COMMANDS = Set.of(
+            "SetTextHighlights", "Highlight", "SetTextHighlightColors",
+            "ShowPersonVisual", "ShowDefaultVisual", "ShowImageVisual", "ShowPic", "HideVisual", "ShowSecondPerson",
+            "ShowThirdPerson", "HideSecondPerson", "HideThirdPerson", "ShowMapMarker", "HideMapMarker", "ShowLargePlanet",
+            "SaveCurrentVisual", "RestoreSavedVisual", "PlaySound", "PlayCustomMusic", "ResumeNormalMusic",
+            "SetShortcut", "SetEnabled", "SetOptionColor", "SetOptionText", "SetTooltip", "SetTooltipHighlights",
+            "SetTooltipHighlightColors", "RemoveOption", "SetStoryOption", "SetStoryColor", "MakeOptionOpenCore");
+    // Changes the speaker, and with it $local and every person token; text without any $ reads the same after it.
+    private static final String SPEAKER_COMMAND = "BeginConversation";
+    private static final String TEXT_CELL_NOTE = "AddText";
+
     // Quest ids have no underscore, so group 1 is the whole id.
     private static final Pattern QUEST_TOKEN = Pattern.compile("\\$nskr_([a-z][a-z0-9]*)_([A-Za-z0-9_]+)");
     private static final Pattern NSKR_KEY = Pattern.compile("\\$(?:[A-Za-z]+\\.)?(nskr_[A-Za-z0-9_]+)");
@@ -179,6 +192,7 @@ public final class RulesCheck {
         if (!readRows(file)) return;
         checkLoading();
         checkHighlightOrder();
+        checkTextCell();
         checkQuestCalls();
         checkTokens();
         checkOptionTokens();
@@ -353,6 +367,64 @@ public final class RulesCheck {
                 }
             }
         }
+    }
+
+    // The Text cell is replaced and printed before the row's Script runs (0.98a-RC8 FireBest.applyRule, FireAll.execute),
+    // and a blank line inside it is drawn as high as the gap between paragraphs. A plain AddText that only lines which
+    // print nothing and leave its tokens alone precede prints the same from the Text cell. Intel and raid rows never
+    // run their Script. A Text cell with OR variants cannot take more paragraphs, and with an empty Text cell a
+    // highlight line before the first AddText decorates the previous paragraph, so neither case is reported.
+    private void checkTextCell() {
+        Set<String> intel = intelTriggers(false);
+        for (ParsedRow row : rows) {
+            String text = row.row().text().replace("\r", "");
+            if (intel.contains(row.trigger()) || row.row().notes().contains(TEXT_CELL_NOTE) || text.contains("\nOR\n")) continue;
+            boolean hasParagraph = !text.isBlank();
+            boolean speakerChanged = false;
+            Set<String> assigned = new HashSet<>();
+            for (RuleExpression e : row.script()) {
+                if (e.error != null) break;
+                if (e.command == null) {
+                    if (e.first != null) assigned.add(e.first.key());
+                    continue;
+                }
+                if ((e.command.equals("unset") || e.command.equals("expire")) && !e.params.isEmpty()) {
+                    assigned.add(e.params.get(0).key());
+                    continue;
+                }
+                if (e.isCommand("AddText")) {
+                    boolean plain = e.params.size() == 1 && !e.params.get(0).isVariable();
+                    String value = plain ? e.params.get(0).text() : "";
+                    if (!plain || value.isEmpty() || value.contains("\nOR\n") || namesAny(value, assigned)
+                            || speakerChanged && value.contains("$")) break;
+                    add(Severity.WARN, "text-cell", row, "AddText \"" + abbreviate(value) + "\" could be part of the Text cell: nothing before it in"
+                            + " the Script prints or changes its tokens (RULES_WRITING \"Where text goes\"). Write the screen's paragraphs in the Text"
+                            + " cell separated by a blank line, or write AddText in the notes column with the reason to keep it");
+                    hasParagraph = true;
+                    continue;
+                }
+                if (e.isCommand(SPEAKER_COMMAND)) {
+                    speakerChanged = true;
+                    continue;
+                }
+                boolean highlight = e.isCommand("SetTextHighlights") || e.isCommand("Highlight") || e.isCommand("SetTextHighlightColors");
+                if (highlight && !hasParagraph || !TEXT_NEUTRAL_COMMANDS.contains(e.command)) break;
+            }
+        }
+    }
+
+    // A text reads a key when it names it unscoped ($name) or with any scope (.name); the memory pass replaces both.
+    private static boolean namesAny(String text, Set<String> keys) {
+        for (String key : keys) {
+            String name = key.substring(1);
+            if (text.contains("$" + name) || text.contains("." + name)) return true;
+        }
+        return false;
+    }
+
+    private static String abbreviate(String text) {
+        String line = text.replace('\n', ' ');
+        return line.length() <= 40 ? line : line.substring(0, 40) + "...";
     }
 
     // nskr_quest calls

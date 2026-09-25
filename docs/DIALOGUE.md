@@ -61,12 +61,12 @@ Quest dialogue is written in `rules.csv`, and its presentation uses vanilla comm
 
 ### Highlights
 
-`SetTextHighlights "phrase" ...` colours phrases in the last paragraph, in order, one argument per occurrence; `SetTextHighlightColors highlight bad` when the colours differ. Put them in the Script of the row whose Text they decorate, before any `AddText`. Tokens are allowed in the arguments; a quest token must be quoted, `SetTextHighlights "$nskr_kq_job3Start"` ([Tokens](../jars/src/lostsector/quest/README.md#tokens)).
+`SetTextHighlights "phrase" ...` colours phrases in the last paragraph, in order, one argument per occurrence; `SetTextHighlightColors highlight bad` when the colours differ. Put them at the top of the Script of the row whose Text they decorate: one `SetTextHighlights` for the whole cell, with the phrases of every paragraph in reading order. A second `SetTextHighlights` on the same paragraph replaces the first. Tokens are allowed in the arguments; a quest token must be quoted, `SetTextHighlights "$nskr_kq_job3Start"` ([Tokens](../jars/src/lostsector/quest/README.md#tokens)).
 
 ### Small and gray text
 
-- Gray narration (thoughts, asides) is `AddText "..." gray`. The Text column cannot be coloured, so a screen that is entirely gray keeps its Text cell empty and prints with `AddText`.
-- A consequence the prose does not state goes in small gray text after it: `AddTextSmall "Acquired the expedition coordinates" gray`, with `SetTextHighlights` for the name. Do not write a small line for a grant that prints its own receipt.
+- A screen's prose is one Text cell, its paragraphs separated by a blank line ([Where text goes](RULES_WRITING.md#where-text-goes)). Gray narration (thoughts, asides) is `AddText "..." gray`, one call per paragraph. The Text column cannot be coloured, so a screen that is entirely gray keeps its Text cell empty and prints with `AddText`.
+- A consequence the prose does not state goes in small gray text after it: `AddTextSmall "Acquired the expedition coordinates" gray`, with `SetTextHighlights` for the name, one call per line. Do not write a small line for a grant that prints its own receipt.
 - A custom colour is an `r,g,b,a` literal that matches the Java constant it mirrors; use it only where the intel already uses that colour.
 
 ### Images and planets

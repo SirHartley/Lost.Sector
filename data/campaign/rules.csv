@@ -18,8 +18,11 @@ nskr_heartFixer",,,
 # Kesteven tip,,,,,,
 nskr_hint_tipBar,AddBarEvents,nskr_quest hint check tipHere,"AddBarEvent nskr_hint_tipApproach ""Approach the Kesteven officer"" ""A Kesteven officer is busy with their datapad at one of the more secluded tables.""",,,HintsTipModule keeps one offer open at a time; tipHere also requires a Kesteven market
 nskr_hint_tipApproach,DialogOptionSelected,$option == nskr_hint_tipApproach,BeginConversation nskr_hint_officer true false,The officer is scrolling through various datafeeds - marking down important information while dismissing others. $nskr_hint_officer_HeOrShe is sipping on a moderately priced drink while you approach.,nskr_hint_tipDrinks:Offer to buy a round of drinks,"The Text shows before BeginConversation runs, so it uses the quest person token"
-nskr_hint_tipDrinks,DialogOptionSelected,$option == nskr_hint_tipDrinks,"AddText ""$HeOrShe takes a long drink from the glass. \""Ahh, but captain - you can solve my problem now. For a modest fee I could share a star system of interest to you.\""""
-AddText ""$HeOrShe looks directly at you. \""Are you interested?\""""","""So much data, so little time."" $heOrShe sighs. ""There's no way we can check out all these leads on our next expedition.""","nskr_hint_tipYes:""Yes.""
+nskr_hint_tipDrinks,DialogOptionSelected,$option == nskr_hint_tipDrinks,,"""So much data, so little time."" $heOrShe sighs. ""There's no way we can check out all these leads on our next expedition.""
+
+$HeOrShe takes a long drink from the glass. ""Ahh, but captain - you can solve my problem now. For a modest fee I could share a star system of interest to you.""
+
+$HeOrShe looks directly at you. ""Are you interested?""","nskr_hint_tipYes:""Yes.""
 nskr_hint_tipMaybe:""Maybe.""
 nskr_hint_tipDecline:Politely decline",
 nskr_hint_tipYes,DialogOptionSelected,$option == nskr_hint_tipYes,"FireBest nskr_hintTipOfferText
@@ -97,8 +100,9 @@ FireBest nskr_kqJackStatus
 FireAll nskr_kqJackOptions",,,"Picks the job 1 tip system where the old dialog did, before nskr_kq_jackStatusJob1Tip tests job1TipKnown."
 ,,,,,,
 nskr_kq_jackGreeting,nskr_kqJackGreeting,$nskr_kq_introduced,,"""Hmmm. Let me check around.""",,
-nskr_kq_jackIntro,nskr_kqJackGreeting,!$nskr_kq_introduced,"AddText ""\""What can I do for you captain?\""""
-$nskr_kq_introduced = true","On the holodisplay you are met with a charismatic smile from officer Lapua. A well groomed man, his manners have that corporate superficiality down to a perfection.",,
+nskr_kq_jackIntro,nskr_kqJackGreeting,!$nskr_kq_introduced,$nskr_kq_introduced = true,"On the holodisplay you are met with a charismatic smile from officer Lapua. A well groomed man, his manners have that corporate superficiality down to a perfection.
+
+""What can I do for you captain?""",,
 ,,,,,,
 nskr_kq_jackStatus,nskr_kqJackStatus,,FireBest nskr_kqNoJobs,,,Fallback.
 nskr_kq_jackStatusJob1Standing,nskr_kqJackStatus,"nskr_quest kq is NOT_STARTED
@@ -203,16 +207,20 @@ nskr_kq_jackOptBack,nskr_kqJackOptions,,SetShortcut nskr_kq_exit ESCAPE false,,n
 ,,,,,,
 # Jack: job 1,,,,,,
 nskr_kq_jackJob1Brief,DialogOptionSelected,"$option == nskr_kq_brief
-nskr_quest kq is NOT_STARTED","AddText ""\""You would be doing a set of tasks for us.\"" He starts reading out from something, probably an internal briefing.""
-AddText ""Task 1 is to track down and engage a fleet belonging to this AI threat, destroy at least one target ship while running our sensor package. Then return it to us here.""
-SetTextHighlights ""track down and engage a fleet belonging to this AI threat, destroy at least one target ship""
-AddText ""Task 2 is to recover a quantity of electronics and other crucial components from the wrecked ships. Around $nskr_kq_job1ArtifactCount should be enough""
-SetTextHighlights ""recover a quantity of electronics and other crucial components from the wrecked ships""
-AddText ""He pauses to give you a quick look, inspecting your reaction.""
-AddText ""\""You will be compensated of course, our payout for the job is $nskr_kq_job1Payout\""""
-SetTextHighlights ""$nskr_kq_job1Payout""
-AddText ""\""Can you handle this captain?\"" He raises his eyebrow inviting you to respond.""
-SetShortcut nskr_kq_exit ESCAPE false","""Our intelligence has been tracking down worrying reports of a new type of rogue AI threat lurking in the outer sector. We are in need of some help, in gathering intel on this entity.""","nskr_kq_confirm:Accept
+nskr_quest kq is NOT_STARTED","SetTextHighlights ""track down and engage a fleet belonging to this AI threat, destroy at least one target ship"" ""recover a quantity of electronics and other crucial components from the wrecked ships"" ""$nskr_kq_job1Payout""
+SetShortcut nskr_kq_exit ESCAPE false","""Our intelligence has been tracking down worrying reports of a new type of rogue AI threat lurking in the outer sector. We are in need of some help, in gathering intel on this entity.""
+
+""You would be doing a set of tasks for us."" He starts reading out from something, probably an internal briefing.
+
+Task 1 is to track down and engage a fleet belonging to this AI threat, destroy at least one target ship while running our sensor package. Then return it to us here.
+
+Task 2 is to recover a quantity of electronics and other crucial components from the wrecked ships. Around $nskr_kq_job1ArtifactCount should be enough
+
+He pauses to give you a quick look, inspecting your reaction.
+
+""You will be compensated of course, our payout for the job is $nskr_kq_job1Payout""
+
+""Can you handle this captain?"" He raises his eyebrow inviting you to respond.","nskr_kq_confirm:Accept
 nskr_kq_ask:""I have some questions.""
 nskr_kq_exit:Back",
 nskr_kq_jackJob1Accept,DialogOptionSelected,"$option == nskr_kq_confirm
@@ -265,20 +273,23 @@ nskr_kq_jackJob1Done,DialogOptionSelected,"$option == nskr_kq_brief
 nskr_quest kq is JOB1_DONE",,"""With all this secured, we should learn a lot more about this ""Enigma"" entity."" He has a self satisfied look on his face.","nskr_kq_confirm:Continue
 nskr_kq_ask:""I have some questions.""",
 nskr_kq_jackJob1Paid,DialogOptionSelected,"$option == nskr_kq_confirm
-nskr_quest kq is JOB1_DONE","AddText ""Officer Lapua gives you a look like he isn't supposed to do this. \""I also threw in a little bonus for a job well done. It's a new modspec courtesy of our own R&D division.\""""
-AddCredits 155000
+nskr_quest kq is JOB1_DONE","AddCredits 155000
 AdjustRep kesteven 5
 AdjustRepPerson nskr_opguy COOPERATIVE 10
 nskr_quest kq do grantModspec
 PlaySound ui_rep_raise
 nskr_quest kq advance JOB1_DONE JOB3_OFFERED
-SetShortcut nskr_kq_exit ESCAPE false","""Nice work captain. I hope we can continue developing this relationship further in the future.""",nskr_kq_exit:Leave,AddCredits pays KestevenHubModule.STAGE1_PAYOUT.
+SetShortcut nskr_kq_exit ESCAPE false","""Nice work captain. I hope we can continue developing this relationship further in the future.""
+
+Officer Lapua gives you a look like he isn't supposed to do this. ""I also threw in a little bonus for a job well done. It's a new modspec courtesy of our own R&D division.""",nskr_kq_exit:Leave,AddCredits pays KestevenHubModule.STAGE1_PAYOUT.
 ,,,,,,
 # Jack: jobs 3 and 5,,,,,,
 nskr_kq_jackJob3Brief,DialogOptionSelected,"$option == nskr_kq_brief
-nskr_quest kq is JOB3_OFFERED","AddText ""\""Oh, by the way we've set up an exchange program for any Artifact Electronics you recover. Go talk to Alice about it.\"" He gives you a quick wink that you barely catch.""
-SetTextHighlights ""exchange program for any Artifact Electronics""
-AddText ""\""Hope you ready for more work.\"" He seems eager to get things moving.""","""You'll need to talk to Alice for this one. Your contact in R&D, I hear she needs some work done.""",nskr_kq_confirm:Continue,
+nskr_quest kq is JOB3_OFFERED","SetTextHighlights ""exchange program for any Artifact Electronics""","""You'll need to talk to Alice for this one. Your contact in R&D, I hear she needs some work done.""
+
+""Oh, by the way we've set up an exchange program for any Artifact Electronics you recover. Go talk to Alice about it."" He gives you a quick wink that you barely catch.
+
+""Hope you ready for more work."" He seems eager to get things moving.",nskr_kq_confirm:Continue,
 nskr_kq_jackJob3Handoff,DialogOptionSelected,"$option == nskr_kq_confirm
 nskr_quest kq is JOB3_OFFERED","nskr_quest kq advance JOB3_OFFERED JOB3_BRIEFING
 AddPotentialContact
@@ -286,10 +297,11 @@ AddText ""\""Go talk to Alice now.\""""
 SetShortcut nskr_kq_exit ESCAPE false",,nskr_kq_exit:Leave,
 ,,,,,,
 nskr_kq_jackJob5Brief,DialogOptionSelected,"$option == nskr_kq_brief
-nskr_quest kq is JOB5_OFFERED","AddText ""\""Head to the bar and give the signal to our man waiting there. You will need to discuss this in person with me and Alice.\"" He gestures you to get moving.""
-SetTextHighlights ""Go to the bar""
+nskr_quest kq is JOB5_OFFERED","SetTextHighlights ""Go to the bar""
 nskr_quest kq advance JOB5_OFFERED JOB5_MEETING
-SetShortcut nskr_kq_exit ESCAPE false","""It's time we told you about what we are actually looking for here. What's the real point of going after this Enigma AI."" His manners are more commanding than usual, this must be important.",nskr_kq_exit:Leave,"The highlight phrase does not occur in the text, as before."
+SetShortcut nskr_kq_exit ESCAPE false","""It's time we told you about what we are actually looking for here. What's the real point of going after this Enigma AI."" His manners are more commanding than usual, this must be important.
+
+""Head to the bar and give the signal to our man waiting there. You will need to discuss this in person with me and Alice."" He gestures you to get moving.",nskr_kq_exit:Leave,"The highlight phrase does not occur in the text, as before."
 ,,,,,,
 nskr_kq_jackLeads,DialogOptionSelected,"$option == nskr_kq_brief
 nskr_quest kq is JOB5_DISKS
@@ -298,8 +310,9 @@ $id == nskr_opguy
 FireBest nskr_kqDelveUpdated
 nskr_quest kq set JOB5_JACK_TIP
 SetShortcut nskr_kq_exit ESCAPE false",,nskr_kq_exit:Leave,
-nskr_kq_jackLeadsEliza,nskr_kqJackLeadsLines,!nskr_quest kq flag ELIZA_FOUND,"SetTextHighlights ""Eliza""
-AddText ""\""That's your best bet on finding her. I'm sure you can get something out of that scum, if you loosen their lips with some free drinks.\"" He gives you a quick nod.""","""You'll need to find out where Eliza is hiding. You need to go undercover, and start asking questions from local pirates.""",,
+nskr_kq_jackLeadsEliza,nskr_kqJackLeadsLines,!nskr_quest kq flag ELIZA_FOUND,"SetTextHighlights ""Eliza""","""You'll need to find out where Eliza is hiding. You need to go undercover, and start asking questions from local pirates.""
+
+""That's your best bet on finding her. I'm sure you can get something out of that scum, if you loosen their lips with some free drinks."" He gives you a quick nod.",,
 nskr_kq_jackLeadsElizaFound,nskr_kqJackLeadsLines,"nskr_quest kq flag ELIZA_FOUND
 !nskr_quest kq flag ELIZA_HELPED
 !nskr_quest kq flag ELIZA_KILLED",,"""Seems like you've already figured out where Eliza is hiding. Good, now get the disks from her.""",,
@@ -364,8 +377,9 @@ nskr_kq_jackAskNextJobSel,DialogOptionSelected,$option == nskr_kq_jackAskNextJob
 FireAll nskr_kqJackQuestions","He nods in approval. ""We do have more work for you, come talk to me later.""",,
 ,,,,,,
 nskr_kq_jackStorySkip,DialogOptionSelected,"$option == nskr_kq_storySkip
-$id == nskr_opguy","AddText ""\""You know we got this strange lead recently pointing to these coordinates, I think you should investigate.\"" He looks a little worried. \""Huh, I actually don't remember how we got these...\""""
-FireBest nskr_kqStorySkipped","He looks almost flustered. ""What- How did you..."" He thinks for a moment.",,
+$id == nskr_opguy",FireBest nskr_kqStorySkipped,"He looks almost flustered. ""What- How did you..."" He thinks for a moment.
+
+""You know we got this strange lead recently pointing to these coordinates, I think you should investigate."" He looks a little worried. ""Huh, I actually don't remember how we got these...""",,
 ,,,,,,
 # Alice,,,,,,
 nskr_kq_aliceChat,DialogOptionSelected,"$option == nskr_kq_chat
@@ -376,8 +390,9 @@ FireAll nskr_kqAliceOptions",,,
 nskr_kq_aliceGreeting,nskr_kqAliceGreeting,"!nskr_quest kq is NOT_STARTED JOB1_ACTIVE JOB1_DONE JOB3_OFFERED
 $nskr_kq_introduced",,"""Oh, you're here.""",,No greeting before JOB3_BRIEFING.
 nskr_kq_aliceIntro,nskr_kqAliceGreeting,"!nskr_quest kq is NOT_STARTED JOB1_ACTIVE JOB1_DONE JOB3_OFFERED
-!$nskr_kq_introduced","AddText ""\""Ahh, yes it's you.\""""
-$nskr_kq_introduced = true","A woman is staring at you through the holodisplay, her expression is unchanging. Manager Lumi is intently analyzing every part of your visage.",,
+!$nskr_kq_introduced",$nskr_kq_introduced = true,"A woman is staring at you through the holodisplay, her expression is unchanging. Manager Lumi is intently analyzing every part of your visage.
+
+""Ahh, yes it's you.""",,
 ,,,,,,
 nskr_kq_aliceStatus,nskr_kqAliceStatus,,FireBest nskr_kqNoJobs,,,Fallback.
 nskr_kq_aliceStatusBusy,nskr_kqAliceStatus,nskr_quest kq is NOT_STARTED JOB1_ACTIVE JOB1_DONE JOB3_OFFERED,,"""Why are you contacting me? I am busy with work.""",,
@@ -474,18 +489,21 @@ SetShortcut nskr_kq_exit ESCAPE false",,nskr_kq_exit:Leave,
 ,,,,,,
 nskr_kq_aliceJob3Report,DialogOptionSelected,"$option == nskr_kq_brief
 nskr_quest kq is JOB3_DONE
-!nskr_quest kq flag JOB3_FAILED","AddText ""She has a slight, but devious smile on her face.""
-AddText ""\""Don't think I forgot about your payment.\""""","""This will set their efforts back for quite some time, giving us ample time to progress our own study of Enigma.""","nskr_kq_confirm:Continue
+!nskr_quest kq flag JOB3_FAILED",,"""This will set their efforts back for quite some time, giving us ample time to progress our own study of Enigma.""
+
+She has a slight, but devious smile on her face.
+
+""Don't think I forgot about your payment.""","nskr_kq_confirm:Continue
 nskr_kq_ask:""I have some questions.""",
 nskr_kq_aliceJob3Failed,DialogOptionSelected,"$option == nskr_kq_brief
 nskr_quest kq is JOB3_DONE
-nskr_quest kq flag JOB3_FAILED","AddText ""\""Don't even think you'll be getting paid for this.\""""
-AddText ""She seems quite frustrated with you."" gray","""Let's hope they don't pull ahead in this race thanks to your little fuck up.""","nskr_kq_confirm:Continue
+nskr_quest kq flag JOB3_FAILED","AddText ""She seems quite frustrated with you."" gray","""Let's hope they don't pull ahead in this race thanks to your little fuck up.""
+
+""Don't even think you'll be getting paid for this.""","nskr_kq_confirm:Continue
 nskr_kq_ask:""I have some questions.""",
 nskr_kq_aliceJob3Paid,DialogOptionSelected,"$option == nskr_kq_confirm
 nskr_quest kq is JOB3_DONE
-!nskr_quest kq flag JOB3_FAILED","AddText ""\""Oh, and there's a new modspec for you to test, go give it a spin.\""""
-AddCredits 205000
+!nskr_quest kq flag JOB3_FAILED","AddCredits 205000
 AdjustRep kesteven 5
 AdjustRepPerson nskr_researcher COOPERATIVE 10
 nskr_quest kq do grantExchangePoints
@@ -494,7 +512,9 @@ SetTextHighlights ""50,000 exchange points""
 nskr_quest kq do grantModspec
 PlaySound ui_rep_raise
 nskr_quest kq advance JOB3_DONE JOB4_WAITING
-SetShortcut nskr_kq_exit ESCAPE false","""I'm giving you some exchange points as a bonus. Don't forget to spend them.""",nskr_kq_exit:Leave,"AddCredits pays KestevenHubModule.STAGE3_PAYOUT; grantExchangePoints grants the 50,000 points the receipt names."
+SetShortcut nskr_kq_exit ESCAPE false","""I'm giving you some exchange points as a bonus. Don't forget to spend them.""
+
+""Oh, and there's a new modspec for you to test, go give it a spin.""",nskr_kq_exit:Leave,"AddCredits pays KestevenHubModule.STAGE3_PAYOUT; grantExchangePoints grants the 50,000 points the receipt names."
 nskr_kq_aliceJob3Penalty,DialogOptionSelected,"$option == nskr_kq_confirm
 nskr_quest kq is JOB3_DONE
 nskr_quest kq flag JOB3_FAILED","AddText ""Okay, shes *really* frustrated with you."" gray
@@ -527,16 +547,19 @@ SetShortcut nskr_kq_exit ESCAPE false",,nskr_kq_exit:Leave,
 ,,,,,,
 nskr_kq_aliceJob4Report,DialogOptionSelected,"$option == nskr_kq_brief
 nskr_quest kq is JOB4_DONE
-!nskr_quest kq flag JOB4_FRIENDLY_HELPED","AddText ""\""Jack will handle sending the rescue fleet over to get the Operations fleet back home.\""""","""Ambushed by an Enigma strike group you say? Worrying. We were hoping their attacks would stay uncoordinated, but there is worrying trend of increased precision and purpose in their activity."" There is a bitter look on her face.","nskr_kq_confirm:Continue
+!nskr_quest kq flag JOB4_FRIENDLY_HELPED",,"""Ambushed by an Enigma strike group you say? Worrying. We were hoping their attacks would stay uncoordinated, but there is worrying trend of increased precision and purpose in their activity."" There is a bitter look on her face.
+
+""Jack will handle sending the rescue fleet over to get the Operations fleet back home.""","nskr_kq_confirm:Continue
 nskr_kq_ask:""I have some questions.""",
 nskr_kq_aliceJob4Helped,DialogOptionSelected,"$option == nskr_kq_brief
 nskr_quest kq is JOB4_DONE
-nskr_quest kq flag JOB4_FRIENDLY_HELPED","AddText ""\""I received a transmission from the Operations fleet that you managed to get them back to running order. Impressive initiative captain, competent people are a valued resource in this sector.\""""","""Ambushed by an Enigma strike group you say? Worrying, we were hoping their attacks would stay uncoordinated, but there is worrying trend of increased precision and purpose in their activity."" There is a puzzled look on her face.","nskr_kq_confirm:Continue
+nskr_quest kq flag JOB4_FRIENDLY_HELPED",,"""Ambushed by an Enigma strike group you say? Worrying, we were hoping their attacks would stay uncoordinated, but there is worrying trend of increased precision and purpose in their activity."" There is a puzzled look on her face.
+
+""I received a transmission from the Operations fleet that you managed to get them back to running order. Impressive initiative captain, competent people are a valued resource in this sector.""","nskr_kq_confirm:Continue
 nskr_kq_ask:""I have some questions.""",
 nskr_kq_aliceJob4Paid,DialogOptionSelected,"$option == nskr_kq_confirm
 nskr_quest kq is JOB4_DONE
-!nskr_quest kq flag JOB4_FRIENDLY_HELPED","AddText ""\""Oh- by the way come talk to me later if you want to readjust some of your ships back to standard specs.\""""
-AddStoryPoints 1
+!nskr_quest kq flag JOB4_FRIENDLY_HELPED","AddStoryPoints 1
 AddCredits 285000
 AdjustRep kesteven 5
 AdjustRepPerson nskr_researcher COOPERATIVE 10
@@ -546,12 +569,12 @@ nskr_quest kq advance JOB4_DONE JOB5_OFFERED
 AddPotentialContact
 AddTextSmall ""Increased contact level with Kesteven contacts"" gray
 nskr_quest kq do raiseJackImportance
-SetShortcut nskr_kq_exit ESCAPE false","""Here's the payment, as promised. A whole new modspec too for you to try, at least try to act grateful."" She smirks, it seems like she's joking, but it's hard to tell.",nskr_kq_exit:Leave,AddCredits pays KestevenHubModule.STAGE4_PAYOUT.
+SetShortcut nskr_kq_exit ESCAPE false","""Here's the payment, as promised. A whole new modspec too for you to try, at least try to act grateful."" She smirks, it seems like she's joking, but it's hard to tell.
+
+""Oh- by the way come talk to me later if you want to readjust some of your ships back to standard specs.""",nskr_kq_exit:Leave,AddCredits pays KestevenHubModule.STAGE4_PAYOUT.
 nskr_kq_aliceJob4PaidHelped,DialogOptionSelected,"$option == nskr_kq_confirm
 nskr_quest kq is JOB4_DONE
-nskr_quest kq flag JOB4_FRIENDLY_HELPED","AddText ""\""Also, there's the payment, as promised. And a whole new modspec too for you to try, at least try to act grateful.\"" She smirks, it seems like she's joking, but it's hard to tell.""
-AddText ""\""Oh- by the way come talk to me later if you want to readjust some of your ships back to standard specs.\""""
-AddStoryPoints 1
+nskr_quest kq flag JOB4_FRIENDLY_HELPED","AddStoryPoints 1
 AddCredits 285000
 AdjustRep kesteven 5
 AdjustRepPerson nskr_researcher COOPERATIVE 10
@@ -562,7 +585,11 @@ nskr_quest kq advance JOB4_DONE JOB5_OFFERED
 AddPotentialContact
 AddTextSmall ""Increased contact level with Kesteven contacts"" gray
 nskr_quest kq do raiseJackImportance
-SetShortcut nskr_kq_exit ESCAPE false","""You are receiving one of the prototype artifacts we managed to recover as a bonus. Treat it well, these are one of a kind.""",nskr_kq_exit:Leave,AddCredits pays KestevenHubModule.STAGE4_PAYOUT.
+SetShortcut nskr_kq_exit ESCAPE false","""You are receiving one of the prototype artifacts we managed to recover as a bonus. Treat it well, these are one of a kind.""
+
+""Also, there's the payment, as promised. And a whole new modspec too for you to try, at least try to act grateful."" She smirks, it seems like she's joking, but it's hard to tell.
+
+""Oh- by the way come talk to me later if you want to readjust some of your ships back to standard specs.""",nskr_kq_exit:Leave,AddCredits pays KestevenHubModule.STAGE4_PAYOUT.
 ,,,,,,
 # Alice: job 5,,,,,,
 nskr_kq_aliceLeads,DialogOptionSelected,"$option == nskr_kq_brief
@@ -573,7 +600,9 @@ FireAll nskr_kqAliceLeadsLines
 FireBest nskr_kqDelveUpdated
 nskr_quest kq set JOB5_ALICE_TIP
 SetShortcut nskr_kq_exit ESCAPE false",,nskr_kq_exit:Leave,"Picks the job 3 target where the old dialog did, before the lines read it."
-nskr_kq_aliceLeadsBothSatellites,nskr_kqAliceLeadsLines,nskr_quest kq check twoSatellites,"AddText ""\""Efficient work captain.\""""","""Looks like you have both the known satellites covered, I can't help you much more. You should talk to Jack if you haven't already."" She nods approvingly.",,
+nskr_kq_aliceLeadsBothSatellites,nskr_kqAliceLeadsLines,nskr_quest kq check twoSatellites,,"""Looks like you have both the known satellites covered, I can't help you much more. You should talk to Jack if you haven't already."" She nods approvingly.
+
+""Efficient work captain.""",,
 nskr_kq_aliceLeadsJob3Satellite,nskr_kqAliceLeadsLines,"nskr_quest kq check oneSatellite
 nskr_quest kq flag SATELLITE4_RECOVERED","FireBest nskr_kqAliceJob3Satellite
 nskr_quest kq do markJob3Satellite","""As you know those old comm satellites are the target. ""She pauses to think for a second."" It must be that Tri-tachyon expedition was going after one, it has to be the one your looking for.""",,
@@ -614,12 +643,13 @@ nskr_kq_aliceFrostFound,DialogOptionSelected,"$option == nskr_kq_confirm
 nskr_quest kq is JOB5_DISKS
 nskr_quest kq flag JOB5_JACK_TIP
 nskr_quest kq flag JOB5_ALICE_TIP
-!nskr_quest kq check allDisks","AddText ""\""I think you are right, impressive. Now find the tundra planet in the $nskr_kq_frostName ASAP.\""""
-SetTextHighlights ""$nskr_kq_frostName""
+!nskr_quest kq check allDisks","SetTextHighlights ""$nskr_kq_frostName""
 PlaySound ui_rep_raise
 FireBest nskr_kqDelveUpdated
 nskr_quest kq set FROST_FOUND
-SetShortcut nskr_kq_exit ESCAPE false","Alice pauses for a moment to think about what you said, and then proceeds to look up something on her datapad.",nskr_kq_exit:Leave,
+SetShortcut nskr_kq_exit ESCAPE false","Alice pauses for a moment to think about what you said, and then proceeds to look up something on her datapad.
+
+""I think you are right, impressive. Now find the tundra planet in the $nskr_kq_frostName ASAP.""",nskr_kq_exit:Leave,
 ,,,,,,
 nskr_kq_aliceCacheBrief,DialogOptionSelected,"$option == nskr_kq_brief
 nskr_quest kq is JOB5_DISKS
@@ -627,25 +657,31 @@ $id == nskr_researcher
 nskr_quest kq flag JOB5_JACK_TIP
 nskr_quest kq flag JOB5_ALICE_TIP
 nskr_quest kq flag JOB5_ALICE_TIP2
-nskr_quest kq check allDisks","AddText ""\""This huge breakthrough has me on edge captain, we will finally be uncovering *it* from the Cache site. It being your next objective, the Unlimited Production Chip.\""""
-SetTextHighlights ""Unlimited Production Chip""
-AddText ""She gives you a stern look. \""This is as important as it gets, the Chip holds the key to great technologies. Do not screw this up captain.\""""
-AddText ""\""The fierce loyalty and violence the Enigma is capable of is not to be underestimated. Their hatred of anyone with their new technology is peculiar, it's like the collapse made them think anyone else isn't meant to exist at all. They are helplessly trying to maintain some broken status quo.\"" She lets out a chuckle. \""Hah, relax, I hope I didn't scare you out of the job captain, I'm sure you are more than capable of dealing with some Enigma spooks at this point.\""""
-AddText ""She's already busy working on multiple holofeeds while she speaks. \""Now, you will enter the site, disable whatever security systems they have left, and recover the Chip. Understood, captain?\""""
+nskr_quest kq check allDisks","SetTextHighlights ""Unlimited Production Chip""
 AddText ""She's not taking *no* as an answer."" gray
-FireAll nskr_kqAliceCacheOptions","""We will start decrypting the disks as soon as we get them unloaded from your cargo. We should have some results in a few hours. Now onto your next task.""",,
+FireAll nskr_kqAliceCacheOptions","""We will start decrypting the disks as soon as we get them unloaded from your cargo. We should have some results in a few hours. Now onto your next task.""
+
+""This huge breakthrough has me on edge captain, we will finally be uncovering *it* from the Cache site. It being your next objective, the Unlimited Production Chip.""
+
+She gives you a stern look. ""This is as important as it gets, the Chip holds the key to great technologies. Do not screw this up captain.""
+
+""The fierce loyalty and violence the Enigma is capable of is not to be underestimated. Their hatred of anyone with their new technology is peculiar, it's like the collapse made them think anyone else isn't meant to exist at all. They are helplessly trying to maintain some broken status quo."" She lets out a chuckle. ""Hah, relax, I hope I didn't scare you out of the job captain, I'm sure you are more than capable of dealing with some Enigma spooks at this point.""
+
+She's already busy working on multiple holofeeds while she speaks. ""Now, you will enter the site, disable whatever security systems they have left, and recover the Chip. Understood, captain?""",,
 nskr_kq_aliceCacheYes,nskr_kqAliceCacheOptions,,,,"nskr_kq_confirm:""Yes""",
 nskr_kq_aliceCacheLie,nskr_kqAliceCacheOptions,nskr_quest kq flag ELIZA_AGREED_SINCERELY,,,"nskr_kq_confirmLie:""Yes"" (lie)",
 nskr_kq_aliceCacheFound,DialogOptionSelected,"$option == nskr_kq_confirm
 nskr_quest kq is JOB5_DISKS
-nskr_quest kq check allDisks","AddText ""Finally Alice arrives back. \""We did it $playerFirstName, we have the exact location of the Cache. I've handed the hyperspace coordinates over to your nav officer.\""""
-AddText ""\""Oh by the way, you can not access the site by normal means. I hope you know how to perform a transverse jump maneuver, if not maybe someone at Galatia Academy can help you. Now get to work.\""""
-AddTextSmall ""Acquired coordinates to the Cache Site"" gray
+nskr_quest kq check allDisks","AddTextSmall ""Acquired coordinates to the Cache Site"" gray
 SetTextHighlights ""Cache Site""
 PlaySound ui_rep_raise
 nskr_quest kq set CACHE_FOUND
 nskr_quest kq advance JOB5_DISKS CACHE_KNOWN
-SetShortcut nskr_kq_exit ESCAPE false","Alice leaves to begin work on the decryption. A few hours pass as you wait in the lobby, you try to pass the time by scrolling on your TriPad. You regret not going to the local bar to pass the time instead.",nskr_kq_exit:Leave,
+SetShortcut nskr_kq_exit ESCAPE false","Alice leaves to begin work on the decryption. A few hours pass as you wait in the lobby, you try to pass the time by scrolling on your TriPad. You regret not going to the local bar to pass the time instead.
+
+Finally Alice arrives back. ""We did it $playerFirstName, we have the exact location of the Cache. I've handed the hyperspace coordinates over to your nav officer.""
+
+""Oh by the way, you can not access the site by normal means. I hope you know how to perform a transverse jump maneuver, if not maybe someone at Galatia Academy can help you. Now get to work.""",nskr_kq_exit:Leave,
 ,,,,,,
 # Alice: questions,,,,,,
 nskr_kq_aliceAsk,nskr_kqAsk,$id == nskr_researcher,FireAll nskr_kqAliceQuestions,,,
@@ -688,8 +724,9 @@ nskr_kq_aliceAskAloneSel,DialogOptionSelected,$option == nskr_kq_aliceAskAlone,"
 FireAll nskr_kqAliceQuestions","""This is a covert operation. If someone asks you don't know me, and so on.""",,
 nskr_kq_aliceAskNecessarySel,DialogOptionSelected,$option == nskr_kq_aliceAskNecessary,"$nskr_kq_askedNecessary = true
 FireAll nskr_kqAliceQuestions","""Yes, we can't risk Tri-Tachyon interfering in our business. Between you and me, I know they're somehow behind this Enigma activity.""",,
-nskr_kq_aliceAskRefuseSel,DialogOptionSelected,$option == nskr_kq_aliceAskRefuse,"AddText ""\""Unless you are being serious about this.\"" She gives you a very mean look.""
-SetShortcut nskr_kq_brief ESCAPE false","""Too bad. The offer stands if you change your mind.""","nskr_kq_refuseConfirm:""yes""
+nskr_kq_aliceAskRefuseSel,DialogOptionSelected,$option == nskr_kq_aliceAskRefuse,SetShortcut nskr_kq_brief ESCAPE false,"""Too bad. The offer stands if you change your mind.""
+
+""Unless you are being serious about this."" She gives you a very mean look.","nskr_kq_refuseConfirm:""yes""
 nskr_kq_brief:""No""",
 nskr_kq_aliceAskTargetSel,DialogOptionSelected,$option == nskr_kq_aliceAskTarget,"$nskr_kq_askedTarget = true
 FireAll nskr_kqAliceQuestions","You send the coordinates you acquired over to her. ""Interesting..."" She makes a few quick searches on her datapad. ""The system has been marked as a possible Enigma site in our database. Those sly bastards were definitely up to something.""",,
@@ -713,17 +750,19 @@ nskr_kq_aliceAskArtifactSel,DialogOptionSelected,$option == nskr_kq_aliceAskArti
 FireAll nskr_kqAliceQuestions","""These ""Artifacts"" aren't physical objects per say, more like collections of valuable data. Hidden in old comm satellite networks, and such. This data is invaluable for anyone trying to understand what this ""Enigma"" truly is, and where it comes from.""",,
 ,,,,,,
 nskr_kq_aliceRefuseConfirm,DialogOptionSelected,"$option == nskr_kq_refuseConfirm
-nskr_quest kq is JOB3_BRIEFING","AddText ""\""I am very disappointed in you captain.\"" She looks eager to cut the comm link on you.""
-AdjustRep kesteven -5
+nskr_quest kq is JOB3_BRIEFING","AdjustRep kesteven -5
 AdjustRepPerson nskr_researcher VENGEFUL -10
 PlaySound ui_rep_drop
 nskr_quest kq advance JOB3_BRIEFING JOB4_WAITING
 nskr_quest kq set JOB3_REFUSED
 nskr_quest kq do placeJob3Leftovers
-SetShortcut nskr_kq_exit ESCAPE false","""Damn, I really wanted to avoid using our own black ops for this...""",nskr_kq_exit:Leave,
+SetShortcut nskr_kq_exit ESCAPE false","""Damn, I really wanted to avoid using our own black ops for this...""
+
+""I am very disappointed in you captain."" She looks eager to cut the comm link on you.",nskr_kq_exit:Leave,
 nskr_kq_aliceStorySkip,DialogOptionSelected,"$option == nskr_kq_storySkip
-$id == nskr_researcher","AddText ""\""You know we got this strange lead recently pointing to these coordinates, I think you should investigate.\"" She looks distressed. \""Huh... I actually don't remember how we got these...\""""
-FireBest nskr_kqStorySkipped","She looks confused for a moment. ""What- How did you..."" She thinks for a moment.",,
+$id == nskr_researcher",FireBest nskr_kqStorySkipped,"She looks confused for a moment. ""What- How did you..."" She thinks for a moment.
+
+""You know we got this strange lead recently pointing to these coordinates, I think you should investigate."" She looks distressed. ""Huh... I actually don't remember how we got these...""",,
 ,,,,,,
 # Nicholas,,,,,,
 nskr_kq_nicholasChat,DialogOptionSelected,"$option == nskr_kq_chat
@@ -747,10 +786,11 @@ nskr_quest kq check job4TargetKnown
 nskr_kq_nicholasOptBack,nskr_kqNicholasOptions,,SetShortcut nskr_kq_exit ESCAPE false,,nskr_kq_exit:Back,
 ,,,,,,
 nskr_kq_nicholasJob4Brief,DialogOptionSelected,"$option == nskr_kq_brief
-nskr_quest kq is JOB4_ACTIVE","AddText ""\""There's this one thing. uhh-\"" He shifts around in his seat. \""A few days after their last known report, we picked up a burst of signals coming from a specific part of the $nskr_kq_job4TargetSystem. \""He looks down at something.\"" The um- signal was much weaker in magnitude, to the level that we could only decipher its direction...\""""
-SetTextHighlights ""$nskr_kq_job4TargetSystem""
+nskr_quest kq is JOB4_ACTIVE","SetTextHighlights ""$nskr_kq_job4TargetSystem""
 nskr_quest kq do recordNicholasTip
-FireBest nskr_kqNicholasTipEnd","""So, the fleet was instructed to send encrypted hyperwave signals using rather expensive Domain comms equipment. You know I hope they didn't lose that stuff... Anyways, every few weeks they would report on their progress "" He scratches his head. ""and umm- we could pick up those transmissions here and decrypt them.""",,
+FireBest nskr_kqNicholasTipEnd","""So, the fleet was instructed to send encrypted hyperwave signals using rather expensive Domain comms equipment. You know I hope they didn't lose that stuff... Anyways, every few weeks they would report on their progress "" He scratches his head. ""and umm- we could pick up those transmissions here and decrypt them.""
+
+""There's this one thing. uhh-"" He shifts around in his seat. ""A few days after their last known report, we picked up a burst of signals coming from a specific part of the $nskr_kq_job4TargetSystem. ""He looks down at something."" The um- signal was much weaker in magnitude, to the level that we could only decipher its direction...""",,
 nskr_kq_nicholasTipEnd,nskr_kqNicholasTipEnd,,"AddTextSmall ""Updated log entry for Operation Lifesaver"" gray
 SetTextHighlights ""Operation Lifesaver""
 PlaySound ui_noise_static
@@ -891,24 +931,37 @@ nskr_kq_partyBlurb,AddBarEvents,"nskr_quest kq is JOB3_ACTIVE JOB3_TARGET_KNOWN
 !nskr_quest kq flag JOB3_PARTY_DECLINED
 nskr_quest kq check partyHere","AddBarEvent nskr_kq_partyApproach ""Approach the employee, and see what you can find out"" ""A lone employee in a Tri-Tachyon suit is drinking at one of the tables.""",,,
 nskr_kq_partyApproach,DialogOptionSelected,$option == nskr_kq_partyApproach,BeginConversation nskr_kq_partyEmployee true false,The employee seems to be busy in thought. There are multiple empty glasses on the table already.,nskr_kq_partyOffer:Offer to buy the next round of drinks,
-nskr_kq_partyOffer,DialogOptionSelected,$option == nskr_kq_partyOffer,"AddText ""\""Thanks captain, it's been a particularly tedious work week for me.\"" $HeOrShe accepts your offer.""
-AddText ""You have some inconsequential smalltalk with the employee, and then proceed to order the drinks.""",You can see $hisOrHer mood immediately improve on the prospect of free drinks.,nskr_kq_partyRound:Continue,
-nskr_kq_partyRound,DialogOptionSelected,$option == nskr_kq_partyRound,"AddText ""\""I'm feeling another round captain, you in?\"" $HeOrShe asks.""","The drinks arrive shortly and the employee starts drinking at an impressive pace. You try to keep up with $himOrHer, but it is rather difficult.","nskr_kq_partyAgree:Agree
+nskr_kq_partyOffer,DialogOptionSelected,$option == nskr_kq_partyOffer,,"You can see $hisOrHer mood immediately improve on the prospect of free drinks.
+
+""Thanks captain, it's been a particularly tedious work week for me."" $HeOrShe accepts your offer.
+
+You have some inconsequential smalltalk with the employee, and then proceed to order the drinks.",nskr_kq_partyRound:Continue,
+nskr_kq_partyRound,DialogOptionSelected,$option == nskr_kq_partyRound,,"The drinks arrive shortly and the employee starts drinking at an impressive pace. You try to keep up with $himOrHer, but it is rather difficult.
+
+""I'm feeling another round captain, you in?"" $HeOrShe asks.","nskr_kq_partyAgree:Agree
 nskr_kq_partyDisagree:Disagree",
 nskr_kq_partyDisagree,DialogOptionSelected,$option == nskr_kq_partyDisagree,"AddText ""$HeOrShe does make a good point, when has one more drink ever hurt anybody?"" gray","""Oh come one captain, just one more drink. I know you can handle more liqueur than that."" $HeOrShe tries to point out.","nskr_kq_partyAgree:Agree
 nskr_kq_partyDecline:Leave",
-nskr_kq_partyAgree,DialogOptionSelected,$option == nskr_kq_partyAgree,"AddText ""Another drink, and another set of smalltalk later, you finally hear something interesting.""
-AddText ""\""Someone from the higher management is having a party today, and you seem like the fun type. I could get you in if you're interested in joining me.\"" $HeOrShe is waiting for your response.""","""That's the spirit captain."" $HeOrShe seems eager to get drinking.","nskr_kq_partyInvite:Accept the offer
+nskr_kq_partyAgree,DialogOptionSelected,$option == nskr_kq_partyAgree,,"""That's the spirit captain."" $HeOrShe seems eager to get drinking.
+
+Another drink, and another set of smalltalk later, you finally hear something interesting.
+
+""Someone from the higher management is having a party today, and you seem like the fun type. I could get you in if you're interested in joining me."" $HeOrShe is waiting for your response.","nskr_kq_partyInvite:Accept the offer
 nskr_kq_partyDecline:Leave",
 nskr_kq_partyInvite,DialogOptionSelected,$option == nskr_kq_partyInvite,"AddText ""During this round of drinks you realize that you feel a little dizzy, better slow down. You're supposed to be on duty."" gray
 AddText ""You drink up some more, and then get ready to move on with the employee.""","""Ah yes, but first let us get *another* drink."" $HeOrShe says cheerfully.",nskr_kq_partyTravel:Continue,
-nskr_kq_partyTravel,DialogOptionSelected,$option == nskr_kq_partyTravel,"ShowDefaultVisual
-AddText ""Finally you arrive in what looks like the right spot. There is a bouncer at the front door, they are busy handling what you presume are other guests.""
-AddText ""Somehow your bodyguards managed to not only keep up with your bumbling, but also blended into the local crowd. but it seems like they'll have to wait outside for this one.""
-AddText ""The employee has a short chat with the bouncer, he flashes some papers - and somewhat surprisingly you are let in. First you do have to hand over your sidearm, of course.""","You make your way around the local transport system. You suspect that you might have gotten lost multiple times, as you try to follow $himOrHer around. The alcohol is not helping.",nskr_kq_partyArrive:Continue,
-nskr_kq_partyArrive,DialogOptionSelected,$option == nskr_kq_partyArrive,"ShowPersonVisual true
-AddText ""\""I hope you aren't disappointed my friend. Now let's grab something to drink.\"" The employee says with a slick smile.""
-AddText ""You weave through the crowd of people, then you see vast array of different drinks from all over the sector, ready to be served. \""So, what will you be having captain?\"" $HeOrShe is motioning you to grab one of the drinks.""","The establishment is filled with people, a large and ornate chandelier lights up the people in expensive suits, with an intricate dance of colors and shadows. The noise of chatter fills the room.","nskr_kq_partyRum:""Sweet Freedom""
+nskr_kq_partyTravel,DialogOptionSelected,$option == nskr_kq_partyTravel,ShowDefaultVisual,"You make your way around the local transport system. You suspect that you might have gotten lost multiple times, as you try to follow $himOrHer around. The alcohol is not helping.
+
+Finally you arrive in what looks like the right spot. There is a bouncer at the front door, they are busy handling what you presume are other guests.
+
+Somehow your bodyguards managed to not only keep up with your bumbling, but also blended into the local crowd. but it seems like they'll have to wait outside for this one.
+
+The employee has a short chat with the bouncer, he flashes some papers - and somewhat surprisingly you are let in. First you do have to hand over your sidearm, of course.",nskr_kq_partyArrive:Continue,
+nskr_kq_partyArrive,DialogOptionSelected,$option == nskr_kq_partyArrive,ShowPersonVisual true,"The establishment is filled with people, a large and ornate chandelier lights up the people in expensive suits, with an intricate dance of colors and shadows. The noise of chatter fills the room.
+
+""I hope you aren't disappointed my friend. Now let's grab something to drink."" The employee says with a slick smile.
+
+You weave through the crowd of people, then you see vast array of different drinks from all over the sector, ready to be served. ""So, what will you be having captain?"" $HeOrShe is motioning you to grab one of the drinks.","nskr_kq_partyRum:""Sweet Freedom""
 nskr_kq_partyLiqueur:""Kings Favour""
 nskr_kq_partyAbsynth:""Absynth""
 nskr_kq_partyWine:""Askonia Sunshine""
@@ -951,39 +1004,59 @@ nskr_kq_partyGroupOfficers,nskr_kqPartyGroups,!$nskr_kq_partyOfficersDone,,"The 
 nskr_kq_partyGroupLeave,nskr_kqPartyGroups,$nskr_kq_partyOfficersDone,,,nskr_kq_partyLeave:Leave,
 ,,,,,,
 nskr_kq_partyTechies,DialogOptionSelected,$option == nskr_kq_partyTechies,"ShowPersonVisual false nskr_kq_partyEngineer
-ShowSecondPerson nskr_kq_partyEntrepreneur
-AddText ""You struggle to follow along, as countless technical terms get thrown around like nothing. They seem to be illustrating some grand plan, that will *definitely* make them rich.""
-AddText ""After a while of listening they seem to finally notice you.""",You approach the techies to find out what they're talking about. They are deep in some kind of tech related marketing scheme.,nskr_kq_partyPitch:Continue,
-nskr_kq_partyPitch,DialogOptionSelected,$option == nskr_kq_partyPitch,"AddText ""\""Yeah, we're looking for investors here. We have a very unique opportunity available here.\"" The other guy chimes in.""
-AddText ""They wait for your response.""","""Oh hello there, interested in our little scheme are you?"" One of them says.","nskr_kq_partyPitchDecline:Politely decline
+ShowSecondPerson nskr_kq_partyEntrepreneur","You approach the techies to find out what they're talking about. They are deep in some kind of tech related marketing scheme.
+
+You struggle to follow along, as countless technical terms get thrown around like nothing. They seem to be illustrating some grand plan, that will *definitely* make them rich.
+
+After a while of listening they seem to finally notice you.",nskr_kq_partyPitch:Continue,
+nskr_kq_partyPitch,DialogOptionSelected,$option == nskr_kq_partyPitch,,"""Oh hello there, interested in our little scheme are you?"" One of them says.
+
+""Yeah, we're looking for investors here. We have a very unique opportunity available here."" The other guy chimes in.
+
+They wait for your response.","nskr_kq_partyPitchDecline:Politely decline
 nskr_kq_partyPitchListen:Try to entertain the idea",
-nskr_kq_partyPitchDecline,DialogOptionSelected,$option == nskr_kq_partyPitchDecline,"$nskr_kq_partyTechiesDone = true
-AddText ""one of them quickly hands you a flashy business card, and gives you a firm handshake as a goodbye.""
-AddText ""You leave before you get sucked into some godawful pyramid scheme. You're not losing your hard earned credits this easily.""","""It's your loss for sure. Once we get the credits rolling, it's going to be smooth sailing. I mean, there's almost *no risk* here."" He says.",nskr_kq_partyLook:Continue,
-nskr_kq_partyPitchListen,DialogOptionSelected,$option == nskr_kq_partyPitchListen,"$nskr_kq_partyTechiesDone = true
-AddText ""As you listen to them explain their plans in more detail, it becomes rather obvious they're trying to sucker in clueless investors with flashy new tech.""
-AddText ""You decide there are much better ways to spend your credits, than on some pyramid scheme.""
-AddText ""As you leave one of them quickly hands you a flashy business card, and gives you a firm handshake as a goodbye.""","""...The profit vector only multiplies with time, a fungible investment now only becomes exponential with time. Our reported margins are about to spike with the introduction of generative price... """,nskr_kq_partyLook:Continue,
+nskr_kq_partyPitchDecline,DialogOptionSelected,$option == nskr_kq_partyPitchDecline,$nskr_kq_partyTechiesDone = true,"""It's your loss for sure. Once we get the credits rolling, it's going to be smooth sailing. I mean, there's almost *no risk* here."" He says.
+
+one of them quickly hands you a flashy business card, and gives you a firm handshake as a goodbye.
+
+You leave before you get sucked into some godawful pyramid scheme. You're not losing your hard earned credits this easily.",nskr_kq_partyLook:Continue,
+nskr_kq_partyPitchListen,DialogOptionSelected,$option == nskr_kq_partyPitchListen,$nskr_kq_partyTechiesDone = true,"""...The profit vector only multiplies with time, a fungible investment now only becomes exponential with time. Our reported margins are about to spike with the introduction of generative price... ""
+
+As you listen to them explain their plans in more detail, it becomes rather obvious they're trying to sucker in clueless investors with flashy new tech.
+
+You decide there are much better ways to spend your credits, than on some pyramid scheme.
+
+As you leave one of them quickly hands you a flashy business card, and gives you a firm handshake as a goodbye.",nskr_kq_partyLook:Continue,
 ,,,,,,
-nskr_kq_partyToast,DialogOptionSelected,$option == nskr_kq_partyToast,"ShowPersonVisual false nskr_kq_partyHost
-AddText ""\""For another successful operation. For greater profits!\"" The commander cheers the crowd on.""","As you make your way over, it appears they're ready to have a toast. Before you even have a chance to react there's already a new drink in your hands.","nskr_kq_partyToastDrink:Drink
+nskr_kq_partyToast,DialogOptionSelected,$option == nskr_kq_partyToast,ShowPersonVisual false nskr_kq_partyHost,"As you make your way over, it appears they're ready to have a toast. Before you even have a chance to react there's already a new drink in your hands.
+
+""For another successful operation. For greater profits!"" The commander cheers the crowd on.","nskr_kq_partyToastDrink:Drink
 nskr_kq_partyToastSkip:Don't drink",
 nskr_kq_partyToastDrink,DialogOptionSelected,$option == nskr_kq_partyToastDrink,"FireBest nskr_kqPartyToastText
 FireBest nskr_kqPartyToastTipsy",You down the drink in one fell swoop.,,
 nskr_kq_partyToastSkip,DialogOptionSelected,$option == nskr_kq_partyToastSkip,FireBest nskr_kqPartyToastText,,,
-nskr_kq_partyToastText,nskr_kqPartyToastText,,"AddText ""You do hear something about a special fleet operation of sorts, but you quickly lose them.""",You watch everyone as they finish their drinks. There are too many people to get a clear picture of anything in particular.,nskr_kq_partyToastLeave:Continue,
+nskr_kq_partyToastText,nskr_kqPartyToastText,,,"You watch everyone as they finish their drinks. There are too many people to get a clear picture of anything in particular.
+
+You do hear something about a special fleet operation of sorts, but you quickly lose them.",nskr_kq_partyToastLeave:Continue,
 nskr_kq_partyToastTipsy,nskr_kqPartyToastTipsy,nskr_quest kq check partyTipsy,"nskr_quest kq do partyDrink 1
 AddText ""You are really starting to feel it, you're quite intoxicated now."" gray",,,
 nskr_kq_partyToastLeave,DialogOptionSelected,$option == nskr_kq_partyToastLeave,$nskr_kq_partyCrowdDone = true,"You decide to leave the crowd alone, there are just too many people to discover anything of note.",nskr_kq_partyLook:Continue,
 ,,,,,,
 nskr_kq_partyOfficers,DialogOptionSelected,$option == nskr_kq_partyOfficers,"ShowPersonVisual false nskr_kq_partyPatrolCommander
 ShowSecondPerson nskr_kq_partyFleetCommander
-ShowThirdPerson nskr_kq_partyAgent
-AddText ""Surely you can use your experience as a fleet commander to impress them. Seems like they're the most likely group to know something of use.""","The officers are sitting at a corner table, its shiny marble like surface is like a mirror. You spot a TriPad, and multiple glasses of drink placed on it.",nskr_kq_partyOfficersJoin:Continue,
-nskr_kq_partyOfficersJoin,DialogOptionSelected,$option == nskr_kq_partyOfficersJoin,"AddText ""You sit down with them, and listen as one of the officers tells an anecdote from his last set of patrol duty.""
-AddText ""\""... The whole engine section was just missing, with a big hole in his ship, This guy says he doesn't know what happened to it!\"" He is struggling to contain his laughter at this point. \""With a straight fucking face, he says that to me! Now that's why I'm never working with those geniuses from the Skathi patrol squadron ever again.\"" He bursts out laughing.""","One of the officers notices you ""I can see you're a captain, come join us."" the officer shouts for you to join.",nskr_kq_partyStoryPrompt:Continue,
-nskr_kq_partyStoryPrompt,DialogOptionSelected,$option == nskr_kq_partyStoryPrompt,"AddText ""This is your chance to earn their trust, just quickly piece something together.""
-AddText ""You tell a story about...""","""Why don't you tell us something captain. I'm sure you've seen your fair share of interesting events."" He says to you.","nskr_kq_partyStoryBounty:Your last bounty hunt
+ShowThirdPerson nskr_kq_partyAgent","The officers are sitting at a corner table, its shiny marble like surface is like a mirror. You spot a TriPad, and multiple glasses of drink placed on it.
+
+Surely you can use your experience as a fleet commander to impress them. Seems like they're the most likely group to know something of use.",nskr_kq_partyOfficersJoin:Continue,
+nskr_kq_partyOfficersJoin,DialogOptionSelected,$option == nskr_kq_partyOfficersJoin,,"One of the officers notices you ""I can see you're a captain, come join us."" the officer shouts for you to join.
+
+You sit down with them, and listen as one of the officers tells an anecdote from his last set of patrol duty.
+
+""... The whole engine section was just missing, with a big hole in his ship, This guy says he doesn't know what happened to it!"" He is struggling to contain his laughter at this point. ""With a straight fucking face, he says that to me! Now that's why I'm never working with those geniuses from the Skathi patrol squadron ever again."" He bursts out laughing.",nskr_kq_partyStoryPrompt:Continue,
+nskr_kq_partyStoryPrompt,DialogOptionSelected,$option == nskr_kq_partyStoryPrompt,,"""Why don't you tell us something captain. I'm sure you've seen your fair share of interesting events."" He says to you.
+
+This is your chance to earn their trust, just quickly piece something together.
+
+You tell a story about...","nskr_kq_partyStoryBounty:Your last bounty hunt
 nskr_kq_partyStoryTrade:Your last trading operation
 nskr_kq_partyStoryAI:Your last encounter with AI
 nskr_kq_partyStorySmuggling:Your last smuggling gig",
@@ -991,18 +1064,24 @@ nskr_kq_partyStoryBounty,DialogOptionSelected,$option == nskr_kq_partyStoryBount
 nskr_kq_partyStoryTrade,DialogOptionSelected,$option == nskr_kq_partyStoryTrade,FireBest nskr_kqPartyStory,,,
 nskr_kq_partyStoryAI,DialogOptionSelected,$option == nskr_kq_partyStoryAI,FireBest nskr_kqPartyStory,,,
 nskr_kq_partyStorySmuggling,DialogOptionSelected,$option == nskr_kq_partyStorySmuggling,FireBest nskr_kqPartyStory,,,
-nskr_kq_partyStory,nskr_kqPartyStory,,"AddText ""You illustrate a grand story of great peril, the stakes are greater than life, then taking quick peeks at the TriPad while pretending to make some epic gestures to drive home the spectacle.""
-AddText ""\""Woah captain, I can't believe you lived from that! That's one hell of a tale, I wouldn't even care if you made half that up.\"" He says with a smug laugh.""
-AddText ""Wow, you really are a great actor. Or maybe it's just the alcohol.""","While illustrating your story, you notice what's on the TriPad. There appears to be coordinates and orders, relating to fleet movements on display. You just need to keep these officers distracted long enough to get a good look.",nskr_kq_partyTarget:Continue,
+nskr_kq_partyStory,nskr_kqPartyStory,,,"While illustrating your story, you notice what's on the TriPad. There appears to be coordinates and orders, relating to fleet movements on display. You just need to keep these officers distracted long enough to get a good look.
+
+You illustrate a grand story of great peril, the stakes are greater than life, then taking quick peeks at the TriPad while pretending to make some epic gestures to drive home the spectacle.
+
+""Woah captain, I can't believe you lived from that! That's one hell of a tale, I wouldn't even care if you made half that up."" He says with a smug laugh.
+
+Wow, you really are a great actor. Or maybe it's just the alcohol.",nskr_kq_partyTarget:Continue,
 nskr_kq_partyTarget,DialogOptionSelected,$option == nskr_kq_partyTarget,"$nskr_kq_partyOfficersDone = true
 AddText ""The $nskr_kq_job3TargetSystem? Certainly worth investigating, you better write that down somewhere."" gray
 SetTextHighlights ""$nskr_kq_job3TargetSystem""
 AddText ""With the info gathered, you decide it's best to leave the officers alone for now, so you give them a quick goodbye.""",You managed to spot that a certain star system is mentioned multiple times on the TriPad's info feed.,nskr_kq_partyLook:Continue,
 ,,,,,,
 nskr_kq_partyLeave,DialogOptionSelected,$option == nskr_kq_partyLeave,"ShowPersonVisual true
-AddText ""\""There you are capitain, I fnound you...\"" There's a brief pause as $heOrShe struggles to maintain their composure \"" We - totally need to get one last drink before you leave!\"" $HeOrShe is in an even worse condition than when you last saw $himOrHer.""
-AddText ""With a sloppy motion $heOrShe points towards the drinks.""
-FireBest nskr_kqPartyLastDrink","As you try to leave, the employee finally finds you again.",,
+FireBest nskr_kqPartyLastDrink","As you try to leave, the employee finally finds you again.
+
+""There you are capitain, I fnound you..."" There's a brief pause as $heOrShe struggles to maintain their composure "" We - totally need to get one last drink before you leave!"" $HeOrShe is in an even worse condition than when you last saw $himOrHer.
+
+With a sloppy motion $heOrShe points towards the drinks.",,
 nskr_kq_partyLastDrink,nskr_kqPartyLastDrink,,,,"nskr_kq_partyWasted1:Agree
 nskr_kq_partyExit:Leave",
 nskr_kq_partyLastDrinkDrunk,nskr_kqPartyLastDrink,nskr_quest kq check partyDrunk,"AddText ""Oh no, it appears you are too intoxicated to remember that you could just say no."" gray",,"nskr_kq_partyWasted1:Agree
@@ -1019,13 +1098,21 @@ nskr_kq_partySlur1,DialogOptionSelected,$option == nskr_kq_partySlur1,FireBest n
 nskr_kq_partySlur2,DialogOptionSelected,$option == nskr_kq_partySlur2,FireBest nskr_kqPartyHangover,,,
 nskr_kq_partySlur3,DialogOptionSelected,$option == nskr_kq_partySlur3,FireBest nskr_kqPartyHangover,,,
 nskr_kq_partySlur4,DialogOptionSelected,$option == nskr_kq_partySlur4,FireBest nskr_kqPartyHangover,,,
-nskr_kq_partyHangover,nskr_kqPartyHangover,,"AddText ""Now you have woken up somewhere, your head, arms, and legs hurt quite a lot. You could really use a tall glass of water.""
-AddText ""A vaguely unpleasant smell fills the room, you hear some muffled chatter coming from the neighboring room and the distant hum of machinery.""","You and the employee got separated at some point, after finally leaving the party. Although you can't remember exactly why.",nskr_kq_partyWake:Open your eyes,
-nskr_kq_partyWake,DialogOptionSelected,$option == nskr_kq_partyWake,"ShowDefaultVisual
-AddText ""There are empty glass bottles in various locations around the room, not all of them quite empty. A large stain of something sticky is on the floor, next to a felled bottle. Your sidearm - a cold metal hunk is with you in bed, at least you didn't lose it.""
-AddText ""You appear to have ended up in some cheap hab-block motel.""","You are surrounded by cold dark grey concrete surfaces. There is only basic furniture in the room, made of cheap plastic. There are no windows, the only light is the sickly off green glow of the cheap light fixtures.",nskr_kq_partyRecall:Continue,
-nskr_kq_partyRecall,DialogOptionSelected,$option == nskr_kq_partyRecall,"AddText ""Thankfully it appears you wrote down the coordinates on your TriPad. In fact it seems the notepad function is the last thing you had open on it. You wrote an order of synthPizza on it in text last night - it appears to not have worked.""
-AddText ""You also remember that you haven't checked how many credits you spent last night.""","Thinking about what happened, you somehow managed to avoid your own bodyguards on your way out - which is rather impressive. You then realize that your security officer is going to kill you once they realize you were not in fact *kidnapped*, but instead just got black out drunk - it happens.",nskr_kq_partyDamages:Assess the damages,
+nskr_kq_partyHangover,nskr_kqPartyHangover,,,"You and the employee got separated at some point, after finally leaving the party. Although you can't remember exactly why.
+
+Now you have woken up somewhere, your head, arms, and legs hurt quite a lot. You could really use a tall glass of water.
+
+A vaguely unpleasant smell fills the room, you hear some muffled chatter coming from the neighboring room and the distant hum of machinery.",nskr_kq_partyWake:Open your eyes,
+nskr_kq_partyWake,DialogOptionSelected,$option == nskr_kq_partyWake,ShowDefaultVisual,"You are surrounded by cold dark grey concrete surfaces. There is only basic furniture in the room, made of cheap plastic. There are no windows, the only light is the sickly off green glow of the cheap light fixtures.
+
+There are empty glass bottles in various locations around the room, not all of them quite empty. A large stain of something sticky is on the floor, next to a felled bottle. Your sidearm - a cold metal hunk is with you in bed, at least you didn't lose it.
+
+You appear to have ended up in some cheap hab-block motel.",nskr_kq_partyRecall:Continue,
+nskr_kq_partyRecall,DialogOptionSelected,$option == nskr_kq_partyRecall,,"Thinking about what happened, you somehow managed to avoid your own bodyguards on your way out - which is rather impressive. You then realize that your security officer is going to kill you once they realize you were not in fact *kidnapped*, but instead just got black out drunk - it happens.
+
+Thankfully it appears you wrote down the coordinates on your TriPad. In fact it seems the notepad function is the last thing you had open on it. You wrote an order of synthPizza on it in text last night - it appears to not have worked.
+
+You also remember that you haven't checked how many credits you spent last night.",nskr_kq_partyDamages:Assess the damages,
 nskr_kq_partyDamages,DialogOptionSelected,$option == nskr_kq_partyDamages,"nskr_quest kq do partyHangover
 AddTextSmall ""Acquired hangover"" gray
 SetTextHighlightColors bad
@@ -1132,10 +1219,11 @@ ShowDefaultVisual",the $faction $fleetName powers up their weapons and moves in 
 ,,,,,,
 # Hint wreck,,,,,,
 nskr_kq_hintWreckOpen,nskr_kqHintWreck,,ShowDefaultVisual,Your sensors team report unusual signals coming from this wreck once you approach.,nskr_kq_hintWreckRead:Continue,"Claimed by KestevenHintWreckModule.claim, called from KestevenJob4Module.placeWrecks, until read"
-nskr_kq_hintWreckRead,DialogOptionSelected,$option == nskr_kq_hintWreckRead,"AddText ""Your ops chief reports. \""It seems to be broadcasting some coordinates located in the $nskr_kq_job4FriendlySystem. That part of the broadcast was unencrypted, seems like they were in a hurry.\""""
-FireBest nskr_kqHintWreckResult
+nskr_kq_hintWreckRead,DialogOptionSelected,$option == nskr_kq_hintWreckRead,"FireBest nskr_kqHintWreckResult
 nskr_quest kq do readHintWreck
-SetShortcut nskr_kq_hintWreckLeave ESCAPE false","A mysterious source on the ship is transmitting a garbled signal, most likely the result of heavy battle damage. After some time the comms team manages to recover something of use.",nskr_kq_hintWreckLeave:Continue,readHintWreck sets JOB4_HINT_WRECK_READ and releases the claim
+SetShortcut nskr_kq_hintWreckLeave ESCAPE false","A mysterious source on the ship is transmitting a garbled signal, most likely the result of heavy battle damage. After some time the comms team manages to recover something of use.
+
+Your ops chief reports. ""It seems to be broadcasting some coordinates located in the $nskr_kq_job4FriendlySystem. That part of the broadcast was unencrypted, seems like they were in a hurry.""",nskr_kq_hintWreckLeave:Continue,readHintWreck sets JOB4_HINT_WRECK_READ and releases the claim
 nskr_kq_hintWreckCoordinates,nskr_kqHintWreckResult,,"AddTextSmall ""Acquired coordinates for the $nskr_kq_job4FriendlySystem"" gray
 SetTextHighlights ""$nskr_kq_job4FriendlySystem""
 PlaySound ui_noise_static",,,Fallback: the Special Operations fleet has not been found
@@ -1262,8 +1350,9 @@ nskr_kq_delveBar,AddBarEvents,"nskr_quest kq is JOB5_MEETING
 nskr_quest kq check delveMeetingHere","AddBarEvent nskr_kq_delveSignal ""Give the signal to the guard to take you to the meeting"" ""You see the man Jack told you about. A guard is leaning against the wall waiting for you."" highlight",,,At asteriaOrOutpost while the stage is JOB5_MEETING; highlight is the old option colour
 nskr_kq_delveSignal,DialogOptionSelected,$option == nskr_kq_delveSignal,FireBest nskr_kqDelveEscort,"You give the signal, and are then escorted through the local transport system.",nskr_kq_delveArrive:Continue,
 nskr_kq_delveEscort,nskr_kqDelveEscort,,ShowPersonVisual true nskr_kq_delveGuard,"""We've arrived captain."" The guard mumbles as he takes you to the lobby of one of the office modules, and then further into the location.",,Fallback: no Asteria in the sector
-nskr_kq_delveEscortAsteria,nskr_kqDelveEscort,nskr_quest kq check asteriaGenerated,"ShowLargePlanet
-AddText ""\""We've arrived captain.\"" The guard mumbles as he takes you to the lobby of one of the nearby skyscrapers, and then further into the building.""","You watch as different parts of the underground mega-city go past your window. Massive Cooling towers going all the way to the surface, with labyrinthine collections of pipes covering them. The imposing factories churn on, no matter the time. The cube like housing blocks not far away, towering over themselves one after another covered in graffiti and dirty gray concrete. You then pass through a tunnel and a new view opens up. You see a brand new part of the city, countless crystalline skyscrapers fill the view reaching all the way to the roof of the cavern.",,"Whenever Asteria exists, also with the questline at the Outpost"
+nskr_kq_delveEscortAsteria,nskr_kqDelveEscort,nskr_quest kq check asteriaGenerated,ShowLargePlanet,"You watch as different parts of the underground mega-city go past your window. Massive Cooling towers going all the way to the surface, with labyrinthine collections of pipes covering them. The imposing factories churn on, no matter the time. The cube like housing blocks not far away, towering over themselves one after another covered in graffiti and dirty gray concrete. You then pass through a tunnel and a new view opens up. You see a brand new part of the city, countless crystalline skyscrapers fill the view reaching all the way to the roof of the cavern.
+
+""We've arrived captain."" The guard mumbles as he takes you to the lobby of one of the nearby skyscrapers, and then further into the building.",,"Whenever Asteria exists, also with the questline at the Outpost"
 nskr_kq_delveArrive,DialogOptionSelected,$option == nskr_kq_delveArrive,"HideSecondPerson
 ShowPic nskr_crib
 FireBest nskr_kqDelveRoom
@@ -1274,27 +1363,45 @@ nskr_kq_delveRoom,nskr_kqDelveRoom,,,"You have arrived in one open areas of the 
 nskr_kq_delveRoomAsteria,nskr_kqDelveRoom,nskr_quest kq check asteriaGenerated,,"You have arrived in one of the top floors of the building. The carefully decorated room is filled with sculpted decorations and high-end furniture. The hard edges of polished stone surfaces contrast the round designer furniture, no doubt the carefully curated creation of some famous interior designer.",,
 ,,,,,,
 nskr_kq_delveGreet,DialogOptionSelected,$option == nskr_kq_delveGreet,"BeginConversation nskr_opguy true false
-ShowSecondPerson nskr_researcher
-AddText ""Jack says, as he lifts up the bottle motioning you to grab a glass.""
-AddText ""Alice seems to be too busy fiddling with a datapad to pay any attention to you yet.""","""Welcome $playerFirstName. Care to take a drink?""","nskr_kq_delveDrink:""Yeah, sure.""
+ShowSecondPerson nskr_researcher","""Welcome $playerFirstName. Care to take a drink?""
+
+Jack says, as he lifts up the bottle motioning you to grab a glass.
+
+Alice seems to be too busy fiddling with a datapad to pay any attention to you yet.","nskr_kq_delveDrink:""Yeah, sure.""
 nskr_kq_delveNoDrink:""No thanks.""",Jack speaks from here on; Alice is the second portrait
-nskr_kq_delveDrink,DialogOptionSelected,$option == nskr_kq_delveDrink,"AddText ""\""This is good stuff you know. Artisan liqueur made with *real* fruits, none of that synth crap they'll sell you in bars.\""""
-AddText ""You calmly grab the glass and brace yourself.""",Jack pours you a rather generous glass of the red liquid.,nskr_kq_delveDrinkIt:Drink it,
-nskr_kq_delveDrinkIt,DialogOptionSelected,$option == nskr_kq_delveDrinkIt,"AddText ""\""Well, what do you think captain?\"" Jack looks eager to hear your opinion.""
-AddText ""Alice seems to be paying attention now, she knows what's up.""
-AddText ""Both of them look at you, amused at your appearance. You are clearly in pain.""","At first the drink tastes quite nice, an indescribable mix of citrus and fruit very sweet too, almost overbearingly so. But quickly you feel the burn - it clings to your throat and it's *really* bad, you struggle to finish the drink and your eyes visibly tear up.","nskr_kq_delveGreat:""It's great...""
+nskr_kq_delveDrink,DialogOptionSelected,$option == nskr_kq_delveDrink,,"Jack pours you a rather generous glass of the red liquid.
+
+""This is good stuff you know. Artisan liqueur made with *real* fruits, none of that synth crap they'll sell you in bars.""
+
+You calmly grab the glass and brace yourself.",nskr_kq_delveDrinkIt:Drink it,
+nskr_kq_delveDrinkIt,DialogOptionSelected,$option == nskr_kq_delveDrinkIt,,"At first the drink tastes quite nice, an indescribable mix of citrus and fruit very sweet too, almost overbearingly so. But quickly you feel the burn - it clings to your throat and it's *really* bad, you struggle to finish the drink and your eyes visibly tear up.
+
+""Well, what do you think captain?"" Jack looks eager to hear your opinion.
+
+Alice seems to be paying attention now, she knows what's up.
+
+Both of them look at you, amused at your appearance. You are clearly in pain.","nskr_kq_delveGreat:""It's great...""
 nskr_kq_delveHate:""Thanks, I hate it.""",
-nskr_kq_delveGreat,DialogOptionSelected,$option == nskr_kq_delveGreat,"AddText ""\""I think it's time we got to business.\"" Alice says.""
-AddText ""\""Yeah, let's get to work.\"" Jack adds.""
-AddText ""He grabs his datapad in preparation, and Alice quickly finishes the rest of her drink too.""","""That means it's some good stuff."" Jack doesn't seem surprised by your reaction.",nskr_kq_delveBusiness:Continue,
+nskr_kq_delveGreat,DialogOptionSelected,$option == nskr_kq_delveGreat,,"""That means it's some good stuff."" Jack doesn't seem surprised by your reaction.
+
+""I think it's time we got to business."" Alice says.
+
+""Yeah, let's get to work."" Jack adds.
+
+He grabs his datapad in preparation, and Alice quickly finishes the rest of her drink too.",nskr_kq_delveBusiness:Continue,
 nskr_kq_delveHate,DialogOptionSelected,$option == nskr_kq_delveHate,"$option = nskr_kq_delveGreat 0
 FireBest DialogOptionSelected",,,"Same screen as ""It's great..."""
-nskr_kq_delveNoDrink,DialogOptionSelected,$option == nskr_kq_delveNoDrink,"AddText ""His face quickly turns serious as he grabs his datapad in preparation.""
-AddText ""Alice suddenly wakes up, nods and quickly finishes her drink too.""","""Shame, this is good stuff you know. Well let's just get straight to business then.""",nskr_kq_delveBusiness:Continue,
+nskr_kq_delveNoDrink,DialogOptionSelected,$option == nskr_kq_delveNoDrink,,"""Shame, this is good stuff you know. Well let's just get straight to business then.""
+
+His face quickly turns serious as he grabs his datapad in preparation.
+
+Alice suddenly wakes up, nods and quickly finishes her drink too.",nskr_kq_delveBusiness:Continue,
 ,,,,,,
-nskr_kq_delveBusiness,DialogOptionSelected,$option == nskr_kq_delveBusiness,"AddText ""\""We are trying to gather enough data disks to crack some of the old encryption. The part that's related to \""Project : Enigma\"". Our estimation is that around 5 more disks should be enough.\"" He finishes.""
-AddText ""\""This will lead us straight to *the Cache*.\"" Alice continues the speech. \""A location that keeps being referenced in these old project communications. It is said that a particular Chip is stored there, it's extremely valuable. Which explains the great effort that went into keeping it hidden.\"" She explains in a dry professor-esque tone.""
-FireAll nskr_kqDelveQuestions","""You know the reason we brought you here."" Jack says. ""We are trying to recover something of great importance now. The old pre-collapse comm network holds the key."" He keeps explaining, his tone emphasizes the importance of this subject.",,
+nskr_kq_delveBusiness,DialogOptionSelected,$option == nskr_kq_delveBusiness,FireAll nskr_kqDelveQuestions,"""You know the reason we brought you here."" Jack says. ""We are trying to recover something of great importance now. The old pre-collapse comm network holds the key."" He keeps explaining, his tone emphasizes the importance of this subject.
+
+""We are trying to gather enough data disks to crack some of the old encryption. The part that's related to ""Project : Enigma"". Our estimation is that around 5 more disks should be enough."" He finishes.
+
+""This will lead us straight to *the Cache*."" Alice continues the speech. ""A location that keeps being referenced in these old project communications. It is said that a particular Chip is stored there, it's extremely valuable. Which explains the great effort that went into keeping it hidden."" She explains in a dry professor-esque tone.",,
 nskr_kq_delveOptListen,nskr_kqDelveQuestions,"!nskr_quest kq flag CACHE_FOUND
 !$nskr_kq_delveAsked",,,nskr_kq_delveListen:Keep listening,
 nskr_kq_delveOptContinue,nskr_kqDelveQuestions,$nskr_kq_delveAsked,,,nskr_kq_delveListen:Continue,After a question the same option reads Continue
@@ -1310,10 +1417,11 @@ nskr_kq_delveOptFound,nskr_kqDelveQuestions,nskr_quest kq flag CACHE_FOUND,,,"ns
 nskr_kq_delveAskEnigma,DialogOptionSelected,$option == nskr_kq_delveAskEnigma,"$nskr_kq_delveAskedEnigma = true 0
 $nskr_kq_delveAsked = true 0
 FireAll nskr_kqDelveQuestions","Alice is quick to answer your question. ""This whole Enigma AI incident, it's almost certainly related to an old pre-collapse Domain project of the same name. It would be too much of an coincidence, based on what we've learned from the decrypted communications.""",,
-nskr_kq_delveAskComms,DialogOptionSelected,$option == nskr_kq_delveAskComms,"AddText ""Jack shows you a low-res image of what appears to be a satellite on his datapad. \""Here's one we managed to recover.\""""
-$nskr_kq_delveAskedComms = true 0
+nskr_kq_delveAskComms,DialogOptionSelected,$option == nskr_kq_delveAskComms,"$nskr_kq_delveAskedComms = true 0
 $nskr_kq_delveAsked = true 0
-FireAll nskr_kqDelveQuestions","Alice clarifies on the subject. ""It's not the main hyperwave network. No, they used their own covert satellites to relay information. Most of them are lost by now, but we're hoping there's enough surviving ones to piece the information together""",,
+FireAll nskr_kqDelveQuestions","Alice clarifies on the subject. ""It's not the main hyperwave network. No, they used their own covert satellites to relay information. Most of them are lost by now, but we're hoping there's enough surviving ones to piece the information together""
+
+Jack shows you a low-res image of what appears to be a satellite on his datapad. ""Here's one we managed to recover.""",,
 nskr_kq_delveAskCache,DialogOptionSelected,$option == nskr_kq_delveAskCache,"$nskr_kq_delveAskedCache = true 0
 $nskr_kq_delveAsked = true 0
 FireAll nskr_kqDelveQuestions","Alice continues. ""It's a well hidden storage site, somewhere in this sector. We don't know that much more yet, but it was a site of high importance. We are eager to learn more from the disks though.""",,
@@ -1321,19 +1429,27 @@ nskr_kq_delveAskChip,DialogOptionSelected,$option == nskr_kq_delveAskChip,"$nskr
 $nskr_kq_delveAsked = true 0
 FireAll nskr_kqDelveQuestions","Jack quickly interjects to respond to your question. ""Yes, you are looking for a Chip of sorts, but it's not important for you to know the exact specifications yet. You will be briefed on the subject later, when it's more relevant.""",,
 ,,,,,,
-nskr_kq_delveListen,DialogOptionSelected,$option == nskr_kq_delveListen,"AddText ""He is looking at you with a serious expression, this is clearly important to him.""
-FireAll nskr_kqDelveListenGate","""We need you $playerFirstName to start working on recovering enough disks, to help us find this cache. You're our best chance so far."" Jack reiterates.","nskr_kq_delveAgree:""Okay, got it.""
+nskr_kq_delveListen,DialogOptionSelected,$option == nskr_kq_delveListen,FireAll nskr_kqDelveListenGate,"""We need you $playerFirstName to start working on recovering enough disks, to help us find this cache. You're our best chance so far."" Jack reiterates.
+
+He is looking at you with a serious expression, this is clearly important to him.","nskr_kq_delveAgree:""Okay, got it.""
 nskr_kq_delveDoubt:""I'm not so sure about this.""
 nskr_kq_delveHaveDisks:""I already have some of those disks.""",
 nskr_kq_delveNoDisks,nskr_kqDelveListenGate,nskr_quest kq check noSatellite,RemoveOption nskr_kq_delveHaveDisks,,,Only after a satellite was salvaged
-nskr_kq_delveDoubt,DialogOptionSelected,$option == nskr_kq_delveDoubt,"AddText ""\""You know captain, we've been laying the ground work for this operation for years, it's a unique opportunity - and the key to help us solve the oncoming Enigma crisis. The more selfish actors in this sector would only waste this opportunity for their own gain only.\"" His hands help illustrate the grand story as he leans in closer to you.""
-AddText ""\""Think about it, Asteria is one of the last great bastions of equality and democracy. We are very much in a unique position to drive progress in this sector. And as such you will get your fair share of the prize.\""""
-AddText ""\""In fact, I've been authorized to grant you and advance of $nskr_kq_delveAdvanceCredits for this job.\""""
-SetTextHighlights ""$nskr_kq_delveAdvanceCredits""
-$nskr_kq_delveAdvanceOffered = true 0","Jacks manners quickly change to that of a corporate salesman, he is ready to sell you this job.","nskr_kq_delveAgree:Agree to do the job
+nskr_kq_delveDoubt,DialogOptionSelected,$option == nskr_kq_delveDoubt,"SetTextHighlights ""$nskr_kq_delveAdvanceCredits""
+$nskr_kq_delveAdvanceOffered = true 0","Jacks manners quickly change to that of a corporate salesman, he is ready to sell you this job.
+
+""You know captain, we've been laying the ground work for this operation for years, it's a unique opportunity - and the key to help us solve the oncoming Enigma crisis. The more selfish actors in this sector would only waste this opportunity for their own gain only."" His hands help illustrate the grand story as he leans in closer to you.
+
+""Think about it, Asteria is one of the last great bastions of equality and democracy. We are very much in a unique position to drive progress in this sector. And as such you will get your fair share of the prize.""
+
+""In fact, I've been authorized to grant you and advance of $nskr_kq_delveAdvanceCredits for this job.""","nskr_kq_delveAgree:Agree to do the job
 nskr_kq_delvePrizes:""What kind of prizes are we talking about?""",Agreeing after this pays the advance
-nskr_kq_delvePrizes,DialogOptionSelected,$option == nskr_kq_delvePrizes,"AddText ""Alice adds to the conversation. \""Of course we don't know exactly that is inside the Cache yet, but we do know that it was important enough for the Domain to hide it well.\""""","He gives you a quick smirk. ""You will be more than well compensated for your work, if we pull this off. And it won't only be a big pile of credits, but some seriously unique tech.""",nskr_kq_delveAgree:Agree to do the job,
-nskr_kq_delveHaveDisks,DialogOptionSelected,$option == nskr_kq_delveHaveDisks,"AddText ""Alice comments on the matter. \""It isn't enough to finish the decryption, but this should speed up our efforts considerably.\""""","Jack has a surprised look on his face. ""Well that makes our work a lot easier captain. If only everyone we work with was this competent, we'd already have the location of this cache tracked down.""","nskr_kq_delveAgree:Agree to do the job
+nskr_kq_delvePrizes,DialogOptionSelected,$option == nskr_kq_delvePrizes,,"He gives you a quick smirk. ""You will be more than well compensated for your work, if we pull this off. And it won't only be a big pile of credits, but some seriously unique tech.""
+
+Alice adds to the conversation. ""Of course we don't know exactly that is inside the Cache yet, but we do know that it was important enough for the Domain to hide it well.""",nskr_kq_delveAgree:Agree to do the job,
+nskr_kq_delveHaveDisks,DialogOptionSelected,$option == nskr_kq_delveHaveDisks,,"Jack has a surprised look on his face. ""Well that makes our work a lot easier captain. If only everyone we work with was this competent, we'd already have the location of this cache tracked down.""
+
+Alice comments on the matter. ""It isn't enough to finish the decryption, but this should speed up our efforts considerably.""","nskr_kq_delveAgree:Agree to do the job
 nskr_kq_delveDoubt:""I'm not so sure about this.""",
 ,,,,,,
 nskr_kq_delveAgree,DialogOptionSelected,$option == nskr_kq_delveAgree,"FireAll nskr_kqDelveAdvance
@@ -1349,21 +1465,30 @@ nskr_kq_delveLowlife:""It's never just some regular lowlife...""","The advance r
 nskr_kq_delveAdvancePaid,nskr_kqDelveAdvance,$nskr_kq_delveAdvanceOffered,"AddCredits 150000
 PlaySound ui_noise_static",,,The amount is KestevenJob5Module.ADVANCE_CREDITS
 nskr_kq_delveNoLz,nskr_kqDelveElizaGate,!nskr_quest kq flag MESSENGER_QUESTION_OPEN,RemoveOption nskr_kq_delveLz,,,"Only after the ""LZ"" messenger was met; asking Alice first closes the question"
-nskr_kq_delveTerrorist,DialogOptionSelected,$option == nskr_kq_delveTerrorist,"AddText ""\""If you're wondering about how or why she would get one these disks, we don't know either. It has to be some kind of bargaining chip with us.\"" Alice finishes with a look of disgust on her face.""","Alice continues with her heads-up. ""She's a political extremist, and has been keeping quiet since her last attack a few years back. That's why I warned you about her.""",nskr_kq_delveElizaNoted:Continue,
+nskr_kq_delveTerrorist,DialogOptionSelected,$option == nskr_kq_delveTerrorist,,"Alice continues with her heads-up. ""She's a political extremist, and has been keeping quiet since her last attack a few years back. That's why I warned you about her.""
+
+""If you're wondering about how or why she would get one these disks, we don't know either. It has to be some kind of bargaining chip with us."" Alice finishes with a look of disgust on her face.",nskr_kq_delveElizaNoted:Continue,
 nskr_kq_delveLowlife,DialogOptionSelected,$option == nskr_kq_delveLowlife,"$option = nskr_kq_delveTerrorist 0
 FireBest DialogOptionSelected",,,Same screen as the terrorist question
 nskr_kq_delveLz,DialogOptionSelected,$option == nskr_kq_delveLz,"$option = nskr_kq_delveTerrorist 0
 FireBest DialogOptionSelected",,,Same screen as the terrorist question
-nskr_kq_delveElizaNoted,DialogOptionSelected,$option == nskr_kq_delveElizaNoted,"AddText ""\""Anyways that's all $playerFirstName, hope you're not left too confused about this situation. I think it's about time we wrap up.\""""
-AddText ""Alice is already packing up her stuff as she speaks. \""Yes, I think we're done. You should contact us later, so we can fill you in on the more minor details and leads regarding this mission.\""""",Jack seems to be pleased with the result of this meeting.,nskr_kq_delveLeave:Leave,
+nskr_kq_delveElizaNoted,DialogOptionSelected,$option == nskr_kq_delveElizaNoted,,"Jack seems to be pleased with the result of this meeting.
+
+""Anyways that's all $playerFirstName, hope you're not left too confused about this situation. I think it's about time we wrap up.""
+
+Alice is already packing up her stuff as she speaks. ""Yes, I think we're done. You should contact us later, so we can fill you in on the more minor details and leads regarding this mission.""",nskr_kq_delveLeave:Leave,
 ,,,,,,
 nskr_kq_delveFound,DialogOptionSelected,$option == nskr_kq_delveFound,"nskr_quest kq do markCacheCore
 AddText ""\""That's incredible. You will be saving us a lot of work, if you are speaking the truth.\""""
 AddText ""Alice starts explaining in the same dry tone. \""I suppose we will have to tell you more about this Chip now. At the moment of the collapse the Cache was hosting the Unlimited Production Chip. The Chip contains the keys to the old Domain's great secrets, so many technologies in one neat package.\""""
 AddText ""\""Now, you will enter this site, disable whatever security systems they have left, and recover this Unlimited Production Chip.\""""","Jack has a look of genuine amazement on his face, while Alice looks more skeptical.",nskr_kq_delveFoundMore:Continue,markCacheCore marks the command core when the guardian is already beaten
-nskr_kq_delveFoundMore,DialogOptionSelected,$option == nskr_kq_delveFoundMore,"AddText ""Jack chimes in. \""Don't worry, you don't need to understand why the Chip works. Just that it's very important, and the goal of your mission.\""""
-AddText ""Jack seems to be pleased with the result of this meeting.""
-AddText ""\""Since you have the Cache coordinates, you should get to work as soon as possible. We will eagerly wait for your return.\""""","""I hope you got all that captain."" She says.",nskr_kq_delveLeave:Leave,
+nskr_kq_delveFoundMore,DialogOptionSelected,$option == nskr_kq_delveFoundMore,,"""I hope you got all that captain."" She says.
+
+Jack chimes in. ""Don't worry, you don't need to understand why the Chip works. Just that it's very important, and the goal of your mission.""
+
+Jack seems to be pleased with the result of this meeting.
+
+""Since you have the Cache coordinates, you should get to work as soon as possible. We will eagerly wait for your return.""",nskr_kq_delveLeave:Leave,
 ,,,,,,
 nskr_kq_delveLeave,DialogOptionSelected,$option == nskr_kq_delveLeave,"AddTextSmall ""Acquired log entry for The Delve"" gray
 SetTextHighlights ""The Delve""
@@ -1559,21 +1684,38 @@ nskr_quest kq check oneSatellite",ShowDefaultVisual,"This autonomous satellite j
 defaultLeave:Leave",
 nskr_kq_satelliteSilent,nskr_kqSatellite,,ShowDefaultVisual,,defaultLeave:Leave,"Fallback: two satellites counted and this one not salvaged, as after the story skip; the old dialog showed no text and no option and left on Escape"
 ,,,,,,
-nskr_kq_satelliteLookSel,DialogOptionSelected,$option == nskr_kq_satelliteLook,"AddText ""You watch the satellite slowly rotate on your display, as it spins uncontrollably in the void of space.""
-AddText ""The operations chief waits for your orders.""","As you fly in closer, the satellite slowly grows on your display from a tiny unrecognisable dot in space. Even once you've finished your approach it's still hard to make out any details on the zoomed in image, the satellite must be only a few metres in size.","defaultLeave:Leave
+nskr_kq_satelliteLookSel,DialogOptionSelected,$option == nskr_kq_satelliteLook,,"As you fly in closer, the satellite slowly grows on your display from a tiny unrecognisable dot in space. Even once you've finished your approach it's still hard to make out any details on the zoomed in image, the satellite must be only a few metres in size.
+
+You watch the satellite slowly rotate on your display, as it spins uncontrollably in the void of space.
+
+The operations chief waits for your orders.","defaultLeave:Leave
 nskr_kq_satelliteSend:Send in the salvor crew",
-nskr_kq_satelliteSendSel,DialogOptionSelected,$option == nskr_kq_satelliteSend,"AddText ""Suddenly the holodisplay flickers to life showing a closeup of the target. The surfaces of the satellite have a desaturated sheen to them, it looks like the slightest force could make the whole structure crumble apart. A clear sign of intense radiation bombardment.""
-AddText ""The team starts carefully disassembling the structure looking for anything worth recovering. Not much of value is discovered at first, only data drives scrubbed clean by radiation, and other malfunctioning comms equipment. Until-""","Your ops chief oversees the mission by-the-book, staging approach-and-scan to maximize safety in the event of environmental or technological hazards. And after a while the salvor team is in place to inspect the satellite.","nskr_kq_satelliteInspect:Continue
+nskr_kq_satelliteSendSel,DialogOptionSelected,$option == nskr_kq_satelliteSend,,"Your ops chief oversees the mission by-the-book, staging approach-and-scan to maximize safety in the event of environmental or technological hazards. And after a while the salvor team is in place to inspect the satellite.
+
+Suddenly the holodisplay flickers to life showing a closeup of the target. The surfaces of the satellite have a desaturated sheen to them, it looks like the slightest force could make the whole structure crumble apart. A clear sign of intense radiation bombardment.
+
+The team starts carefully disassembling the structure looking for anything worth recovering. Not much of value is discovered at first, only data drives scrubbed clean by radiation, and other malfunctioning comms equipment. Until-","nskr_kq_satelliteInspect:Continue
 defaultLeave:Leave",
-nskr_kq_satelliteInspectSel,DialogOptionSelected,$option == nskr_kq_satelliteInspect,"AddText ""The ops chief runs a set of different scans on the compartment. Revealing inside a shielded data disk, connected to some sort of anti-tampering device. It is unclear what this device would do once triggered.""
-AddText ""Your ops chief looks worried. \""There's no telling from outside what that device will do if triggered.\""""","The team reports of a hidden compartment inside the satellite. Unlike the rest of the equipment it has proper radiation shielding, clearly it's somehow important for the satellites intended function.","nskr_kq_satellitePrepare:Prepare to take the disk
+nskr_kq_satelliteInspectSel,DialogOptionSelected,$option == nskr_kq_satelliteInspect,,"The team reports of a hidden compartment inside the satellite. Unlike the rest of the equipment it has proper radiation shielding, clearly it's somehow important for the satellites intended function.
+
+The ops chief runs a set of different scans on the compartment. Revealing inside a shielded data disk, connected to some sort of anti-tampering device. It is unclear what this device would do once triggered.
+
+Your ops chief looks worried. ""There's no telling from outside what that device will do if triggered.""","nskr_kq_satellitePrepare:Prepare to take the disk
 defaultLeave:Leave",
-nskr_kq_satellitePrepareSel,DialogOptionSelected,$option == nskr_kq_satellitePrepare,"AddText ""They pause for a second to think. \""... You know, there's a good chance it'll just do nothing. Considering the state that the rest of the equipment is in.\""""
-AddText ""You order the ops chief to prepare a plan to recover the disk, and after a short wait you are ready to begin.""","The ops chief runs over the data you've gathered one last time. ""Well at least there's no sign of explosives onboard the satellite. Still the device could begin a self-destruct reactor overload, causing an intense radiation leak or an EM pulse. Alternatively it could simply send a hyperwave ping alerting nearby forces of tampering, whoever those might be.""","nskr_kq_satelliteProceed:Proceed with the operation
+nskr_kq_satellitePrepareSel,DialogOptionSelected,$option == nskr_kq_satellitePrepare,,"The ops chief runs over the data you've gathered one last time. ""Well at least there's no sign of explosives onboard the satellite. Still the device could begin a self-destruct reactor overload, causing an intense radiation leak or an EM pulse. Alternatively it could simply send a hyperwave ping alerting nearby forces of tampering, whoever those might be.""
+
+They pause for a second to think. ""... You know, there's a good chance it'll just do nothing. Considering the state that the rest of the equipment is in.""
+
+You order the ops chief to prepare a plan to recover the disk, and after a short wait you are ready to begin.","nskr_kq_satelliteProceed:Proceed with the operation
 defaultLeave:Leave",
-nskr_kq_satelliteProceedSel,DialogOptionSelected,$option == nskr_kq_satelliteProceed,"AddText ""Finally a salvor picks up the disk before it's disconnected, and you get a clear look at it \""Project : Enigma\"" is printed on it in faded red text.""
-AddText ""The rest of the team hurries into the shielded shuttle as the last member prepares to disconnect the disk. Your ops chief is holding their breath at this point, as the tension at the bridge builds up.""",A handful of volunteers are sent in hardsuits to recover the disk. You closely watch as the team tries their best not to prematurely trip the device while trying to recover the disk.,nskr_kq_satelliteUnplug:Continue,No Escape from here until the disk is taken
-nskr_kq_satelliteUnplugSel,DialogOptionSelected,$option == nskr_kq_satelliteUnplug,"AddText ""Onboard your comms officer picks up the disk, so they can deliver an initial report.""","They take a quick look at the disk one last time and then unplug it, and... nothing. Your ops chief helps finish the operation without further incident.",nskr_kq_satelliteReport:Continue,
+nskr_kq_satelliteProceedSel,DialogOptionSelected,$option == nskr_kq_satelliteProceed,,"A handful of volunteers are sent in hardsuits to recover the disk. You closely watch as the team tries their best not to prematurely trip the device while trying to recover the disk.
+
+Finally a salvor picks up the disk before it's disconnected, and you get a clear look at it ""Project : Enigma"" is printed on it in faded red text.
+
+The rest of the team hurries into the shielded shuttle as the last member prepares to disconnect the disk. Your ops chief is holding their breath at this point, as the tension at the bridge builds up.",nskr_kq_satelliteUnplug:Continue,No Escape from here until the disk is taken
+nskr_kq_satelliteUnplugSel,DialogOptionSelected,$option == nskr_kq_satelliteUnplug,,"They take a quick look at the disk one last time and then unplug it, and... nothing. Your ops chief helps finish the operation without further incident.
+
+Onboard your comms officer picks up the disk, so they can deliver an initial report.",nskr_kq_satelliteReport:Continue,
 nskr_kq_satelliteReportSel,DialogOptionSelected,$option == nskr_kq_satelliteReport,"FireBest nskr_kqSatelliteDiskReport
 AddText ""Suddenly you are interrupted by multiple alarms going off at once on the bridge. Seems like the anti-tampering device only malfunctioned temporarily. \""Captain, the satellite just fired a hyperwave ping alerting the whole damn constellation of our presence.\""""
 AddText ""It's time to leave, quickly."" gray
@@ -1581,19 +1723,28 @@ FireBest nskr_kqSatelliteSalvaged",,,
 nskr_kq_satelliteDiskReport,nskr_kqSatelliteDiskReport,,,"Your comms officer approaches you ready to tell more about this disk. ""This is no ordinary data drive, and it's not just the radiation shielding. It has a construction I've never seen before, and can't find any reference to in our databases. Although all the data is encrypted, oddly enough the disk uses centuries old Domain encryption. So we could break it if we had more data to work with, and the right equipment.""",,Fallback: salvaged before job 5
 nskr_kq_satelliteDiskReportJob5,nskr_kqSatelliteDiskReport,nskr_quest kq is JOB5_DISKS CACHE_KNOWN CACHE_CLEARED CHIP_RECOVERED COMPLETED FAILED,,"Your comms officer approaches you ready to tell more about this disk. ""This is no ordinary data drive, and it's not just the radiation shielding. It has a construction I've never seen before, it must be the disk we're looking for. As our intel suggested all the data is encrypted, oddly enough the disk uses centuries old Domain encryption.""",,"Every stage from JOB5_DISKS on, failure included"
 ,,,,,,
-nskr_kq_satelliteSearchSel,DialogOptionSelected,$option == nskr_kq_satelliteSearch,"AddText ""You watch the holofeed from multiple perspectives show the operation in progress, soon the team is in place to recover the disk.""","Your ops chief prepares the salvage operation, and after a short wait the salvor team is ready to go. They get in range without issue, and start looking for the same hidden compartment.","nskr_kq_satelliteScan:Continue
+nskr_kq_satelliteSearchSel,DialogOptionSelected,$option == nskr_kq_satelliteSearch,,"Your ops chief prepares the salvage operation, and after a short wait the salvor team is ready to go. They get in range without issue, and start looking for the same hidden compartment.
+
+You watch the holofeed from multiple perspectives show the operation in progress, soon the team is in place to recover the disk.","nskr_kq_satelliteScan:Continue
 defaultLeave:Leave",
-nskr_kq_satelliteScanSel,DialogOptionSelected,$option == nskr_kq_satelliteScan,"AddText ""The ops chief paces back and forth impatiently \""We're ready to go captain, just give us the word.\""""","Both the disk and anti-tampering device seem to be intact. The sensors team runs multiple scans on the satellite, then showing projections that confirm its nearly identical to the last one.","nskr_kq_satelliteRetrieve:Order the disk to be retrieved
+nskr_kq_satelliteScanSel,DialogOptionSelected,$option == nskr_kq_satelliteScan,,"Both the disk and anti-tampering device seem to be intact. The sensors team runs multiple scans on the satellite, then showing projections that confirm its nearly identical to the last one.
+
+The ops chief paces back and forth impatiently ""We're ready to go captain, just give us the word.""","nskr_kq_satelliteRetrieve:Order the disk to be retrieved
 defaultLeave:Leave",
-nskr_kq_satelliteRetrieveSel,DialogOptionSelected,$option == nskr_kq_satelliteRetrieve,"AddText ""The ops chief quickly begins to bark orders to try and get a grip on the situation. \""It's stuck on loop broadcasting some hyperwave broadcast.\""The sensors office reports. \""It's harmless, well - as harmless as a hyperwave beam is, and seemingly unintentional. We should be able to capture it for later, maybe there's something of use here.\""""
-AddText ""\""Well seems like the satellite is - mostly safe.\"" The ops chief says. \""We should move forward with the operation ASAP.\""""",Before you can give the go order the satellite suddenly comes to life. Sensor readings go haywire on the bridge as your crew scrambles to figure out what's going on.,nskr_kq_satelliteBroadcast:Continue,No Escape from here until the disk is taken
-nskr_kq_satelliteBroadcastSel,DialogOptionSelected,$option == nskr_kq_satelliteBroadcast,"AddText ""During the wait the communications team has finished an early report on the broadcast. \""Not only is this broadcast encrypted, there's a heavy layer of corruption on top.\"" The comms officer says. \""But of course there's nothing a little elbow grease from our team can't solve.\""""
-AddText ""\""With some cleanup, and a couple of decryption algorithms, we managed to extract a group of keywords that are repeated in the broadcast.\""""
-nskr_quest kq do pickJob5FrostTip
+nskr_kq_satelliteRetrieveSel,DialogOptionSelected,$option == nskr_kq_satelliteRetrieve,,"Before you can give the go order the satellite suddenly comes to life. Sensor readings go haywire on the bridge as your crew scrambles to figure out what's going on.
+
+The ops chief quickly begins to bark orders to try and get a grip on the situation. ""It's stuck on loop broadcasting some hyperwave broadcast.""The sensors office reports. ""It's harmless, well - as harmless as a hyperwave beam is, and seemingly unintentional. We should be able to capture it for later, maybe there's something of use here.""
+
+""Well seems like the satellite is - mostly safe."" The ops chief says. ""We should move forward with the operation ASAP.""",nskr_kq_satelliteBroadcast:Continue,No Escape from here until the disk is taken
+nskr_kq_satelliteBroadcastSel,DialogOptionSelected,$option == nskr_kq_satelliteBroadcast,"nskr_quest kq do pickJob5FrostTip
 AddText ""Enigma, Glacier, Frozen, $nskr_kq_keywordFrost, Heart, $nskr_kq_keywordConstellation"" gray
 AddText ""\""Your guess is as good as mine captain.\"" They shrug. \""It's a miracle we got anything out from this data set.\""""
 AddText ""The ops chief reports to you. \""With this mess solved we should get moving captain, anyone listening nearby knows that something's up.\""""
-FireBest nskr_kqSatelliteSalvaged",The salvor team hastily recovers the disk with the help of some shielded drones - to minimize hyperwave exposure. The chiefs strict attention to protocol makes this seem like a routine operation. And in no time the shuttle is on its way back to your flagship.,,"pickJob5FrostTip picks the hint system where the old dialog first read it, before the keywords show its constellation"
+FireBest nskr_kqSatelliteSalvaged","The salvor team hastily recovers the disk with the help of some shielded drones - to minimize hyperwave exposure. The chiefs strict attention to protocol makes this seem like a routine operation. And in no time the shuttle is on its way back to your flagship.
+
+During the wait the communications team has finished an early report on the broadcast. ""Not only is this broadcast encrypted, there's a heavy layer of corruption on top."" The comms officer says. ""But of course there's nothing a little elbow grease from our team can't solve.""
+
+""With some cleanup, and a couple of decryption algorithms, we managed to extract a group of keywords that are repeated in the broadcast.""",,"pickJob5FrostTip picks the hint system where the old dialog first read it, before the keywords show its constellation"
 ,,,,,,
 nskr_kq_satelliteSalvaged,nskr_kqSatelliteSalvaged,,"nskr_quest kq do salvageSatellite
 Ping sensor_burst
@@ -1609,17 +1760,25 @@ DismissDialog",,,
 # KESTEVEN QUESTLINE: GLACIER,,,,,,
 nskr_kq_glacierOpen,nskr_kqGlacier,,ShowLargePlanet,Your fleet approaches the tundra planet Glacier.,"nskr_kq_glacierSearch:Search for the facility
 defaultLeave:Leave","Opened through the claim of markGlacier, from Alice's second Frost tip until the disk is recovered"
-nskr_kq_glacierSearchSel,DialogOptionSelected,$option == nskr_kq_glacierSearch,"AddText ""\""There's no sign of human activity on the site, past or present.\"" The ops chief report. \""Well within the past few centuries at least. But there's no way of telling what else we could find here, we'll have to go in expecting the worst.\""""
-AddText ""\""This is our last chance to turn back.\""""",You order the sensor team to begin tracking down the signal on the planets surface. And in no time you have confirmation on the comms facility's exact coordinates.,"nskr_kq_glacierLand:Continue
+nskr_kq_glacierSearchSel,DialogOptionSelected,$option == nskr_kq_glacierSearch,,"You order the sensor team to begin tracking down the signal on the planets surface. And in no time you have confirmation on the comms facility's exact coordinates.
+
+""There's no sign of human activity on the site, past or present."" The ops chief report. ""Well within the past few centuries at least. But there's no way of telling what else we could find here, we'll have to go in expecting the worst.""
+
+""This is our last chance to turn back.""","nskr_kq_glacierLand:Continue
 defaultLeave:Leave",
-nskr_kq_glacierLandSel,DialogOptionSelected,$option == nskr_kq_glacierLand,"AddText ""The only evidence of the facility's existence are the tall comms towers going through the layers of packed snow and ice. The salvor crew has to use heavy machinery to start digging through the ice to even reach an entrance of any kind.""
-ShowPic nskr_glacier","You watch the salvor teams shuttle land on the top of a large flat hill near the pole of the planet. Relentless wind and snow beats on the shuttle and crew. Far away rolling hills dot the horizon, everything else is barren.",nskr_kq_glacierDig:Continue,"From here on every screen shows the Glacier illustration again, as the old dialog did after each click"
-nskr_kq_glacierDigSel,DialogOptionSelected,$option == nskr_kq_glacierDig,"AddText ""Despite being abandoned for seemingly centuries, the facility still has power. \""Explains how we could track down the signal so easily, everything is still lit up like no one left. It must be powered by some sort of passive decay reactor.\"" your ops chief comments.""
-AddText ""Clouds of dust get kicked up as the team makes their way through the countless hallways of the facility.""
-ShowPic nskr_glacier","After some waiting, and a lot of digging. The crew has finally reached the facility proper.",nskr_kq_glacierHalls:Continue,
-nskr_kq_glacierHallsSel,DialogOptionSelected,$option == nskr_kq_glacierHalls,"AddText ""\""It appears we've tripped some security mechanism, it's brought multiple hidden anti-ship batteries around the perimeter online.\"" The chief urgently reports.""
-AddText ""They continue, making quick orders and frantically going through the info feeds \""Looks like the decades of frost are buying us some extra time, I'd say we have around an hour before they come fully online.\""""
-ShowPic nskr_glacier",Alarms go off on the bridge as multiple screens turn red. The security chief scrambles to assess the situation.,"nskr_kq_glacierRush:Continue
+nskr_kq_glacierLandSel,DialogOptionSelected,$option == nskr_kq_glacierLand,ShowPic nskr_glacier,"You watch the salvor teams shuttle land on the top of a large flat hill near the pole of the planet. Relentless wind and snow beats on the shuttle and crew. Far away rolling hills dot the horizon, everything else is barren.
+
+The only evidence of the facility's existence are the tall comms towers going through the layers of packed snow and ice. The salvor crew has to use heavy machinery to start digging through the ice to even reach an entrance of any kind.",nskr_kq_glacierDig:Continue,"From here on every screen shows the Glacier illustration again, as the old dialog did after each click"
+nskr_kq_glacierDigSel,DialogOptionSelected,$option == nskr_kq_glacierDig,ShowPic nskr_glacier,"After some waiting, and a lot of digging. The crew has finally reached the facility proper.
+
+Despite being abandoned for seemingly centuries, the facility still has power. ""Explains how we could track down the signal so easily, everything is still lit up like no one left. It must be powered by some sort of passive decay reactor."" your ops chief comments.
+
+Clouds of dust get kicked up as the team makes their way through the countless hallways of the facility.",nskr_kq_glacierHalls:Continue,
+nskr_kq_glacierHallsSel,DialogOptionSelected,$option == nskr_kq_glacierHalls,ShowPic nskr_glacier,"Alarms go off on the bridge as multiple screens turn red. The security chief scrambles to assess the situation.
+
+""It appears we've tripped some security mechanism, it's brought multiple hidden anti-ship batteries around the perimeter online."" The chief urgently reports.
+
+They continue, making quick orders and frantically going through the info feeds ""Looks like the decades of frost are buying us some extra time, I'd say we have around an hour before they come fully online.""","nskr_kq_glacierRush:Continue
 nskr_kq_glacierComplicates:""This *complicates* things.""
 nskr_kq_glacierCurse:""Ahh shit.""",
 nskr_kq_glacierComplicatesSel,DialogOptionSelected,$option == nskr_kq_glacierComplicates,"$option = nskr_kq_glacierRush 0
@@ -1627,14 +1786,16 @@ FireBest DialogOptionSelected",,,Same screen as Continue
 nskr_kq_glacierCurseSel,DialogOptionSelected,$option == nskr_kq_glacierCurse,"$option = nskr_kq_glacierRush 0
 FireBest DialogOptionSelected",,,Same screen as Continue
 ,,,,,,
-nskr_kq_glacierRushSel,DialogOptionSelected,$option == nskr_kq_glacierRush,"AddText ""You watch the operations chief shout quick and precise orders across the bride, you need to reach the central command room and fast.""
-AddTextSmall ""You have around 90 minutes left."" gray
+nskr_kq_glacierRushSel,DialogOptionSelected,$option == nskr_kq_glacierRush,"AddTextSmall ""You have around 90 minutes left."" gray
 SetTextHighlights ""90""
-ShowPic nskr_glacier","The salvor team receives the orders to get moving, but their pace remains uncomfortably slow as they lug around the heavy EVA equipment and tools.",nskr_kq_glacierImpasse:Continue,"The countdown starts at 90 minutes; each line states the minutes left after that screen, which reach 0 on the late paths"
-nskr_kq_glacierImpasseSel,DialogOptionSelected,$option == nskr_kq_glacierImpasse,"AddText ""The ops chief hastily makes some plans of action and delivers them to you. \""We have a few tricks we can try here, remember time is of the essence captain.\""""
-AddTextSmall ""You have around 75 minutes left."" gray
+ShowPic nskr_glacier","The salvor team receives the orders to get moving, but their pace remains uncomfortably slow as they lug around the heavy EVA equipment and tools.
+
+You watch the operations chief shout quick and precise orders across the bride, you need to reach the central command room and fast.",nskr_kq_glacierImpasse:Continue,"The countdown starts at 90 minutes; each line states the minutes left after that screen, which reach 0 on the late paths"
+nskr_kq_glacierImpasseSel,DialogOptionSelected,$option == nskr_kq_glacierImpasse,"AddTextSmall ""You have around 75 minutes left."" gray
 SetTextHighlights ""75""
-ShowPic nskr_glacier",The team makes steady progress deeper into the facility until they reach an impasse. A heavily reinforced door is blocking the shortest path.,"nskr_kq_glacierWalk:Try to find a way around
+ShowPic nskr_glacier","The team makes steady progress deeper into the facility until they reach an impasse. A heavily reinforced door is blocking the shortest path.
+
+The ops chief hastily makes some plans of action and delivers them to you. ""We have a few tricks we can try here, remember time is of the essence captain.""","nskr_kq_glacierWalk:Try to find a way around
 nskr_kq_glacierCut:Cut through it
 nskr_kq_glacierBlast:Blast it",
 nskr_kq_glacierWalkSel,DialogOptionSelected,$option == nskr_kq_glacierWalk,"AddTextSmall ""You have around 45 minutes left."" gray
@@ -1645,24 +1806,29 @@ nskr_kq_glacierCutSel,DialogOptionSelected,$option == nskr_kq_glacierCut,"AddTex
 SetTextHighlights ""45""
 $nskr_kq_glacierPath = cut 0
 ShowPic nskr_glacier","The team sets up the plasma torch and gets to work. You watch as everyone pulls down a solid shining black visor on their helmets, suddenly a blinding stream of sparks fills the view while they cut the structure. It takes some time, but eventually they get through.",nskr_kq_glacierServers:Continue,
-nskr_kq_glacierBlastSel,DialogOptionSelected,$option == nskr_kq_glacierBlast,"AddText ""Seems like structure is only barely holding it together as it creeks and bends under the newfound stress. The team quickly squeezes through the hole in the door.""
-AddText ""That was quite fast, lets hope the structure holds on for a little while longer.""
-AddTextSmall ""You have around 60 minutes left."" gray
+nskr_kq_glacierBlastSel,DialogOptionSelected,$option == nskr_kq_glacierBlast,"AddTextSmall ""You have around 60 minutes left."" gray
 SetTextHighlights ""60""
 $nskr_kq_glacierPath = blast 0
-ShowPic nskr_glacier","The team carefully install the shaped breaching charge. They take cover, and as the charges are blown the hallways get filled with a storm of dust.",nskr_kq_glacierServers:Continue,
+ShowPic nskr_glacier","The team carefully install the shaped breaching charge. They take cover, and as the charges are blown the hallways get filled with a storm of dust.
+
+Seems like structure is only barely holding it together as it creeks and bends under the newfound stress. The team quickly squeezes through the hole in the door.
+
+That was quite fast, lets hope the structure holds on for a little while longer.",nskr_kq_glacierServers:Continue,
 ,,,,,,
-nskr_kq_glacierServersSel,DialogOptionSelected,$option == nskr_kq_glacierServers,"AddText ""The crew on bridge quickly map out the room, after a short wait they locate the central command console. \""Seems like we found what we are looking for, let's get to work.\"" Your ops chief comments.""
-FireBest nskr_kqGlacierServersTime
-ShowPic nskr_glacier","The team has finally reached what looks like the right place. A massive central server room, dimly lit server racks with multiple stories of intertwined walkways seem to continue on for eternity, as a thin haze of fog and dust obscures your view.",nskr_kq_glacierConsole:Continue,
+nskr_kq_glacierServersSel,DialogOptionSelected,$option == nskr_kq_glacierServers,"FireBest nskr_kqGlacierServersTime
+ShowPic nskr_glacier","The team has finally reached what looks like the right place. A massive central server room, dimly lit server racks with multiple stories of intertwined walkways seem to continue on for eternity, as a thin haze of fog and dust obscures your view.
+
+The crew on bridge quickly map out the room, after a short wait they locate the central command console. ""Seems like we found what we are looking for, let's get to work."" Your ops chief comments.",nskr_kq_glacierConsole:Continue,
 nskr_kq_glacierServersTime,nskr_kqGlacierServersTime,,"AddTextSmall ""You have around 35 minutes left."" gray
 SetTextHighlights ""35""",,,Fallback: after the walk or the cut
 nskr_kq_glacierServersTimeBlast,nskr_kqGlacierServersTime,$nskr_kq_glacierPath == blast,"AddTextSmall ""You have around 50 minutes left."" gray
 SetTextHighlights ""50""",,,
-nskr_kq_glacierConsoleSel,DialogOptionSelected,$option == nskr_kq_glacierConsole,"AddText ""The console seems to be in control of most of the facility's systems, your bridge crew might be able to guide the salvor team to shutdown the defenses.""
-AddText ""The ops chief and the comms officer don't seem to agree which course of action is the best, so they leave the choice to you.""
-FireBest nskr_kqGlacierConsoleTime
-ShowPic nskr_glacier","Next to the console you see a large rack of identical disks, an intricate sprawl of wires connects it to the console. It takes a moment for your crew to figure out which is the correct one.","nskr_kq_glacierRun:Grab the disk and run
+nskr_kq_glacierConsoleSel,DialogOptionSelected,$option == nskr_kq_glacierConsole,"FireBest nskr_kqGlacierConsoleTime
+ShowPic nskr_glacier","Next to the console you see a large rack of identical disks, an intricate sprawl of wires connects it to the console. It takes a moment for your crew to figure out which is the correct one.
+
+The console seems to be in control of most of the facility's systems, your bridge crew might be able to guide the salvor team to shutdown the defenses.
+
+The ops chief and the comms officer don't seem to agree which course of action is the best, so they leave the choice to you.","nskr_kq_glacierRun:Grab the disk and run
 nskr_kq_glacierDefuse:Try to shut down the system",
 nskr_kq_glacierConsoleTime,nskr_kqGlacierConsoleTime,,"AddTextSmall ""You have around 30 minutes left."" gray
 SetTextHighlights ""30""",,,Fallback: after the walk or the cut
@@ -1680,18 +1846,21 @@ nskr_kq_glacierRunBackBlast,nskr_kqGlacierRunBack,$nskr_kq_glacierPath == blast,
 SetTextHighlights ""0""
 $nskr_kq_glacierLate = true 0","On their way back they make a worrying discovery. A part of blown up section has caved in, a considerable amount of time is wasted as the crew tries to clear a path big enough to squeeze through.",,
 ,,,,,,
-nskr_kq_glacierDefuseSel,DialogOptionSelected,$option == nskr_kq_glacierDefuse,"AddText ""It takes excruciatingly long for any part of the system to respond to orders, but eventually it seems like you might be back in control.""
-FireBest nskr_kqGlacierDefuseTime
+nskr_kq_glacierDefuseSel,DialogOptionSelected,$option == nskr_kq_glacierDefuse,"FireBest nskr_kqGlacierDefuseTime
 $nskr_kq_glacierShutdown = true 0
-ShowPic nskr_glacier","You watch as both the bridge crew and the team on site scramble to get control of the system. As they try to coerce it to shutdown, it becomes obvious that large parts of it are corrupted or otherwise non-functional.",nskr_kq_glacierDefused:Continue,
+ShowPic nskr_glacier","You watch as both the bridge crew and the team on site scramble to get control of the system. As they try to coerce it to shutdown, it becomes obvious that large parts of it are corrupted or otherwise non-functional.
+
+It takes excruciatingly long for any part of the system to respond to orders, but eventually it seems like you might be back in control.",nskr_kq_glacierDefused:Continue,
 nskr_kq_glacierDefuseTime,nskr_kqGlacierDefuseTime,,"AddTextSmall ""You have around 0 minutes left."" gray
 SetTextHighlights ""0""
 $nskr_kq_glacierLate = true 0",,,Fallback: after the walk or the cut
 nskr_kq_glacierDefuseTimeBlast,nskr_kqGlacierDefuseTime,$nskr_kq_glacierPath == blast,"AddTextSmall ""You have around 15 minutes left."" gray
 SetTextHighlights ""15""",,,
-nskr_kq_glacierDefusedSel,DialogOptionSelected,$option == nskr_kq_glacierDefused,"AddText ""With the systems shut down the team is free to grab the disk and make their way back to the shuttle.""
-AddText ""On their way back the team discovers that a part of blown up section has caved in, good thing your not in a hurry though. They manage to dig and reinforce a new path through rubble without much effort, and are shortly on their way back.""
-ShowPic nskr_glacier","After some frantic back and forth the team finally finds a way to lower the emergency defense level of the facility, de-escalating the situation. After a short breather the operation is back in progress.",nskr_kq_glacierReturn:Continue,"Only the blast path shuts the defenses down in time, so the cave-in line always follows"
+nskr_kq_glacierDefusedSel,DialogOptionSelected,$option == nskr_kq_glacierDefused,ShowPic nskr_glacier,"After some frantic back and forth the team finally finds a way to lower the emergency defense level of the facility, de-escalating the situation. After a short breather the operation is back in progress.
+
+With the systems shut down the team is free to grab the disk and make their way back to the shuttle.
+
+On their way back the team discovers that a part of blown up section has caved in, good thing your not in a hurry though. They manage to dig and reinforce a new path through rubble without much effort, and are shortly on their way back.",nskr_kq_glacierReturn:Continue,"Only the blast path shuts the defenses down in time, so the cave-in line always follows"
 nskr_kq_glacierDefusedLateSel,DialogOptionSelected,"$option == nskr_kq_glacierDefused
 $nskr_kq_glacierLate","FireBest nskr_kqGlacierRedAlert
 AddText ""Seems like you are barely late, as the team finally finds a way to lower the emergency defense level of the facility. A barrage from the anti-ship batteries has already fired off, some ships in your fleet suffer some damage as a result.""
@@ -1732,8 +1901,12 @@ nskr_kq_elizaSpacerAsk,DialogOptionSelected,$option == nskr_kq_elizaSpacerAsk,Fi
 nskr_kq_elizaSpacerOptHello,nskr_kqElizaSpacerOptions,,,,"nskr_kq_elizaSpacerHello:""Hello? I'm talking to you.""",
 nskr_kq_elizaSpacerOptCredits,nskr_kqElizaSpacerOptions,nskr_quest kq check elizaSpacerAffordable,,,"nskr_kq_elizaSpacerCredits:""Would some credits change your mind?""",Only while the player has more credits than the price
 nskr_kq_elizaSpacerOptLeave,nskr_kqElizaSpacerOptions,,,,nskr_kq_elizaSpacerLeave:Leave,
-nskr_kq_elizaSpacerHello,DialogOptionSelected,$option == nskr_kq_elizaSpacerHello,"AddText ""\""Keep your nose out of our business captain.\"" $HeOrShe says in a gruesome tone, and returns to drinking like nothing happened.""","The spacer slowly turns to you, staring at you intensely.",nskr_kq_elizaSpacerLeave:Leave,
-nskr_kq_elizaSpacerCredits,DialogOptionSelected,$option == nskr_kq_elizaSpacerCredits,"AddText ""$HeOrShe adjusts $hisOrHer position on $hisOrHer chair, and quickly eyes up the room. \""For a small donation I could point you towards a certain person.\""""","The spacer slowly turns to you. ""Everything is always about the damn money to you people, but if you insist...""","nskr_kq_elizaSpacerPay:Pay $himOrHer
+nskr_kq_elizaSpacerHello,DialogOptionSelected,$option == nskr_kq_elizaSpacerHello,,"The spacer slowly turns to you, staring at you intensely.
+
+""Keep your nose out of our business captain."" $HeOrShe says in a gruesome tone, and returns to drinking like nothing happened.",nskr_kq_elizaSpacerLeave:Leave,
+nskr_kq_elizaSpacerCredits,DialogOptionSelected,$option == nskr_kq_elizaSpacerCredits,,"The spacer slowly turns to you. ""Everything is always about the damn money to you people, but if you insist...""
+
+$HeOrShe adjusts $hisOrHer position on $hisOrHer chair, and quickly eyes up the room. ""For a small donation I could point you towards a certain person.""","nskr_kq_elizaSpacerPay:Pay $himOrHer
 nskr_kq_elizaSpacerLeave:Leave",
 nskr_kq_elizaSpacerPay,DialogOptionSelected,$option == nskr_kq_elizaSpacerPay,"nskr_quest kq do elizaPickContact
 AddText ""\""You will want to talk the contact at $nskr_kq_elizaContactMarket. You will have no trouble finding them at the bar, trust me.\""""
@@ -1762,8 +1935,9 @@ nskr_kq_elizaSlyPaying,DialogOptionSelected,$option == nskr_kq_elizaSlyPaying,Fi
 nskr_kq_elizaSlyEliza,DialogOptionSelected,$option == nskr_kq_elizaSlyEliza,FireBest nskr_kqElizaSlyGone,"The spacer looks annoyed. ""Haha, very funny captain. It's pretty fucking obvious you don't work for them, I ain't going to tell you shit.""",nskr_kq_elizaSlyLeave:Leave,
 nskr_kq_elizaSlyComsec,DialogOptionSelected,$option == nskr_kq_elizaSlyComsec,"$option = nskr_kq_elizaSlyEliza 0
 FireBest DialogOptionSelected",,,"Same screen as ""Eliza"""
-nskr_kq_elizaSlyMyself,DialogOptionSelected,$option == nskr_kq_elizaSlyMyself,"AddText ""$HeOrShe turns more serious for a moment. \""I might be able to put the word out for you, you might just find what you're looking for.\""""
-FireBest nskr_kqElizaSlyGone","The spacer looks puzzled. ""No one out here *only* works for themselves, everyone of note has connections and ties.""",nskr_kq_elizaSlyLeave:Leave,
+nskr_kq_elizaSlyMyself,DialogOptionSelected,$option == nskr_kq_elizaSlyMyself,FireBest nskr_kqElizaSlyGone,"The spacer looks puzzled. ""No one out here *only* works for themselves, everyone of note has connections and ties.""
+
+$HeOrShe turns more serious for a moment. ""I might be able to put the word out for you, you might just find what you're looking for.""",nskr_kq_elizaSlyLeave:Leave,
 nskr_kq_elizaSlyGone,nskr_kqElizaSlyGone,,,$HeOrShe quickly picks up $hisOrHer drink and disappears into the crowd. The conversation is over.,,Shared last line of every answer
 nskr_kq_elizaSlyLeave,DialogOptionSelected,$option == nskr_kq_elizaSlyLeave,"nskr_quest kq do elizaSlySpacerLeave
 HideVisual
@@ -1793,32 +1967,46 @@ $nskr_intel_update == contactMoved","SetTextHighlightColors 255,0,0,255
 SetTextHighlights ""the contact""","With the conditions deteriorating on $nskr_kq_elizaContactFormer, the contact has moved their operations to $nskr_kq_elizaContactEntity.",,The Delve update KestevenElizaSearchModule sends when the contact's market is decivilized; the color is the pirate faction's color
 ,,,,,,
 # KESTEVEN QUESTLINE: ELIZA,,,,,,
-nskr_kq_elizaPort,OpenInteractionDialog,nskr_quest kq check elizaPort score:10000,"ShowDefaultVisual
-AddText ""Seems like there's no clear way around this \""meeting\"".""","The port authority denies your docking access. You receive a message from Eliza, a request join her in a meeting. On the condition that you come alone, no guards or other crew of your own.","nskr_kq_elizaMeet:Agree to meet her
+nskr_kq_elizaPort,OpenInteractionDialog,nskr_quest kq check elizaPort score:10000,ShowDefaultVisual,"The port authority denies your docking access. You receive a message from Eliza, a request join her in a meeting. On the condition that you come alone, no guards or other crew of your own.
+
+Seems like there's no clear way around this ""meeting"".","nskr_kq_elizaMeet:Agree to meet her
 defaultLeave:Leave",Replaces the whole market dialog until the meeting has finished once; score:10000 wins over every vanilla market opening.
 nskr_kq_elizaMeet,DialogOptionSelected,$option == nskr_kq_elizaMeet,"nskr_quest kq do elizaMeet
 AddText ""\""There's going to be a delay of course, and it's going to get ugly - fast.\"" The captain says. There is a sour expression, they are not happy about this. \""Hopefully it won't come down to this.\""""","The marine captain, with the help of the black ops team hatch a contingency plan in case things go wrong with Eliza.",nskr_kq_elizaEscort:Continue,
-nskr_kq_elizaEscort,DialogOptionSelected,$option == nskr_kq_elizaEscort,"AddText ""You are then escorted by group of rough looking bodyguards, who of course collect your sidearm for safekeeping. One of them has a fearsome scar on their left arm, wrapping all the way from the elbow to the shoulder. It's accentuated by many tattoos surrounding it, in an intricate pattern of abstract symbols and shapes - you wonder what causes such damage without killing them outright. The guards take you through a beaten down section of the port, presumably to the meeting.""
-AddText ""After a short walk you arrive in a section that seems to have been recently refurbished. It's unusually modern looking, but still maintains a makeshift look.""
-AddText ""The old and new clash in a patchwork of exposed pipe-works, rusted out surfaces, freshly renovated walls and brand new light fixtures.""","You agree to the offer, and shortly after the port authority gives the green light to land at a specific dock.",nskr_kq_elizaOffice:Continue,
-nskr_kq_elizaOffice,DialogOptionSelected,$option == nskr_kq_elizaOffice,"ShowPersonVisual false nskr_anarchist
-AddText ""\""Welcome to my humble port captain.\"" Eliza greets you from behind a fancy looking desk. \""Feel free to take a seat, we have a lot to discuss.\""""","The guards point you towards what looks like a small office. And immediately you spot Eliza in the room. She's wearing a flashy and ornate looking uniform - dark leather belts loop around and hang off of the blood red uniform, underlined by shiny gold pins and decorations - a fit for a warlord.","nskr_kq_elizaSit:Take a seat
+nskr_kq_elizaEscort,DialogOptionSelected,$option == nskr_kq_elizaEscort,,"You agree to the offer, and shortly after the port authority gives the green light to land at a specific dock.
+
+You are then escorted by group of rough looking bodyguards, who of course collect your sidearm for safekeeping. One of them has a fearsome scar on their left arm, wrapping all the way from the elbow to the shoulder. It's accentuated by many tattoos surrounding it, in an intricate pattern of abstract symbols and shapes - you wonder what causes such damage without killing them outright. The guards take you through a beaten down section of the port, presumably to the meeting.
+
+After a short walk you arrive in a section that seems to have been recently refurbished. It's unusually modern looking, but still maintains a makeshift look.
+
+The old and new clash in a patchwork of exposed pipe-works, rusted out surfaces, freshly renovated walls and brand new light fixtures.",nskr_kq_elizaOffice:Continue,
+nskr_kq_elizaOffice,DialogOptionSelected,$option == nskr_kq_elizaOffice,ShowPersonVisual false nskr_anarchist,"The guards point you towards what looks like a small office. And immediately you spot Eliza in the room. She's wearing a flashy and ornate looking uniform - dark leather belts loop around and hang off of the blood red uniform, underlined by shiny gold pins and decorations - a fit for a warlord.
+
+""Welcome to my humble port captain."" Eliza greets you from behind a fancy looking desk. ""Feel free to take a seat, we have a lot to discuss.""","nskr_kq_elizaSit:Take a seat
 nskr_kq_elizaStand:Keep standing",
 nskr_kq_elizaSit,DialogOptionSelected,$option == nskr_kq_elizaSit,FireBest nskr_kqElizaCache,,,
 nskr_kq_elizaStand,DialogOptionSelected,$option == nskr_kq_elizaStand,"$nskr_kq_elizaStood = true 0
 FireBest nskr_kqElizaCache",,,
-nskr_kq_elizaCache,nskr_kqElizaCache,,"AddText ""She sets down a handcrafted notebook down on the desk as she speaks.""
-AddText ""Her tone turns inquisitive. \""I see you're also working on the same subject. Did they even tell you what you were *really* looking for in there?\""""","""As you may know I have personally gotten quite invested in this cache mystery. I managed to get my hands on two disks so far, the data recovered from them is fascinating. The plans they had...""","nskr_kq_elizaChip:""Some chip I think.""
+nskr_kq_elizaCache,nskr_kqElizaCache,,,"""As you may know I have personally gotten quite invested in this cache mystery. I managed to get my hands on two disks so far, the data recovered from them is fascinating. The plans they had...""
+
+She sets down a handcrafted notebook down on the desk as she speaks.
+
+Her tone turns inquisitive. ""I see you're also working on the same subject. Did they even tell you what you were *really* looking for in there?""","nskr_kq_elizaChip:""Some chip I think.""
 nskr_kq_elizaNotReally:""Not really.""
 nskr_kq_elizaNotTelling:""I'm not telling you.""",
 ,,,,,,
 nskr_kq_elizaChip,DialogOptionSelected,$option == nskr_kq_elizaChip,FireBest nskr_kqElizaPower,"""It's not just some chip! It's the key to the old Domain's greatest technologies.""",,
 nskr_kq_elizaNotReally,DialogOptionSelected,$option == nskr_kq_elizaNotReally,FireBest nskr_kqElizaPower,,,
 nskr_kq_elizaNotTelling,DialogOptionSelected,$option == nskr_kq_elizaNotTelling,FireBest nskr_kqElizaPower,"""Would you stop being so hostile captain, I'm showing such hospitality to you. Try to just focus on the business at hand, anyways...""",,
-nskr_kq_elizaPower,nskr_kqElizaPower,,"AddText ""\""What do you live for captain? To wake up at exact same minute every morning? To wear the exact same uniform every day? To only call people by Sir and Ma'am? To do exactly as your told? Even when your being slowly pushed to your death?\"" She looks more intent. \""When I saw so many of my peers slowly lose every part their selves to the bureaucracy machine - I swore I would never become one of them.\"" She sighs. \""It's a broken system captain - the Domain that is, are we really doomed to repeat the same cycle over and over again?\"" She stops for a moment.""
-AddText ""\""The collapse gave such a beautiful opportunity for humanity to be born a new. The Hegemony is fatally gripped by the longing for an old world - Everything will be exactly the same it was no exceptions, leading to the same failures all over again. There's still a chance for us to learn from the past, all it takes is a second collapse.\"" She lets out a devilish little smile. \""That's where the Unlimited Production Chip comes in.\""""
-AddText ""\""Now $nskr_kq_playerFullName, who do you think deserves to wield such power?\""""
-AddText ""She leans back on her chair while waiting for your response, the chair made from exquisite dark leather towers over her.""","At the moment of the collapse the Cache was hosting the Unlimited Production Chip. It's the keys to construct the greatest ships ever known to mankind."" Eliza is starting to get quite worked up.","nskr_kq_elizaKesteven:""I'm sure the Kesteven Corporation are a responsible organization.""
+nskr_kq_elizaPower,nskr_kqElizaPower,,,"At the moment of the collapse the Cache was hosting the Unlimited Production Chip. It's the keys to construct the greatest ships ever known to mankind."" Eliza is starting to get quite worked up.
+
+""What do you live for captain? To wake up at exact same minute every morning? To wear the exact same uniform every day? To only call people by Sir and Ma'am? To do exactly as your told? Even when your being slowly pushed to your death?"" She looks more intent. ""When I saw so many of my peers slowly lose every part their selves to the bureaucracy machine - I swore I would never become one of them."" She sighs. ""It's a broken system captain - the Domain that is, are we really doomed to repeat the same cycle over and over again?"" She stops for a moment.
+
+""The collapse gave such a beautiful opportunity for humanity to be born a new. The Hegemony is fatally gripped by the longing for an old world - Everything will be exactly the same it was no exceptions, leading to the same failures all over again. There's still a chance for us to learn from the past, all it takes is a second collapse."" She lets out a devilish little smile. ""That's where the Unlimited Production Chip comes in.""
+
+""Now $nskr_kq_playerFullName, who do you think deserves to wield such power?""
+
+She leans back on her chair while waiting for your response, the chair made from exquisite dark leather towers over her.","nskr_kq_elizaKesteven:""I'm sure the Kesteven Corporation are a responsible organization.""
 nskr_kq_elizaNotYou:""Well, not you that's for sure.""
 nskr_kq_elizaUnsure:""I'm not sure.""
 nskr_kq_elizaBackHer:""You""
@@ -1844,14 +2032,19 @@ nskr_kq_elizaSayNothing:Say nothing
 nskr_kq_elizaJoin:""Hmm, maybe you're right.""",
 nskr_kq_elizaNotYou,DialogOptionSelected,$option == nskr_kq_elizaNotYou,FireBest nskr_kqElizaPropaganda,,"nskr_kq_elizaRefuse:""I'm not listening to a political rant from a wanted terrorist.""
 nskr_kq_elizaJoin:""Hmm, maybe you're right.""",
-nskr_kq_elizaPropaganda,nskr_kqElizaPropaganda,,"AddText ""\""Ready to toil away and not see a fraction of the profits you create for your Kesteven higher-ups. Did you really think you were going to wield even 1% of the power this chip would create?\"" She pauses for a moment, probably to cook up another political rant.""","""Another victim of corporate propaganda I see. Ready to die for the ""greater good"" I'm sure.""",,
+nskr_kq_elizaPropaganda,nskr_kqElizaPropaganda,,,"""Another victim of corporate propaganda I see. Ready to die for the ""greater good"" I'm sure.""
+
+""Ready to toil away and not see a fraction of the profits you create for your Kesteven higher-ups. Did you really think you were going to wield even 1% of the power this chip would create?"" She pauses for a moment, probably to cook up another political rant.",,
 ,,,,,,
-nskr_kq_elizaRefuse,DialogOptionSelected,$option == nskr_kq_elizaRefuse,"AddText ""\""Laws must exist to keep the people subservient, and those who show signs of disobedience will be punished.\""""
-FireBest nskr_kqElizaFarGone","""Is that what they call it now. ""When tyranny becomes law, resistance becomes duty."" You ever hear of that captain?""",,
+nskr_kq_elizaRefuse,DialogOptionSelected,$option == nskr_kq_elizaRefuse,FireBest nskr_kqElizaFarGone,"""Is that what they call it now. ""When tyranny becomes law, resistance becomes duty."" You ever hear of that captain?""
+
+""Laws must exist to keep the people subservient, and those who show signs of disobedience will be punished.""",,
 nskr_kq_elizaSilent,DialogOptionSelected,$option == nskr_kq_elizaSilent,FireBest nskr_kqElizaFarGone,,,
 nskr_kq_elizaFarGone,nskr_kqElizaFarGone,,"AddText ""You're too far gone? No, she's clearly out of her mind. You're making the right call."" gray","""You really are too far gone. This can't work."" She turns on the chair to face perpendicular to you, as she tries to calm down.",nskr_kq_elizaDismissed:Continue,
 ,,,,,,
-nskr_kq_elizaWhatPower,DialogOptionSelected,$option == nskr_kq_elizaWhatPower,"AddText ""\""It's time for the self fulfilling prophecy of this faux-Domain to come true.\""""","""It will grant us the power to free this sector of the old world blues captain."" Her eyes are lit up.","nskr_kq_elizaHowGood:""And how is this supposed to be a good thing?""
+nskr_kq_elizaWhatPower,DialogOptionSelected,$option == nskr_kq_elizaWhatPower,,"""It will grant us the power to free this sector of the old world blues captain."" Her eyes are lit up.
+
+""It's time for the self fulfilling prophecy of this faux-Domain to come true.""","nskr_kq_elizaHowGood:""And how is this supposed to be a good thing?""
 nskr_kq_elizaJoin:""I think I understand.""",
 nskr_kq_elizaHowGood,DialogOptionSelected,$option == nskr_kq_elizaHowGood,,"""Because I'm the one willing to take action, the bureaucracy machine has overtaken every human action - Everything is cold and calculated to perfection. The people need to be freed from the inevitable total control of the Hegemony, by force if necessary."" She's at the edge of her chair.","nskr_kq_elizaViolence:""Even more violence solves nothing now.""
 nskr_kq_elizaJoin:""I think I understand.""",
@@ -1876,14 +2069,18 @@ HideVisual",,defaultLeave:Continue,
 ,,,,,,
 nskr_kq_elizaJoin,DialogOptionSelected,$option == nskr_kq_elizaJoin,FireBest nskr_kqElizaRight,,,
 nskr_kq_elizaBackHer,DialogOptionSelected,$option == nskr_kq_elizaBackHer,FireBest nskr_kqElizaRight,,,
-nskr_kq_elizaRight,nskr_kqElizaRight,,"AddText ""\""We will make things right, with this chip it will not only be achieved, it will be inevitable.\"" She's warming up to you as you play along.""","""Yes, you get it captain. This sector has suffered for far too long under corporate greed and the self appointed Hegemony. The grip of authority grows stronger every passing moment.""","nskr_kq_elizaRefuse:""I'm not working with a terrorist.""
+nskr_kq_elizaRight,nskr_kqElizaRight,,,"""Yes, you get it captain. This sector has suffered for far too long under corporate greed and the self appointed Hegemony. The grip of authority grows stronger every passing moment.""
+
+""We will make things right, with this chip it will not only be achieved, it will be inevitable."" She's warming up to you as you play along.","nskr_kq_elizaRefuse:""I'm not working with a terrorist.""
 nskr_kq_elizaTogether:""Yes we will make things right, together."" (lie)
 nskr_kq_elizaReallyRight:""You really are right.""",
 nskr_kq_elizaReallyRight,DialogOptionSelected,$option == nskr_kq_elizaReallyRight,"FireBest nskr_kqElizaOffer
 AddText ""Be careful of what you're getting yourself into, now."" gray",,,
 nskr_kq_elizaTogether,DialogOptionSelected,$option == nskr_kq_elizaTogether,"FireBest nskr_kqElizaOffer
 AddText ""Just tell her what she wants to hear."" gray",,,
-nskr_kq_elizaOffer,nskr_kqElizaOffer,,"AddText ""\""With this power the sector will be free. No masters - no rules, right captain?\"" She waits for your response, even though she already knows the answer.""","""I will hand over the disks to you. You will find the Cache with the help of those Kesteven goons. And then you will bring back the Unlimited Production Chip to us.""","nskr_kq_elizaAgreeLie:Agree (lie)
+nskr_kq_elizaOffer,nskr_kqElizaOffer,,,"""I will hand over the disks to you. You will find the Cache with the help of those Kesteven goons. And then you will bring back the Unlimited Production Chip to us.""
+
+""With this power the sector will be free. No masters - no rules, right captain?"" She waits for your response, even though she already knows the answer.","nskr_kq_elizaAgreeLie:Agree (lie)
 nskr_kq_elizaAgree:Agree",
 nskr_kq_elizaAgree,DialogOptionSelected,$option == nskr_kq_elizaAgree,"nskr_quest kq set ELIZA_AGREED_SINCERELY
 AddText ""Wait, you really agree with her? Oh dear."" gray
@@ -1944,15 +2141,16 @@ FireAll nskr_kqElizaInterceptOptions","""I can tell you have the UPC captain."" 
 nskr_kq_elizaInterceptOptHandOver,nskr_kqElizaInterceptOptions,!nskr_quest kq check elizaChipGone,,,nskr_kq_elizaInterceptHandOver:Give her the UPC,While the chip has not gone to Kesteven or an alternative ending
 nskr_kq_elizaInterceptOptRefuse,nskr_kqElizaInterceptOptions,!nskr_quest kq check elizaChipGone,,,"nskr_kq_elizaInterceptRefuse:""No, I'd rather not.""",
 nskr_kq_elizaInterceptOptNoChip,nskr_kqElizaInterceptOptions,nskr_quest kq check elizaChipGone,,,"nskr_kq_elizaInterceptNoChip:""I don't have it anymore.""",The only option once the chip is gone; the other two show otherwise
-nskr_kq_elizaInterceptHandOver,DialogOptionSelected,$option == nskr_kq_elizaInterceptHandOver,"AddText ""\""Now come visit me at $nskr_kq_elizaHomeMarket to reap your reward.\""""
-nskr_quest kq do elizaChipHandOver
+nskr_kq_elizaInterceptHandOver,DialogOptionSelected,$option == nskr_kq_elizaInterceptHandOver,"nskr_quest kq do elizaChipHandOver
 PlaySound ui_noise_static
 AddTextSmall ""Lost the Unlimited Production Chip"" gray
 SetTextHighlightColors bad
 SetTextHighlights Lost
 AddTextSmall ""Relationship with Eliza improved by 5"" gray
 SetTextHighlightColors good
-SetTextHighlights 5","A shuttle quickly delivers the UPC over to Eliza's flagship. ""Oh yes captain, you've done an invaluable deed for the cause. Our time has come indeed."" An unsettling grin develops on her face.",nskr_kq_elizaInterceptExit:Leave,"elizaChipHandOver: the chip, reputation, markers, and the fleet stands down and flies home"
+SetTextHighlights 5","A shuttle quickly delivers the UPC over to Eliza's flagship. ""Oh yes captain, you've done an invaluable deed for the cause. Our time has come indeed."" An unsettling grin develops on her face.
+
+""Now come visit me at $nskr_kq_elizaHomeMarket to reap your reward.""",nskr_kq_elizaInterceptExit:Leave,"elizaChipHandOver: the chip, reputation, markers, and the fleet stands down and flies home"
 nskr_kq_elizaInterceptRefuse,DialogOptionSelected,$option == nskr_kq_elizaInterceptRefuse,"nskr_quest kq do elizaHostile
 PlaySound ui_rep_drop","""We had a simple deal captain - if you are not willing to hold up your part, I shall fulfill it by force."" Her menacing eyes stare straight into you.
 The comm link is cut before you can respond.
@@ -2024,14 +2222,16 @@ nskr_kq_doubtDismiss:Dismiss thought",
 nskr_kq_doubtAskSel,DialogOptionSelected,$option == nskr_kq_doubtAsk,"AddText ""You should try talking to your crew, maybe they can come up with a plan."" gray
 SetShortcut nskr_kq_doubtDismiss ESCAPE",,"nskr_kq_doubtTakeNote:""Okay then.""
 nskr_kq_doubtDismiss:Dismiss thought",
-nskr_kq_doubtTakeNoteSel,DialogOptionSelected,$option == nskr_kq_doubtTakeNote,"AddText ""The sensors officer has reported nothing of interest. Your operations chief is struggling to come to any other conclusion than - it's empty.""
-SetShortcut nskr_kq_doubtDismiss ESCAPE",You take note of the current situation and your options.,"nskr_kq_doubtChief:Talk to the operations chief
+nskr_kq_doubtTakeNoteSel,DialogOptionSelected,$option == nskr_kq_doubtTakeNote,SetShortcut nskr_kq_doubtDismiss ESCAPE,"You take note of the current situation and your options.
+
+The sensors officer has reported nothing of interest. Your operations chief is struggling to come to any other conclusion than - it's empty.","nskr_kq_doubtChief:Talk to the operations chief
 nskr_kq_doubtSensors:Talk to the sensors officer
 nskr_kq_doubtDismiss:Dismiss thought",
 ,,,,,,
-nskr_kq_doubtChiefSel,DialogOptionSelected,$option == nskr_kq_doubtChief,"AddText ""\""I don't know captain.\"" They seems a little defeated. \""It doesn't add up, the gravity well was right there. Yet all we find is empty space - of course the guys on the science team are busy theorising some one of a kind dark- matter/energy anomaly or whatever. But the center - the well, it has to be the answer...\""""
-ShowPersonVisual true nskr_kq_cacheChief
-$nskr_kq_doubtAskedChief = true 0","There's an open datafeed with countless open entries filled with scribbled notes, some crossed over, and all connected with criss-crossing lines.","nskr_kq_doubtBack:Leave them be
+nskr_kq_doubtChiefSel,DialogOptionSelected,$option == nskr_kq_doubtChief,"ShowPersonVisual true nskr_kq_cacheChief
+$nskr_kq_doubtAskedChief = true 0","There's an open datafeed with countless open entries filled with scribbled notes, some crossed over, and all connected with criss-crossing lines.
+
+""I don't know captain."" They seems a little defeated. ""It doesn't add up, the gravity well was right there. Yet all we find is empty space - of course the guys on the science team are busy theorising some one of a kind dark- matter/energy anomaly or whatever. But the center - the well, it has to be the answer...""","nskr_kq_doubtBack:Leave them be
 nskr_kq_doubtSomething:""There must be something to it, I know it.""
 nskr_kq_doubtDoomed:""It's doomed isn't it.""",
 nskr_kq_doubtSomethingSel,DialogOptionSelected,$option == nskr_kq_doubtSomething,$nskr_kq_doubtTip = true 0,"""Oh- you must be right captain. That center anomaly is at the core of this, it has to be answer - somehow."" They start going through the data one more time.","nskr_kq_doubtMatter:Leave them be
@@ -2039,7 +2239,9 @@ nskr_kq_doubtInteresting:""Interesting.""",
 nskr_kq_doubtSensorsSel,DialogOptionSelected,$option == nskr_kq_doubtSensors,"ShowPersonVisual true nskr_kq_cacheSensors
 $nskr_kq_doubtAskedSensors = true 0","""Captain, we just finished a checkup on all the sensor logs and guess what?"" They say with sarcastic enthusiasm. ""It's nothing - all empty, absolutely nothing - that's all we've seen since our arrival here, but I guess we'll have to keep watch. There must be something to this place, surely it can't just be empty.""","nskr_kq_doubtBack:Leave them be
 nskr_kq_doubtRecheck:Ask them to check again, with extra care",
-nskr_kq_doubtRecheckSel,DialogOptionSelected,$option == nskr_kq_doubtRecheck,"AddText ""They seem annoyed. \""Sorry captain, we crunched all the numbers again - the result is still nothing. There's nothing I can do about that.\"" They shrug.""","You tell them to check again, this time being extra careful of any minute signals that could get lost in the cosmic noise. And after a moderate wait they have a new report ready.",nskr_kq_doubtBack:Leave them be,
+nskr_kq_doubtRecheckSel,DialogOptionSelected,$option == nskr_kq_doubtRecheck,,"You tell them to check again, this time being extra careful of any minute signals that could get lost in the cosmic noise. And after a moderate wait they have a new report ready.
+
+They seem annoyed. ""Sorry captain, we crunched all the numbers again - the result is still nothing. There's nothing I can do about that."" They shrug.",nskr_kq_doubtBack:Leave them be,
 ,,,,,,
 nskr_kq_doubtBackSel,DialogOptionSelected,$option == nskr_kq_doubtBack,"HideVisual
 unset $nskr_kq_doubtGaveUp
@@ -2083,10 +2285,12 @@ DismissDialog",,,
 nskr_kq_doubtRightSel,DialogOptionSelected,$option == nskr_kq_doubtRight,"nskr_quest kq do endCacheDoubt
 DismissDialog",,,
 ,,,,,,
-nskr_kq_coreFirst,nskr_kqCacheCore,!nskr_quest kq flag CORE_SEEN,"AddText ""The vast structures float unbothered, like they have always been here. Seemingly unknowing to what has just taken effect.""
-AddText ""As your bridge crew tries to pick through all the new signals they spot a cluster of computer cores in the debris.""
-PlaySound ui_discovered_entity
-nskr_quest kq set CORE_SEEN","You watch as the system materializes in front of you, gracefully out of thin air. No one aboard the bridge knows how this was possible.",nskr_kq_coreApproach:Approach the command core,"Opened by the claim of KestevenCacheModule, first in the guardian encounter's window (KestevenQuest.showCacheCore)"
+nskr_kq_coreFirst,nskr_kqCacheCore,!nskr_quest kq flag CORE_SEEN,"PlaySound ui_discovered_entity
+nskr_quest kq set CORE_SEEN","You watch as the system materializes in front of you, gracefully out of thin air. No one aboard the bridge knows how this was possible.
+
+The vast structures float unbothered, like they have always been here. Seemingly unknowing to what has just taken effect.
+
+As your bridge crew tries to pick through all the new signals they spot a cluster of computer cores in the debris.",nskr_kq_coreApproach:Approach the command core,"Opened by the claim of KestevenCacheModule, first in the guardian encounter's window (KestevenQuest.showCacheCore)"
 nskr_kq_coreQuest,nskr_kqCacheCore,"nskr_quest kq flag CORE_SEEN
 nskr_quest kq check cacheQuestTarget
 !nskr_quest kq flag CHIP_SALVAGED",FireBest nskr_kqCoreSalvage,,,
@@ -2097,15 +2301,20 @@ nskr_kq_coreWreckage,nskr_kqCacheCore,nskr_quest kq flag CORE_SEEN,FireBest nskr
 nskr_kq_coreApproachSel,DialogOptionSelected,"$option == nskr_kq_coreApproach
 nskr_quest kq check cacheQuestTarget",FireBest nskr_kqCoreSalvage,,,
 nskr_kq_coreApproachWreckageSel,DialogOptionSelected,$option == nskr_kq_coreApproach,FireBest nskr_kqCoreWreckage,,,Fallback: before JOB5_DISKS or after failure
-nskr_kq_coreSalvageLines,nskr_kqCoreSalvage,,"AddText ""For a moment the bridge seems to quiets down, and you notice a quiet hum - a distant instrument. The harder you try to focus on it to more distant it becomes.""
-AddText ""You're then suddenly brought out of your thought by the ops chief asking you what to do next.""
-ShowDefaultVisual","A strange cluster of computer cores are left among the wreckage, further inspection should yield results. Your bridge crew is preparing post battle operations.","nskr_kq_coreSalvage:Begin salvage operations
+nskr_kq_coreSalvageLines,nskr_kqCoreSalvage,,ShowDefaultVisual,"A strange cluster of computer cores are left among the wreckage, further inspection should yield results. Your bridge crew is preparing post battle operations.
+
+For a moment the bridge seems to quiets down, and you notice a quiet hum - a distant instrument. The harder you try to focus on it to more distant it becomes.
+
+You're then suddenly brought out of your thought by the ops chief asking you what to do next.","nskr_kq_coreSalvage:Begin salvage operations
 defaultLeave:Leave",Shared by the entry and the first approach
 nskr_kq_coreWreckageLine,nskr_kqCoreWreckage,,ShowDefaultVisual,A strange cluster of computer cores are left among the wreckage.,defaultLeave:Leave,Shared by the entry and the first approach
-nskr_kq_coreSalvageSel,DialogOptionSelected,$option == nskr_kq_coreSalvage,"AddText ""There's no sign of casualties or life pods in the wreckage, yet the prototype hulls were clearly meant to be crewed. For a moment it seems pointless to even try and uncover what happened here.""
-AddText ""Until, the crew stumbles upon a console in one of the derelict wrecks. In it they find a maintenance log, which has been used by an anonymous and disgruntled maintenance worker to journal their frustrations.""
-AddText ""\""I'm sending a transcript of the maintenance logs to your fleet log.\"" Your comms officer reports.""
-ShowDefaultVisual","As the crew picks apart the cores, it becomes clear that almost all the data in them is lost. Instead of being garbled, or otherwise corrupted by radiation the cores are just empty. Like they have been reformatted by someone, there is almost no data left in the whole system.",nskr_kq_coreChip:Continue,
+nskr_kq_coreSalvageSel,DialogOptionSelected,$option == nskr_kq_coreSalvage,ShowDefaultVisual,"As the crew picks apart the cores, it becomes clear that almost all the data in them is lost. Instead of being garbled, or otherwise corrupted by radiation the cores are just empty. Like they have been reformatted by someone, there is almost no data left in the whole system.
+
+There's no sign of casualties or life pods in the wreckage, yet the prototype hulls were clearly meant to be crewed. For a moment it seems pointless to even try and uncover what happened here.
+
+Until, the crew stumbles upon a console in one of the derelict wrecks. In it they find a maintenance log, which has been used by an anonymous and disgruntled maintenance worker to journal their frustrations.
+
+""I'm sending a transcript of the maintenance logs to your fleet log."" Your comms officer reports.",nskr_kq_coreChip:Continue,
 nskr_kq_coreChipSel,DialogOptionSelected,$option == nskr_kq_coreChip,"AddTextSmall ""Acquired the Unlimited Production Chip"" gray
 SetTextHighlights ""the Unlimited Production Chip""
 AddRemoveCommodity alpha_core 1
@@ -2120,17 +2329,19 @@ FireBest nskr_kqKestevenEndingUpset","As you approach $marketName, you contempla
 defaultLeave:Leave",Replaces the dialog of the home market and of Asteria Station while the ending is open; score:10000 wins over every vanilla market opening.
 nskr_kq_kestevenEndingUpset,nskr_kqKestevenEndingUpset,,"AddText ""Particularly, this would upset both the Tri-Tachyon Corporation and Eliza."" gray",,,Fallback: Eliza lives
 nskr_kq_kestevenEndingUpsetKilled,nskr_kqKestevenEndingUpset,nskr_quest kq flag ELIZA_KILLED,"AddText ""Particularly this would upset the Tri-Tachyon Corporation."" gray",,,
-nskr_kq_kestevenEndingStart,DialogOptionSelected,$option == nskr_kq_kestevenEndingStart,"AddText ""Alice shortly shows up too \""I'm going to begin work on the Chip directly. As soon as we get it unloaded.\""""
-AddText ""Jack continues \""We can discuss your share of the deal while Alice works on the Chip.\""""
-PlaySound ui_noise_static
+nskr_kq_kestevenEndingStart,DialogOptionSelected,$option == nskr_kq_kestevenEndingStart,"PlaySound ui_noise_static
 AddTextSmall ""Lost the Unlimited Production Chip"" gray
 SetTextHighlights ""the Unlimited Production Chip""
 ShowPersonVisual true nskr_opguy
-ShowSecondPerson nskr_researcher","You land at the dock and are immediately greeted by Jack. ""I see you have the Chip captain. We have searched long for this, the secrets we are about to uncover are unprecedented."" He gazes into the horizon, he's clearly contemplating the stakes at play.",nskr_kq_kestevenEndingShare:Continue,
-nskr_kq_kestevenEndingShare,DialogOptionSelected,$option == nskr_kq_kestevenEndingShare,"AddText ""\""I've authorized you to get a share of some of the equipment produced with the Unlimited Production Chip. You will not be disappointed, also there will be some new toys in the artifact exchange.\"" He gives you a quick smirk.""
-ShowPersonVisual false nskr_opguy","There is a defiant look on Jack's face. ""As you know, this will have some consequences on the wider sector. Relations with Tri-Tachyon will tank, they won't take this lightly. This cold war of ours is about to go hot, but we will be ready."" He regains some confidence.",nskr_kq_kestevenEndingDone:Continue,
-nskr_kq_kestevenEndingDone,DialogOptionSelected,$option == nskr_kq_kestevenEndingDone,"AddText ""\""Thank you for your service $nskr_kq_playerFullName. I hope we can again work together in the future, burn bright.\"" He gives you an intense handshake as you try to leave.""
-nskr_quest kq set KESTEVEN_ENDING_DONE
+ShowSecondPerson nskr_researcher","You land at the dock and are immediately greeted by Jack. ""I see you have the Chip captain. We have searched long for this, the secrets we are about to uncover are unprecedented."" He gazes into the horizon, he's clearly contemplating the stakes at play.
+
+Alice shortly shows up too ""I'm going to begin work on the Chip directly. As soon as we get it unloaded.""
+
+Jack continues ""We can discuss your share of the deal while Alice works on the Chip.""",nskr_kq_kestevenEndingShare:Continue,
+nskr_kq_kestevenEndingShare,DialogOptionSelected,$option == nskr_kq_kestevenEndingShare,ShowPersonVisual false nskr_opguy,"There is a defiant look on Jack's face. ""As you know, this will have some consequences on the wider sector. Relations with Tri-Tachyon will tank, they won't take this lightly. This cold war of ours is about to go hot, but we will be ready."" He regains some confidence.
+
+""I've authorized you to get a share of some of the equipment produced with the Unlimited Production Chip. You will not be disappointed, also there will be some new toys in the artifact exchange."" He gives you a quick smirk.",nskr_kq_kestevenEndingDone:Continue,
+nskr_kq_kestevenEndingDone,DialogOptionSelected,$option == nskr_kq_kestevenEndingDone,"nskr_quest kq set KESTEVEN_ENDING_DONE
 nskr_quest kq advance CHIP_RECOVERED COMPLETED
 nskr_quest kq do kestevenEnding
 AddStoryPoints 1
@@ -2143,7 +2354,9 @@ AdjustRep kesteven 25
 AdjustRepPerson nskr_opguy COOPERATIVE 20
 AdjustRepPerson nskr_researcher COOPERATIVE 20
 FireAll nskr_kqKestevenEndingWar
-PlaySound ui_rep_raise",After some waiting around Alice gives the green light to pick up the equipment package.,defaultLeave:Leave,"The amounts are KestevenEndingsModule.KESTEVEN_STORY_POINTS, KestevenHubModule.STAGE5_PAYOUT and KestevenEndingsModule.EXCHANGE_POINTS; kestevenEnding grants the points and rolls the Tri-Tachyon value"
+PlaySound ui_rep_raise","After some waiting around Alice gives the green light to pick up the equipment package.
+
+""Thank you for your service $nskr_kq_playerFullName. I hope we can again work together in the future, burn bright."" He gives you an intense handshake as you try to leave.",defaultLeave:Leave,"The amounts are KestevenEndingsModule.KESTEVEN_STORY_POINTS, KestevenHubModule.STAGE5_PAYOUT and KestevenEndingsModule.EXCHANGE_POINTS; kestevenEnding grants the points and rolls the Tri-Tachyon value"
 nskr_kq_kestevenEndingTriTachyon,nskr_kqKestevenEndingWar,nskr_quest kq check endingTriTachyonAbove,"nskr_quest kq do endingLowerTriTachyon
 AddTextSmall ""Relationship with Tri-Tachyon reduced to $nskr_kq_endingTriTachyonRep"" gray
 SetTextHighlightColors bad
@@ -2155,11 +2368,13 @@ SetTextHighlights ""enter hostilities""",,,
 ,,,,,,
 # Eliza ending,,,,,,
 nskr_kq_elizaEndingOpen,OpenInteractionDialog,nskr_quest kq check elizaEndingHere score:10000,ShowDefaultVisual,On approach you receiver orders from the port authority to land at a specific dock. You then receive a comms call from Eliza.,nskr_kq_elizaEndingCall:Continue,"Replaces the dialog of Eliza's market while the ending is open, as nskr_kq_elizaPort does before it; the old screen had no Leave"
-nskr_kq_elizaEndingCall,DialogOptionSelected,$option == nskr_kq_elizaEndingCall,"AddText ""\""I hope you understand that Kesteven won't take this lightly, they'll get the Hegemony involved too for sure. You'll be a wanted $nskr_kq_endingManOrWoman, but with the Chip secured our victory shall be inevitable.\""""
-ShowPersonVisual false nskr_anarchist","""Ah, you're here captain. Lets get straight to business, shall we?"" She quickly straightens her posture.",nskr_kq_elizaEndingEquipment:Continue,
-nskr_kq_elizaEndingEquipment,DialogOptionSelected,$option == nskr_kq_elizaEndingEquipment,"AddText ""A tiny shuttle approaches your fleet, it delivers the equipment from Eliza - as promised.""","""I have your equipment ready, soon we will begin a new collapse. The days old are over, it's time for a new dawn."" There is a devious smile on her face.",nskr_kq_elizaEndingDone:Continue,
-nskr_kq_elizaEndingDone,DialogOptionSelected,$option == nskr_kq_elizaEndingDone,"AddText ""Eliza frantically finishes her speech. \""Now go captain.\"" She raises her hands and looks towards the roof, in a vaguely fanatic gesture. \""watch the stations burn, empires fall, leaders flee like cowards. It is time to infest the rat's nest. Humanity will be free!\"" The grin on her face is bone chilling.""
-AddText ""Hope you made the right choice, captain."" gray
+nskr_kq_elizaEndingCall,DialogOptionSelected,$option == nskr_kq_elizaEndingCall,ShowPersonVisual false nskr_anarchist,"""Ah, you're here captain. Lets get straight to business, shall we?"" She quickly straightens her posture.
+
+""I hope you understand that Kesteven won't take this lightly, they'll get the Hegemony involved too for sure. You'll be a wanted $nskr_kq_endingManOrWoman, but with the Chip secured our victory shall be inevitable.""",nskr_kq_elizaEndingEquipment:Continue,
+nskr_kq_elizaEndingEquipment,DialogOptionSelected,$option == nskr_kq_elizaEndingEquipment,,"""I have your equipment ready, soon we will begin a new collapse. The days old are over, it's time for a new dawn."" There is a devious smile on her face.
+
+A tiny shuttle approaches your fleet, it delivers the equipment from Eliza - as promised.",nskr_kq_elizaEndingDone:Continue,
+nskr_kq_elizaEndingDone,DialogOptionSelected,$option == nskr_kq_elizaEndingDone,"AddText ""Hope you made the right choice, captain."" gray
 nskr_quest kq set ELIZA_ENDING_DONE
 nskr_quest kq advance CHIP_RECOVERED COMPLETED
 nskr_quest kq do elizaEnding
@@ -2173,7 +2388,9 @@ AdjustRepPerson nskr_anarchist COOPERATIVE 30
 FireAll nskr_kqElizaEndingWar
 AddTextSmall ""They will not forget this anytime soon"" gray
 AddPotentialContact nskr_anarchist
-PlaySound ui_rep_raise","""Our time to strike at the Hegemony and Kesteven has come...""",defaultLeave:Leave,"The story points are KestevenEndingsModule.ELIZA_STORY_POINTS; elizaEnding rolls and applies the relationships, the pirate one included, and changes the market"
+PlaySound ui_rep_raise","""Our time to strike at the Hegemony and Kesteven has come...""
+
+Eliza frantically finishes her speech. ""Now go captain."" She raises her hands and looks towards the roof, in a vaguely fanatic gesture. ""watch the stations burn, empires fall, leaders flee like cowards. It is time to infest the rat's nest. Humanity will be free!"" The grin on her face is bone chilling.",defaultLeave:Leave,"The story points are KestevenEndingsModule.ELIZA_STORY_POINTS; elizaEnding rolls and applies the relationships, the pirate one included, and changes the market"
 nskr_kq_elizaEndingKesteven,nskr_kqElizaEndingWar,nskr_quest kq check elizaEndingKestevenAbove,"nskr_quest kq do elizaEndingLowerKesteven
 AddTextSmall ""Relationship with Kesteven reduced to $nskr_kq_elizaEndingKestevenRep"" gray
 SetTextHighlightColors bad
@@ -2202,14 +2419,17 @@ nskr_quest kq check altEndingLuddicMarket
 !nskr_quest kq flag ALT_ENDING_DONE
 nskr_quest kq flag LUDDIC_ENDING_SECOND_TALK
 $nskr_kq_altEndingLocked",,,nskr_kq_altEndingLuddicPick:Talk about the Unlimited Production Chip you have,"After the second conversation, only the official who had it"
-nskr_kq_altEndingLuddicPickSel,DialogOptionSelected,$option == nskr_kq_altEndingLuddicPick,"SetTextHighlights destroyed
-AddText ""\""For these are the evils that corrupt our world - Taking us further from Providence. You don't deny this do you captain? For certain you knew our reaction to this object, a true walker would know to approach us.\""""
-AddText ""\""Is this true captain?\"" $HeOrShe rubs $hisOrHer chin with deep intent in $hisOrHer eyes.""","""I hear you speak of a vile creation of mammon."" $HeOrShe says sharply. ""It must be destroyed, no question about it.""","nskr_kq_altEndingLuddicAgree:Destroy the Chip
+nskr_kq_altEndingLuddicPickSel,DialogOptionSelected,$option == nskr_kq_altEndingLuddicPick,SetTextHighlights destroyed,"""I hear you speak of a vile creation of mammon."" $HeOrShe says sharply. ""It must be destroyed, no question about it.""
+
+""For these are the evils that corrupt our world - Taking us further from Providence. You don't deny this do you captain? For certain you knew our reaction to this object, a true walker would know to approach us.""
+
+""Is this true captain?"" $HeOrShe rubs $hisOrHer chin with deep intent in $hisOrHer eyes.","nskr_kq_altEndingLuddicAgree:Destroy the Chip
 nskr_kq_altEndingLuddicDoubt:""So I would get nothing?""
 nskr_kq_altEndingExit:""Actually, never mind.""",
 nskr_kq_altEndingLuddicPickLocked,DialogOptionSelected,"$option == nskr_kq_altEndingLuddicPick
-$nskr_kq_altEndingLocked","AddText ""\""You need to destroy the Chip.\"" $HeOrShe commands.""
-SetTextHighlights destroy","""Have you finally seen the path captain? Or are you here to just waste my time.""","nskr_kq_altEndingLuddicAgree:Destroy the Chip
+$nskr_kq_altEndingLocked",SetTextHighlights destroy,"""Have you finally seen the path captain? Or are you here to just waste my time.""
+
+""You need to destroy the Chip."" $HeOrShe commands.","nskr_kq_altEndingLuddicAgree:Destroy the Chip
 nskr_kq_altEndingExit:""Nope.""","An official locked to the ending, or any official already locked by the Tri-Tachyon ending"
 nskr_kq_altEndingLuddicDoubtSel,DialogOptionSelected,$option == nskr_kq_altEndingLuddicDoubt,"nskr_quest kq set LUDDIC_ENDING_SECOND_TALK
 $nskr_kq_altEndingLocked = true
@@ -2241,16 +2461,19 @@ nskr_quest kq check altEndingTtMarket
 !nskr_quest kq flag ALT_ENDING_DONE
 nskr_quest kq flag TT_ENDING_SECOND_TALK
 $nskr_kq_altEndingLocked",,,nskr_kq_altEndingTtPick:Talk about the Unlimited Production Chip you have,"After the second conversation, only the official who had it"
-nskr_kq_altEndingTtPickSel,DialogOptionSelected,$option == nskr_kq_altEndingTtPick,"AddText ""\""Such an item holds great power, the Tri-Tachyon corporation is willing to grant $nskr_kq_altEndingTtOffer for such an item.\""""
-SetTextHighlights ""$nskr_kq_altEndingTtOffer""
-AddText ""\""Remember, such power would come with additional costs, requiring further investment. So... Take it or leave it captain.\""""
-FireBest nskr_kqAltEndingTtOfferOptions","""What a fascinating object you speak of, if you are telling the truth of course."" $HeOrShe looks skeptical",,"The counter-offer label shows a quest token, so its options come from a quest row"
+nskr_kq_altEndingTtPickSel,DialogOptionSelected,$option == nskr_kq_altEndingTtPick,"SetTextHighlights ""$nskr_kq_altEndingTtOffer""
+FireBest nskr_kqAltEndingTtOfferOptions","""What a fascinating object you speak of, if you are telling the truth of course."" $HeOrShe looks skeptical
+
+""Such an item holds great power, the Tri-Tachyon corporation is willing to grant $nskr_kq_altEndingTtOffer for such an item.""
+
+""Remember, such power would come with additional costs, requiring further investment. So... Take it or leave it captain.""",,"The counter-offer label shows a quest token, so its options come from a quest row"
 nskr_kq_altEndingTtOfferOptions,nskr_kqAltEndingTtOfferOptions,,,,"nskr_kq_altEndingTtAgree:Sell the Chip
 nskr_kq_altEndingTtIncrease:""How about $nskr_kq_altEndingTtRaised""
 nskr_kq_altEndingExit:""Actually, never mind.""",
 nskr_kq_altEndingTtPickLocked,DialogOptionSelected,"$option == nskr_kq_altEndingTtPick
-$nskr_kq_altEndingLocked","AddText ""\""The $nskr_kq_altEndingTtRaised for the Chip is waiting for you.\""""
-SetTextHighlights ""$nskr_kq_altEndingTtRaised""","""Changed your fickle mind yet $nskr_kq_playerFullName?""","nskr_kq_altEndingTtAgree:Sell the Chip
+$nskr_kq_altEndingLocked","SetTextHighlights ""$nskr_kq_altEndingTtRaised""","""Changed your fickle mind yet $nskr_kq_playerFullName?""
+
+""The $nskr_kq_altEndingTtRaised for the Chip is waiting for you.""","nskr_kq_altEndingTtAgree:Sell the Chip
 nskr_kq_altEndingExit:""Nope.""","An official locked to the ending, or any official already locked by the Luddic ending"
 nskr_kq_altEndingTtIncreaseSel,DialogOptionSelected,$option == nskr_kq_altEndingTtIncrease,"nskr_quest kq do altEndingRaisePrice
 nskr_quest kq set TT_ENDING_SECOND_TALK
@@ -2286,7 +2509,9 @@ $entity.nskr_kq_ttCollector
 nskr_kq_ttCollectorDemand,DialogOptionSelected,$option == nskr_kq_ttCollectorDemand,"FireBest nskr_kqTtCollectorDemand
 $entity.ignorePlayerCommRequests = true 10",,,
 nskr_kq_ttCollectorDemandNone,nskr_kqTtCollectorDemand,,,"""Seems like you don't have enough cargo to give us anything.""","nskr_kq_ttCollectorNoPay:""Yeah, uhhh... I Don't have any of that stuff.""",Fallback: no Artifact Electronics
-nskr_kq_ttCollectorDemandSome,nskr_kqTtCollectorDemand,nskr_quest kq check ttCollectorCanPaySome,"AddText ""\""Just give us all the cargo, and we can stay civilized about this.\""""","""Our scans show you have $nskr_kq_ttCollectorPayment units of Artifact Electronics.""","nskr_kq_ttCollectorPay:Hand over the $nskr_kq_ttCollectorPayment units of Artifact Electronics
+nskr_kq_ttCollectorDemandSome,nskr_kqTtCollectorDemand,nskr_quest kq check ttCollectorCanPaySome,,"""Our scans show you have $nskr_kq_ttCollectorPayment units of Artifact Electronics.""
+
+""Just give us all the cargo, and we can stay civilized about this.""","nskr_kq_ttCollectorPay:Hand over the $nskr_kq_ttCollectorPayment units of Artifact Electronics
 nskr_kq_ttCollectorFight:""No, I don't think I will.""","The demand is everything held, so ttCollectorCanPayAll never passes"
 nskr_kq_ttCollectorPay,DialogOptionSelected,$option == nskr_kq_ttCollectorPay,"nskr_quest kq do ttCollectorPay
 AdjustRep tritachyon 5
@@ -2331,32 +2556,11 @@ nskr_shipSwapSell:Trade in artifacts
 nskr_shipSwapExit:Go back",
 nskr_shipSwapSellOption,DialogOptionSelected,"$option == nskr_shipSwapSell","nskr_shipSwap sell",,,
 nskr_shipSwap_SellResponse,nskr_shipSold,,"FireAll nskr_shipSwapMenu","""Thank you for your business.""",,
-nskr_shipSwap_ListBuyableShips,DialogOptionSelected,"$option == nskr_shipSwapBuyShips","nskr_shipSwap prepareStock
-FireBest nskr_shipSwapHullStock",,,
-nskr_shipSwap_hullStock,nskr_shipSwapHullStock,"nskr_shipSwap hasStock SHIP","nskr_shipSwap getShipForSale
-ShowPersonVisual",,,
-nskr_shipSwap_hullStockNone,nskr_shipSwapHullStock,,"SetShortcut nskr_shipSwapMenuReturn ESCAPE","""Looks like we don't have any ships in stock at the moment.""","nskr_shipSwapMenuReturn:Back",
-nskr_shipSwap_ListBuyableGuns,DialogOptionSelected,"$option == nskr_shipSwapBuyGuns","nskr_shipSwap prepareStock
-FireBest nskr_shipSwapWeaponStock",,,
-nskr_shipSwap_weaponStock,nskr_shipSwapWeaponStock,"nskr_shipSwap hasStock WEAPON","nskr_shipSwap getGunForSale",,,
-nskr_shipSwap_weaponStockNone,nskr_shipSwapWeaponStock,,"SetShortcut nskr_shipSwapMenuReturn ESCAPE","""Looks like we don't have any weapons in stock at the moment.""","nskr_shipSwapMenuReturn:Back",
-nskr_shipSwap_pickCancelled,nskr_shipSwapPickCancelled,,"SetShortcut nskr_shipSwapMenuReturn ESCAPE","""Don't want anything? Shame.""","nskr_shipSwapMenuReturn:Go back","Fired by nskr_shipSwap when a stock picker is cancelled or nothing is picked."
-nskr_shipSwap_picked,nskr_shipSwapPicked,,"nskr_shipSwap listPicked
-AddTextSmall ""This will cost $nskr_shipSwap_costStr points.""
-SetTextHighlights $nskr_shipSwap_costStr
-AddTextSmall ""You have $nskr_shipSwap_pointsStr points.""
-SetTextHighlights $nskr_shipSwap_pointsStr
-FireBest nskr_shipSwapPickedOffer",,,"Fired by nskr_shipSwap after a stock pick."
-nskr_shipSwap_pickedHull,nskr_shipSwapPickedHull,,"AddTextSmall ""$nskr_shipSwap_itemName-Class"" textGrayColor",,,"Fired by nskr_shipSwap listPicked once per picked hull."
-nskr_shipSwap_pickedWeapon,nskr_shipSwapPickedWeapon,,"AddTextSmall ""$nskr_shipSwap_itemName"" textGrayColor",,,"Fired by nskr_shipSwap listPicked once per picked weapon."
-nskr_shipSwap_offer,nskr_shipSwapPickedOffer,"nskr_shipSwap canAfford","SetShortcut nskr_shipSwapMenuReturn ESCAPE",,"nskr_shipSwapConfirmPurchase:Make the purchase
-nskr_shipSwapMenuReturn:""Never mind.""",
-nskr_shipSwap_offerTooExpensive,nskr_shipSwapPickedOffer,,"SetShortcut nskr_shipSwapMenuReturn ESCAPE","You can not afford this transaction.","nskr_shipSwapMenuReturn:Go back",
+nskr_shipSwap_ListBuyableShips,DialogOptionSelected,"$option == nskr_shipSwapBuyShips","nskr_shipSwap getShipForSale",,,
+nskr_shipSwap_ListBuyableGuns,DialogOptionSelected,"$option == nskr_shipSwapBuyGuns","nskr_shipSwap getGunForSale",,,
 nskr_shipSwapBuyConfirm,DialogOptionSelected,"$option == nskr_shipSwapConfirmPurchase","nskr_shipSwap confirmPurchase
-ShowPersonVisual
 AddTextSmall ""You have $nskr_shipSwap_pointsStr points.""
-SetTextHighlights $nskr_shipSwap_pointsStr
-SetShortcut nskr_shipSwapMenuReturn ESCAPE","""Thank you for your business.""","nskr_shipSwapMenuReturn:Go back",
+SetTextHighlights $nskr_shipSwap_pointsStr","""Thank you for your business.""",,
 nskr_shipSwapExit,DialogOptionSelected,"$option == nskr_shipSwapExit","FireAll PopulateOptions",,,
 "#END ARTIFACT swap options",,,,,,
 ,,,,,,
@@ -2364,40 +2568,14 @@ nskr_shipSwapExit,DialogOptionSelected,"$option == nskr_shipSwapExit","FireAll P
 nskr_modRemovalOption,PopulateOptions,"nskr_isBaseOfficial research
 nskr_modRemoval hasOption
 nskr_quest kq is JOB5_OFFERED JOB5_MEETING JOB5_DISKS CACHE_KNOWN CACHE_CLEARED CHIP_RECOVERED COMPLETED FAILED",,,"nskr_modRemovalMenu:Adjust special modifications",
-nskr_modRemovalMenu,nskr_modRemovalMenu,,"AddText ""We could - with some effort, remove all Special Modifications from one of your vessels captain.""
-SetShortcut nskr_modRemovalExit ""ESCAPE""",,"nskr_modRemovalManage:Select one of your ships
+nskr_modRemovalMenu,nskr_modRemovalMenu,,"SetShortcut nskr_modRemovalExit ""ESCAPE""","We could - with some effort, remove all Special Modifications from one of your vessels captain.","nskr_modRemovalManage:Select one of your ships
 nskr_modRemovalExit:Go back",
 nskr_modRemovalMenuSel,DialogOptionSelected,"$option == nskr_modRemovalMenu","FireAll nskr_modRemovalMenu",,,
 nskr_modRemovalExit,DialogOptionSelected,"$option == nskr_modRemovalExit","FireAll PopulateOptions",,,
-nskr_modRemovalManage,DialogOptionSelected,"$option == nskr_modRemovalManage
-nskr_modRemoval hasShips","nskr_modRemoval getHulls",,,
-nskr_modRemovalManageNone,DialogOptionSelected,"$option == nskr_modRemovalManage
-!nskr_modRemoval hasShips","SetShortcut nskr_modRemovalExit ESCAPE","""Looks like you don't have any ships with Special Modifications. Quit wasting my time now, will you."" She groans.","nskr_modRemovalExit:Leave",
-nskr_modRemoval_pickCancelled,nskr_modRemovalPickCancelled,,"SetShortcut nskr_modRemovalReturn ESCAPE","""Come on captain, just make up your mind already. I don't have all day."" She mutters.","nskr_modRemovalReturn:Go back","Fired by nskr_modRemoval when the ship picker is cancelled or nothing is picked."
-nskr_modRemoval_shipPicked,nskr_modRemovalShipPicked,,"AddTextSmall ""Selected $nskr_modRemoval_shipName $nskr_modRemoval_hullName-Class"" textGrayColor
-SetTextHighlights $nskr_modRemoval_hullName
-FireAll nskr_modRemovalShipOptions",,,"Fired by nskr_modRemoval after a ship is picked."
-nskr_modRemoval_shipOptPickOne,nskr_modRemovalShipOptions,"$nskr_modRemoval_sMods == 1",,,"nskr_modRemoval_pick_ship:Select $nskr_modRemoval_hullName-Class has $nskr_modRemoval_sMods S-Mod",
-nskr_modRemoval_shipOptPickMany,nskr_modRemovalShipOptions,"$nskr_modRemoval_sMods != 1",,,"nskr_modRemoval_pick_ship:Select $nskr_modRemoval_hullName-Class has $nskr_modRemoval_sMods S-Mods",
-nskr_modRemoval_shipOptBack,nskr_modRemovalShipOptions,,"SetShortcut nskr_modRemovalReturn ESCAPE",,"nskr_modRemovalReturn:Go back",
+nskr_modRemovalManage,DialogOptionSelected,"$option == nskr_modRemovalManage","nskr_modRemoval getHulls",,,
 nskr_modRemovalReturnSel,DialogOptionSelected,"$option == nskr_modRemovalReturn","FireAll nskr_modRemovalMenu",,,
-nskr_modRemovalPickOption,DialogOptionSelected,"$option == nskr_modRemoval_pick_ship","nskr_modRemoval prepareRemove
-AddText ""Removing all the Special Modifications from the $nskr_modRemoval_hullName without causing permanent damage would require significant work.""
-SetStoryOption nskr_modRemoval_confirm 1 nskr_modRemoval ui_char_spent_story_point ""Removed S-Mods from a ship""
-SetShortcut nskr_modRemovalReturn ESCAPE",,"nskr_modRemoval_confirm:I'm sure you're capable enough.
-nskr_modRemovalReturn:Go back",
-nskr_modRemoval_sModLine,nskr_modRemovalSModLine,,"AddTextSmall ""S-Modded $nskr_modRemoval_sModName"" textGrayColor
-SetTextHighlightColors story
-SetTextHighlights $nskr_modRemoval_sModName",,,"Fired by nskr_modRemoval prepareRemove once per S-mod."
-nskr_modRemovalPickOptionConfirm,DialogOptionSelected,"$option == nskr_modRemoval_confirm","nskr_modRemoval remove
-AddText ""After some waiting around Alice finally gets back in contact with you.""
-AddText ""\""It wasn't easy but we pulled it off captain.\"" She says with a smug expression.""
-FireBest nskr_modRemovalRemovedText
-SetShortcut nskr_modRemovalExit ESCAPE","The hull is offloaded at a dry-dock so the crew can begin work on it.","nskr_modRemovalExit:Leave",
-nskr_modRemoval_removedOne,nskr_modRemovalRemovedText,"$nskr_modRemoval_removed == 1","AddTextSmall ""$nskr_modRemoval_shipName $nskr_modRemoval_hullName-Class removed $nskr_modRemoval_removed S-Mod"" textGrayColor
-SetTextHighlights $nskr_modRemoval_removed",,,
-nskr_modRemoval_removedMany,nskr_modRemovalRemovedText,,"AddTextSmall ""$nskr_modRemoval_shipName $nskr_modRemoval_hullName-Class removed $nskr_modRemoval_removed S-Mods"" textGrayColor
-SetTextHighlights $nskr_modRemoval_removed",,,
+nskr_modRemovalPickOption,DialogOptionSelected,"$option == nskr_modRemoval_pick_ship","nskr_modRemoval prepareRemove",,,
+nskr_modRemovalPickOptionConfirm,DialogOptionSelected,"$option == nskr_modRemoval_confirm","nskr_modRemoval remove",,,
 "#END MOD REMOVAL",,,,,,
 ,,,,,,
 # DEBT options,,,,,,
@@ -2416,42 +2594,14 @@ nskr_debtStatus,nskr_debtStatus,,"AddTextSmall ""You have loaned $nskr_debt_poin
 SetTextHighlights $nskr_debt_pointsStr
 AddTextSmall ""Your maximum loan is $nskr_debt_MaxpointsStr""
 SetTextHighlights $nskr_debt_MaxpointsStr",,,Shared status lines; tokens written by nskr_debt init
-nskr_debt_ListBuyable,DialogOptionSelected,"$option == nskr_debtBuy","nskr_debt init
-FireAll nskr_debtLoans",,,
-nskr_debt_loanSmall,nskr_debtLoans,,,,"nskr_debt_loanSmall:Loan $nskr_debt_loanSmallStr",
-nskr_debt_loanSmallOff,nskr_debtLoans,"!nskr_debt available loanSmall","SetEnabled nskr_debt_loanSmall false",,,
-nskr_debt_loanLarge,nskr_debtLoans,,,,"nskr_debt_loanLarge:Loan $nskr_debt_loanLargeStr",
-nskr_debt_loanLargeOff,nskr_debtLoans,"!nskr_debt available loanLarge","SetEnabled nskr_debt_loanLarge false",,,
-nskr_debt_loanAll,nskr_debtLoans,,,,"nskr_debt_loanAll:Loan $nskr_debt_loanAllStr",
-nskr_debt_loanAllOff,nskr_debtLoans,"!nskr_debt available loanAll","SetEnabled nskr_debt_loanAll false",,,
-nskr_debt_repaySmall,nskr_debtLoans,,,,"nskr_debt_repaySmall:Repay $nskr_debt_repaySmallStr",
-nskr_debt_repaySmallOff,nskr_debtLoans,"!nskr_debt available repaySmall","SetEnabled nskr_debt_repaySmall false",,,
-nskr_debt_repayLarge,nskr_debtLoans,,,,"nskr_debt_repayLarge:Repay $nskr_debt_repayLargeStr",
-nskr_debt_repayLargeOff,nskr_debtLoans,"!nskr_debt available repayLarge","SetEnabled nskr_debt_repayLarge false",,,
-nskr_debt_repayAll,nskr_debtLoans,,,,"nskr_debt_repayAll:Repay $nskr_debt_repayAllStr",
-nskr_debt_repayAllOff,nskr_debtLoans,"!nskr_debt available repayAll","SetEnabled nskr_debt_repayAll false",,,
-nskr_debt_loansBack,nskr_debtLoans,,"SetShortcut nskr_debtMenuReturn ""ESCAPE"" false",,"nskr_debtMenuReturn:Back",
-nskr_debt_loanSmallSel,DialogOptionSelected,"$option == nskr_debt_loanSmall","$nskr_debt_pick = loanSmall 0
-FireAll nskr_debtPreview",,,
-nskr_debt_loanLargeSel,DialogOptionSelected,"$option == nskr_debt_loanLarge","$nskr_debt_pick = loanLarge 0
-FireAll nskr_debtPreview",,,
-nskr_debt_loanAllSel,DialogOptionSelected,"$option == nskr_debt_loanAll","$nskr_debt_pick = loanAll 0
-FireAll nskr_debtPreview",,,
-nskr_debt_repaySmallSel,DialogOptionSelected,"$option == nskr_debt_repaySmall","$nskr_debt_pick = repaySmall 0
-FireAll nskr_debtPreview",,,
-nskr_debt_repayLargeSel,DialogOptionSelected,"$option == nskr_debt_repayLarge","$nskr_debt_pick = repayLarge 0
-FireAll nskr_debtPreview",,,
-nskr_debt_repayAllSel,DialogOptionSelected,"$option == nskr_debt_repayAll","$nskr_debt_pick = repayAll 0
-FireAll nskr_debtPreview",,,
-nskr_debtPreview,nskr_debtPreview,,"nskr_debt preview $nskr_debt_pick
+nskr_debt_ListBuyable,DialogOptionSelected,"$option == nskr_debtBuy","nskr_debt getLoans",,,
+nskr_debtBuyOption,DialogOptionSelected,"nskr_optionStartsWith ""nskr_debt_pick_""","nskr_debt loan
+AddText ""\""Will this be suitable?\""""
+FireBest nskr_debtStatus
 SetShortcut nskr_debtBuy ""ESCAPE""",,"nskr_debtConfirmLoan:Confirm transaction
 nskr_debtBuy:Go back",
-nskr_debtPreviewCost,nskr_debtPreview,"nskr_debt isLoan $nskr_debt_pick","SetTextHighlights $nskr_debt_costStr","A loan of $nskr_debt_amountStr would cost you $nskr_debt_costStr monthly, at the current interest rate.",,
-nskr_debtPreviewAsk,nskr_debtPreview,,"FireBest nskr_debtStatus","""Will this be suitable?""",,
-nskr_debtBuyConfirm,DialogOptionSelected,"$option == nskr_debtConfirmLoan","nskr_debt take $nskr_debt_pick
-PlaySound ui_rep_raise
-nskr_debt init
-FireAll nskr_debtLoans
+nskr_debtBuyConfirm,DialogOptionSelected,"$option == nskr_debtConfirmLoan","nskr_debt confirmLoan
+nskr_debt getLoans
 FireBest nskr_debtStatus","""Thank you for your business.""",,
 nskr_debtExit,DialogOptionSelected,"$option == nskr_debtExit","FireAll PopulateOptions",,,
 "#END DEBT options",,,,,,
@@ -2724,7 +2874,9 @@ FireBest nskr_icCollectorDemand
 AddText ""You have $nskr_debt_pointsStr in unpaid loans.""
 SetTextHighlights $nskr_debt_pointsStr",,,
 nskr_ic_collectorDemandNone,nskr_icCollectorDemand,,,"""Seems like you don't have enough credits to pay us anything.""","nskr_ic_collectorNoPay:""Yeah, uhhh... I Don't have any money.""",Fallback: the player cannot pay anything.
-nskr_ic_collectorDemandSome,nskr_icCollectorDemand,nskr_quest ic check collectorCanPaySome,"AddText ""\""Just give us all you have, so we don't need to use *other* measures.\""""","""Seems like you don't have enough credits to pay us everything.""","nskr_ic_collectorPaySome:Pay them $nskr_ic_collectorPayment
+nskr_ic_collectorDemandSome,nskr_icCollectorDemand,nskr_quest ic check collectorCanPaySome,,"""Seems like you don't have enough credits to pay us everything.""
+
+""Just give us all you have, so we don't need to use *other* measures.""","nskr_ic_collectorPaySome:Pay them $nskr_ic_collectorPayment
 nskr_ic_collectorFight:""No, I don't think I will.""",
 nskr_ic_collectorDemandAll,nskr_icCollectorDemand,nskr_quest ic check collectorCanPayAll,,"""Just give us all the owed money, and we don't need to use *other* measures.""","nskr_ic_collectorPayAll:Pay them $nskr_ic_collectorPayment
 nskr_ic_collectorFight:""No, I don't think I will.""",
@@ -2878,19 +3030,16 @@ MakeHostileWhileTOff tOff true 7
 $sawPlayerWithTOffCount++ 10
 $ignorePlayerCommRequests = true 0",,,
 tOffEnigmaPatrolOpenComm,OpenCommLink,"$entity.transponderOffConv score:100
-$faction.id == enigma score:1000","AddText ""\""[TARGET]   [transponder_off] in DSRD operational space is against the law. You're hereby ordered to turn your transponder on and identify yourself immediately.     INTERRUPT     waiting. query (blood). scanning. true. [objective == you will never be one of us]\""""
-AdjustRep $faction.id TRANSPONDER_OFF
-AdjustRepActivePerson TRANSPONDER_OFF",,"0:tOff_refuse:Refuse and cut the comm link",
+$faction.id == enigma score:1000","AdjustRep $faction.id TRANSPONDER_OFF
+AdjustRepActivePerson TRANSPONDER_OFF","""[TARGET]   [transponder_off] in DSRD operational space is against the law. You're hereby ordered to turn your transponder on and identify yourself immediately.     INTERRUPT     waiting. query (blood). scanning. true. [objective == you will never be one of us]""","0:tOff_refuse:Refuse and cut the comm link",
 tOffEnigmaPatrolOpenCommUnknown,OpenCommLink,"$entity.transponderOffConv score:100
 !$entity.knowsWhoPlayerIs
-$faction.id == enigma score:1000","AddText""\""[TARGET]   [transponder_off] in DSRD operational space is against the law. You're hereby ordered to turn your transponder on and identify yourself immediately.     INTERRUPT     waiting. query (blood). scanning. true. [objective == you will never be one of us]\""""
-AdjustRep $faction.id TRANSPONDER_OFF
-AdjustRepActivePerson TRANSPONDER_OFF",,"0:tOff_refuse:Refuse and cut the comm link",
+$faction.id == enigma score:1000","AdjustRep $faction.id TRANSPONDER_OFF
+AdjustRepActivePerson TRANSPONDER_OFF","""[TARGET]   [transponder_off] in DSRD operational space is against the law. You're hereby ordered to turn your transponder on and identify yourself immediately.     INTERRUPT     waiting. query (blood). scanning. true. [objective == you will never be one of us]""","0:tOff_refuse:Refuse and cut the comm link",
 tOffEnigmaPatrolOpenCommTOn,OpenCommLink,"$entity.transponderOffConv score:100
 $player.transponderOn
-$faction.id == enigma score:1000","AddText ""\""[TARGET]  [transponder_off] in DSRD operational space is against the law. You're hereby ordered to turn your transponder on and identify yourself immediately.     INTERRUPT     waiting. query (blood). scanning. true. [objective == you will never be one of us]\""""
-AdjustRep $faction.id TRANSPONDER_OFF
-AdjustRepActivePerson TRANSPONDER_OFF",,"0:tOff_refuse:Refuse and cut the comm link",
+$faction.id == enigma score:1000","AdjustRep $faction.id TRANSPONDER_OFF
+AdjustRepActivePerson TRANSPONDER_OFF","""[TARGET]  [transponder_off] in DSRD operational space is against the law. You're hereby ordered to turn your transponder on and identify yourself immediately.     INTERRUPT     waiting. query (blood). scanning. true. [objective == you will never be one of us]""","0:tOff_refuse:Refuse and cut the comm link",
 "#END enigma patrol stopping player w/ transponder off",,,,,,
 ,,,,,,
 # DORMANT,,,,,,
@@ -2924,73 +3073,12 @@ FireAll PopulateOptions","Trying to establish a comm link with the core is not a
 "#END MISC EVENTS",,,,,,
 ,,,,,,
 # CONTRACTS,,,,,,
-nskr_contracts_blurbElimination,nskr_contracts_blurb,"$nskr_contracts_type == ELIMINATE",,"""The board has authorized an elimination contract on certain enemy vessels. Looks like they want to thin out the competition.""",,
-nskr_contracts_blurbRecovery,nskr_contracts_blurb,"$nskr_contracts_type == SCAVENGE",,"""We are looking for someone to fulfill our new data recovery contract. The trends deduced from our existing data have already proven invaluable for our efforts.""",,
+nskr_contracts_blurb,nskr_contracts_blurb,,"Call $nskr_contracts_ref showBlurb",,,
 nskr_contracts_option,nskr_contracts_option,,,,"nskr_contracts_start:Ask about the contract",
 nskr_contracts_start,DialogOptionSelected,"$option == nskr_contracts_start","$missionId = nskr_contracts
-FireAll nskr_contractsOfferText
-SetShortcut contact_decline ESCAPE false",,"contact_accept:Accept the contract
+Call $nskr_contracts_ref showContract",,"contact_accept:Accept the contract
 contact_decline:Decline",
-,,,,,,
-nskr_contracts_elimination1,nskr_contractsOfferText,"$nskr_contracts_type == ELIMINATE",,"""The powers that be have authorized mercenary contracts for the destruction of enemy assets.""",,
-nskr_contracts_elimination2Hostile,nskr_contractsOfferText,"$nskr_contracts_type == ELIMINATE
-!$nskr_contracts_factionBounty","SetTextHighlights $nskr_contracts_count","""And as it happens we have a new elimination contract available, it would require the destruction of $nskr_contracts_count hostile $nskr_contracts_targets.""",,
-nskr_contracts_elimination2Faction,nskr_contractsOfferText,"$nskr_contracts_type == ELIMINATE
-$nskr_contracts_factionBounty","SetTextHighlights $nskr_contracts_count","""And as it happens we have a new elimination contract available, it would require the destruction of $nskr_contracts_count $nskr_contracts_targets.""",,
-nskr_contracts_elimination3,nskr_contractsOfferText,"$nskr_contracts_type == ELIMINATE","SetTextHighlights $nskr_contracts_rewardPer $nskr_contracts_rewardTotal","""The payout per target vessel is $nskr_contracts_rewardPer for a total of $nskr_contracts_rewardTotal. You will be paid upon the full completion of the contract.""",,
-nskr_contracts_elimination4,nskr_contractsOfferText,"$nskr_contracts_type == ELIMINATE",,"""Are you interested captain?""",,
-nskr_contracts_recovery1,nskr_contractsOfferText,"$nskr_contracts_type == SCAVENGE",,"""Our department has great interest in salvage records and materials breakdowns, we are willing to pay for data on certain recovered resources. From destroyed vessels - to be specific.""",,
-nskr_contracts_recovery2,nskr_contractsOfferText,"$nskr_contracts_type == SCAVENGE","SetTextHighlights $nskr_contracts_count","""And as it happens we have a new data recovery contract available, it would require the recovery of $nskr_contracts_count $nskr_contracts_targets.""",,
-nskr_contracts_recovery3,nskr_contractsOfferText,"$nskr_contracts_type == SCAVENGE","SetTextHighlights $nskr_contracts_rewardPer $nskr_contracts_rewardTotal","""The payout per unit recovered is $nskr_contracts_rewardPer for a total of $nskr_contracts_rewardTotal. You will be paid upon the full completion of the contract.""",,
-nskr_contracts_recovery4,nskr_contractsOfferText,"$nskr_contracts_type == SCAVENGE",,"""Of course we are interested in the data only, you get to keep whatever materials you recover.""",,
-nskr_contracts_recovery5,nskr_contractsOfferText,"$nskr_contracts_type == SCAVENGE",,"""Are you willing to do this?""",,
 "#END CONTRACTS",,,,,,
-,,,,,,
-# THRONES GIFT,,,,,,
-nskr_thronesGift_pickShip,nskr_thronesGiftPick,nskr_thronesGift hasShips,"nskr_thronesGift pick ""Pick from your fleet"" Confirm Cancel",,,Opened by ThronesGiftIntel; the picker result fires nskr_thronesGiftPicked or nskr_thronesGiftPickCancelled
-nskr_thronesGift_pickNoShips,nskr_thronesGiftPick,!nskr_thronesGift hasShips,SetShortcut nskr_thronesGift_leave ESCAPE,You can not automate your only ship.,nskr_thronesGift_leave:Go back,
-,,,,,,
-nskr_thronesGift_pickCancelled,nskr_thronesGiftPickCancelled,,SetShortcut nskr_thronesGift_leave ESCAPE,You selected nothing.,"nskr_thronesGift_another:Automate another ship
-nskr_thronesGift_leave:Go back",
-,,,,,,
-nskr_thronesGift_picked,nskr_thronesGiftPicked,,"AddTextSmall ""This will cost $nskr_thronesGift_cost automation points."" standardTextColor
-SetTextHighlightColors highlight
-SetTextHighlights ""$nskr_thronesGift_cost""
-AddTextSmall ""You have $nskr_thronesGift_points automation points available."" standardTextColor
-SetTextHighlightColors highlight
-SetTextHighlights ""$nskr_thronesGift_points""
-AddTextSmall ""Selected $nskr_thronesGift_shipName $nskr_thronesGift_hullName-Class"" gray
-SetTextHighlightColors highlight
-SetTextHighlights ""$nskr_thronesGift_hullName""
-FireBest nskr_thronesGiftPickedOptions",,,
-nskr_thronesGift_pickedAfford,nskr_thronesGiftPickedOptions,nskr_thronesGift canAfford,"SetOptionColor nskr_thronesGift_automate highlight
-SetTooltip nskr_thronesGift_automate ""This will cost $nskr_thronesGift_cost automation points.""
-nskr_quest confirm nskr_thronesGift_automate ""Are you sure? This cannot be reversed. It will cost $nskr_thronesGift_cost automation points."" ""Confirm"" ""Cancel""
-SetShortcut nskr_thronesGift_leave ESCAPE",,"nskr_thronesGift_automate:Automate $nskr_thronesGift_hullName-Class
-nskr_thronesGift_another:Automate another ship
-nskr_thronesGift_leave:Go back",
-nskr_thronesGift_pickedPoor,nskr_thronesGiftPickedOptions,!nskr_thronesGift canAfford,"SetTextHighlightColors bad
-SetTextHighlights ""can not afford""
-SetShortcut nskr_thronesGift_leave ESCAPE",You can not afford to automate this ship.,"nskr_thronesGift_another:Automate another ship
-nskr_thronesGift_leave:Go back",
-,,,,,,
-nskr_thronesGift_automateSel,DialogOptionSelected,"$option == nskr_thronesGift_automate
-nskr_thronesGift hasPicked","nskr_thronesGift automate
-AddTextSmall ""Automated $nskr_thronesGift_shipName $nskr_thronesGift_hullName-Class"" gray
-SetTextHighlightColors highlight
-SetTextHighlights ""$nskr_thronesGift_hullName""
-AddTextSmall ""Lost $nskr_thronesGift_cost automation points."" gray
-SetTextHighlightColors bad
-SetTextHighlights ""$nskr_thronesGift_cost""
-AddTextSmall ""You now have $nskr_thronesGift_points automation points."" gray
-PlaySound ui_noise_static
-SetShortcut nskr_thronesGift_leave ESCAPE",,"nskr_thronesGift_leave:Continue
-nskr_thronesGift_another:Automate another ship",
-nskr_thronesGift_automateGone,DialogOptionSelected,"$option == nskr_thronesGift_automate
-!nskr_thronesGift hasPicked",DismissDialog,,,The picked ship is no longer in the fleet
-nskr_thronesGift_anotherSel,DialogOptionSelected,$option == nskr_thronesGift_another,FireBest nskr_thronesGiftPick,,,
-nskr_thronesGift_leaveSel,DialogOptionSelected,$option == nskr_thronesGift_leave,"DismissDialog
-nskr_thronesGift refreshIntel",,,
 ,,,,,,
 # QUEST DEV,,,,,,
 nskr_questDev_marketOption,PopulateOptions,"$hasMarket
