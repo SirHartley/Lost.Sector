@@ -31,6 +31,10 @@ Angle brackets mark required arguments; brackets mark optional ones. These go in
 | `AddCredits <amount>` | Change player credits, refresh credit facts and print the vanilla receipt. Do not grant again in Java. Validate affordability before charging. |
 | `AddRemoveCommodity <id> <quantity> [withText]` | Positive adds, negative removes. Also supports credits. Defaults to a receipt when the absolute quantity is at least one. |
 | `AddRemoveAnyItem <type> <id> [specialData] <quantity>` | RESOURCES, WEAPONS, FIGHTER_CHIP or SPECIAL with receipt. Example: `AddRemoveAnyItem SPECIAL ship_bp paragon 1`. |
+| `AddStoryPoints <n>` | Grant story points with the vanilla receipt (`addStoryPoints(n, textPanel, false)`). |
+| `AdjustRep <factionId> [limit] <delta>` | Change the player's standing with a faction by `delta` percent points (`5` is +0.05) through a `CUSTOM` reputation action, which prints the vanilla receipt. `limit` is a `RepLevel` name the change stops at; without it there is none. A `RepActions` name instead of the delta applies that action. |
+| `AdjustRepPerson <personId> <limit> <delta>` | The same for an important person; the limit is required in this form. |
+| `AddPotentialContact [personId]` | `ContactIntel.addPotentialContact(1f, person, target market, textPanel)` for the important person or, without an id, the active person; prints vanilla's contact line. |
 | `PlayerHasCargo <id> [quantity]` | Condition; quantity defaults one. Checks commodities/weapons/fighters and special items with null data. Cannot validate a particular blueprint's data. |
 | `CheckSetting <settingId>` | Condition reading an existing Boolean setting. |
 | `RollProbability <probability>` | Seeded condition tied to target/rule/month inputs, not a fresh quest-target generator or saved random choice. |
@@ -56,7 +60,7 @@ Angle brackets mark required arguments; brackets mark optional ones. These go in
 | `SetStoryOption <optionId> <points> <bonusXPKey> [sound] ["log text"]` | Story point option: colors it, adds the cost to the label, adds the confirmation and disables it when the player cannot pay. The key is a `bonusXP` entry in `settings.json`; sounds `leadership`, `combat`, `industry`, `technology` map to the story point chimes. With exactly three arguments it reads `<optionId> <sound> <log text>`, charges one point and uses the option id as the bonus XP key; pass at least four. |
 | `DumpMemory` | Debug the current memory map. Does not list generator-only replacements or supply missing state. |
 
-For `AddShip`, `AdjustRep*`, `MarketCMD`, `BarCMD`, `MissionHubCMD` and other multi-action commands, read the source and vanilla row below. Their subcommands and state requirements are not interchangeable. A listed example is a call site, not a complete recipe for that subsystem.
+For `AddShip`, `AdjustRepActivePerson`, `MarketCMD`, `BarCMD`, `MissionHubCMD` and other multi-action commands, read the source and vanilla row below. Their subcommands and state requirements are not interchangeable. A listed example is a call site, not a complete recipe for that subsystem.
 
 Colors follow the command's Token.getColor path: a Color object in memory; an `r,g,b,a` String; `highlight`/`h` (buttonShortcut); `good`/`bad` (textFriendColor/textEnemyColor); `story`; `gray`/`grey`; a faction ID (base UI color); or an actual settings color ID. Do not invent IDs or assume every String parameter expands tokens.
 

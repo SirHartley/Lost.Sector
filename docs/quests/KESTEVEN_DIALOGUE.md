@@ -8,42 +8,46 @@ Java paths are relative to `jars/src/lostsector/campaign/`; `dialogue/rules/` an
 
 | Style | Used by | How it runs |
 |---|---|---|
-| Rules rows with a multi-verb command | Briefings, hand-ins and confirmations of Jack, Alice and Nicholas (`nskr_kestevenQuest`); the Special Operations fleet (`nskr_job4FleetDialog`); the collector (`nskr_ttCollectorDialog`); Eliza's intercept (`nskr_elizaInterceptDialog`); both alternative endings | Rows select the conversation and call a verb. The verb writes most text and options from Java strings. Several commands extend `PaginatedOptions` and take over the dialog plugin (`setupDelegateDialog`). Every non-paging option then returns to rules through `FireBest DialogOptionSelected`. |
-| Rules rows only | The conversation hub of Jack, Alice and Nicholas (menus, status lines, questions; gates from `KestevenHubModule` checks); fleet greetings and threats: Enigma strike group, Eliza's raided and revenge fleets, Jack's revenge fleet, the Cache guardian, the "LZ" messenger, generic Enigma comms | Text, options and scripts live in `data/campaign/rules.csv`. |
+| Rules rows with a multi-verb command | The Special Operations fleet (`nskr_job4FleetDialog`); the collector (`nskr_ttCollectorDialog`); Eliza's intercept (`nskr_elizaInterceptDialog`); both alternative endings | Rows select the conversation and call a verb. The verb writes most text and options from Java strings. Several commands extend `PaginatedOptions` and take over the dialog plugin (`setupDelegateDialog`). Every non-paging option then returns to rules through `FireBest DialogOptionSelected`. |
+| Rules rows only | Every conversation with Jack, Alice and Nicholas (gates, values and game actions from `KestevenHubModule`); fleet greetings and threats: Enigma strike group, Eliza's raided and revenge fleets, Jack's revenge fleet, the Cache guardian, the "LZ" messenger, generic Enigma comms | Text, options and scripts live in `data/campaign/rules.csv`. |
 | Java `InteractionDialogPlugin` or `BaseBarEvent` | Satellites, Glacier, Cache hint, Cache core, Eliza's port, both final ending dialogs, the job 3 and job 5 bar scenes, the job 4 hint wreck | `CorePlugin.pickInteractionDialogPlugin` or `PortsideBarData` opens the class. All text, options and state changes are in the Java class, using a nested `OptionId` enum. |
 
 ## Jack, Alice and Nicholas
 
-The conversation hub is the `# KESTEVEN QUESTLINE` block of `data/campaign/rules.csv`, with `kesteven/quest/KestevenHubModule` declaring its checks, action and tokens. Briefings, hand-ins, confirmations, the job 3 refusal and the story skip are still in `dialogue/rules/nskr_kestevenQuest`; the rows reach them through its verbs.
+Every conversation with Jack, Alice and Nicholas is in the `# KESTEVEN QUESTLINE` block of `data/campaign/rules.csv`. `kesteven/quest/KestevenHubModule` declares the checks, actions and tokens the rows use; no Java prints its text.
 
 ### Rows and triggers
 
-The block has sub-headers in play order: `# Entry`, `# Jack`, `# Alice`, `# Nicholas`, `# Shared status lines` and `# Briefings, questions and hand-offs`.
+The block has sub-headers in play order: `# Entry`, `# Jack`, `# Jack: job 1`, `# Jack: jobs 3 and 5`, `# Jack: questions`, `# Alice`, `# Alice: job 3`, `# Alice: job 4`, `# Alice: job 5`, `# Alice: questions`, `# Nicholas`, `# Shared lines` and `# Hand-offs`.
 
 | Screen | Structure | Trigger and rows |
 |---|---|---|
 | Entry option | Market menu row | `nskr_kq_hubChatOption` on `PopulateOptions`: `$tag:k_quest`, `check hubOpen` (Kesteven market, Kesteven standing above -50), not `ENDED`, not `COMPLETED` or `FAILED`. Adds `nskr_kq_chat` "Chat about operations work". |
-| Open a speaker | `DialogOptionSelected` pick by `$id` | `nskr_kq_jackChat`, `nskr_kq_aliceChat`, `nskr_kq_nicholasChat` fire the speaker's greeting, status and menu. `nskr_kq_jackChatJob1Tip` first runs `do pickJob1Tip` (see below). |
+| Open a speaker | `DialogOptionSelected` pick by `$id` | `nskr_kq_jackChat`, `nskr_kq_aliceChat`, `nskr_kq_nicholasChat` fire the speaker's greeting, status and menu. `nskr_kq_jackChatJob1Tip` first runs `do pickJob1Tip`. |
 | Greeting and introduction | `FireBest` pick (Jack, Alice); `FireAll` text inserts (Nicholas) | `nskr_kqJackGreeting`, `nskr_kqAliceGreeting`, `nskr_kqNicholasGreeting`. The introduction rows set `$nskr_kq_introduced` in the speaker's memory. |
-| Status line | `FireBest` pick | `nskr_kqJackStatus`, `nskr_kqAliceStatus`, `nskr_kqNicholasStatus`. Lines two speakers share are shared inserts fired with `FireBest`: `nskr_kqNewJob`, `nskr_kqNeedFleet`, `nskr_kqNoJobs`. |
-| Speaker menu | `FireAll` menu | `nskr_kqJackOptions`, `nskr_kqAliceOptions`, `nskr_kqNicholasOptions`: story point options, the action option and Back. |
-| Questions | `FireAll` menu | `nskr_kq_hubAsk` handles `nskr_kestevenQuest_extraStart_` (the briefing's "I have some questions."), prints "What do you need to know?" and fires `nskr_kqAsk`, whose rows (`nskr_kq_jackAsk`, `nskr_kq_jackAskJob1`, `nskr_kq_aliceAsk`) fire `nskr_kqJackQuestions` or `nskr_kqAliceQuestions`. Each answer row sets an "asked" key on the speaker and fires the questions again. |
-| Hand-offs to Java | `DialogOptionSelected` | See the next table. |
+| Status line | `FireBest` pick | `nskr_kqJackStatus`, `nskr_kqAliceStatus`, `nskr_kqNicholasStatus`, with the shared inserts `nskr_kqNewJob`, `nskr_kqNeedFleet`, `nskr_kqNoJobs`. |
+| Speaker menu | `FireAll` menu | `nskr_kqJackOptions`, `nskr_kqAliceOptions`, `nskr_kqNicholasOptions`: story point options, the action option (`nskr_kq_brief`) and Back. |
+| Briefing or hand-in | `DialogOptionSelected` pick by stage, speaker and flags | Rows on `$option == nskr_kq_brief`, one per screen (tables below); `nskr_kq_hubBrief` is the fallback with Back only. Paragraphs after the first use `AddText`, so each `SetTextHighlights` follows its own paragraph. Conditional paragraphs are inserts: `nskr_kqFleetDoubt`, `nskr_kqAliceNicholasHint`, `nskr_kqJackTipLine`; the job 5 leads are text inserts on `nskr_kqJackLeadsLines` and `nskr_kqAliceLeadsLines`, which fire `nskr_kqAliceJob3Satellite`, `nskr_kqAliceJob4Satellite` and `nskr_kqDisksLeft`; `nskr_kqDelveUpdated` prints the Delve log line and its sound. |
+| Conditional options of a briefing | `FireAll` menu | `nskr_kqAliceFrostOptions` ("It's the <Frost>." when Frost was entered, Leave), `nskr_kqAliceCacheOptions` ("Yes", and "Yes" (lie) with `ELIZA_AGREED_SINCERELY`). The Nicholas briefing ends with the `FireBest` pick `nskr_kqNicholasTipEnd`. |
+| Confirmation | `DialogOptionSelected` pick by stage and flags | Rows on `$option == nskr_kq_confirm`; each adds Leave. `nskr_kq_hubConfirm` is the fallback. `nskr_kq_hubConfirmLie` sets `$option` to `nskr_kq_confirm` and fires `DialogOptionSelected` again, so "Yes" (lie) does what "Yes" does. |
+| Questions | `FireAll` menu | `nskr_kq_hubAsk` handles `nskr_kq_ask` (the briefing's "I have some questions."), prints "What do you need to know?" and fires `nskr_kqAsk`, whose rows (`nskr_kq_jackAsk`, `nskr_kq_jackAskJob1`, `nskr_kq_aliceAsk`) fire `nskr_kqJackQuestions` or `nskr_kqAliceQuestions`. Each answer row sets an "asked" key on the speaker and fires the questions again. |
+| Job 3 refusal | Plain chain | "I'm not doing this." (`nskr_kq_aliceAskRefuse`) → `nskr_kq_aliceAskRefuseSel` ("yes" or "No") → `nskr_kq_aliceRefuseConfirm`. |
+| Story skip | `DialogOptionSelected` pick by `$id`, then a shared insert | `nskr_kq_jackStorySkip`, `nskr_kq_aliceStorySkip` print the speaker's lines and fire `nskr_kqStorySkipped`, which runs `do storySkip` and prints the receipts. |
+| Requirement skip | Continue chain | `nskr_kq_hubReqSkip` (at `JOB4_WAITING` `nskr_kq_hubReqSkipJob4`, which first sets `JOB4_REQUIREMENT_SKIPPED`) sets `$option` to `nskr_kq_brief` and fires `DialogOptionSelected`, which shows the briefing. |
 
-Option ids and the rows that handle them:
+Option ids:
 
-| Option id | Added by | Handler row | Runs |
-|---|---|---|---|
-| `nskr_kq_chat` | `nskr_kq_hubChatOption` | `nskr_kq_jackChat`, `nskr_kq_jackChatJob1Tip`, `nskr_kq_aliceChat`, `nskr_kq_nicholasChat` | Greeting, status, menu |
-| `nskr_kestevenQuest_pick_` | Menu action options, question Back, `skip()` "No" | `nskr_kq_hubBriefing` | `nskr_kestevenQuest advanceStage`: `showQuestInfoAndPrepare()` |
-| `nskr_kestevenQuest_story_pick_` | Story point requirement skip, `SetStoryOption ... 1 nskr_skipRequirement` | `nskr_kq_hubReqSkip`; at `JOB4_WAITING` `nskr_kq_hubReqSkipJob4`, which first sets `JOB4_REQUIREMENT_SKIPPED` | `advanceStage` |
-| `nskr_kestevenQuest_story_skip_pick_` | Story skip, `SetStoryOption ... 5 nskr_skipStory` | `nskr_kq_hubStorySkip` | `advanceStageStorySkip`: `SkipStoryOptionPicked()` |
-| `nskr_kestevenQuest_extraStart_` | `showQuestInfoAndPrepare()` | `nskr_kq_hubAsk` | Questions |
-| `nskr_kq_jackAsk…`, `nskr_kq_aliceAsk…` | Question rows | `…Sel` answer rows | Answer, then questions again |
-| `nskr_kq_aliceAskRefuse` | `nskr_kq_aliceQRefuse` | `nskr_kq_aliceAskRefuseSel` | `skip`: refusal prompt |
-| `nskr_kestevenQuestConfirmSkip` | `skip()` | `nskr_kq_hubConfirmSkip` | `confirmSkip`: refusal penalties, stage 11 |
-| `nskr_kestevenQuestConfirmQuest`, `…B` | `showQuestInfoAndPrepare()` | `nskr_kq_hubConfirm`, `nskr_kq_hubConfirmLie` | `confirmQuest`: `quest()` |
-| `nskr_kestevenQuestExit` | Menu Back, Java screens | `nskr_kq_hubExit` | `FireAll PopulateOptions` |
+| Option id | Added by | Handled by |
+|---|---|---|
+| `nskr_kq_chat` | `nskr_kq_hubChatOption` | `nskr_kq_jackChat`, `nskr_kq_jackChatJob1Tip`, `nskr_kq_aliceChat`, `nskr_kq_nicholasChat` |
+| `nskr_kq_brief` | Menu action options, question Back, refusal "No" | Briefing rows |
+| `nskr_kq_reqSkip` | Menu rows with `SetStoryOption nskr_kq_reqSkip 1 nskr_skipRequirement` | `nskr_kq_hubReqSkip`, `nskr_kq_hubReqSkipJob4` |
+| `nskr_kq_storySkip` | Menu rows with `SetStoryOption nskr_kq_storySkip 5 nskr_skipStory` | `nskr_kq_jackStorySkip`, `nskr_kq_aliceStorySkip` |
+| `nskr_kq_ask` | Briefings | `nskr_kq_hubAsk` |
+| `nskr_kq_jackAsk…`, `nskr_kq_aliceAsk…` | Question rows | `…Sel` answer rows |
+| `nskr_kq_confirm`, `nskr_kq_confirmLie` | Briefings, `nskr_kqAliceFrostOptions`, `nskr_kqAliceCacheOptions` | Confirmation rows, `nskr_kq_hubConfirmLie` |
+| `nskr_kq_refuseConfirm` | `nskr_kq_aliceAskRefuseSel` | `nskr_kq_aliceRefuseConfirm` |
+| `nskr_kq_exit` | Back and Leave everywhere, with Escape | `nskr_kq_hubExit`: `FireAll PopulateOptions` |
 
 `KestevenHubModule` declarations used by the rows:
 
@@ -51,17 +55,31 @@ Option ids and the rows that handle them:
 |---|---|---|
 | check | `hubOpen` | The dialog target's market belongs to Kesteven and the player's Kesteven relationship is above -0.50 |
 | check | `storySkipUnlocked` | LunaLib setting `storySkipUnlocked` |
-| check | `job1Standing`, `job3Standing`, `job4Standing`, `job5Standing` | Kesteven relationship at least `nskr_kestevenQuest.JOB1_REP` … `JOB5_REP` |
-| check | `job3Fleet`, `job5Fleet` | `nskr_kestevenQuest.fleetPower()` above `JOB3_POWER`, `JOB5_POWER` |
+| check | `job1Standing`, `job3Standing`, `job4Standing`, `job5Standing` | Kesteven relationship at least `JOB1_REP` … `JOB5_REP` |
+| check | `job3Fleet`, `job5Fleet` | `fleetPower()` above `JOB3_POWER`, `JOB5_POWER` |
 | check | `job4Fleet` | `JOB4_REQUIREMENT_SKIPPED`, or fleet power above `JOB4_POWER` |
+| check | `fleetStretched` | At `JOB3_BRIEFING` or `JOB4_WAITING`, fleet power below that job's gate plus 0.15: the briefing's doubt line |
 | check | `job1Cargo` | At least `JOB1_ARTIFACTS` Artifact Electronics in the player's cargo |
 | check | `job1SensorReady`, `job1CargoReady` | Sensor task done and not delivered; electronics in cargo and not delivered |
 | check | `job1TipKnown`, `job4TargetKnown` | `job1TipSystem`, `job4EnemyTarget` set |
-| check | `nicholasTipGiven`, `twoSatellites`, `allDisks` | `nicholasDialogStage` at least 1; at least two satellites; at least five disks |
-| action | `pickJob1Tip` | `QuestHelper.getJob1Tip()`: picks the tip system on first use and places a dormant Enigma fleet there |
-| token | `playerFullName`, `job1TipSystem`, `job3Start` | Player's full name; tip system name; job 3 start market entity name |
+| check | `nicholasTipGiven`, `outpostExists`, `frostVisited` | `nicholasDialogStage` at least 1; the Outpost market exists and is Kesteven's; the player has entered Frost |
+| check | `noSatellite`, `oneSatellite`, `twoSatellites`, `disksOverTwo`, `allDisks` | Satellites salvaged 0, 1, at least 2; disks above 2, at least 5 |
+| action | `pickJob1Tip`, `pickJob3Start`, `pickJob3Target`, `pickJob4FriendlyTarget`, `pickJob5FrostTip` | The `QuestHelper` getter of that target, which picks it on first use; `pickJob1Tip` also places a dormant Enigma fleet |
+| action | `recordNicholasTip` | `nicholasDialogStage` = 1 |
+| action | `markJob3Satellite`, `markJob4Satellite`, `markGlacier` | `ctx.mark` on satellite #3, satellite #4 or Glacier, from `JOB5_DISKS` on |
+| action | `grantModspec` | A random Kesteven modspec the player does not know yet, if any (purpose `kestevenQuestRandom`), through `ctx.rewards().item` |
+| action | `grantExchangePoints`, `grantEpoch`, `raiseJackImportance` | 50,000 artifact exchange points (`nskr_shipSwap.addPoints`); the `nskr_epoch_empty` frigate with the vanilla ship receipt; Jack's importance to high |
+| action | `placeJob3Leftovers` | The derelicts, debris, satellite #3 and dormant fleet at the job 3 target after a refusal |
+| action | `storySkip` | The story skip's world changes, flags and stage change to `CACHE_KNOWN` ([questline](KESTEVEN_QUESTLINE.md#story-skip)) |
+| token | `playerFullName`, `job1Payout`, `job3Payout`, `job4Payout` | Player's full name; the stage payouts with `Misc.getDGSCredits`. The job 1 briefing also uses `KestevenJob1Module`'s token `job1ArtifactCount` (`JOB1_ARTIFACTS`) |
+| token | `job1TipSystem`, `job3Start`, `job3Market`, `job3TargetSystem`, `job4Constellation`, `job4TargetSystem`, `outpostName` | Names from the saved targets: tip system; job 3 start entity and its market; job 3 target system; friendly target constellation; strike group system; Outpost |
+| token | `frostName`, `frostTipConstellation`, `frostTipDistance` | Frost's name; the hint system's constellation (`QuestHelper.parseConstellation`); the distance from it to Frost times 1.5 in light-years, rounded to two decimals and printed as a Java float |
 
-The job 1 tip system is picked where the old dialog first asked for it: opening Jack's menu at `JOB1_ACTIVE` with neither task done and no tip given (`nskr_kq_jackChatJob1Tip`), and opening Jack's questions at `NOT_STARTED` (`nskr_kq_jackAskJob1`). The checks never pick it.
+Targets are picked where the old dialog first read them: the job 1 tip when Jack's menu opens at `JOB1_ACTIVE` with neither task done and no tip given (`nskr_kq_jackChatJob1Tip`) and when his questions open at `NOT_STARTED` (`nskr_kq_jackAskJob1`); the job 3 start market by the job 3 briefing; the friendly target by the job 4 briefing; the job 3 target by Alice's leads; the hint system by Alice's Frost tip. An action runs first in the row's Script and the text follows with `AddText`, so the tokens read the picked value. Checks and tokens never pick.
+
+`job1Progress` (declared by `KestevenJob1Module`) moves `JOB1_ACTIVE` to `JOB1_DONE` once both deliveries are recorded and refreshes the job 1 map marker; the hand-in rows and the tip row run it after setting their flags.
+
+The stage payouts and the 70 electronics are constants of `KestevenHubModule`; the rows pay and take them with `AddCredits` and `AddRemoveCommodity` and the same literal amounts, and the notes column of those rows names the constant.
 
 ### Decision tables
 
@@ -134,29 +152,53 @@ Conditions are counted as `FireBest` scores: one per line, `score:10` where note
 |---|---|---|
 | Jack, `NOT_STARTED` | "How am I supposed to find them?" (tip known; `JOB1_TIP_GIVEN`), "Rogue AI?" (`askedRogueAi`), "The ships?" (not `FOUGHT_ENIGMA`; `askedShips`), "Artifact Electronics?" (`askedElectronics`), "What about the AI Cores?" (`askedCores`), "I've already fought them." (`FOUGHT_ENIGMA`; `askedFought`) | Tip: sets `JOB1_TIP_GIVEN` |
 | Jack, `JOB1_DONE` | "What are you actually doing with this equipment?" (`askedEquipment`), "Enigma AI?" (`askedEnigma`), "Next job?" (`askedNextJob`) | |
-| Alice, `JOB3_BRIEFING` | "How do I know where to go?" (`askedWhere`), "So I'm on my own for this?" (`askedAlone`), "Is this really necessary?" (`askedNecessary`), "I'm not doing this." (never hidden) | Refusal: `nskr_kestevenQuest skip` |
+| Alice, `JOB3_BRIEFING` | "How do I know where to go?" (`askedWhere`), "So I'm on my own for this?" (`askedAlone`), "Is this really necessary?" (`askedNecessary`), "I'm not doing this." (never hidden) | Refusal prompt |
 | Alice, `JOB3_DONE` | "Know anything about the target?" (`JOB3_TARGET_DISCOVERED`; `askedTarget`), "Next job?" (`askedNextJob`) | |
 | Alice, `JOB4_WAITING` | "Special Operations fleet?", "Possible threats?", "Supplies and fuel?", "Nicholas Antoine?" (`askedSpecOps`, `askedThreats`, `askedSupplies`, `askedNicholas`), Ask about the "LZ" character (`MESSENGER_QUESTION_OPEN`) | "LZ": clears `MESSENGER_QUESTION_OPEN` |
 | Alice, `JOB4_DONE` | "What was the Operations fleet's goal?", "Why are you so interested in this Enigma AI?", "The Artifact?" (`askedGoal`, `askedInterest`, `askedArtifact`), Ask about the "LZ" character | "LZ": clears `MESSENGER_QUESTION_OPEN` |
 
-Every question list ends with Back (`nskr_kestevenQuest_pick_`, Escape), which shows the briefing again.
+Every question list ends with Back (`nskr_kq_brief`, Escape), which shows the briefing again.
 
-### Where the Java text lives
+**Briefings and hand-ins** (rows on `$option == nskr_kq_brief`; the `$option` line is counted). The stage decides; a speaker is named where the rows test `$id`.
 
-| Stage | Speaker | Briefing or hand-in (`showQuestInfoAndPrepare`) | Confirmation (`quest`) |
+| Stage and state | Row (score) | Effects | Options |
 |---|---|---|---|
-| 0 | Jack | Job 1 briefing | Accept |
-| 1 | Jack | Sensor and electronics hand-ins, location tip | — |
-| 2 | Jack | Wrap-up | Rewards |
-| 6 | Jack | Send to Alice, exchange program | Contact, stage 7 |
-| 7 | Alice | Job 3 briefing | Accept |
-| 10 | Alice | Success or failure | Rewards or penalties |
-| 11 | Alice | Job 4 briefing | Accept |
-| 12 | Nicholas | Signal burst hint | — |
-| 13 | Alice | Ambush report | Rewards |
-| 14 | Jack | Go to the bar (sets 15) | — |
-| 16 | Jack | Eliza tip | — |
-| 16 | Alice | Satellite tip, Frost tip, Cache briefing | Frost identified; Cache coordinates |
+| Any stage without a match | `nskr_kq_hubBrief` (1) | | Back |
+| `NOT_STARTED` | `nskr_kq_jackJob1Brief` (2) | | Accept, "I have some questions.", Back |
+| `JOB1_ACTIVE`, both hand-ins ready | `…jackJob1HandInBoth` (4) | Takes 70 electronics, "Lost sensor package", both delivered flags, `do job1Progress` | Back |
+| `JOB1_ACTIVE`, electronics ready | `…jackJob1HandInCargo` (3) | Takes 70 electronics, `JOB1_ELECTRONICS_DELIVERED`, `do job1Progress` | Back |
+| `JOB1_ACTIVE`, sensor data ready | `…jackJob1HandInPackage` (3) | "Lost sensor package", `JOB1_DATA_DELIVERED`, `do job1Progress` | Back |
+| `JOB1_ACTIVE`, nothing delivered, no tip, tip known, nothing ready | `…jackJob1Tip` (8) | Tip line, `JOB1_TIP_GIVEN`, `do job1Progress` | Back |
+| `JOB1_DONE` | `…jackJob1Done` (2) | | Continue, "I have some questions." |
+| `JOB3_OFFERED` | `…jackJob3Brief` (2) | | Continue |
+| `JOB3_BRIEFING` | `…aliceJob3Brief` (2) | `pickJob3Start`; doubt line when `fleetStretched` | Accept, "I have some questions.", Back |
+| `JOB3_DONE`, success / `JOB3_FAILED` | `…aliceJob3Report` / `…aliceJob3Failed` (3) | | Continue, "I have some questions." |
+| `JOB4_WAITING` | `…aliceJob4Brief` (2) | `pickJob4FriendlyTarget`; Nicholas line when `outpostExists`; doubt line when `fleetStretched` | Accept, "I have some questions.", Back |
+| `JOB4_ACTIVE` | `…nicholasJob4Brief` (2) | `recordNicholasTip`; ends with the log line or, with `JOB4_TARGET_FOUND`, "already investigated" | Leave |
+| `JOB4_DONE`, not helped / `JOB4_FRIENDLY_HELPED` | `…aliceJob4Report` / `…aliceJob4Helped` (3) | | Continue, "I have some questions." |
+| `JOB5_OFFERED` | `…jackJob5Brief` (2) | `advance JOB5_OFFERED JOB5_MEETING` | Leave |
+| `JOB5_DISKS`, Jack, no Jack tip | `…jackLeads` (4) | Eliza and disk lines, Delve log line, `JOB5_JACK_TIP` | Leave |
+| `JOB5_DISKS`, Alice, no Alice tip | `…aliceLeads` (4) | `pickJob3Target`; satellite lines (marks the missing satellite when one is salvaged), disk lines, Delve log line, `JOB5_ALICE_TIP` | Leave |
+| `JOB5_DISKS`, Alice, both tips, not tip 2 | `…aliceFrostTip` (6) | `pickJob5FrostTip`, Delve log line, `JOB5_ALICE_TIP2`, `markGlacier` | "It's the <Frost>." when Frost was entered, Leave |
+| `JOB5_DISKS`, Alice, both tips, tip 2, all disks | `…aliceCacheBrief` (7) | | "Yes", "Yes" (lie) with `ELIZA_AGREED_SINCERELY` |
+
+**Confirmations** (rows on `$option == nskr_kq_confirm`; every one adds Leave).
+
+| Stage and state | Row (score) | Effects |
+|---|---|---|
+| Any stage without a match | `nskr_kq_hubConfirm` (1) | |
+| `NOT_STARTED` | `nskr_kq_jackJob1Accept` (2) | Log line, `advance NOT_STARTED JOB1_ACTIVE` |
+| `JOB1_DONE` | `…jackJob1Paid` (2) | 155,000 credits, Kesteven +5, Jack +10 (at most cooperative), modspec, `advance JOB1_DONE JOB3_OFFERED` |
+| `JOB3_OFFERED` | `…jackJob3Handoff` (2) | `advance JOB3_OFFERED JOB3_BRIEFING`, Jack as potential contact |
+| `JOB3_BRIEFING` | `…aliceJob3Accept` (2) | Log line, `advance JOB3_BRIEFING JOB3_ACTIVE` |
+| `JOB3_DONE`, success | `…aliceJob3Paid` (3) | 205,000 credits, Kesteven +5, Alice +10, 50,000 exchange points, modspec, `advance JOB3_DONE JOB4_WAITING` |
+| `JOB3_DONE`, `JOB3_FAILED` | `…aliceJob3Penalty` (3) | Kesteven -5, Alice -10 (at least vengeful), `advance JOB3_DONE JOB4_WAITING` |
+| `JOB4_WAITING` | `…aliceJob4Accept` (2) | Log line, `advance JOB4_WAITING JOB4_ACTIVE` |
+| `JOB4_DONE`, not helped / helped | `…aliceJob4Paid` / `…aliceJob4PaidHelped` (3) | 1 story point, 285,000 credits, Kesteven +5, Alice +10, the Epoch frigate if helped, modspec, `advance JOB4_DONE JOB5_OFFERED`, Alice as potential contact, Jack's importance high |
+| `JOB5_DISKS`, both tips, not all disks | `…aliceFrostFound` (4) | Delve log line, `FROST_FOUND` |
+| `JOB5_DISKS`, all disks | `…aliceCacheFound` (3) | `CACHE_FOUND`, `advance JOB5_DISKS CACHE_KNOWN` |
+
+The two `JOB5_DISKS` confirmations test the disks, not which screen offered the option: "It's the <Frost>." on the Frost tip screen with all five disks gives the Cache coordinates, as the old `quest()` did.
 
 ## Fleet conversations
 
@@ -209,9 +251,9 @@ The official who reaches the second conversation is locked to it through `$nskr_
 
 ## Notes for moving dialogue into rules
 
-- **Speaker branching:** `showQuestInfoAndPrepare()` and `quest()` branch on the active person and on cached flags. Each branch becomes a row keyed on the person (`$id`) and the conditions it tests, as the hub rows above do.
+- **Speaker branching:** a Java branch on the active person and on flags becomes a row keyed on the person (`$id`) and the conditions it tests, as the hub rows above do.
 - **Highlights:** Java highlights use `addPara(text, color, highlight, …)`. The highlighted phrases and colours move with the text.
 - **Values in text:** job 1 electronics, payouts, the job 4 constellation, the Frost distance and target names are computed in Java. They must be prepared as tokens before a row displays them; see [RULES_AUTHORING.md](../RULES_AUTHORING.md#create-a-custom-text-token).
-- **Stage writes:** most stage changes happen inside `quest()` or `showQuestInfoAndPrepare()`. The full list is in [KESTEVEN_STATE.md](KESTEVEN_STATE.md#who-changes-the-stage).
+- **Stage writes:** the full list is in [KESTEVEN_STATE.md](KESTEVEN_STATE.md#who-changes-the-stage).
 - **Java-only dialogs:** those opened by `CorePlugin` have no rules entry today. Moving them means adding a rules entry route and removing the `CorePlugin` branch.
 - **Bar events:** `HostileTakeoverBarEvent` and the Eliza bar events are saved in `PortsideBarData`; renaming or deleting the classes affects existing saves.

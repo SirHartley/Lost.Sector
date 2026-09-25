@@ -1063,7 +1063,7 @@ Do not add a framework feature that only one quest could ever use; keep that in 
 | Duplicate today | Replaced by |
 |---|---|
 | `QuestHelper.getFailed`/`setFailed` and `getCompleted`/`setCompleted`, identical bodies | Flags on the state |
-| Fourteen hand-written seeded `Random` accessors (`ElizaDialog`, `CacheDoubtDialog`, `CacheCoreDialog`, `EndingKestevenDialog`, `EndingElizaDialog`, `nskr_altEndingDialogLuddic`, `nskr_altEndingDialogTT`, `nskr_job4FleetDialog`, `HintWreckDialog`, `nskr_ttCollectorDialog`, `nskr_elizaInterceptDialog`, `KestevenTipBarEventCreator`, `KestevenTipBarEvent`, `nskr_kestevenQuest`) | `ctx.random(purpose)` |
+| Thirteen hand-written seeded `Random` accessors (`ElizaDialog`, `CacheDoubtDialog`, `CacheCoreDialog`, `EndingKestevenDialog`, `EndingElizaDialog`, `nskr_altEndingDialogLuddic`, `nskr_altEndingDialogTT`, `nskr_job4FleetDialog`, `HintWreckDialog`, `nskr_ttCollectorDialog`, `nskr_elizaInterceptDialog`, `KestevenTipBarEventCreator`, `KestevenTipBarEvent`) | `ctx.random(purpose)` |
 | `nskr_ttCollectorDialog`, the second copy of the loan collector's encounter | `PayOffEncounter` and rows |
 | Intel classes that register themselves and poll in `advanceImpl` | `QuestIntel` and intel rows |
 | The spawn-and-register tail repeated across `KestevenFleets` spawners | `ctx.fleets().spawn` |
@@ -1082,7 +1082,7 @@ Migration map for the Kesteven questline and the other systems. The owning task 
 | `QuestHelper` questline getters and setters | `KestevenState` fields and `KestevenQuest` queries |
 | `campaign/kesteven/quest/KestevenFleets` builders | Builders in the Kesteven quest package returning `SimpleFleet` |
 | `campaign/kesteven/quest/KestevenPeople` | Fixed people stay in world generation; generated people move to `ctx.people()` |
-| Java dialog classes (`ElizaDialog`, `CacheCoreDialog`, `HintWreckDialog`, endings, `nskr_kestevenQuest` and the other questline commands) | Rows, checks, actions and claims |
+| Java dialog classes (`ElizaDialog`, `CacheCoreDialog`, `HintWreckDialog`, endings and the other questline commands) | Rows, checks, actions and claims (`nskr_kestevenQuest` done in T16 and T17: `KestevenHubModule` and the `# KESTEVEN QUESTLINE` rows) |
 | `HostileTakeoverBarEvent`, `ElizaSearch*BarEvent`, `DelveMeetingBarEvent`, `KestevenTipBarEvent` | `AddBarEvents` rows and quest people |
 | `EnemyUnknownIntel`, `HostileTakeoverIntel`, `OperationLifesaverIntel`, `TheDelveIntel`, `CacheIntel` | `QuestIntel` with intel rows (`EnemyUnknownIntel` done in T18: key `job1` of `KestevenJob1Module`; `HostileTakeoverIntel` in T19: key `job3` of `KestevenJob3Module`) |
 | `nskr_isKStage` and other stage predicates | `nskr_quest kq is` and `reached` |

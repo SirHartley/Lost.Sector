@@ -6,7 +6,7 @@ Java paths are relative to `jars/src/lostsector/campaign/`; `dialogue/rules/`, `
 
 ## Storage
 
-The questline is quest `kq` of the quest framework. `kesteven/quest/KestevenQuest` is its definition, registered in `quest/QuestCatalog`. `KestevenHubModule` declares the checks, action and tokens of the conversation hub rows ([dialogue map](KESTEVEN_DIALOGUE.md#jack-alice-and-nicholas)); `KestevenJob1Module` runs job 1's intel, dormant fleet and move to `JOB1_DONE` ([Job 1](KESTEVEN_QUESTLINE.md#job-1-enemy-unknown-stages-0-to-6)); `KestevenJob3Module` runs job 3's intel and the objects placed at acceptance ([Job 3](KESTEVEN_QUESTLINE.md#job-3-hostile-takeover-stages-6-to-11)). `QuestStageManager` and the Java dialogs, bar events, intel and rules commands still run the rest of the questline, reading and writing one saved `kesteven/quest/KestevenState`. `KestevenQuest.isAvailable()` keeps the default `true`, because the old code runs the questline in every campaign and handles a missing Kesteven home as failure.
+The questline is quest `kq` of the quest framework. `kesteven/quest/KestevenQuest` is its definition, registered in `quest/QuestCatalog`. `KestevenHubModule` declares the checks, actions and tokens of the rows for every conversation with Jack, Alice and Nicholas ([dialogue map](KESTEVEN_DIALOGUE.md#jack-alice-and-nicholas)); `KestevenJob1Module` runs job 1's intel, dormant fleet and move to `JOB1_DONE` ([Job 1](KESTEVEN_QUESTLINE.md#job-1-enemy-unknown-stages-0-to-6)); `KestevenJob3Module` runs job 3's intel and the objects placed at acceptance ([Job 3](KESTEVEN_QUESTLINE.md#job-3-hostile-takeover-stages-6-to-11)). `QuestStageManager` and the Java dialogs, bar events, intel and rules commands still run the rest of the questline, reading and writing one saved `kesteven/quest/KestevenState`. `KestevenQuest.isAvailable()` keeps the default `true`, because the old code runs the questline in every campaign and handles a missing Kesteven home as failure.
 
 | Mechanism | Location | Notes |
 |---|---|---|
@@ -32,7 +32,7 @@ The quest manager creates the state on the first unpaused frame of a new campaig
 
 ### Access from the old code
 
-The questline's own old classes use these accessors until later tasks replace them with modules. These are the quest package and the questline dialog commands `nskr_kestevenQuest`, `nskr_job4FleetDialog`, `nskr_ttCollectorDialog`, `nskr_elizaInterceptDialog`, `nskr_altEndingDialogLuddic` and `nskr_altEndingDialogTT`; other features use the [queries](#queries-for-other-features). Each is a thin wrapper over the state; the quest package's own classes also read and write fields directly where they already hold the state.
+The questline's own old classes use these accessors until later tasks replace them with modules. These are the quest package and the questline dialog commands `nskr_job4FleetDialog`, `nskr_ttCollectorDialog`, `nskr_elizaInterceptDialog`, `nskr_altEndingDialogLuddic` and `nskr_altEndingDialogTT`; other features use the [queries](#queries-for-other-features). Each is a thin wrapper over the state; the quest package's own classes also read and write fields directly where they already hold the state.
 
 | Accessor | Reads or writes |
 |---|---|
@@ -113,13 +113,13 @@ The actual path can skip stages: 8 to 10 without 9, 7 to 11 when job 3 is refuse
 | Flag | Meaning | Written by |
 |---|---|---|
 | `ENDED` | Questline permanently failed | `QuestStageManager` failure checks |
-| `STORY_SKIPPED` | Story skip used; nothing reads it | `nskr_kestevenQuest` story skip |
+| `STORY_SKIPPED` | Story skip used; nothing reads it | Hub action `storySkip` |
 | `FOUGHT_ENIGMA` | Beat Enigma before accepting job 1 | `QuestStageManager.reportEncounterLootGenerated` |
 | `JOB1_SENSOR_DATA` | Sensor task done | Same; `KestevenJob1Module.onSkip` on a jump past `JOB1_ACTIVE` |
-| `JOB1_DATA_DELIVERED`, `JOB1_ELECTRONICS_DELIVERED` | Sensor package and electronics delivered | `nskr_kestevenQuest` |
-| `JOB1_TIP_GIVEN` | Jack gave the location tip | `nskr_kestevenQuest` briefing; rules `nskr_kq_jackAskTipSel` |
+| `JOB1_DATA_DELIVERED`, `JOB1_ELECTRONICS_DELIVERED` | Sensor package and electronics delivered | Rules `nskr_kq_jackJob1HandIn…` |
+| `JOB1_TIP_GIVEN` | Jack gave the location tip | Rules `nskr_kq_jackJob1Tip`, `nskr_kq_jackAskTipSel` |
 | `COLLECTOR_PAID` | Tri-Tachyon collector paid | `nskr_ttCollectorDialog` |
-| `JOB3_REFUSED` | Job 3 refused; nothing reads it | `nskr_kestevenQuest.confirmSkip` |
+| `JOB3_REFUSED` | Job 3 refused; nothing reads it | Rules `nskr_kq_aliceRefuseConfirm` |
 | `JOB3_TARGET_DISCOVERED` | Target coordinates from the bar | `HostileTakeoverBarEvent` |
 | `JOB3_FAILED` | Timeout or stealth broken | `QuestStageManager` |
 | `MESSENGER_MET`, `MESSENGER_QUESTION_OPEN` | "LZ" messenger met; question available (cleared after asking Alice) | Quest `ic` through `KestevenQuest.reportMessengerMet()`; cleared by rules `nskr_kq_aliceAskLzSel` |
@@ -131,8 +131,8 @@ The actual path can skip stages: 8 to 10 without 9, 7 to 11 when job 3 is refuse
 | `JOB4_TARGET_DESTROYED` | Strike group below 20% strength | `QuestStageManager` |
 | `JOB4_FRIENDLY_HELPED` | Supplies and fuel given | `nskr_job4FleetDialog` |
 | `JOB4_FAILED` | Player attacked the friendly fleet | `QuestStageManager` |
-| `JOB5_JACK_TIP`, `JOB5_ALICE_TIP`, `JOB5_ALICE_TIP2` | Job 5 tips given | `nskr_kestevenQuest` |
-| `FROST_FOUND` | Frost identified | `nskr_kestevenQuest.quest()`, `QuestStageManager`, story skip |
+| `JOB5_JACK_TIP`, `JOB5_ALICE_TIP`, `JOB5_ALICE_TIP2` | Job 5 tips given | Rules `nskr_kq_jackLeads`, `nskr_kq_aliceLeads`, `nskr_kq_aliceFrostTip`; story skip |
+| `FROST_FOUND` | Frost identified | Rules `nskr_kq_aliceFrostFound`, `QuestStageManager`, story skip |
 | `SATELLITE3_RECOVERED`, `SATELLITE4_RECOVERED` | Satellite #3 or #4 salvaged | `DataSatelliteDialog`, story skip |
 | `GLACIER_DISK_RECOVERED` | Disk #5 recovered | `GlacierCommsDialog`, story skip |
 | `ALL_DISKS_RECOVERED` | At least five disks | `QuestStageManager` |
@@ -144,7 +144,7 @@ The actual path can skip stages: 8 to 10 without 9, 7 to 11 when job 3 is refuse
 | `ELIZA_RAID_ENABLED` | Refused; raid enabled | `ElizaDialog` |
 | `ELIZA_RAIDED` | Raid done | `ElizaRaid` |
 | `ELIZA_KILLED` | Eliza dead | `QuestStageManager.runFleetLogic` |
-| `CACHE_FOUND` | Cache coordinates known | `nskr_kestevenQuest`, `QuestStageManager`, story skip |
+| `CACHE_FOUND` | Cache coordinates known | Rules `nskr_kq_aliceCacheFound`, `QuestStageManager`, story skip |
 | `CORE_SEEN`, `CHIP_SALVAGED` | Core seen; UPC salvaged | `CacheCoreDialog` |
 | `ELIZA_INTERCEPT_TALKED` | Eliza's intercept fleet spoke to the player | `nskr_elizaInterceptDialog` |
 | `CHIP_HANDED_TO_ELIZA` | UPC handed to Eliza | `nskr_elizaInterceptDialog` |
@@ -175,7 +175,7 @@ Other features read flags through the [queries](#queries-for-other-features). `n
 | `cacheGuardianSpot` | `SectorEntityToken` | Guardian spawn point in Unknown Site | `QuestHelper.setCacheFleetLoc()` |
 | `disksRecovered` | `int` | Disks recovered | `DataSatelliteDialog`, `ElizaDialog`, `ElizaRaid`, `GlacierCommsDialog` |
 | `satellitesRecovered` | `int` | Satellites salvaged, 0 to 2 | `DataSatelliteDialog`, story skip |
-| `nicholasDialogStage` | `int` | Nicholas's job 4 dialogue stage; the hub reads it through `check nicholasTipGiven` | `nskr_kestevenQuest` |
+| `nicholasDialogStage` | `int` | Nicholas's job 4 dialogue stage; the hub reads it through `check nicholasTipGiven` | Hub action `recordNicholasTip` |
 | `job4FleetDialogStage` | `int` | Special Operations fleet dialogue stage | `nskr_job4FleetDialog setDialogStage`, called from rules |
 | `elizaSearchStage` | `int` | Eliza bar chain stage, 0 to 3 | Eliza bar events |
 | `elizaSearchUsedMarkets` | `List<String>` | Market ids already used by the Eliza bar chain | Eliza bar events |
@@ -200,7 +200,7 @@ Each purpose is a constant on `KestevenState`, named after the persistent-data k
 
 | Constant | Purpose | Accessor |
 |---|---|---|
-| `RANDOM_QUEST` | `kestevenQuestRandom` | `nskr_kestevenQuest.getRandom()`: target pickers, fleets, rewards, Eliza bar payment, Cache guardian and wrecks |
+| `RANDOM_QUEST` | `kestevenQuestRandom` | `KestevenQuest.random(KestevenState.RANDOM_QUEST)` and the hub actions: target pickers, fleets, the modspec reward, Eliza bar payment, Cache guardian and wrecks |
 | `RANDOM_REVENGE` | `kestevenQuestRandomKey` | `QuestStageManager.getRandom()`: Jack's revenge roll |
 | `RANDOM_SATELLITE` | `artifactKeyRandom` | `DataSatelliteDialog.getRandom()` |
 | `RANDOM_GLACIER` | `glacierCommsKeyRandom` | `GlacierCommsDialog.getRandom()` |
@@ -236,19 +236,20 @@ Each purpose is a constant on `KestevenState`, named after the persistent-data k
 | `$nskr_kq_job1Dormant` | The job 1 tip system's dormant fleet: role flag of quest `kq` | `QuestFleets.adopt`, from `QuestHelper.getJob1Tip()` | Nothing reads it yet |
 | `$nskr_altEndingDialogLockedToPerson` | The official in either alternative ending | Alternative endings | Alternative endings |
 | `$nskr_ic_messenger`, `$nskr_ic_messengerLeaving` | Messenger fleet role flags of quest `ic` | `QuestFleets` | Rules `# INTERCEPTS` |
+| `$missionImportant` with reason `nskr_kq` | Satellite #3, satellite #4, Glacier | Hub actions `markJob3Satellite`, `markJob4Satellite`, `markGlacier` (`ctx.mark`, scope `JOB5_DISKS` on) | Map markers; `DataSatelliteDialog` and `GlacierCommsDialog` unset the key on salvage |
 | `$nskr_kq_introduced` | Jack, Alice or Nicholas, each their own; no expiry | Hub introduction rows `nskr_kq_jackIntro`, `nskr_kq_aliceIntro`, `nskr_kq_nicholasIntro` | Hub greeting rows |
 | `$nskr_kq_asked<Topic>` (`askedRogueAi`, `askedShips`, `askedElectronics`, `askedCores`, `askedFought`, `askedEquipment`, `askedEnigma`, `askedNextJob` on Jack; `askedWhere`, `askedAlone`, `askedNecessary`, `askedTarget`, `askedNextJob`, `askedSpecOps`, `askedThreats`, `askedSupplies`, `askedNicholas`, `askedGoal`, `askedInterest`, `askedArtifact` on Alice) | The speaker; no expiry | Hub answer rows `nskr_kq_<speaker>Ask<Topic>Sel` | Hub question rows, which hide an asked question |
 
 ## Who changes the stage
 
-`quest/QuestManager` is the only writer of the stage. Every old writer calls `QuestHelper.setStage(int)`, which translates the int with `KestevenStage.fromLegacy` and calls `advance` on a context from `QuestManager.get().context("kq", ...)`. Each change is logged as `[kq] FROM -> TO (rule null)`.
+`quest/QuestManager` is the only writer of the stage. Rows change it with `nskr_quest kq advance FROM TO` and modules with `ctx.advance`. Every old writer calls `QuestHelper.setStage(int)`, which translates the int with `KestevenStage.fromLegacy` and calls `advance` on a context from `QuestManager.get().context("kq", ...)`; its changes are logged as `[kq] FROM -> TO (rule legacy)`.
 
 | Caller of `setStage` | Stage changes |
 |---|---|
-| `nskr_kestevenQuest.quest()` | 0→1, 2→6, 6→7, 7→8, 10→11, 11→12, 13→14, 16→17 |
-| `nskr_kestevenQuest.showQuestInfoAndPrepare()` | 14→15 |
-| `nskr_kestevenQuest.confirmSkip()` | 7→11 |
-| `nskr_kestevenQuest.SkipStoryOptionPicked()` | 0, 6, 7, 11 or 14→17 (story skip) |
+| Hub confirmation rows, `nskr_quest kq advance` | 0→1, 2→6, 6→7, 7→8, 10→11, 11→12, 13→14, 16→17 |
+| Hub row `nskr_kq_jackJob5Brief` | 14→15 |
+| Hub row `nskr_kq_aliceRefuseConfirm` | 7→11 |
+| Hub action `storySkip` (`ctx.advance`) | 0, 6, 7, 11 or 14→17 (story skip) |
 | `KestevenJob1Module` (`job1Progress` action, daily tick) | 1→2 |
 | `QuestStageManager.advance()` | 12→13, 16→17, failure→99 |
 | `QuestStageManager.job3TargetLogic()` | 8 or 9→10 |

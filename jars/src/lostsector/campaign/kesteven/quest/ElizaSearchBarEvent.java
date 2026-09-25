@@ -14,7 +14,6 @@ import com.fs.starfarer.api.impl.campaign.ids.Ranks;
 import com.fs.starfarer.api.impl.campaign.intel.bar.PortsideBarData;
 import com.fs.starfarer.api.impl.campaign.intel.bar.events.BaseBarEvent;
 import com.fs.starfarer.api.util.Misc;
-import lostsector.dialogue.rules.nskr_kestevenQuest;
 import lostsector.helper.MathHelper;
 
 import java.awt.*;
@@ -88,7 +87,7 @@ public class ElizaSearchBarEvent extends BaseBarEvent {
 
 		if (count == 0) {
 			options.clearOptions();
-			money = MathHelper.getSeededRandomNumberInRange(4000, 7000, nskr_kestevenQuest.getRandom());
+			money = MathHelper.getSeededRandomNumberInRange(4000, 7000, KestevenQuest.random(KestevenState.RANDOM_QUEST));
 			dialog.getVisualPanel().showPersonInfo(person, true);
 			text.addPara("The spacer is busy in thought while drinking and doesn't seem to notice you.");
 			options.addOption("\"I'm looking for Eliza.\"", OptionId.A1);
@@ -248,7 +247,7 @@ public class ElizaSearchBarEvent extends BaseBarEvent {
 
 	public static void setPaidForInfoTarget(){
 		KestevenState state = QuestHelper.writableState();
-		if (state != null) state.elizaContactMarket = QuestHelper.pickElizaMarket(nskr_kestevenQuest.getRandom(), false);
+		if (state != null) state.elizaContactMarket = QuestHelper.pickElizaMarket(KestevenQuest.random(KestevenState.RANDOM_QUEST), false);
 	}
 
 	public static SectorEntityToken getPaidForInfoTarget(){

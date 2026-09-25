@@ -10,7 +10,6 @@ import com.fs.starfarer.api.impl.campaign.ids.MemFlags;
 import com.fs.starfarer.api.util.Misc;
 import lostsector.campaign.kesteven.quest.UnlimitedProductionChipCondition;
 import lostsector.campaign.kesteven.quest.QuestHelper;
-import lostsector.dialogue.rules.nskr_kestevenQuest;
 import lostsector.dialogue.rules.nskr_shipSwap;
 import lostsector.helper.MathHelper;
 import lostsector.helper.SectorLookup;
@@ -133,7 +132,7 @@ public class EndingKestevenDialog implements InteractionDialogPlugin {
             //BPs
             playerCargo.addSpecial(new SpecialItemData("nskr_prot_light", null), 1);
             //credits
-            playerCargo.getCredits().add(nskr_kestevenQuest.STAGE5_PAYOUT);
+            playerCargo.getCredits().add(KestevenHubModule.STAGE5_PAYOUT);
             //Exchange
             nskr_shipSwap.addPoints(REWARD_POINTS);
             //+rep
@@ -143,7 +142,7 @@ public class EndingKestevenDialog implements InteractionDialogPlugin {
             //TT war
             float rep = MathHelper.getSeededRandomNumberInRange(-0.70f, -0.65f, getRandom());
             //completion text
-            String payout = Misc.getDGSCredits(nskr_kestevenQuest.STAGE5_PAYOUT);
+            String payout = Misc.getDGSCredits(KestevenHubModule.STAGE5_PAYOUT);
             text.setFontSmallInsignia();
             //add sp
             Global.getSector().getPlayerStats().setStoryPoints(Global.getSector().getPlayerStats().getStoryPoints()+1);

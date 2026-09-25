@@ -8,8 +8,7 @@ Java paths are relative to `jars/src/lostsector/campaign/`; `dialogue/rules/` an
 
 | Owner | Role |
 |---|---|
-| `# KESTEVEN QUESTLINE` rows in `data/campaign/rules.csv`, `kesteven/quest/KestevenHubModule` | The conversation hub with Jack, Alice and Nicholas: entry option, greetings, introductions, status lines, menus, questions and the story point requirement skip ([dialogue map](KESTEVEN_DIALOGUE.md#jack-alice-and-nicholas)) |
-| `dialogue/rules/nskr_kestevenQuest` | Briefings, hand-ins, rewards, the job 3 refusal, the story skip and most player-driven stage changes, called from the hub rows |
+| `# KESTEVEN QUESTLINE` rows in `data/campaign/rules.csv`, `kesteven/quest/KestevenHubModule` | Every conversation with Jack, Alice and Nicholas: offers, briefings, hand-ins, rewards, questions, the job 3 refusal, the story skip and most player-driven stage changes; the job gates and payouts ([dialogue map](KESTEVEN_DIALOGUE.md#jack-alice-and-nicholas)) |
 | `kesteven/quest/QuestStageManager` | `EveryFrameScript` in `EFS_LIST`: automatic stage changes, failure checks, intel, bar events, quest fleets and their AI, the Cache guardian timer, Eliza relocation, post-quest revenge fleets |
 | `kesteven/quest/KestevenQuest`, `KestevenStage`, `KestevenFlag`, `KestevenState` | Framework definition of quest `kq`, with the modules `KestevenHubModule`, `KestevenJob1Module` and `KestevenJob3Module`; the stage enum, the flags and the saved state ([KESTEVEN_STATE.md](KESTEVEN_STATE.md)) |
 | `kesteven/quest/KestevenJob1Module`, `# KESTEVEN QUESTLINE: JOB 1` rows in `data/campaign/rules.csv` | Job 1 world logic: the intel entry and its text rows, the tip system's dormant fleet, the move to stage 2 ([Job 1](#job-1-enemy-unknown-stages-0-to-6)) |
@@ -37,7 +36,7 @@ The rules row `nskr_kq_hubChatOption` adds "Chat about operations work" to a per
 
 At stage 20 and after failure the option disappears.
 
-Each job has a relationship gate and, from job 3 on, a fleet-strength gate. Strength is `nskr_kestevenQuest.fleetPower()`: `PowerLevel.get(0.2f, 0f, 2f)`, or 2 in dev mode. The hub rows read the gates through the `KestevenHubModule` checks `job1Standing` … `job5Standing` and `job3Fleet` … `job5Fleet`, which compute the strength each time a row tests them; the job 3 and job 4 briefings compute it once per command call.
+Each job has a relationship gate and, from job 3 on, a fleet-strength gate. Strength is `KestevenHubModule.fleetPower()`: `PowerLevel.get(0.2f, 0f, 2f)`, or 2 in dev mode. The rows read the gates through the `KestevenHubModule` checks `job1Standing` … `job5Standing`, `job3Fleet` … `job5Fleet` and `fleetStretched`, which compute the strength each time a row tests them.
 
 | Job | Offered by | Kesteven relationship | Strength |
 |---|---|---|---|
@@ -54,12 +53,12 @@ When the relationship gate passes and only the strength gate fails, the offer sh
 
 ## Stages
 
-The stage is a `KestevenStage` on the quest state, changed only by the quest manager. The old code reads and writes it as the legacy integer below through `QuestHelper.getStage/setStage`; [KESTEVEN_STATE.md](KESTEVEN_STATE.md#stages) maps each integer to its constant. Stages 3 to 5 are unused. There is no Job 2; the job numbers follow the stage cheat sheet in `nskr_kestevenQuest.java`.
+The stage is a `KestevenStage` on the quest state, changed only by the quest manager. The old code reads and writes it as the legacy integer below through `QuestHelper.getStage/setStage`; [KESTEVEN_STATE.md](KESTEVEN_STATE.md#stages) maps each integer to its constant. Stages 3 to 5 are unused. There is no Job 2; the job numbers follow the old stage numbering.
 
 | Stage | Meaning | Set by |
 |---|---|---|
 | 0 | Not started | Start stage; the quest manager creates the state on the first unpaused frame of a new campaign |
-| 1 | Job 1 active | Jack, accept (`quest()`) |
+| 1 | Job 1 active | Jack, accept |
 | 2 | Job 1 tasks done | `KestevenJob1Module`, when both deliveries are recorded |
 | 6 | Job 3 offered by Jack | Jack, job 1 turn-in |
 | 7 | Talk to Alice | Jack, job 3 briefing |
@@ -87,7 +86,7 @@ Jack offers two tasks for 155,000 credits:
 
 The tip system is picked once by `QuestHelper.getJob1Tip()`: from the `KestevenHubModule` action `pickJob1Tip` when the player opens Jack's questions at stage 0, or his menu at stage 1 with neither task done and no tip given, and from `KestevenJob1Module` when stage 1 starts. The pick chooses a system with an Enigma base and places a dormant Enigma fleet there, which the quest adopts as role `job1Dormant` (`FleetOrders.none()`, persistent, so it outlives the job). Jack gives the system through "How am I supposed to find them?": a question at stage 0, a menu option leading to the briefing at stage 1. Either sets `JOB1_TIP_GIVEN`.
 
-Jack takes each delivery when the player has it (`JOB1_DATA_DELIVERED`, `JOB1_ELECTRONICS_DELIVERED`). `KestevenJob1Module` then moves stage 1 to 2: its action `job1Progress` does it at once, and its daily tick catches a delivery no row reported. Nothing calls `job1Progress` yet: the hand-ins in `nskr_kestevenQuest` only set the flags, so the move and a new map marker after the tip wait for the next campaign day. Turning in at stage 2 grants a Kesteven hullmod modspec (an unknown one of `nskr_inertial`, `nskr_volatile`, `nskr_bigBats`, `nskr_criticalArmor` if possible), 155,000 credits, Kesteven +5 and Jack +10, and sets stage 6.
+Jack takes each delivery when the player has it (`JOB1_DATA_DELIVERED`, `JOB1_ELECTRONICS_DELIVERED`). `KestevenJob1Module` then moves stage 1 to 2: its action `job1Progress` does it at once, and its daily tick catches a delivery no row reported. The hand-in rows and the tip row call `job1Progress` right after setting their flags, so the move and the new map marker after the tip happen at once. Turning in at stage 2 grants a Kesteven hullmod modspec (an unknown one of `nskr_inertial`, `nskr_volatile`, `nskr_bigBats`, `nskr_criticalArmor` if possible), 155,000 credits, Kesteven +5 and Jack +10, and sets stage 6.
 
 Winning against Enigma before accepting sets `FOUGHT_ENIGMA`, which changes one of Jack's answers.
 
@@ -95,7 +94,7 @@ Winning against Enigma before accepting sets `FOUGHT_ENIGMA`, which changes one 
 
 `KestevenJob1Module` is active at stages 1 and 2. When stage 1 starts it shows the `QuestIntel` entry `job1` (icon `job1`; tags important, accepted, missions) as a campaign message, and it ends the entry at once when the stage leaves 2, including on failure. Its map marker is the tip system's hyperspace anchor once the tip was given and the system still has an Enigma base, otherwise `asteriaOrOutpost`; the module sets it when stage 1 starts, in `job1Progress` and once a day.
 
-The text is in the `# KESTEVEN QUESTLINE: JOB 1` block, selected by `$nskr_intel_key == job1`: the title "Enemy Unknown" (`nskr_kqIntelTitle`), one bullet per open task (`nskr_kqIntelBullets`) and the description (`nskr_kqIntelDesc`). The description repeats the bullets as paragraphs after its first line, because `QuestIntel` shows no bullets in the description panel. The rows use the module's checks `kestevenHostile` (Kesteven relationship at most -0.50; job 3 rows use it too) and `job1TipBase` (the tip system has an Enigma base), the tokens `job1HomeName` (`asteriaOrOutpost` name) and `job1ArtifactCount` (`nskr_kestevenQuest.JOB1_ARTIFACTS`), and the hub's `job1TipSystem`.
+The text is in the `# KESTEVEN QUESTLINE: JOB 1` block, selected by `$nskr_intel_key == job1`: the title "Enemy Unknown" (`nskr_kqIntelTitle`), one bullet per open task (`nskr_kqIntelBullets`) and the description (`nskr_kqIntelDesc`). The description repeats the bullets as paragraphs after its first line, because `QuestIntel` shows no bullets in the description panel. The rows use the module's checks `kestevenHostile` (Kesteven relationship at most -0.50; job 3 rows use it too) and `job1TipBase` (the tip system has an Enigma base), the tokens `job1HomeName` (`asteriaOrOutpost` name) and `job1ArtifactCount` (`KestevenHubModule.JOB1_ARTIFACTS`), and the hub's `job1TipSystem`.
 
 ## Job 3: Hostile Takeover (stages 6 to 11)
 
@@ -124,11 +123,11 @@ The job ends in `QuestStageManager` at stage 10 in one of three ways:
 
 ### Intel
 
-The `QuestIntel` entry `job3` (icon `job3`; tags important, accepted, missions) shows as a campaign message when stage 8 starts, and `KestevenJob3Module` ends it at once when the stage leaves 9, including on failure. Its map marker is the start market at stage 8 and the target at stage 9. The text is in the `# KESTEVEN QUESTLINE: JOB 3` block, selected by `$nskr_intel_key == job3`: the title "Hostile Takeover", bullets for hostile relations (`kestevenHostile`), the days left (`job3TimeLeft`, token `job3DaysLeft`: `job3TimeLeft` cut to whole days) and the current step (tokens `job3MarketName`, `job3MarketSystem`, `job3TargetSystem`), and the description with the bullets repeated as paragraphs.
+The `QuestIntel` entry `job3` (icon `job3`; tags important, accepted, missions) shows as a campaign message when stage 8 starts, and `KestevenJob3Module` ends it at once when the stage leaves 9, including on failure. Its map marker is the start market at stage 8 and the target at stage 9. The text is in the `# KESTEVEN QUESTLINE: JOB 3` block, selected by `$nskr_intel_key == job3`: the title "Hostile Takeover", bullets for hostile relations (`kestevenHostile`), the days left (`job3TimeLeft`, token `job3DaysLeft`: `job3TimeLeft` cut to whole days) and the current step (tokens `job3HomeMarket`, `job3HomeSystem`, `job3TargetSystem`), and the description with the bullets repeated as paragraphs.
 
 Alice's turn-in at stage 10: on success, a modspec, 50,000 exchange points, 205,000 credits, Kesteven +5 and Alice +10; on failure, Kesteven -5 and Alice -10. Both set stage 11.
 
-Refusing at stage 7 ("I'm not doing this.", then "yes") costs Kesteven -5 and Alice -10 and sets stage 11 and `JOB3_REFUSED`. The derelicts, satellite #3 and the dormant fleet are still placed at the target so job 5 can use them. The question row `nskr_kq_aliceQRefuse` has its own option id, handled by `nskr_kq_aliceAskRefuseSel`, which calls `nskr_kestevenQuest skip`.
+Refusing at stage 7 ("I'm not doing this.", then "yes") costs Kesteven -5 and Alice -10 and sets stage 11 and `JOB3_REFUSED`. The derelicts, satellite #3 and the dormant fleet are still placed at the target so job 5 can use them. The rows are `nskr_kq_aliceAskRefuseSel` (the prompt) and `nskr_kq_aliceRefuseConfirm`, whose action `placeJob3Leftovers` places the leftovers.
 
 ## Job 4: Operation Lifesaver (stages 11 to 14)
 
@@ -275,9 +274,9 @@ The questline option then disappears. The Cache can still be found and fought; `
 
 ## Story skip
 
-While the `storySkipUnlocked` setting is on, the speaker menus add a 5-story-point "Skip story" option at stages 0, 6, 7 and 11 (after the job 4 wait), and at stage 14 while a job 5 gate fails (rows `nskr_kq_jackOptStorySkip…`, `nskr_kq_aliceOptStorySkip…`). Its handler row `nskr_kq_hubStorySkip` runs `nskr_kestevenQuest advanceStageStorySkip`, and `SkipStoryOptionPicked()`:
+While the `storySkipUnlocked` setting is on, the speaker menus add a 5-story-point "Skip story" option at stages 0, 6, 7 and 11 (after the job 4 wait), and at stage 14 while a job 5 gate fails (rows `nskr_kq_jackOptStorySkip…`, `nskr_kq_aliceOptStorySkip…`). Its handler rows `nskr_kq_jackStorySkip` and `nskr_kq_aliceStorySkip` print the speaker's lines and fire `nskr_kqStorySkipped`, whose `KestevenHubModule` action `storySkip`:
 
-- places the job 3 objects (satellite #3 and the dormant fleet) if the stage is at most 7, and the job 4 objects (strike group, satellite #4 and wrecks) if it is at most 11;
+- places the job 3 objects (satellite #3 and the dormant fleet) at stages up to 7, and the job 4 objects (strike group, satellite #4 and wrecks) at stages up to 11;
 - marks every job 5 tip and disk source as done and sets the Eliza help flags, generating Eliza if she has no market yet;
 - sets `CACHE_FOUND` and stage 17;
 - clears `nskr_starfarerFromStart` and sets `STORY_SKIPPED`.
@@ -287,8 +286,10 @@ While the `storySkipUnlocked` setting is on, the speaker menus add a 5-story-poi
 These follow from the code and rules as written. None has been checked in game.
 
 1. **"Yes (lie)" to Alice.** It follows the same path as "Yes" and records nothing; no code reads a lie to Alice.
-2. **Missing shortcut target.** The row `nskr_kq_hubBriefing` calls `SetShortcut nskr_kestevenQuestCancel`, but no option has that id. The call does nothing; `updateOptions()` puts Escape on `nskr_kestevenQuestExit`. The row's own options are dead too: `advanceStage` clears them before adding its own.
-3. **Glacier.** The first screen of `GlacierCommsDialog` has no Leave option. `CorePlugin` opens it only when its one option, "Search for the facility", is available, and the next screen offers Leave.
-4. **Operation Lifesaver system fallbacks.** `KestevenFleets.spawnJob4Target` picks the strike group's system inside the friendly target's constellation. When no other system there has two planets, `QuestHelper.getRandomSystemWithinConstellation` retries without excluding the friendly system, so both fleets can share one system; with no candidate at all it returns null and the spawn fails. `getRandomSystemFarCore`'s fallback can return a system outside any constellation, which `OperationLifesaverIntel` does not expect. Kept as is by the maintainer.
-5. **Cache guardian report can move the stage back.** `KestevenQuest.reportCacheGuardianDefeated()` sets stage 18 whenever the questline has not ended and the stage is 16 or later, so a guardian defeat reported at stage 19 or 20 would return the questline to 18. Normal play defeats the guardian before stage 19.
-6. **Failure counts as late stages.** `glacierCommsOpen()` and `cacheIsQuestTarget()` keep the old `stage >= 16` comparison on legacy numbers, so they are also true after failure (legacy stage 99).
+2. **Glacier.** The first screen of `GlacierCommsDialog` has no Leave option. `CorePlugin` opens it only when its one option, "Search for the facility", is available, and the next screen offers Leave.
+3. **Operation Lifesaver system fallbacks.** `KestevenFleets.spawnJob4Target` picks the strike group's system inside the friendly target's constellation. When no other system there has two planets, `QuestHelper.getRandomSystemWithinConstellation` retries without excluding the friendly system, so both fleets can share one system; with no candidate at all it returns null and the spawn fails. `getRandomSystemFarCore`'s fallback can return a system outside any constellation, which `OperationLifesaverIntel` does not expect. Kept as is by the maintainer.
+4. **Cache guardian report can move the stage back.** `KestevenQuest.reportCacheGuardianDefeated()` sets stage 18 whenever the questline has not ended and the stage is 16 or later, so a guardian defeat reported at stage 19 or 20 would return the questline to 18. Normal play defeats the guardian before stage 19.
+5. **Failure counts as late stages.** `glacierCommsOpen()` and `cacheIsQuestTarget()` keep the old `stage >= 16` comparison on legacy numbers, so they are also true after failure (legacy stage 99).
+6. **Frost guess with all disks.** Alice's confirmations at stage 16 test the disks, not the screen that offered the option. With all five disks, a Frost tip screen (both tips given, tip 2 not yet) offers "It's the <Frost>.", and choosing it gives the Cache coordinates and stage 17 (`nskr_kq_aliceCacheFound`).
+7. **Empty screen at stage 16.** Alice's "Continue" with all disks leads to her Cache briefing only when both tips and tip 2 are recorded. With all disks and her tip given but Jack's missing, the briefing option shows only Back (`nskr_kq_hubBrief`).
+8. **Highlight without its phrase.** Jack's job 5 briefing highlights "Go to the bar", which its text does not contain, so nothing is highlighted.

@@ -11,7 +11,10 @@ import com.fs.starfarer.api.impl.campaign.procgen.Constellation;
 import com.fs.starfarer.api.impl.campaign.procgen.themes.BaseThemeGenerator;
 import com.fs.starfarer.api.impl.campaign.procgen.themes.DerelictThemeGenerator;
 import com.fs.starfarer.api.util.Misc;
-import lostsector.dialogue.rules.nskr_kestevenQuest;
+import lostsector.world.systems.frost.Frost;
+import com.fs.starfarer.api.impl.campaign.procgen.StarSystemGenerator;
+import com.fs.starfarer.api.impl.campaign.terrain.DebrisFieldTerrainPlugin;
+import com.fs.starfarer.api.impl.campaign.rulecmd.salvage.special.ShipRecoverySpecial;
 import lostsector.ModPlugin;
 import lostsector.settings.Setting;
 import lostsector.settings.SettingsManager;
@@ -36,7 +39,7 @@ public class QuestHelper {
     }
 
     public static SectorEntityToken spawnArtifact(SectorEntityToken loc, int number) {
-        Random random = nskr_kestevenQuest.getRandom();
+        Random random = KestevenQuest.random(KestevenState.RANDOM_QUEST);
         LocationAPI containing = loc.getContainingLocation();
         BaseThemeGenerator.EntityLocation createLoc = DerelictThemeGenerator.createLocationAtRandomGap(random, loc, 0f);
         SectorEntityToken artifact = DerelictThemeGenerator.addNonSalvageEntity(containing, createLoc, "nskr_artifact", Factions.NEUTRAL).entity;
@@ -53,6 +56,28 @@ public class QuestHelper {
         log("baseLoc " + loc.getName());
         log("qUtil SPAWNED artifact in " + artifact.getOrbitFocus().getName());
         return artifact;
+    }
+
+    // The derelicts and debris of the expedition's fight at the job 3 target, placed when job 3 ends without it.
+    public static void spawnEnvironmentalStorytelling(){
+        SectorEntityToken loc = QuestHelper.getJob3Target();
+
+        Frost.addDerelict(loc.getStarSystem(), "doom_Strike", SystemHelper.createRandomNearOrbit(loc), ShipRecoverySpecial.ShipCondition.BATTERED, Math.random()<0.50f, null);
+        Frost.addDerelict(loc.getStarSystem(), "atlas_Standard", SystemHelper.createRandomNearOrbit(loc), ShipRecoverySpecial.ShipCondition.BATTERED, Math.random()<0.50f, null);
+        Frost.addDerelict(loc.getStarSystem(), "shrike_Attack", SystemHelper.createRandomNearOrbit(loc), ShipRecoverySpecial.ShipCondition.BATTERED, Math.random()<0.50f, null);
+
+        DebrisFieldTerrainPlugin.DebrisFieldParams params_loc_main = new DebrisFieldTerrainPlugin.DebrisFieldParams(
+                350f, // field radius - should not go above 1000 for performance reasons
+                1.2f, // density, visual - affects number of debris pieces
+                10000000f, // duration in days
+                0f); // days the field will keep generating glowing pieces
+        params_loc_main.source = DebrisFieldTerrainPlugin.DebrisFieldSource.MIXED;
+        params_loc_main.baseSalvageXP = 500; // base XP for scavenging in field
+        SectorEntityToken frost_main1 = Misc.addDebrisField(loc.getStarSystem(), params_loc_main, StarSystemGenerator.random);
+        frost_main1.setSensorProfile(1000f);
+        frost_main1.setDiscoverable(true);
+        frost_main1.setOrbit(SystemHelper.createRandomNearOrbit(loc));
+        frost_main1.setId("nskr_loc_main_debrisBelt");
     }
 
     public static boolean outpostExists(){
@@ -302,7 +327,7 @@ public class QuestHelper {
     }
 
     public static SectorEntityToken pickCacheFleetLoc() {
-        Random random = nskr_kestevenQuest.getRandom();
+        Random random = KestevenQuest.random(KestevenState.RANDOM_QUEST);
         StarSystemAPI sys = Global.getSector().getStarSystem("Unknown Site");
 
         return sys.createToken(new Vector2f(MathHelper.getSeededRandomNumberInRange(-3000f, 3000f, random), MathHelper.getSeededRandomNumberInRange(-3000f, 3000f, random)));
@@ -434,12 +459,12 @@ public class QuestHelper {
         KestevenState state = writableState();
         if (state == null) return null;
         if (state.job1TipSystem == null) {
-            StarSystemAPI sys = getRandomSystemWithEnigmaBase(nskr_kestevenQuest.getRandom());
+            StarSystemAPI sys = getRandomSystemWithEnigmaBase(KestevenQuest.random(KestevenState.RANDOM_QUEST));
             //NO VALID SYSTEMS
             if (sys==null) return null;
 
             state.job1TipSystem = sys;
-            SectorEntityToken dormant = DormantSpawner.addDormant(SystemHelper.getRandomLocationInSystem(sys ,true,false, nskr_kestevenQuest.getRandom()),
+            SectorEntityToken dormant = DormantSpawner.addDormant(SystemHelper.getRandomLocationInSystem(sys ,true,false, KestevenQuest.random(KestevenState.RANDOM_QUEST)),
                     "enigma", 20f);
             if (dormant instanceof CampaignFleetAPI) {
                 KestevenQuest.context().fleets().adopt(KestevenJob1Module.ROLE_TIP_DORMANT, (CampaignFleetAPI) dormant);
@@ -453,7 +478,7 @@ public class QuestHelper {
         KestevenState state = writableState();
         if (state == null) return null;
         if (state.job3Start == null)
-            state.job3Start = SystemHelper.getRandomFactionMarket(nskr_kestevenQuest.getRandom(), Factions.TRITACHYON, QuestStageManager.JOB3_MARKET_BLACKLIST);
+            state.job3Start = SystemHelper.getRandomFactionMarket(KestevenQuest.random(KestevenState.RANDOM_QUEST), Factions.TRITACHYON, QuestStageManager.JOB3_MARKET_BLACKLIST);
 
         return state.job3Start;
     }
@@ -462,7 +487,7 @@ public class QuestHelper {
         KestevenState state = writableState();
         if (state == null) return null;
         if (state.job3Target == null)
-            state.job3Target = SystemHelper.getRandomLocationInSystem(getRandomSystemNearCore(nskr_kestevenQuest.getRandom()), false, false, nskr_kestevenQuest.getRandom());
+            state.job3Target = SystemHelper.getRandomLocationInSystem(getRandomSystemNearCore(KestevenQuest.random(KestevenState.RANDOM_QUEST)), false, false, KestevenQuest.random(KestevenState.RANDOM_QUEST));
 
         return state.job3Target;
     }
@@ -471,7 +496,7 @@ public class QuestHelper {
         KestevenState state = writableState();
         if (state == null) return null;
         if (state.job4FriendlyTarget == null)
-            state.job4FriendlyTarget = SystemHelper.getRandomLocationInSystem(getRandomSystemFarCore(nskr_kestevenQuest.getRandom()), false, false, nskr_kestevenQuest.getRandom());
+            state.job4FriendlyTarget = SystemHelper.getRandomLocationInSystem(getRandomSystemFarCore(KestevenQuest.random(KestevenState.RANDOM_QUEST)), false, false, KestevenQuest.random(KestevenState.RANDOM_QUEST));
 
         return state.job4FriendlyTarget;
     }
@@ -492,7 +517,7 @@ public class QuestHelper {
         KestevenState state = writableState();
         if (state == null) return null;
         if (state.job5FrostTipSystem == null)
-            state.job5FrostTipSystem = getRandomSystemNearLocation(SectorLookup.getFrost().getStar().getLocationInHyperspace(),7000f,12000f, SectorLookup.getFrost(), nskr_kestevenQuest.getRandom());
+            state.job5FrostTipSystem = getRandomSystemNearLocation(SectorLookup.getFrost().getStar().getLocationInHyperspace(),7000f,12000f, SectorLookup.getFrost(), KestevenQuest.random(KestevenState.RANDOM_QUEST));
 
         return state.job5FrostTipSystem;
     }
@@ -504,7 +529,7 @@ public class QuestHelper {
 
     public static void setElizaLoc(){
         KestevenState state = writableState();
-        if (state != null) state.elizaMarket = pickElizaMarket(nskr_kestevenQuest.getRandom(), false);
+        if (state != null) state.elizaMarket = pickElizaMarket(KestevenQuest.random(KestevenState.RANDOM_QUEST), false);
     }
 
     public static SectorEntityToken getCacheFleetLoc(){

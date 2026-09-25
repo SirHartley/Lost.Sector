@@ -39,7 +39,7 @@ Established by descriptions `kesteven` and `nskr_asteria`, the ship descriptions
 - **The Outpost.** A recently established installation that stages expeditions into the fringes. It gets one of several frontier names (Verge, Fringe, Boundary, Perimeter, Threshold, Land's End, Monitor, Brink). The leadership moves there if Asteria is lost.
 - **Ships.** Kesteven's catalogue is young and uneven. Several hulls are recommissioned pre-Collapse designs (the "Construction" defense line, the Blackbird prototype). The Prosperity battleship was revived under Hegemony pressure after the First AI War through opaque DRA "infrastructure reinvestments", at a cost to Asteria's stability; the Hegemony then declined it as too expensive. The Kingstork was the first hull of the Kesteven Construction defense branch. Recurring traits: performance at a steep upkeep, "repairs must be done to spec, or not at all", and marketing that overstates.
 - **Services.** Kesteven sells loans (debt collectors pursue defaulters), trades prototype hulls and weapons for Artifact Electronics through an exchange program, removes S-mods, and licenses its designs to players in good standing. It offers mercenary elimination contracts "authorized by the board", and buys salvage data because "the trends deduced from our existing data have already proven invaluable".
-- **Rivals and arms.** Kesteven is in a cold war with Tri-Tachyon, which Jack expects to "go hot" if Kesteven gets the UPC (`EndingKestevenDialog`). It has a Special Operations fleet and its own black ops, which Alice "really wanted to avoid using" (`nskr_kestevenQuest`, job 3 refusal). Its scavenger fleets travel to systems of interest, and some turn on lone captains ("Nothing personal of course, captain it's just business.", rules `betrayalGreeting`).
+- **Rivals and arms.** Kesteven is in a cold war with Tri-Tachyon, which Jack expects to "go hot" if Kesteven gets the UPC (`EndingKestevenDialog`). It has a Special Operations fleet and its own black ops, which Alice "really wanted to avoid using" (rules `nskr_kq_aliceRefuseConfirm`, job 3 refusal). Its scavenger fleets travel to systems of interest, and some turn on lone captains ("Nothing personal of course, captain it's just business.", rules `betrayalGreeting`).
 
 ### Project Enigma
 
@@ -158,7 +158,7 @@ Jack is Kesteven's space operations officer at Asteria (`nskr_opguy`), the quest
 **Voice.** Charismatic and corporate: "a charismatic smile ... his manners have that corporate superficiality down to a perfection" (`nskr_kq_jackIntro`). In person he is tall and inviting, with "a big - and mostly genuine smile" (`DelveMeetingBarEvent`). He becomes a salesman when the player hesitates, turns commanding when the stakes rise, and enjoys winning.
 
 - On Kesteven's mission (`DelveMeetingBarEvent`): "Think about it, Asteria is one of the last great bastions of equality and democracy. We are very much in a unique position to drive progress in this sector." This shows the sincere-sounding corporate pitch; he believes it, and the setting's own descriptions undercut it.
-- On Eliza's death (`nskr_kestevenQuest`, job 5 tip): "I hear you managed to already take out Eliza for good, very impressive captain." The narration adds "There is a sinister smile on his face, you seem to have made his day." His warmth has a hard edge.
+- On Eliza's death (rules `nskr_kq_jackLeadsElizaKilled`, job 5 tip): "I hear you managed to already take out Eliza for good, very impressive captain." The narration adds "There is a sinister smile on his face, you seem to have made his day." His warmth has a hard edge.
 - At the Kesteven ending (`EndingKestevenDialog`): "This cold war of ours is about to go hot, but we will be ready." ... "I hope we can again work together in the future, burn bright." Defiance, confidence and a sign-off that belongs to him.
 - Betrayed (rules `jackRevengeanceDialogInitial`): "I can't believe you betrayed us just like that, and to work with some lunatic spacer." He "struggles to maintain his composure".
 
@@ -186,7 +186,7 @@ Alice is Kesteven's R&D manager (`nskr_researcher`): the job 3 and job 4 contact
 
 Nicholas works in Kesteven intelligence and communications at the Outpost (`nskr_intelligence`) and appears in job 4.
 
-**Voice.** Reserved and hesitant, full of fillers and self-corrections. He worries about equipment: "Um, welcome captain." ... "So, the fleet was instructed to send encrypted hyperwave signals using rather expensive Domain comms equipment. You know I hope they didn't lose that stuff..." ... "There's this one thing. uhh-" (`nskr_kq_nicholasGreeting`, stage 12).
+**Voice.** Reserved and hesitant, full of fillers and self-corrections. He worries about equipment: "Um, welcome captain." ... "So, the fleet was instructed to send encrypted hyperwave signals using rather expensive Domain comms equipment. You know I hope they didn't lose that stuff..." ... "There's this one thing. uhh-" (rules `nskr_kq_nicholasGreeting` and `nskr_kq_nicholasJob4Brief`, stage 12).
 
 ### Michael Roux
 

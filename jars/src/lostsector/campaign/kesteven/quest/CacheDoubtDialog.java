@@ -9,7 +9,6 @@ import com.fs.starfarer.api.combat.EngagementResultAPI;
 import com.fs.starfarer.api.impl.campaign.ids.Factions;
 import com.fs.starfarer.api.impl.campaign.ids.Ranks;
 import com.fs.starfarer.api.util.Misc;
-import lostsector.dialogue.rules.nskr_kestevenQuest;
 
 import java.awt.*;
 import java.util.Map;
@@ -47,7 +46,7 @@ public class CacheDoubtDialog implements InteractionDialogPlugin {
         Color gr = Misc.getPositiveHighlightColor();
         Color r = Misc.getNegativeHighlightColor();
         Color tc = Misc.getTextColor();
-        Random random = nskr_kestevenQuest.getRandom();
+        Random random = KestevenQuest.random(KestevenState.RANDOM_QUEST);
         //gen people
         FullName.Gender gender = FullName.Gender.MALE;
         if (random.nextFloat() > 0.5f) {

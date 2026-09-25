@@ -106,47 +106,162 @@ nskr_kq_jackStatusCompleted,nskr_kqJackStatus,nskr_quest kq is COMPLETED,,"""Not
 ,,,,,,
 nskr_kq_jackOptReqSkipJob3,nskr_kqJackOptions,"nskr_quest kq is JOB3_OFFERED
 nskr_quest kq check job3Standing
-!nskr_quest kq check job3Fleet","SetStoryOption nskr_kestevenQuest_story_pick_ 1 nskr_skipRequirement ui_char_spent_story_point ""Skipped quest reqs.""",,nskr_kestevenQuest_story_pick_:I believe you'll find me more than capable.,
+!nskr_quest kq check job3Fleet","SetStoryOption nskr_kq_reqSkip 1 nskr_skipRequirement ui_char_spent_story_point ""Skipped quest reqs.""",,nskr_kq_reqSkip:I believe you'll find me more than capable.,
 nskr_kq_jackOptReqSkipJob5,nskr_kqJackOptions,"nskr_quest kq is JOB5_OFFERED
 nskr_quest kq check job5Standing
-!nskr_quest kq check job5Fleet","SetStoryOption nskr_kestevenQuest_story_pick_ 1 nskr_skipRequirement ui_char_spent_story_point ""Skipped quest reqs.""",,nskr_kestevenQuest_story_pick_:I believe you'll find me more than capable.,
+!nskr_quest kq check job5Fleet","SetStoryOption nskr_kq_reqSkip 1 nskr_skipRequirement ui_char_spent_story_point ""Skipped quest reqs.""",,nskr_kq_reqSkip:I believe you'll find me more than capable.,
 nskr_kq_jackOptStorySkip,nskr_kqJackOptions,"nskr_quest kq is NOT_STARTED JOB3_OFFERED
-nskr_quest kq check storySkipUnlocked","SetStoryOption nskr_kestevenQuest_story_skip_pick_ 5 nskr_skipStory ui_char_spent_story_point ""Skipped story.""",,"nskr_kestevenQuest_story_skip_pick_:You are looking for the Cache and the UPC, right? I think I can help. (Skip story)",
+nskr_quest kq check storySkipUnlocked","SetStoryOption nskr_kq_storySkip 5 nskr_skipStory ui_char_spent_story_point ""Skipped story.""",,"nskr_kq_storySkip:You are looking for the Cache and the UPC, right? I think I can help. (Skip story)",
 nskr_kq_jackOptStorySkipJob5Standing,nskr_kqJackOptions,"nskr_quest kq is JOB5_OFFERED
 !nskr_quest kq check job5Standing
-nskr_quest kq check storySkipUnlocked","SetStoryOption nskr_kestevenQuest_story_skip_pick_ 5 nskr_skipStory ui_char_spent_story_point ""Skipped story.""",,"nskr_kestevenQuest_story_skip_pick_:You are looking for the Cache and the UPC, right? I think I can help. (Skip story)",
+nskr_quest kq check storySkipUnlocked","SetStoryOption nskr_kq_storySkip 5 nskr_skipStory ui_char_spent_story_point ""Skipped story.""",,"nskr_kq_storySkip:You are looking for the Cache and the UPC, right? I think I can help. (Skip story)",
 nskr_kq_jackOptStorySkipJob5Fleet,nskr_kqJackOptions,"nskr_quest kq is JOB5_OFFERED
 nskr_quest kq check job5Standing
 !nskr_quest kq check job5Fleet
-nskr_quest kq check storySkipUnlocked","SetStoryOption nskr_kestevenQuest_story_skip_pick_ 5 nskr_skipStory ui_char_spent_story_point ""Skipped story.""",,"nskr_kestevenQuest_story_skip_pick_:You are looking for the Cache and the UPC, right? I think I can help. (Skip story)",
+nskr_quest kq check storySkipUnlocked","SetStoryOption nskr_kq_storySkip 5 nskr_skipStory ui_char_spent_story_point ""Skipped story.""",,"nskr_kq_storySkip:You are looking for the Cache and the UPC, right? I think I can help. (Skip story)",
 nskr_kq_jackOptJob1,nskr_kqJackOptions,"nskr_quest kq is NOT_STARTED
-nskr_quest kq check job1Standing",,,nskr_kestevenQuest_pick_:Enemy Unknown,
+nskr_quest kq check job1Standing",,,nskr_kq_brief:Enemy Unknown,
 nskr_kq_jackOptJob1Tip,nskr_kqJackOptions,"nskr_quest kq is JOB1_ACTIVE
 !nskr_quest kq flag JOB1_SENSOR_DATA
 !nskr_quest kq check job1Cargo
 !nskr_quest kq flag JOB1_TIP_GIVEN
-nskr_quest kq check job1TipKnown",,,"nskr_kestevenQuest_pick_:""How am I supposed to find them?""",
+nskr_quest kq check job1TipKnown",,,"nskr_kq_brief:""How am I supposed to find them?""",
 nskr_kq_jackOptJob1Package,nskr_kqJackOptions,"nskr_quest kq is JOB1_ACTIVE
 nskr_quest kq check job1SensorReady
-!nskr_quest kq check job1CargoReady",,,nskr_kestevenQuest_pick_:Hand over the package,
+!nskr_quest kq check job1CargoReady",,,nskr_kq_brief:Hand over the package,
 nskr_kq_jackOptJob1Cargo,nskr_kqJackOptions,"nskr_quest kq is JOB1_ACTIVE
 nskr_quest kq check job1CargoReady
-!nskr_quest kq check job1SensorReady",,,nskr_kestevenQuest_pick_:Hand over the electronics,
+!nskr_quest kq check job1SensorReady",,,nskr_kq_brief:Hand over the electronics,
 nskr_kq_jackOptJob1Both,nskr_kqJackOptions,"nskr_quest kq is JOB1_ACTIVE
 nskr_quest kq check job1SensorReady
-nskr_quest kq check job1CargoReady",,,nskr_kestevenQuest_pick_:Hand over everything,
-nskr_kq_jackOptJob1Done,nskr_kqJackOptions,nskr_quest kq is JOB1_DONE,,,"nskr_kestevenQuest_pick_:""I've done everything.""",
+nskr_quest kq check job1CargoReady",,,nskr_kq_brief:Hand over everything,
+nskr_kq_jackOptJob1Done,nskr_kqJackOptions,nskr_quest kq is JOB1_DONE,,,"nskr_kq_brief:""I've done everything.""",
 nskr_kq_jackOptJob3,nskr_kqJackOptions,"nskr_quest kq is JOB3_OFFERED
 nskr_quest kq check job3Standing
-nskr_quest kq check job3Fleet",,,nskr_kestevenQuest_pick_:Hostile Takeover,
+nskr_quest kq check job3Fleet",,,nskr_kq_brief:Hostile Takeover,
 nskr_kq_jackOptJob5,nskr_kqJackOptions,"nskr_quest kq is JOB5_OFFERED
 nskr_quest kq check job5Standing
-nskr_quest kq check job5Fleet",,,"nskr_kestevenQuest_pick_:""I'm listening.""",
+nskr_quest kq check job5Fleet",,,"nskr_kq_brief:""I'm listening.""",
 nskr_kq_jackOptLeads,nskr_kqJackOptions,"nskr_quest kq is JOB5_DISKS
 !nskr_quest kq flag JOB5_JACK_TIP
-!nskr_quest kq check allDisks",,,"nskr_kestevenQuest_pick_:""Okay""",
-nskr_kq_jackOptBack,nskr_kqJackOptions,,SetShortcut nskr_kestevenQuestExit ESCAPE false,,nskr_kestevenQuestExit:Back,
+!nskr_quest kq check allDisks",,,"nskr_kq_brief:""Okay""",
+nskr_kq_jackOptBack,nskr_kqJackOptions,,SetShortcut nskr_kq_exit ESCAPE false,,nskr_kq_exit:Back,
 ,,,,,,
+# Jack: job 1,,,,,,
+nskr_kq_jackJob1Brief,DialogOptionSelected,"$option == nskr_kq_brief
+nskr_quest kq is NOT_STARTED","AddText ""\""You would be doing a set of tasks for us.\"" He starts reading out from something, probably an internal briefing.""
+AddText ""Task 1 is to track down and engage a fleet belonging to this AI threat, destroy at least one target ship while running our sensor package. Then return it to us here.""
+SetTextHighlights ""track down and engage a fleet belonging to this AI threat, destroy at least one target ship""
+AddText ""Task 2 is to recover a quantity of electronics and other crucial components from the wrecked ships. Around $nskr_kq_job1ArtifactCount should be enough""
+SetTextHighlights ""recover a quantity of electronics and other crucial components from the wrecked ships""
+AddText ""He pauses to give you a quick look, inspecting your reaction.""
+AddText ""\""You will be compensated of course, our payout for the job is $nskr_kq_job1Payout\""""
+SetTextHighlights ""$nskr_kq_job1Payout""
+AddText ""\""Can you handle this captain?\"" He raises his eyebrow inviting you to respond.""
+SetShortcut nskr_kq_exit ESCAPE false","""Our intelligence has been tracking down worrying reports of a new type of rogue AI threat lurking in the outer sector. We are in need of some help, in gathering intel on this entity.""","nskr_kq_confirm:Accept
+nskr_kq_ask:""I have some questions.""
+nskr_kq_exit:Back",
+nskr_kq_jackJob1Accept,DialogOptionSelected,"$option == nskr_kq_confirm
+nskr_quest kq is NOT_STARTED","AddTextSmall ""Acquired log entry for Enemy Unknown"" gray
+SetTextHighlights ""Enemy Unknown""
+PlaySound ui_noise_static
+nskr_quest kq advance NOT_STARTED JOB1_ACTIVE
+AddText ""\""Good luck. I await your return.\"" He starts marking down stuff on his holopad as the connection is cut.""
+SetShortcut nskr_kq_exit ESCAPE false",,nskr_kq_exit:Leave,
+,,,,,,
+nskr_kq_jackJob1HandInBoth,DialogOptionSelected,"$option == nskr_kq_brief
+nskr_quest kq is JOB1_ACTIVE
+nskr_quest kq check job1CargoReady
+nskr_quest kq check job1SensorReady","AddRemoveCommodity nskr_electronics -70
+AddTextSmall ""Lost sensor package"" gray
+PlaySound ui_rep_raise
+nskr_quest kq set JOB1_DATA_DELIVERED
+nskr_quest kq set JOB1_ELECTRONICS_DELIVERED
+nskr_quest kq do job1Progress
+SetShortcut nskr_kq_exit ESCAPE false","""We've been waiting to see some concrete data on this subject. Nice work captain."" He makes a vaguely congratulatory gesture.",nskr_kq_exit:Back,Four lines: wins over the single hand-in rows. The amount is KestevenHubModule.JOB1_ARTIFACTS.
+nskr_kq_jackJob1HandInCargo,DialogOptionSelected,"$option == nskr_kq_brief
+nskr_quest kq is JOB1_ACTIVE
+nskr_quest kq check job1CargoReady","AddRemoveCommodity nskr_electronics -70
+PlaySound ui_rep_raise
+nskr_quest kq set JOB1_ELECTRONICS_DELIVERED
+nskr_quest kq do job1Progress
+SetShortcut nskr_kq_exit ESCAPE false","""Perfect. This will proof itself invaluable to our efforts.""",nskr_kq_exit:Back,The amount is KestevenHubModule.JOB1_ARTIFACTS.
+nskr_kq_jackJob1HandInPackage,DialogOptionSelected,"$option == nskr_kq_brief
+nskr_quest kq is JOB1_ACTIVE
+nskr_quest kq check job1SensorReady","AddTextSmall ""Lost sensor package"" gray
+PlaySound ui_rep_raise
+nskr_quest kq set JOB1_DATA_DELIVERED
+nskr_quest kq do job1Progress
+SetShortcut nskr_kq_exit ESCAPE false","""We've been waiting to see some concrete data on this subject. Nice work captain."" He makes a vaguely congratulatory gesture.",nskr_kq_exit:Back,
+nskr_kq_jackJob1Tip,DialogOptionSelected,"$option == nskr_kq_brief
+nskr_quest kq is JOB1_ACTIVE
+!nskr_quest kq flag JOB1_DATA_DELIVERED
+!nskr_quest kq flag JOB1_ELECTRONICS_DELIVERED
+!nskr_quest kq flag JOB1_TIP_GIVEN
+nskr_quest kq check job1TipKnown
+!nskr_quest kq check job1CargoReady
+!nskr_quest kq check job1SensorReady","FireBest nskr_kqJackTipLine
+AddText ""\""That should give you something to work on captain.\"" He nods and shortly cuts the comm link.""
+nskr_quest kq set JOB1_TIP_GIVEN
+nskr_quest kq do job1Progress
+SetShortcut nskr_kq_exit ESCAPE false",,nskr_kq_exit:Back,
+nskr_kq_jackTipLine,nskr_kqJackTipLine,,"SetTextHighlights ""$nskr_kq_job1TipSystem""","""Our best lead is the $nskr_kq_job1TipSystem. You should start from there.""",,Shared by the job 1 briefing and the question.
+,,,,,,
+nskr_kq_jackJob1Done,DialogOptionSelected,"$option == nskr_kq_brief
+nskr_quest kq is JOB1_DONE",,"""With all this secured, we should learn a lot more about this ""Enigma"" entity."" He has a self satisfied look on his face.","nskr_kq_confirm:Continue
+nskr_kq_ask:""I have some questions.""",
+nskr_kq_jackJob1Paid,DialogOptionSelected,"$option == nskr_kq_confirm
+nskr_quest kq is JOB1_DONE","AddText ""Officer Lapua gives you a look like he isn't supposed to do this. \""I also threw in a little bonus for a job well done. It's a new modspec courtesy of our own R&D division.\""""
+AddCredits 155000
+AdjustRep kesteven 5
+AdjustRepPerson nskr_opguy COOPERATIVE 10
+nskr_quest kq do grantModspec
+PlaySound ui_rep_raise
+nskr_quest kq advance JOB1_DONE JOB3_OFFERED
+SetShortcut nskr_kq_exit ESCAPE false","""Nice work captain. I hope we can continue developing this relationship further in the future.""",nskr_kq_exit:Leave,AddCredits pays KestevenHubModule.STAGE1_PAYOUT.
+,,,,,,
+# Jack: jobs 3 and 5,,,,,,
+nskr_kq_jackJob3Brief,DialogOptionSelected,"$option == nskr_kq_brief
+nskr_quest kq is JOB3_OFFERED","AddText ""\""Oh, by the way we've set up an exchange program for any Artifact Electronics you recover. Go talk to Alice about it.\"" He gives you a quick wink that you barely catch.""
+SetTextHighlights ""exchange program for any Artifact Electronics""
+AddText ""\""Hope you ready for more work.\"" He seems eager to get things moving.""","""You'll need to talk to Alice for this one. Your contact in R&D, I hear she needs some work done.""",nskr_kq_confirm:Continue,
+nskr_kq_jackJob3Handoff,DialogOptionSelected,"$option == nskr_kq_confirm
+nskr_quest kq is JOB3_OFFERED","nskr_quest kq advance JOB3_OFFERED JOB3_BRIEFING
+AddPotentialContact
+AddText ""\""Go talk to Alice now.\""""
+SetShortcut nskr_kq_exit ESCAPE false",,nskr_kq_exit:Leave,
+,,,,,,
+nskr_kq_jackJob5Brief,DialogOptionSelected,"$option == nskr_kq_brief
+nskr_quest kq is JOB5_OFFERED","AddText ""\""Head to the bar and give the signal to our man waiting there. You will need to discuss this in person with me and Alice.\"" He gestures you to get moving.""
+SetTextHighlights ""Go to the bar""
+nskr_quest kq advance JOB5_OFFERED JOB5_MEETING
+SetShortcut nskr_kq_exit ESCAPE false","""It's time we told you about what we are actually looking for here. What's the real point of going after this Enigma AI."" His manners are more commanding than usual, this must be important.",nskr_kq_exit:Leave,"The highlight phrase does not occur in the text, as before."
+,,,,,,
+nskr_kq_jackLeads,DialogOptionSelected,"$option == nskr_kq_brief
+nskr_quest kq is JOB5_DISKS
+$id == nskr_opguy
+!nskr_quest kq flag JOB5_JACK_TIP","FireAll nskr_kqJackLeadsLines
+FireBest nskr_kqDelveUpdated
+nskr_quest kq set JOB5_JACK_TIP
+SetShortcut nskr_kq_exit ESCAPE false",,nskr_kq_exit:Leave,
+nskr_kq_jackLeadsEliza,nskr_kqJackLeadsLines,!nskr_quest kq flag ELIZA_FOUND,"SetTextHighlights ""Eliza""
+AddText ""\""That's your best bet on finding her. I'm sure you can get something out of that scum, if you loosen their lips with some free drinks.\"" He gives you a quick nod.""","""You'll need to find out where Eliza is hiding. You need to go undercover, and start asking questions from local pirates.""",,
+nskr_kq_jackLeadsElizaFound,nskr_kqJackLeadsLines,"nskr_quest kq flag ELIZA_FOUND
+!nskr_quest kq flag ELIZA_HELPED
+!nskr_quest kq flag ELIZA_KILLED",,"""Seems like you've already figured out where Eliza is hiding. Good, now get the disks from her.""",,
+nskr_kq_jackLeadsElizaHelped,nskr_kqJackLeadsLines,"nskr_quest kq flag ELIZA_FOUND
+nskr_quest kq flag ELIZA_HELPED",,"""Seems like you've already figured out where Eliza is hiding, and got the disks from her. Excellent."" He seems very pleased.",,
+nskr_kq_jackLeadsElizaKilled,nskr_kqJackLeadsLines,"nskr_quest kq flag ELIZA_FOUND
+!nskr_quest kq flag ELIZA_HELPED
+nskr_quest kq flag ELIZA_KILLED",,"""I hear you managed to already take out Eliza for good, very impressive captain."" There is a sinister smile on his face, you seem to have made his day.",,
+nskr_kq_jackLeadsDisksLeft,nskr_kqJackLeadsLines,"nskr_quest kq flag JOB5_ALICE_TIP
+!nskr_quest kq check disksOverTwo",FireBest nskr_kqDisksLeft,,,
+nskr_kq_jackLeadsDisksMore,nskr_kqJackLeadsLines,"nskr_quest kq flag JOB5_ALICE_TIP
+nskr_quest kq check disksOverTwo",,"""As you know this is not all five disks. Come chat with Alice later about getting the rest too.""",,
+nskr_kq_jackLeadsDone,nskr_kqJackLeadsLines,nskr_quest kq flag JOB5_ALICE_TIP,,"""That's all captain.""",,
+nskr_kq_jackLeadsRemind,nskr_kqJackLeadsLines,!nskr_quest kq flag JOB5_ALICE_TIP,,"""That's all, remember to talk to Alice if you haven't yet.""",,
+,,,,,,
+# Jack: questions,,,,,,
 nskr_kq_jackAsk,nskr_kqAsk,$id == nskr_opguy,FireAll nskr_kqJackQuestions,,,
 nskr_kq_jackAskJob1,nskr_kqAsk,"$id == nskr_opguy
 nskr_quest kq is NOT_STARTED","nskr_quest kq do pickJob1Tip
@@ -173,10 +288,10 @@ nskr_kq_jackQEnigma,nskr_kqJackQuestions,"nskr_quest kq is JOB1_DONE
 !$nskr_kq_askedEnigma",,,"nskr_kq_jackAskEnigma:""Enigma AI?""",
 nskr_kq_jackQNextJob,nskr_kqJackQuestions,"nskr_quest kq is JOB1_DONE
 !$nskr_kq_askedNextJob",,,"nskr_kq_jackAskNextJob:""Next job?""",
-nskr_kq_jackQBack,nskr_kqJackQuestions,,SetShortcut nskr_kestevenQuest_pick_ ESCAPE false,,nskr_kestevenQuest_pick_:Back,
-nskr_kq_jackAskTipSel,DialogOptionSelected,$option == nskr_kq_jackAskTip,"SetTextHighlights ""$nskr_kq_job1TipSystem""
+nskr_kq_jackQBack,nskr_kqJackQuestions,,SetShortcut nskr_kq_brief ESCAPE false,,nskr_kq_brief:Back,
+nskr_kq_jackAskTipSel,DialogOptionSelected,$option == nskr_kq_jackAskTip,"FireBest nskr_kqJackTipLine
 nskr_quest kq set JOB1_TIP_GIVEN
-FireAll nskr_kqJackQuestions","""Our best lead is the $nskr_kq_job1TipSystem. You should start from there.""",,
+FireAll nskr_kqJackQuestions",,,
 nskr_kq_jackAskRogueAiSel,DialogOptionSelected,$option == nskr_kq_jackAskRogueAi,"$nskr_kq_askedRogueAi = true
 FireAll nskr_kqJackQuestions","""Basically all the reports claim that automated ships of some sort are behind these attacks. Usually deploying a collection of advanced technologies never before seen the sector."" He looks particularly skeptical.",,
 nskr_kq_jackAskShipsSel,DialogOptionSelected,$option == nskr_kq_jackAskShips,"$nskr_kq_askedShips = true
@@ -193,6 +308,10 @@ nskr_kq_jackAskEnigmaSel,DialogOptionSelected,$option == nskr_kq_jackAskEnigma,"
 FireAll nskr_kqJackQuestions","""Enigma is one of the few words we can decipher from their transmissions. It is unclear what it actually means though."" He pauses for a moment.""It could be some sort of master AI core, or the name of their base of operations, or "" He pauses again to think. ""It's just the codename of the unholy project that caused this mess.""",,
 nskr_kq_jackAskNextJobSel,DialogOptionSelected,$option == nskr_kq_jackAskNextJob,"$nskr_kq_askedNextJob = true
 FireAll nskr_kqJackQuestions","He nods in approval. ""We do have more work for you, come talk to me later.""",,
+,,,,,,
+nskr_kq_jackStorySkip,DialogOptionSelected,"$option == nskr_kq_storySkip
+$id == nskr_opguy","AddText ""\""You know we got this strange lead recently pointing to these coordinates, I think you should investigate.\"" He looks a little worried. \""Huh, I actually don't remember how we got these...\""""
+FireBest nskr_kqStorySkipped","He looks almost flustered. ""What- How did you..."" He thinks for a moment.",,
 ,,,,,,
 # Alice,,,,,,
 nskr_kq_aliceChat,DialogOptionSelected,"$option == nskr_kq_chat
@@ -247,35 +366,234 @@ nskr_kq_aliceStatusCompleted,nskr_kqAliceStatus,nskr_quest kq is COMPLETED,,"""S
 nskr_kq_aliceOptReqSkip,nskr_kqAliceOptions,"nskr_quest kq is JOB4_WAITING
 nskr_quest kq flag JOB4_WAIT_OVER
 nskr_quest kq check job4Standing
-!nskr_quest kq check job4Fleet","SetStoryOption nskr_kestevenQuest_story_pick_ 1 nskr_skipRequirement ui_char_spent_story_point ""Skipped quest reqs.""",,nskr_kestevenQuest_story_pick_:I believe you'll find me more than capable.,
+!nskr_quest kq check job4Fleet","SetStoryOption nskr_kq_reqSkip 1 nskr_skipRequirement ui_char_spent_story_point ""Skipped quest reqs.""",,nskr_kq_reqSkip:I believe you'll find me more than capable.,
 nskr_kq_aliceOptStorySkip,nskr_kqAliceOptions,"nskr_quest kq is JOB3_BRIEFING
-nskr_quest kq check storySkipUnlocked","SetStoryOption nskr_kestevenQuest_story_skip_pick_ 5 nskr_skipStory ui_char_spent_story_point ""Skipped story.""",,"nskr_kestevenQuest_story_skip_pick_:You are looking for the Cache and the UPC, right? I think I can help. (Skip story)",
+nskr_quest kq check storySkipUnlocked","SetStoryOption nskr_kq_storySkip 5 nskr_skipStory ui_char_spent_story_point ""Skipped story.""",,"nskr_kq_storySkip:You are looking for the Cache and the UPC, right? I think I can help. (Skip story)",
 nskr_kq_aliceOptStorySkipJob4,nskr_kqAliceOptions,"nskr_quest kq is JOB4_WAITING
 nskr_quest kq flag JOB4_WAIT_OVER
-nskr_quest kq check storySkipUnlocked","SetStoryOption nskr_kestevenQuest_story_skip_pick_ 5 nskr_skipStory ui_char_spent_story_point ""Skipped story.""",,"nskr_kestevenQuest_story_skip_pick_:You are looking for the Cache and the UPC, right? I think I can help. (Skip story)",
-nskr_kq_aliceOptJob3,nskr_kqAliceOptions,nskr_quest kq is JOB3_BRIEFING,,,nskr_kestevenQuest_pick_:Hostile Takeover,
-nskr_kq_aliceOptJob3Report,nskr_kqAliceOptions,nskr_quest kq is JOB3_DONE,,,nskr_kestevenQuest_pick_:Hand over your AAR,
+nskr_quest kq check storySkipUnlocked","SetStoryOption nskr_kq_storySkip 5 nskr_skipStory ui_char_spent_story_point ""Skipped story.""",,"nskr_kq_storySkip:You are looking for the Cache and the UPC, right? I think I can help. (Skip story)",
+nskr_kq_aliceOptJob3,nskr_kqAliceOptions,nskr_quest kq is JOB3_BRIEFING,,,nskr_kq_brief:Hostile Takeover,
+nskr_kq_aliceOptJob3Report,nskr_kqAliceOptions,nskr_quest kq is JOB3_DONE,,,nskr_kq_brief:Hand over your AAR,
 nskr_kq_aliceOptJob4,nskr_kqAliceOptions,"nskr_quest kq is JOB4_WAITING
 nskr_quest kq flag JOB4_WAIT_OVER
 nskr_quest kq check job4Standing
-nskr_quest kq check job4Fleet",,,nskr_kestevenQuest_pick_:Operation Lifesaver,
+nskr_quest kq check job4Fleet",,,nskr_kq_brief:Operation Lifesaver,
 nskr_kq_aliceOptJob4Report,nskr_kqAliceOptions,"nskr_quest kq is JOB4_DONE
-!nskr_quest kq flag JOB4_FRIENDLY_HELPED",,,nskr_kestevenQuest_pick_:Hand over the fleets coordinates and your combat log,
+!nskr_quest kq flag JOB4_FRIENDLY_HELPED",,,nskr_kq_brief:Hand over the fleets coordinates and your combat log,
 nskr_kq_aliceOptJob4Helped,nskr_kqAliceOptions,"nskr_quest kq is JOB4_DONE
-nskr_quest kq flag JOB4_FRIENDLY_HELPED",,,nskr_kestevenQuest_pick_:Hand over your operational report,
+nskr_quest kq flag JOB4_FRIENDLY_HELPED",,,nskr_kq_brief:Hand over your operational report,
 nskr_kq_aliceOptLeads,nskr_kqAliceOptions,"nskr_quest kq is JOB5_DISKS
 !nskr_quest kq flag JOB5_ALICE_TIP
-!nskr_quest kq check allDisks",,,"nskr_kestevenQuest_pick_:""Okay""",
+!nskr_quest kq check allDisks",,,"nskr_kq_brief:""Okay""",
 nskr_kq_aliceOptNewLead,nskr_kqAliceOptions,"nskr_quest kq is JOB5_DISKS
 nskr_quest kq flag JOB5_JACK_TIP
 nskr_quest kq flag JOB5_ALICE_TIP
 !nskr_quest kq flag JOB5_ALICE_TIP2
 nskr_quest kq check twoSatellites
-!nskr_quest kq check allDisks",,,nskr_kestevenQuest_pick_:Continue,
+!nskr_quest kq check allDisks",,,nskr_kq_brief:Continue,
 nskr_kq_aliceOptAllDisks,nskr_kqAliceOptions,"nskr_quest kq is JOB5_DISKS
-nskr_quest kq check allDisks",,,nskr_kestevenQuest_pick_:Continue,
-nskr_kq_aliceOptBack,nskr_kqAliceOptions,,SetShortcut nskr_kestevenQuestExit ESCAPE false,,nskr_kestevenQuestExit:Back,
+nskr_quest kq check allDisks",,,nskr_kq_brief:Continue,
+nskr_kq_aliceOptBack,nskr_kqAliceOptions,,SetShortcut nskr_kq_exit ESCAPE false,,nskr_kq_exit:Back,
 ,,,,,,
+# Alice: job 3,,,,,,
+nskr_kq_aliceJob3Brief,DialogOptionSelected,"$option == nskr_kq_brief
+nskr_quest kq is JOB3_BRIEFING","nskr_quest kq do pickJob3Start
+AddText ""\""Our intelligence has tracked down a Tri-Tachyon expedition on Enigma activity, said to leave from $nskr_kq_job3Market. We need you to figure out their destination and make sure that they don't make it back. Harsh I know, but we can't risk those fools at Tri-Tachyon getting ahead in this field.\""""
+SetTextHighlights ""$nskr_kq_job3Market""
+AddText ""\""I don't care how you do it, but the fleet must neutralized stealthily. This is sabotage, not a declaration of war.\""""
+SetTextHighlights ""neutralized stealthily""
+AddText ""She pauses, as if to check that you're still listening.""
+AddText ""\""Of course, my reward will be $nskr_kq_job3Payout. Fair warning this mission is time sensitive, you have around 90 days until the fleet has completed its task, and we will have missed our mark. So prepare accordingly before starting this job.\""""
+SetTextHighlights ""$nskr_kq_job3Payout"" ""this mission is time sensitive, you have around 90 days""
+FireBest nskr_kqFleetDoubt
+AddText ""\""I hope you won't disappoint me.\"" She looks impatient waiting for your response.""
+SetShortcut nskr_kq_exit ESCAPE false",,"nskr_kq_confirm:Accept
+nskr_kq_ask:""I have some questions.""
+nskr_kq_exit:Back","Picks the job 3 start market where the old dialog did, before the text reads it."
+nskr_kq_aliceJob3Accept,DialogOptionSelected,"$option == nskr_kq_confirm
+nskr_quest kq is JOB3_BRIEFING","AddTextSmall ""Acquired log entry for Hostile Takeover"" gray
+SetTextHighlights ""Hostile Takeover""
+PlaySound ui_noise_static
+nskr_quest kq advance JOB3_BRIEFING JOB3_ACTIVE
+AddText ""\""Go get to work now.\"" The comm link is swiftly cut.""
+SetShortcut nskr_kq_exit ESCAPE false",,nskr_kq_exit:Leave,
+,,,,,,
+nskr_kq_aliceJob3Report,DialogOptionSelected,"$option == nskr_kq_brief
+nskr_quest kq is JOB3_DONE
+!nskr_quest kq flag JOB3_FAILED","AddText ""She has a slight, but devious smile on her face.""
+AddText ""\""Don't think I forgot about your payment.\""""","""This will set their efforts back for quite some time, giving us ample time to progress our own study of Enigma.""","nskr_kq_confirm:Continue
+nskr_kq_ask:""I have some questions.""",
+nskr_kq_aliceJob3Failed,DialogOptionSelected,"$option == nskr_kq_brief
+nskr_quest kq is JOB3_DONE
+nskr_quest kq flag JOB3_FAILED","AddText ""\""Don't even think you'll be getting paid for this.\""""
+AddText ""She seems quite frustrated with you."" gray","""Let's hope they don't pull ahead in this race thanks to your little fuck up.""","nskr_kq_confirm:Continue
+nskr_kq_ask:""I have some questions.""",
+nskr_kq_aliceJob3Paid,DialogOptionSelected,"$option == nskr_kq_confirm
+nskr_quest kq is JOB3_DONE
+!nskr_quest kq flag JOB3_FAILED","AddText ""\""Oh, and there's a new modspec for you to test, go give it a spin.\""""
+AddCredits 205000
+AdjustRep kesteven 5
+AdjustRepPerson nskr_researcher COOPERATIVE 10
+nskr_quest kq do grantExchangePoints
+AddTextSmall ""Acquired 50,000 exchange points"" gray
+SetTextHighlights ""50,000 exchange points""
+nskr_quest kq do grantModspec
+PlaySound ui_rep_raise
+nskr_quest kq advance JOB3_DONE JOB4_WAITING
+SetShortcut nskr_kq_exit ESCAPE false","""I'm giving you some exchange points as a bonus. Don't forget to spend them.""",nskr_kq_exit:Leave,"AddCredits pays KestevenHubModule.STAGE3_PAYOUT; grantExchangePoints grants the 50,000 points the receipt names."
+nskr_kq_aliceJob3Penalty,DialogOptionSelected,"$option == nskr_kq_confirm
+nskr_quest kq is JOB3_DONE
+nskr_quest kq flag JOB3_FAILED","AddText ""Okay, shes *really* frustrated with you."" gray
+AdjustRep kesteven -5
+AdjustRepPerson nskr_researcher VENGEFUL -10
+PlaySound ui_rep_drop
+nskr_quest kq advance JOB3_DONE JOB4_WAITING
+SetShortcut nskr_kq_exit ESCAPE false","""Just be glad I'm not firing you on the spot.""",nskr_kq_exit:Leave,
+,,,,,,
+# Alice: job 4,,,,,,
+nskr_kq_aliceJob4Brief,DialogOptionSelected,"$option == nskr_kq_brief
+nskr_quest kq is JOB4_WAITING","nskr_quest kq do pickJob4FriendlyTarget
+AddText ""She seems to finally have the right file open. \""As you know, it's very likely that something unusual has happened so prepare for the worst. Might be a good idea to grab some extra supplies and fuel in case they need emergency assistance.\""""
+AddText ""\""Their task was to analyze suspected Enigma activity in $nskr_kq_job4Constellation constellation. Your job is to locate them, establish contact, and eliminate any existing threats in the area. Pay for the job is $nskr_kq_job4Payout\""""
+SetTextHighlights ""$nskr_kq_job4Constellation constellation"" ""$nskr_kq_job4Payout""
+FireBest nskr_kqAliceNicholasHint
+FireBest nskr_kqFleetDoubt
+AddText ""\""Are you able to help us captain?\"" She tries to measure your response.""
+SetShortcut nskr_kq_exit ESCAPE false","""Our Special Operations fleet has gone silent for a worrying amount of time."" There is a hint of genuine worry on her face. ""We need you to go and find them, and then figure out what is going on."" She begins to mumble to herself while looking through various data projections. ""I hope they didn't lose *that* equipment. It would be a serious blow-back...""","nskr_kq_confirm:Accept
+nskr_kq_ask:""I have some questions.""
+nskr_kq_exit:Back","Picks the friendly fleet's location where the old dialog did, before the text reads it."
+nskr_kq_aliceNicholasHint,nskr_kqAliceNicholasHint,nskr_quest kq check outpostExists,"SetTextHighlights ""$nskr_kq_outpostName""","""Oh, by the way, you should talk to Nicholas Antoine. He works in communications and is currently stationed at $nskr_kq_outpostName. He most likely has some more information.""",,
+nskr_kq_aliceJob4Accept,DialogOptionSelected,"$option == nskr_kq_confirm
+nskr_quest kq is JOB4_WAITING","AddTextSmall ""Acquired log entry for Operation Lifesaver"" gray
+SetTextHighlights ""Operation Lifesaver""
+PlaySound ui_noise_static
+nskr_quest kq advance JOB4_WAITING JOB4_ACTIVE
+AddText ""\""Lets hope for the best, captain.\"" She nods before cutting the comm link.""
+SetShortcut nskr_kq_exit ESCAPE false",,nskr_kq_exit:Leave,
+,,,,,,
+nskr_kq_aliceJob4Report,DialogOptionSelected,"$option == nskr_kq_brief
+nskr_quest kq is JOB4_DONE
+!nskr_quest kq flag JOB4_FRIENDLY_HELPED","AddText ""\""Jack will handle sending the rescue fleet over to get the Operations fleet back home.\""""","""Ambushed by an Enigma strike group you say? Worrying. We were hoping their attacks would stay uncoordinated, but there is worrying trend of increased precision and purpose in their activity."" There is a bitter look on her face.","nskr_kq_confirm:Continue
+nskr_kq_ask:""I have some questions.""",
+nskr_kq_aliceJob4Helped,DialogOptionSelected,"$option == nskr_kq_brief
+nskr_quest kq is JOB4_DONE
+nskr_quest kq flag JOB4_FRIENDLY_HELPED","AddText ""\""I received a transmission from the Operations fleet that you managed to get them back to running order. Impressive initiative captain, competent people are a valued resource in this sector.\""""","""Ambushed by an Enigma strike group you say? Worrying, we were hoping their attacks would stay uncoordinated, but there is worrying trend of increased precision and purpose in their activity."" There is a puzzled look on her face.","nskr_kq_confirm:Continue
+nskr_kq_ask:""I have some questions.""",
+nskr_kq_aliceJob4Paid,DialogOptionSelected,"$option == nskr_kq_confirm
+nskr_quest kq is JOB4_DONE
+!nskr_quest kq flag JOB4_FRIENDLY_HELPED","AddText ""\""Oh- by the way come talk to me later if you want to readjust some of your ships back to standard specs.\""""
+AddStoryPoints 1
+AddCredits 285000
+AdjustRep kesteven 5
+AdjustRepPerson nskr_researcher COOPERATIVE 10
+nskr_quest kq do grantModspec
+PlaySound ui_rep_raise
+nskr_quest kq advance JOB4_DONE JOB5_OFFERED
+AddPotentialContact
+AddTextSmall ""Increased contact level with Kesteven contacts"" gray
+nskr_quest kq do raiseJackImportance
+SetShortcut nskr_kq_exit ESCAPE false","""Here's the payment, as promised. A whole new modspec too for you to try, at least try to act grateful."" She smirks, it seems like she's joking, but it's hard to tell.",nskr_kq_exit:Leave,AddCredits pays KestevenHubModule.STAGE4_PAYOUT.
+nskr_kq_aliceJob4PaidHelped,DialogOptionSelected,"$option == nskr_kq_confirm
+nskr_quest kq is JOB4_DONE
+nskr_quest kq flag JOB4_FRIENDLY_HELPED","AddText ""\""Also, there's the payment, as promised. And a whole new modspec too for you to try, at least try to act grateful.\"" She smirks, it seems like she's joking, but it's hard to tell.""
+AddText ""\""Oh- by the way come talk to me later if you want to readjust some of your ships back to standard specs.\""""
+AddStoryPoints 1
+AddCredits 285000
+AdjustRep kesteven 5
+AdjustRepPerson nskr_researcher COOPERATIVE 10
+nskr_quest kq do grantEpoch
+nskr_quest kq do grantModspec
+PlaySound ui_rep_raise
+nskr_quest kq advance JOB4_DONE JOB5_OFFERED
+AddPotentialContact
+AddTextSmall ""Increased contact level with Kesteven contacts"" gray
+nskr_quest kq do raiseJackImportance
+SetShortcut nskr_kq_exit ESCAPE false","""You are receiving one of the prototype artifacts we managed to recover as a bonus. Treat it well, these are one of a kind.""",nskr_kq_exit:Leave,AddCredits pays KestevenHubModule.STAGE4_PAYOUT.
+,,,,,,
+# Alice: job 5,,,,,,
+nskr_kq_aliceLeads,DialogOptionSelected,"$option == nskr_kq_brief
+nskr_quest kq is JOB5_DISKS
+$id == nskr_researcher
+!nskr_quest kq flag JOB5_ALICE_TIP","nskr_quest kq do pickJob3Target
+FireAll nskr_kqAliceLeadsLines
+FireBest nskr_kqDelveUpdated
+nskr_quest kq set JOB5_ALICE_TIP
+SetShortcut nskr_kq_exit ESCAPE false",,nskr_kq_exit:Leave,"Picks the job 3 target where the old dialog did, before the lines read it."
+nskr_kq_aliceLeadsBothSatellites,nskr_kqAliceLeadsLines,nskr_quest kq check twoSatellites,"AddText ""\""Efficient work captain.\""""","""Looks like you have both the known satellites covered, I can't help you much more. You should talk to Jack if you haven't already."" She nods approvingly.",,
+nskr_kq_aliceLeadsJob3Satellite,nskr_kqAliceLeadsLines,"nskr_quest kq check oneSatellite
+nskr_quest kq flag SATELLITE4_RECOVERED","FireBest nskr_kqAliceJob3Satellite
+nskr_quest kq do markJob3Satellite","""As you know those old comm satellites are the target. ""She pauses to think for a second."" It must be that Tri-tachyon expedition was going after one, it has to be the one your looking for.""",,
+nskr_kq_aliceLeadsJob4Satellite,nskr_kqAliceLeadsLines,"nskr_quest kq check oneSatellite
+nskr_quest kq flag SATELLITE3_RECOVERED","FireBest nskr_kqAliceJob4Satellite
+nskr_quest kq do markJob4Satellite","""As you know those old comm satellites are the target. The one our Special Operations fleet went after is the one your looking for.""",,
+nskr_kq_aliceLeadsNoSatellite,nskr_kqAliceLeadsLines,nskr_quest kq check noSatellite,"FireBest nskr_kqAliceJob4Satellite
+AddText ""\""The other satellite though...\"" She pauses to think for a second. \""It must be that, the Tri-Tachyon expedition was going after one.\""""
+FireBest nskr_kqAliceJob3Satellite","""Remember what I said about the old comm satellites, those are your target. The one our Special Operations fleet went after should be the easiest one to locate.""",,
+nskr_kq_aliceLeadsDisksLeft,nskr_kqAliceLeadsLines,"nskr_quest kq flag JOB5_JACK_TIP
+!nskr_quest kq check disksOverTwo",FireBest nskr_kqDisksLeft,,,
+nskr_kq_aliceLeadsDisksMore,nskr_kqAliceLeadsLines,"nskr_quest kq flag JOB5_JACK_TIP
+nskr_quest kq check disksOverTwo",,"""As you know this is not all five disks. Come chat with me later about getting the rest too.""",,
+nskr_kq_aliceLeadsRemind,nskr_kqAliceLeadsLines,!nskr_quest kq flag JOB5_JACK_TIP,,"""That's all for now captain. You should also talk to Jack if you haven't already.""",,
+nskr_kq_aliceJob3SatelliteFound,nskr_kqAliceJob3Satellite,nskr_quest kq flag JOB3_TARGET_DISCOVERED,"SetTextHighlights ""$nskr_kq_job3TargetSystem""","""It was in the $nskr_kq_job3TargetSystem. Good thing you figured out where they were heading.""",,
+nskr_kq_aliceJob3SatelliteIntercepted,nskr_kqAliceJob3Satellite,,"SetTextHighlights ""$nskr_kq_job3TargetSystem""","""Despite your efforts to screw this up, by not finding out where they were heading. We managed intercept its target from their comms. It was the $nskr_kq_job3TargetSystem."" Its likes she's lecturing a child.",,Fallback: the player did not find the target.
+nskr_kq_aliceJob4Satellite,nskr_kqAliceJob4Satellite,,"SetTextHighlights ""$nskr_kq_job4TargetSystem""","""It was in the $nskr_kq_job4TargetSystem.""",,
+,,,,,,
+nskr_kq_aliceFrostTip,DialogOptionSelected,"$option == nskr_kq_brief
+nskr_quest kq is JOB5_DISKS
+$id == nskr_researcher
+nskr_quest kq flag JOB5_JACK_TIP
+nskr_quest kq flag JOB5_ALICE_TIP
+!nskr_quest kq flag JOB5_ALICE_TIP2","nskr_quest kq do pickJob5FrostTip
+AddText ""\""We have managed to get our hands on a fascinating new lead. Our comms team decrypted a message from the network, relating to a new system of interest.\""""
+AddText ""\""The transcript talks of a tundra planet in a red dwarf class star system, with a special comms facility. Sadly we could not precisely locate, or name the system.\""""
+SetTextHighlights ""tundra planet in a red dwarf class star system""
+AddText ""\""Our current knowledge is that it's within $nskr_kq_frostTipDistance light-years of the $nskr_kq_frostTipConstellation. That's all we know for now, you should get to work straight away.\""""
+SetTextHighlights ""$nskr_kq_frostTipDistance light-years"" ""$nskr_kq_frostTipConstellation""
+AddText ""She eyes you up, to make sure that you actually listened to everything she said.""
+FireBest nskr_kqDelveUpdated
+nskr_quest kq set JOB5_ALICE_TIP2
+nskr_quest kq do markGlacier
+FireAll nskr_kqAliceFrostOptions","""Excellent, you managed to recover the disks from the satellites in one piece. Now for the next task at hand.""",,"Picks the system of the distance hint where the old dialog did, before the text reads it."
+nskr_kq_aliceFrostGuess,nskr_kqAliceFrostOptions,nskr_quest kq check frostVisited,"AddText ""A red dwarf system related to Enigma? The $nskr_kq_frostName, it must be."" gray",,"nskr_kq_confirm:""It's the $nskr_kq_frostName.""",
+nskr_kq_aliceFrostLeave,nskr_kqAliceFrostOptions,,SetShortcut nskr_kq_exit ESCAPE false,,nskr_kq_exit:Leave,
+nskr_kq_aliceFrostFound,DialogOptionSelected,"$option == nskr_kq_confirm
+nskr_quest kq is JOB5_DISKS
+nskr_quest kq flag JOB5_JACK_TIP
+nskr_quest kq flag JOB5_ALICE_TIP
+!nskr_quest kq check allDisks","AddText ""\""I think you are right, impressive. Now find the tundra planet in the $nskr_kq_frostName ASAP.\""""
+SetTextHighlights ""$nskr_kq_frostName""
+PlaySound ui_rep_raise
+FireBest nskr_kqDelveUpdated
+nskr_quest kq set FROST_FOUND
+SetShortcut nskr_kq_exit ESCAPE false","Alice pauses for a moment to think about what you said, and then proceeds to look up something on her datapad.",nskr_kq_exit:Leave,
+,,,,,,
+nskr_kq_aliceCacheBrief,DialogOptionSelected,"$option == nskr_kq_brief
+nskr_quest kq is JOB5_DISKS
+$id == nskr_researcher
+nskr_quest kq flag JOB5_JACK_TIP
+nskr_quest kq flag JOB5_ALICE_TIP
+nskr_quest kq flag JOB5_ALICE_TIP2
+nskr_quest kq check allDisks","AddText ""\""This huge breakthrough has me on edge captain, we will finally be uncovering *it* from the Cache site. It being your next objective, the Unlimited Production Chip.\""""
+SetTextHighlights ""Unlimited Production Chip""
+AddText ""She gives you a stern look. \""This is as important as it gets, the Chip holds the key to great technologies. Do not screw this up captain.\""""
+AddText ""\""The fierce loyalty and violence the Enigma is capable of is not to be underestimated. Their hatred of anyone with their new technology is peculiar, it's like the collapse made them think anyone else isn't meant to exist at all. They are helplessly trying to maintain some broken status quo.\"" She lets out a chuckle. \""Hah, relax, I hope I didn't scare you out of the job captain, I'm sure you are more than capable of dealing with some Enigma spooks at this point.\""""
+AddText ""She's already busy working on multiple holofeeds while she speaks. \""Now, you will enter the site, disable whatever security systems they have left, and recover the Chip. Understood, captain?\""""
+AddText ""She's not taking *no* as an answer."" gray
+FireAll nskr_kqAliceCacheOptions","""We will start decrypting the disks as soon as we get them unloaded from your cargo. We should have some results in a few hours. Now onto your next task.""",,
+nskr_kq_aliceCacheYes,nskr_kqAliceCacheOptions,,,,"nskr_kq_confirm:""Yes""",
+nskr_kq_aliceCacheLie,nskr_kqAliceCacheOptions,nskr_quest kq flag ELIZA_AGREED_SINCERELY,,,"nskr_kq_confirmLie:""Yes"" (lie)",
+nskr_kq_aliceCacheFound,DialogOptionSelected,"$option == nskr_kq_confirm
+nskr_quest kq is JOB5_DISKS
+nskr_quest kq check allDisks","AddText ""Finally Alice arrives back. \""We did it $playerFirstName, we have the exact location of the Cache. I've handed the hyperspace coordinates over to your nav officer.\""""
+AddText ""\""Oh by the way, you can not access the site by normal means. I hope you know how to perform a transverse jump maneuver, if not maybe someone at Galatia Academy can help you. Now get to work.\""""
+AddTextSmall ""Acquired coordinates to the Cache Site"" gray
+SetTextHighlights ""Cache Site""
+PlaySound ui_rep_raise
+nskr_quest kq set CACHE_FOUND
+nskr_quest kq advance JOB5_DISKS CACHE_KNOWN
+SetShortcut nskr_kq_exit ESCAPE false","Alice leaves to begin work on the decryption. A few hours pass as you wait in the lobby, you try to pass the time by scrolling on your TriPad. You regret not going to the local bar to pass the time instead.",nskr_kq_exit:Leave,
+,,,,,,
+# Alice: questions,,,,,,
 nskr_kq_aliceAsk,nskr_kqAsk,$id == nskr_researcher,FireAll nskr_kqAliceQuestions,,,
 ,,,,,,
 nskr_kq_aliceQWhere,nskr_kqAliceQuestions,"nskr_quest kq is JOB3_BRIEFING
@@ -308,7 +626,7 @@ nskr_kq_aliceQArtifact,nskr_kqAliceQuestions,"nskr_quest kq is JOB4_DONE
 !$nskr_kq_askedArtifact",,,"nskr_kq_aliceAskArtifact:""The Artifact?""",
 nskr_kq_aliceQLzJob4Done,nskr_kqAliceQuestions,"nskr_quest kq is JOB4_DONE
 nskr_quest kq flag MESSENGER_QUESTION_OPEN",,,"nskr_kq_aliceAskLz:Ask about the ""LZ"" character",
-nskr_kq_aliceQBack,nskr_kqAliceQuestions,,SetShortcut nskr_kestevenQuest_pick_ ESCAPE false,,nskr_kestevenQuest_pick_:Back,
+nskr_kq_aliceQBack,nskr_kqAliceQuestions,,SetShortcut nskr_kq_brief ESCAPE false,,nskr_kq_brief:Back,
 nskr_kq_aliceAskWhereSel,DialogOptionSelected,$option == nskr_kq_aliceAskWhere,"SetTextHighlights ""$nskr_kq_job3Start""
 $nskr_kq_askedWhere = true
 FireAll nskr_kqAliceQuestions","""I'd suggest starting at $nskr_kq_job3Start. You'll figure out the rest captain, you have serious talent when it comes to this type of work, or so I hear.""",,
@@ -316,7 +634,9 @@ nskr_kq_aliceAskAloneSel,DialogOptionSelected,$option == nskr_kq_aliceAskAlone,"
 FireAll nskr_kqAliceQuestions","""This is a covert operation. If someone asks you don't know me, and so on.""",,
 nskr_kq_aliceAskNecessarySel,DialogOptionSelected,$option == nskr_kq_aliceAskNecessary,"$nskr_kq_askedNecessary = true
 FireAll nskr_kqAliceQuestions","""Yes, we can't risk Tri-Tachyon interfering in our business. Between you and me, I know they're somehow behind this Enigma activity.""",,
-nskr_kq_aliceAskRefuseSel,DialogOptionSelected,$option == nskr_kq_aliceAskRefuse,nskr_kestevenQuest skip,,,The job 3 refusal prompt is still in nskr_kestevenQuest.
+nskr_kq_aliceAskRefuseSel,DialogOptionSelected,$option == nskr_kq_aliceAskRefuse,"AddText ""\""Unless you are being serious about this.\"" She gives you a very mean look.""
+SetShortcut nskr_kq_brief ESCAPE false","""Too bad. The offer stands if you change your mind.""","nskr_kq_refuseConfirm:""yes""
+nskr_kq_brief:""No""",
 nskr_kq_aliceAskTargetSel,DialogOptionSelected,$option == nskr_kq_aliceAskTarget,"$nskr_kq_askedTarget = true
 FireAll nskr_kqAliceQuestions","You send the coordinates you acquired over to her. ""Interesting..."" She makes a few quick searches on her datapad. ""The system has been marked as a possible Enigma site in our database. Those sly bastards were definitely up to something.""",,
 nskr_kq_aliceAskNextJobSel,DialogOptionSelected,$option == nskr_kq_aliceAskNextJob,"$nskr_kq_askedNextJob = true
@@ -338,6 +658,19 @@ FireAll nskr_kqAliceQuestions","Her tone turns unusually passionate. ""You do se
 nskr_kq_aliceAskArtifactSel,DialogOptionSelected,$option == nskr_kq_aliceAskArtifact,"$nskr_kq_askedArtifact = true
 FireAll nskr_kqAliceQuestions","""These ""Artifacts"" aren't physical objects per say, more like collections of valuable data. Hidden in old comm satellite networks, and such. This data is invaluable for anyone trying to understand what this ""Enigma"" truly is, and where it comes from.""",,
 ,,,,,,
+nskr_kq_aliceRefuseConfirm,DialogOptionSelected,"$option == nskr_kq_refuseConfirm
+nskr_quest kq is JOB3_BRIEFING","AddText ""\""I am very disappointed in you captain.\"" She looks eager to cut the comm link on you.""
+AdjustRep kesteven -5
+AdjustRepPerson nskr_researcher VENGEFUL -10
+PlaySound ui_rep_drop
+nskr_quest kq advance JOB3_BRIEFING JOB4_WAITING
+nskr_quest kq set JOB3_REFUSED
+nskr_quest kq do placeJob3Leftovers
+SetShortcut nskr_kq_exit ESCAPE false","""Damn, I really wanted to avoid using our own black ops for this...""",nskr_kq_exit:Leave,
+nskr_kq_aliceStorySkip,DialogOptionSelected,"$option == nskr_kq_storySkip
+$id == nskr_researcher","AddText ""\""You know we got this strange lead recently pointing to these coordinates, I think you should investigate.\"" She looks distressed. \""Huh... I actually don't remember how we got these...\""""
+FireBest nskr_kqStorySkipped","She looks confused for a moment. ""What- How did you..."" She thinks for a moment.",,
+,,,,,,
 # Nicholas,,,,,,
 nskr_kq_nicholasChat,DialogOptionSelected,"$option == nskr_kq_chat
 $id == nskr_intelligence","FireAll nskr_kqNicholasGreeting
@@ -356,28 +689,51 @@ nskr_quest kq check job4TargetKnown
 ,,,,,,
 nskr_kq_nicholasOptTip,nskr_kqNicholasOptions,"nskr_quest kq is JOB4_ACTIVE
 nskr_quest kq check job4TargetKnown
-!nskr_quest kq check nicholasTipGiven",,,"nskr_kestevenQuest_pick_:""Tell me what you know.""",
-nskr_kq_nicholasOptBack,nskr_kqNicholasOptions,,SetShortcut nskr_kestevenQuestExit ESCAPE false,,nskr_kestevenQuestExit:Back,
+!nskr_quest kq check nicholasTipGiven",,,"nskr_kq_brief:""Tell me what you know.""",
+nskr_kq_nicholasOptBack,nskr_kqNicholasOptions,,SetShortcut nskr_kq_exit ESCAPE false,,nskr_kq_exit:Back,
 ,,,,,,
-# Shared status lines,,,,,,
+nskr_kq_nicholasJob4Brief,DialogOptionSelected,"$option == nskr_kq_brief
+nskr_quest kq is JOB4_ACTIVE","AddText ""\""There's this one thing. uhh-\"" He shifts around in his seat. \""A few days after their last known report, we picked up a burst of signals coming from a specific part of the $nskr_kq_job4TargetSystem. \""He looks down at something.\"" The um- signal was much weaker in magnitude, to the level that we could only decipher its direction...\""""
+SetTextHighlights ""$nskr_kq_job4TargetSystem""
+nskr_quest kq do recordNicholasTip
+FireBest nskr_kqNicholasTipEnd","""So, the fleet was instructed to send encrypted hyperwave signals using rather expensive Domain comms equipment. You know I hope they didn't lose that stuff... Anyways, every few weeks they would report on their progress "" He scratches his head. ""and umm- we could pick up those transmissions here and decrypt them.""",,
+nskr_kq_nicholasTipEnd,nskr_kqNicholasTipEnd,,"AddTextSmall ""Updated log entry for Operation Lifesaver"" gray
+SetTextHighlights ""Operation Lifesaver""
+PlaySound ui_noise_static
+SetShortcut nskr_kq_exit ESCAPE false","""...That's pretty much all I know.""",nskr_kq_exit:Leave,Fallback: the strike group has not been seen.
+nskr_kq_nicholasTipEndFound,nskr_kqNicholasTipEnd,nskr_quest kq flag JOB4_TARGET_FOUND,SetShortcut nskr_kq_exit ESCAPE false,"""...Ah- but it looks like you've already investigated that location. I'm afraid I can't be of any more help then.""",nskr_kq_exit:Leave,
+,,,,,,
+# Shared lines,,,,,,
 nskr_kq_hubNewJob,nskr_kqNewJob,,,"""There is a new job available at the moment, are you interested?""",,
 nskr_kq_hubNeedFleet,nskr_kqNeedFleet,,,"""There is a new job available at the moment, but we require someone more qualified. Come back later with a proper fleet.""",,
 nskr_kq_hubNoJobs,nskr_kqNoJobs,,,"""There are no new jobs available at the moment.""",,
+nskr_kq_hubFleetDoubt,nskr_kqFleetDoubt,nskr_quest kq check fleetStretched,"SetTextHighlights ""exceptionally difficult""","""Looking at what you currently have at your disposal. This job could be exceptionally difficult for your current fleet."" There is a look of doubt on her face.",,
+nskr_kq_hubDisksLeft,nskr_kqDisksLeft,,,"""As you know this is not all five disks. We'll get to that in time, just focus on getting the ones we've talked about first.""",,
+nskr_kq_hubDelveUpdated,nskr_kqDelveUpdated,,"AddTextSmall ""Updated log entry for the Delve"" gray
+SetTextHighlights ""the Delve""
+PlaySound ui_noise_static",,,
+nskr_kq_hubStorySkipped,nskr_kqStorySkipped,,"nskr_quest kq do storySkip
+AddTextSmall ""Added log entry for the Delve"" gray
+SetTextHighlights ""the Delve""
+AddTextSmall ""Disabled questline achievements"" gray
+SetTextHighlightColors bad
+SetTextHighlights ""Disabled""
+PlaySound ui_noise_static
+SetShortcut nskr_kq_exit ESCAPE false",,nskr_kq_exit:Leave,
 ,,,,,,
-"# Briefings, questions and hand-offs",,,,,,
-nskr_kq_hubBriefing,DialogOptionSelected,$option == nskr_kestevenQuest_pick_,"nskr_kestevenQuest advanceStage
-SetShortcut nskr_kestevenQuestCancel ""ESCAPE""",,"nskr_kestevenQuestConfirmQuest:Continue
-nskr_kestevenQuestExit:Go back",Briefings and hand-ins are still in nskr_kestevenQuest; it replaces these options.
-nskr_kq_hubReqSkip,DialogOptionSelected,$option == nskr_kestevenQuest_story_pick_,nskr_kestevenQuest advanceStage,,,
-nskr_kq_hubReqSkipJob4,DialogOptionSelected,"$option == nskr_kestevenQuest_story_pick_
+# Hand-offs,,,,,,
+nskr_kq_hubBrief,DialogOptionSelected,$option == nskr_kq_brief,SetShortcut nskr_kq_exit ESCAPE false,,nskr_kq_exit:Back,Fallback: a briefing option at a stage without a briefing row.
+nskr_kq_hubReqSkip,DialogOptionSelected,$option == nskr_kq_reqSkip,"$option = nskr_kq_brief 0
+FireBest DialogOptionSelected",,,
+nskr_kq_hubReqSkipJob4,DialogOptionSelected,"$option == nskr_kq_reqSkip
 nskr_quest kq is JOB4_WAITING","nskr_quest kq set JOB4_REQUIREMENT_SKIPPED
-nskr_kestevenQuest advanceStage",,,Keeps Alice's job 4 offer open on later visits.
-nskr_kq_hubStorySkip,DialogOptionSelected,$option == nskr_kestevenQuest_story_skip_pick_,nskr_kestevenQuest advanceStageStorySkip,,,
-nskr_kq_hubAsk,DialogOptionSelected,$option == nskr_kestevenQuest_extraStart_,FireBest nskr_kqAsk,"""What do you need to know?""",,
-nskr_kq_hubConfirm,DialogOptionSelected,$option == nskr_kestevenQuestConfirmQuest,nskr_kestevenQuest confirmQuest,,nskr_kestevenQuestExit:Leave,
-nskr_kq_hubConfirmLie,DialogOptionSelected,$option == nskr_kestevenQuestConfirmQuestB,nskr_kestevenQuest confirmQuest,,nskr_kestevenQuestExit:Leave,
-nskr_kq_hubConfirmSkip,DialogOptionSelected,$option == nskr_kestevenQuestConfirmSkip,nskr_kestevenQuest confirmSkip,,nskr_kestevenQuestExit:Leave,
-nskr_kq_hubExit,DialogOptionSelected,$option == nskr_kestevenQuestExit,FireAll PopulateOptions,,,
+$option = nskr_kq_brief 0
+FireBest DialogOptionSelected",,,Keeps Alice's job 4 offer open on later visits.
+nskr_kq_hubAsk,DialogOptionSelected,$option == nskr_kq_ask,FireBest nskr_kqAsk,"""What do you need to know?""",,
+nskr_kq_hubConfirm,DialogOptionSelected,$option == nskr_kq_confirm,SetShortcut nskr_kq_exit ESCAPE false,,nskr_kq_exit:Leave,Fallback: a confirmation at a stage without a confirmation row.
+nskr_kq_hubConfirmLie,DialogOptionSelected,$option == nskr_kq_confirmLie,"$option = nskr_kq_confirm 0
+FireBest DialogOptionSelected",,,The lie changes nothing; the confirmation rows handle it.
+nskr_kq_hubExit,DialogOptionSelected,$option == nskr_kq_exit,FireAll PopulateOptions,,,
 ,,,,,,
 # ARTIFACT swap options,,,,,,
 nskr_shipSwapOption,PopulateOptions,"nskr_isBaseOfficial research
@@ -1436,7 +1792,7 @@ nskr_kq_job3IntelDays,nskr_kqIntelBullets,"$nskr_intel_key == job3
 nskr_quest kq is JOB3_ACTIVE JOB3_TARGET_KNOWN
 nskr_quest kq check job3TimeLeft",,You have $nskr_kq_job3DaysLeft days to finish this job.,,
 nskr_kq_job3IntelStart,nskr_kqIntelBullets,"$nskr_intel_key == job3
-nskr_quest kq is JOB3_ACTIVE",,Head to $nskr_kq_job3MarketName in $nskr_kq_job3MarketSystem and figure out what the expeditions target is. Then neutralize the fleet.,,
+nskr_quest kq is JOB3_ACTIVE",,Head to $nskr_kq_job3HomeMarket in $nskr_kq_job3HomeSystem and figure out what the expeditions target is. Then neutralize the fleet.,,
 nskr_kq_job3IntelTarget,nskr_kqIntelBullets,"$nskr_intel_key == job3
 nskr_quest kq is JOB3_TARGET_KNOWN",,"Ambush the fleet on its way to, or in $nskr_kq_job3TargetSystem. Leave no witness.",,
 nskr_kq_job3IntelDescActive,nskr_kqIntelDesc,"$nskr_intel_key == job3
@@ -1450,6 +1806,6 @@ nskr_kq_job3IntelDescDays,nskr_kqIntelDesc,"$nskr_intel_key == job3
 nskr_quest kq is JOB3_ACTIVE JOB3_TARGET_KNOWN
 nskr_quest kq check job3TimeLeft",,You have $nskr_kq_job3DaysLeft days to finish this job.,,Same text as bullet nskr_kq_job3IntelDays: the description panel shows no bullets
 nskr_kq_job3IntelDescStart,nskr_kqIntelDesc,"$nskr_intel_key == job3
-nskr_quest kq is JOB3_ACTIVE",,Head to $nskr_kq_job3MarketName in $nskr_kq_job3MarketSystem and figure out what the expeditions target is. Then neutralize the fleet.,,Same text as bullet nskr_kq_job3IntelStart: the description panel shows no bullets
+nskr_quest kq is JOB3_ACTIVE",,Head to $nskr_kq_job3HomeMarket in $nskr_kq_job3HomeSystem and figure out what the expeditions target is. Then neutralize the fleet.,,Same text as bullet nskr_kq_job3IntelStart: the description panel shows no bullets
 nskr_kq_job3IntelDescTarget,nskr_kqIntelDesc,"$nskr_intel_key == job3
 nskr_quest kq is JOB3_TARGET_KNOWN",,"Ambush the fleet on its way to, or in $nskr_kq_job3TargetSystem. Leave no witness.",,Same text as bullet nskr_kq_job3IntelTarget: the description panel shows no bullets

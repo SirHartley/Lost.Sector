@@ -30,12 +30,11 @@ final class KestevenJob3Module extends QuestModule<KestevenStage, KestevenState>
 
         // Whole days, cut down, as the old intel showed them.
         d.token("job3DaysLeft", ctx -> String.valueOf((int) ctx.state().job3TimeLeft));
-        d.token("job3MarketName", ctx -> {
+        d.token("job3HomeMarket", ctx -> {
             SectorEntityToken start = ctx.state().job3Start;
             return start == null || start.getMarket() == null ? "" : start.getMarket().getName();
         });
-        d.token("job3MarketSystem", ctx -> systemName(ctx.state().job3Start));
-        d.token("job3TargetSystem", ctx -> systemName(ctx.state().job3Target));
+        d.token("job3HomeSystem", ctx -> systemName(ctx.state().job3Start));
     }
 
     // QuestStageManager did this on the first unpaused frame at JOB3_ACTIVE, before it spawns the expedition. The start

@@ -11,8 +11,9 @@ import lostsector.quest.Quests;
 import java.util.List;
 import java.util.Random;
 
-// KestevenHubModule holds the gates of the conversation hub, KestevenJob1Module runs job 1 and KestevenJob3Module part
-// of job 3; QuestStageManager and the old dialog classes still run the rest of the questline on this state (T17 to T35).
+// KestevenHubModule serves every conversation with Jack, Alice and Nicholas, KestevenJob1Module runs job 1 and
+// KestevenJob3Module part of job 3; QuestStageManager and the old dialog classes still run the rest of the questline
+// on this state (T19 to T35).
 // isAvailable() keeps the default: the old code runs the questline in every campaign and treats a missing
 // Kesteven home as failure (stage 99), so the state must always exist.
 public final class KestevenQuest extends Quest<KestevenStage, KestevenState> {

@@ -25,7 +25,6 @@ import lostsector.campaign.kesteven.ExileManager;
 import lostsector.campaign.enigma.DormantSpawner;
 import lostsector.campaign.events.EnvironmentalStorytelling;
 import lostsector.dialogue.rules.nskr_job4FleetDialog;
-import lostsector.dialogue.rules.nskr_kestevenQuest;
 import lostsector.dialogue.rules.nskr_ttCollectorDialog;
 import lostsector.ModPlugin;
 import lostsector.helper.FleetHelper;
@@ -249,7 +248,7 @@ public class QuestStageManager extends BaseCampaignEventListener implements Ever
                     //added to mem in the spawner
                 }
                 //hint wrecks/environmental storytelling
-                spawnJob4Wrecks(nskr_kestevenQuest.getRandom());
+                spawnJob4Wrecks(KestevenQuest.random(KestevenState.RANDOM_QUEST));
 
                 log("Qmanager spawn job4 fleets");
                 state.job4FleetsSpawned = true;
@@ -968,7 +967,7 @@ public class QuestStageManager extends BaseCampaignEventListener implements Ever
             if (QuestHelper.getStage() <= 9) {
                 QuestHelper.setFailed(true, KestevenFlag.JOB3_FAILED);
                 QuestHelper.setStage(10);
-                nskr_kestevenQuest.spawnEnvironmentalStorytelling();
+                QuestHelper.spawnEnvironmentalStorytelling();
                 Global.getSector().getCampaignUI().addMessage("You have ran out of time, mission failed. Report back to "+ SectorLookup.asteriaOrOutpost().getName()+" to finish the job.",
                         Global.getSettings().getColor("standardTextColor"),
                         "mission failed",
@@ -1155,7 +1154,7 @@ public class QuestStageManager extends BaseCampaignEventListener implements Ever
         PersonAPI jack = KestevenPeople.getJack();
         SectorEntityToken loc = SectorLookup.asteriaOrOutpost().getPrimaryEntity();
         //spawn fleet and add to list
-        CampaignFleetAPI fleet = KestevenFleets.spawnJackFleet(loc, jack, nskr_kestevenQuest.getRandom());
+        CampaignFleetAPI fleet = KestevenFleets.spawnJackFleet(loc, jack, KestevenQuest.random(KestevenState.RANDOM_QUEST));
         //remove from market
         loc.getMarket().getCommDirectory().removePerson(jack);
         loc.getMarket().removePerson(jack);

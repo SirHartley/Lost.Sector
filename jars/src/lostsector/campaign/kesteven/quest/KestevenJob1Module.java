@@ -5,7 +5,6 @@ import com.fs.starfarer.api.campaign.SectorEntityToken;
 import com.fs.starfarer.api.campaign.StarSystemAPI;
 import com.fs.starfarer.api.campaign.econ.MarketAPI;
 import com.fs.starfarer.api.impl.campaign.ids.Tags;
-import lostsector.dialogue.rules.nskr_kestevenQuest;
 import lostsector.helper.Ids;
 import lostsector.helper.SectorLookup;
 import lostsector.quest.Declarations;
@@ -17,7 +16,7 @@ import lostsector.quest.QuestModule;
 import java.util.List;
 
 // Job 1, "Enemy Unknown": the intel entry, the tip system's dormant fleet and the move to JOB1_DONE once both
-// deliveries are recorded. Briefings and hand-ins are the hub's (KestevenHubModule, nskr_kestevenQuest).
+// deliveries are recorded. Briefings and hand-ins are the hub's (KestevenHubModule).
 final class KestevenJob1Module extends QuestModule<KestevenStage, KestevenState> {
 
     static final String INTEL = "job1";
@@ -44,7 +43,7 @@ final class KestevenJob1Module extends QuestModule<KestevenStage, KestevenState>
             MarketAPI home = SectorLookup.asteriaOrOutpost();
             return home == null ? "" : home.getName();
         });
-        d.token("job1ArtifactCount", ctx -> String.valueOf(nskr_kestevenQuest.JOB1_ARTIFACTS));
+        d.token("job1ArtifactCount", ctx -> String.valueOf(KestevenHubModule.JOB1_ARTIFACTS));
     }
 
     // The old intel picked the tip system on its first display, right after the job was accepted.

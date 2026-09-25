@@ -6,7 +6,6 @@ import com.fs.starfarer.api.campaign.rules.MemoryAPI;
 import com.fs.starfarer.api.combat.EngagementResultAPI;
 import com.fs.starfarer.api.util.Misc;
 import lostsector.campaign.kesteven.quest.QuestHelper;
-import lostsector.dialogue.rules.nskr_kestevenQuest;
 
 import java.awt.*;
 import java.util.Map;
@@ -39,7 +38,7 @@ public class HintWreckDialog implements InteractionDialogPlugin {
         Color gr = Misc.getPositiveHighlightColor();
         Color r = Misc.getNegativeHighlightColor();
         Color tc = Misc.getTextColor();
-        Random random = nskr_kestevenQuest.getRandom();
+        Random random = KestevenQuest.random(KestevenState.RANDOM_QUEST);
 
         visual.showImageVisual(dialog.getInteractionTarget().getCustomInteractionDialogImageVisual());
 
