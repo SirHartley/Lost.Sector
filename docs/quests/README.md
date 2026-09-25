@@ -14,7 +14,7 @@ These pages describe current behavior, including behavior that looks unintended.
 They do not govern:
 
 - **code owners and lifecycle:** [ARCHITECTURE.md](../ARCHITECTURE.md);
-- **rules syntax and routing contracts:** [RULES.md](../RULES.md) and [RULES_AUTHORING.md](../RULES_AUTHORING.md);
+- **rules structure, syntax and routing contracts:** [RULES_WRITING.md](../RULES_WRITING.md), [RULES.md](../RULES.md) and [RULES_AUTHORING.md](../RULES_AUTHORING.md);
 - **player-facing wording:** [DIALOGUE.md](../DIALOGUE.md);
 - **characters, voice and setting:** [LORE.md](../LORE.md).
 

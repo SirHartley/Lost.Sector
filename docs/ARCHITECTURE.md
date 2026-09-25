@@ -8,6 +8,7 @@ Technical routing for the current implementation. Java paths below are relative 
 | [DIALOGUE.md](DIALOGUE.md) | All player-facing text, rules or Java: workflow, shared text presentation and dialogue flow; prose constraints in LORE.md |
 | [LORE.md](LORE.md) | Setting facts, knowledge limits, character voices and source-labelled prose examples |
 | [RULES.md](RULES.md) | Rules syntax, execution and project routing contracts |
+| [RULES_WRITING.md](RULES_WRITING.md) | Writing rules content: process, structure choice, conditions, state, text, options, exits and layout |
 | [RULES_AUTHORING.md](RULES_AUTHORING.md) | Using and debugging commands, memory and text replacements, including Java integration; vanilla dictionaries and source corrections |
 | [UI.md](UI.md) | Java custom panels, widgets, renderers, sprites, tooltips, layout and input; shared text guidelines in DIALOGUE.md |
 | [Quest implementation](quests/README.md) | Kesteven questline stages, state and dialogue map; contracts and bounties |
@@ -29,7 +30,7 @@ Technical routing for the current implementation. Java paths below are relative 
 | New-game content, adding the mod to a save | `ModPlugin.onNewGame*` and the `SAVE_KEY` check in `onGameLoad`; [world generation](#save-identity) |
 | Difficulty, fleet scaling and other settings | `settings/Difficulty.scriptedFleetMult()`, `randomEnigmaFleetMult()`, `isStarfarer()` -> `settings/Setting` -> `settings/SettingsManager` cache of `data/config/LunaSettings.csv` and LunaLib; [settings](#settings) |
 | Value lost after save/load | [Save identity](#save-identity) |
-| Rules menu, option routing, highlights | [Project routing](RULES.md#project-routing), [shared text presentation](DIALOGUE.md#shared-text-presentation) |
+| Rules menu, option routing, highlights | [Writing rules](RULES_WRITING.md), [project routing](RULES.md#project-routing), [shared text presentation](DIALOGUE.md#shared-text-presentation) |
 | Command arguments, mission calls, memory lifetime, missing text replacements | [Rules implementation guide](RULES_AUTHORING.md) and its dictionaries, including for Java-only fixes |
 | Hullmod, system or weapon behavior | [Combat data bindings](#combat-data-bindings) -> class in `combat/hullmods/`, `combat/systems/`, `combat/weapons/` |
 | Prototype versus Enigma presentation | `helper/ShipHelper.protOrEnigma()` / `isProtTech()` |

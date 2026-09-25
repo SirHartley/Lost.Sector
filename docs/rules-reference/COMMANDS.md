@@ -15,14 +15,14 @@ Angle brackets mark required arguments; brackets mark optional ones. These go in
 | `SetTooltipHighlights <optionId> "phrase" ...` | Highlight tooltip phrases, not the option label. |
 | `SetTooltipHighlightColors <optionId> <color> ...` | Colors corresponding to tooltip highlights. |
 | `SetOptionColor <optionId> <color>` | Color an existing option using its exact ID. |
-| `SetEnabled <optionId> <boolean>` | Enable/disable an option. Add a tooltip to explain a restriction. |
+| `SetEnabled <optionId> <boolean>` | Enable/disable an option. Add a tooltip to explain a restriction. This and the other option decorators do nothing when the option does not exist yet. |
 | `SetOptionText <optionId> "text"` | Replace the option label. This implementation reads raw text, not token-expanded prose. |
-| `SetShortcut <optionId> ESCAPE [putLast]` | Bind a recognized keyboard name without KEY_. putLast defaults true. |
+| `SetShortcut <optionId> ESCAPE [putLast]` | Bind a recognized keyboard name without KEY_. putLast defaults true. Option ids starting with `cutCommLink` or `defaultLeave` get Escape automatically, except `cutCommLink2` and `cutCommLinkNoText2`. |
 | `AddOption <order> <id> "text"` | Script option-adding command; ordinary String arguments, not full text replacement. Prefer the Options column for ordinary narrative options. |
 | `RemoveOption <optionId>` | Remove an option; does not navigate or end the conversation. |
 | `SetColor $key <color>` | Store a Color in local memory without expiry. Uses the raw key, not scope resolution. Add an expiry for dialogue-only values. Colors are command inputs, not display strings. |
-| `FireBest <trigger> [keepOptions]` | Apply one best matching rule. keepOptions defaults false; an empty new option set does not itself clear the old menu. |
-| `FireAll <trigger>` | Apply all matching rules and combine options. This build ignores a keepOptions argument. Includes FireAllIntercept. |
+| `FireBest <trigger> [keepOptions]` | Apply one best matching rule; false when nothing matches. keepOptions (literal or variable) defaults false; an empty new option set does not itself clear the old menu. The trigger may be a `$variable`. |
+| `FireAll <trigger>` | Apply all matching rules and combine options. This build ignores a keepOptions argument. First sets `$fireAllTrigger` and fires `FireBest FireAllIntercept`; a matching intercept row runs instead of the requested trigger. See [FireAll and FireBest](../RULES.md#fireall-and-firebest). |
 | `Call $reference <action> [args...]` | Invoke a stored CallableEvent. Alias CallEvent; not arbitrary reflection or a rule-ID jump. |
 | `unset $key` | Remove a key now, resolving its scope. |
 | `unsetAll $prefix` | Remove keys by prefix in one scope. Use only a prefix you own; persistent state can be deleted too. |
@@ -35,8 +35,10 @@ Angle brackets mark required arguments; brackets mark optional ones. These go in
 | `CheckSetting <settingId>` | Condition reading an existing Boolean setting. |
 | `RollProbability <probability>` | Seeded condition tied to target/rule/month inputs, not a fresh quest-target generator or saved random choice. |
 | `BeginConversation <personRefOrId> [minimal] [showRelationship]` | Select the active person, refresh person memory and show their card. Resolves important people, market people, comm-directory entries or POST: IDs. Requires a rule-based dialog. |
-| `ShowPersonVisual [minimal] [importantPersonId]` | Show a person card; defaults to active person/fleet commander. Does not switch active person or memory ownership. |
-| `ShowImageVisual <key>` / `ShowImageVisual <category> <key>` | Settings sprite, default category illustrations. Not a raw arbitrary image path. |
+| `ShowPersonVisual [minimal] [importantPersonId]` | Show a person card; defaults to active person/fleet commander. Does not switch active person or memory ownership. An id not registered with the important people throws. |
+| `ShowSecondPerson <importantPersonId>` / `ShowThirdPerson <importantPersonId>` | Add a second or third portrait; ignored when the id is not an important person. `HideSecondPerson` / `HideThirdPerson` remove them. |
+| `ShowImageVisual <key>` / `ShowImageVisual <category> <key>` | Settings sprite at its own size, default category illustrations. Not a raw arbitrary image path. `ShowPic <key>` shows an illustration at a fixed 640x400. |
+| `ShowMapMarker <entityOrMarketId> [title] [text]` / `HideMapMarker` | Map beside the person card, and its removal. |
 | `ShowDefaultVisual` | Restore the target's default custom/planet/fleet visual, not necessarily the bar scene. |
 | `SaveCurrentVisual` / `RestoreSavedVisual` | Existing visual save/restore commands. Check their saved slot before nesting custom visuals. |
 | `MakeOptionOpenCore <optionId> <tabId> <tradeMode> [onlyTargetTab]` | Wire an option to core UI. Supply tradeMode: this implementation accesses argument three when a tab is supplied. |
@@ -47,12 +49,14 @@ Angle brackets mark required arguments; brackets mark optional ones. These go in
 | `MakeOtherFleetAllowDisengage <reason> <boolean> [days]` | Reason-owned permission to disengage. Does not send the other fleet home. |
 | `MakeOtherFleetLowRepImpact <reason> <boolean> [days]` | Reduced reputation impact, not zero. |
 | `MakeOtherFleetNoRepImpact <reason> <boolean> [days]` | No reputation impact. Prefer reason-aware commands over overwriting another system's flag. |
-| `EndConversation [DO_NOT_FIRE or NO_CONTINUE]` | Leave person conversation; may rebuild fleet/market menus. Not a fleet-encounter dismissal. |
+| `EndConversation [DO_NOT_FIRE or NO_CONTINUE]` | Clear the active person and rebuild the base menu: fleet reinit, or `MarketPostOpen`/`PopulateOptions` for a market or person dialog. `DO_NOT_FIRE` skips the rebuild; `NO_CONTINUE` shows the default visual first and skips a fleet's Continue step. Outside a rules-based dialog it only resets the fleet conversation flag (and `NO_CONTINUE` still shows the default visual). Not a fleet-encounter dismissal. See [Fleet and bar exits](../RULES.md#fleet-and-bar-exits). |
 | `DismissDialog` | Dismiss the window. For fleet encounters, see [fleet and bar exits](../RULES.md#fleet-and-bar-exits) for BattleAPI cleanup first. |
 | `PlaySound <soundId>` | Registered UI sound at default pitch/volume; source expects stereo. |
+| `PlayCustomMusic <musicId>` / `ResumeNormalMusic` | Replace the campaign music; the second restores it and must follow. |
+| `SetStoryOption <optionId> <points> <bonusXPKey> [sound] ["log text"]` | Story point option: colors it, adds the cost to the label, adds the confirmation and disables it when the player cannot pay. The key is a `bonusXP` entry in `settings.json`; sounds `leadership`, `combat`, `industry`, `technology` map to the story point chimes. With exactly three arguments it reads `<optionId> <sound> <log text>`, charges one point and uses the option id as the bonus XP key; pass at least four. |
 | `DumpMemory` | Debug the current memory map. Does not list generator-only replacements or supply missing state. |
 
-For `AddShip`, `AdjustRep*`, `SetStoryOption`, `MarketCMD`, `BarCMD`, `MissionHubCMD` and other multi-action commands, read the source and vanilla row below. Their subcommands and state requirements are not interchangeable. A listed example is a call site, not a complete recipe for that subsystem.
+For `AddShip`, `AdjustRep*`, `MarketCMD`, `BarCMD`, `MissionHubCMD` and other multi-action commands, read the source and vanilla row below. Their subcommands and state requirements are not interchangeable. A listed example is a call site, not a complete recipe for that subsystem.
 
 Colors follow the command's Token.getColor path: a Color object in memory; an `r,g,b,a` String; `highlight`/`h` (buttonShortcut); `good`/`bad` (textFriendColor/textEnemyColor); `story`; `gray`/`grey`; a faction ID (base UI color); or an actual settings color ID. Do not invent IDs or assume every String parameter expands tokens.
 
