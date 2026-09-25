@@ -6,9 +6,12 @@ import com.fs.starfarer.api.impl.campaign.ids.Factions;
 import com.fs.starfarer.api.impl.campaign.ids.HullMods;
 import lostsector.campaign.bounties.abyss.AbyssSpawner;
 import lostsector.campaign.kesteven.quest.KestevenQuest;
+import lostsector.dialogue.rules.nskr_debt;
 import lostsector.helper.FleetHelper.GuardAttackBehaviour;
 import lostsector.helper.FleetHelper.GuardMovementBehaviour;
 import lostsector.helper.FleetHelper.InterceptBehaviour;
+import lostsector.helper.Ids;
+import lostsector.helper.SectorLookup;
 import lostsector.helper.SystemHelper;
 import lostsector.quest.FleetOrders;
 import lostsector.quest.FleetRole;
@@ -18,10 +21,11 @@ import lostsector.quest.QuestModule;
 import lostsector.quest.Quests;
 import lostsector.quest.modules.InterceptEncounter;
 import lostsector.quest.modules.InterceptEncounter.Repeat;
+import lostsector.quest.modules.PayOffEncounter;
 
 import java.util.List;
 
-// Record quest "ic": three one-shot fleets that hunt the player in hyperspace. Records and roles share the names below.
+// Record quest "ic": four one-shot fleets that hunt the player in hyperspace. Records and roles share the names below.
 public final class InterceptsQuest extends Quest<InterceptsStage, InterceptsState> {
 
     public static final String ID = "ic";
@@ -31,9 +35,15 @@ public final class InterceptsQuest extends Quest<InterceptsStage, InterceptsStat
     static final String MESSENGER_LEAVING = "messengerLeaving";
     static final String AUTO_HUNTER = "autoHunter";
     static final String AUTO_HUNTER_GUARD = "autoHunterGuard";
+    static final String COLLECTOR = "collector";
+    static final String COLLECTOR_LEAVING = "collectorLeaving";
 
     private static final float CORE_DISTANCE = 25000f;
     private static final float AUTO_HUNTER_AUTOMATED_DP = 75f;
+    private static final int COLLECTOR_MIN_DEBT = 250000;
+    // Below this many credits the collector takes no part payment.
+    private static final int COLLECTOR_PART_MINIMUM = 100000;
+    private static final float KESTEVEN_HOSTILE = -0.5f;
 
     public InterceptsQuest() {
         super(ID, InterceptsStage.class, NoFlags.class, InterceptsStage.RUNNING);
@@ -46,7 +56,7 @@ public final class InterceptsQuest extends Quest<InterceptsStage, InterceptsStat
 
     @Override
     protected List<QuestModule<InterceptsStage, InterceptsState>> createModules() {
-        return List.of(aro(), messenger(), autoHunter());
+        return List.of(aro(), messenger(), autoHunter(), collector(), collectorDemand());
     }
 
     // Hunts players who carry Abyss bounty ships.
@@ -86,6 +96,36 @@ public final class InterceptsQuest extends Quest<InterceptsStage, InterceptsStat
                 .switchAfter(30f, AUTO_HUNTER_GUARD,
                         FleetRole.of(FleetOrders.guard(GuardMovementBehaviour.ORBIT, GuardAttackBehaviour.PLAYER, 0.01f).withdrawWhenBeaten()),
                         random -> SystemHelper.getRandomFactionMarket(random, Factions.LUDDIC_PATH));
+    }
+
+    // Collects a large Kesteven debt from a player hostile to Kesteven. It goes home once paid (action
+    // collectorLeave from its comm link) or once the player is no longer hostile to Kesteven.
+    private static InterceptEncounter<InterceptsStage, InterceptsState> collector() {
+        return new InterceptEncounter<InterceptsStage, InterceptsState>(COLLECTOR, COLLECTOR,
+                FleetRole.of(FleetOrders.intercept(InterceptBehaviour.AROUND).withdrawWhenBeaten().withdrawAfter(45f)),
+                Repeat.ONCE, 0.01f,
+                ctx -> SectorLookup.kestevenExists() && InterceptEncounter.playerInHyperspaceWithin(CORE_DISTANCE)
+                        && kestevenHostile() && nskr_debt.getDebt() >= COLLECTOR_MIN_DEBT,
+                InterceptsFleets::collector)
+                .switchOnAction("collectorLeave", COLLECTOR_LEAVING,
+                        FleetRole.of(FleetOrders.leave().withdrawWhenBeaten().withdrawAfter(45f)),
+                        random -> SystemHelper.getRandomFactionMarket(random, Ids.KESTEVEN_FACTION_ID),
+                        ctx -> {
+                        })
+                .switchWhen(ctx -> !kestevenHostile())
+                .onSwitch(InterceptsFleets::ignoreOtherFleets);
+    }
+
+    // The collector's demand: the whole debt, or all the player's credits when they hold at least the part minimum.
+    private static PayOffEncounter<InterceptsStage, InterceptsState> collectorDemand() {
+        return new PayOffEncounter<InterceptsStage, InterceptsState>(COLLECTOR, PayOffEncounter.CREDITS,
+                ctx -> nskr_debt.getDebt(), COLLECTOR_PART_MINIMUM)
+                .demandsWhile(ctx -> kestevenHostile())
+                .onPaid((ctx, amount) -> nskr_debt.addDebt(-amount));
+    }
+
+    private static boolean kestevenHostile() {
+        return Global.getSector().getFaction(Ids.KESTEVEN_FACTION_ID).getRelationship(Factions.PLAYER) <= KESTEVEN_HOSTILE;
     }
 
     // Automated hulls, counted by deployment points, including SotF's Sierra's Concord.

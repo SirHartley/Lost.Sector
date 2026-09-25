@@ -233,7 +233,7 @@ Decide where each fact lives before writing rows.
 |---|---|---|
 | Quest progress, targets, timers, decisions, counters | The quest's Java owner (a mission, intel or manager), read through a command verb or a mission reference | `nskr_quest kq is JOB3_BRIEFING`; a hub mission's `$<missionId>_stage` |
 | "Already asked", "already introduced" and other conversation flags | The speaker's own memory: an unscoped key while the person is active | `$nskr_ex_askedPay` |
-| What a fleet is for | The fleet's memory, set by its spawner | `$debtCollector` |
+| What a fleet is for | The fleet's memory, set by its spawner | `$nskr_ic_collector` |
 | Something the player knows, shared by several conversations | `$player` | SotF `$player.sotf_knowDustkeepers` |
 | A sector-wide fact that rows in unrelated places read | `$global`, only when no better owner exists | SotF `$global.apromise_completed` |
 | A value shown in text | A String with expiry `0`, written before the row that shows it | `$nskr_debt_pointsStr` |

@@ -53,6 +53,9 @@ public final class InterceptEncounter<S extends Enum<S> & QuestStage, T extends 
     private float nextAfterDays = Float.NaN;
     private String nextAction;
     private Consumer<QuestContext<S, T>> onNextAction;
+    private Predicate<QuestContext<S, T>> nextWhen;
+    private Consumer<CampaignFleetAPI> onSwitch = fleet -> {
+    };
 
     public interface Host {
 
@@ -116,6 +119,22 @@ public final class InterceptEncounter<S extends Enum<S> & QuestStage, T extends 
         return this;
     }
 
+    // Also switches every fleet of the first role on the first day the condition holds. Needs the second role from
+    // switchAfter or switchOnAction.
+    public InterceptEncounter<S, T> switchWhen(Predicate<QuestContext<S, T>> condition) {
+        if (nextRole == null) throw new IllegalStateException("intercept encounter " + id + " has no second role to switch to");
+        if (condition == null) throw new IllegalArgumentException("switch condition of " + id + " must not be null");
+        nextWhen = condition;
+        return this;
+    }
+
+    // Runs on each fleet after it switches to the second role, for memory flags the new orders need.
+    public InterceptEncounter<S, T> onSwitch(Consumer<CampaignFleetAPI> onSwitch) {
+        if (onSwitch == null) throw new IllegalArgumentException("onSwitch of " + id + " must not be null");
+        this.onSwitch = onSwitch;
+        return this;
+    }
+
     private void setNext(String role, FleetRole fleetRole, Function<Random, SectorEntityToken> target) {
         if (nextRole != null) throw new IllegalStateException("intercept encounter " + id + " already has a second role");
         if (role == null || fleetRole == null) throw new IllegalArgumentException("second role of " + id + " is missing a parameter");
@@ -143,6 +162,9 @@ public final class InterceptEncounter<S extends Enum<S> & QuestStage, T extends 
             for (QuestFleet fleet : ctx.fleets().get(role)) {
                 if (fleet.info().age >= nextAfterDays) switchFleet(ctx, fleet);
             }
+        }
+        if (nextWhen != null && !ctx.fleets().get(role).isEmpty() && nextWhen.test(ctx)) {
+            for (QuestFleet fleet : ctx.fleets().get(role)) switchFleet(ctx, fleet);
         }
         Record record = record(ctx);
         if (repeat == Repeat.ONCE ? record.spawns > 0 : hasFleet(ctx)) return;
@@ -181,6 +203,7 @@ public final class InterceptEncounter<S extends Enum<S> & QuestStage, T extends 
     private void switchFleet(QuestContext<S, T> ctx, QuestFleet fleet) {
         if (nextTarget != null) fleet.info().target = nextTarget.apply(ctx.random("target:" + id));
         ctx.fleets().reassign(fleet, nextRole);
+        onSwitch.accept(fleet.fleet());
     }
 
     private boolean hasFleet(QuestContext<S, T> ctx) {

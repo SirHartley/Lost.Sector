@@ -172,7 +172,7 @@ Every question list ends with Back (`nskr_kestevenQuest_pick_`, Escape), which s
 | Cache guardian | `cacheDialogInit`, `cacheDialogInitial`, `cacheDialogEnd` | none |
 | "LZ" messenger | `MessengerFleetDialogInit`, `…Initial`, `…End` | none |
 
-Rows for `nskr_ttCollectorDialog` and `nskr_loanSharkDialog` never pass the `setPaid` verb; its `case` falls through into `canPay`.
+Rows for `nskr_ttCollectorDialog` never pass the `setPaid` verb; its `case` falls through into `canPay`.
 
 ## Alternative endings
 

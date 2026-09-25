@@ -60,7 +60,6 @@ import lostsector.campaign.bounties.eternity.EternitySpawner;
 import lostsector.campaign.bounties.mothership.MothershipSpawner;
 import lostsector.campaign.bounties.peacekeepers.RorqualSpawner;
 import lostsector.campaign.events.blacksite.BlacksiteManager;
-import lostsector.campaign.kesteven.loans.LoanShark;
 import lostsector.campaign.events.hints.HintManager;
 import lostsector.campaign.enigma.EnigmaFleetLoot;
 import lostsector.campaign.bounties.BountyLoot;
@@ -197,7 +196,6 @@ public class ModPlugin extends BaseModPlugin {
         EFS_LIST.add(new AbyssSpawner());
         EFS_LIST.add(new QuestStageManager());
         EFS_LIST.add(new ExileManager());
-        EFS_LIST.add(new LoanShark());
         EFS_LIST.add(new BlackOpsManager());
         EFS_LIST.add(new ContractManager());
         EFS_LIST.add(new EnigmaHullmodListener());

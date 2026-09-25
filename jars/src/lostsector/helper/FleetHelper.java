@@ -27,7 +27,6 @@ import lostsector.campaign.bounties.abyss.AbyssSpawner;
 import lostsector.campaign.bounties.eternity.EternitySpawner;
 import lostsector.campaign.bounties.mothership.MothershipSpawner;
 import lostsector.campaign.bounties.peacekeepers.RorqualSpawner;
-import lostsector.campaign.kesteven.loans.LoanShark;
 import lostsector.helper.fleet.FleetInfo;
 import lostsector.campaign.kesteven.quest.QuestStageManager;
 import lostsector.helper.fleet.SimpleFleetMember;
@@ -492,7 +491,6 @@ public class FleetHelper {
         FLEET_ARRAY_KEYS.add(AbyssSpawner.FLEET_ARRAY_KEY);
         FLEET_ARRAY_KEYS.add(RorqualSpawner.FLEET_ARRAY_KEY);
         FLEET_ARRAY_KEYS.add(BlackOpsManager.FLEET_ARRAY_KEY);
-        FLEET_ARRAY_KEYS.add(LoanShark.FLEET_ARRAY_KEY);
         FLEET_ARRAY_KEYS.add(MothershipSpawner.FLEET_ARRAY_KEY);
         FLEET_ARRAY_KEYS.add(QuestFleets.KEY);
     }

@@ -49,7 +49,7 @@ The framework is built on branch `quest-overhaul`; the task ids refer to the tra
 | Intel and rules text outside dialogs | `QuestIntel`, `QuestIntels`, `QuestText` | implemented | T11 |
 | Rules check tool | `lostsector.quest.dev.RulesCheck` | implemented | T12 |
 | Dev menu and stage jumps | `nskr_questDev`, `QuestDevTools` | implemented | T13 |
-| Shared modules | `lostsector.quest.modules` | `InterceptEncounter` implemented; the others planned | T37 to T41 |
+| Shared modules | `lostsector.quest.modules` | `InterceptEncounter` and `PayOffEncounter` implemented; the others planned | T37 to T41 |
 
 Until a component is implemented, do not write code against it and do not write a substitute. Implement it in its task, or stop and report.
 
@@ -920,9 +920,9 @@ Behavior used by more than one quest lives once in `lostsector.quest.modules`, c
 
 | Module | Used by | Does | Status |
 |---|---|---|---|
-| `PayOffEncounter` | Loan collector, Tri-Tachyon collector | A hostile fleet that demands payment in credits or cargo; pay, part pay or fight | planned, T37 |
+| [`PayOffEncounter`](#payoffencounter) | Loan collector (quest `ic`); planned for the Tri-Tachyon collector | A hostile fleet that demands payment in credits or cargo; pay, part pay or fight | implemented, T37 |
 | `BountyEncounter` | Abyss, Eternity, Mothership, Peacekeepers | Spawn, first sighting, intel, completion, reward, shared text slots | planned, T39 |
-| [`InterceptEncounter`](#interceptencounter) | ARO strike, "LZ" messenger, Auto-Hunter (quest `ic`); planned for the loan collector and the Tri-Tachyon collector | Daily roll, spawn near the player, the orders of its role, an optional second role | implemented, T41 |
+| [`InterceptEncounter`](#interceptencounter) | ARO strike, "LZ" messenger, Auto-Hunter, loan collector (quest `ic`); planned for the Tri-Tachyon collector | Daily roll, spawn near the player, the orders of its role, an optional second role | implemented, T41 |
 
 The task that builds a shared module documents its constructor and behavior here. A shared module that keeps data defines a saved record class and an interface the quest's state implements to hold the records.
 
@@ -942,6 +942,8 @@ public final class InterceptEncounter<S, T extends QuestState<S> & InterceptEnco
     public InterceptEncounter<S, T> switchAfter(float days, String role, FleetRole fleetRole, Function<Random, SectorEntityToken> target);
     public InterceptEncounter<S, T> switchOnAction(String action, String role, FleetRole fleetRole,
             Function<Random, SectorEntityToken> target, Consumer<QuestContext<S, T>> onAction);
+    public InterceptEncounter<S, T> switchWhen(Predicate<QuestContext<S, T>> condition);   // after switchAfter or switchOnAction
+    public InterceptEncounter<S, T> onSwitch(Consumer<CampaignFleetAPI> onSwitch);
     public static boolean playerInHyperspaceWithin(float distanceFromCenter);
 }
 ```
@@ -949,9 +951,42 @@ public final class InterceptEncounter<S, T extends QuestState<S> & InterceptEnco
 - **Identity.** `id` names the record in `Host.intercepts()`, the random purposes `roll:<id>`, `fleet:<id>` and `target:<id>`, and the record id of its fleets. `role` and `fleetRole` are declared as a role of the quest. No stages: active in every stage.
 - **Daily roll.** In `onDay`, when a player fleet exists: a `ONCE` encounter whose record has a spawn, or a `REPEATING` encounter with a live fleet in either of its roles, does nothing. Otherwise, when `condition` holds, one draw from `roll:<id>` below `dailyChance` spawns the fleet. Conditions run only in the game.
 - **Spawn.** The builder gets a token at the player's position and the `fleet:<id>` random and returns the fleet unbuilt; `ctx.fleets().spawn(role, id, spec)` builds and registers it. The module then moves it to a random point at 0.9 times the sum of the player's sensor strength and the fleet's sensor profile from the player, faces it randomly, runs `finish` (faction changes, hullmods) and `FleetHelper.update`, all with the same random, and counts the spawn in the record.
-- **Second role.** At most one. `switchAfter` switches every fleet of the first role whose `FleetInfo.age` has reached the days, checked in `onDay`. `switchOnAction` declares the action: run from a dialog whose target is a fleet of the encounter, it calls `onAction`, then switches the fleet if it still has the first role; any other target is logged and ignored. A switch first sets `FleetInfo.target` from `target` with the `target:<id>` random (for `guard` or `leave()` orders), then calls `ctx.fleets().reassign`.
-- **Payment encounters.** A collector can use the same module: its role carries the fleet's config and hostility, its rows test the role flag, and a `switchOnAction` action sends it home after payment. The payment itself belongs to `PayOffEncounter`.
+- **Second role.** At most one. `switchAfter` switches every fleet of the first role whose `FleetInfo.age` has reached the days, checked in `onDay`. `switchOnAction` declares the action: run from a dialog whose target is a fleet of the encounter, it calls `onAction`, then switches the fleet if it still has the first role; any other target is logged and ignored. `switchWhen` adds a trigger to the second role set by one of the other two (it throws without one): every fleet of the first role switches on the first day the condition holds, checked in `onDay`. A switch first sets `FleetInfo.target` from `target` with the `target:<id>` random (for `guard` or `leave()` orders), then calls `ctx.fleets().reassign`, then runs `onSwitch` on the fleet, for memory flags the new orders need, such as `MemFlags.FLEET_IGNORES_OTHER_FLEETS` on a fleet that goes home.
+- **Payment encounters.** A collector uses this module for its spawn and orders: its role carries the fleet's config and hostility, its rows test the role flag, and a `switchOnAction` action sends it home after payment. The payment itself is a [`PayOffEncounter`](#payoffencounter) in the same quest; the loan collector (records `collector` and `collectorLeaving` of quest `ic`) is the example.
 - **Dev info.** One line per encounter: spawns, and each live fleet's role and age.
+
+### PayOffEncounter
+
+The game logic of a payment demand: whether the player can pay all, part or nothing, what a payment takes, and the payment with its vanilla receipt. The fleet comes from another module, normally an [`InterceptEncounter`](#interceptencounter) with the same id; the text, the options and every other consequence are rows. Quest `ic`'s loan collector is the example.
+
+```java
+public final class PayOffEncounter<S, T extends QuestState<S> & PayOffEncounter.Host> extends QuestModule<S, T> {
+    public static final String CREDITS = "credits";
+    public static final int EVERYTHING = Integer.MAX_VALUE;
+    public interface Host { Map<String, Record> payOffs(); }   // the state creates the map; the module fills it
+    public static final class Record { public int payments(); public long paid(); }   // saved in the state
+
+    @SafeVarargs public PayOffEncounter(String id, String currency, ToIntFunction<QuestContext<S, T>> owed, int partMinimum, S... stages);
+    public PayOffEncounter<S, T> demandsWhile(Predicate<QuestContext<S, T>> condition);
+    public PayOffEncounter<S, T> onPaid(BiConsumer<QuestContext<S, T>, Integer> onPaid);
+}
+```
+
+- **Currency.** `CREDITS` or a commodity id. The player's holding is whole credits (`(int)` of the float credits, the value `Misc.getDGSCredits` shows) or `getCommodityQuantity` of the commodity. `owed` runs in the game only, whenever a check, the token or the action needs it.
+- **Declarations**, all named after the id. No stages: active in every stage.
+
+  | Name | Kind | Passes or does |
+  |---|---|---|
+  | `<id>Demands` | check | The `demandsWhile` condition holds (default: always) |
+  | `<id>CanPayAll` | check | Holding ≥ owed |
+  | `<id>CanPaySome` | check | Holding < owed and holding ≥ `partMinimum` |
+  | `<id>Payment` | token | The amount the payment takes, min(owed, holding) and never below 0: `Misc.getDGSCredits` for credits, the plain number for a commodity; `""` without a player fleet |
+  | `<id>Pay` | action | Takes that amount with `ctx.rewards().takeCredits` or `ctx.rewards().commodity(id, -amount)`, which print the vanilla loss receipt; counts the payment in the record; then runs `onPaid` with the amount. An amount of 0 takes nothing, prints nothing and is logged; `onPaid` still runs |
+
+- **Demand screen.** A `FireBest` pick on a private trigger: a fallback row for "cannot pay", and rows on `check <id>CanPayAll` and `check <id>CanPaySome`, which never pass together. Pay options show the amount with `$nskr_<q>_<id>Payment`, so the pick is fired from a row of the quest ([Tokens](#tokens)). A pay handler runs `do <id>Pay`, then the other consequences in rows (`AdjustRep`, `PlaySound`), then the fleet module's switch action.
+- **Part payments.** `partMinimum` is at least 1; `EVERYTHING` as `partMinimum` allows none. A demand for everything the player holds, such as the Tri-Tachyon collector's Artifact Electronics, passes `EVERYTHING` as owed and 1 as `partMinimum`: every payment is then a part payment of everything held, `CanPayAll` never passes, and the pick's "some" row holds the hand-over option.
+- **`onPaid`** does what the payment settles in the quest's own data, such as reducing the Kesteven debt. It runs inside the action, after the receipt.
+- **Dev info.** One line per demand: payments and the total paid.
 
 ## Save compatibility
 
@@ -985,8 +1020,8 @@ Do not add a framework feature that only one quest could ever use; keep that in 
 | Duplicate today | Replaced by |
 |---|---|
 | `QuestHelper.getFailed`/`setFailed` and `getCompleted`/`setCompleted`, identical bodies | Flags on the state |
-| Fifteen hand-written seeded `Random` accessors (`ElizaDialog`, `CacheDoubtDialog`, `CacheCoreDialog`, `EndingKestevenDialog`, `EndingElizaDialog`, `nskr_altEndingDialogLuddic`, `nskr_altEndingDialogTT`, `nskr_job4FleetDialog`, `HintWreckDialog`, `nskr_ttCollectorDialog`, `nskr_loanSharkDialog`, `nskr_elizaInterceptDialog`, `KestevenTipBarEventCreator`, `KestevenTipBarEvent`, `nskr_kestevenQuest`) | `ctx.random(purpose)` |
-| `nskr_loanSharkDialog` and `nskr_ttCollectorDialog`, two copies of one encounter | `PayOffEncounter` and rows |
+| Fourteen hand-written seeded `Random` accessors (`ElizaDialog`, `CacheDoubtDialog`, `CacheCoreDialog`, `EndingKestevenDialog`, `EndingElizaDialog`, `nskr_altEndingDialogLuddic`, `nskr_altEndingDialogTT`, `nskr_job4FleetDialog`, `HintWreckDialog`, `nskr_ttCollectorDialog`, `nskr_elizaInterceptDialog`, `KestevenTipBarEventCreator`, `KestevenTipBarEvent`, `nskr_kestevenQuest`) | `ctx.random(purpose)` |
+| `nskr_ttCollectorDialog`, the second copy of the loan collector's encounter | `PayOffEncounter` and rows |
 | Intel classes that register themselves and poll in `advanceImpl` | `QuestIntel` and intel rows |
 | The spawn-and-register tail repeated across `KestevenFleets` spawners | `ctx.fleets().spawn` |
 | `QuestStageManager.runFleetLogic`, per-fleet AI | `FleetOrders` on `FleetHelper` |
@@ -1009,6 +1044,7 @@ Migration map for the Kesteven questline and the other systems. The owning task 
 | `EnemyUnknownIntel`, `HostileTakeoverIntel`, `OperationLifesaverIntel`, `TheDelveIntel`, `CacheIntel` | `QuestIntel` with intel rows |
 | `nskr_isKStage` and other stage predicates | `nskr_quest kq is` and `reached` |
 | `events/InterceptManager`, its `Saved` spawn flags, frame counters and per-fleet AI | Quest `ic` in `campaign/events/intercepts`: `InterceptEncounter` records, `onDay` rolls, roles with `FleetOrders` withdrawal and `reassign` (done in T41) |
+| `kesteven/loans/LoanShark` and `dialogue/rules/nskr_loanSharkDialog`, their persistent-data keys, `$debtCollector` and the `# DEBT collector dialog` rows | Records `collector` of quest `ic`: an `InterceptEncounter` with `switchOnAction`, `switchWhen` and `onSwitch`, a `PayOffEncounter`, and rows in `# INTERCEPTS` (done in T37) |
 | Outside readers (`ContractManager`, the kiosk commands, `StalkerSpawner`, `InterceptManager`, `BlackOpsManager`, `Cache`, `CorePlugin`) | `Quests` and `KestevenQuest` queries (done in T15; see [KESTEVEN_STATE.md](../../../../docs/quests/KESTEVEN_STATE.md)) |
 
 ## Outside the framework

@@ -214,7 +214,7 @@ Each purpose is a constant on `KestevenState`, named after the persistent-data k
 | `RANDOM_COLLECTOR` | `ttCollectorDialogRandom` | `nskr_ttCollectorDialog.getRandom()`: the daily collector roll |
 | `RANDOM_ELIZA_INTERCEPT` | `elizaInterceptDialogRandom` | `nskr_elizaInterceptDialog.getRandom()` |
 
-`kesteven/tips/KestevenTipBarEventCreator`, `KestevenTipBarEvent` and `dialogue/rules/nskr_loanSharkDialog` are not questline content and keep their own persistent-data `Random`s.
+`kesteven/tips/KestevenTipBarEventCreator` and `KestevenTipBarEvent` are not questline content and keep their own persistent-data `Random`s.
 
 ## Memory flags
 

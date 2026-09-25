@@ -8,6 +8,7 @@ import com.fs.starfarer.api.fleet.FleetMemberAPI;
 import com.fs.starfarer.api.impl.campaign.ids.Factions;
 import com.fs.starfarer.api.impl.campaign.ids.MemFlags;
 import com.fs.starfarer.api.impl.campaign.ids.Tags;
+import lostsector.helper.Ids;
 import lostsector.helper.MathHelper;
 import lostsector.helper.PowerLevel;
 import lostsector.helper.fleet.SimpleFleet;
@@ -23,6 +24,7 @@ final class InterceptsFleets {
     private static final String ARO_NAME = "ARO Strike Group";
     private static final String MESSENGER_NAME = "Merc Messenger";
     private static final String AUTO_HUNTER_NAME = "Hunter Fanatics";
+    private static final String COLLECTOR_NAME = "Debt Collector";
     private static final String INTERCEPT_TEXT = "intercepting your fleet";
 
     private InterceptsFleets() {
@@ -88,6 +90,25 @@ final class InterceptsFleets {
         return fleet;
     }
 
+    static SimpleFleet collector(SectorEntityToken at, Random random) {
+        float combatPoints = MathHelper.getSeededRandomNumberInRange(100f, 110f, random);
+        combatPoints += combatPoints * PowerLevel.get(0.2f, 0f, 2f);
+        combatPoints *= Difficulty.scriptedFleetMult();
+
+        List<String> keys = new ArrayList<>();
+        keys.add(MemFlags.FLEET_FIGHT_TO_THE_LAST);
+        keys.add(MemFlags.MEMORY_KEY_SAW_PLAYER_WITH_TRANSPONDER_ON);
+        keys.add(MemFlags.MEMORY_KEY_MAKE_HOLD_VS_STRONGER);
+
+        SimpleFleet fleet = new SimpleFleet(at, Ids.KESTEVEN_FACTION_ID, combatPoints, keys, random);
+        fleet.ignoreMarketFleetSizeMult = true;
+        fleet.maxShipSize = 3;
+        fleet.sMods = MathHelper.getSeededRandomNumberInRange(2, 3, random);
+        fleet.name = COLLECTOR_NAME;
+        interceptPlayer(fleet);
+        return fleet;
+    }
+
     private static void interceptPlayer(SimpleFleet fleet) {
         fleet.assignment = FleetAssignment.INTERCEPT;
         fleet.assignmentText = INTERCEPT_TEXT;
@@ -97,6 +118,11 @@ final class InterceptsFleets {
     // The ARO group and the messenger are built from Luddic Church and pirate doctrine but fly as mercenaries.
     static void flyAsMercenaries(CampaignFleetAPI fleet, Random random) {
         fleet.setFaction(Factions.MERCENARY, true);
+    }
+
+    // A collector that stops hunting ignores other fleets on its way home.
+    static void ignoreOtherFleets(CampaignFleetAPI fleet) {
+        fleet.getMemoryWithoutUpdate().set(MemFlags.FLEET_IGNORES_OTHER_FLEETS, true);
     }
 
     // Half of the ships and always the flagship get the machine spirit hullmod.

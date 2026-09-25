@@ -901,38 +901,47 @@ The comm link is cut before you have a chance to respond.",nskr_ic_messengerCut:
 nskr_ic_messengerCut,DialogOptionSelected,$option == nskr_ic_messengerCut,"ShowDefaultVisual
 EndConversation",the $fleetName assumes a neutral posture.,,
 ,,,,,,
-# DEBT collector dialog,,,,,,
-nskr_loanSharkDialogInit,BeginFleetEncounter,"$faction.id == kesteven score:1000
+nskr_ic_collectorHail,BeginFleetEncounter,"$faction.id == kesteven score:1000
 !$ignorePlayerCommRequests
-$debtCollector","HailPlayer",,,
-nskr_loanSharkDialogInitial,OpenCommLink,"$faction.id == kesteven score:100
+$nskr_ic_collector",HailPlayer,,,
+nskr_ic_collectorOpen,OpenCommLink,"$faction.id == kesteven score:100
 $entity.isHostile
 !$ignorePlayerCommRequests
-nskr_loanSharkDialog hasOption",,"""You owe the Kesteven Corporation a great deal of money $playerName. It's time to pay up."" The captain has a particularly ruthless look to him.","nskr_loanSharkDialogInitialText:Continue",
-nskr_loanSharkDialogInitialText,DialogOptionSelected,"$option == nskr_loanSharkDialogInitialText","nskr_loanSharkDialog canPay
-$entity.ignorePlayerCommRequests = true 10
+$entity.nskr_ic_collector
+nskr_quest ic check collectorDemands",,"""You owe the Kesteven Corporation a great deal of money $playerName. It's time to pay up."" The captain has a particularly ruthless look to him.",nskr_ic_collectorDemand:Continue,
+nskr_ic_collectorDemand,DialogOptionSelected,$option == nskr_ic_collectorDemand,"$entity.ignorePlayerCommRequests = true 10
 nskr_debt init
+FireBest nskr_icCollectorDemand
 AddText ""You have $nskr_debt_pointsStr in unpaid loans.""
 SetTextHighlights $nskr_debt_pointsStr",,,
-nskr_loanSharkDialogPaySome,DialogOptionSelected,"$option ==nskr_loanSharkDialogPaySome","nskr_loanSharkDialog pay
+nskr_ic_collectorDemandNone,nskr_icCollectorDemand,,,"""Seems like you don't have enough credits to pay us anything.""","nskr_ic_collectorNoPay:""Yeah, uhhh... I Don't have any money.""",Fallback: the player cannot pay anything.
+nskr_ic_collectorDemandSome,nskr_icCollectorDemand,nskr_quest ic check collectorCanPaySome,"AddText ""\""Just give us all you have, so we don't need to use *other* measures.\""""","""Seems like you don't have enough credits to pay us everything.""","nskr_ic_collectorPaySome:Pay them $nskr_ic_collectorPayment
+nskr_ic_collectorFight:""No, I don't think I will.""",
+nskr_ic_collectorDemandAll,nskr_icCollectorDemand,nskr_quest ic check collectorCanPayAll,,"""Just give us all the owed money, and we don't need to use *other* measures.""","nskr_ic_collectorPayAll:Pay them $nskr_ic_collectorPayment
+nskr_ic_collectorFight:""No, I don't think I will.""",
+nskr_ic_collectorPaySome,DialogOptionSelected,$option == nskr_ic_collectorPaySome,"FireBest nskr_icCollectorPay
 MakeOtherFleetAllowDisengage true
-MakeOtherFleetNonAggressive true
-","""Thank you for your business captain. Glad we could come to terms, peacefully."" There is a hint of sarcasm in what $heOrShe is saying.","nskr_loanSharkDialogExit:Leave",
-nskr_loanSharkDialogPayAll,DialogOptionSelected,"$option ==nskr_loanSharkDialogPayAll","nskr_loanSharkDialog pay
+MakeOtherFleetNonAggressive true","""Thank you for your business captain. Glad we could come to terms, peacefully."" There is a hint of sarcasm in what $heOrShe is saying.",nskr_ic_collectorExit:Leave,
+nskr_ic_collectorPayAll,DialogOptionSelected,$option == nskr_ic_collectorPayAll,"FireBest nskr_icCollectorPay
 MakeOtherFleetAllowDisengage true
-MakeOtherFleetNonAggressive true
-","""Thank you for your business captain. I am glad we could come to terms, peacefully."" There is a hint of sarcasm in what $heOrShe is saying.","nskr_loanSharkDialogExit:Leave",
-nskr_loanSharkDialogExit,DialogOptionSelected,"$option == nskr_loanSharkDialogExit","EndConversation
-ShowDefaultVisual
-","You cut the comm link.",,
-nskr_loanSharkDialogNoPay,DialogOptionSelected,"$option ==nskr_loanSharkDialogNoPay",,"""Looks like it's time to use *other* means of payment."" $HeOrShe says in an arrogant manner.","nskr_loanSharkDialogExitFight:Cut the comm link",
-nskr_loanSharkDialogExitFight,DialogOptionSelected,"$option ==nskr_loanSharkDialogExitFight","EndConversation
-ShowDefaultVisual
-","""Looks like it's time to use *other* means of payment."" $HeOrShe says in an arrogant manner.
+MakeOtherFleetNonAggressive true","""Thank you for your business captain. I am glad we could come to terms, peacefully."" There is a hint of sarcasm in what $heOrShe is saying.",nskr_ic_collectorExit:Leave,
+nskr_ic_collectorPay,nskr_icCollectorPay,,"nskr_quest ic do collectorPay
+nskr_debt init
+AddTextSmall ""Debt reduced to $nskr_debt_pointsStr"" gray
+SetTextHighlights $nskr_debt_pointsStr
+AdjustRep kesteven 5
+AdjustRepActivePerson COOPERATIVE 10
+PlaySound ui_rep_raise
+unset $entity.ignorePlayerCommRequests
+nskr_quest ic do collectorLeave",,,"Payment, receipts and departure, shared by both pay handlers."
+nskr_ic_collectorExit,DialogOptionSelected,$option == nskr_ic_collectorExit,"ShowDefaultVisual
+EndConversation",You cut the comm link.,,
+nskr_ic_collectorNoPay,DialogOptionSelected,$option == nskr_ic_collectorNoPay,,"""Looks like it's time to use *other* means of payment."" $HeOrShe says in an arrogant manner.",nskr_ic_collectorFight:Cut the comm link,
+nskr_ic_collectorFight,DialogOptionSelected,$option == nskr_ic_collectorFight,"ShowDefaultVisual
+EndConversation","""Looks like it's time to use *other* means of payment."" $HeOrShe says in an arrogant manner.
 The comm link is cut before you can respond.
 
 the $faction $fleetName powers up their weapons and moves in to engage.",,
-"#END DEBT collector dialog",,,,,,
 ,,,,,,
 # BETRAYAL,,,,,,
 betrayalInit,BeginFleetEncounter,"$faction.id == kesteven score:1000
