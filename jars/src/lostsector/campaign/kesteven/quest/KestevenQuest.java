@@ -17,7 +17,8 @@ import java.util.Random;
 // KestevenSatelliteModule the data-disk satellites, KestevenElizaModule Eliza's port, KestevenCollector's shared
 // modules the Tri-Tachyon collector, KestevenElizaFleetsModule Eliza's fleets, KestevenEndingsModule the Kesteven and
 // Eliza endings, KestevenAltEndingsModule the Luddic and Tri-Tachyon endings, KestevenAftermathModule Jack's revenge
-// and the failure for losing both mission markets, and KestevenCacheModule the Cache.
+// and the failure for losing both mission markets, KestevenCacheModule the Cache and KestevenHintWreckModule the job 4
+// hint wreck.
 // isAvailable() keeps the default: the old code runs the questline in every campaign and treats a missing
 // Kesteven home as failure (stage 99), so the state must always exist.
 public final class KestevenQuest extends Quest<KestevenStage, KestevenState> {
@@ -39,7 +40,7 @@ public final class KestevenQuest extends Quest<KestevenStage, KestevenState> {
                 new KestevenJob4Module(), new KestevenJob5Module(), new KestevenGlacierModule(), new KestevenElizaSearchModule(),
                 new KestevenSatelliteModule(), new KestevenElizaModule(), KestevenCollector.encounter(), KestevenCollector.demand(),
                 new KestevenElizaFleetsModule(), new KestevenEndingsModule(), new KestevenAltEndingsModule(),
-                new KestevenAftermathModule(), new KestevenCacheModule());
+                new KestevenAftermathModule(), new KestevenCacheModule(), new KestevenHintWreckModule());
     }
 
     // Null before QuestManager.startQuests() at the end of ModPlugin.onGameLoad, which includes new-campaign generation.

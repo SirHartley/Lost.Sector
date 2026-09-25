@@ -44,7 +44,7 @@ import java.util.Set;
 // Job 4, "Operation Lifesaver": the wait before Alice offers it, the intel entry, the strike group, the Special
 // Operations fleet and the splinter patrols, the hint wrecks, completion and the failure for attacking the Special
 // Operations fleet. The Special Operations conversation and the hint wreck are rows in # KESTEVEN QUESTLINE: JOB 4;
-// briefing, acceptance and turn-in are the hub's.
+// briefing, acceptance and turn-in are the hub's, and KestevenHintWreckModule reads the hint wreck in any stage.
 // Active until job 5's disks, because the job's fleets stay in the world until they withdraw (fleetsWithdraw).
 final class KestevenJob4Module extends QuestModule<KestevenStage, KestevenState> {
 
@@ -54,7 +54,6 @@ final class KestevenJob4Module extends QuestModule<KestevenStage, KestevenState>
     static final String ROLE_SPECIAL_OPS = "job4SpecialOps";
     static final String ROLE_SPECIAL_OPS_LEAVING = "job4SpecialOpsLeaving";
     static final String ROLE_SPLINTER = "job4Splinter";
-    static final String TRIGGER_HINT_WRECK = "nskr_kqHintWreck";
 
     // Units from the sector's centre.
     private static final float FRIENDLY_TARGET_MIN_DISTANCE = 32500f;
@@ -97,7 +96,6 @@ final class KestevenJob4Module extends QuestModule<KestevenStage, KestevenState>
         d.role(ROLE_SPECIAL_OPS_LEAVING, FleetRole.of(FleetOrders.leave("travelling back to")
                 .withdrawWhen(info -> fleetsWithdraw())).persistent());
         d.role(ROLE_SPLINTER, FleetRole.of(FleetOrders.keep().withdrawWhen(info -> fleetsWithdraw())).persistent());
-        d.trigger(TRIGGER_HINT_WRECK);
 
         d.check("job4CanHelp", ctx -> {
             CargoAPI cargo = Global.getSector().getPlayerFleet().getCargo();
@@ -109,7 +107,6 @@ final class KestevenJob4Module extends QuestModule<KestevenStage, KestevenState>
 
         d.action("recordJob4FleetTalk", KestevenJob4Module::recordFleetTalk);
         d.action("sendJob4FleetHome", KestevenJob4Module::sendFleetHome);
-        d.action("readHintWreck", KestevenJob4Module::readHintWreck);
 
         d.token("job4FriendlySystem", ctx -> systemName(ctx.state().job4FriendlyTarget));
         d.token("job4FriendlyEntity", ctx -> ctx.state().job4FriendlyTarget == null ? "" : ctx.state().job4FriendlyTarget.getName());
@@ -360,8 +357,7 @@ final class KestevenJob4Module extends QuestModule<KestevenStage, KestevenState>
                     days + MathHelper.getSeededRandomNumberInRange(-3f, 3f, random));
             if (y == 0) {
                 derelict.setId(HINT_WRECK_ID + random.nextLong());
-                // Unread in every stage, as before; readHintWreck releases it and the vanilla derelict dialog returns.
-                ctx.claimDialog(derelict, TRIGGER_HINT_WRECK, KestevenStage.values());
+                KestevenHintWreckModule.claim(ctx, derelict);
             }
         }
     }
@@ -406,12 +402,6 @@ final class KestevenJob4Module extends QuestModule<KestevenStage, KestevenState>
         ctx.fleets().reassign(fleet, ROLE_SPECIAL_OPS_LEAVING);
     }
 
-    private static void readHintWreck(QuestContext<KestevenStage, KestevenState> ctx) {
-        ctx.set(KestevenFlag.JOB4_HINT_WRECK_READ);
-        if (ctx.target() != null) ctx.releaseDialog(ctx.target());
-        refreshMap(ctx);
-    }
-
     // Helpers
 
     private static void strikeGroupDestroyed(QuestContext<KestevenStage, KestevenState> ctx, QuestFleet fleet) {
@@ -433,8 +423,9 @@ final class KestevenJob4Module extends QuestModule<KestevenStage, KestevenState>
         }
     }
 
-    // The map marker of the old intel: the most precise lead the player has.
-    private static void refreshMap(QuestContext<KestevenStage, KestevenState> ctx) {
+    // The map marker of the old intel: the most precise lead the player has. KestevenHintWreckModule calls it when the
+    // hint wreck is read.
+    static void refreshMap(QuestContext<KestevenStage, KestevenState> ctx) {
         if (ctx.stage() != KestevenStage.JOB4_ACTIVE || !ctx.intel().isShown(INTEL)) return;
         ctx.intel().setMapLocation(INTEL, mapLocation(ctx));
     }

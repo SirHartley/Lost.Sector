@@ -59,7 +59,7 @@ final class KestevenAftermathModule extends QuestModule<KestevenStage, KestevenS
         if (ExileManager.canExile() || SectorLookup.asteriaExists() || ctx.has(KestevenFlag.ENDED)) return;
         if (ctx.stage() != KestevenStage.FAILED) ctx.advance(KestevenStage.FAILED);
         ctx.set(KestevenFlag.ENDED);
-        ctx.log("ERROR sector is fucked, ending missions");
+        ctx.log("Kesteven holds neither Asteria nor the Outpost, questline failed");
     }
 
     // Jack leaves his market and the important people; ExileManager reads JACK_GONE so an exile does not bring him back.

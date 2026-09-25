@@ -15,7 +15,8 @@ Java paths are relative to `jars/src/lostsector/campaign/`; `dialogue/rules/` an
 | `kesteven/quest/KestevenElizaFleetsModule`, `# KESTEVEN QUESTLINE: ELIZA FLEETS` rows | Eliza's fleets after the raid, for the chip and for revenge, their conversations and `ELIZA_KILLED` ([Eliza's fleets](#elizas-fleets)) |
 | `kesteven/quest/KestevenElizaSearchModule`, `# KESTEVEN QUESTLINE: ELIZA SEARCH` rows | The search for Eliza at pirate bars during stage 16 ([Finding Eliza](#finding-eliza)) |
 | `kesteven/quest/KestevenJob3Module`, `# KESTEVEN QUESTLINE: JOB 3` rows | Job 3 world logic: the expedition and its outcome, the intel entry and its text rows, and the objects placed when the job is accepted ([Job 3](#job-3-hostile-takeover-stages-6-to-11)) |
-| `kesteven/quest/KestevenJob4Module`, `# KESTEVEN QUESTLINE: JOB 4` rows | Job 4 world logic: the wait, the intel entry and its text rows, the strike group, the Special Operations fleet and its conversation, the splinter patrols, the hint wreck, completion and failure ([Job 4](#job-4-operation-lifesaver-stages-11-to-14)) |
+| `kesteven/quest/KestevenJob4Module`, `# KESTEVEN QUESTLINE: JOB 4` rows | Job 4 world logic: the wait, the intel entry and its text rows, the strike group, the Special Operations fleet and its conversation, the splinter patrols, the wrecks, completion and failure ([Job 4](#job-4-operation-lifesaver-stages-11-to-14)) |
+| `kesteven/quest/KestevenHintWreckModule` | The hint wreck's claim trigger and the action `readHintWreck`, in every stage ([Job 4](#job-4-operation-lifesaver-stages-11-to-14)) |
 | `kesteven/quest/KestevenJob5Module`, `# KESTEVEN QUESTLINE: JOB 5` rows | The Delve meeting at the bar, its escort guard, and the job 5 intel entry and its text rows ([Briefing and meeting](#briefing-and-meeting)) |
 | `kesteven/quest/KestevenGlacierModule`, `# KESTEVEN QUESTLINE: GLACIER` rows | The Glacier comms facility: its map marker and dialog claim, the timed raid, the barrage's fleet damage and disk #5 ([Glacier](#glacier-disk-5)) |
 | `kesteven/quest/KestevenSatelliteModule`, `# KESTEVEN QUESTLINE: SATELLITES` rows | The data-disk satellites' dialog, salvage and woken guards, `ALL_DISKS_RECOVERED`, and `FROST_FOUND` on entering Frost ([The five data disks](#the-five-data-disks)) |
@@ -161,7 +162,7 @@ When stage 12 starts, `KestevenJob4Module`, in the order the old code used, whic
 - places data-disk satellite #4 at the enemy target;
 - spawns the Kesteven "Special Operations" fleet at the friendly target (transponder off), role `job4SpecialOps`;
 - spawns ten Enigma "Splinter" patrols, role `job4Splinter`;
-- places a debris field and three Kesteven derelicts near the enemy target. The first derelict is the hint wreck; its dialog is claimed with the trigger `nskr_kqHintWreck` in every stage until it is read.
+- places a debris field and three Kesteven derelicts near the enemy target. The first derelict is the hint wreck; its dialog is claimed with the trigger `nskr_kqHintWreck` of `KestevenHintWreckModule` in every stage until it is read.
 
 The builders are `KestevenFleets.job4StrikeGroup`, `job4SpecialOps` and `job4Splinter`. Every job 4 role is persistent and has `FleetOrders.withdrawWhen`: from stage 17 on (failure included), or from stage 14 on once satellite #4 is salvaged, the fleet keeps its last assignment and despawns once out of the player's sight. Until then:
 
@@ -171,7 +172,7 @@ The builders are `KestevenFleets.job4StrikeGroup`, `job4SpecialOps` and `job4Spl
 Three sources lead the player on:
 
 - Nicholas describes a burst of signals from the enemy target system and records his dialogue stage.
-- The hint wreck gives the friendly fleet's system (rows `nskr_kq_hintWreck*`; the action `readHintWreck` sets `JOB4_HINT_WRECK_READ` and releases the claim, so the vanilla derelict dialog opens from then on).
+- The hint wreck gives the friendly fleet's system (rows `nskr_kq_hintWreck*`; the action `readHintWreck` of `KestevenHintWreckModule`, active in every stage, sets `JOB4_HINT_WRECK_READ` and releases the claim, so the vanilla derelict dialog opens from then on).
 - The Special Operations fleet (transponder must be on) tells its story, sends the strike group coordinates, and asks for 250 supplies and 400 fuel. Its first conversation runs the action `recordJob4FleetTalk`: `JOB4_FRIENDLY_TALKED`, `JOB4_FRIENDLY_FOUND`, and `JOB4_TARGET_HINT` unless the strike group was already seen or beaten. Giving the supplies and fuel sets `JOB4_FRIENDLY_HELPED`, and the action `sendJob4FleetHome` moves the fleet to role `job4SpecialOpsLeaving`, which flies to `asteriaOrOutpost` ("travelling back to <market>") and despawns there.
 
 The `job4` entry lists each lead the player has. Its map marker points at the most precise one: the strike group once seen or once the Special Operations fleet sent its coordinates; else the friendly fleet's coordinates from the hint wreck while that fleet is not found; else the system Nicholas named; else the found friendly fleet; else the briefing's constellation. The strike group leads apply only until it is destroyed. The module sets the marker when the job starts, whenever one of its own flags changes and once a day, so Nicholas's tip moves it on the next daily tick.

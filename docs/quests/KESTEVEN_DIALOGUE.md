@@ -305,7 +305,7 @@ The `# KESTEVEN QUESTLINE: JOB 4` block holds the job's conversations and intel 
 |---|---|---|---|
 | Special Operations fleet | `BeginFleetEncounter` and `OpenCommLink` on the role flag `$nskr_kq_job4SpecialOps`, at `JOB4_ACTIVE` or `JOB4_DONE`, Kesteven relationship above -0.50, transponder on | `nskr_kq_job4FleetHail` (hail until `JOB4_FRIENDLY_TALKED`), `…Open` (first talk), `…Ask` with the insert `nskr_kqJob4FleetStrikeGroup` (strike group coordinates unless `JOB4_TARGET_FOUND`), `…OpenAgain` (talked, not helped), `…Help` with the pick `nskr_kqJob4FleetHelp` (`…HelpShort` fallback, `…HelpReady` on `check job4CanHelp`), `…HelpConfirm`, `…Exit` | Plain chain; the help screen is a `FireBest` pick |
 | Strike group | `BeginFleetEncounter` and `OpenCommLink` on `$nskr_kq_job4StrikeGroup` | `nskr_kq_job4StrikeGroupHail`, `…Open`, `…Listen`, `…Ask` and `…Hello` (continue chains to `…Listen`), `…Cut` | Plain chain |
-| Hint wreck | The claimed trigger `nskr_kqHintWreck` on the first derelict of `KestevenJob4Module.placeWrecks` | `nskr_kq_hintWreckOpen`, `…Read` with the pick `nskr_kqHintWreckResult` (`…Coordinates` fallback, `…Found` on `JOB4_FRIENDLY_FOUND`), `…Leave` | Plain chain |
+| Hint wreck | The claimed trigger `nskr_kqHintWreck` (`KestevenHintWreckModule`) on the first derelict of `KestevenJob4Module.placeWrecks`, in every stage until read | `nskr_kq_hintWreckOpen`, `…Read` with the pick `nskr_kqHintWreckResult` (`…Coordinates` fallback, `…Found` on `JOB4_FRIENDLY_FOUND`), `…Leave` | Plain chain |
 
 | Kind | Name | Does |
 |---|---|---|
@@ -313,7 +313,7 @@ The `# KESTEVEN QUESTLINE: JOB 4` block holds the job's conversations and intel 
 | check | `job4FriendlyNamed`, `job4TargetNamed` | The friendly or enemy target entity has a name other than "Null" (intel bullet variants) |
 | action | `recordJob4FleetTalk` | Sets `JOB4_FRIENDLY_TALKED` and `JOB4_FRIENDLY_FOUND`, and `JOB4_TARGET_HINT` unless the strike group was seen or beaten |
 | action | `sendJob4FleetHome` | Moves the Special Operations fleet to role `job4SpecialOpsLeaving`, bound for `asteriaOrOutpost` |
-| action | `readHintWreck` | Sets `JOB4_HINT_WRECK_READ` and releases the wreck's claim |
+| action | `readHintWreck` | `KestevenHintWreckModule`, in every stage: sets `JOB4_HINT_WRECK_READ`, releases the wreck's claim and, at `JOB4_ACTIVE`, moves the `job4` map marker |
 | token | `job4FriendlySystem`, `job4FriendlyEntity`, `job4TargetEntity`, `job4OutpostSystem`, `job4SearchArea`, `job4Supplies`, `job4Fuel` | Names from the job 4 targets and the Outpost; the constellation with its type (`KestevenQuest.constellationName`); the player's supplies and fuel in whole units |
 
 The hand-over uses `AddRemoveCommodity`, `AdjustRep kesteven 5` and `AdjustRepActivePerson COOPERATIVE 10`, whose vanilla receipts replace the old custom receipt lines. The rows also use the hub's `outpostExists`, `nicholasTipGiven` and `job4TargetKnown`, the job 1 module's `kestevenHostile` and `homeName`, and the hub token `job4TargetSystem`.
