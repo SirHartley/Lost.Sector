@@ -636,6 +636,7 @@ The `KEY` list in sector memory is the only saved fleet data. Owner, role and re
 ```java
 public final class QuestPeople {
     public PersonAPI create(String key, String factionId, Consumer<PersonAPI> setup);   // returns the existing person when the key exists
+    public PersonAPI create(String key, String factionId, FullName.Gender gender, Consumer<PersonAPI> setup);
     public PersonAPI get(String key);                                                  // null when absent
     public String id(String key);                                                      // nskr_<q>_<key>
     public void release(String key);
@@ -644,8 +645,9 @@ public final class QuestPeople {
 
 Every key passed to `create` is declared first with `d.person(key)` in the `declare` of a module; the key follows the declaration name rules (lowerCamel, unique within the quest). `QuestPeople` refuses a key that is not declared. The declaration lets the [rules check tool](#rules-check-tool) check person tokens and their clashes with token names.
 
-`create` makes the person with `FactionAPI.createRandomPerson(ctx.random("person:" + key))`, sets the id `nskr_<q>_<key>`, runs `setup` for portrait, name, rank, post and gender, registers the person with `ImportantPeopleAPI.addPerson` and stores it in the state. Registration is what lets the vanilla presentation commands find generated people: `BeginConversation nskr_kq_host` makes the person the active speaker (their memory becomes `$local`), and `ShowSecondPerson` and `ShowThirdPerson` add portraits. `release` removes the person from the important people and the state; call it in `onStop` for people the quest no longer needs. A quest reset releases all of its people.
+`create` makes the person with `FactionAPI.createRandomPerson(gender, ctx.random("person:" + key))`, sets the id `nskr_<q>_<key>`, runs `setup` for portrait, name, rank, post and gender, registers the person with `ImportantPeopleAPI.addPerson` and stores it in the state. Registration is what lets the vanilla presentation commands find generated people: `BeginConversation nskr_kq_host` makes the person the active speaker (their memory becomes `$local`), and `ShowSecondPerson` and `ShowThirdPerson` add portraits. `release` removes the person from the important people and the state; call it in `onStop` for people the quest no longer needs. A quest reset releases all of its people.
 
+- **Gender.** The overload without a gender passes `Gender.ANY`. For `ANY` (or null) the game draws the gender from the same random, male unless `nextFloat()` is above 0.5, before it picks the portrait and the name; `createRandomPerson(Random)` makes that same draw, so both overloads give the same person for a key and seed (0.98a-RC8 `Faction.createRandomPerson`, `sources-obf/campaign.java`). Pass `MALE` or `FEMALE` when the text fixes a gender; setting it in `setup` would leave the portrait and name of the drawn gender.
 - **Keys** are the ones declared with `d.person`. An undeclared key or an unknown faction id logs an error and `create` returns null.
 - **Ids.** `ImportantPeople.addPerson` files the person under `getId()` at the time of the call, so the id is set before registering and must not change afterwards. `BeginConversation <id>` looks the id up with `getImportantPeople().getData(id)`, then among the target market's people, or `POST:<postId>` in its comm directory; `ShowSecondPerson` and `ShowThirdPerson` use `getData(id)` only and do nothing for an unknown id.
 
@@ -1132,7 +1134,7 @@ Migration map for the Kesteven questline and the other systems. The owning task 
 | `campaign/kesteven/quest/KestevenFleets` builders | Builders in the Kesteven quest package returning `SimpleFleet` |
 | `campaign/kesteven/quest/KestevenPeople` | Fixed people stay in world generation; generated people move to `ctx.people()` |
 | Java dialog classes (`ElizaDialog`, `CacheCoreDialog`, `HintWreckDialog`, endings and the other questline commands) | Rows, checks, actions and claims (`nskr_kestevenQuest` done in T16 and T17: `KestevenHubModule` and the `# KESTEVEN QUESTLINE` rows) |
-| `HostileTakeoverBarEvent`, `ElizaSearch*BarEvent`, `DelveMeetingBarEvent` | `AddBarEvents` rows and quest people |
+| `HostileTakeoverBarEvent`, `ElizaSearch*BarEvent`, `DelveMeetingBarEvent` | `AddBarEvents` rows and quest people (`HostileTakeoverBarEvent` done in T20 and T21: `KestevenPartyModule` and the `# KESTEVEN QUESTLINE: JOB 3 PARTY` rows) |
 | `EnemyUnknownIntel`, `HostileTakeoverIntel`, `OperationLifesaverIntel`, `TheDelveIntel`, `CacheIntel` | `QuestIntel` with intel rows (`EnemyUnknownIntel` done in T18: key `job1` of `KestevenJob1Module`; `HostileTakeoverIntel` in T19: key `job3` of `KestevenJob3Module`) |
 | `nskr_isKStage` and other stage predicates | `nskr_quest kq is` and `reached` |
 | `events/InterceptManager`, its `Saved` spawn flags, frame counters and per-fleet AI | Quest `ic` in `campaign/events/intercepts`: `InterceptEncounter` records, `onDay` rolls, roles with `FleetOrders` withdrawal and `reassign` (done in T41) |

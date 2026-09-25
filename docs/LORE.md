@@ -129,7 +129,7 @@ These instructions describe how the existing mod text is written. They govern pl
 - **Competent crew.** Crew members are professionals with their own manner: the careful ops chief, the sarcastic sensors officer, the comms officer's "nothing a little elbow grease from our team can't solve".
 - **Gray asides.** Gray narration carries the captain's own reactions and occasional judgment: "Wait, you really agree with her? Oh dear." (`ElizaDialog`), "Hope you made the right choice, captain." (`EndingElizaDialog`). `CacheDoubtDialog` uses the same gray voice as an inner voice that talks back.
 - **Wide tonal range.** Comedy and horror sit side by side.
-  - Comic: the drinking scenes (`HostileTakeoverBarEvent`, the artisan liqueur in `DelveMeetingBarEvent`); the Peacekeepers' commander asking whether "Sam" sent the player to prank him (rules `pkInspired`); the Cache guardian's taunts ("Is this autofit by chance?", "Have it writ upon thy meagre grave : Skill issue.", `CacheBossTauntPlugin`).
+  - Comic: the drinking scenes (the job 3 party, rules `nskr_kq_party…`; the artisan liqueur in `DelveMeetingBarEvent`); the Peacekeepers' commander asking whether "Sam" sent the player to prank him (rules `pkInspired`); the Cache guardian's taunts ("Is this autofit by chance?", "Have it writ upon thy meagre grave : Skill issue.", `CacheBossTauntPlugin`).
   - Grave: the Frozen Heart's enslaved thousands and the Enigma doctrine are written without jokes.
 - **Machine voices.** AI and system voices use log formatting: bracketed tokens, lowercase queries, `INTERRUPT` breaks and cut-off protocol text. Example (rules `greetingEnigmaHostile`): `query. blood?. scanning. [BLOOD] collect, amass, gather, stockpile, hoard, reap...`
 - **Lore by quotation.** Prototype hulls, weapons and upgrades carry a quoted project log or journal line with a named author instead of a technical description.
@@ -248,7 +248,7 @@ THRN is the Hellspawn judge. It speaks in short gray lines, sometimes one word a
 
 | Speaker | Source | Voice |
 |---|---|---|
-| Tri-Tachyon employee | `HostileTakeoverBarEvent` | Friendly heavy drinker who gets the captain into a management party |
+| Tri-Tachyon employee | Job 3 party, rules `nskr_kq_party…` | Friendly heavy drinker who gets the captain into a management party |
 | Tri-Tachyon collector | rules `nskr_ttCollectorDialog*` | Resentful and businesslike: "We know you are working with those snakes from Kesteven." ... "Pleasure doing business with you captain." |
 | Tri-Tachyon buyer | `nskr_altEndingDialogTT` | Skeptical, then greedy: "Just think of all the things you could buy." (ravenous smile) |
 | Luddic official | `nskr_altEndingDialogLuddic` | Scriptural: "I hear you speak of a vile creation of mammon." ... "you do not *get* your way to providence." |

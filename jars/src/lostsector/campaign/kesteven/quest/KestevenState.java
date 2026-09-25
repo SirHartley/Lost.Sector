@@ -46,6 +46,7 @@ public final class KestevenState extends QuestState<KestevenStage> {
     int nicholasDialogStage;
     int job4FleetDialogStage;
     int elizaSearchStage;
+    int partyDrinks;
     List<String> elizaSearchUsedMarkets = new ArrayList<>();
 
     float ttPayout;

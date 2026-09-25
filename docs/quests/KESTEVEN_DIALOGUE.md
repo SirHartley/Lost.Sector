@@ -9,8 +9,8 @@ Java paths are relative to `jars/src/lostsector/campaign/`; `dialogue/rules/` an
 | Style | Used by | How it runs |
 |---|---|---|
 | Rules rows with a multi-verb command | The Special Operations fleet (`nskr_job4FleetDialog`); the collector (`nskr_ttCollectorDialog`); Eliza's intercept (`nskr_elizaInterceptDialog`); both alternative endings | Rows select the conversation and call a verb. The verb writes most text and options from Java strings. Several commands extend `PaginatedOptions` and take over the dialog plugin (`setupDelegateDialog`). Every non-paging option then returns to rules through `FireBest DialogOptionSelected`. |
-| Rules rows only | Every conversation with Jack, Alice and Nicholas (gates, values and game actions from `KestevenHubModule`); fleet greetings and threats: Enigma strike group, Eliza's raided and revenge fleets, Jack's revenge fleet, the Cache guardian, the "LZ" messenger, generic Enigma comms | Text, options and scripts live in `data/campaign/rules.csv`. |
-| Java `InteractionDialogPlugin` or `BaseBarEvent` | Satellites, Glacier, Cache hint, Cache core, Eliza's port, both final ending dialogs, the job 3 and job 5 bar scenes, the job 4 hint wreck | `CorePlugin.pickInteractionDialogPlugin` or `PortsideBarData` opens the class. All text, options and state changes are in the Java class, using a nested `OptionId` enum. |
+| Rules rows only | Every conversation with Jack, Alice and Nicholas (gates, values and game actions from `KestevenHubModule`); the job 3 party, a rules bar event (guests, drink count and bill from `KestevenPartyModule`); fleet greetings and threats: Enigma strike group, Eliza's raided and revenge fleets, Jack's revenge fleet, the Cache guardian, the "LZ" messenger, generic Enigma comms | Text, options and scripts live in `data/campaign/rules.csv`. |
+| Java `InteractionDialogPlugin` or `BaseBarEvent` | Satellites, Glacier, Cache hint, Cache core, Eliza's port, both final ending dialogs, the job 5 bar scenes, the job 4 hint wreck | `CorePlugin.pickInteractionDialogPlugin` or `PortsideBarData` opens the class. All text, options and state changes are in the Java class, using a nested `OptionId` enum. |
 
 ## Jack, Alice and Nicholas
 
@@ -230,11 +230,27 @@ Admin officials at Luddic Church, Luddic Path and Tri-Tachyon markets get "Talk 
 
 The official who reaches the second conversation is locked to it through `$nskr_altEndingDialogLockedToPerson`.
 
+## Job 3 party
+
+The party at the job 3 start market is in the `# KESTEVEN QUESTLINE: JOB 3 PARTY` block. Flow, gates and rewards are in [The party](KESTEVEN_QUESTLINE.md#the-party).
+
+| Screen | Structure | Trigger and rows |
+|---|---|---|
+| Blurb and option | `AddBarEvents` row | `nskr_kq_partyBlurb`: `AddBarEvent nskr_kq_partyApproach`. |
+| Meeting the employee to the drink choice | Plain chain | `nskr_kq_partyApproach` (`BeginConversation nskr_kq_partyEmployee true false`), `…Offer`, `…Round`, `…Disagree`, `…Agree`, `…Invite`, `…Travel` (`ShowDefaultVisual`), `…Arrive` (`ShowPersonVisual true`). |
+| A drink | Handlers with shared inserts | `nskr_kq_partyRum`, `…Liqueur`, `…Absynth`, `…Wine`, `…Spirit` fire `nskr_kqPartyCheers`, run `do partyDrink`, add the drink's paragraph and fire `nskr_kqPartyMingle`; `nskr_kq_partyNothing` fires only `nskr_kqPartyMingle`. |
+| Looking around | `FireBest` pick, then `FireAll` menu | `nskr_kq_partyLook` (`HideVisual`) fires `nskr_kqPartyLookText` (two versions) and `nskr_kqPartyGroups` (one text and option row per unvisited group; Leave once the officers are visited). |
+| The techies | Plain chain | `nskr_kq_partyTechies` (portraits), `…Pitch`, `…PitchDecline`, `…PitchListen`. |
+| The toast | Plain chain with shared inserts | `nskr_kq_partyToast`, `…ToastDrink` and `…ToastSkip` fire `nskr_kqPartyToastText`; the drink also fires `nskr_kqPartyToastTipsy`; `…ToastLeave`. |
+| The officers | Plain chain with a shared insert | `nskr_kq_partyOfficers` (portraits), `…OfficersJoin`, `…StoryPrompt`; the four story options fire `nskr_kqPartyStory`; `…Target` names the system. |
+| The last drink | `FireBest` pick | `nskr_kq_partyLeave` fires `nskr_kqPartyLastDrink`: sober (Agree, Leave) or drunk (`check partyDrunk`: Agree and two drunk answers). |
+| The hangover | Shared inserts and a plain chain | `nskr_kq_partyWasted1` to `3` fire `nskr_kqPartyBlackout` (`HideVisual`); `nskr_kq_partySlur1` to `4` fire `nskr_kqPartyHangover`; `…Wake` (`ShowDefaultVisual`), `…Recall`, `…Damages` (`do partyHangover`). |
+| Exits | `BarCMD returnFromEvent true` | `nskr_kq_partyDecline` sets `JOB3_PARTY_DECLINED`; `nskr_kq_partyExit` and `nskr_kq_partyHome` fire `nskr_kqPartyCoordinates` (stage 9, `JOB3_TARGET_DISCOVERED`, receipt). |
+
 ## Java dialogs and bar events
 
 | Class | Opened by | Content | State written |
 |---|---|---|---|
-| `kesteven/quest/HostileTakeoverBarEvent` | `PortsideBarData` at the job 3 start market, stages 8–9; added by `KestevenJob3Module` | Party with a Tri-Tachyon employee | Stage 9, target discovered |
 | `kesteven/quest/DataSatelliteDialog` | `CorePlugin`, satellites #3 and #4 | Disk salvage, ping, keywords | Disk count, satellite flags, wakes the guard |
 | `kesteven/quest/HintWreckDialog` | `CorePlugin`, hint wreck | Coordinates of the friendly fleet | Hint flag |
 | `kesteven/quest/DelveMeetingBarEvent` | `nskr_barEventFixer` on each bar visit at stage 15 | Meeting with Jack and Alice | Advance credits, stage 16 |
@@ -256,4 +272,4 @@ The official who reaches the second conversation is locked to it through `$nskr_
 - **Values in text:** job 1 electronics, payouts, the job 4 constellation, the Frost distance and target names are computed in Java. They must be prepared as tokens before a row displays them; see [RULES_AUTHORING.md](../RULES_AUTHORING.md#create-a-custom-text-token).
 - **Stage writes:** the full list is in [KESTEVEN_STATE.md](KESTEVEN_STATE.md#who-changes-the-stage).
 - **Java-only dialogs:** those opened by `CorePlugin` have no rules entry today. Moving them means adding a rules entry route and removing the `CorePlugin` branch.
-- **Bar events:** `HostileTakeoverBarEvent` and the Eliza bar events are saved in `PortsideBarData`; renaming or deleting the classes affects existing saves.
+- **Bar events:** the Eliza bar events are saved in `PortsideBarData`; renaming or deleting the classes affects existing saves. A rules bar event saves nothing of its own; the job 3 party is the example.

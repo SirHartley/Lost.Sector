@@ -63,7 +63,7 @@ The stage is a `KestevenStage` on the quest state, changed only by the quest man
 | 6 | Job 3 offered by Jack | Jack, job 1 turn-in |
 | 7 | Talk to Alice | Jack, job 3 briefing |
 | 8 | Job 3 active | Alice, accept |
-| 9 | Expedition target known | `HostileTakeoverBarEvent` |
+| 9 | Expedition target known | The job 3 party, leaving it |
 | 10 | Job 3 over, success or failure | `QuestStageManager`: target destroyed, timeout, or stealth broken |
 | 11 | Job 4 pending | Alice, job 3 turn-in; also job 3 skip |
 | 12 | Job 4 active | Alice, accept |
@@ -106,15 +106,12 @@ When stage 8 starts, `KestevenJob3Module` (active at stages 8, 9 and 10), in thi
 
 - picks the start market and the job 3 target, a random location in a system near the core, if they are not picked yet;
 - shows the intel entry `job3`;
-- adds `HostileTakeoverBarEvent` to `PortsideBarData` (still a Java bar event);
 - places a dormant Enigma fleet at the target. It is not a quest fleet: `DataSatelliteDialog.makeHostile` moves it to `QuestStageManager`'s fleet list when satellite #3 is salvaged;
 - spawns the "Expedition" fleet (Tri-Tachyon, `KestevenFleets.job3Expedition`) at the start market as role `job3Expedition`, with the target as `FleetInfo.target`;
 - places data-disk satellite #3 at the target;
 - starts the timer `KestevenState.TIMER_JOB3`.
 
 The expedition's role runs `FleetOrders.expedition(10, 70)`: it prepares at home for 10 days, travels to the target, orbits it until day 70, then returns home and stands down.
-
-`HostileTakeoverBarEvent` is a drinking scene with a Tri-Tachyon employee. Either way out of the party, sober or with a hangover that costs 4,000 to 7,000 credits, gives the target coordinates: stage 9 and `JOB3_TARGET_DISCOVERED`. Declining the first round removes the bar event permanently; the player must then find the expedition another way.
 
 `KestevenJob3Module` ends the job at stage 10 in one of three ways, each while the stage is 8 or 9:
 
@@ -123,6 +120,21 @@ The expedition's role runs `FleetOrders.expedition(10, 70)`: it prepares at home
 - the player contributes to a fight the expedition loses while it has seen the player's transponder on, checked at the loot (`onLoot`), which comes before the battle report: `JOB3_FAILED` ("failed to neutralize the fleet stealthily").
 
 At stage 10, or when the module stops earlier (failure or a jump), the expedition moves to the persistent role `job3ExpeditionOver` (`FleetOrders.withdraw()`): it keeps its last assignment and despawns once out of the player's hyperspace sensor range.
+
+### The party
+
+A rules bar event at the start market, in the `# KESTEVEN QUESTLINE: JOB 3 PARTY` block, run by `KestevenPartyModule` (active at stages 8 and 9). The `AddBarEvents` row `nskr_kq_partyBlurb` adds the blurb and the option "Approach the employee" at stages 8 and 9 while neither `JOB3_TARGET_DISCOVERED` nor `JOB3_PARTY_DECLINED` is set and the module's check `partyHere` finds the bar's market to be the start market. It shows at every visit, with no random pick or timeout.
+
+When stage 8 starts, the module creates seven Tri-Tachyon quest people: the employee (`partyEmployee`, either gender, post `genericMilitary`), the two techies (`partyEngineer`, male, post `kTechEngineer`; `partyEntrepreneur`, male), the host of the toast (`partyHost`, female, base commander) and the three officers (`partyPatrolCommander`, male; `partyFleetCommander` and `partyAgent`, either gender). It releases them when the module stops.
+
+The scene is a drinking conversation with the employee, who is the active speaker from the first click (`BeginConversation nskr_kq_partyEmployee true false`); the group screens show the other guests' portraits with `ShowPersonVisual`, `ShowSecondPerson` and `ShowThirdPerson`.
+
+- **Declining.** Leave, offered after the refused second round and at the party invitation, ends the event and sets `JOB3_PARTY_DECLINED`, so it never shows again; the player must then find the expedition another way.
+- **Drinks.** The state counts drinks in `partyDrinks` (action `partyDrink <n>`): one for each drink at the party except the "Absynth", which counts two, and one for the toast of the second group when the player already had a drink. Checks `partyTipsy` (at least one) and `partyDrunk` (at least two) read it.
+- **Groups.** After the arrival the player picks from three groups (a `FireAll` menu on `nskr_kqPartyGroups`); the employee's memory marks each one visited (`$nskr_kq_partyTechiesDone`, `$nskr_kq_partyCrowdDone`, `$nskr_kq_partyOfficersDone`). Only the officers reveal the target system; after them the menu offers Leave.
+- **Leaving.** The employee offers a last drink. Sober (`partyDrunk` false), the player can leave: stage 9, `JOB3_TARGET_DISCOVERED` and the receipt "Acquired Expedition coordinates". Drunk, only drinking options remain; the hangover chain ends with the action `partyHangover`, which takes 4,000 to 7,000 credits (random `partyHangover`, capped by the credits held; vanilla loss receipt) before the same stage change, flag and receipt. Accepting the last drink while sober also leads to the hangover.
+
+Every exit returns to the bar with `BarCMD returnFromEvent true`, which shows Continue first, as the old Java event did.
 
 ### Intel
 

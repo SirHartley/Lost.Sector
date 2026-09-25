@@ -11,7 +11,6 @@ import com.fs.starfarer.api.campaign.econ.MarketAPI;
 import com.fs.starfarer.api.impl.campaign.ids.MemFlags;
 import com.fs.starfarer.api.impl.campaign.ids.Tags;
 import com.fs.starfarer.api.impl.campaign.intel.BaseIntelPlugin;
-import com.fs.starfarer.api.impl.campaign.intel.bar.PortsideBarData;
 import lostsector.campaign.enigma.DormantSpawner;
 import lostsector.helper.Ids;
 import lostsector.helper.SectorLookup;
@@ -67,14 +66,12 @@ final class KestevenJob3Module extends QuestModule<KestevenStage, KestevenState>
     // The objects and the expedition are placed in the order QuestStageManager placed them on the first unpaused frame
     // at JOB3_ACTIVE; the start and target are read in the order the old intel's first display picked them. That keeps
     // the questline's shared random sequence.
-    // TODO T20/T21: replace the Java bar event with AddBarEvents rows.
     @Override
     protected void onStart(QuestContext<KestevenStage, KestevenState> ctx) {
         SectorEntityToken start = QuestHelper.getJob3Start();
         SectorEntityToken target = QuestHelper.getJob3Target();
         ctx.intel().show(INTEL);
         ctx.intel().setMapLocation(INTEL, start);
-        PortsideBarData.getInstance().addEvent(new HostileTakeoverBarEvent());
         DormantSpawner.addDormant(target, "enigma", 45f, 50f, 0f, 1f, 1f, 1f, 1, 1);
         ctx.log("job 3 dormant fleet placed at " + target.getName() + " in " + target.getStarSystem().getName());
 

@@ -247,6 +247,13 @@ Bar-event wrappers close with `BarCMD returnFromEvent`, not `close`. It hands th
 
 `AddBarEvent <id> "<option>" "<blurb>" [<colour>]` queues a blurb and an option on the market's temporary bar event list during `AddBarEvents`; `BarCMD` shows them afterwards, so the row itself has no Options column. The optional fourth argument goes through Token.getColor: `highlight` resolves to the buttonShortcut colour; faction IDs resolve to faction colour. `BarCMD.showOptions` lists these entries before the Java bar events, at most `maxBarEvents` of them, and they take slots from the Java events. The row's conditions run on every visit to the bar, so an entry appears at every market where they pass. Clicking the option stores the `BarCMD` in entity memory as `$BarCMD` (expiry `0`), gives the dialog back to the rules plugin, sets `$option` with expiry `0` and fires `FireBest DialogOptionSelected`; no person is made active, so the handler starts the conversation with `BeginConversation` (0.98a-RC8 `rulecmd/missions/BarCMD.java`).
 
+More of the same source (0.98a-RC8 `BarCMD`, `BarEventDialogPlugin`; `VisualPanel` in `sources-obf/ui.newui.java`):
+
+- A rules entry also takes a slot from `isAlwaysShow()` Java events, which otherwise do not count toward the random number of Java events. It has no frequency, timeout, random pick or tutorial check of its own.
+- A click makes a person active only for a hub mission's bar wrapper.
+- `returnFromEvent` also aborts the hub missions offered at the bar. Without `true` the list shows at once after "You unobtrusively watch the patrons of the bar...". Listing the bar restores the saved visual, so portraits and `HideVisual` inside the event do not carry over.
+- `BeginConversation <id> <minimal> <showRelationship>` calls `showPersonInfo(person, minimal, showRelationship)`. The two-argument `showPersonInfo(person, minimal)` a Java event uses shows the relationship bar only when not minimal and the person's relationship to the player is at least 0.05 either way, so `BeginConversation <id> true false` reproduces `showPersonInfo(person, true)`. `ShowPersonVisual <minimal> [<id>]` calls the two-argument form and does not change the speaker.
+
 ## Editing and validation
 
 1. Read the relevant existing rows and required Starsector rules references. Check [the authoring guide and dictionaries](RULES_AUTHORING.md) for the commands and keys being used, changed or debugged, not only new ones. Use vanilla source for uncertain engine behavior, and read-only `lib/` archives for third-party APIs.

@@ -1912,3 +1912,164 @@ nskr_hint_frostDescSignals,nskr_hintIntelDesc,"$nskr_intel_key == frost
 !nskr_quest hint check frostGone",SetTextHighlights hostile,You found a strange forgotten system brimming with signals and sensor contacts. The hostile conditions make thorough exploration difficult.,,
 nskr_hint_frostDescQuiet,nskr_hintIntelDesc,"$nskr_intel_key == frost
 nskr_quest hint check frostGone","SetTextHighlights ""Frozen Heart""",With the destruction of Frozen Heart the system falls quiet for the first time in centuries.,,
+,,,,,,
+# KESTEVEN QUESTLINE: JOB 3 PARTY,,,,,,
+nskr_kq_partyBlurb,AddBarEvents,"nskr_quest kq is JOB3_ACTIVE JOB3_TARGET_KNOWN
+!nskr_quest kq flag JOB3_TARGET_DISCOVERED
+!nskr_quest kq flag JOB3_PARTY_DECLINED
+nskr_quest kq check partyHere","AddBarEvent nskr_kq_partyApproach ""Approach the employee, and see what you can find out"" ""A lone employee in a Tri-Tachyon suit is drinking at one of the tables.""",,,
+nskr_kq_partyApproach,DialogOptionSelected,$option == nskr_kq_partyApproach,BeginConversation nskr_kq_partyEmployee true false,The employee seems to be busy in thought. There are multiple empty glasses on the table already.,nskr_kq_partyOffer:Offer to buy the next round of drinks,
+nskr_kq_partyOffer,DialogOptionSelected,$option == nskr_kq_partyOffer,"AddText ""\""Thanks captain, it's been a particularly tedious work week for me.\"" $HeOrShe accepts your offer.""
+AddText ""You have some inconsequential smalltalk with the employee, and then proceed to order the drinks.""",You can see $hisOrHer mood immediately improve on the prospect of free drinks.,nskr_kq_partyRound:Continue,
+nskr_kq_partyRound,DialogOptionSelected,$option == nskr_kq_partyRound,"AddText ""\""I'm feeling another round captain, you in?\"" $HeOrShe asks.""","The drinks arrive shortly and the employee starts drinking at an impressive pace. You try to keep up with $himOrHer, but it is rather difficult.","nskr_kq_partyAgree:Agree
+nskr_kq_partyDisagree:Disagree",
+nskr_kq_partyDisagree,DialogOptionSelected,$option == nskr_kq_partyDisagree,"AddText ""$HeOrShe does make a good point, when has one more drink ever hurt anybody?"" gray","""Oh come one captain, just one more drink. I know you can handle more liqueur than that."" $HeOrShe tries to point out.","nskr_kq_partyAgree:Agree
+nskr_kq_partyDecline:Leave",
+nskr_kq_partyAgree,DialogOptionSelected,$option == nskr_kq_partyAgree,"AddText ""Another drink, and another set of smalltalk later, you finally hear something interesting.""
+AddText ""\""Someone from the higher management is having a party today, and you seem like the fun type. I could get you in if you're interested in joining me.\"" $HeOrShe is waiting for your response.""","""That's the spirit captain."" $HeOrShe seems eager to get drinking.","nskr_kq_partyInvite:Accept the offer
+nskr_kq_partyDecline:Leave",
+nskr_kq_partyInvite,DialogOptionSelected,$option == nskr_kq_partyInvite,"AddText ""During this round of drinks you realize that you feel a little dizzy, better slow down. You're supposed to be on duty."" gray
+AddText ""You drink up some more, and then get ready to move on with the employee.""","""Ah yes, but first let us get *another* drink."" $HeOrShe says cheerfully.",nskr_kq_partyTravel:Continue,
+nskr_kq_partyTravel,DialogOptionSelected,$option == nskr_kq_partyTravel,"ShowDefaultVisual
+AddText ""Finally you arrive in what looks like the right spot. There is a bouncer at the front door, they are busy handling what you presume are other guests.""
+AddText ""Somehow your bodyguards managed to not only keep up with your bumbling, but also blended into the local crowd. but it seems like they'll have to wait outside for this one.""
+AddText ""The employee has a short chat with the bouncer, he flashes some papers - and somewhat surprisingly you are let in. First you do have to hand over your sidearm, of course.""","You make your way around the local transport system. You suspect that you might have gotten lost multiple times, as you try to follow $himOrHer around. The alcohol is not helping.",nskr_kq_partyArrive:Continue,
+nskr_kq_partyArrive,DialogOptionSelected,$option == nskr_kq_partyArrive,"ShowPersonVisual true
+AddText ""\""I hope you aren't disappointed my friend. Now let's grab something to drink.\"" The employee says with a slick smile.""
+AddText ""You weave through the crowd of people, then you see vast array of different drinks from all over the sector, ready to be served. \""So, what will you be having captain?\"" $HeOrShe is motioning you to grab one of the drinks.""","The establishment is filled with people, a large and ornate chandelier lights up the people in expensive suits, with an intricate dance of colors and shadows. The noise of chatter fills the room.","nskr_kq_partyRum:""Sweet Freedom""
+nskr_kq_partyLiqueur:""Kings Favour""
+nskr_kq_partyAbsynth:""Absynth""
+nskr_kq_partyWine:""Askonia Sunshine""
+nskr_kq_partySpirit:""Tears of Ludd""
+nskr_kq_partyNothing:""Nothing""",
+nskr_kq_partyRum,DialogOptionSelected,$option == nskr_kq_partyRum,"FireBest nskr_kqPartyCheers
+nskr_quest kq do partyDrink 1
+AddText ""Quite sweet and with a bit of complexity, yet the taste is lacking something special. This rum is a decent enough drink.""
+FireBest nskr_kqPartyMingle",,,
+nskr_kq_partyLiqueur,DialogOptionSelected,$option == nskr_kq_partyLiqueur,"FireBest nskr_kqPartyCheers
+nskr_quest kq do partyDrink 1
+AddText ""An excessively sweet taste attacks your mouth, although the burn is not too bad, you are not a fan of this liqueur.""
+FireBest nskr_kqPartyMingle",,,
+nskr_kq_partyAbsynth,DialogOptionSelected,$option == nskr_kq_partyAbsynth,"FireBest nskr_kqPartyCheers
+nskr_quest kq do partyDrink 2
+AddText ""The sickly green liquid shines like a glowing toxin. You try to brace yourself, but it's not enough, you can only taste the burn of this horrible concoction. You feel sick for a significant period after.""
+FireBest nskr_kqPartyMingle",,,
+nskr_kq_partyWine,DialogOptionSelected,$option == nskr_kq_partyWine,"FireBest nskr_kqPartyCheers
+nskr_quest kq do partyDrink 1
+AddText ""It's not too sweet or bitter, yet the wine has peculiar aftertaste, this blue wine is alright.""
+FireBest nskr_kqPartyMingle",,,
+nskr_kq_partySpirit,DialogOptionSelected,$option == nskr_kq_partySpirit,"FireBest nskr_kqPartyCheers
+nskr_quest kq do partyDrink 1
+AddText ""A complex yet pleasant taste of herbs fills your mouth, you can visualise the green forests of Gilead from the aroma, this herb infused spirit is not too bad.""
+FireBest nskr_kqPartyMingle",,,
+nskr_kq_partyNothing,DialogOptionSelected,$option == nskr_kq_partyNothing,FireBest nskr_kqPartyMingle,"""Don't be such a downer captain... just relax for a bit, maybe."" $HeOrShe blurts out.",,
+nskr_kq_partyCheers,nskr_kqPartyCheers,,,"$HeOrShe grabs a drink too. ""Bottoms up captain."" $HeOrShe chants and starts chugging.",,
+nskr_kq_partyMingle,nskr_kqPartyMingle,,,"The employee is starting to get visibly drunk at this point, and $heOrShe goes to chat up some colleagues. This is your chance to snoop around. You are here for work, remember?",nskr_kq_partyLook:Look for anything of interest,
+,,,,,,
+nskr_kq_partyLook,DialogOptionSelected,$option == nskr_kq_partyLook,"HideVisual
+FireBest nskr_kqPartyLookText
+FireAll nskr_kqPartyGroups",,,
+nskr_kq_partyLookText,nskr_kqPartyLookText,,,"As you begin to look around, you spot three distinct groups of people that could be of interest.",,
+nskr_kq_partyLookTextDone,nskr_kqPartyLookText,"$nskr_kq_partyTechiesDone
+$nskr_kq_partyCrowdDone
+$nskr_kq_partyOfficersDone",,"Seems like you have seen everything there is to see, it's time to move on.",,
+nskr_kq_partyGroupTechies,nskr_kqPartyGroups,!$nskr_kq_partyTechiesDone,,"The first is a group of two men chatting, they have a certain techie vibe to them. Certainly there is a chance they know something of use.",nskr_kq_partyTechies:Approach the first group,
+nskr_kq_partyGroupCrowd,nskr_kqPartyGroups,!$nskr_kq_partyCrowdDone,,The second is a larger group centered around what appears to be someone from this - higher management. Eavesdropping on them could yield some results.,nskr_kq_partyToast:Approach the second group,
+nskr_kq_partyGroupOfficers,nskr_kqPartyGroups,!$nskr_kq_partyOfficersDone,,"The third is a collection that appears to be three officers in uniforms, one of them could even be an admiral. A promising lead for sure.",nskr_kq_partyOfficers:Approach the third group,
+nskr_kq_partyGroupLeave,nskr_kqPartyGroups,$nskr_kq_partyOfficersDone,,,nskr_kq_partyLeave:Leave,
+,,,,,,
+nskr_kq_partyTechies,DialogOptionSelected,$option == nskr_kq_partyTechies,"ShowPersonVisual false nskr_kq_partyEngineer
+ShowSecondPerson nskr_kq_partyEntrepreneur
+AddText ""You struggle to follow along, as countless technical terms get thrown around like nothing. They seem to be illustrating some grand plan, that will *definitely* make them rich.""
+AddText ""After a while of listening they seem to finally notice you.""",You approach the techies to find out what they're talking about. They are deep in some kind of tech related marketing scheme.,nskr_kq_partyPitch:Continue,
+nskr_kq_partyPitch,DialogOptionSelected,$option == nskr_kq_partyPitch,"AddText ""\""Yeah, we're looking for investors here. We have a very unique opportunity available here.\"" The other guy chimes in.""
+AddText ""They wait for your response.""","""Oh hello there, interested in our little scheme are you?"" One of them says.","nskr_kq_partyPitchDecline:Politely decline
+nskr_kq_partyPitchListen:Try to entertain the idea",
+nskr_kq_partyPitchDecline,DialogOptionSelected,$option == nskr_kq_partyPitchDecline,"$nskr_kq_partyTechiesDone = true
+AddText ""one of them quickly hands you a flashy business card, and gives you a firm handshake as a goodbye.""
+AddText ""You leave before you get sucked into some godawful pyramid scheme. You're not losing your hard earned credits this easily.""","""It's your loss for sure. Once we get the credits rolling, it's going to be smooth sailing. I mean, there's almost *no risk* here."" He says.",nskr_kq_partyLook:Continue,
+nskr_kq_partyPitchListen,DialogOptionSelected,$option == nskr_kq_partyPitchListen,"$nskr_kq_partyTechiesDone = true
+AddText ""As you listen to them explain their plans in more detail, it becomes rather obvious they're trying to sucker in clueless investors with flashy new tech.""
+AddText ""You decide there are much better ways to spend your credits, than on some pyramid scheme.""
+AddText ""As you leave one of them quickly hands you a flashy business card, and gives you a firm handshake as a goodbye.""","""...The profit vector only multiplies with time, a fungible investment now only becomes exponential with time. Our reported margins are about to spike with the introduction of generative price... """,nskr_kq_partyLook:Continue,
+,,,,,,
+nskr_kq_partyToast,DialogOptionSelected,$option == nskr_kq_partyToast,"ShowPersonVisual false nskr_kq_partyHost
+AddText ""\""For another successful operation. For greater profits!\"" The commander cheers the crowd on.""","As you make your way over, it appears they're ready to have a toast. Before you even have a chance to react there's already a new drink in your hands.","nskr_kq_partyToastDrink:Drink
+nskr_kq_partyToastSkip:Don't drink",
+nskr_kq_partyToastDrink,DialogOptionSelected,$option == nskr_kq_partyToastDrink,"FireBest nskr_kqPartyToastText
+FireBest nskr_kqPartyToastTipsy",You down the drink in one fell swoop.,,
+nskr_kq_partyToastSkip,DialogOptionSelected,$option == nskr_kq_partyToastSkip,FireBest nskr_kqPartyToastText,,,
+nskr_kq_partyToastText,nskr_kqPartyToastText,,"AddText ""You do hear something about a special fleet operation of sorts, but you quickly lose them.""",You watch everyone as they finish their drinks. There are too many people to get a clear picture of anything in particular.,nskr_kq_partyToastLeave:Continue,
+nskr_kq_partyToastTipsy,nskr_kqPartyToastTipsy,nskr_quest kq check partyTipsy,"nskr_quest kq do partyDrink 1
+AddText ""You are really starting to feel it, you're quite intoxicated now."" gray",,,
+nskr_kq_partyToastLeave,DialogOptionSelected,$option == nskr_kq_partyToastLeave,$nskr_kq_partyCrowdDone = true,"You decide to leave the crowd alone, there are just too many people to discover anything of note.",nskr_kq_partyLook:Continue,
+,,,,,,
+nskr_kq_partyOfficers,DialogOptionSelected,$option == nskr_kq_partyOfficers,"ShowPersonVisual false nskr_kq_partyPatrolCommander
+ShowSecondPerson nskr_kq_partyFleetCommander
+ShowThirdPerson nskr_kq_partyAgent
+AddText ""Surely you can use your experience as a fleet commander to impress them. Seems like they're the most likely group to know something of use.""","The officers are sitting at a corner table, its shiny marble like surface is like a mirror. You spot a TriPad, and multiple glasses of drink placed on it.",nskr_kq_partyOfficersJoin:Continue,
+nskr_kq_partyOfficersJoin,DialogOptionSelected,$option == nskr_kq_partyOfficersJoin,"AddText ""You sit down with them, and listen as one of the officers tells an anecdote from his last set of patrol duty.""
+AddText ""\""... The whole engine section was just missing, with a big hole in his ship, This guy says he doesn't know what happened to it!\"" He is struggling to contain his laughter at this point. \""With a straight fucking face, he says that to me! Now that's why I'm never working with those geniuses from the Skathi patrol squadron ever again.\"" He bursts out laughing.""","One of the officers notices you ""I can see you're a captain, come join us."" the officer shouts for you to join.",nskr_kq_partyStoryPrompt:Continue,
+nskr_kq_partyStoryPrompt,DialogOptionSelected,$option == nskr_kq_partyStoryPrompt,"AddText ""This is your chance to earn their trust, just quickly piece something together.""
+AddText ""You tell a story about...""","""Why don't you tell us something captain. I'm sure you've seen your fair share of interesting events."" He says to you.","nskr_kq_partyStoryBounty:Your last bounty hunt
+nskr_kq_partyStoryTrade:Your last trading operation
+nskr_kq_partyStoryAI:Your last encounter with AI
+nskr_kq_partyStorySmuggling:Your last smuggling gig",
+nskr_kq_partyStoryBounty,DialogOptionSelected,$option == nskr_kq_partyStoryBounty,FireBest nskr_kqPartyStory,,,
+nskr_kq_partyStoryTrade,DialogOptionSelected,$option == nskr_kq_partyStoryTrade,FireBest nskr_kqPartyStory,,,
+nskr_kq_partyStoryAI,DialogOptionSelected,$option == nskr_kq_partyStoryAI,FireBest nskr_kqPartyStory,,,
+nskr_kq_partyStorySmuggling,DialogOptionSelected,$option == nskr_kq_partyStorySmuggling,FireBest nskr_kqPartyStory,,,
+nskr_kq_partyStory,nskr_kqPartyStory,,"AddText ""You illustrate a grand story of great peril, the stakes are greater than life, then taking quick peeks at the TriPad while pretending to make some epic gestures to drive home the spectacle.""
+AddText ""\""Woah captain, I can't believe you lived from that! That's one hell of a tale, I wouldn't even care if you made half that up.\"" He says with a smug laugh.""
+AddText ""Wow, you really are a great actor. Or maybe it's just the alcohol.""","While illustrating your story, you notice what's on the TriPad. There appears to be coordinates and orders, relating to fleet movements on display. You just need to keep these officers distracted long enough to get a good look.",nskr_kq_partyTarget:Continue,
+nskr_kq_partyTarget,DialogOptionSelected,$option == nskr_kq_partyTarget,"$nskr_kq_partyOfficersDone = true
+AddText ""The $nskr_kq_job3TargetSystem? Certainly worth investigating, you better write that down somewhere."" gray
+SetTextHighlights ""$nskr_kq_job3TargetSystem""
+AddText ""With the info gathered, you decide it's best to leave the officers alone for now, so you give them a quick goodbye.""",You managed to spot that a certain star system is mentioned multiple times on the TriPad's info feed.,nskr_kq_partyLook:Continue,
+,,,,,,
+nskr_kq_partyLeave,DialogOptionSelected,$option == nskr_kq_partyLeave,"ShowPersonVisual true
+AddText ""\""There you are capitain, I fnound you...\"" There's a brief pause as $heOrShe struggles to maintain their composure \"" We - totally need to get one last drink before you leave!\"" $HeOrShe is in an even worse condition than when you last saw $himOrHer.""
+AddText ""With a sloppy motion $heOrShe points towards the drinks.""
+FireBest nskr_kqPartyLastDrink","As you try to leave, the employee finally finds you again.",,
+nskr_kq_partyLastDrink,nskr_kqPartyLastDrink,,,,"nskr_kq_partyWasted1:Agree
+nskr_kq_partyExit:Leave",
+nskr_kq_partyLastDrinkDrunk,nskr_kqPartyLastDrink,nskr_quest kq check partyDrunk,"AddText ""Oh no, it appears you are too intoxicated to remember that you could just say no."" gray",,"nskr_kq_partyWasted1:Agree
+nskr_kq_partyWasted2:""You're totally right, I could use more drink.""
+nskr_kq_partyWasted3:""What! Just one more? I'm drinking way more than that!""",
+nskr_kq_partyWasted1,DialogOptionSelected,$option == nskr_kq_partyWasted1,FireBest nskr_kqPartyBlackout,,,
+nskr_kq_partyWasted2,DialogOptionSelected,$option == nskr_kq_partyWasted2,FireBest nskr_kqPartyBlackout,,,
+nskr_kq_partyWasted3,DialogOptionSelected,$option == nskr_kq_partyWasted3,FireBest nskr_kqPartyBlackout,,,
+nskr_kq_partyBlackout,nskr_kqPartyBlackout,,HideVisual,"The rest of the night, very quickly becomes a blur in your head. You vaguely remember talking to dozens of people, and downing even more drinks than that.","nskr_kq_partySlur1:""Whhere's that damn drink...""
+nskr_kq_partySlur2:""So I went in gungs blazing! Sure showed em' who's bsoss, hah!""
+nskr_kq_partySlur3:""No, seruoislkly I just had it in my hadns!""
+nskr_kq_partySlur4:""Yea, it's a tuogh job, but I wouldn't have it any othe way.""",
+nskr_kq_partySlur1,DialogOptionSelected,$option == nskr_kq_partySlur1,FireBest nskr_kqPartyHangover,,,
+nskr_kq_partySlur2,DialogOptionSelected,$option == nskr_kq_partySlur2,FireBest nskr_kqPartyHangover,,,
+nskr_kq_partySlur3,DialogOptionSelected,$option == nskr_kq_partySlur3,FireBest nskr_kqPartyHangover,,,
+nskr_kq_partySlur4,DialogOptionSelected,$option == nskr_kq_partySlur4,FireBest nskr_kqPartyHangover,,,
+nskr_kq_partyHangover,nskr_kqPartyHangover,,"AddText ""Now you have woken up somewhere, your head, arms, and legs hurt quite a lot. You could really use a tall glass of water.""
+AddText ""A vaguely unpleasant smell fills the room, you hear some muffled chatter coming from the neighboring room and the distant hum of machinery.""","You and the employee got separated at some point, after finally leaving the party. Although you can't remember exactly why.",nskr_kq_partyWake:Open your eyes,
+nskr_kq_partyWake,DialogOptionSelected,$option == nskr_kq_partyWake,"ShowDefaultVisual
+AddText ""There are empty glass bottles in various locations around the room, not all of them quite empty. A large stain of something sticky is on the floor, next to a felled bottle. Your sidearm - a cold metal hunk is with you in bed, at least you didn't lose it.""
+AddText ""You appear to have ended up in some cheap hab-block motel.""","You are surrounded by cold dark grey concrete surfaces. There is only basic furniture in the room, made of cheap plastic. There are no windows, the only light is the sickly off green glow of the cheap light fixtures.",nskr_kq_partyRecall:Continue,
+nskr_kq_partyRecall,DialogOptionSelected,$option == nskr_kq_partyRecall,"AddText ""Thankfully it appears you wrote down the coordinates on your TriPad. In fact it seems the notepad function is the last thing you had open on it. You wrote an order of synthPizza on it in text last night - it appears to not have worked.""
+AddText ""You also remember that you haven't checked how many credits you spent last night.""","Thinking about what happened, you somehow managed to avoid your own bodyguards on your way out - which is rather impressive. You then realize that your security officer is going to kill you once they realize you were not in fact *kidnapped*, but instead just got black out drunk - it happens.",nskr_kq_partyDamages:Assess the damages,
+nskr_kq_partyDamages,DialogOptionSelected,$option == nskr_kq_partyDamages,"nskr_quest kq do partyHangover
+AddTextSmall ""Acquired hangover"" gray
+SetTextHighlightColors bad
+SetTextHighlights hangover
+PlaySound ui_rep_drop
+AddText ""It's time to leave, and forget that this happened.""","You quickly check your credits account, it certainly was an expensive night out.",nskr_kq_partyHome:Leave,
+,,,,,,
+nskr_kq_partyDecline,DialogOptionSelected,$option == nskr_kq_partyDecline,"HideVisual
+nskr_quest kq set JOB3_PARTY_DECLINED
+BarCMD returnFromEvent true","You decide it's best to leave, and not waste time getting drunk for no good reason.",,
+nskr_kq_partyExit,DialogOptionSelected,$option == nskr_kq_partyExit,"HideVisual
+FireBest nskr_kqPartyCoordinates","You manage to convince the employee that you're in a hurry. You then quickly leave the party, and make your way back to your ship.",,
+nskr_kq_partyHome,DialogOptionSelected,$option == nskr_kq_partyHome,FireBest nskr_kqPartyCoordinates,"You leave, calmly making your way back to your ship, as you try not upset your headache.",,
+nskr_kq_partyCoordinates,nskr_kqPartyCoordinates,,"nskr_quest kq advance JOB3_ACTIVE JOB3_TARGET_KNOWN
+nskr_quest kq set JOB3_TARGET_DISCOVERED
+AddTextSmall ""Acquired Expedition coordinates"" gray
+SetTextHighlights ""Expedition coordinates""
+PlaySound ui_rep_raise
+BarCMD returnFromEvent true",,,

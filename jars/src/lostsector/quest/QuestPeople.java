@@ -2,6 +2,7 @@ package lostsector.quest;
 
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.FactionAPI;
+import com.fs.starfarer.api.characters.FullName.Gender;
 import com.fs.starfarer.api.characters.PersonAPI;
 
 import java.util.ArrayList;
@@ -19,6 +20,12 @@ public final class QuestPeople {
 
     // Returns the existing person when the key exists; null when the key is not declared with d.person or the faction is unknown.
     public PersonAPI create(String key, String factionId, Consumer<PersonAPI> setup) {
+        return create(key, factionId, Gender.ANY, setup);
+    }
+
+    // Gender.ANY draws the gender from the person's random exactly as FactionAPI.createRandomPerson(Random) does, so
+    // both overloads give the same person for the same key and seed.
+    public PersonAPI create(String key, String factionId, Gender gender, Consumer<PersonAPI> setup) {
         QuestState<?> state = run.state();
         PersonAPI existing = state.people.get(key);
         if (existing != null) return existing;
@@ -31,7 +38,7 @@ public final class QuestPeople {
             QuestManager.logError(run.id(), "person " + key + " refused: unknown faction " + factionId);
             return null;
         }
-        PersonAPI person = faction.createRandomPerson(QuestContext.random(state, "person:" + key));
+        PersonAPI person = faction.createRandomPerson(gender, QuestContext.random(state, "person:" + key));
         person.setId(id(key));
         if (setup != null) setup.accept(person);
         Global.getSector().getImportantPeople().addPerson(person);
