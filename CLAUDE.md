@@ -47,7 +47,7 @@ The dictionaries distinguish checked recipes from extracted names, expressions a
 
 ### Make and record changes
 
-- Use one task branch for the user's message. Quest overhaul tasks use the shared branch in [Quest overhaul](#quest-overhaul).
+- Use one task branch for the user's message.
 - Make one commit per requested change. If one message contains several changes, commit them separately in the requested order.
 - Keep each commit message to one short, plain-English summary. Do not include testing notes, agent or model names, co-author trailers, session metadata, links, formatting, or session URLs.
 - Update the affected documentation in the same commit, following [Documentation upkeep](#documentation-upkeep). Do this without a separate user request.
@@ -62,7 +62,7 @@ The dictionaries distinguish checked recipes from extracted names, expressions a
 - Every runtime-affecting final branch must pass the full clean Java 17 build described in [Building](#building).
 - Build the exact final remote task-branch revision. Earlier builds, partial builds, IDE analysis, and static checks do not satisfy the gate.
 - Missing compilers or dependencies are merge blockers. Documentation-only changes do not require a Java build.
-- Open a pull request and merge it when the work is complete. Do not leave finished work on an unmerged branch. The quest overhaul branch is the exception while its tracker is open.
+- Open a pull request and merge it when the work is complete. Do not leave finished work on an unmerged branch.
 - Use the connected GitHub app to create, inspect, and merge pull requests. Use `gh` only if the app is unavailable. A broken `gh` login is not a blocker when the app works.
 - Fetch current remote `main` before branching and again before merging. Integrate intervening changes, push the exact final commit, and verify the merged remote revision.
 
@@ -230,16 +230,6 @@ Code subagents work from a brief written with the [dispatch template](#subagent-
 ### Claude Code hooks
 
 `.claude/settings.json` runs two hooks in Claude Code sessions. After a compaction or resume, `.claude/hooks/reread-guides.sh` reminds the session to read this file, `docs/RULES_WRITING.md` and the quest framework guide again. Before an edit to rules or quest files, `.claude/hooks/rules-edit-reminder.sh` repeats the rules of [Read the current documentation](#read-the-current-documentation). The hooks remind; they do not replace those rules. Update them when the guide paths or the reading rules change.
-
-## Quest overhaul
-
-The quest overhaul runs on the shared branch `quest-overhaul`, tracked by the draft pull request SirHartley/Lost.Sector#8. The user authorized it to proceed task by task without approval of each stage. Remove this section in the commit that merges the branch.
-
-- Every quest overhaul task commits to `quest-overhaul`, not to a new task branch. One task is one commit. Tasks run in parallel where their files do not overlap, so they may land out of tracker order; a task whose inputs are not committed yet waits.
-- At the start of a session, check out `quest-overhaul`, merge current `main` into it, read the in-full guides and start the first unchecked task.
-- Each runtime-affecting commit passes the full compile gate in [Building](#building) before it is pushed. Push after every task and tick its box in the tracker with the commit id.
-- The branch merges to `main` once, after the final task, through the tracker pull request and the full gate on its exact final revision.
-- A task that cannot finish leaves no commit behind; the next session repeats it.
 
 ## Version names
 
