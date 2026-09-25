@@ -14,9 +14,9 @@ The questline is quest `kq` of the quest framework. `kesteven/quest/KestevenQues
 | Flags | `KestevenFlag` constants set on the state | See [Flags](#flags) |
 | Fields | Package-private fields of `KestevenState` | See [Fields](#fields) |
 | Randoms | One saved `Random` per purpose on the state, from `KestevenQuest.random(purpose)` | See [Randoms](#randoms) |
-| Timers | None | The old counters count frame seconds and stay fields until the modules replace them |
+| Timers | `KestevenState.TIMER_JOB3` | Started when the job 3 expedition spawns; the other old counters count frame seconds and stay fields until the modules replace them |
 | Quest fleet list | Sector memory `$kQuestMissionFleets`, a `List<FleetInfo>` | Read and written by `FleetHelper.getFleets/setFleets`. `FleetInfo.age` is in days. |
-| Framework fleets | The framework's `QuestFleets.KEY` list | The job 1 tip system's dormant fleet, role `job1Dormant` |
+| Framework fleets | The framework's `QuestFleets.KEY` list | The job 1 tip system's dormant fleet, role `job1Dormant`; the job 3 expedition, roles `job3Expedition` and `job3ExpeditionOver` |
 | Fleet, entity and person memory | The owning `MemoryAPI` | Routing flags read by `rules.csv` and `CorePlugin`, and the conversation flags of Jack, Alice and Nicholas; see [Memory flags](#memory-flags) |
 | Saved objects | Bar events in `PortsideBarData`, intel in the intel manager, `ElizaRaidObjectiveCreator` as a listener | Their class names and fields are serialized. |
 | Per installation | LunaLib settings: `settings/SettingsManager.set` and `Setting` reads | `thronesGiftUnlocked`, `hellspawnUnlocked`, `storySkipUnlocked`; shared by all campaigns |
@@ -39,7 +39,7 @@ The questline's own old classes use these accessors until later tasks replace th
 | `QuestHelper.getStage()`, `setStage(int)` | The stage, as the legacy int; `setStage` calls `QuestContext.advance` and skips a write of the current stage |
 | `QuestHelper.getCompleted(KestevenFlag)`, `setCompleted(boolean, KestevenFlag)`, `getFailed`, `setFailed` | A flag; the failed pair is identical |
 | `QuestHelper.getEndMissions()`, `setEndMissions(boolean)` | `ENDED` |
-| `QuestHelper.getDisksRecovered`, `getMissionTimerJob3`, `getNicholasDialogStage`, `getJob4FleetDialogStage`, `getTtPayout` and their setters | The field of the same meaning |
+| `QuestHelper.getDisksRecovered`, `getNicholasDialogStage`, `getJob4FleetDialogStage`, `getTtPayout` and their setters | The field of the same meaning |
 | `QuestHelper.getJob1Tip`, `getJob3Start`, `getJob3Target`, `getJob4FriendlyTarget`, `getJob5FrostTip` | The target field; the first read after it is null picks and stores it |
 | `QuestHelper.getJob4EnemyTarget/setJob4EnemyTarget`, `getElizaLoc/setElizaLoc`, `getCacheFleetLoc/setCacheFleetLoc` | The target field; the setters without an argument pick a new value |
 | `DataSatelliteDialog.get/setRecoveredSatelliteCount` | `satellitesRecovered` |
@@ -121,7 +121,7 @@ The actual path can skip stages: 8 to 10 without 9, 7 to 11 when job 3 is refuse
 | `COLLECTOR_PAID` | Tri-Tachyon collector paid | `nskr_ttCollectorDialog` |
 | `JOB3_REFUSED` | Job 3 refused; nothing reads it | Rules `nskr_kq_aliceRefuseConfirm` |
 | `JOB3_TARGET_DISCOVERED` | Target coordinates from the bar | `HostileTakeoverBarEvent` |
-| `JOB3_FAILED` | Timeout or stealth broken | `QuestStageManager` |
+| `JOB3_FAILED` | Timeout or stealth broken | `KestevenJob3Module` |
 | `MESSENGER_MET`, `MESSENGER_QUESTION_OPEN` | "LZ" messenger met; question available (cleared after asking Alice) | Quest `ic` through `KestevenQuest.reportMessengerMet()`; cleared by rules `nskr_kq_aliceAskLzSel` |
 | `JOB4_WAIT_OVER` | 30-day wait over | `QuestStageManager` |
 | `JOB4_REQUIREMENT_SKIPPED` | Job 4 strength gate bypassed with a story point | Rules `nskr_kq_hubReqSkipJob4` |
@@ -184,9 +184,8 @@ Other features read flags through the [queries](#queries-for-other-features). `n
 | `dayCounter`, `fleetCounter` | `float` | Daily logic timer (10 s) and fleet timer (1 s), in frame seconds | `QuestStageManager` |
 | `job4WaitCounter` | `float` | Job 4 wait, in frame seconds; the wait ends above 300 | `QuestStageManager` |
 | `cacheSeconds` | `float` | Frame seconds spent in Unknown Site before the guardian | `QuestStageManager` |
-| `job3TimeLeft` | `float` | Starts at 90 and loses 0.1 per quest fleet tick while the expedition exists; the job 3 intel shows it (token `job3DaysLeft`) | `QuestStageManager.job3TargetLogic` |
 | `job4IntelAdded`, `job5IntelAdded`, `cacheIntelAdded` | `boolean` | Intel added once | `QuestStageManager` |
-| `job3FleetSpawned`, `job4FleetsSpawned` | `boolean` | Job fleets and objects placed once | `QuestStageManager` |
+| `job4FleetsSpawned` | `boolean` | Job fleets and objects placed once | `QuestStageManager` |
 | `collectorSpawned` | `boolean` | Tri-Tachyon collector spawned | `QuestStageManager` |
 | `cacheGuardianSpotPicked`, `cacheDoubtShown`, `cacheGuardianSpawned` | `boolean` | Guardian location picked, Cache hint shown, guardian spawned | `QuestStageManager` |
 | `elizaInterceptSpawned`, `elizaRevengeSpawned`, `jackRevengeSpawned` | `boolean` | Eliza's intercept, Eliza's revenge and Jack's revenge spawned | `QuestStageManager` |
@@ -225,7 +224,7 @@ The Kesteven bar tip is not questline content; it is quest `hint` ([Exploration 
 | `$kQuestArtifact5`, `$kQuestArtifact6` | The two Unknown Site satellites | `Cache.generate` through `KestevenQuest.markEmptyDataSatellite` | As above |
 | `$nskr_artifactKeyEmpty` | Satellite entity | `DataSatelliteDialog`, `KestevenQuest.markEmptyDataSatellite` | `DataSatelliteDialog` |
 | `$job4HintWreck` + number | Entity **id** prefix, not memory | `QuestStageManager.spawnJob4Wrecks` | `KestevenQuest.isUnreadHintWreck` for `CorePlugin` |
-| `$KestevenQuestJob3Target` | Expedition fleet | `KestevenFleets` | `QuestStageManager` |
+| `$nskr_kq_job3Expedition`, `$nskr_kq_job3ExpeditionOver` | The job 3 expedition: role flags of quest `kq` | `QuestFleets` | Nothing reads them |
 | `$KestevenQuestJob4Target`, `$KestevenQuestJob4Friendly`, `$KestevenQuestJob4Splinter` | Job 4 fleets | `KestevenFleets` | `QuestStageManager`, rules |
 | `$KestevenQuestTTCollector` | Collector fleet | `KestevenFleets` | `QuestStageManager`, rules |
 | `$ElizaFleet` | Eliza's fleet after the raid | `KestevenFleets` | `QuestStageManager`, rules |
@@ -252,8 +251,8 @@ The Kesteven bar tip is not questline content; it is quest `hint` ([Exploration 
 | Hub action `storySkip` (`ctx.advance`) | 0, 6, 7, 11 or 14→17 (story skip) |
 | `KestevenJob1Module` (`job1Progress` action, daily tick) | 1→2 |
 | `QuestStageManager.advance()` | 12→13, 16→17, failure→99 |
-| `QuestStageManager.job3TargetLogic()` | 8 or 9→10 |
-| `QuestStageManager.reportEncounterLootGenerated()` | 8 or 9→10 (stealth broken), any→14 (friendly attacked) |
+| `KestevenJob3Module` (expedition beaten, timer over, stealth broken) | 8 or 9→10 |
+| `QuestStageManager.reportEncounterLootGenerated()` | any→14 (friendly attacked) |
 | `HostileTakeoverBarEvent` | 8→9 |
 | `DelveMeetingBarEvent` | 15→16 |
 | `Cache.CacheGuardInteractionConfig`, through `KestevenQuest.reportCacheGuardianDefeated()` | 16 or 17→18 |

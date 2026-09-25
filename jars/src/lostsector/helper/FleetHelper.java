@@ -459,6 +459,43 @@ public class FleetHelper {
                 && MathUtils.getDistance(info.fleet.getLocation(), info.target.getLocation()) <= RAID_ORBIT_RANGE;
     }
 
+    // An expedition by FleetInfo.age: orbits info.home ("preparing") until prepareDays, travels to info.target, orbits it
+    // ("on expedition", re-issued on every call) until returnAfterDays, then goes home and stands down there. The
+    // phase checks run in this order against the assignment the fleet had at the start of the call, as the old job 3
+    // expedition logic did; nothing is issued while the fleet is busy (MemFlags.FLEET_BUSY).
+    public static void expeditionAI(CampaignFleetAPI fleet, FleetInfo info, float prepareDays, float returnAfterDays) {
+        if (fleet.getAI() == null || info.home == null || info.target == null) return;
+        if (fleet.getMemoryWithoutUpdate().contains(MemFlags.FLEET_BUSY)) return;
+        if (fleet.getAI().getCurrentAssignment() == null) {
+            fleet.clearAssignments();
+            fleet.addAssignment(FleetAssignment.HOLD, fleet.getContainingLocation().createToken(fleet.getLocation()), Float.MAX_VALUE, "holding");
+        }
+        FleetAssignment assignment = fleet.getCurrentAssignment().getAssignment();
+        boolean atHome = fleet.getContainingLocation() == info.home.getContainingLocation();
+        boolean atTarget = fleet.getContainingLocation() == info.target.getContainingLocation();
+        float age = info.age;
+        if (age < prepareDays && atHome && assignment != FleetAssignment.ORBIT_PASSIVE) {
+            fleet.clearAssignments();
+            fleet.addAssignment(FleetAssignment.ORBIT_PASSIVE, info.home, Float.MAX_VALUE, "preparing");
+        }
+        if (age > prepareDays && !atTarget && assignment != FleetAssignment.GO_TO_LOCATION) {
+            fleet.clearAssignments();
+            fleet.addAssignment(FleetAssignment.GO_TO_LOCATION, info.target, Float.MAX_VALUE, "moving to location");
+        }
+        // The fleet is never given PATROL_SYSTEM, so this orbit is issued again on every call.
+        if (age < returnAfterDays && atTarget && assignment != FleetAssignment.PATROL_SYSTEM) {
+            fleet.clearAssignments();
+            fleet.addAssignment(FleetAssignment.ORBIT_PASSIVE, info.target, Float.MAX_VALUE, "on expedition");
+        }
+        if (age > returnAfterDays && atTarget && assignment != FleetAssignment.GO_TO_LOCATION) {
+            fleet.clearAssignments();
+            fleet.addAssignment(FleetAssignment.GO_TO_LOCATION, info.home, Float.MAX_VALUE, "returning to " + info.home.getName());
+        }
+        if (age > returnAfterDays && atHome && assignment != FleetAssignment.ORBIT_PASSIVE) {
+            fleet.addAssignment(FleetAssignment.ORBIT_PASSIVE, info.home, Float.MAX_VALUE, "standing down");
+        }
+    }
+
     public static FleetMemberAPI generateShip(String variant, boolean noAutofit, boolean alwaysRecover) {
         return generateShip(variant, noAutofit, alwaysRecover, new ArrayList<String>());
     }

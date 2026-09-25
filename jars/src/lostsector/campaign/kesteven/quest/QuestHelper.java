@@ -415,16 +415,6 @@ public class QuestHelper {
         if (state != null) state.disksRecovered = count;
     }
 
-    public static float getMissionTimerJob3() {
-        KestevenState state = KestevenQuest.state();
-        return state == null ? QuestStageManager.JOB3_TIME_LIMIT : state.job3TimeLeft;
-    }
-
-    public static void setMissionTimerJob3(float timer) {
-        KestevenState state = writableState();
-        if (state != null) state.job3TimeLeft = timer;
-    }
-
     public static int getNicholasDialogStage() {
         KestevenState state = KestevenQuest.state();
         return state == null ? 0 : state.nicholasDialogStage;

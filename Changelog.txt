@@ -80,6 +80,7 @@ Adjusted - The Frost intel entry closes three days after the Frozen Heart falls 
 Removed - The delete button on the Frost intel entry while the Frozen Heart stands
 Fixed - Typo in the Kesteven officer's system tip conversation
 Adjusted - The Enemy Unknown intel entry reports the recovered sensor data as an update and stays for three days once finished
+Adjusted - The Hostile Takeover intel entry reports the expedition's defeat, the timeout or being discovered as updates and stays for three days once finished
 
 1.0.b
 Adjusted - Severely nerfed spawn rates for Borealis, Rhea and Kingslayer

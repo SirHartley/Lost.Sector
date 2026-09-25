@@ -27,6 +27,9 @@ public final class KestevenState extends QuestState<KestevenStage> {
     public static final String RANDOM_COLLECTOR = "ttCollectorDialogRandom";
     public static final String RANDOM_ELIZA_INTERCEPT = "elizaInterceptDialogRandom";
 
+    // Started when the job 3 expedition spawns; the job fails when it passes KestevenJob3Module.TIME_LIMIT days.
+    public static final String TIMER_JOB3 = "job3Expedition";
+
     // Picked on first use and kept.
     StarSystemAPI job1TipSystem;
     SectorEntityToken job3Start;
@@ -55,11 +58,8 @@ public final class KestevenState extends QuestState<KestevenStage> {
     float fleetCounter;
     float job4WaitCounter;
     float cacheSeconds;
-    // Days left, reduced by 0.1 on every quest fleet tick while the expedition exists.
-    float job3TimeLeft = QuestStageManager.JOB3_TIME_LIMIT;
 
     // One-time actions of QuestStageManager.
-    boolean job3FleetSpawned;
     boolean job4IntelAdded;
     boolean job4FleetsSpawned;
     boolean job5IntelAdded;

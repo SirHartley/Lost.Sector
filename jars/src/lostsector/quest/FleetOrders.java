@@ -16,7 +16,8 @@ public final class FleetOrders {
         LEAVE,
         RAID,
         WITHDRAW,
-        PATROL
+        PATROL,
+        EXPEDITION
     }
 
     private Kind kind;
@@ -26,6 +27,8 @@ public final class FleetOrders {
     private float playerInterceptChance;
     private String orbitText;
     private boolean withdrawHome;
+    private float prepareDays;
+    private float returnAfterDays;
 
     private String patrolFaction;
     private float patrolSwitchDays;
@@ -48,6 +51,8 @@ public final class FleetOrders {
         copy.playerInterceptChance = playerInterceptChance;
         copy.orbitText = orbitText;
         copy.withdrawHome = withdrawHome;
+        copy.prepareDays = prepareDays;
+        copy.returnAfterDays = returnAfterDays;
         copy.patrolFaction = patrolFaction;
         copy.patrolSwitchDays = patrolSwitchDays;
         copy.patrolText = patrolText;
@@ -91,6 +96,18 @@ public final class FleetOrders {
         FleetOrders orders = new FleetOrders(Kind.RAID);
         orders.orbitText = orbitText;
         orders.withdrawHome = withdrawHome;
+        return orders;
+    }
+
+    // Prepares at FleetInfo.home for prepareDays, travels to FleetInfo.target and orbits it until returnAfterDays, then
+    // returns home and stands down there, by FleetInfo.age. The quest sets the target after spawning.
+    public static FleetOrders expedition(float prepareDays, float returnAfterDays) {
+        if (!(prepareDays >= 0f) || !(returnAfterDays > prepareDays)) {
+            throw new IllegalArgumentException("expedition needs 0 <= prepareDays < returnAfterDays");
+        }
+        FleetOrders orders = new FleetOrders(Kind.EXPEDITION);
+        orders.prepareDays = prepareDays;
+        orders.returnAfterDays = returnAfterDays;
         return orders;
     }
 
@@ -166,6 +183,9 @@ public final class FleetOrders {
                         && reinforce != null && info.fleet.getFleetPoints() < info.strength * reinforceBelow) {
                     reinforce.accept(info, random);
                 }
+                break;
+            case EXPEDITION:
+                FleetHelper.expeditionAI(info.fleet, info, prepareDays, returnAfterDays);
                 break;
             default:
                 break;

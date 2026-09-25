@@ -12,7 +12,7 @@ Java paths are relative to `jars/src/lostsector/campaign/`; `dialogue/rules/` an
 | `kesteven/quest/QuestStageManager` | `EveryFrameScript` in `EFS_LIST`: automatic stage changes, failure checks, intel, bar events, quest fleets and their AI, the Cache guardian timer, Eliza relocation, post-quest revenge fleets |
 | `kesteven/quest/KestevenQuest`, `KestevenStage`, `KestevenFlag`, `KestevenState` | Framework definition of quest `kq`, with the modules `KestevenHubModule`, `KestevenJob1Module` and `KestevenJob3Module`; the stage enum, the flags and the saved state ([KESTEVEN_STATE.md](KESTEVEN_STATE.md)) |
 | `kesteven/quest/KestevenJob1Module`, `# KESTEVEN QUESTLINE: JOB 1` rows in `data/campaign/rules.csv` | Job 1 world logic: the intel entry and its text rows, the tip system's dormant fleet, the move to stage 2 ([Job 1](#job-1-enemy-unknown-stages-0-to-6)) |
-| `kesteven/quest/KestevenJob3Module`, `# KESTEVEN QUESTLINE: JOB 3` rows | Job 3 intel entry and its text rows, and the objects placed when the job is accepted ([Job 3](#job-3-hostile-takeover-stages-6-to-11)); the expedition itself is still `QuestStageManager`'s |
+| `kesteven/quest/KestevenJob3Module`, `# KESTEVEN QUESTLINE: JOB 3` rows | Job 3 world logic: the expedition and its outcome, the intel entry and its text rows, and the objects placed when the job is accepted ([Job 3](#job-3-hostile-takeover-stages-6-to-11)) |
 | `kesteven/quest/QuestHelper` | Wrappers over `KestevenState` for the old callers: the stage as a legacy int, flags, fields and lazily picked target locations; `saveEnding()` |
 | `kesteven/quest/KestevenFleets` | Builders for every quest fleet |
 | `CorePlugin` | Opens the Java quest dialogs when the player interacts with a quest entity, deciding through `KestevenQuest` queries |
@@ -94,7 +94,7 @@ Winning against Enigma the same way before accepting (stage 0) sets `FOUGHT_ENIG
 
 `KestevenJob1Module` is active at stages 0, 1, 2 and 6. When stage 1 starts it shows the `QuestIntel` entry `job1` (icon `job1`; tags important, accepted, missions; sort tier 2, major posting sound, Kesteven UI colours, delete button once completed) as a campaign message. When the turn-in reaches stage 6 it completes the entry, which sends a completion update and stays for the vanilla end delay of three days; on failure or a jump from stages 1 and 2 it ends the entry at once. Its map marker is the tip system's hyperspace anchor once the tip was given and the system still has an Enigma base, otherwise `asteriaOrOutpost`; the module sets it when stage 1 starts, in `job1Progress` and once a day.
 
-The text is in the `# KESTEVEN QUESTLINE: JOB 1` block, selected by `$nskr_intel_key == job1`: the title "Enemy Unknown" (`nskr_kqIntelTitle`), one bullet per open task (`nskr_kqIntelBullets`) and the description (`nskr_kqIntelDesc`). The entry is declared with `descriptionBullets()`, so the description panel shows the same bullets after its paragraph, as the old `EnemyUnknownIntel` did. Completed, the entry shows "You managed to complete the job." and "Mission complete." (`$nskr_intel_status == completed`). The old highlighted phrases are `SetTextHighlights` lines in the rows; the sensor update's phrase is yellow (`yellowTextColor`), and the other bullets stay out of that message through `$nskr_intel_update != sensorData`. The rows use the module's checks `kestevenHostile` (Kesteven relationship at most -0.50) and `job1TipBase` (the tip system has an Enigma base), the tokens `job1HomeName` (`asteriaOrOutpost` name) and `job1ArtifactCount` (`nskr_kestevenQuest.JOB1_ARTIFACTS`), and the hub's `job1TipSystem`.
+The text is in the `# KESTEVEN QUESTLINE: JOB 1` block, selected by `$nskr_intel_key == job1`: the title "Enemy Unknown" (`nskr_kqIntelTitle`), one bullet per open task (`nskr_kqIntelBullets`) and the description (`nskr_kqIntelDesc`). The entry is declared with `descriptionBullets()`, so the description panel shows the same bullets after its paragraph, as the old `EnemyUnknownIntel` did. Completed, the entry shows "You managed to complete the job." and "Mission complete." (`$nskr_intel_status == completed`). The old highlighted phrases are `SetTextHighlights` lines in the rows; the sensor update's phrase is yellow (`yellowTextColor`), and the other bullets stay out of that message through `$nskr_intel_update != sensorData`. The rows use the module's checks `kestevenHostile` (Kesteven relationship at most -0.50) and `job1TipBase` (the tip system has an Enigma base), the tokens `homeName` (`asteriaOrOutpost` name, also used by the job 3 rows) and `job1ArtifactCount` (`nskr_kestevenQuest.JOB1_ARTIFACTS`), and the hub's `job1TipSystem`.
 
 ## Job 3: Hostile Takeover (stages 6 to 11)
 
@@ -102,28 +102,31 @@ At stage 6 Jack sends the player to Alice and mentions the artifact exchange (`n
 
 Alice's briefing at stage 7: a Tri-Tachyon expedition leaves from the job 3 start market, a random Tri-Tachyon market other than `eochu_bres` and `culann`. The player must destroy it without being identified, within about 90 days, for 205,000 credits. Accepting sets stage 8.
 
-When stage 8 starts, `KestevenJob3Module` (active at stages 8 and 9):
+When stage 8 starts, `KestevenJob3Module` (active at stages 8, 9 and 10), in this order:
 
 - picks the start market and the job 3 target, a random location in a system near the core, if they are not picked yet;
 - shows the intel entry `job3`;
 - adds `HostileTakeoverBarEvent` to `PortsideBarData` (still a Java bar event);
-- places a dormant Enigma fleet at the target. It is not a quest fleet: `DataSatelliteDialog.makeHostile` moves it to `QuestStageManager`'s fleet list when satellite #3 is salvaged.
+- places a dormant Enigma fleet at the target. It is not a quest fleet: `DataSatelliteDialog.makeHostile` moves it to `QuestStageManager`'s fleet list when satellite #3 is salvaged;
+- spawns the "Expedition" fleet (Tri-Tachyon, `KestevenFleets.job3Expedition`) at the start market as role `job3Expedition`, with the target as `FleetInfo.target`;
+- places data-disk satellite #3 at the target;
+- starts the timer `KestevenState.TIMER_JOB3`.
 
-On the first unpaused frame at stage 8, `QuestStageManager` spawns the "Expedition" fleet (Tri-Tachyon) at the start market, tracks it, and places data-disk satellite #3 at the target. The expedition, its countdown, completion and failure stay in `QuestStageManager` until `FleetOrders` can run the expedition's schedule.
-
-The expedition prepares at home for 10 days, travels to the target, orbits it until day 70, then returns home and stands down.
+The expedition's role runs `FleetOrders.expedition(10, 70)`: it prepares at home for 10 days, travels to the target, orbits it until day 70, then returns home and stands down.
 
 `HostileTakeoverBarEvent` is a drinking scene with a Tri-Tachyon employee. Either way out of the party, sober or with a hangover that costs 4,000 to 7,000 credits, gives the target coordinates: stage 9 and `JOB3_TARGET_DISCOVERED`. Declining the first round removes the bar event permanently; the player must then find the expedition another way.
 
-The job ends in `QuestStageManager` at stage 10 in one of three ways:
+`KestevenJob3Module` ends the job at stage 10 in one of three ways, each while the stage is 8 or 9:
 
-- the expedition falls below 20% of its spawn strength: success;
-- the expedition is older than 90 days: `JOB3_FAILED`, and derelicts are left at the target;
-- the player contributes to a battle against the expedition while it has seen the player's transponder on: `JOB3_FAILED` ("failed to neutralize the fleet stealthily").
+- the expedition falls below 20% of its spawn strength after a battle it took part in (`onBattle`), or is destroyed (`onFleetGone`): success, and the fleet is no longer marked important;
+- the timer passes 90 days, checked once a day (`onDay`): `JOB3_FAILED`, and derelicts are left at the target (`QuestHelper.spawnEnvironmentalStorytelling`);
+- the player contributes to a fight the expedition loses while it has seen the player's transponder on, checked at the loot (`onLoot`), which comes before the battle report: `JOB3_FAILED` ("failed to neutralize the fleet stealthily").
+
+At stage 10, or when the module stops earlier (failure or a jump), the expedition moves to the persistent role `job3ExpeditionOver` (`FleetOrders.withdraw()`): it keeps its last assignment and despawns once out of the player's hyperspace sensor range.
 
 ### Intel
 
-The `QuestIntel` entry `job3` (icon `job3`; tags important, accepted, missions; sort tier 2, major posting sound, Kesteven UI colours) shows as a campaign message when stage 8 starts, and `KestevenJob3Module` ends it at once when the stage leaves 9, including on failure. Its map marker is the start market at stage 8 and the target at stage 9. The text is in the `# KESTEVEN QUESTLINE: JOB 3` block, selected by `$nskr_intel_key == job3`: the title "Hostile Takeover", bullets for hostile relations (`kestevenHostile`), the days left (`job3TimeLeft`, token `job3DaysLeft`: `job3TimeLeft` cut to whole days) and the current step (tokens `job3HomeMarket`, `job3HomeSystem`, `job3TargetSystem`), and the description, which shows the bullets after its own paragraph (`descriptionBullets()`). The old highlighted phrases "non-hostile relations" and "<days> days" are `SetTextHighlights` lines.
+The `QuestIntel` entry `job3` (icon `job3`; tags important, accepted, missions; sort tier 2, major posting sound, Kesteven UI colours) shows as a campaign message when stage 8 starts. When the job ends, the module moves the map marker to `asteriaOrOutpost` and completes or fails the entry with the update `done`, `timeout` or `stealth`, the old campaign message as a bullet with its yellow highlights and the minor message sound; the entry then stays for the vanilla end delay of three days, with a delete button. On failure of the questline or a jump from stages 8 and 9 the entry ends at once. Its map marker is the start market at stage 8 and the target at stage 9. The text is in the `# KESTEVEN QUESTLINE: JOB 3` block, selected by `$nskr_intel_key == job3`: the title "Hostile Takeover", bullets for hostile relations (`kestevenHostile`), the days left (check `job3TimeLeft`, token `job3DaysLeft`: 90 minus the timer's days, cut to whole days) and the current step (tokens `job3HomeMarket`, `job3HomeSystem`, `job3TargetSystem`), and the description, which shows the bullets after its own paragraph (`descriptionBullets()`). Finished, the entry shows the old stage 10 lines while the stage is 10 and the old later lines after that, for success (`$nskr_intel_status == completed`) and failure (`failed`); those rows stay out of the finishing message (`$nskr_intel_mode != update`). The old highlighted phrases are `SetTextHighlights` lines.
 
 Alice's turn-in at stage 10: on success, a modspec, 50,000 exchange points, 205,000 credits, Kesteven +5 and Alice +10; on failure, Kesteven -5 and Alice -10. Both set stage 11.
 

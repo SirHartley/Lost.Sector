@@ -46,7 +46,6 @@ public class QuestStageManager extends BaseCampaignEventListener implements Ever
     //manages quest stage changes and mission fleets
     public static final String FLEET_ARRAY_KEY = "$kQuestMissionFleets";
     public static final String TT_COLLECTOR_KEY = "$KestevenQuestTTCollector";
-    public static final String JOB3_TARGET_KEY = "$KestevenQuestJob3Target";
     public static final ArrayList<String> JOB3_MARKET_BLACKLIST = new ArrayList<>();
     static {
         JOB3_MARKET_BLACKLIST.add("eochu_bres");
@@ -61,7 +60,6 @@ public class QuestStageManager extends BaseCampaignEventListener implements Ever
     public static final String REVENGEANCE_FLEET_KEY = "$RevengeanceQuestFleet";
     public static final String ELIZA_INTERCEPT_FLEET_KEY = "$InterceptPlayerElizaFleet";
 
-    public static final float JOB3_TIME_LIMIT = 90f;
     public static final int SPLINTER_COUNT = 10;
     public static final int JOB4_HELP_SUPPLIES = 250;
     public static final int JOB4_HELP_FUEL = 400;
@@ -212,17 +210,6 @@ public class QuestStageManager extends BaseCampaignEventListener implements Ever
             if (state.job4WaitCounter>(300f)){
                 QuestHelper.setCompleted(true, KestevenFlag.JOB4_WAIT_OVER);
                 state.job4WaitCounter = 0f;
-            }
-        }
-        //start job 3; KestevenJob3Module adds the intel, the bar event and the dormant fleet when the stage starts
-        // TODO T19: move the expedition to KestevenJob3Module once FleetOrders can run its schedule.
-        if (stage ==8) {
-            if (!state.job3FleetSpawned) {
-                CampaignFleetAPI fleet = KestevenFleets.spawnJob3TargetFleet();
-                fleets.add(new FleetInfo(fleet, QuestHelper.getJob3Target(), QuestHelper.getJob3Start()));
-                QuestHelper.spawnArtifact(QuestHelper.getJob3Target(),3);
-                log("Qmanager spawn job3 target");
-                state.job3FleetSpawned = true;
             }
         }
         //start job 4
@@ -581,12 +568,6 @@ public class QuestStageManager extends BaseCampaignEventListener implements Ever
             //age update
             f.age+=0.1f;
 
-            //job 3 target fleet manager
-            if (fleet.getMemoryWithoutUpdate().contains(JOB3_TARGET_KEY)) {
-                //
-                job3TargetLogic(f, fleet);
-                continue;
-            }
 
             //job 4 fleet manager
             if (fleet.getMemoryWithoutUpdate().contains(JOB4_SPLINTER_KEY) || fleet.getMemoryWithoutUpdate().contains(JOB4_TARGET_KEY) || fleet.getMemoryWithoutUpdate().contains(JOB4_FRIENDLY_KEY)) {
@@ -929,112 +910,6 @@ public class QuestStageManager extends BaseCampaignEventListener implements Ever
         }
     }
 
-    private void job3TargetLogic(FleetInfo f, CampaignFleetAPI fleet) {
-        CampaignFleetAPI pf = Global.getSector().getPlayerFleet();
-        if (pf == null) return;
-
-        SectorEntityToken target = QuestHelper.getJob3Target();
-        SectorEntityToken home = QuestHelper.getJob3Start();
-
-        boolean despawn = false;
-        //job COMPLETED
-        if (fleet.getFleetPoints() < (f.strength * 0.20f)) {
-            despawn = true;
-            //stage check
-            if (QuestHelper.getStage() <= 9) {
-                QuestHelper.setStage(10);
-                //completion text
-                Global.getSector().getCampaignUI().addMessage("You have completed your objective. Report back to "+ SectorLookup.asteriaOrOutpost().getName()+" to finish the job.",
-                        Global.getSettings().getColor("standardTextColor"),
-                        "Report back to "+ SectorLookup.asteriaOrOutpost().getName(),
-                        "",
-                        Global.getSettings().getColor("yellowTextColor"),
-                        Global.getSettings().getColor("yellowTextColor"));
-                //no longer important
-                if (fleet.getMemoryWithoutUpdate().contains(MemFlags.MEMORY_KEY_MISSION_IMPORTANT)){
-                    fleet.getMemoryWithoutUpdate().unset(MemFlags.MEMORY_KEY_MISSION_IMPORTANT);
-                }
-            }
-        }
-        //quest skipped
-        if (QuestHelper.getStage() >= 10 && !despawn) {
-            despawn = true;
-        }
-        //job FAILED
-        if (f.age > JOB3_TIME_LIMIT && !despawn) {
-            despawn = true;
-            //stage check
-            if (QuestHelper.getStage() <= 9) {
-                QuestHelper.setFailed(true, KestevenFlag.JOB3_FAILED);
-                QuestHelper.setStage(10);
-                QuestHelper.spawnEnvironmentalStorytelling();
-                Global.getSector().getCampaignUI().addMessage("You have ran out of time, mission failed. Report back to "+ SectorLookup.asteriaOrOutpost().getName()+" to finish the job.",
-                        Global.getSettings().getColor("standardTextColor"),
-                        "mission failed",
-                        "Report back to "+ SectorLookup.asteriaOrOutpost().getName(),
-                        Global.getSettings().getColor("yellowTextColor"),
-                        Global.getSettings().getColor("yellowTextColor"));
-            }
-        }
-
-        Vector2f fp = fleet.getLocationInHyperspace();
-        Vector2f pp = pf.getLocationInHyperspace();
-        float dist = MathUtils.getDistance(pp, fp);
-        if (despawn) {
-            if (dist > Global.getSettings().getMaxSensorRangeHyper()) {
-                //tracker for cleaning the list
-                removed.add(fleet);
-                fleet.despawn();
-            }
-        }
-        //logic
-        //TIMER
-        QuestHelper.setMissionTimerJob3(QuestHelper.getMissionTimerJob3() - 0.1f);
-
-        //stop here when defeated
-        if (despawn) return;
-        //assignment logic
-        FleetAssignmentDataAPI curr = fleet.getAI().getCurrentAssignment();
-        //used special maneuvers
-        if (fleet.getMemoryWithoutUpdate().contains(MemFlags.FLEET_BUSY)) return;
-
-        if (curr == null) {
-            fleet.clearAssignments();
-            fleet.addAssignment(FleetAssignment.HOLD, fleet.getContainingLocation().createToken(fleet.getLocation()), Float.MAX_VALUE, "holding");
-            log("null assignment");
-        }
-        FleetAssignment assignment = fleet.getCurrentAssignment().getAssignment();
-        //prepare
-        if (f.age < 10f && fleet.getContainingLocation() == home.getContainingLocation() && assignment != FleetAssignment.ORBIT_PASSIVE) {
-            fleet.clearAssignments();
-            fleet.addAssignment(FleetAssignment.ORBIT_PASSIVE, home, Float.MAX_VALUE, "preparing");
-            log("Qmanager PREPARING" + home.getName() + " IN " + home.getContainingLocation().getName());
-        }
-        //go to
-        if (f.age > 10f && fleet.getContainingLocation() != target.getContainingLocation() && assignment != FleetAssignment.GO_TO_LOCATION) {
-            fleet.clearAssignments();
-            fleet.addAssignment(FleetAssignment.GO_TO_LOCATION, target, Float.MAX_VALUE, "moving to location");
-            log("Qmanager MOVING TO " + target.getName() + " IN " + target.getContainingLocation().getName());
-        }
-        //explore
-        if (f.age < 70f && fleet.getContainingLocation() == target.getContainingLocation() && assignment != FleetAssignment.PATROL_SYSTEM) {
-            fleet.clearAssignments();
-            fleet.addAssignment(FleetAssignment.ORBIT_PASSIVE, target, Float.MAX_VALUE, "on expedition");
-            log("Qmanager EXPEDITION IN " + target.getContainingLocation().getName());
-        }
-        //return
-        if (f.age > 70f && fleet.getContainingLocation() == target.getContainingLocation() && assignment != FleetAssignment.GO_TO_LOCATION) {
-            fleet.clearAssignments();
-            fleet.addAssignment(FleetAssignment.GO_TO_LOCATION, home, Float.MAX_VALUE, "returning to " + home.getName());
-            log("Qmanager RETURNING TO " + home.getName() + " IN " + home.getContainingLocation().getName());
-        }
-        //despawn
-        if (f.age > 70f && fleet.getContainingLocation() == home.getContainingLocation() && assignment != FleetAssignment.ORBIT_PASSIVE) {
-            fleet.addAssignment(FleetAssignment.ORBIT_PASSIVE, home, Float.MAX_VALUE, "standing down");
-            log("Qmanager DESPAWNING TO " + home.getName() + " IN " + home.getContainingLocation().getName());
-        }
-    }
-
     private void job4TargetLogic(FleetInfo f, CampaignFleetAPI fleet) {
         CampaignFleetAPI pf = Global.getSector().getPlayerFleet();
         if (pf == null) return;
@@ -1168,30 +1043,6 @@ public class QuestStageManager extends BaseCampaignEventListener implements Ever
     public void reportEncounterLootGenerated(FleetEncounterContextPlugin plugin, CargoAPI loot) {
         CampaignFleetAPI loser = plugin.getLoser();
         if (loser == null) return;
-        //job 3 fail check
-        if (stage <=9) {
-            if (loser.getMemoryWithoutUpdate().contains(JOB3_TARGET_KEY) && loser.getMemoryWithoutUpdate().contains(MemFlags.MEMORY_KEY_SAW_PLAYER_WITH_TRANSPONDER_ON)) {
-                List<FleetEncounterContextPlugin.FleetMemberData> casualties = plugin.getLoserData().getOwnCasualties();
-
-                for (FleetEncounterContextPlugin.FleetMemberData memberData : casualties) {
-                    FleetEncounterContextPlugin.Status status = memberData.getStatus();
-                    if (status == FleetEncounterContextPlugin.Status.NORMAL) continue;
-                    float contrib = plugin.computePlayerContribFraction();
-                    if (QuestHelper.getStage() <= 9 && contrib>0f) {
-                        //FAIL
-                        QuestHelper.setFailed(true, KestevenFlag.JOB3_FAILED);
-                        QuestHelper.setStage(10);
-                        Global.getSector().getCampaignUI().addMessage("You failed to neutralize the fleet stealthily. Report back to "+ SectorLookup.asteriaOrOutpost().getName()+" to finish the job.",
-                                Global.getSettings().getColor("standardTextColor"),
-                                "failed to neutralize the fleet stealthily",
-                                "Report back to "+ SectorLookup.asteriaOrOutpost().getName(),
-                                Global.getSettings().getColor("yellowTextColor"),
-                                Global.getSettings().getColor("yellowTextColor"));
-                        break;
-                    }
-                }
-            }
-        }
         //job 4 failure
         if (loser.getMemoryWithoutUpdate().contains(JOB4_FRIENDLY_KEY)) {
             List<FleetEncounterContextPlugin.FleetMemberData> casualties = plugin.getLoserData().getOwnCasualties();

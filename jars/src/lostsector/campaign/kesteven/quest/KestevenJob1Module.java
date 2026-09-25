@@ -47,7 +47,8 @@ final class KestevenJob1Module extends QuestModule<KestevenStage, KestevenState>
         // Rows call it after recording a job 1 delivery or the tip, where the old frame poll reacted.
         d.action("job1Progress", KestevenJob1Module::progress);
 
-        d.token("job1HomeName", ctx -> {
+        // Asteria or the Outpost, whichever hosts the questline; the job 3 intel rows read it too.
+        d.token("homeName", ctx -> {
             MarketAPI home = SectorLookup.asteriaOrOutpost();
             return home == null ? "" : home.getName();
         });

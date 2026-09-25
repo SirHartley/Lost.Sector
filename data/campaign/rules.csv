@@ -1773,11 +1773,11 @@ nskr_kq_job1IntelData,nskr_kqIntelBullets,"$nskr_intel_key == job1
 nskr_quest kq is JOB1_ACTIVE
 $nskr_intel_update != sensorData
 nskr_quest kq flag JOB1_SENSOR_DATA
-!nskr_quest kq flag JOB1_DATA_DELIVERED","SetTextHighlights ""return to Jack Lapua in $nskr_kq_job1HomeName""","With the data gathered, you should return to Jack Lapua in $nskr_kq_job1HomeName to deliver the package.",,
+!nskr_quest kq flag JOB1_DATA_DELIVERED","SetTextHighlights ""return to Jack Lapua in $nskr_kq_homeName""","With the data gathered, you should return to Jack Lapua in $nskr_kq_homeName to deliver the package.",,
 nskr_kq_job1IntelElectronics,nskr_kqIntelBullets,"$nskr_intel_key == job1
 nskr_quest kq is JOB1_ACTIVE
 $nskr_intel_update != sensorData
-!nskr_quest kq flag JOB1_ELECTRONICS_DELIVERED","SetTextHighlights ""$nskr_kq_job1ArtifactCount Artifact Electronics""","Search for more AI activity, and recover the electronics once you've defeated them. Once you have $nskr_kq_job1ArtifactCount Artifact Electronics deliver them to Jack Lapua in $nskr_kq_job1HomeName.",,
+!nskr_quest kq flag JOB1_ELECTRONICS_DELIVERED","SetTextHighlights ""$nskr_kq_job1ArtifactCount Artifact Electronics""","Search for more AI activity, and recover the electronics once you've defeated them. Once you have $nskr_kq_job1ArtifactCount Artifact Electronics deliver them to Jack Lapua in $nskr_kq_homeName.",,
 nskr_kq_job1IntelTip,nskr_kqIntelBullets,"$nskr_intel_key == job1
 nskr_quest kq is JOB1_ACTIVE
 $nskr_intel_update != sensorData
@@ -1787,32 +1787,73 @@ nskr_kq_job1IntelTasksDone,nskr_kqIntelBullets,"$nskr_intel_key == job1
 nskr_quest kq is JOB1_DONE",,You have completed the tasks. Talk to Jack Lapua to finish the job.,,
 nskr_kq_job1IntelSensorData,nskr_kqIntelBullets,"$nskr_intel_key == job1
 $nskr_intel_update == sensorData","SetTextHighlightColors yellowTextColor
-SetTextHighlights ""Deliver it back to $nskr_kq_job1HomeName""",You managed to gather sufficient data in battle for the task. Deliver it back to $nskr_kq_job1HomeName.,,The message KestevenJob1Module sends when the sensor task is done
+SetTextHighlights ""Deliver it back to $nskr_kq_homeName""",You managed to gather sufficient data in battle for the task. Deliver it back to $nskr_kq_homeName.,,The message KestevenJob1Module sends when the sensor task is done
 nskr_kq_job1IntelCompleted,nskr_kqIntelBullets,"$nskr_intel_key == job1
 $nskr_intel_status == completed",,You managed to complete the job.,,
 nskr_kq_job1IntelDescActive,nskr_kqIntelDesc,"$nskr_intel_key == job1
 nskr_quest kq is JOB1_ACTIVE",,"Jack Lapua gave you a set of tasks to complete, involving an unknown AI threat.",,
 nskr_kq_job1IntelDescDone,nskr_kqIntelDesc,"$nskr_intel_key == job1
-nskr_quest kq is JOB1_DONE",,Return to $nskr_kq_job1HomeName.,,
+nskr_quest kq is JOB1_DONE",,Return to $nskr_kq_homeName.,,
 nskr_kq_job1IntelDescCompleted,nskr_kqIntelDesc,"$nskr_intel_key == job1
 $nskr_intel_status == completed",,Mission complete.,,
 ,,,,,,
 # KESTEVEN QUESTLINE: JOB 3,,,,,,
 nskr_kq_job3IntelTitle,nskr_kqIntelTitle,$nskr_intel_key == job3,,Hostile Takeover,,
 nskr_kq_job3IntelHostile,nskr_kqIntelBullets,"$nskr_intel_key == job3
-nskr_quest kq is JOB3_ACTIVE JOB3_TARGET_KNOWN
+nskr_quest kq is JOB3_ACTIVE JOB3_TARGET_KNOWN JOB3_DONE
+$nskr_intel_mode != update
 nskr_quest kq check kestevenHostile","SetTextHighlights ""non-hostile relations""","You need to get back to non-hostile relations with Kesteven, if you want to finish this job.",,
 nskr_kq_job3IntelDays,nskr_kqIntelBullets,"$nskr_intel_key == job3
+$nskr_intel_status == active
 nskr_quest kq is JOB3_ACTIVE JOB3_TARGET_KNOWN
 nskr_quest kq check job3TimeLeft","SetTextHighlights ""$nskr_kq_job3DaysLeft days""",You have $nskr_kq_job3DaysLeft days to finish this job.,,
 nskr_kq_job3IntelStart,nskr_kqIntelBullets,"$nskr_intel_key == job3
+$nskr_intel_status == active
 nskr_quest kq is JOB3_ACTIVE",,Head to $nskr_kq_job3HomeMarket in $nskr_kq_job3HomeSystem and figure out what the expeditions target is. Then neutralize the fleet.,,
 nskr_kq_job3IntelTarget,nskr_kqIntelBullets,"$nskr_intel_key == job3
+$nskr_intel_status == active
 nskr_quest kq is JOB3_TARGET_KNOWN",,"Ambush the fleet on its way to, or in $nskr_kq_job3TargetSystem. Leave no witness.",,
+nskr_kq_job3IntelReturn,nskr_kqIntelBullets,"$nskr_intel_key == job3
+$nskr_intel_status == completed
+$nskr_intel_mode != update
+nskr_quest kq is JOB3_DONE","SetTextHighlights ""return to Alice Lumi""","With the fleet taken care of, you should return to Alice Lumi.",,
+nskr_kq_job3IntelReturnFailed,nskr_kqIntelBullets,"$nskr_intel_key == job3
+$nskr_intel_status == failed
+$nskr_intel_mode != update
+nskr_quest kq is JOB3_DONE","SetTextHighlights ""Return to Alice Lumi""",You failed the job. Return to Alice Lumi,,
+nskr_kq_job3IntelCompleted,nskr_kqIntelBullets,"$nskr_intel_key == job3
+$nskr_intel_status == completed
+$nskr_intel_mode != update
+!nskr_quest kq is JOB3_DONE",,You managed to complete the job.,,
+nskr_kq_job3IntelFailed,nskr_kqIntelBullets,"$nskr_intel_key == job3
+$nskr_intel_status == failed
+$nskr_intel_mode != update
+!nskr_quest kq is JOB3_DONE",,You failed the job.,,
+nskr_kq_job3IntelDone,nskr_kqIntelBullets,"$nskr_intel_key == job3
+$nskr_intel_update == done","SetTextHighlightColors yellowTextColor
+SetTextHighlights ""Report back to $nskr_kq_homeName""",You have completed your objective. Report back to $nskr_kq_homeName to finish the job.,,Sent by KestevenJob3Module when the expedition is beaten
+nskr_kq_job3IntelTimeout,nskr_kqIntelBullets,"$nskr_intel_key == job3
+$nskr_intel_update == timeout","SetTextHighlightColors yellowTextColor yellowTextColor
+SetTextHighlights ""mission failed"" ""Report back to $nskr_kq_homeName""","You have ran out of time, mission failed. Report back to $nskr_kq_homeName to finish the job.",,Sent by KestevenJob3Module when the time runs out
+nskr_kq_job3IntelStealth,nskr_kqIntelBullets,"$nskr_intel_key == job3
+$nskr_intel_update == stealth","SetTextHighlightColors yellowTextColor yellowTextColor
+SetTextHighlights ""failed to neutralize the fleet stealthily"" ""Report back to $nskr_kq_homeName""",You failed to neutralize the fleet stealthily. Report back to $nskr_kq_homeName to finish the job.,,Sent by KestevenJob3Module when the player broke stealth
 nskr_kq_job3IntelDescActive,nskr_kqIntelDesc,"$nskr_intel_key == job3
 nskr_quest kq is JOB3_ACTIVE",,Figure out the target and neutralize the fleet.,,
 nskr_kq_job3IntelDescKnown,nskr_kqIntelDesc,"$nskr_intel_key == job3
 nskr_quest kq is JOB3_TARGET_KNOWN",,Neutralize the fleet.,,
+nskr_kq_job3IntelDescReturn,nskr_kqIntelDesc,"$nskr_intel_key == job3
+$nskr_intel_status == completed
+nskr_quest kq is JOB3_DONE",,Return to $nskr_kq_homeName.,,
+nskr_kq_job3IntelDescReturnFailed,nskr_kqIntelDesc,"$nskr_intel_key == job3
+$nskr_intel_status == failed
+nskr_quest kq is JOB3_DONE",,"Mission failed, return to $nskr_kq_homeName.",,
+nskr_kq_job3IntelDescCompleted,nskr_kqIntelDesc,"$nskr_intel_key == job3
+$nskr_intel_status == completed
+!nskr_quest kq is JOB3_DONE",,Mission complete,,
+nskr_kq_job3IntelDescFailed,nskr_kqIntelDesc,"$nskr_intel_key == job3
+$nskr_intel_status == failed
+!nskr_quest kq is JOB3_DONE",,Mission failed,,
 ,,,,,,
 # HINTS,,,,,,
 # Kesteven tip,,,,,,

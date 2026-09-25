@@ -392,11 +392,8 @@ public class KestevenFleets {
         return fleet;
     }
 
-    //target fleet for job 3
-    public static CampaignFleetAPI spawnJob3TargetFleet(){
-        Random random = KestevenQuest.random(KestevenState.RANDOM_QUEST);
-        SectorEntityToken loc = QuestHelper.getJob3Start();
-
+    // The job 3 expedition, unbuilt, at the start market; its random is the questline's shared sequence.
+    public static SimpleFleet job3Expedition(SectorEntityToken start, Random random) {
         float combatPoints = MathHelper.getSeededRandomNumberInRange(130f, 140f, random);
 
         //apply settings
@@ -407,9 +404,8 @@ public class KestevenFleets {
         keys.add(MemFlags.FLEET_IGNORED_BY_OTHER_FLEETS);
         keys.add(MemFlags.FLEET_IGNORES_OTHER_FLEETS);
         keys.add(MemFlags.MEMORY_KEY_MISSION_IMPORTANT);
-        keys.add(QuestStageManager.JOB3_TARGET_KEY);
         //fleet
-        SimpleFleet simpleFleet = new SimpleFleet(loc, Factions.TRITACHYON, combatPoints, keys, random);
+        SimpleFleet simpleFleet = new SimpleFleet(start, Factions.TRITACHYON, combatPoints, keys, random);
         simpleFleet.freighterPoints = combatPoints/4f;
         simpleFleet.tankerPoints = combatPoints/4f;
         simpleFleet.linerPoints = combatPoints/8f;
@@ -420,9 +416,6 @@ public class KestevenFleets {
         simpleFleet.name = "Expedition";
         simpleFleet.assignment = FleetAssignment.ORBIT_PASSIVE;
         simpleFleet.assignmentText = "preparing";
-        CampaignFleetAPI fleet = simpleFleet.create();
-
-        log("job3Target " + fleet.getName() + " size " + combatPoints);
-        return fleet;
+        return simpleFleet;
     }
 }
