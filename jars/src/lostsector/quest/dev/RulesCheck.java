@@ -4,6 +4,7 @@ import lostsector.quest.Declarations;
 import lostsector.quest.Quest;
 import lostsector.quest.QuestCatalog;
 import lostsector.quest.QuestFleets;
+import lostsector.quest.QuestText;
 import lostsector.quest.dev.RuleExpression.Operator;
 import lostsector.quest.dev.RuleExpression.Token;
 
@@ -25,6 +26,7 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 // Static checks of data/campaign/rules.csv against the engine's loader and the quest framework's rules contract.
@@ -44,11 +46,8 @@ public final class RulesCheck {
 
     // Scratch keys QuestText writes before it matches intel rows (README "Intel") and the fleet memory keys QuestFleets
     // writes on spawn; role flags $nskr_<q>_<role> are added per declared role.
-    private static final Set<String> FRAMEWORK_KEYS = Set.of("$nskr_intel_key", "$nskr_intel_status", "$nskr_intel_update", "$nskr_intel_mode",
-            QuestFleets.OWNER_KEY, QuestFleets.ROLE_KEY, QuestFleets.RECORD_KEY);
-    // QuestText fires these for every quest; the last two select every matching row (README "Intel").
-    private static final List<String> INTEL_SUFFIXES = List.of("IntelTitle", "IntelBullets", "IntelDesc");
-    private static final Set<String> INTEL_ALL_SUFFIXES = Set.of("IntelBullets", "IntelDesc");
+    private static final Set<String> FRAMEWORK_KEYS = Stream.concat(QuestText.SCRATCH_KEYS.stream(),
+            Stream.of(QuestFleets.OWNER_KEY, QuestFleets.ROLE_KEY, QuestFleets.RECORD_KEY)).collect(Collectors.toUnmodifiableSet());
     // QuestTokens adds these for each quest person: $nskr_<q>_<key>_<suffix> (README "People").
     private static final Set<String> PERSON_TOKEN_SUFFIXES = Set.of("name", "heOrShe", "HeOrShe", "himOrHer", "HimOrHer", "hisOrHer", "HisOrHer");
 
@@ -631,11 +630,12 @@ public final class RulesCheck {
         return triggers;
     }
 
+    // QuestText reads these for every quest; the IntelBullets and IntelDesc triggers select every matching row.
     private Set<String> intelTriggers(boolean allMatchingOnly) {
         Set<String> triggers = new HashSet<>();
         for (String id : quests.keySet()) {
-            for (String suffix : INTEL_SUFFIXES) {
-                if (!allMatchingOnly || INTEL_ALL_SUFFIXES.contains(suffix)) triggers.add("nskr_" + id + suffix);
+            for (String suffix : allMatchingOnly ? QuestText.ALL_MATCHING_SUFFIXES : QuestText.SUFFIXES) {
+                triggers.add(QuestText.trigger(id, suffix));
             }
         }
         return triggers;

@@ -24,6 +24,14 @@ public final class QuestTokens implements RuleTokenReplacementGeneratorPlugin {
 
     @Override
     public Map<String, String> getTokenReplacements(String ruleId, Object entity, Map<String, MemoryAPI> memoryMap) {
+        Map<String, String> tokens = values(ruleId, memoryMap, failed);
+        tokens.replaceAll((key, value) -> Matcher.quoteReplacement(value));
+        return tokens;
+    }
+
+    // The unescaped token values for a rule id, keyed like getTokenReplacements; QuestText reads them to highlight
+    // token values. A token whose lambda throws is "" and is logged when failed is not null.
+    static Map<String, String> values(String ruleId, Map<String, MemoryAPI> memoryMap, Set<String> failed) {
         if (ruleId == null || !ruleId.startsWith(PREFIX)) return Collections.emptyMap();
         int end = ruleId.indexOf('_', PREFIX.length());
         if (end < 0) return Collections.emptyMap();
@@ -31,26 +39,26 @@ public final class QuestTokens implements RuleTokenReplacementGeneratorPlugin {
         QuestManager.Run<?, ?> run = manager == null ? null : manager.run(ruleId.substring(PREFIX.length(), end));
         if (run == null || run.state() == null) return Collections.emptyMap();
         Map<String, String> tokens = new HashMap<>();
-        putDeclared(tokens, run, ruleId, memoryMap);
+        putDeclared(tokens, run, ruleId, memoryMap, failed);
         putPeople(tokens, run);
         return tokens;
     }
 
-    private <S extends Enum<S> & QuestStage, T extends QuestState<S>> void putDeclared(
-            Map<String, String> tokens, QuestManager.Run<S, T> run, String ruleId, Map<String, MemoryAPI> memoryMap) {
+    private static <S extends Enum<S> & QuestStage, T extends QuestState<S>> void putDeclared(
+            Map<String, String> tokens, QuestManager.Run<S, T> run, String ruleId, Map<String, MemoryAPI> memoryMap, Set<String> failed) {
         QuestContext<S, T> ctx = new QuestContext<>(run, "token", ruleId, null, memoryMap, null);
         for (Map.Entry<String, Function<QuestContext<S, T>, String>> token : run.quest.declarations().tokens().entrySet()) {
-            put(tokens, run.id(), token.getKey(), value(run.id(), token.getKey(), token.getValue(), ctx));
+            put(tokens, run.id(), token.getKey(), value(run.id(), token.getKey(), token.getValue(), ctx, failed));
         }
     }
 
     // A token that throws shows as empty text instead of breaking the dialog.
-    private <C> String value(String questId, String name, Function<C, String> token, C ctx) {
+    private static <C> String value(String questId, String name, Function<C, String> token, C ctx, Set<String> failed) {
         try {
             String value = token.apply(ctx);
             return value == null ? "" : value;
         } catch (RuntimeException e) {
-            if (failed.add(questId + "." + name)) {
+            if (failed != null && failed.add(questId + "." + name)) {
                 QuestManager.logError(questId, "token " + name + " threw " + e);
             }
             return "";
@@ -73,6 +81,6 @@ public final class QuestTokens implements RuleTokenReplacementGeneratorPlugin {
     }
 
     private static void put(Map<String, String> tokens, String questId, String name, String value) {
-        tokens.put("$" + PREFIX + questId + "_" + name, Matcher.quoteReplacement(value));
+        tokens.put("$" + PREFIX + questId + "_" + name, value);
     }
 }

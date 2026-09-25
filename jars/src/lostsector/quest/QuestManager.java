@@ -282,7 +282,7 @@ public final class QuestManager extends BaseCampaignEventListener
             queue.clear();
         }
 
-        // Stops every module and removes what the quest placed in the world, then starts a fresh state.
+        // Stops every module, removes what the quest placed in the world and ends its intel, then starts a fresh state.
         private void reset() {
             T state = state();
             List<QuestModule<S, T>> modules = quest.modules();
@@ -293,6 +293,7 @@ public final class QuestManager extends BaseCampaignEventListener
             clearScoped(state, null);
             fleets.despawnWhere(role -> true);
             people.releaseAll();
+            QuestIntels.endAll(id());
             logInfo(id(), "reset from " + state.stage);
             start();
         }

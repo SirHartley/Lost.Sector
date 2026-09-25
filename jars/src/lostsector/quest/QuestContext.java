@@ -27,6 +27,7 @@ public final class QuestContext<S extends Enum<S> & QuestStage, T extends QuestS
     private final Map<String, MemoryAPI> memoryMap;
     private final List<String> args;
     private QuestRewards rewards;
+    private QuestIntels intels;
 
     QuestContext(QuestManager.Run<S, T> run, String source, String ruleId, InteractionDialogAPI dialog,
                  Map<String, MemoryAPI> memoryMap, List<String> args) {
@@ -187,6 +188,12 @@ public final class QuestContext<S extends Enum<S> & QuestStage, T extends QuestS
 
     public QuestPeople people() {
         return run.people;
+    }
+
+    // Bound to this context's dialog, which decides where new entries and updates are printed.
+    public QuestIntels intel() {
+        if (intels == null) intels = new QuestIntels(this);
+        return intels;
     }
 
     // Bound to this context's dialog, which decides whether receipts are printed.

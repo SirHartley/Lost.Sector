@@ -46,7 +46,7 @@ The framework is built on branch `quest-overhaul`; the task ids refer to the tra
 | Rules command, tokens, people, rewards | `nskr_quest`, `QuestVerbs`, `QuestTokens`, `QuestPeople`, `QuestRewards` | implemented | T08 |
 | Presentation spec (vanilla commands per effect) | [DIALOGUE.md](../../../../docs/DIALOGUE.md#presentation-in-rules) | implemented | T09 |
 | Gap verbs: `confirm`, `engage` | `nskr_quest` | planned | T10 |
-| Intel and rules text outside dialogs | `QuestIntel`, `QuestText` | planned | T11 |
+| Intel and rules text outside dialogs | `QuestIntel`, `QuestIntels`, `QuestText` | implemented | T11 |
 | Rules check tool | `lostsector.quest.dev.RulesCheck` | implemented | T12 |
 | Dev menu and stage jumps | `nskr_questDev`, `QuestDevTools` | implemented | T13 |
 | Shared modules | `lostsector.quest.modules` | `InterceptEncounter` implemented; the others planned | T37 to T41 |
@@ -159,7 +159,7 @@ A module that calls `advance` inside any of these hooks queues the change; the m
 
 `QuestManager.jump(quest, target)` serves the dev menu and the player's story skip. It walks from the current stage to the target along the `previous()` chain of the target. For the current stage and each stage on the path except the target, it calls `onSkip(ctx)` on the modules active in that stage, which set what the stage's conversations would have set (default decisions, rewards the story assumes), then performs a normal stage change to the next stage on the path. Advances queued by hooks during the walk are dropped and logged, because the jump decides the path; advances queued by the target stage's hooks apply after the jump. `ctx.isJump()` is true during the jump.
 
-A target is ahead when the current stage lies on its `previous()` chain. A jump to any other target, including the current stage, resets the quest first: every module active in the current stage stops in reverse order, marks, claims, pending opens, fleets and people of the quest are removed, and a fresh state starts at the start stage. If the start stage is not on the target's chain (a stage such as `FAILED` whose `previous()` is null), the reset quest changes straight to the target.
+A target is ahead when the current stage lies on its `previous()` chain. A jump to any other target, including the current stage, resets the quest first: every module active in the current stage stops in reverse order, marks, claims, pending opens, fleets and people of the quest are removed, its intel entries end at once, and a fresh state starts at the start stage. If the start stage is not on the target's chain (a stage such as `FAILED` whose `previous()` is null), the reset quest changes straight to the target.
 
 ### Save and reload
 
@@ -678,19 +678,45 @@ public final class QuestIntels {
 }
 ```
 
-`QuestIntel extends BaseIntelPlugin` and is final. `show` adds it with `IntelManagerAPI.addIntel(intel, false, textPanel)` (the text panel when a dialog is open) and adds it as a script, so the vanilla ending delay counts down; `advanceImpl` does nothing. The icon and tags come from `d.intel(key, icon, tags...)`; icons are keys under `graphics.campaignMissions` in `data/config/settings.json`.
+`ctx.intel()` returns the `QuestIntels` of the context; like `ctx.rewards()` it is bound to the context's dialog. Keys are declared with `d.intel(key, icon, tags...)`: the key follows the declaration name rules, the icon is a key under `graphics.campaignMissions` in `data/config/settings.json`, and the tags are intel tags such as `Tags.INTEL_MISSIONS`. A duplicate key, a blank icon or a null tag throws at load.
+
+- **`show`** adds a `QuestIntel` with `IntelManagerAPI.addIntel(intel, false, textPanel)`: with a dialog open, the posting message prints in its text panel; without one, the game posts a campaign message. It also adds the entry as a sector script, because the intel manager does not advance its entries: the script counts down the vanilla end delay, and the sector drops it once the entry has ended (`isDone()`). `advanceImpl` does nothing. `show` is a no-op while the key has an active entry. An undeclared key, or an icon that `SettingsAPI.getSpriteName("campaignMissions", icon)` does not find, logs an error and shows nothing.
+- **Active entry.** An entry is active until `complete`, `fail` or `end`. `isShown` is true only for an active entry, so a completed entry still counting down its delay does not stop `show` from adding a new one.
+- **`update`** sends an update message through `sendUpdateIfPlayerHasIntel(updateKey, textPanel)`: in the dialog's text panel when one is open, otherwise as a campaign message, which the game sends only for an entry the player has and that is not hidden. `complete` and `fail` set the status, send an update with an empty update key and call `endAfterDelay()` (`BaseIntelPlugin.getBaseDaysAfterEnd()`, 3 days). `end` calls `endImmediately()` on every entry of the key, active or ending; the intel manager removes ended entries on its next unpaused advance. `update`, `setMapLocation`, `complete` and `fail` on a key without an active entry log an error and do nothing.
+- **Map location.** `setMapLocation` stores the entity on the entry; `getMapLocation` returns it, and vanilla derives the `Local` tag from it.
+- **Reset.** A quest [reset](#a-stage-jump) ends every entry of the quest at once.
+- **Saved fields.** The intel manager and the sector's script list save the entry, so `QuestIntel` holds only the quest id, the key, the icon, the tags, the status (`QuestIntel.Status`) and the map entity, and reads its quest's state and rows when displayed. The update key lives in `BaseIntelPlugin`'s transient `listInfoParam` while a message is built. When the quest has no state, the entry shows its key as the title, matches no rows and logs once per entry and load.
 
 Text rows, read with `QuestText` outside any dialog:
 
 | Trigger | Matching | Shows |
 |---|---|---|
-| `nskr_<q>IntelTitle` | Best match | The entry's title |
-| `nskr_<q>IntelBullets` | Every matching row, one bullet each | Bullets in the list, the tooltip and update messages |
+| `nskr_<q>IntelTitle` | Best match | The entry's title in the list, map tooltip, messages and description panel |
+| `nskr_<q>IntelBullets` | Every matching row, one bullet each | Bullets in the list, the map tooltip and messages |
 | `nskr_<q>IntelDesc` | Every matching row, one paragraph each, in file order | The description panel |
 
-Before matching, `QuestText` writes these keys into a scratch local memory: `$nskr_intel_key` (the entry key), `$nskr_intel_status` (`active`, `completed` or `failed`), `$nskr_intel_update` (the update key, empty otherwise) and `$nskr_intel_mode` (`list`, `tooltip`, `update` or `desc`). Rows select with these keys and with `nskr_quest` conditions. Token values are highlighted in the highlight color. Rows under these triggers must use only conditions that work without a dialog: memory keys and `nskr_quest` verbs. Their Script and Options columns are ignored.
+Before matching, `QuestText` writes these keys into a scratch local memory: `$nskr_intel_key` (the entry key), `$nskr_intel_status` (`active`, `completed` or `failed`), `$nskr_intel_update` (the update key, empty otherwise) and `$nskr_intel_mode`. The mode is `list` for the intel list (`ListInfoMode.INTEL`) and the sort title, `tooltip` for the map tooltip (`MAP_TOOLTIP`), `update` for every message (`MESSAGES`: the posting message, updates, completion and failure) and `desc` for the description panel and its title (`IN_DESC` too). Rows select with these keys and with `nskr_quest` conditions. Rows under these triggers must use only conditions that work without a dialog: memory keys and `nskr_quest` condition verbs. Their Script and Options columns are ignored.
 
-`QuestText.title`, `QuestText.lines` and the matching rely on `RulesAPI.getBestMatching` and `getAllMatching` with a null dialog, `RuleAPI.pickText()` and `performTokenReplacement` ([vanilla source](../../../../docs/RULES_AUTHORING.md#text-replacements-are-not-all-memory-keys)). T11 verifies this against the game source and adds it to the in-game checklist; if it cannot work, T11 records the reason and the replacement design here, and intel text stays in Java until then.
+- **Memory.** Matching uses `local` (the scratch memory), `player` and `global`; player and global memory are read with `getMemoryWithoutUpdate()`, without the campaign plugins' fact refresh. Token replacement gets the scratch memory only, so `$player.` and `$global.` keys are not replaced in intel text; show computed values with [tokens](#tokens).
+- **Text.** Rows with blank text are skipped. The title is not highlighted; in bullets and paragraphs, each quest token value is highlighted in `Misc.getHighlightColor()`. Text goes to `addPara(text, color, pad)`, which does not run `String.format`, so `%` shows as written.
+- **Stable text.** The intel UI builds entries again whenever it redraws them, and the engine picks at random among title rows with equal scores and among `OR` variants each time. Title rows must not tie, and intel rows do not use `OR` variants.
+- **Cost.** The intel list reads each entry's title once per sort: it calls `setTagsForSort` on every listed entry right before sorting by `getSortString`, and `QuestIntel` keeps the title from that call until the next one. Every other call reads the rows again. The core UI calls found in the 0.98a-RC8 source build a list item (`recreate`), a map tooltip (`createImpl`) or a message; whether the map tooltip is rebuilt every frame while hovered was not determined.
+
+```java
+public final class QuestText {
+    public static String trigger(String questId, String suffix);                        // nskr_<q> + TITLE, BULLETS or DESC
+    public static Map<String, MemoryAPI> intelMemory(String key, String status, String update, String mode);
+    public static String title(String trigger, Map<String, MemoryAPI> memoryMap);       // best match; null when none or blank
+    public static List<Line> lines(String trigger, Map<String, MemoryAPI> memoryMap);   // every match in file order
+
+    public static final class Line {
+        public final String text;           // after token replacement
+        public final String[] highlights;   // quest token values, once per occurrence, in text order
+    }
+}
+```
+
+`QuestText` also holds the scratch keys, trigger suffixes and mode values as constants, which the [rules check tool](#rules-check-tool) reads. It matches with `RulesAPI.getBestMatching` and `getAllMatching` with a null dialog, picks each row's text with `RuleAPI.pickText()` and replaces tokens with `performTokenReplacement(ruleId, text, null, memoryMap)`; [Rules text outside a dialog](../../../../docs/RULES_AUTHORING.md#rules-text-outside-a-dialog) has the verified engine behavior. A check lambda or command that throws during matching is not caught.
 
 ### Tokens
 

@@ -1,5 +1,6 @@
 package lostsector.quest;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -29,9 +30,22 @@ public final class Declarations<S extends Enum<S> & QuestStage, T extends QuestS
     private final Map<String, QuestModule<S, T>> roleModules = new HashMap<>();
     private final Set<String> triggers = new LinkedHashSet<>();
     private final Set<String> people = new LinkedHashSet<>();
+    private final Map<String, Intel> intels = new LinkedHashMap<>();
 
     private QuestModule<S, T> declaring;
     private boolean sealed;
+
+    // An intel entry key's icon (a key under graphics.campaignMissions in settings.json) and its intel tags.
+    static final class Intel {
+
+        final String icon;
+        final List<String> tags;
+
+        Intel(String icon, List<String> tags) {
+            this.icon = icon;
+            this.tags = tags;
+        }
+    }
 
     Declarations(String questId) {
         this.questId = questId;
@@ -93,6 +107,14 @@ public final class Declarations<S extends Enum<S> & QuestStage, T extends QuestS
         }
     }
 
+    // An intel entry that QuestIntels shows; its text comes from the quest's intel rows (README "Intel").
+    public void intel(String key, String icon, String... tags) {
+        if (icon == null || icon.isBlank() || tags == null || Arrays.asList(tags).contains(null)) {
+            throw new IllegalArgumentException("[" + questId + "] intel " + key + " needs an icon and non-null tags");
+        }
+        put(intels, "intel", key, new Intel(icon, List.of(tags)));
+    }
+
     public Map<String, Predicate<QuestContext<S, T>>> checks() {
         return Collections.unmodifiableMap(checks);
     }
@@ -124,6 +146,14 @@ public final class Declarations<S extends Enum<S> & QuestStage, T extends QuestS
 
     public Set<String> people() {
         return Collections.unmodifiableSet(people);
+    }
+
+    public Set<String> intels() {
+        return Collections.unmodifiableSet(intels.keySet());
+    }
+
+    Intel intelDeclaration(String key) {
+        return intels.get(key);
     }
 
     private <V> void put(Map<String, V> map, String kind, String name, V value) {
