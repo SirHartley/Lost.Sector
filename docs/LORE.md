@@ -39,7 +39,7 @@ Established by descriptions `kesteven` and `nskr_asteria`, the ship descriptions
 - **The Outpost.** A recently established installation that stages expeditions into the fringes. It gets one of several frontier names (Verge, Fringe, Boundary, Perimeter, Threshold, Land's End, Monitor, Brink). The leadership moves there if Asteria is lost.
 - **Ships.** Kesteven's catalogue is young and uneven. Several hulls are recommissioned pre-Collapse designs (the "Construction" defense line, the Blackbird prototype). The Prosperity battleship was revived under Hegemony pressure after the First AI War through opaque DRA "infrastructure reinvestments", at a cost to Asteria's stability; the Hegemony then declined it as too expensive. The Kingstork was the first hull of the Kesteven Construction defense branch. Recurring traits: performance at a steep upkeep, "repairs must be done to spec, or not at all", and marketing that overstates.
 - **Services.** Kesteven sells loans (debt collectors pursue defaulters), trades prototype hulls and weapons for Artifact Electronics through an exchange program, removes S-mods, and licenses its designs to players in good standing. It offers mercenary elimination contracts "authorized by the board", and buys salvage data because "the trends deduced from our existing data have already proven invaluable".
-- **Rivals and arms.** Kesteven is in a cold war with Tri-Tachyon, which Jack expects to "go hot" if Kesteven gets the UPC (`EndingKestevenDialog`). It has a Special Operations fleet and its own black ops, which Alice "really wanted to avoid using" (rules `nskr_kq_aliceRefuseConfirm`, job 3 refusal). Its scavenger fleets travel to systems of interest, and some turn on lone captains ("Nothing personal of course, captain it's just business.", rules `betrayalGreeting`).
+- **Rivals and arms.** Kesteven is in a cold war with Tri-Tachyon, which Jack expects to "go hot" if Kesteven gets the UPC (rules `nskr_kq_kestevenEndingShare`). It has a Special Operations fleet and its own black ops, which Alice "really wanted to avoid using" (rules `nskr_kq_aliceRefuseConfirm`, job 3 refusal). Its scavenger fleets travel to systems of interest, and some turn on lone captains ("Nothing personal of course, captain it's just business.", rules `betrayalGreeting`).
 
 ### Project Enigma
 
@@ -127,7 +127,7 @@ These instructions describe how the existing mod text is written. They govern pl
 
 - **Second person.** Narration addresses the captain as "you" in present tense and follows the bridge crew at work: "Your ops chief oversees the mission by-the-book, staging approach-and-scan to maximize safety..." (rule `nskr_kq_satelliteSendSel`).
 - **Competent crew.** Crew members are professionals with their own manner: the careful ops chief, the sarcastic sensors officer, the comms officer's "nothing a little elbow grease from our team can't solve".
-- **Gray asides.** Gray narration carries the captain's own reactions and occasional judgment: "Wait, you really agree with her? Oh dear." (`ElizaDialog`), "Hope you made the right choice, captain." (`EndingElizaDialog`). `CacheDoubtDialog` uses the same gray voice as an inner voice that talks back.
+- **Gray asides.** Gray narration carries the captain's own reactions and occasional judgment: "Wait, you really agree with her? Oh dear." (`ElizaDialog`), "Hope you made the right choice, captain." (rules `nskr_kq_elizaEndingDone`). `CacheDoubtDialog` uses the same gray voice as an inner voice that talks back.
 - **Wide tonal range.** Comedy and horror sit side by side.
   - Comic: the drinking scenes (the job 3 party, rules `nskr_kq_party…`; the artisan liqueur in the Delve meeting, rules `nskr_kq_delveDrink`); the Peacekeepers' commander asking whether "Sam" sent the player to prank him (rules `pkInspired`); the Cache guardian's taunts ("Is this autofit by chance?", "Have it writ upon thy meagre grave : Skill issue.", `CacheBossTauntPlugin`).
   - Grave: the Frozen Heart's enslaved thousands and the Enigma doctrine are written without jokes.
@@ -159,7 +159,7 @@ Jack is Kesteven's space operations officer at Asteria (`nskr_opguy`), the quest
 
 - On Kesteven's mission (rules `nskr_kq_delveDoubt`): "Think about it, Asteria is one of the last great bastions of equality and democracy. We are very much in a unique position to drive progress in this sector." This shows the sincere-sounding corporate pitch; he believes it, and the setting's own descriptions undercut it.
 - On Eliza's death (rules `nskr_kq_jackLeadsElizaKilled`, job 5 tip): "I hear you managed to already take out Eliza for good, very impressive captain." The narration adds "There is a sinister smile on his face, you seem to have made his day." His warmth has a hard edge.
-- At the Kesteven ending (`EndingKestevenDialog`): "This cold war of ours is about to go hot, but we will be ready." ... "I hope we can again work together in the future, burn bright." Defiance, confidence and a sign-off that belongs to him.
+- At the Kesteven ending (rules `nskr_kq_kestevenEndingShare` and `nskr_kq_kestevenEndingDone`): "This cold war of ours is about to go hot, but we will be ready." ... "I hope we can again work together in the future, burn bright." Defiance, confidence and a sign-off that belongs to him.
 - Betrayed (rules `jackRevengeanceDialogInitial`): "I can't believe you betrayed us just like that, and to work with some lunatic spacer." He "struggles to maintain his composure".
 
 **Traits.** He keeps secrets politely: "That's classified information captain. I'm sure you'll understand." He slips the player a bonus he "isn't supposed to", and offers artisan liqueur made with "*real* fruits, none of that synth crap". He is skeptical of rumors and proud of Kesteven's work.
@@ -211,7 +211,7 @@ Eliza is a revolutionary, and Kesteven calls her a terrorist (`nskr_anarchist`, 
 - On law: "When tyranny becomes law, resistance becomes duty." ... "Laws must exist to keep the people subservient, and those who show signs of disobedience will be punished."
 - On violence: "Sacrifices have to be made in the face of progress! Life isn't black and white, sometimes you have to get your hands dirty captain to make a change. For there are not many other options left!"
 - On her goal: "With this power the sector will be free. No masters - no rules, right captain?"
-- At victory (`EndingElizaDialog`): "watch the stations burn, empires fall, leaders flee like cowards. It is time to infest the rat's nest. Humanity will be free!" The narration calls the gesture "vaguely fanatic" and the grin "bone chilling".
+- At victory (rules `nskr_kq_elizaEndingDone`): "watch the stations burn, empires fall, leaders flee like cowards. It is time to infest the rat's nest. Humanity will be free!" The narration calls the gesture "vaguely fanatic" and the grin "bone chilling".
 
 **Voice.**
 

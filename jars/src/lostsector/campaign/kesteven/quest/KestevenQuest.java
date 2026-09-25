@@ -14,9 +14,9 @@ import java.util.Random;
 // KestevenJob3Module and KestevenPartyModule run job 3, KestevenJob4Module job 4, KestevenJob5Module the job 5 meeting
 // and intel, KestevenGlacierModule the Glacier facility, KestevenElizaSearchModule the Eliza search at pirate bars,
 // KestevenSatelliteModule the data-disk satellites, KestevenElizaModule Eliza's port, KestevenCollector's shared
-// modules the Tri-Tachyon collector, KestevenElizaFleetsModule Eliza's fleets and KestevenAltEndingsModule the Luddic
-// and Tri-Tachyon endings; QuestStageManager and the old dialog classes still run the rest of the questline on this
-// state (T19 to T35).
+// modules the Tri-Tachyon collector, KestevenElizaFleetsModule Eliza's fleets, KestevenEndingsModule the Kesteven and
+// Eliza endings and KestevenAltEndingsModule the Luddic and Tri-Tachyon endings; QuestStageManager and the old dialog
+// classes still run the rest of the questline on this state (T19 to T35).
 // isAvailable() keeps the default: the old code runs the questline in every campaign and treats a missing
 // Kesteven home as failure (stage 99), so the state must always exist.
 public final class KestevenQuest extends Quest<KestevenStage, KestevenState> {
@@ -37,7 +37,7 @@ public final class KestevenQuest extends Quest<KestevenStage, KestevenState> {
         return List.of(new KestevenHubModule(), new KestevenJob1Module(), new KestevenJob3Module(), new KestevenPartyModule(),
                 new KestevenJob4Module(), new KestevenJob5Module(), new KestevenGlacierModule(), new KestevenElizaSearchModule(),
                 new KestevenSatelliteModule(), new KestevenElizaModule(), KestevenCollector.encounter(), KestevenCollector.demand(),
-                new KestevenElizaFleetsModule(), new KestevenAltEndingsModule());
+                new KestevenElizaFleetsModule(), new KestevenEndingsModule(), new KestevenAltEndingsModule());
     }
 
     // Null before QuestManager.startQuests() at the end of ModPlugin.onGameLoad, which includes new-campaign generation.
@@ -102,7 +102,7 @@ public final class KestevenQuest extends Quest<KestevenStage, KestevenState> {
         return stage().toLegacy() >= 16;
     }
 
-    // Dialog routes of CorePlugin, until the questline claims these entities itself.
+    // Places of the questline, for the rows that take over their dialogs.
 
     // Eliza's market entity, or any entity of a market connected to it.
     public static boolean atElizaMarket(SectorEntityToken entity) {
@@ -111,18 +111,6 @@ public final class KestevenQuest extends Quest<KestevenStage, KestevenState> {
         if (market == null) return false;
         if (entity.getId().equals(market.getId())) return true;
         return entity.getMarket() != null && entity.getMarket().getConnectedEntities().contains(market);
-    }
-
-    public static boolean kestevenEndingAvailable() {
-        return stage() == KestevenStage.CHIP_RECOVERED
-                && !Quests.has(KestevenFlag.KESTEVEN_ENDING_DONE) && !Quests.has(KestevenFlag.CHIP_HANDED_TO_ELIZA);
-    }
-
-    public static boolean elizaEndingAvailable() {
-        return stage() == KestevenStage.CHIP_RECOVERED
-                && !Quests.has(KestevenFlag.ELIZA_ENDING_DONE) && !Quests.has(KestevenFlag.ELIZA_KILLED)
-                && Quests.has(KestevenFlag.ELIZA_HELPED) && Quests.has(KestevenFlag.CHIP_HANDED_TO_ELIZA)
-                && Quests.has(KestevenFlag.ELIZA_RETURNED);
     }
 
     // Actions for features outside the questline.

@@ -41,7 +41,7 @@ The framework is built on branch `quest-overhaul`; the task ids refer to the tra
 | Component | Classes | Status | Task |
 |---|---|---|---|
 | Core: definitions, state, store, manager, transitions, marks, claims | `Quest`, `QuestStage`, `QuestState`, `QuestModule`, `Declarations`, `QuestContext`, `QuestManager`, `QuestStore`, `QuestCatalog`, `Quests`, `QuestDialogs`, `NoFlags` | implemented | T05 |
-| Events: listeners, daily tick, frame hook | `QuestManager` | implemented; fleet detection added in T22 | T06, T22 |
+| Events: listeners, daily tick, frame hook | `QuestManager` | implemented; fleet detection added in T22, reputation changes in T31 | T06, T22, T31 |
 | Fleets | `QuestFleets`, `QuestFleet`, `FleetRole`, `FleetOrders` | implemented; `keep`, `patrolHomeAfterChase`, `leave(textPrefix)` and `withdrawWhen` added in T22 | T07, T22 |
 | Rules command, tokens, people, rewards | `nskr_quest`, `QuestVerbs`, `QuestTokens`, `QuestPeople`, `QuestRewards` | implemented | T08 |
 | Presentation spec (vanilla commands per effect) | [DIALOGUE.md](../../../../docs/DIALOGUE.md#presentation-in-rules) | implemented | T09 |
@@ -401,6 +401,7 @@ public abstract class QuestModule<S, T> {
     protected void onLoot(QuestContext<S, T> ctx, QuestFleet fleet, FleetEncounterContextPlugin plugin, CargoAPI loot);
     protected void onEncounterLoot(QuestContext<S, T> ctx, FleetEncounterContextPlugin plugin, CargoAPI loot);
     protected void onDecivilized(QuestContext<S, T> ctx, MarketAPI market, boolean fullyDestroyed);
+    protected void onReputationChange(QuestContext<S, T> ctx, String factionId, float delta);
     protected void onShipsRecovered(QuestContext<S, T> ctx, List<FleetMemberAPI> ships);
 
     protected void devInfo(QuestContext<S, T> ctx, List<String> lines);
@@ -422,6 +423,7 @@ public abstract class QuestModule<S, T> {
 | `onLoot` | Loot is generated from an encounter with this quest's fleet | Adding quest items to loot |
 | `onEncounterLoot` | Loot is generated from any encounter, whoever the player fought | Checks on every fight, such as a task done while engaging a faction |
 | `onDecivilized` | Any colony is decivilized | Losing a quest location |
+| `onReputationChange` | The player's relationship with a faction changes through the reputation system | Caps on a relationship after a story choice |
 | `onShipsRecovered` | The player recovers ships, after a battle or from a derelict | Changing recovered quest hulls |
 | `devInfo` | The dev menu shows the quest | One line per value worth checking |
 
@@ -544,6 +546,7 @@ The manager implements the vanilla callbacks below and routes each to the hooks 
 | `reportBattleOccurred(primaryWinner, battle)` | `CampaignEventListener` | `onBattle` | Owning quests of every quest fleet in the battle |
 | `reportEncounterLootGenerated(plugin, loot)` | `CampaignEventListener` | `onLoot`, then `onEncounterLoot` | `onLoot`: owning quests of the quest fleets on the side the player fought; `onEncounterLoot`: all active modules |
 | `reportColonyDecivilized(market, fullyDestroyed)` | `ColonyDecivListener` | `onDecivilized` | All active modules |
+| `reportPlayerReputationChange(factionId, delta)` | `CampaignEventListener` | `onReputationChange` | All active modules |
 | `reportShipsRecovered(ships, dialog)` | `ShipRecoveryListener` | `onShipsRecovered` | All active modules |
 
 Delivery order is quest order in `QuestCatalog`, then module order. A stage change during delivery takes effect at once: each module's activity is checked when its turn comes, so a module that became inactive does not receive the rest of that event and one that became active does. Unavailable quests and quests without state receive nothing, which includes events that arrive during a load before `startQuests()`. `EconomyTickListener` is not a daily tick (it fires about every three days) and is not used.
@@ -554,6 +557,7 @@ Delivery order is quest order in `QuestCatalog`, then module order. A stage chan
 - **Registration.** Implementing a listener interface on `QuestManager` is enough. The `EFS_LIST` loop calls `getListenerManager().addListener(script, true)`; vanilla's `ListenerManager` files the object under every class and interface it implements (`FastIterationClassifier.classify`), and `ListenerUtil` fetches listeners by interface. `beforeGameSave` removes the object and `afterGameSave` adds it again.
 - **Location changes.** `CampaignEngine.setCurrentLocation` reports the change when a jump switches locations, before the fade-in and warp-in finish; `CoreScript.reportFleetJumped` marks the destination system entered only when the jump finishes (0.98a-RC8: `setCurrentLocation` at `sources-obf/campaign.java` 4495, called in the `SWITCHING_LOCATIONS` state at 4827, `reportFleetJumped` in the `FINISH` state at 4914; `CoreScript.reportFleetJumped` at `sources-api/impl.campaign.java` 7250). In `onLocationChanged`, a system entered for the first time still has `isEnteredByPlayer()` false.
 - **Detection.** `BaseCampaignEntity.advance` runs the entity's `SensorContactIndicatorManager`, which calls `ListenerUtil.reportDetectedEntity(entity, level)` while the entity is visible to the player fleet and not hidden: once when it first shows as a sensor contact, again when it reaches composition or composition-and-faction details, and with `VisibilityLevel.NONE` when a contact in the current location drops out of view (0.98a-RC8 `sources-obf/campaign.java` 1032, 16650-16671 and 16760; `ListenerUtil` in `sources-api/campaign.listeners.java` 938). A fleet already in view reports nothing more until its level changes. The manager tests the fleet's `QuestFleets.OWNER_KEY` before looking the fleet up, because the lookup reads the sector's memory. `DetectedEntityListener` extends `GenericPlugin`; the manager's `getHandlingPriority` returns -1 because it is only a listener.
+- **Reputation.** `CoreReputationPlugin.adjustPlayerReputation` reports every change of the player's relationship with a faction whose delta is not 0 through `SectorAPI.reportPlayerReputationChange`, which calls every `CampaignEventListener` (0.98a-RC8 `sources-api/impl.campaign.java` 6187-6192, `sources-obf/campaign.java` 5281-5285). `FactionAPI.setRelationship` and `adjustRelationship` report nothing, so a hook that sets a relationship does not call itself. Changes of a person's relationship (`reportPlayerReputationChange(person, delta)`) are not routed.
 - **Decivilization.** Only `reportColonyDecivilized` is routed. `DecivTracker.decivilize` fires `reportColonyAboutToBeDecivilized` earlier in the same call, before the market leaves the economy; the manager ignores it.
 - **Recovery.** `ListenerUtil.reportShipsRecovered` calls every `ShipRecoveryListener` in the listener manager. `FleetInteractionDialogPluginImpl` calls it after the post-battle recovery picker, and `ShipRecoverySpecial` after recovering a derelict. The dialog argument is not passed on; the hook context has no dialog.
 - **Encounter loot.** The only caller of `reportEncounterLootGenerated` is `FleetInteractionDialogPluginImpl` at `CONTINUE_LOOT` (0.98a-RC8 `sources-api/impl.campaign.java` 14119), so `onEncounterLoot` comes once for every loot screen of a fleet encounter, with or without quest fleets. It is delivered after `onLoot`. The hook context has no dialog.
@@ -1128,7 +1132,7 @@ Do not add a framework feature that only one quest could ever use; keep that in 
 | Duplicate today | Replaced by |
 |---|---|
 | `QuestHelper.getFailed`/`setFailed` and `getCompleted`/`setCompleted`, identical bodies | Flags on the state |
-| Five hand-written seeded `Random` accessors (`ElizaDialog`, `CacheDoubtDialog`, `CacheCoreDialog`, `EndingKestevenDialog`, `EndingElizaDialog`) | `ctx.random(purpose)` |
+| Three hand-written seeded `Random` accessors (`ElizaDialog`, `CacheDoubtDialog`, `CacheCoreDialog`) | `ctx.random(purpose)` |
 | `nskr_ttCollectorDialog`, the second copy of the loan collector's encounter | `PayOffEncounter` and rows (done in T32: `KestevenCollector` in quest `kq`) |
 | Intel classes that register themselves and poll in `advanceImpl` | `QuestIntel` and intel rows |
 | The spawn-and-register tail repeated across `KestevenFleets` spawners | `ctx.fleets().spawn` |
@@ -1147,7 +1151,7 @@ Migration map for the Kesteven questline and the other systems. The owning task 
 | `QuestHelper` questline getters and setters | `KestevenState` fields and `KestevenQuest` queries |
 | `campaign/kesteven/quest/KestevenFleets` builders | Builders in the Kesteven quest package returning `SimpleFleet` |
 | `campaign/kesteven/quest/KestevenPeople` | Fixed people stay in world generation; generated people move to `ctx.people()` |
-| Java dialog classes (`CacheCoreDialog`, endings and the other questline commands) | Rows, checks, actions and claims (`nskr_kestevenQuest` done in T16 and T17: `KestevenHubModule` and the `# KESTEVEN QUESTLINE` rows; `GlacierCommsDialog` and its `CorePlugin` route in T26: `KestevenGlacierModule`, a claim and the `# KESTEVEN QUESTLINE: GLACIER` rows; `DataSatelliteDialog` and its route in T25: `KestevenSatelliteModule`, a claim on every satellite and the `# KESTEVEN QUESTLINE: SATELLITES` rows); `HintWreckDialog` and `nskr_job4FleetDialog` in T22 and T23: a claim and role rows of `KestevenJob4Module`; `ElizaDialog` and its `CorePlugin` route in T28: `KestevenElizaModule` and the `# KESTEVEN QUESTLINE: ELIZA` rows on `OpenInteractionDialog`; `nskr_elizaInterceptDialog` in T31: `KestevenElizaFleetsModule`, fleet roles and the `# KESTEVEN QUESTLINE: ELIZA FLEETS` rows) |
+| Java dialog classes (`CacheCoreDialog`, endings and the other questline commands) | Rows, checks, actions and claims (`nskr_kestevenQuest` done in T16 and T17: `KestevenHubModule` and the `# KESTEVEN QUESTLINE` rows; `GlacierCommsDialog` and its `CorePlugin` route in T26: `KestevenGlacierModule`, a claim and the `# KESTEVEN QUESTLINE: GLACIER` rows; `DataSatelliteDialog` and its route in T25: `KestevenSatelliteModule`, a claim on every satellite and the `# KESTEVEN QUESTLINE: SATELLITES` rows); `HintWreckDialog` and `nskr_job4FleetDialog` in T22 and T23: a claim and role rows of `KestevenJob4Module`; `ElizaDialog` and its `CorePlugin` route in T28: `KestevenElizaModule` and the `# KESTEVEN QUESTLINE: ELIZA` rows on `OpenInteractionDialog`; `nskr_elizaInterceptDialog` in T31: `KestevenElizaFleetsModule`, fleet roles and the `# KESTEVEN QUESTLINE: ELIZA FLEETS` rows; `EndingKestevenDialog`, `EndingElizaDialog` and their `CorePlugin` routes also in T31: `KestevenEndingsModule` and the `# KESTEVEN QUESTLINE: ENDINGS` rows on `OpenInteractionDialog`) |
 | `HostileTakeoverBarEvent`, `ElizaSearch*BarEvent`, `DelveMeetingBarEvent` | `AddBarEvents` rows and quest people (`HostileTakeoverBarEvent` done in T20 and T21: `KestevenPartyModule` and the `# KESTEVEN QUESTLINE: JOB 3 PARTY` rows; `ElizaSearch*BarEvent` done in T27: `KestevenElizaSearchModule`; `DelveMeetingBarEvent` and `nskr_barEventFixer` done in T24: `KestevenJob5Module` and the `# KESTEVEN QUESTLINE: JOB 5` rows) |
 | `EnemyUnknownIntel`, `HostileTakeoverIntel`, `OperationLifesaverIntel`, `TheDelveIntel`, `CacheIntel` | `QuestIntel` with intel rows (`EnemyUnknownIntel` done in T18: key `job1` of `KestevenJob1Module`; `HostileTakeoverIntel` in T19: key `job3` of `KestevenJob3Module`; `TheDelveIntel` in T24: key `job5` of `KestevenJob5Module`); `OperationLifesaverIntel` in T22: key `job4` of `KestevenJob4Module`) |
 | `nskr_isKStage` and other stage predicates | `nskr_quest kq is` and `reached` |

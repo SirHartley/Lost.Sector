@@ -574,6 +574,18 @@ public final class QuestManager extends BaseCampaignEventListener
         });
     }
 
+    // CoreReputationPlugin.adjustPlayerReputation reports every non-zero change of a faction's relationship to the
+    // player; FactionAPI.setRelationship reports nothing. Changes to a person's relationship are not routed.
+    @Override
+    public void reportPlayerReputationChange(String factionId, float delta) {
+        deliver(new Hook() {
+            @Override
+            public <S extends Enum<S> & QuestStage, T extends QuestState<S>> void call(QuestModule<S, T> module, QuestContext<S, T> ctx) {
+                module.onReputationChange(ctx, factionId, delta);
+            }
+        });
+    }
+
     // ListenerUtil.reportShipsRecovered: after-battle recovery and derelict recovery (ShipRecoverySpecial).
     @Override
     public void reportShipsRecovered(List<FleetMemberAPI> ships, InteractionDialogAPI dialog) {

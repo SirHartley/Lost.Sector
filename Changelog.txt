@@ -93,6 +93,7 @@ Fixed - After the Kesteven story skip, the data-disk satellites' empty dialog ha
 Adjusted - Handing Artifact Electronics to the Tri-Tachyon collector shows the standard cargo lost and relationship receipts
 Fixed - Eliza's revenge fleet now opens its own conversation when you meet it
 Adjusted - The Luddic and Tri-Tachyon endings of the Kesteven questline show the standard story point, credits and relationship receipts
+Adjusted - The Kesteven and Eliza endings show the standard receipts for story points, credits, blueprints and relationship changes
 
 1.0.b
 Adjusted - Severely nerfed spawn rates for Borealis, Rhea and Kingslayer

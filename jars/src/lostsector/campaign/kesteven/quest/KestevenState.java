@@ -61,6 +61,9 @@ public final class KestevenState extends QuestState<KestevenStage> implements In
     transient FleetMemberAPI glacierHit;
 
     float ttPayout;
+    // The Tri-Tachyon relationship the Kesteven ending rolls; the Eliza ending's three values, which the commission
+    // restore puts back (KestevenEndingsModule).
+    float kestevenEndingTriTachyonRep;
     float commissionRepPirates;
     float commissionRepKesteven;
     float commissionRepHegemony;

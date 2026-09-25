@@ -8,8 +8,8 @@ Java paths are relative to `jars/src/lostsector/campaign/`; `dialogue/rules/` an
 
 | Style | Used by | How it runs |
 |---|---|---|
-| Rules rows only | Every conversation with Jack, Alice and Nicholas (gates, values and game actions from `KestevenHubModule`); the job 3 party, a rules bar event (guests, drink count and bill from `KestevenPartyModule`); the Glacier facility (`KestevenGlacierModule`); the Eliza search at pirate bars (`KestevenElizaSearchModule`); the data-disk satellites (`KestevenSatelliteModule`); the Luddic and Tri-Tachyon endings (`KestevenAltEndingsModule`); the Delve meeting at the bar (`KestevenJob5Module`); the meeting at Eliza's port (`KestevenElizaModule`); Eliza's fleets (`KestevenElizaFleetsModule`); job 4: the Special Operations fleet, the Enigma strike group and the hint wreck (checks, actions and tokens from `KestevenJob4Module`, [below](#job-4-rows)); the Tri-Tachyon collector ([below](#tri-tachyon-collector-rows)); fleet greetings and threats: Jack's revenge fleet, the Cache guardian, the "LZ" messenger, generic Enigma comms | Text, options and scripts live in `data/campaign/rules.csv`. |
-| Java `InteractionDialogPlugin` or `BaseBarEvent` | Cache hint, Cache core, both final ending dialogs | `CorePlugin.pickInteractionDialogPlugin` or `PortsideBarData` opens the class. All text, options and state changes are in the Java class, using a nested `OptionId` enum. |
+| Rules rows only | Every conversation with Jack, Alice and Nicholas (gates, values and game actions from `KestevenHubModule`); the job 3 party, a rules bar event (guests, drink count and bill from `KestevenPartyModule`); the Glacier facility (`KestevenGlacierModule`); the Eliza search at pirate bars (`KestevenElizaSearchModule`); the data-disk satellites (`KestevenSatelliteModule`); the Luddic and Tri-Tachyon endings (`KestevenAltEndingsModule`); the Delve meeting at the bar (`KestevenJob5Module`); the meeting at Eliza's port (`KestevenElizaModule`); the Kesteven and Eliza endings (`KestevenEndingsModule`); Eliza's fleets (`KestevenElizaFleetsModule`); job 4: the Special Operations fleet, the Enigma strike group and the hint wreck (checks, actions and tokens from `KestevenJob4Module`, [below](#job-4-rows)); the Tri-Tachyon collector ([below](#tri-tachyon-collector-rows)); fleet greetings and threats: Jack's revenge fleet, the Cache guardian, the "LZ" messenger, generic Enigma comms | Text, options and scripts live in `data/campaign/rules.csv`. |
+| Java `InteractionDialogPlugin` or `BaseBarEvent` | Cache hint, Cache core | `CorePlugin.pickInteractionDialogPlugin` or `PortsideBarData` opens the class. All text, options and state changes are in the Java class, using a nested `OptionId` enum. |
 
 ## Jack, Alice and Nicholas
 
@@ -375,17 +375,28 @@ The meeting at Eliza's market is in the `# KESTEVEN QUESTLINE: ELIZA` block. Flo
 | Agreement | Handlers with shared inserts | `nskr_kq_elizaJoin` and `…BackHer` fire `nskr_kqElizaRight`; `…ReallyRight` and `…Together` fire `nskr_kqElizaOffer`; `…Agree` and `…AgreeLie` fire `nskr_kqElizaMonitoring` and `nskr_kqElizaDisks` (flags, `elizaHandOver`, receipts, `elizaToPort`, `defaultLeave`). |
 | Her move | Delve update | `nskr_kq_elizaMovedBullet` on `nskr_kqIntelBullets` for update `elizaMoved`; the other job 5 bullets exclude that update. |
 
+## The Kesteven and Eliza endings
+
+Both endings are rows in the `# KESTEVEN QUESTLINE: ENDINGS` block that take over the dialog of their place on `OpenInteractionDialog`; [the questline page](KESTEVEN_QUESTLINE.md#the-kesteven-and-eliza-endings) describes when and the effects. `KestevenEndingsModule` declares the checks, actions and tokens.
+
+| Screen | Structure | Rows |
+|---|---|---|
+| Kesteven: the choice | `OpenInteractionDialog` row, `score:10000` | `nskr_kq_kestevenEndingOpen` (`check kestevenEndingHere`): `ShowDefaultVisual`, the market's name through `$marketName`, the gray line from the `FireBest` pick `nskr_kqKestevenEndingUpset` (`nskr_kq_kestevenEndingUpsetKilled` with `ELIZA_KILLED`), Continue and `defaultLeave` (Escape). |
+| Kesteven: arrival, share, end | Plain chain | `nskr_kq_kestevenEndingStart` (the chip's loss line, Jack's card and Alice as second portrait with `ShowPersonVisual true nskr_opguy` and `ShowSecondPerson`), `nskr_kq_kestevenEndingShare` (`ShowPersonVisual false nskr_opguy`), `nskr_kq_kestevenEndingDone` (flag, stage 20, action `kestevenEnding`, the rewards, the `FireAll` inserts `nskr_kqKestevenEndingWar`: `nskr_kq_kestevenEndingTriTachyon`, `nskr_kq_kestevenEndingWar`), then `defaultLeave`. |
+| Eliza: the call | `OpenInteractionDialog` row, `score:10000` | `nskr_kq_elizaEndingOpen` (`check elizaEndingHere`): `ShowDefaultVisual`, Continue only. |
+| Eliza: talk, equipment, end | Plain chain | `nskr_kq_elizaEndingCall` (Eliza's card, `ShowPersonVisual false nskr_anarchist`; token `endingManOrWoman`: "man", "woman", or "captain" for another gender), `nskr_kq_elizaEndingEquipment`, `nskr_kq_elizaEndingDone` (flag, stage 20, action `elizaEnding`, the rewards, the `FireAll` inserts `nskr_kqElizaEndingWar`: `nskr_kq_elizaEndingKesteven`, `…Hegemony`, `…IronShell`, then the contact with `AddPotentialContact nskr_anarchist`), then `defaultLeave`. |
+
+The insert rows' checks read a relationship before their own action lowers it, because a `FireAll` matches all its rows before it runs their scripts ([FireAll and FireBest](../RULES.md#fireall-and-firebest)). The "reduced to" and "improved to" values are tokens (`endingTriTachyonRep`, `elizaEndingPiratesRep`, `elizaEndingKestevenRep`, `elizaEndingHegemonyRep`), rounded as the old lines were.
+
 ## Java dialogs and bar events
 
 | Class | Opened by | Content | State written |
 |---|---|---|---|
 | `kesteven/quest/CacheDoubtDialog` | `QuestStageManager`, once in Unknown Site | Inner-voice hint | None |
 | `kesteven/quest/CacheCoreDialog` | `CorePlugin` or the guardian's fleet-interaction config | Cache core salvage | Stage 19, rewards |
-| `kesteven/quest/EndingKestevenDialog` | `CorePlugin` at stage 19 | Kesteven ending | Stage 20, rewards, relations |
-| `kesteven/quest/EndingElizaDialog` | `CorePlugin` at stage 19 after the handover | Eliza ending | Stage 20, rewards, relations |
 | `kesteven/quest/ElizaRaid` | Raid menu at Eliza's market | Raid objective | Disks, Eliza's fleet |
 
-`CacheCoreDialog` and the endings show the options they need; their text blocks are sequential `addPara` calls keyed by `OptionId`.
+`CacheCoreDialog` shows the options it needs; their text blocks are sequential `addPara` calls keyed by `OptionId`.
 
 ## Notes for moving dialogue into rules
 

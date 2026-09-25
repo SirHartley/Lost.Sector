@@ -1,16 +1,12 @@
 package lostsector.campaign;
 
 import lostsector.campaign.kesteven.quest.CacheCoreDialog;
-import lostsector.campaign.kesteven.quest.EndingElizaDialog;
-import lostsector.campaign.kesteven.quest.EndingKestevenDialog;
 
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.PluginPick;
 import com.fs.starfarer.api.campaign.*;
 import lostsector.campaign.starts.hellspawn.HellSpawnAbilityInteraction;
 import lostsector.campaign.starts.hellspawn.HellSpawnJudgementInteraction;
-import lostsector.campaign.kesteven.quest.KestevenQuest;
-import lostsector.helper.SectorLookup;
 import lostsector.quest.QuestDialogs;
 
 public class CorePlugin extends BaseCampaignPlugin {
@@ -40,21 +36,6 @@ public class CorePlugin extends BaseCampaignPlugin {
         if (interactionTarget.getId().equals("nskr_cache_core")) {
             return new PluginPick<InteractionDialogPlugin>(new CacheCoreDialog(), PickPriority.MOD_GENERAL);
         }
-        //job5 end
-        //kesteven
-        if (KestevenQuest.kestevenEndingAvailable() && SectorLookup.asteriaOrOutpost()!=null) {
-            String loc = SectorLookup.asteriaOrOutpost().getId();
-            if (interactionTarget.getId().equals(loc)) {
-                return new PluginPick<InteractionDialogPlugin>(new EndingKestevenDialog(), PickPriority.MOD_GENERAL);
-            } else if (loc.equals("nskr_asteria") && interactionTarget.getId().equals("nskr_asteria_station")){
-                return new PluginPick<InteractionDialogPlugin>(new EndingKestevenDialog(), PickPriority.MOD_GENERAL);
-            }
-        }
-        //eliza
-        if (KestevenQuest.elizaEndingAvailable() && KestevenQuest.atElizaMarket(interactionTarget)) {
-            return new PluginPick<InteractionDialogPlugin>(new EndingElizaDialog(), PickPriority.MOD_GENERAL);
-        }
-
         return null;
     }
 

@@ -14,7 +14,6 @@ import com.fs.starfarer.api.impl.MusicPlayerPluginImpl;
 import com.fs.starfarer.api.impl.campaign.ids.Factions;
 import com.fs.starfarer.api.impl.campaign.ids.Pings;
 import com.fs.starfarer.api.impl.campaign.world.MoteParticleScript;
-import exerelin.campaign.DiplomacyManager;
 import lostsector.campaign.kesteven.ExileManager;
 import lostsector.ModPlugin;
 import lostsector.helper.FleetHelper;
@@ -43,12 +42,9 @@ public class QuestStageManager extends BaseCampaignEventListener implements Ever
 
     //chance per day
     public static final float REVENGEANCE_CHANCE = 0.01f;
-    public static final float ELIZA_MAX_RELATION_KESTEVEN = -0.50f;
-    public static final float ELIZA_MAX_RELATION_HEGEMONY = -0.35f;
     private float pingTimer = 0;
 
     private int stage =0;
-    private int frameWait = 0;
     private int frameWait2 = 0;
 
     private final List<CampaignFleetAPI> removed = new ArrayList<>();
@@ -195,35 +191,6 @@ public class QuestStageManager extends BaseCampaignEventListener implements Ever
             }
             //cache mote particles
             if (Math.random()<0.004f)MoteParticleScript.spawnMote(pf);
-        }
-        //job5 finish: restore the commission after the Eliza ending
-        if (QuestHelper.getCompleted(KestevenFlag.COMMISSION_RESTORE_PENDING) && !state.commissionRestored){
-            //have to wait a few frames for the vanilla commission to end
-            frameWait++;
-            if (frameWait==30) {
-                float repPirates = state.commissionRepPirates;
-                float repKesteven = state.commissionRepKesteven;
-                float repHege = state.commissionRepHegemony;
-                //pirates
-                if (Global.getSector().getFaction(Factions.PIRATES).getRelationship(Factions.PLAYER) <= repPirates) {
-                    Global.getSector().getFaction(Factions.PLAYER).setRelationship(Factions.PIRATES, repPirates);
-                }
-                //kesteven
-                if (Global.getSector().getFaction(Factions.PLAYER).getRelationship("kesteven") >= repKesteven) {
-                    Global.getSector().getFaction(Factions.PLAYER).setRelationship("kesteven", repKesteven);
-                }
-                //hege
-                if (Global.getSector().getFaction(Factions.PLAYER).getRelationship(Factions.HEGEMONY) >= repHege) {
-                    Global.getSector().getFaction(Factions.PLAYER).setRelationship(Factions.HEGEMONY, repHege);
-                }
-                //IS
-                if(ModPlugin.IS_IRONSHELL){
-                    if (Global.getSector().getFaction(Factions.PLAYER).getRelationship("ironshell") >= repHege) {
-                        Global.getSector().getFaction(Factions.PLAYER).setRelationship("ironshell", repHege);
-                    }
-                }
-                state.commissionRestored = true;
-            }
         }
         //mission logic
         if (state.dayCounter>10f) {
@@ -386,41 +353,6 @@ public class QuestStageManager extends BaseCampaignEventListener implements Ever
         Global.getSector().getImportantPeople().removePerson("nskr_opguy");
         QuestHelper.setCompleted(true, KestevenFlag.JACK_GONE);
         return fleet;
-    }
-
-    @Override
-    public void reportPlayerReputationChange(String faction, float delta) {
-
-        //relations capper for Eliza ending
-        if (QuestHelper.getCompleted(KestevenFlag.ELIZA_ENDING_DONE)){
-            if (faction.equals(Ids.KESTEVEN_FACTION_ID)){
-                //add Nex rel cap
-                float max;
-                if (ModPlugin.IS_NEXERELIN) {
-                    float maxRel = 1f - DiplomacyManager.getManager().getMaxRelationship(faction, Factions.PLAYER);
-                    max = Math.max(ELIZA_MAX_RELATION_KESTEVEN - maxRel, -1f);
-                } else {
-                    max = ELIZA_MAX_RELATION_KESTEVEN;
-                }
-                if (Global.getSector().getPlayerFaction().getRelationship(faction) > max){
-                    Global.getSector().getPlayerFaction().setRelationship(faction, max);
-                }
-            }
-            if (faction.equals(Factions.HEGEMONY) || faction.equals("ironshell")){
-                //add Nex rel cap
-                float max;
-                if (ModPlugin.IS_NEXERELIN) {
-                    float maxRel = 1f - DiplomacyManager.getManager().getMaxRelationship(faction, Factions.PLAYER);
-                    max = Math.max(ELIZA_MAX_RELATION_HEGEMONY - maxRel, -1f);
-                } else {
-                    max = ELIZA_MAX_RELATION_HEGEMONY;
-                }
-                if (Global.getSector().getPlayerFaction().getRelationship(faction) > max){
-                    Global.getSector().getPlayerFaction().setRelationship(faction, max);
-                }
-            }
-        }
-
     }
 
     public static Random getRandom() {

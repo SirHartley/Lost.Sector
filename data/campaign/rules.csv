@@ -2949,3 +2949,77 @@ nskr_quest kq do altEndingPlaceChip","""You made the right choice captain. Enjoy
 ,,,,,,
 nskr_kq_altEndingExitSel,DialogOptionSelected,$option == nskr_kq_altEndingExit,FireAll PopulateOptions,"""Do come back if you change your mind.""",,
 nskr_kq_altEndingExitAgreeSel,DialogOptionSelected,$option == nskr_kq_altEndingExitAgree,FireAll PopulateOptions,,,
+,,,,,,
+# KESTEVEN QUESTLINE: ENDINGS,,,,,,
+# Kesteven ending,,,,,,
+nskr_kq_kestevenEndingOpen,OpenInteractionDialog,nskr_quest kq check kestevenEndingHere score:10000,"ShowDefaultVisual
+FireBest nskr_kqKestevenEndingUpset","As you approach $marketName, you contemplate whether Kesteven should get the Unlimited Production Chip or not. It would certainly have serious consequences on your reputation and the wider sector too. This is the last chance to change your mind.","nskr_kq_kestevenEndingStart:Continue
+defaultLeave:Leave",Replaces the dialog of the home market and of Asteria Station while the ending is open; score:10000 wins over every vanilla market opening.
+nskr_kq_kestevenEndingUpset,nskr_kqKestevenEndingUpset,,"AddText ""Particularly, this would upset both the Tri-Tachyon Corporation and Eliza."" gray",,,Fallback: Eliza lives
+nskr_kq_kestevenEndingUpsetKilled,nskr_kqKestevenEndingUpset,nskr_quest kq flag ELIZA_KILLED,"AddText ""Particularly this would upset the Tri-Tachyon Corporation."" gray",,,
+nskr_kq_kestevenEndingStart,DialogOptionSelected,$option == nskr_kq_kestevenEndingStart,"AddText ""Alice shortly shows up too \""I'm going to begin work on the Chip directly. As soon as we get it unloaded.\""""
+AddText ""Jack continues \""We can discuss your share of the deal while Alice works on the Chip.\""""
+PlaySound ui_noise_static
+AddTextSmall ""Lost the Unlimited Production Chip"" gray
+SetTextHighlights ""the Unlimited Production Chip""
+ShowPersonVisual true nskr_opguy
+ShowSecondPerson nskr_researcher","You land at the dock and are immediately greeted by Jack. ""I see you have the Chip captain. We have searched long for this, the secrets we are about to uncover are unprecedented."" He gazes into the horizon, he's clearly contemplating the stakes at play.",nskr_kq_kestevenEndingShare:Continue,
+nskr_kq_kestevenEndingShare,DialogOptionSelected,$option == nskr_kq_kestevenEndingShare,"AddText ""\""I've authorized you to get a share of some of the equipment produced with the Unlimited Production Chip. You will not be disappointed, also there will be some new toys in the artifact exchange.\"" He gives you a quick smirk.""
+ShowPersonVisual false nskr_opguy","There is a defiant look on Jack's face. ""As you know, this will have some consequences on the wider sector. Relations with Tri-Tachyon will tank, they won't take this lightly. This cold war of ours is about to go hot, but we will be ready."" He regains some confidence.",nskr_kq_kestevenEndingDone:Continue,
+nskr_kq_kestevenEndingDone,DialogOptionSelected,$option == nskr_kq_kestevenEndingDone,"AddText ""\""Thank you for your service $nskr_kq_playerFullName. I hope we can again work together in the future, burn bright.\"" He gives you an intense handshake as you try to leave.""
+nskr_quest kq set KESTEVEN_ENDING_DONE
+nskr_quest kq advance CHIP_RECOVERED COMPLETED
+nskr_quest kq do kestevenEnding
+AddStoryPoints 1
+AddCredits 565000
+AddRemoveAnyItem SPECIAL nskr_prot_light 1
+AddTextSmall ""Acquired 450,000 exchange points"" gray
+SetTextHighlights ""450,000 exchange points""
+AddTextSmall ""Increased contact level with Kesteven contacts"" gray
+AdjustRep kesteven 25
+AdjustRepPerson nskr_opguy COOPERATIVE 20
+AdjustRepPerson nskr_researcher COOPERATIVE 20
+FireAll nskr_kqKestevenEndingWar
+PlaySound ui_rep_raise",After some waiting around Alice gives the green light to pick up the equipment package.,defaultLeave:Leave,"The amounts are KestevenEndingsModule.KESTEVEN_STORY_POINTS, KestevenHubModule.STAGE5_PAYOUT and KestevenEndingsModule.EXCHANGE_POINTS; kestevenEnding grants the points and rolls the Tri-Tachyon value"
+nskr_kq_kestevenEndingTriTachyon,nskr_kqKestevenEndingWar,nskr_quest kq check endingTriTachyonAbove,"nskr_quest kq do endingLowerTriTachyon
+AddTextSmall ""Relationship with Tri-Tachyon reduced to $nskr_kq_endingTriTachyonRep"" gray
+SetTextHighlightColors bad
+SetTextHighlights ""$nskr_kq_endingTriTachyonRep""",,,The check reads the relationship before any row of this FireAll runs its script
+nskr_kq_kestevenEndingWar,nskr_kqKestevenEndingWar,nskr_quest kq check endingKestevenTriTachyonAbove,"nskr_quest kq do endingKestevenTriTachyonWar
+AddTextSmall ""Kesteven and Tri-Tachyon enter hostilities"" gray
+SetTextHighlightColors bad
+SetTextHighlights ""enter hostilities""",,,
+,,,,,,
+# Eliza ending,,,,,,
+nskr_kq_elizaEndingOpen,OpenInteractionDialog,nskr_quest kq check elizaEndingHere score:10000,ShowDefaultVisual,On approach you receiver orders from the port authority to land at a specific dock. You then receive a comms call from Eliza.,nskr_kq_elizaEndingCall:Continue,"Replaces the dialog of Eliza's market while the ending is open, as nskr_kq_elizaPort does before it; the old screen had no Leave"
+nskr_kq_elizaEndingCall,DialogOptionSelected,$option == nskr_kq_elizaEndingCall,"AddText ""\""I hope you understand that Kesteven won't take this lightly, they'll get the Hegemony involved too for sure. You'll be a wanted $nskr_kq_endingManOrWoman, but with the Chip secured our victory shall be inevitable.\""""
+ShowPersonVisual false nskr_anarchist","""Ah, you're here captain. Lets get straight to business, shall we?"" She quickly straightens her posture.",nskr_kq_elizaEndingEquipment:Continue,
+nskr_kq_elizaEndingEquipment,DialogOptionSelected,$option == nskr_kq_elizaEndingEquipment,"AddText ""A tiny shuttle approaches your fleet, it delivers the equipment from Eliza - as promised.""","""I have your equipment ready, soon we will begin a new collapse. The days old are over, it's time for a new dawn."" There is a devious smile on her face.",nskr_kq_elizaEndingDone:Continue,
+nskr_kq_elizaEndingDone,DialogOptionSelected,$option == nskr_kq_elizaEndingDone,"AddText ""Eliza frantically finishes her speech. \""Now go captain.\"" She raises her hands and looks towards the roof, in a vaguely fanatic gesture. \""watch the stations burn, empires fall, leaders flee like cowards. It is time to infest the rat's nest. Humanity will be free!\"" The grin on her face is bone chilling.""
+AddText ""Hope you made the right choice, captain."" gray
+nskr_quest kq set ELIZA_ENDING_DONE
+nskr_quest kq advance CHIP_RECOVERED COMPLETED
+nskr_quest kq do elizaEnding
+AddStoryPoints 2
+AddRemoveAnyItem SPECIAL nskr_prot_wp 1
+AddRemoveAnyItem SPECIAL nskr_prot_heavy 1
+AddTextSmall ""Relationship with Pirates improved to $nskr_kq_elizaEndingPiratesRep"" gray
+SetTextHighlightColors good
+SetTextHighlights ""$nskr_kq_elizaEndingPiratesRep""
+AdjustRepPerson nskr_anarchist COOPERATIVE 30
+FireAll nskr_kqElizaEndingWar
+AddTextSmall ""They will not forget this anytime soon"" gray
+AddPotentialContact nskr_anarchist
+PlaySound ui_rep_raise","""Our time to strike at the Hegemony and Kesteven has come...""",defaultLeave:Leave,"The story points are KestevenEndingsModule.ELIZA_STORY_POINTS; elizaEnding rolls and applies the relationships, the pirate one included, and changes the market"
+nskr_kq_elizaEndingKesteven,nskr_kqElizaEndingWar,nskr_quest kq check elizaEndingKestevenAbove,"nskr_quest kq do elizaEndingLowerKesteven
+AddTextSmall ""Relationship with Kesteven reduced to $nskr_kq_elizaEndingKestevenRep"" gray
+SetTextHighlightColors bad
+SetTextHighlights ""$nskr_kq_elizaEndingKestevenRep""",,,The checks read the relationships before any row of this FireAll runs its script
+nskr_kq_elizaEndingHegemony,nskr_kqElizaEndingWar,nskr_quest kq check elizaEndingHegemonyAbove,"nskr_quest kq do elizaEndingLowerHegemony
+AddTextSmall ""Relationship with the Hegemony reduced to $nskr_kq_elizaEndingHegemonyRep"" gray
+SetTextHighlightColors bad
+SetTextHighlights ""$nskr_kq_elizaEndingHegemonyRep""",,,
+nskr_kq_elizaEndingIronShell,nskr_kqElizaEndingWar,nskr_quest kq check elizaEndingIronShellAbove,"nskr_quest kq do elizaEndingLowerIronShell
+AddTextSmall ""Relationship with the Iron Shell reduced to $nskr_kq_elizaEndingHegemonyRep"" gray
+SetTextHighlightColors bad
+SetTextHighlights ""$nskr_kq_elizaEndingHegemonyRep""",,,Only with Iron Shell enabled; it takes the Hegemony value

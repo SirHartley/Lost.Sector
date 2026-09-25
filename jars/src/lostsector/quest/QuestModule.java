@@ -80,6 +80,10 @@ public abstract class QuestModule<S extends Enum<S> & QuestStage, T extends Ques
     protected void onDecivilized(QuestContext<S, T> ctx, MarketAPI market, boolean fullyDestroyed) {
     }
 
+    // The player's relationship with a faction changed through the reputation system (CoreReputationPlugin), by delta.
+    protected void onReputationChange(QuestContext<S, T> ctx, String factionId, float delta) {
+    }
+
     protected void onShipsRecovered(QuestContext<S, T> ctx, List<FleetMemberAPI> ships) {
     }
 
