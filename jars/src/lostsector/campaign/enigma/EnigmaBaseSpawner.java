@@ -17,7 +17,6 @@ import com.fs.starfarer.api.impl.campaign.procgen.themes.DerelictThemeGenerator;
 import com.fs.starfarer.api.util.Misc;
 import com.fs.starfarer.api.util.Pair;
 import com.fs.starfarer.api.util.WeightedRandomPicker;
-import lostsector.campaign.kesteven.quest.QuestHelper;
 import lostsector.helper.fleet.SystemPicker;
 import lostsector.helper.Ids;
 import lostsector.helper.SystemHelper;
@@ -78,7 +77,7 @@ public class EnigmaBaseSpawner {
                 DefenderDataOverride defenders = new DefenderDataOverride("enigma",1f, 30f, 100f);
                 SectorEntityToken base = addDerelict(system, spawnData.one, placeToSpawn.orbit, defenders);
                 //makes sure we are not in a star
-                QuestHelper.spawnAwayFromStarFixer(base);
+                SystemHelper.spawnAwayFromStarFixer(base);
                 base.setId("nskr_enigmabase_"+numberOfSpawns);
 
                 numberOfSpawns++;

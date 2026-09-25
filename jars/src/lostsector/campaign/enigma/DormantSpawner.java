@@ -15,7 +15,6 @@ import com.fs.starfarer.api.impl.campaign.procgen.themes.BaseThemeGenerator.Loca
 import com.fs.starfarer.api.impl.campaign.procgen.themes.RemnantSeededFleetManager;
 import com.fs.starfarer.api.util.Pair;
 import com.fs.starfarer.api.util.WeightedRandomPicker;
-import lostsector.campaign.kesteven.quest.QuestHelper;
 import lostsector.settings.Difficulty;
 import lostsector.helper.FleetHelper;
 import lostsector.helper.fleet.SystemPicker;
@@ -144,7 +143,7 @@ public class DormantSpawner {
         }
 
         //makes sure we are not in a star
-        QuestHelper.spawnAwayFromStarFixer(fleet, 2.0f);
+        SystemHelper.spawnAwayFromStarFixer(fleet, 2.0f);
 
         //update
         FleetHelper.update(fleet, new Random());

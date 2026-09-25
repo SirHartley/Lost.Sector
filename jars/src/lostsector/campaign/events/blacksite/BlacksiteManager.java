@@ -22,7 +22,6 @@ import com.fs.starfarer.api.impl.campaign.procgen.StarSystemGenerator;
 import com.fs.starfarer.api.impl.campaign.terrain.DebrisFieldTerrainPlugin;
 import com.fs.starfarer.api.util.Misc;
 import lostsector.helper.fleet.FleetInfo;
-import lostsector.campaign.kesteven.quest.QuestHelper;
 import lostsector.helper.fleet.SimpleFleet;
 import lostsector.settings.Difficulty;
 import lostsector.persistence.Saved;
@@ -188,7 +187,7 @@ public class BlacksiteManager extends BaseCampaignEventListener implements Every
                             fleet.addAssignment(FleetAssignment.GO_TO_LOCATION_AND_DESPAWN, f.home, Float.MAX_VALUE, "standing down");
                         } else {
                             if (fleet.getCurrentAssignment().getAssignment() != FleetAssignment.GO_TO_LOCATION_AND_DESPAWN) {
-                                SectorEntityToken market = QuestHelper.getRandomFactionMarket(getRandom(), fleet.getFaction().getId());
+                                SectorEntityToken market = SystemHelper.getRandomFactionMarket(getRandom(), fleet.getFaction().getId());
                                 fleet.clearAssignments();
                                 if (market==null) {
                                     fleet.addAssignment(FleetAssignment.GO_TO_LOCATION_AND_DESPAWN, f.home, Float.MAX_VALUE, "standing down");
@@ -400,7 +399,7 @@ public class BlacksiteManager extends BaseCampaignEventListener implements Every
             fleet.setFacing(random.nextFloat() * 360.0f);
 
             //makes sure we are not in a star
-            QuestHelper.spawnAwayFromStarFixer(fleet);
+            SystemHelper.spawnAwayFromStarFixer(fleet);
 
             //update
             FleetHelper.update(fleet, random);

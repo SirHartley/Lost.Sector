@@ -56,7 +56,7 @@ public class DelveMeetingBarEvent extends BaseBarEvent {
     @Override
     public boolean shouldShowAtMarket(MarketAPI market) {
         if (QuestHelper.getStage()<=14) return false;
-        if (market!= QuestHelper.asteriaOrOutpost()){
+        if (market!= SectorLookup.asteriaOrOutpost()){
             return false;
         }
         return true;
@@ -137,8 +137,8 @@ public class DelveMeetingBarEvent extends BaseBarEvent {
         asteria = SectorLookup.getAsteria()!=null;
 
         String name = Global.getSector().getPlayerPerson().getName().getFirst();
-        PersonAPI jack = QuestPeople.getJack();
-        PersonAPI alice = QuestPeople.getAlice();
+        PersonAPI jack = KestevenPeople.getJack();
+        PersonAPI alice = KestevenPeople.getAlice();
         disks = DataSatelliteDialog.getRecoveredSatelliteCount()>0;
         boolean foundCache = QuestHelper.getCompleted(QuestStageManager.FOUND_CACHE_KEY);
 

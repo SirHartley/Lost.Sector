@@ -75,7 +75,7 @@ public class TheDelveIntel extends BaseIntelPlugin {
 
     //updates variables, DO NOT do this in advance
     private void init(){
-        asteriaOrOutpost = QuestHelper.asteriaOrOutpost().getName();
+        asteriaOrOutpost = SectorLookup.asteriaOrOutpost().getName();
         stage = QuestHelper.getStage();
         relation = Global.getSector().getPlayerFaction().getRelationship("kesteven");
 
@@ -312,9 +312,9 @@ public class TheDelveIntel extends BaseIntelPlugin {
         init();
 
         SectorEntityToken loc = null;
-        if(stage==16) loc = QuestHelper.asteriaOrOutpost().getPrimaryEntity();
+        if(stage==16) loc = SectorLookup.asteriaOrOutpost().getPrimaryEntity();
         if(stage==17 || stage==18) loc = Global.getSector().getStarSystem("Unknown Site").getCenter();
-        if(stage==19 && !agreeEliza) loc = QuestHelper.asteriaOrOutpost().getPrimaryEntity();
+        if(stage==19 && !agreeEliza) loc = SectorLookup.asteriaOrOutpost().getPrimaryEntity();
         if(stage==19 && agreeEliza) loc = QuestHelper.getElizaLoc();
 
         return loc;

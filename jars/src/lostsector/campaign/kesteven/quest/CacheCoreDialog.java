@@ -8,6 +8,7 @@ import com.fs.starfarer.api.impl.campaign.ids.MemFlags;
 import com.fs.starfarer.api.util.Misc;
 import lostsector.campaign.kesteven.quest.QuestHelper;
 import lostsector.helper.MathHelper;
+import lostsector.helper.SectorLookup;
 
 import java.awt.*;
 import java.util.Map;
@@ -166,7 +167,7 @@ public class CacheCoreDialog implements InteractionDialogPlugin {
             if (QuestHelper.getCompleted(ElizaDialog.AGREED_TO_HELP_KEY)){
                 QuestHelper.getElizaLoc().getMemoryWithoutUpdate().set(MemFlags.MEMORY_KEY_MISSION_IMPORTANT,true);
             } else {
-                QuestHelper.asteriaOrOutpost().getMemoryWithoutUpdate().set(MemFlags.MEMORY_KEY_MISSION_IMPORTANT,true);
+                SectorLookup.asteriaOrOutpost().getMemoryWithoutUpdate().set(MemFlags.MEMORY_KEY_MISSION_IMPORTANT,true);
             }
 
             //remove important

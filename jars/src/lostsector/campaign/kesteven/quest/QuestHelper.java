@@ -11,7 +11,6 @@ import com.fs.starfarer.api.impl.campaign.procgen.Constellation;
 import com.fs.starfarer.api.impl.campaign.procgen.themes.BaseThemeGenerator;
 import com.fs.starfarer.api.impl.campaign.procgen.themes.DerelictThemeGenerator;
 import com.fs.starfarer.api.util.Misc;
-import lostsector.campaign.kesteven.ExileManager;
 import lostsector.campaign.kesteven.quest.ElizaSearchBarEvent;
 import lostsector.dialogue.rules.nskr_kestevenQuest;
 import lostsector.ModPlugin;
@@ -23,7 +22,6 @@ import lostsector.helper.SectorLookup;
 import lostsector.helper.SystemHelper;
 import org.jetbrains.annotations.Nullable;
 import org.lazywizard.lazylib.MathUtils;
-import org.lazywizard.lazylib.VectorUtils;
 import org.lwjgl.util.vector.Vector2f;
 
 import java.util.ArrayList;
@@ -50,21 +48,11 @@ public class QuestHelper {
         artifact.getMemory().set(QuestStageManager.ARTIFACT_KEY+number, true);
 
         //makes sure we are not in a star
-        QuestHelper.spawnAwayFromStarFixer(artifact, 2.0f);
+        SystemHelper.spawnAwayFromStarFixer(artifact, 2.0f);
 
         log("baseLoc " + loc.getName());
         log("qUtil SPAWNED artifact in " + artifact.getOrbitFocus().getName());
         return artifact;
-    }
-
-    // Null only when neither Asteria nor the Outpost exists.
-    public static MarketAPI asteriaOrOutpost(){
-        SectorEntityToken asteria = SectorLookup.getAsteria();
-        SectorEntityToken outpost = SectorLookup.getOutpost();
-        MarketAPI asteriaMarket = asteria == null ? null : asteria.getMarket();
-        MarketAPI outpostMarket = outpost == null ? null : outpost.getMarket();
-        boolean useOutpost = asteriaMarket == null || ExileManager.getExiled(ExileManager.EXILE_KEY);
-        return useOutpost && outpostMarket != null ? outpostMarket : asteriaMarket;
     }
 
     public static boolean outpostExists(){
@@ -261,66 +249,13 @@ public class QuestHelper {
         if (validMarkets.isEmpty()){
             if (ignoreUsedMarket){
                 log("ERROR no valid Eliza markets picking random pirate market");
-                return getRandomFactionMarket(random, Factions.PIRATES, ElizaSearchBarEvent.getUsedMarkets(ElizaSearchBarEvent.USED_MARKET_KEY));
+                return SystemHelper.getRandomFactionMarket(random, Factions.PIRATES, ElizaSearchBarEvent.getUsedMarkets(ElizaSearchBarEvent.USED_MARKET_KEY));
             }
             log("ERROR no valid Eliza markets try again");
             return pickElizaMarket(random, true);
         }
         return validMarkets.get(MathHelper.getSeededRandomNumberInRange(0,validMarkets.size()-1, random)).getPrimaryEntity();
     }
-
-    public static boolean hasFactionMarket(StarSystemAPI sys, String faction){
-        boolean market = false;
-        for (SectorEntityToken e : sys.getAllEntities()){
-            if (e.getMarket() == null) continue;
-            if (e.getMarket().getFactionId() == null) continue;
-            if (e.getMarket().isPlanetConditionMarketOnly()) continue;
-            if (e.getMarket().isHidden()) continue;
-            if (e.getMarket().getFactionId().equals(Factions.NEUTRAL)) continue;
-            if (e.getMarket().getFaction().getId().equals(faction)){
-                market = true;
-                break;
-            }
-        }
-        return market;
-    }
-
-    public static SectorEntityToken getRandomFactionMarket(Random random, String faction) {
-        return getRandomFactionMarket(random, faction, new ArrayList<String>());
-    }
-    public static SectorEntityToken getRandomFactionMarket(Random random, String faction, List<String> blacklist) {
-        List<MarketAPI> validMarkets = new ArrayList<>();
-        for (MarketAPI market : Misc.getFactionMarkets(faction)) {
-            boolean isValid = true;
-            StarSystemAPI system = market.getStarSystem();
-            //crash on hyperspace markets
-            if (system==null) continue;
-            if (system.hasTag(Tags.THEME_HIDDEN) || system.hasTag(Tags.SYSTEM_CUT_OFF_FROM_HYPER) ||
-                    system.getStar() == null || system.getPlanets().size()<1) {
-                isValid = false;
-            }
-            if (blacklist.contains(market.getId())){
-                isValid = false;
-            }
-            if (market.isHidden() || market.isPlanetConditionMarketOnly()){
-                isValid = false;
-            }
-            if (isValid) {
-                validMarkets.add(market);
-            }
-        }
-        if (validMarkets.isEmpty()){
-            if (!blacklist.isEmpty()){
-                log("ERROR no valid " + faction + " markets with blacklist retry");
-                return getRandomFactionMarket(random, faction, new ArrayList<String>());
-            } else {
-                log("ERROR no valid " + faction + " markets picking random market");
-                return SystemHelper.getRandomMarket(random, false);
-            }
-        }
-        return validMarkets.get(MathHelper.getSeededRandomNumberInRange(0,validMarkets.size()-1, random)).getPrimaryEntity();
-    }
-
 
     //for kesteven quest line
     public static boolean hasEnigmaBase(StarSystemAPI system){
@@ -371,84 +306,6 @@ public class QuestHelper {
         StarSystemAPI sys = Global.getSector().getStarSystem("Unknown Site");
 
         return sys.createToken(new Vector2f(MathHelper.getSeededRandomNumberInRange(-3000f, 3000f, random), MathHelper.getSeededRandomNumberInRange(-3000f, 3000f, random)));
-    }
-
-    public static SectorEntityToken spawnAwayFromStarFixer(SectorEntityToken entity){
-        return spawnAwayFromStarFixer(entity, 1f);
-    }
-
-    public static SectorEntityToken spawnAwayFromStarFixer(SectorEntityToken entity, float extraDistanceMult){
-        PlanetAPI planet = getNearestPlanetEntity(entity);
-        if (planet==null){
-            log("ERROR no planets");
-            return entity;
-        }
-        PlanetAPI focus = null;
-        if (entity.getOrbit()!=null&&entity.getOrbitFocus()!=null){
-            if (entity.getOrbitFocus() instanceof PlanetAPI){
-                focus = (PlanetAPI) entity.getOrbitFocus();
-                log("focus " +focus.getName());
-                log("planet " +planet.getName());
-            }
-        }
-        //move away from planet or star
-        float length = MathUtils.getDistance(entity.getLocation(), planet.getLocation());
-        float end_x = 0f;
-        float end_y = 0f;
-        if (planet.isStar()) extraDistanceMult = 2.0f;
-        if (focus!=null && planet!=focus) extraDistanceMult = 1f;
-        float toDistance = (planet.getRadius() * 1.25f) * extraDistanceMult;
-        if (planet.isStar() && length<=0f){
-            Vector2f newVector = Vector2f.add(new Vector2f(100f,100f), entity.getLocation(), null);
-            entity.setLocation(newVector.getX(), newVector.getY());
-            length = MathUtils.getDistance(entity.getLocation(), planet.getLocation());
-            log("fixed 0 location");
-        }
-        log("planet "+planet.getName()+" toDist "+toDistance+" ent "+entity.getName());
-        float endLength = 0f;
-        if (length>0f && length < toDistance) {
-            while (length < toDistance) {
-                Vector2f vector = new Vector2f(MathHelper.scaleVector(Vector2f.sub(entity.getLocation(), planet.getLocation(), entity.getLocation()), 1.25f));
-                length = vector.length();
-                endLength = vector.length();
-                end_x = planet.getLocation().getX() + length * (vector.getX() / length);
-                end_y = planet.getLocation().getY() + length * (vector.getY() / length);
-                log("x " + end_x + " y " + end_y + " length " + length + " goal " + toDistance + " extra " + extraDistanceMult);
-                entity.setLocation(end_x, end_y);
-                log("MiscLS moved " + entity.getName() + " loc " + entity.getContainingLocation().getName());
-            }
-        } else return entity;
-
-        OrbitAPI newOrbit;
-        if (endLength>0f) length = endLength;
-
-        float angle = VectorUtils.getAngle(planet.getLocation(), entity.getLocation());
-        float days = MathUtils.getRandomNumberInRange(1f, 1.25f) * (length/15f);
-        if (entity.getOrbit()!=null && entity.getOrbitFocus()!=null) {
-            newOrbit = Global.getFactory().createCircularOrbit(entity.getOrbitFocus(), angle, length, days);
-        } else {
-            newOrbit = Global.getFactory().createCircularOrbit(planet, angle, length, days);
-        }
-        entity.setOrbit(newOrbit);
-        log ("MiscLS finished "+entity.getName()+" dist "+MathUtils.getDistance(entity.getLocation(), planet.getLocation())+ " target "+length);
-
-        return entity;
-    }
-
-    private static PlanetAPI getNearestPlanetEntity(SectorEntityToken entity) {
-        float dist = Float.MAX_VALUE;
-        float newDist = 0f;
-        PlanetAPI nearest = null;
-        for (SectorEntityToken e : entity.getStarSystem().getAllEntities()){
-            if (e instanceof PlanetAPI){
-                newDist = MathUtils.getDistance(e.getLocation(), entity.getLocation()) - e.getRadius();
-                if (newDist<dist) {
-                    dist = newDist;
-                    nearest = (PlanetAPI)e;
-                }
-            }
-        }
-        return nearest;
     }
 
     public static void saveEnding(){
@@ -583,7 +440,7 @@ public class QuestHelper {
         Map<String, Object> data = Global.getSector().getPersistentData();
         String id = nskr_kestevenQuest.PERSISTENT_KEY+"Start3";
         if (!data.containsKey(id))
-            data.put(id, getRandomFactionMarket(nskr_kestevenQuest.getRandom(), Factions.TRITACHYON, QuestStageManager.JOB3_MARKET_BLACKLIST));
+            data.put(id, SystemHelper.getRandomFactionMarket(nskr_kestevenQuest.getRandom(), Factions.TRITACHYON, QuestStageManager.JOB3_MARKET_BLACKLIST));
 
         return (SectorEntityToken) data.get(id);
     }
@@ -672,30 +529,5 @@ public class QuestHelper {
 
         Map<String, Object> data = Global.getSector().getPersistentData();
         data.put(id, stage);
-    }
-
-    public static SectorEntityToken getLocation(String id){
-        return getLocation(id, null);
-    }
-    public static SectorEntityToken getLocation(String id, SectorEntityToken defaultLoc){
-
-        Map<String, Object> data = Global.getSector().getPersistentData();
-        if (!data.containsKey(id)) data.put(id, defaultLoc);
-
-        return (SectorEntityToken) data.get(id);
-    }
-    public static SectorEntityToken setLocation(SectorEntityToken loc, String id){
-        Map<String, Object> data = Global.getSector().getPersistentData();
-        data.put(id, loc);
-
-        return (SectorEntityToken) data.get(id);
-    }
-    public static Random getRandom(String id) {
-        Map<String, Object> data = Global.getSector().getPersistentData();
-        if (!data.containsKey(id)) {
-
-            data.put(id,  new Random(new Random().nextLong()));
-        }
-        return (Random) data.get(id);
     }
 }

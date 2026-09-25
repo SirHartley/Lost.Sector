@@ -19,6 +19,7 @@ import com.fs.starfarer.api.util.Misc.Token;
 import lostsector.campaign.kesteven.quest.QuestStageManager;
 import lostsector.campaign.kesteven.quest.QuestHelper;
 import lostsector.helper.MathHelper;
+import lostsector.helper.SectorLookup;
 import org.lwjgl.input.Keyboard;
 
 import java.awt.*;
@@ -272,10 +273,10 @@ public class nskr_modRemoval extends PaginatedOptions {
     public static boolean validMarket(MarketAPI market) {
         if (market==null) return false;
         if (Global.getSector().getPlayerFaction().getRelationship("kesteven")<=-0.5f) return false;
-        if (QuestHelper.asteriaOrOutpost()==null) return false;
+        if (SectorLookup.asteriaOrOutpost()==null) return false;
         if (QuestHelper.getCompleted(QuestStageManager.ELIZA_INTERCEPT_HANDED_OVER) || QuestHelper.getCompleted(nskr_altEndingDialogLuddic.DIALOG_FINISHED_KEY)) return false;
 
-        return market== QuestHelper.asteriaOrOutpost();
+        return market== SectorLookup.asteriaOrOutpost();
     }
 
     public static List<FleetMemberAPI> getShipsWithSmods(){

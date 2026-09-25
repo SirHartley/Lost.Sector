@@ -22,6 +22,7 @@ import lostsector.campaign.events.blacksite.BlacksiteManager;
 import lostsector.campaign.kesteven.quest.QuestStageManager;
 import lostsector.campaign.kesteven.quest.QuestHelper;
 import lostsector.dialogue.rules.nskr_kestevenQuest;
+import lostsector.helper.SectorLookup;
 
 import java.util.Collection;
 import java.util.List;
@@ -91,8 +92,8 @@ public class CorePlugin extends BaseCampaignPlugin {
         //job5 end
         if (stage==19){
             //kesteven
-            if (QuestHelper.asteriaOrOutpost()!=null) {
-                String loc = QuestHelper.asteriaOrOutpost().getId();
+            if (SectorLookup.asteriaOrOutpost()!=null) {
+                String loc = SectorLookup.asteriaOrOutpost().getId();
                 if (!QuestHelper.getCompleted(EndingKestevenDialog.DIALOG_FINISHED_KEY) && !QuestHelper.getCompleted(QuestStageManager.ELIZA_INTERCEPT_HANDED_OVER)) {
                     if (interactionTarget.getId().equals(loc)) {
                         return new PluginPick<InteractionDialogPlugin>(new EndingKestevenDialog(), PickPriority.MOD_GENERAL);

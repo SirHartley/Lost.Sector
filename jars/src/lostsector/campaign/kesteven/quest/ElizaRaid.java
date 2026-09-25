@@ -13,7 +13,7 @@ import com.fs.starfarer.api.impl.campaign.rulecmd.salvage.MarketCMD.RaidDangerLe
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import com.fs.starfarer.api.util.Misc;
 import lostsector.campaign.kesteven.quest.ElizaDialog;
-import lostsector.campaign.kesteven.quest.QuestFleets;
+import lostsector.campaign.kesteven.quest.KestevenFleets;
 import lostsector.campaign.kesteven.quest.QuestHelper;
 import lostsector.helper.MathHelper;
 
@@ -78,7 +78,7 @@ public class ElizaRaid extends AbstractGoalGroundRaidObjectivePluginImpl {
 
         QuestHelper.setCompleted(true, ElizaDialog.ELIZA_FIGHT_KEY);
         //spawn fleet
-        CampaignFleetAPI fleet = QuestFleets.spawnElizaFleet(market.getPrimaryEntity(), eliza, ElizaDialog.getRandom(), false, false);
+        CampaignFleetAPI fleet = KestevenFleets.spawnElizaFleet(market.getPrimaryEntity(), eliza, ElizaDialog.getRandom(), false, false);
 
         //xp
         return (int) (1 * getProjectedCreditsValue() * XP_GAIN_VALUE_MULT);

@@ -5,7 +5,7 @@ import com.fs.starfarer.api.characters.PersonAPI;
 import lostsector.campaign.kesteven.ExileManager;
 import lostsector.helper.SectorLookup;
 
-public class QuestPeople {
+public class KestevenPeople {
 
     public static PersonAPI getJack(){
         boolean exiled = ExileManager.getExiled(ExileManager.EXILE_KEY);

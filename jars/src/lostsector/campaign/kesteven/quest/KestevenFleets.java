@@ -26,10 +26,10 @@ import org.lwjgl.util.vector.Vector2f;
 
 import java.util.*;
 
-public class QuestFleets {
+public class KestevenFleets {
 
     static void log(final String message) {
-        Global.getLogger(QuestFleets.class).info(message);
+        Global.getLogger(KestevenFleets.class).info(message);
     }
 
     public static final String FLEET_NAME = "Eliza's Merc Armada";
@@ -262,7 +262,7 @@ public class QuestFleets {
         CampaignFleetAPI fleet = simpleFleet.create();
 
         //makes sure we are not in a star
-        QuestHelper.spawnAwayFromStarFixer(fleet);
+        SystemHelper.spawnAwayFromStarFixer(fleet);
 
         //add to mem IMPORTANT
         List<FleetInfo> fleets = FleetHelper.getFleets(QuestStageManager.FLEET_ARRAY_KEY);
@@ -338,7 +338,7 @@ public class QuestFleets {
         CampaignFleetAPI fleet = simpleFleet.create();
 
         //makes sure we are not in a star
-        QuestHelper.spawnAwayFromStarFixer(fleet, 2.0f);
+        SystemHelper.spawnAwayFromStarFixer(fleet, 2.0f);
 
         //add to mem IMPORTANT
         List<FleetInfo> fleets = FleetHelper.getFleets(QuestStageManager.FLEET_ARRAY_KEY);
@@ -387,7 +387,7 @@ public class QuestFleets {
         CampaignFleetAPI fleet = simpleFleet.create();
 
         //makes sure we are not in a star
-        QuestHelper.spawnAwayFromStarFixer(fleet, 1.5f);
+        SystemHelper.spawnAwayFromStarFixer(fleet, 1.5f);
 
         log("job4Friendly SPAWNED " + fleet.getName() + " size " + combatPoints +" in "+ origin.getName()+" to "+ loc.getName());
         return fleet;

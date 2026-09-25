@@ -25,6 +25,7 @@ import lostsector.persistence.Saved;
 import lostsector.helper.FleetHelper;
 import lostsector.helper.MathHelper;
 import lostsector.helper.PowerLevel;
+import lostsector.helper.SystemHelper;
 import org.lazywizard.lazylib.MathUtils;
 import org.lwjgl.util.vector.Vector2f;
 
@@ -255,7 +256,7 @@ public class InterceptManager extends BaseCampaignEventListener implements Every
                     } // go back
                     else {
                         if (fleet.getAI().getCurrentAssignmentType()!=FleetAssignment.GO_TO_LOCATION_AND_DESPAWN) {
-                            SectorEntityToken target = QuestHelper.getRandomFactionMarket(random, Factions.PIRATES);
+                            SectorEntityToken target = SystemHelper.getRandomFactionMarket(random, Factions.PIRATES);
                             fleet.clearAssignments();
                             fleet.addAssignment(FleetAssignment.GO_TO_LOCATION_AND_DESPAWN, target, Float.MAX_VALUE, "returning to "+target.getMarket().getName());
                         }
@@ -307,7 +308,7 @@ public class InterceptManager extends BaseCampaignEventListener implements Every
                     } else {
                         // Pick a new target once if the current one has no market.
                         if (f.target.getMarket()==null){
-                            f.target = QuestHelper.getRandomFactionMarket(random, Factions.LUDDIC_PATH);
+                            f.target = SystemHelper.getRandomFactionMarket(random, Factions.LUDDIC_PATH);
                         }
                         FleetHelper.guardTargetAI(fleet, f, FleetHelper.GuardMovementBehaviour.ORBIT, FleetHelper.GuardAttackBehaviour.PLAYER, 0.01f);
                     }

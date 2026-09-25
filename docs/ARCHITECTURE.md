@@ -22,7 +22,7 @@ Technical routing for the current implementation. Java paths below are relative 
 | Endings and the production chip | `kesteven/quest/EndingKestevenDialog`, `kesteven/quest/EndingElizaDialog`, `dialogue/rules/nskr_altEndingDialogLuddic/TT -> QuestHelper.saveEnding()`; `kesteven/quest/UnlimitedProductionChipCondition -> kesteven/BlackOpsManager.getUPC()` |
 | Named bounties | `bounties/*/*Spawner -> events/hints/HintManager -> intel/*Intel -> bounties/BountyLoot`; [bounty structure](quests/CONTRACTS_AND_BOUNTIES.md#named-bounties) |
 | Roaming Enigma fleets | `enigma/HyperspaceEnigmaSpawner`, `enigma/StalkerSpawner`, `enigma/DormantSpawner`, `enigma/EnigmaBaseSpawner` + `EnigmaDefenderPlugin`; officers `enigma/EnigmaAIConverter`; loot `enigma/EnigmaFleetLoot` |
-| Event fleets | `events/InterceptManager`, `kesteven/loans/LoanShark`, quest fleets from `QuestStageManager` via `kesteven/quest/QuestFleets`; dialogue in `rules.csv` or `dialogue/rules/nskr_ttCollectorDialog`, `nskr_loanSharkDialog`, `nskr_elizaInterceptDialog` |
+| Event fleets | `events/InterceptManager`, `kesteven/loans/LoanShark`, quest fleets from `QuestStageManager` via `kesteven/quest/KestevenFleets`; dialogue in `rules.csv` or `dialogue/rules/nskr_ttCollectorDialog`, `nskr_loanSharkDialog`, `nskr_elizaInterceptDialog` |
 | Debt, ship swap, S-mod removal | Official menus in `rules.csv -> dialogue/rules/nskr_debt`, `nskr_shipSwap`, `nskr_modRemoval`; monthly interest `kesteven/loans/CrushingDebt` |
 | Contracts | `person_missions.csv -> kesteven/contracts/ContractsMission -> kesteven/contracts/ContractIntel`; `kesteven/contracts/ContractManager`; [contracts](quests/CONTRACTS_AND_BOUNTIES.md#contracts) |
 | Blacksites | `events/blacksite/BlacksiteSpawner -> events/blacksite/BlacksiteManager -> CorePlugin -> BlacksiteDialog` |
@@ -53,11 +53,11 @@ Technical routing for the current implementation. Java paths below are relative 
 | `ModPlugin.onNewGameAfterEconomyLoad()` | Frost part 2 market (Corvus mode or no Nexerelin), `DerelictTeaserSpawner.spawnRogues()` |
 | `ModPlugin.onNewGameAfterTimePass()` | Frost, Outpost and Asteria in a random system in Nexerelin random-core games, IndEvo features, `SectorGen.genPeople()`, Frost ruins, `DesertConditionRepair.fix()`, blacksites, Mothership fleet, Enigma relations |
 
-`onGameLoad` order: Nexerelin null-manager guard -> `createManagers()`: clears the `persistence/Saved` registry and `CampaignTimer` instances and builds new `EFS_LIST` instances -> `HellSpawnDisposableFleetSpawner` and `ThronesGiftDisposableFleetSpawner` behind `hasScript` -> `kesteven/KestevenBlueprints.borrowIndieBlueprints()` -> `kesteven/BlackOpsBlueprints.scanWeaponBlueprints()` -> `syncNSKRScripts()` -> `registerPlugin(new CorePlugin())` -> `EFS_LIST` as transient scripts, transient listeners and listener-manager listeners -> `persistence/Saved.loadPersistentData()` -> `KestevenTipBarEventCreator` -> `Difficulty.clearStarfarerFromStartUnlessStarfarer()` -> new-save generation -> `FleetHelper.hackBrokenVariants()`.
+`onGameLoad` order: Nexerelin null-manager guard -> `createManagers()`: clears the `persistence/Saved` registry and `CampaignTimer` instances and builds new `EFS_LIST` instances -> `HellSpawnDisposableFleetSpawner` and `ThronesGiftDisposableFleetSpawner` behind `hasScript` -> `kesteven/KestevenBlueprints.borrowIndieBlueprints()` -> `kesteven/BlackOpsBlueprints.scanWeaponBlueprints()` -> `syncNSKRScripts()` -> `registerPlugin(new CorePlugin())` -> `EFS_LIST` as transient scripts, transient listeners and listener-manager listeners -> `persistence/Saved.loadPersistentData()` -> `kesteven/tips/KestevenTipBarEventCreator` -> `Difficulty.clearStarfarerFromStartUnlessStarfarer()` -> new-save generation -> `FleetHelper.hackBrokenVariants()`.
 
 A save without `ModPlugin.SAVE_KEY` (`nskr_enabled`) in sector persistent data runs all four `onNewGame*` hooks from `onGameLoad`, then adds a Kesteven station commander to `nskr_asteria`. This is how the mod is added to an existing save.
 
-Sectors without Arcadia (Nexerelin random-core games, or Arcadia removed) get Asteria from `Asteria.generateInRandomSystemIfMissing()`, called after `Outpost.generate()`. Look Asteria up by entity ID (`helper/SectorLookup.getAsteria()`), never through Arcadia. `SectorGen.genPeople()` places Michael, Jack and Alice on Asteria and Nicholas on the Outpost. If no system qualifies, Asteria is not generated, `QuestHelper.asteriaOrOutpost()` returns the Outpost, and `kesteven/ExileManager.exile()` creates the missing quest people there.
+Sectors without Arcadia (Nexerelin random-core games, or Arcadia removed) get Asteria from `Asteria.generateInRandomSystemIfMissing()`, called after `Outpost.generate()`. Look Asteria up by entity ID (`helper/SectorLookup.getAsteria()`), never through Arcadia. `SectorGen.genPeople()` places Michael, Jack and Alice on Asteria and Nicholas on the Outpost. If no system qualifies, Asteria is not generated, `helper/SectorLookup.asteriaOrOutpost()` returns the Outpost, and `kesteven/ExileManager.exile()` creates the missing quest people there.
 
 Scripts use two lifecycles:
 
@@ -68,7 +68,7 @@ Scripts use two lifecycles:
 
 `CorePlugin` is a transient `BaseCampaignPlugin`: vanilla drops transient plugins when saving, so `onGameLoad` registers it again. Its `pickInteractionDialogPlugin` routes quest and event entities to their Java dialogs by entity ID and memory state.
 
-Other registrations: `KestevenTipBarEventCreator` bar event creator, guarded by `hasEventCreator`; `ElizaRaidObjectiveCreator`, added by `ElizaDialog` during that dialog. Combat listeners added to ships and entities last for one battle.
+Other registrations: `kesteven/tips/KestevenTipBarEventCreator` bar event creator, guarded by `hasEventCreator`; `ElizaRaidObjectiveCreator`, added by `ElizaDialog` during that dialog. Combat listeners added to ships and entities last for one battle.
 
 | Registry | Owner / consumer |
 |---|---|
@@ -145,8 +145,8 @@ Packages group code by feature. Use `rg --files jars/src/lostsector/<package>` f
 | `rendering` | Render helpers and blast sprites |
 | `dialogue/rules` | Rule commands (`nskr_*`) |
 | `campaign` | `CorePlugin`; feature packages below |
-| `campaign/enigma` | Enigma fleets, bases, relations, officers, loot, the Heart occupation, `EnigmaPopCondition` |
-| `campaign/kesteven` | Kesteven economy, exports, blueprints, black ops, exile; `loans/`, `contracts/`, and the questline in `quest/` |
+| `campaign/enigma` | Enigma fleets, bases, relations, officers, loot, the Heart occupation and Frost intel, `EnigmaPopCondition` |
+| `campaign/kesteven` | Kesteven economy, exports, blueprints, black ops, exile; `loans/`, `contracts/`, bar tips in `tips/`, and the questline in `quest/` |
 | `campaign/bounties` | `BountyLoot`; one package per named bounty: `abyss/`, `eternity/`, `mothership/`, `peacekeepers/` |
 | `campaign/events` | ARO intercepts, hints (`hints/`), blacksites (`blacksite/`), environmental storytelling, derelict teasers |
 | `campaign/starts` | `GameModeManager`; the `hellspawn/` and `thronesgift/` custom starts |
@@ -159,12 +159,12 @@ Packages group code by feature. Use `rg --files jars/src/lostsector/<package>` f
 | File | Owner / connection |
 |---|---|
 | `CorePlugin` | Transient campaign plugin; `pickInteractionDialogPlugin` routes quest, blacksite, Mothership and custom-start entities to Java dialogs |
-| `kesteven/ExileManager` | Kesteven exile from Asteria; moves quest people between Asteria and Outpost; `QuestHelper.asteriaOrOutpost()` |
+| `kesteven/ExileManager` | Kesteven exile from Asteria; moves quest people between Asteria and Outpost; its exile flag is read by `helper/SectorLookup.asteriaOrOutpost()` |
 | `kesteven/KestevenExportManager`, `kesteven/LicensingFees` | Kesteven export sets and monthly licensing fees |
 | `kesteven/loans/CrushingDebt` | Monthly debt interest for `dialogue/rules/nskr_debt` |
 | `kesteven/CommissionedCrewsBonus` | Monthly crew stipend with Commissioned Crews |
 | `kesteven/KestevenBlueprints`, `kesteven/BlackOpsBlueprints` | Static blueprint setup called from `onGameLoad` |
-| `enigma/HeartOccupation` | While Enigma owns `nskr_heart`, removes every comm-directory entry except `nskr_enigmaAdmin`, every frame including while paused; Frost intel bootstrap |
+| `enigma/HeartOccupation` | While Enigma owns `nskr_heart`, removes every comm-directory entry except `nskr_enigmaAdmin`, every frame including while paused; adds `enigma/FrostIntel` on the first visit to Frost |
 | `enigma/EnigmaHullmodListener` | Enigma tip unlock counts; logic in static `update()` |
 | `enigma/EnigmaRelations`, `enigma/EnigmaAIConverter` | Enigma relationship clamp; AI-core officers on spawned Enigma fleets |
 
@@ -185,11 +185,12 @@ Packages group code by feature. Use `rg --files jars/src/lostsector/<package>` f
 |---|---|
 | `kesteven/quest/QuestStageManager` | Kesteven questline state and automatic transitions, quest fleets, failure to stage 99. Runs while paused. |
 | `kesteven/quest/QuestHelper` | Stage and flag accessors over sector persistent data (`getStage`, `getCompleted`, `getFloat`), artifact spawning, `saveEnding()` |
-| `kesteven/quest/QuestPeople` | Quest person lookups: Jack, Alice, Nicholas, Michael and Eliza; the first four return null while their current market is missing |
-| `kesteven/quest/QuestFleets`; `helper/fleet/SimpleFleet`, `SimpleFleetMember`, `SimpleCaptain`, `SystemPicker`, `FleetInfo` | Quest fleet spawns; fleet and system builders shared by all spawners |
+| `kesteven/quest/KestevenPeople` | Quest person lookups: Jack, Alice, Nicholas, Michael and Eliza; the first four return null while their current market is missing |
+| `kesteven/quest/KestevenFleets`; `helper/fleet/SimpleFleet`, `SimpleFleetMember`, `SimpleCaptain`, `SystemPicker`, `FleetInfo` | Quest fleet spawns; fleet and system builders shared by all spawners |
 | `kesteven/quest/*Dialog` | Java `InteractionDialogPlugin`s opened by `CorePlugin`; `CacheDoubtDialog` is opened by `QuestStageManager` |
-| `kesteven/quest/*BarEvent`, `KestevenTipBarEventCreator` | Bar events. `QuestStageManager` adds `HostileTakeoverBarEvent` and the Eliza search bar events to `PortsideBarData`; `dialogue/rules/nskr_barEventFixer` adds `DelveMeetingBarEvent` on each visit; `KestevenTipBarEventCreator` creates `KestevenTipBarEvent`. |
-| `kesteven/quest/*Intel` | Job intel: `EnemyUnknownIntel`, `HostileTakeoverIntel`, `OperationLifesaverIntel`, `TheDelveIntel`, `CacheIntel`, `FrostIntel`, `KestevenTipIntel` |
+| `kesteven/quest/*BarEvent` | Questline bar events. `QuestStageManager` adds `HostileTakeoverBarEvent` and the Eliza search bar events to `PortsideBarData`; `dialogue/rules/nskr_barEventFixer` adds `DelveMeetingBarEvent` on each visit. |
+| `kesteven/quest/*Intel` | Job intel: `EnemyUnknownIntel`, `HostileTakeoverIntel`, `OperationLifesaverIntel`, `TheDelveIntel`, `CacheIntel` |
+| `kesteven/tips/KestevenTipBarEventCreator`, `KestevenTipBarEvent`, `KestevenTipIntel` | Bar event at Kesteven markets that sells the location of an unvisited system with a warning beacon, a derelict survey ship or a derelict mothership; the creator makes `KestevenTipBarEvent`, which adds `KestevenTipIntel` when the player pays. Not part of the questline. |
 | `kesteven/quest/ElizaRaid`, `ElizaRaidObjectiveCreator` | Ground-raid objective for Eliza's data disks |
 | `kesteven/quest/UnlimitedProductionChipCondition` | Market condition of the production chip |
 | `kesteven/contracts/*` | `ContractsMission`, `ContractInfo`, `ContractIntel`, `ContractManager` (failure checks; offer reset when its counter reaches 600 seconds, about 60 days) |
@@ -254,8 +255,8 @@ Prototype weapons (`prot_wp` tag, Unknown Prototype manufacturer) have one `*Eff
 | File | Owner / connection |
 |---|---|
 | `Ids` | Stable faction, person, entity and hullmod IDs; mod ID `lost.sector` |
-| `SectorLookup` | Fixed places (`getFrost`, `getAsteria`, `getOutpost`) and existence checks (`enigmaExists`, `kestevenExists`, `asteriaExists`) |
-| `SystemHelper` | Random system, market and in-system location picks; gate, relay and neutron-star checks; nearest system; entity swaps |
+| `SectorLookup` | Fixed places (`getFrost`, `getAsteria`, `getOutpost`), the Kesteven home market (`asteriaOrOutpost`: the Outpost while exiled or without Asteria) and existence checks (`enigmaExists`, `kestevenExists`, `asteriaExists`) |
+| `SystemHelper` | Random system, market, faction market (`getRandomFactionMarket`) and in-system location picks; `spawnAwayFromStarFixer` moves a placed entity or fleet out of the nearest planet or star; gate, relay and neutron-star checks; nearest system; entity swaps |
 | `ShipHelper` | Prototype/Enigma identity (`isProtTech`, `protOrEnigma`), logistics and D-mod checks, officer skills, hull-size multiplier (`getLinearMod`) |
 | `CombatHelper` | Range queries pinned to LazyLib 2.4b behavior; area damage including station modules |
 | `MathHelper` | Easing, noise, seeded random ranges (modified from LazyLib); sector seed (`getSeedParsed`) |

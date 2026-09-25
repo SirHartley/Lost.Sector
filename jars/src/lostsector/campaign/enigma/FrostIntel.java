@@ -1,4 +1,4 @@
-package lostsector.campaign.kesteven.quest;
+package lostsector.campaign.enigma;
 
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.FactionAPI;

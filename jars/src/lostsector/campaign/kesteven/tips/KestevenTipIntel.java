@@ -1,4 +1,4 @@
-package lostsector.campaign.kesteven.quest;
+package lostsector.campaign.kesteven.tips;
 
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.CampaignFleetAPI;
@@ -10,7 +10,6 @@ import com.fs.starfarer.api.impl.campaign.intel.BaseIntelPlugin;
 import com.fs.starfarer.api.ui.SectorMapAPI;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import com.fs.starfarer.api.util.Misc;
-import lostsector.campaign.kesteven.quest.KestevenTipBarEvent;
 
 import java.awt.*;
 import java.util.Map;

@@ -1,4 +1,4 @@
-package lostsector.campaign.kesteven.quest;
+package lostsector.campaign.kesteven.tips;
 
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.InteractionDialogAPI;
@@ -15,7 +15,6 @@ import com.fs.starfarer.api.impl.campaign.ids.Tags;
 import com.fs.starfarer.api.impl.campaign.intel.bar.PortsideBarData;
 import com.fs.starfarer.api.impl.campaign.intel.bar.events.BaseBarEvent;
 import com.fs.starfarer.api.util.Misc;
-import lostsector.campaign.kesteven.quest.KestevenTipIntel;
 import lostsector.helper.fleet.SystemPicker;
 import lostsector.helper.MathHelper;
 import lostsector.helper.SystemHelper;

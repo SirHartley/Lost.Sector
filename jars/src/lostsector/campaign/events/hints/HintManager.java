@@ -3,7 +3,7 @@ package lostsector.campaign.events.hints;
 import lostsector.campaign.bounties.abyss.AbyssIntel;
 import lostsector.campaign.bounties.eternity.UmbraIntel;
 import lostsector.campaign.bounties.mothership.MothershipIntel;
-import lostsector.campaign.kesteven.quest.FrostIntel;
+import lostsector.campaign.enigma.FrostIntel;
 
 import com.fs.starfarer.api.EveryFrameScript;
 import com.fs.starfarer.api.Global;

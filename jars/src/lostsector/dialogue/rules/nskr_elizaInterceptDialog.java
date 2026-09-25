@@ -15,7 +15,8 @@ import lostsector.campaign.kesteven.quest.EndingKestevenDialog;
 import lostsector.campaign.kesteven.quest.QuestStageManager;
 import lostsector.campaign.kesteven.quest.QuestHelper;
 import lostsector.helper.MathHelper;
-import lostsector.campaign.kesteven.quest.QuestPeople;
+import lostsector.campaign.kesteven.quest.KestevenPeople;
+import lostsector.helper.SectorLookup;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -170,13 +171,13 @@ public class nskr_elizaInterceptDialog extends PaginatedOptions {
         QuestHelper.setCompleted(true, QuestStageManager.ELIZA_INTERCEPT_HANDED_OVER);
 
         //rep
-        QuestPeople.getEliza().getRelToPlayer().adjustRelationship(0.05f, RepLevel.COOPERATIVE);
+        KestevenPeople.getEliza().getRelToPlayer().adjustRelationship(0.05f, RepLevel.COOPERATIVE);
         if(Global.getSector().getFaction(Factions.PLAYER).getRelationship("kesteven")>-0.35f) {
             Global.getSector().getFaction(Factions.PLAYER).setRelationship("kesteven", -0.35f);
         }
         //remove important
         dialog.getInteractionTarget().getMemoryWithoutUpdate().unset(MemFlags.MEMORY_KEY_MISSION_IMPORTANT);
-        if (QuestHelper.asteriaOrOutpost()!=null) QuestHelper.asteriaOrOutpost().getMemory().unset(MemFlags.MEMORY_KEY_MISSION_IMPORTANT);
+        if (SectorLookup.asteriaOrOutpost()!=null) SectorLookup.asteriaOrOutpost().getMemory().unset(MemFlags.MEMORY_KEY_MISSION_IMPORTANT);
         //add important to base
         QuestHelper.getElizaLoc().getMemory().set(MemFlags.MEMORY_KEY_MISSION_IMPORTANT, true);
 
@@ -205,7 +206,7 @@ public class nskr_elizaInterceptDialog extends PaginatedOptions {
         dialog.getInteractionTarget().getMemoryWithoutUpdate().unset(MemFlags.MEMORY_KEY_MISSION_IMPORTANT);
 
         //-rep
-        QuestPeople.getEliza().getRelToPlayer().adjustRelationship(-0.75f, RepLevel.VENGEFUL);
+        KestevenPeople.getEliza().getRelToPlayer().adjustRelationship(-0.75f, RepLevel.VENGEFUL);
 
         Global.getSoundPlayer().playUISound("ui_rep_drop",1f,1f);
     }

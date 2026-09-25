@@ -35,6 +35,7 @@ import lostsector.helper.Ids;
 import lostsector.helper.MathHelper;
 import lostsector.helper.SectorLookup;
 import lostsector.world.systems.cache.Cache;
+import lostsector.helper.SystemHelper;
 import org.lazywizard.lazylib.MathUtils;
 import org.lazywizard.lazylib.VectorUtils;
 import org.lwjgl.util.vector.Vector2f;
@@ -228,7 +229,7 @@ public class QuestStageManager extends BaseCampaignEventListener implements Ever
         if (stage>=16 && QuestHelper.getCompleted(JOB5_FOUND_ELIZA_KEY) && !QuestHelper.getCompleted(KILLED_ELIZA_KEY)) {
             if(QuestHelper.getElizaLoc().getMarket().isPlanetConditionMarketOnly()){
                 log("Qmanager eliza loc deciv, changing");
-                PersonAPI eliza = QuestPeople.getEliza();
+                PersonAPI eliza = KestevenPeople.getEliza();
                 String oldLoc = QuestHelper.getElizaLoc().getMarket().getPrimaryEntity().getName();
                 //new loc
                 QuestHelper.setElizaLoc();
@@ -331,7 +332,7 @@ public class QuestStageManager extends BaseCampaignEventListener implements Ever
             }
             //logic
             if (!jobFleetSpawned3.val) {
-                CampaignFleetAPI fleet = QuestFleets.spawnJob3TargetFleet();
+                CampaignFleetAPI fleet = KestevenFleets.spawnJob3TargetFleet();
                 fleets.add(new FleetInfo(fleet, QuestHelper.getJob3Target(), QuestHelper.getJob3Start()));
                 QuestHelper.spawnArtifact(QuestHelper.getJob3Target(),3);
                 log("Qmanager spawn job3 target");
@@ -351,13 +352,13 @@ public class QuestStageManager extends BaseCampaignEventListener implements Ever
             if (!jobFleetsSpawned4.val) {
 
                 //this sets job4TargetLoc
-                QuestFleets.spawnJob4Target();
+                KestevenFleets.spawnJob4Target();
 
                 QuestHelper.spawnArtifact(QuestHelper.getJob4EnemyTarget(),4);
-                CampaignFleetAPI fleet = QuestFleets.spawnJob4Friendly();
+                CampaignFleetAPI fleet = KestevenFleets.spawnJob4Friendly();
                 fleets.add(new FleetInfo(fleet, null, QuestHelper.getJob4FriendlyTarget()));
                 for (int x = 0; x<SPLINTER_COUNT;x++) {
-                    new Pair<>(QuestFleets.spawnJob4Splinters(), 0f);
+                    new Pair<>(KestevenFleets.spawnJob4Splinters(), 0f);
                     //added to mem in the spawner
                 }
                 //hint wrecks/environmental storytelling
@@ -383,9 +384,9 @@ public class QuestStageManager extends BaseCampaignEventListener implements Ever
         //job 4 completion
         if (stage ==12 && QuestHelper.getCompleted(JOB4_FOUND_FRIENDLY_KEY) && QuestHelper.getCompleted(JOB4_DESTROYED_KEY)){
             //completion text
-            Global.getSector().getCampaignUI().addMessage("With the threat eliminated and the Operations fleet located, you can report back to "+ QuestHelper.asteriaOrOutpost().getName()+" to finish the job.",
+            Global.getSector().getCampaignUI().addMessage("With the threat eliminated and the Operations fleet located, you can report back to "+ SectorLookup.asteriaOrOutpost().getName()+" to finish the job.",
                     Global.getSettings().getColor("standardTextColor"),
-                    "report back to "+ QuestHelper.asteriaOrOutpost().getName(),
+                    "report back to "+ SectorLookup.asteriaOrOutpost().getName(),
                     "",
                     Global.getSettings().getColor("yellowTextColor"),
                     Global.getSettings().getColor("yellowTextColor"));
@@ -541,7 +542,7 @@ public class QuestStageManager extends BaseCampaignEventListener implements Ever
         if (counter.val>10f) {
             //job 4 cannot finish without finding the Special Operations fleet, so replace it if something else destroyed it first
             if (stage == 12 && jobFleetsSpawned4.val && !QuestHelper.getCompleted(JOB4_FOUND_FRIENDLY_KEY) && !hasFleetWithKey(fleets, JOB4_FRIENDLY_KEY)) {
-                CampaignFleetAPI fleet = QuestFleets.spawnJob4Friendly();
+                CampaignFleetAPI fleet = KestevenFleets.spawnJob4Friendly();
                 fleets.add(new FleetInfo(fleet, null, QuestHelper.getJob4FriendlyTarget()));
                 log("Qmanager respawned job4 friendly");
             }
@@ -554,7 +555,7 @@ public class QuestStageManager extends BaseCampaignEventListener implements Ever
                     Random random = nskr_ttCollectorDialog.getRandom();
                     if (random.nextFloat() < BASE_TT_COLLECT_CHANCE && pf.isInHyperspace() && pf.getLocation().length() < 25000f && cargo) {
 
-                        CampaignFleetAPI fleet = QuestFleets.spawnCollectorFleet();
+                        CampaignFleetAPI fleet = KestevenFleets.spawnCollectorFleet();
                         fleets.add(new FleetInfo(fleet, null, fleet.getContainingLocation().createToken(fleet.getLocation())));
 
                         collected.val = true;
@@ -604,7 +605,7 @@ public class QuestStageManager extends BaseCampaignEventListener implements Ever
     }
 
     private void respawnEliza(SectorEntityToken loc) {
-        PersonAPI eliza = QuestPeople.getEliza();
+        PersonAPI eliza = KestevenPeople.getEliza();
         //add eliza to market
         loc.getMarket().getCommDirectory().addPerson(eliza,1);
         loc.getMarket().addPerson(eliza);
@@ -821,7 +822,7 @@ public class QuestStageManager extends BaseCampaignEventListener implements Ever
                         fleet.getMemoryWithoutUpdate().clear();
                         fleet.getMemoryWithoutUpdate().set(MemFlags.FLEET_IGNORES_OTHER_FLEETS, true);
 
-                        SectorEntityToken loc = QuestHelper.getRandomFactionMarket(new Random(), Factions.TRITACHYON);
+                        SectorEntityToken loc = SystemHelper.getRandomFactionMarket(new Random(), Factions.TRITACHYON);
                         if (loc != null && loc.getMarket() != null) {
                             fleet.addAssignment(FleetAssignment.GO_TO_LOCATION_AND_DESPAWN, loc, Float.MAX_VALUE, "returning to " + loc.getName());
                             log("Qmanager " + fleet.getName() + " RETURNING ");
@@ -890,7 +891,7 @@ public class QuestStageManager extends BaseCampaignEventListener implements Ever
                 continue;
             }
             //eliza fleet, after raiding her
-            if (fleet.getMemoryWithoutUpdate().contains(QuestFleets.ELIZA_RAIDED_FLEET_KEY)){
+            if (fleet.getMemoryWithoutUpdate().contains(KestevenFleets.ELIZA_RAIDED_FLEET_KEY)){
                 boolean despawn = false;
 
                 //destroyed
@@ -1057,9 +1058,9 @@ public class QuestStageManager extends BaseCampaignEventListener implements Ever
             if (QuestHelper.getStage() <= 9) {
                 QuestHelper.setStage(10);
                 //completion text
-                Global.getSector().getCampaignUI().addMessage("You have completed your objective. Report back to "+ QuestHelper.asteriaOrOutpost().getName()+" to finish the job.",
+                Global.getSector().getCampaignUI().addMessage("You have completed your objective. Report back to "+ SectorLookup.asteriaOrOutpost().getName()+" to finish the job.",
                         Global.getSettings().getColor("standardTextColor"),
-                        "Report back to "+ QuestHelper.asteriaOrOutpost().getName(),
+                        "Report back to "+ SectorLookup.asteriaOrOutpost().getName(),
                         "",
                         Global.getSettings().getColor("yellowTextColor"),
                         Global.getSettings().getColor("yellowTextColor"));
@@ -1081,10 +1082,10 @@ public class QuestStageManager extends BaseCampaignEventListener implements Ever
                 QuestHelper.setFailed(true, JOB3_FAIL_KEY);
                 QuestHelper.setStage(10);
                 nskr_kestevenQuest.spawnEnvironmentalStorytelling();
-                Global.getSector().getCampaignUI().addMessage("You have ran out of time, mission failed. Report back to "+ QuestHelper.asteriaOrOutpost().getName()+" to finish the job.",
+                Global.getSector().getCampaignUI().addMessage("You have ran out of time, mission failed. Report back to "+ SectorLookup.asteriaOrOutpost().getName()+" to finish the job.",
                         Global.getSettings().getColor("standardTextColor"),
                         "mission failed",
-                        "Report back to "+ QuestHelper.asteriaOrOutpost().getName(),
+                        "Report back to "+ SectorLookup.asteriaOrOutpost().getName(),
                         Global.getSettings().getColor("yellowTextColor"),
                         Global.getSettings().getColor("yellowTextColor"));
             }
@@ -1230,8 +1231,8 @@ public class QuestStageManager extends BaseCampaignEventListener implements Ever
             boolean helped = QuestHelper.getCompleted(JOB4_HELPED_KEY);
             SectorEntityToken target = QuestHelper.getJob4FriendlyTarget();
             //safety check
-            if (QuestHelper.asteriaOrOutpost() != null) {
-                SectorEntityToken home = QuestHelper.asteriaOrOutpost().getPrimaryEntity();
+            if (SectorLookup.asteriaOrOutpost() != null) {
+                SectorEntityToken home = SectorLookup.asteriaOrOutpost().getPrimaryEntity();
                 //go back to asteria
                 if (fleet.getContainingLocation() == target.getContainingLocation() && helped && fleet.getAI().getCurrentAssignmentType() == FleetAssignment.ORBIT_PASSIVE) {
                     //no longer important
@@ -1239,23 +1240,23 @@ public class QuestStageManager extends BaseCampaignEventListener implements Ever
                         fleet.getMemoryWithoutUpdate().unset(MemFlags.MEMORY_KEY_MISSION_IMPORTANT);
                     }
                     fleet.clearAssignments();
-                    fleet.addAssignment(FleetAssignment.GO_TO_LOCATION_AND_DESPAWN, home, Float.MAX_VALUE, "travelling back to " + QuestHelper.asteriaOrOutpost().getName());
+                    fleet.addAssignment(FleetAssignment.GO_TO_LOCATION_AND_DESPAWN, home, Float.MAX_VALUE, "travelling back to " + SectorLookup.asteriaOrOutpost().getName());
                 }
             }
         }
     }
 
     private CampaignFleetAPI vengeanceEliza(boolean intercept){
-        PersonAPI eliza = QuestPeople.getEliza();
+        PersonAPI eliza = KestevenPeople.getEliza();
         SectorEntityToken loc = QuestHelper.getElizaLoc();
         //-rep
         if (!intercept) eliza.getRelToPlayer().adjustRelationship(-0.75f, RepLevel.VENGEFUL);
         //spawn fleet and add to list
         CampaignFleetAPI fleet;
         if (!intercept){
-            fleet = QuestFleets.spawnElizaFleet(loc, eliza, ElizaDialog.getRandom(), true, false);
+            fleet = KestevenFleets.spawnElizaFleet(loc, eliza, ElizaDialog.getRandom(), true, false);
         } else {
-            fleet = QuestFleets.spawnElizaFleet(loc, eliza, ElizaDialog.getRandom(), false, true);
+            fleet = KestevenFleets.spawnElizaFleet(loc, eliza, ElizaDialog.getRandom(), false, true);
         }
         //remove from market
         loc.getMarket().getCommDirectory().removePerson(eliza);
@@ -1264,10 +1265,10 @@ public class QuestStageManager extends BaseCampaignEventListener implements Ever
         return fleet;
     }
     private CampaignFleetAPI vengeanceJack(){
-        PersonAPI jack = QuestPeople.getJack();
-        SectorEntityToken loc = QuestHelper.asteriaOrOutpost().getPrimaryEntity();
+        PersonAPI jack = KestevenPeople.getJack();
+        SectorEntityToken loc = SectorLookup.asteriaOrOutpost().getPrimaryEntity();
         //spawn fleet and add to list
-        CampaignFleetAPI fleet = QuestFleets.spawnJackFleet(loc, jack, nskr_kestevenQuest.getRandom());
+        CampaignFleetAPI fleet = KestevenFleets.spawnJackFleet(loc, jack, nskr_kestevenQuest.getRandom());
         //remove from market
         loc.getMarket().getCommDirectory().removePerson(jack);
         loc.getMarket().removePerson(jack);
@@ -1300,9 +1301,9 @@ public class QuestStageManager extends BaseCampaignEventListener implements Ever
                 if (stage==1) {
                     QuestHelper.setCompleted(true, JOB1_SENSORS_KEY);
                     //completion text
-                    Global.getSector().getCampaignUI().addMessage("You managed to gather sufficient data in battle for the task. Deliver it back to " + QuestHelper.asteriaOrOutpost().getName() + ".",
+                    Global.getSector().getCampaignUI().addMessage("You managed to gather sufficient data in battle for the task. Deliver it back to " + SectorLookup.asteriaOrOutpost().getName() + ".",
                             Global.getSettings().getColor("standardTextColor"),
-                            "Deliver it back to " + QuestHelper.asteriaOrOutpost().getName(),
+                            "Deliver it back to " + SectorLookup.asteriaOrOutpost().getName(),
                             "",
                             Global.getSettings().getColor("yellowTextColor"),
                             Global.getSettings().getColor("yellowTextColor"));
@@ -1322,10 +1323,10 @@ public class QuestStageManager extends BaseCampaignEventListener implements Ever
                         //FAIL
                         QuestHelper.setFailed(true, JOB3_FAIL_KEY);
                         QuestHelper.setStage(10);
-                        Global.getSector().getCampaignUI().addMessage("You failed to neutralize the fleet stealthily. Report back to "+ QuestHelper.asteriaOrOutpost().getName()+" to finish the job.",
+                        Global.getSector().getCampaignUI().addMessage("You failed to neutralize the fleet stealthily. Report back to "+ SectorLookup.asteriaOrOutpost().getName()+" to finish the job.",
                                 Global.getSettings().getColor("standardTextColor"),
                                 "failed to neutralize the fleet stealthily",
-                                "Report back to "+ QuestHelper.asteriaOrOutpost().getName(),
+                                "Report back to "+ SectorLookup.asteriaOrOutpost().getName(),
                                 Global.getSettings().getColor("yellowTextColor"),
                                 Global.getSettings().getColor("yellowTextColor"));
                         break;

@@ -19,6 +19,7 @@ import lostsector.campaign.kesteven.quest.UnlimitedProductionChipCondition;
 import lostsector.campaign.kesteven.quest.QuestHelper;
 import lostsector.ModPlugin;
 import lostsector.helper.MathHelper;
+import lostsector.helper.SectorLookup;
 
 import java.awt.*;
 import java.util.Map;
@@ -85,7 +86,7 @@ public class EndingElizaDialog implements InteractionDialogPlugin {
         Color r = Misc.getNegativeHighlightColor();
         Color tc = Misc.getTextColor();
 
-        PersonAPI eliza = QuestPeople.getEliza();
+        PersonAPI eliza = KestevenPeople.getEliza();
 
         text.addPara(optionText, b, h, "", "");
 
@@ -196,23 +197,23 @@ public class EndingElizaDialog implements InteractionDialogPlugin {
             text.addPara("They will not forget this anytime soon",g,r,"","");
             //remove important
             QuestHelper.getElizaLoc().getMemory().unset(MemFlags.MEMORY_KEY_MISSION_IMPORTANT);
-            if (QuestHelper.asteriaOrOutpost()!=null) QuestHelper.asteriaOrOutpost().getMemory().unset(MemFlags.MEMORY_KEY_MISSION_IMPORTANT);
+            if (SectorLookup.asteriaOrOutpost()!=null) SectorLookup.asteriaOrOutpost().getMemory().unset(MemFlags.MEMORY_KEY_MISSION_IMPORTANT);
 
             text.setFontInsignia();
 
             //CONTACT
             ContactIntel.addPotentialContact(1f, eliza, dialog.getInteractionTarget().getMarket(), text);
 
-            if(QuestPeople.getAlice()!=null) {
-                QuestPeople.getAlice().getRelToPlayer().adjustRelationship(-0.75f, RepLevel.VENGEFUL);
-                if(ContactIntel.getContactIntel(QuestPeople.getAlice())!=null) {
-                    ContactIntel.getContactIntel(QuestPeople.getAlice()).setState(ContactIntel.ContactState.SUSPENDED);
+            if(KestevenPeople.getAlice()!=null) {
+                KestevenPeople.getAlice().getRelToPlayer().adjustRelationship(-0.75f, RepLevel.VENGEFUL);
+                if(ContactIntel.getContactIntel(KestevenPeople.getAlice())!=null) {
+                    ContactIntel.getContactIntel(KestevenPeople.getAlice()).setState(ContactIntel.ContactState.SUSPENDED);
                 }
             }
-            if(QuestPeople.getJack()!=null) {
-                QuestPeople.getJack().getRelToPlayer().adjustRelationship(-0.75f, RepLevel.VENGEFUL);
-                if(ContactIntel.getContactIntel(QuestPeople.getJack())!=null) {
-                    ContactIntel.getContactIntel(QuestPeople.getJack()).setState(ContactIntel.ContactState.SUSPENDED);
+            if(KestevenPeople.getJack()!=null) {
+                KestevenPeople.getJack().getRelToPlayer().adjustRelationship(-0.75f, RepLevel.VENGEFUL);
+                if(ContactIntel.getContactIntel(KestevenPeople.getJack())!=null) {
+                    ContactIntel.getContactIntel(KestevenPeople.getJack()).setState(ContactIntel.ContactState.SUSPENDED);
                 }
             }
 

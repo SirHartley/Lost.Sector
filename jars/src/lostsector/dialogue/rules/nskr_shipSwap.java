@@ -27,6 +27,7 @@ import lostsector.campaign.kesteven.quest.QuestStageManager;
 import lostsector.campaign.kesteven.quest.QuestHelper;
 import lostsector.helper.StringHelper;
 import lostsector.helper.MathHelper;
+import lostsector.helper.SectorLookup;
 import org.apache.log4j.Logger;
 import org.lwjgl.input.Keyboard;
 
@@ -652,9 +653,9 @@ public class nskr_shipSwap extends PaginatedOptions {
 		if (market==null) return false;
 		if (!market.getFaction().getId().equals("kesteven")) return false;
 		if (Global.getSector().getPlayerFaction().getRelationship("kesteven")<=-0.5f) return false;
-		if (QuestHelper.asteriaOrOutpost()==null) return false;
+		if (SectorLookup.asteriaOrOutpost()==null) return false;
 		if (QuestHelper.getCompleted(QuestStageManager.ELIZA_INTERCEPT_HANDED_OVER) || QuestHelper.getCompleted(nskr_altEndingDialogLuddic.DIALOG_FINISHED_KEY)) return false;
-		return market.getId().equals(QuestHelper.asteriaOrOutpost().getId());
+		return market.getId().equals(SectorLookup.asteriaOrOutpost().getId());
 	}
 	
 	public static Random getRandom() {

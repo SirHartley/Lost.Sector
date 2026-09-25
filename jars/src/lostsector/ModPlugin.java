@@ -64,7 +64,7 @@ import lostsector.campaign.events.hints.HintManager;
 import lostsector.campaign.enigma.EnigmaFleetLoot;
 import lostsector.campaign.bounties.BountyLoot;
 import lostsector.campaign.kesteven.contracts.ContractManager;
-import lostsector.campaign.kesteven.quest.KestevenTipBarEventCreator;
+import lostsector.campaign.kesteven.tips.KestevenTipBarEventCreator;
 import lostsector.campaign.kesteven.quest.QuestStageManager;
 import lostsector.persistence.CampaignTimer;
 import lostsector.helper.FleetHelper;

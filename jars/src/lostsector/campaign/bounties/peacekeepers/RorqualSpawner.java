@@ -1,6 +1,5 @@
 package lostsector.campaign.bounties.peacekeepers;
 
-import lostsector.campaign.kesteven.quest.QuestHelper;
 import lostsector.helper.fleet.FleetInfo;
 import lostsector.helper.fleet.SimpleCaptain;
 import lostsector.helper.fleet.SimpleFleet;
@@ -29,6 +28,7 @@ import lostsector.persistence.Saved;
 import lostsector.helper.FleetHelper;
 import lostsector.helper.MathHelper;
 import lostsector.helper.ShipHelper;
+import lostsector.helper.SystemHelper;
 import org.lazywizard.lazylib.MathUtils;
 import org.lwjgl.util.vector.Vector2f;
 import org.magiclib.util.MagicCampaign;
@@ -195,7 +195,7 @@ public class RorqualSpawner extends BaseCampaignEventListener implements EveryFr
                             fleet.clearAssignments();
                             fleet.addAssignment(FleetAssignment.ORBIT_PASSIVE, target, Float.MAX_VALUE, "maintaining order");
 
-                            setTarget(QuestHelper.getRandomFactionMarket(getRandom(), Factions.INDEPENDENT));
+                            setTarget(SystemHelper.getRandomFactionMarket(getRandom(), Factions.INDEPENDENT));
                             newTargetCounter.val = 0f;
                             log(LOG_PREFIX + " new target " + getTarget().getName());
                             //reinforce
@@ -538,7 +538,7 @@ public class RorqualSpawner extends BaseCampaignEventListener implements EveryFr
         Map<String, Object> data = Global.getSector().getPersistentData();
         String id = MEMORY_KEY;
         if (!data.containsKey(id))
-            data.put(id, QuestHelper.getRandomFactionMarket(getRandom(), Factions.INDEPENDENT));
+            data.put(id, SystemHelper.getRandomFactionMarket(getRandom(), Factions.INDEPENDENT));
 
         return (SectorEntityToken)data.get(id);
     }

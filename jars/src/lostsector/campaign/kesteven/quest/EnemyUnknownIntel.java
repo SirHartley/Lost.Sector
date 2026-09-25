@@ -13,6 +13,7 @@ import com.fs.starfarer.api.util.Misc;
 import lostsector.campaign.kesteven.quest.QuestStageManager;
 import lostsector.campaign.kesteven.quest.QuestHelper;
 import lostsector.dialogue.rules.nskr_kestevenQuest;
+import lostsector.helper.SectorLookup;
 
 import java.awt.*;
 import java.util.Set;
@@ -54,7 +55,7 @@ public class EnemyUnknownIntel extends BaseIntelPlugin {
 
     //updates variables, DO NOT do this in advance
     private void init(){
-        asteriaOrOutpost = QuestHelper.asteriaOrOutpost().getName();
+        asteriaOrOutpost = SectorLookup.asteriaOrOutpost().getName();
         stage = QuestHelper.getStage();
         relation = Global.getSector().getPlayerFaction().getRelationship("kesteven");
 
@@ -184,7 +185,7 @@ public class EnemyUnknownIntel extends BaseIntelPlugin {
     @Override
     public SectorEntityToken getMapLocation(SectorMapAPI map) {
         if (tipped && base) return QuestHelper.getJob1Tip().getHyperspaceAnchor();
-        return QuestHelper.asteriaOrOutpost().getPrimaryEntity();
+        return SectorLookup.asteriaOrOutpost().getPrimaryEntity();
     }
 
     @Override

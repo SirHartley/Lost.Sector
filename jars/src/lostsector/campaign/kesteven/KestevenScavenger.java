@@ -12,7 +12,6 @@ import com.fs.starfarer.api.impl.campaign.ids.Tags;
 import com.fs.starfarer.api.impl.campaign.procgen.themes.BaseThemeGenerator;
 import com.fs.starfarer.api.util.WeightedRandomPicker;
 import lostsector.helper.fleet.FleetInfo;
-import lostsector.campaign.kesteven.quest.QuestHelper;
 import lostsector.helper.fleet.SimpleFleet;
 import lostsector.helper.fleet.SystemPicker;
 import lostsector.settings.Difficulty;
@@ -282,7 +281,7 @@ public class KestevenScavenger extends BaseCampaignEventListener implements Ever
                 //max count reached
                 if (fleets.size() >= MAX_COUNT) return;
 
-                MarketAPI market = QuestHelper.getRandomFactionMarket(new Random(), "kesteven").getMarket();
+                MarketAPI market = SystemHelper.getRandomFactionMarket(new Random(), "kesteven").getMarket();
                 this.spawnScavFleets(market);
             }
         }

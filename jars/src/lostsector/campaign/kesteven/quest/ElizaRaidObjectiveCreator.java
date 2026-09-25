@@ -25,7 +25,7 @@ public class ElizaRaidObjectiveCreator implements GroundRaidObjectivesListener {
         if (market == null) return;
 
         if(QuestHelper.getCompleted(ElizaDialog.ELIZA_RAID_KEY) && !QuestHelper.getCompleted(ElizaDialog.ELIZA_FIGHT_KEY) && market== QuestHelper.getElizaLoc().getMarket()) {
-            ElizaRaid raid = new ElizaRaid(market, QuestPeople.getEliza());
+            ElizaRaid raid = new ElizaRaid(market, KestevenPeople.getEliza());
             objectives.add(raid);
         }
     }

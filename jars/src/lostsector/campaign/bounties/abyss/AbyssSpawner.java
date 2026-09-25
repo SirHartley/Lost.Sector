@@ -1,6 +1,5 @@
 package lostsector.campaign.bounties.abyss;
 
-import lostsector.campaign.kesteven.quest.QuestHelper;
 import lostsector.helper.fleet.FleetInfo;
 import lostsector.helper.fleet.SimpleCaptain;
 import lostsector.helper.fleet.SimpleFleet;
@@ -239,7 +238,7 @@ public class AbyssSpawner extends BaseCampaignEventListener implements EveryFram
         CampaignFleetAPI fleet = simpleFleet.create();
 
         //makes sure we are not in a star
-        QuestHelper.spawnAwayFromStarFixer(fleet, 2.0f);
+        SystemHelper.spawnAwayFromStarFixer(fleet, 2.0f);
 
         fleet.setFaction(FACTION, true);
 

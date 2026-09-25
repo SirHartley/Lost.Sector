@@ -8,7 +8,7 @@ Java paths are relative to `jars/src/lostsector/campaign/`; `dialogue/rules/` an
 
 | Mechanism | Location | Notes |
 |---|---|---|
-| `QuestHelper.getStage/setStage`, `getCompleted/setCompleted`, `getFailed/setFailed`, `getFloat/setFloat`, `getDialogStage/setDialogStage`, `getLocation/setLocation` | `Global.getSector().getPersistentData()` | Plain keys without `$`, although some constants spell one. Every getter writes its default into the map on first read. `getFailed` and `getCompleted` read the same map; the names are interchangeable. |
+| `QuestHelper.getStage/setStage`, `getCompleted/setCompleted`, `getFailed/setFailed`, `getFloat/setFloat`, `getDialogStage/setDialogStage` | `Global.getSector().getPersistentData()` | Plain keys without `$`, although some constants spell one. Every getter writes its default into the map on first read. `getFailed` and `getCompleted` read the same map; the names are interchangeable. |
 | Lazily picked targets | Persistent data, key prefix `nskr_kestevenQuest` | The first read picks and stores a `SectorEntityToken` or `StarSystemAPI`. The picking context is whichever caller reads first, often a dialog or intel panel. |
 | `persistence/Saved<T>` fields in `QuestStageManager` | Persistent data, `nskr_` + name | Reloaded by `ModPlugin` on load and after save. |
 | Quest fleet list | Sector memory `$kQuestMissionFleets`, a `List<FleetInfo>` | Read and written by `FleetHelper.getFleets/setFleets`. `FleetInfo.age` is in days. |
@@ -44,7 +44,7 @@ Each owner keeps its own `Random` in persistent data. Most are seeded from the s
 | `nskr_kestevenQuestStart3` | `QuestHelper.getJob3Start()` | Random Tri-Tachyon market entity, not `eochu_bres` or `culann` |
 | `nskr_kestevenQuestTarget3` | `QuestHelper.getJob3Target()` | Random location in a system within 27,500 units of the centre |
 | `nskr_kestevenQuestTargetFriendly4` | `QuestHelper.getJob4FriendlyTarget()` | Random location in a system at least 32,500 units from the centre |
-| `nskr_kestevenQuestTargetEnemy4` | `QuestFleets.spawnJob4Target()` via `QuestHelper.setJob4EnemyTarget` | Strike group location |
+| `nskr_kestevenQuestTargetEnemy4` | `KestevenFleets.spawnJob4Target()` via `QuestHelper.setJob4EnemyTarget` | Strike group location |
 | `nskr_kestevenQuestJob5FrostTip` | `QuestHelper.getJob5FrostTip()` | System 7,000 to 12,000 units from Frost, used for Alice's distance hint |
 | `nskr_kestevenQuestElizaJob5` | `QuestHelper.setElizaLoc()` | Eliza's market entity; re-picked on decivilization |
 | `nskr_kestevenQuestCacheFleet` | `QuestHelper.setCacheFleetLoc()` | Guardian spawn point in Unknown Site |
@@ -157,12 +157,12 @@ Stored as `nskr_` + name.
 | `$kQuestArtifact3`, `$kQuestArtifact4` | Satellite entity | `QuestHelper.spawnArtifact` | `CorePlugin` (prefix match) and `DataSatelliteDialog` |
 | `$nskr_artifactKeyEmpty` | Satellite entity | `DataSatelliteDialog` | `DataSatelliteDialog` |
 | `$job4HintWreck` + number | Entity **id** prefix, not memory | `QuestStageManager.spawnJob4Wrecks` | `CorePlugin` |
-| `$KestevenQuestJob3Target` | Expedition fleet | `QuestFleets` | `QuestStageManager` |
-| `$KestevenQuestJob4Target`, `$KestevenQuestJob4Friendly`, `$KestevenQuestJob4Splinter` | Job 4 fleets | `QuestFleets` | `QuestStageManager`, rules |
-| `$KestevenQuestTTCollector` | Collector fleet | `QuestFleets` | `QuestStageManager`, rules |
-| `$ElizaFleet` | Eliza's fleet after the raid | `QuestFleets` | `QuestStageManager`, rules |
-| `$InterceptPlayerElizaFleet` | Eliza's intercept fleet | `QuestFleets` | `QuestStageManager`, rules, `nskr_elizaInterceptDialog` |
-| `$RevengeanceQuestFleet`, `$RevengeanceJack` | Revenge fleets | `QuestFleets` | `QuestStageManager`, rules |
+| `$KestevenQuestJob3Target` | Expedition fleet | `KestevenFleets` | `QuestStageManager` |
+| `$KestevenQuestJob4Target`, `$KestevenQuestJob4Friendly`, `$KestevenQuestJob4Splinter` | Job 4 fleets | `KestevenFleets` | `QuestStageManager`, rules |
+| `$KestevenQuestTTCollector` | Collector fleet | `KestevenFleets` | `QuestStageManager`, rules |
+| `$ElizaFleet` | Eliza's fleet after the raid | `KestevenFleets` | `QuestStageManager`, rules |
+| `$InterceptPlayerElizaFleet` | Eliza's intercept fleet | `KestevenFleets` | `QuestStageManager`, rules, `nskr_elizaInterceptDialog` |
+| `$RevengeanceQuestFleet`, `$RevengeanceJack` | Revenge fleets | `KestevenFleets` | `QuestStageManager`, rules |
 | `$CacheGuardianFleet` (`Cache.CACHE_FLEET_KEY`) | Guardian fleet | `Cache` | `QuestStageManager`, `CacheBossTauntPlugin`, rules |
 | `$EnigmaDormantFleet` (`DormantSpawner.DORMANT_KEY`) | Dormant fleets at quest locations | `DormantSpawner.addDormant` | `DataSatelliteDialog.makeHostile`, `QuestStageManager` |
 | `$nskr_altEndingDialogLockedToPerson` | The official in either alternative ending | Alternative endings | Alternative endings |

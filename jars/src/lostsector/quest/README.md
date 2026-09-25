@@ -65,7 +65,7 @@ These apply to the main session and to every subagent.
    | React to game events | A [module hook](#questmodule) | A new `EveryFrameScript`, a new listener class, polling in intel `advanceImpl` |
    | Do something every day | `onDay` | Counting frames or seconds, `CampaignTimer` |
    | Wait a number of days | A [timer](#random-timers-and-marks) checked when needed | A counter advanced every frame |
-   | Random numbers | `ctx.random(purpose)` | `new Random(...)`, `Math.random()`, `Misc.random`, `QuestHelper.getRandom` |
+   | Random numbers | `ctx.random(purpose)` | `new Random(...)`, `Math.random()`, `Misc.random` |
    | Spawn or track a quest fleet | `ctx.fleets().spawn(role, simpleFleet)` | Adding to `FleetHelper.getFleets` lists by hand, new fleet array keys |
    | Give a fleet orders | A [role](#fleets) with `FleetOrders` | Per-fleet AI code in a quest |
    | Create a quest person | `ctx.people().create(...)` | `createRandomPerson` in a dialog class, unregistered persons |
@@ -806,10 +806,10 @@ Do not add a framework feature that only one quest could ever use; keep that in 
 | Duplicate today | Replaced by |
 |---|---|
 | `QuestHelper.getFailed`/`setFailed` and `getCompleted`/`setCompleted`, identical bodies | Flags on the state |
-| Fifteen hand-written seeded `Random` accessors (`ElizaDialog`, `CacheDoubtDialog`, `CacheCoreDialog`, `EndingKestevenDialog`, `EndingElizaDialog`, `nskr_altEndingDialogLuddic`, `nskr_altEndingDialogTT`, `nskr_job4FleetDialog`, `HintWreckDialog`, `nskr_ttCollectorDialog`, `nskr_loanSharkDialog`, `nskr_elizaInterceptDialog`, `KestevenTipBarEventCreator`, `KestevenTipBarEvent`, `nskr_kestevenQuest`) and the unused `QuestHelper.getRandom` | `ctx.random(purpose)` |
+| Fifteen hand-written seeded `Random` accessors (`ElizaDialog`, `CacheDoubtDialog`, `CacheCoreDialog`, `EndingKestevenDialog`, `EndingElizaDialog`, `nskr_altEndingDialogLuddic`, `nskr_altEndingDialogTT`, `nskr_job4FleetDialog`, `HintWreckDialog`, `nskr_ttCollectorDialog`, `nskr_loanSharkDialog`, `nskr_elizaInterceptDialog`, `KestevenTipBarEventCreator`, `KestevenTipBarEvent`, `nskr_kestevenQuest`) | `ctx.random(purpose)` |
 | `nskr_loanSharkDialog` and `nskr_ttCollectorDialog`, two copies of one encounter | `PayOffEncounter` and rows |
 | Intel classes that register themselves and poll in `advanceImpl` | `QuestIntel` and intel rows |
-| The spawn-and-register tail repeated across `QuestFleets` spawners | `ctx.fleets().spawn` |
+| The spawn-and-register tail repeated across `KestevenFleets` spawners | `ctx.fleets().spawn` |
 | `QuestStageManager.runFleetLogic`, per-fleet AI | `FleetOrders` on `FleetHelper` |
 | `Color` locals repeated in dialog classes | Text in rows with vanilla highlight commands |
 | `QuestStageManager` polling every frame, paused or not | Module hooks |
@@ -822,10 +822,9 @@ Migration map for the Kesteven questline and the other systems. The owning task 
 | Old | New |
 |---|---|
 | `QuestStageManager` stage ints, `Saved` flags and timers | `KestevenStage`, `KestevenFlag`, fields on `KestevenState` |
-| `QuestHelper` generic helpers (market pickers, `spawnAwayFromStarFixer`, `hasFactionMarket`) | `helper/` (T04) |
 | `QuestHelper` questline getters and setters | `KestevenState` fields and `KestevenQuest` queries |
-| `campaign/kesteven/quest/QuestFleets` builders | Builders in the Kesteven quest package returning `SimpleFleet`; renamed in T04 so the name does not clash with the framework |
-| `campaign/kesteven/quest/QuestPeople` | Fixed people stay in world generation; generated people move to `ctx.people()`; renamed in T04 |
+| `campaign/kesteven/quest/KestevenFleets` builders | Builders in the Kesteven quest package returning `SimpleFleet` |
+| `campaign/kesteven/quest/KestevenPeople` | Fixed people stay in world generation; generated people move to `ctx.people()` |
 | Java dialog classes (`ElizaDialog`, `CacheCoreDialog`, `HintWreckDialog`, endings, `nskr_kestevenQuest` and the other questline commands) | Rows, checks, actions and claims |
 | `HostileTakeoverBarEvent`, `ElizaSearch*BarEvent`, `DelveMeetingBarEvent`, `KestevenTipBarEvent` | `AddBarEvents` rows and quest people |
 | `EnemyUnknownIntel`, `HostileTakeoverIntel`, `OperationLifesaverIntel`, `TheDelveIntel`, `CacheIntel` | `QuestIntel` with intel rows |

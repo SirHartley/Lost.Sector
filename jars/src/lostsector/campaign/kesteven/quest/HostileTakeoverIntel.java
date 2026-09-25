@@ -11,6 +11,7 @@ import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import com.fs.starfarer.api.util.Misc;
 import lostsector.campaign.kesteven.quest.QuestStageManager;
 import lostsector.campaign.kesteven.quest.QuestHelper;
+import lostsector.helper.SectorLookup;
 
 import java.awt.*;
 import java.util.Set;
@@ -50,7 +51,7 @@ public class HostileTakeoverIntel extends BaseIntelPlugin {
 
     //updates variables, DO NOT do this in advance
     private void init(){
-        asteriaOrOutpost = QuestHelper.asteriaOrOutpost().getName();
+        asteriaOrOutpost = SectorLookup.asteriaOrOutpost().getName();
         stage = QuestHelper.getStage();
         relation = Global.getSector().getPlayerFaction().getRelationship("kesteven");
         timer = QuestHelper.getMissionTimerJob3();
@@ -182,7 +183,7 @@ public class HostileTakeoverIntel extends BaseIntelPlugin {
         SectorEntityToken loc = null;
         if(stage==8) loc = home;
         if(stage==9) loc = target;
-        if(stage>=10) loc = QuestHelper.asteriaOrOutpost().getPrimaryEntity();
+        if(stage>=10) loc = SectorLookup.asteriaOrOutpost().getPrimaryEntity();
 
         return loc;
     }

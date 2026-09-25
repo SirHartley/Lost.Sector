@@ -65,7 +65,7 @@ public class OperationLifesaverIntel extends BaseIntelPlugin {
 
     //updates variables, DO NOT do this in advance
     private void init(){
-        asteriaOrOutpost = QuestHelper.asteriaOrOutpost().getName();
+        asteriaOrOutpost = SectorLookup.asteriaOrOutpost().getName();
         stage = QuestHelper.getStage();
         relation = Global.getSector().getPlayerFaction().getRelationship("kesteven");
 
@@ -247,7 +247,7 @@ public class OperationLifesaverIntel extends BaseIntelPlugin {
     public SectorEntityToken getMapLocation(SectorMapAPI map) {
         init();
 
-        if (stage == 13) return QuestHelper.asteriaOrOutpost().getPrimaryEntity();
+        if (stage == 13) return SectorLookup.asteriaOrOutpost().getPrimaryEntity();
         if (stage != 12) return null;
 
         // The leads shown by addBulletPoints, most precise first.

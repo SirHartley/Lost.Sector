@@ -11,9 +11,11 @@ import com.fs.starfarer.api.impl.campaign.ids.Factions;
 import com.fs.starfarer.api.impl.campaign.ids.StarTypes;
 import com.fs.starfarer.api.impl.campaign.ids.Tags;
 import com.fs.starfarer.api.impl.campaign.procgen.themes.BaseThemeGenerator;
+import com.fs.starfarer.api.util.Misc;
 import com.fs.starfarer.api.util.WeightedRandomPicker;
 import lostsector.helper.fleet.SystemPicker;
 import org.lazywizard.lazylib.MathUtils;
+import org.lazywizard.lazylib.VectorUtils;
 import org.lwjgl.util.vector.Vector2f;
 
 import java.util.ArrayList;
@@ -86,6 +88,43 @@ public class SystemHelper {
         MarketAPI randomMarket = markets.get(MathHelper.getSeededRandomNumberInRange(0, markets.size()-1, random));
 
         return randomMarket.getPrimaryEntity();
+    }
+
+    public static SectorEntityToken getRandomFactionMarket(Random random, String faction) {
+        return getRandomFactionMarket(random, faction, new ArrayList<String>());
+    }
+
+    public static SectorEntityToken getRandomFactionMarket(Random random, String faction, List<String> blacklist) {
+        List<MarketAPI> validMarkets = new ArrayList<>();
+        for (MarketAPI market : Misc.getFactionMarkets(faction)) {
+            boolean isValid = true;
+            StarSystemAPI system = market.getStarSystem();
+            //crash on hyperspace markets
+            if (system==null) continue;
+            if (system.hasTag(Tags.THEME_HIDDEN) || system.hasTag(Tags.SYSTEM_CUT_OFF_FROM_HYPER) ||
+                    system.getStar() == null || system.getPlanets().size()<1) {
+                isValid = false;
+            }
+            if (blacklist.contains(market.getId())){
+                isValid = false;
+            }
+            if (market.isHidden() || market.isPlanetConditionMarketOnly()){
+                isValid = false;
+            }
+            if (isValid) {
+                validMarkets.add(market);
+            }
+        }
+        if (validMarkets.isEmpty()){
+            if (!blacklist.isEmpty()){
+                log("ERROR no valid " + faction + " markets with blacklist retry");
+                return getRandomFactionMarket(random, faction, new ArrayList<String>());
+            } else {
+                log("ERROR no valid " + faction + " markets picking random market");
+                return getRandomMarket(random, false);
+            }
+        }
+        return validMarkets.get(MathHelper.getSeededRandomNumberInRange(0,validMarkets.size()-1, random)).getPrimaryEntity();
     }
 
     public static boolean hasGate(StarSystemAPI sys){
@@ -175,6 +214,84 @@ public class SystemHelper {
 
     public static OrbitAPI createRandomNearOrbit(SectorEntityToken loc){
         return Global.getFactory().createCircularOrbit(loc, (float)Math.random() * 360.0f, MathUtils.getRandomNumberInRange(150f, 550f), MathUtils.getRandomNumberInRange(12,24));
+    }
+
+    public static SectorEntityToken spawnAwayFromStarFixer(SectorEntityToken entity){
+        return spawnAwayFromStarFixer(entity, 1f);
+    }
+
+    public static SectorEntityToken spawnAwayFromStarFixer(SectorEntityToken entity, float extraDistanceMult){
+        PlanetAPI planet = getNearestPlanetEntity(entity);
+        if (planet==null){
+            log("ERROR no planets");
+            return entity;
+        }
+        PlanetAPI focus = null;
+        if (entity.getOrbit()!=null&&entity.getOrbitFocus()!=null){
+            if (entity.getOrbitFocus() instanceof PlanetAPI){
+                focus = (PlanetAPI) entity.getOrbitFocus();
+                log("focus " +focus.getName());
+                log("planet " +planet.getName());
+            }
+        }
+        //move away from planet or star
+        float length = MathUtils.getDistance(entity.getLocation(), planet.getLocation());
+        float end_x = 0f;
+        float end_y = 0f;
+        if (planet.isStar()) extraDistanceMult = 2.0f;
+        if (focus!=null && planet!=focus) extraDistanceMult = 1f;
+        float toDistance = (planet.getRadius() * 1.25f) * extraDistanceMult;
+        if (planet.isStar() && length<=0f){
+            Vector2f newVector = Vector2f.add(new Vector2f(100f,100f), entity.getLocation(), null);
+            entity.setLocation(newVector.getX(), newVector.getY());
+            length = MathUtils.getDistance(entity.getLocation(), planet.getLocation());
+            log("fixed 0 location");
+        }
+        log("planet "+planet.getName()+" toDist "+toDistance+" ent "+entity.getName());
+        float endLength = 0f;
+        if (length>0f && length < toDistance) {
+            while (length < toDistance) {
+                Vector2f vector = new Vector2f(MathHelper.scaleVector(Vector2f.sub(entity.getLocation(), planet.getLocation(), entity.getLocation()), 1.25f));
+                length = vector.length();
+                endLength = vector.length();
+                end_x = planet.getLocation().getX() + length * (vector.getX() / length);
+                end_y = planet.getLocation().getY() + length * (vector.getY() / length);
+                log("x " + end_x + " y " + end_y + " length " + length + " goal " + toDistance + " extra " + extraDistanceMult);
+                entity.setLocation(end_x, end_y);
+                log("MiscLS moved " + entity.getName() + " loc " + entity.getContainingLocation().getName());
+            }
+        } else return entity;
+
+        OrbitAPI newOrbit;
+        if (endLength>0f) length = endLength;
+
+        float angle = VectorUtils.getAngle(planet.getLocation(), entity.getLocation());
+        float days = MathUtils.getRandomNumberInRange(1f, 1.25f) * (length/15f);
+        if (entity.getOrbit()!=null && entity.getOrbitFocus()!=null) {
+            newOrbit = Global.getFactory().createCircularOrbit(entity.getOrbitFocus(), angle, length, days);
+        } else {
+            newOrbit = Global.getFactory().createCircularOrbit(planet, angle, length, days);
+        }
+        entity.setOrbit(newOrbit);
+        log ("MiscLS finished "+entity.getName()+" dist "+MathUtils.getDistance(entity.getLocation(), planet.getLocation())+ " target "+length);
+
+        return entity;
+    }
+
+    private static PlanetAPI getNearestPlanetEntity(SectorEntityToken entity) {
+        float dist = Float.MAX_VALUE;
+        float newDist = 0f;
+        PlanetAPI nearest = null;
+        for (SectorEntityToken e : entity.getStarSystem().getAllEntities()){
+            if (e instanceof PlanetAPI){
+                newDist = MathUtils.getDistance(e.getLocation(), entity.getLocation()) - e.getRadius();
+                if (newDist<dist) {
+                    dist = newDist;
+                    nearest = (PlanetAPI)e;
+                }
+            }
+        }
+        return nearest;
     }
 
     public static float getDistanceFromNearestSystem(Vector2f loc){

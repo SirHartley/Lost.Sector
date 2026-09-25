@@ -19,7 +19,6 @@ import com.fs.starfarer.api.util.Misc;
 import indevo.industries.artillery.scripts.ArtilleryStationScript;
 import indevo.industries.artillery.scripts.CampaignAttackScript;
 import lostsector.ModPlugin;
-import lostsector.campaign.kesteven.quest.FrostIntel;
 import lostsector.persistence.Saved;
 import lostsector.helper.MathHelper;
 import lostsector.world.systems.frost.Frost;

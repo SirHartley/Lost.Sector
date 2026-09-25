@@ -23,7 +23,7 @@ import com.fs.starfarer.api.util.Misc.Token;
 import lostsector.campaign.kesteven.quest.DataSatelliteDialog;
 import lostsector.campaign.kesteven.quest.ElizaDialog;
 import lostsector.campaign.kesteven.quest.GlacierCommsDialog;
-import lostsector.campaign.kesteven.quest.QuestFleets;
+import lostsector.campaign.kesteven.quest.KestevenFleets;
 import lostsector.campaign.kesteven.quest.QuestStageManager;
 import lostsector.campaign.kesteven.quest.QuestHelper;
 import lostsector.ModPlugin;
@@ -31,7 +31,7 @@ import lostsector.settings.Setting;
 import lostsector.helper.Ids;
 import lostsector.helper.MathHelper;
 import lostsector.campaign.enigma.DormantSpawner;
-import lostsector.campaign.kesteven.quest.QuestPeople;
+import lostsector.campaign.kesteven.quest.KestevenPeople;
 import lostsector.helper.SectorLookup;
 import lostsector.helper.SystemHelper;
 import lostsector.helper.PowerLevel;
@@ -240,9 +240,9 @@ public class nskr_kestevenQuest extends PaginatedOptions {
 		player = Global.getSector().getPlayerPerson();
 		person = dialog.getInteractionTarget().getActivePerson();
 
-		jack = QuestPeople.getJack();
-		alice = QuestPeople.getAlice();
-		nick = QuestPeople.getNick();
+		jack = KestevenPeople.getJack();
+		alice = KestevenPeople.getAlice();
+		nick = KestevenPeople.getNick();
 
 		power = null;
 		stage = QuestHelper.getStage();
@@ -664,7 +664,7 @@ public class nskr_kestevenQuest extends PaginatedOptions {
 		}
 		//job 4 objects already exist from stage 12
 		if (stage <= 11) {
-			QuestFleets.spawnJob4Target();
+			KestevenFleets.spawnJob4Target();
 			QuestHelper.spawnArtifact(QuestHelper.getJob4EnemyTarget(), 4);
 			QuestStageManager.spawnJob4Wrecks(nskr_kestevenQuest.getRandom());
 		}
@@ -1385,7 +1385,7 @@ public class nskr_kestevenQuest extends PaginatedOptions {
 			text.addPara("\"I am very disappointed in you captain.\" She looks eager to cut the comm link on you.");
 			text.setFontSmallInsignia();
 			Global.getSector().getFaction(Factions.PLAYER).adjustRelationship("kesteven",-0.05f);
-			QuestPeople.getAlice().getRelToPlayer().adjustRelationship(-0.10f, RepLevel.VENGEFUL);
+			KestevenPeople.getAlice().getRelToPlayer().adjustRelationship(-0.10f, RepLevel.VENGEFUL);
 			//penalty text
 			text.addPara("Relationship with Kesteven reduced by 5",g,r,"5","");
 			text.addPara("Relationship with Alice Lumi reduced by 10",g,r,"10","");
@@ -1460,7 +1460,7 @@ public class nskr_kestevenQuest extends PaginatedOptions {
 			playerCargo.addHullmods(mod,1);
 			playerCargo.getCredits().add(STAGE1_PAYOUT);
 			Global.getSector().getFaction(Factions.PLAYER).adjustRelationship("kesteven",0.05f);
-			QuestPeople.getJack().getRelToPlayer().adjustRelationship(0.10f, RepLevel.COOPERATIVE);
+			KestevenPeople.getJack().getRelToPlayer().adjustRelationship(0.10f, RepLevel.COOPERATIVE);
 			//completion text
 			String payout = Misc.getDGSCredits(STAGE1_PAYOUT);
 			String desc = "Received +" + payout;
@@ -1504,7 +1504,7 @@ public class nskr_kestevenQuest extends PaginatedOptions {
 			nskr_shipSwap.addPoints(50000f);
 			playerCargo.getCredits().add(STAGE3_PAYOUT);
 			Global.getSector().getFaction(Factions.PLAYER).adjustRelationship("kesteven",0.05f);
-			QuestPeople.getAlice().getRelToPlayer().adjustRelationship(0.10f, RepLevel.COOPERATIVE);
+			KestevenPeople.getAlice().getRelToPlayer().adjustRelationship(0.10f, RepLevel.COOPERATIVE);
 			//completion text
 			String payout = Misc.getDGSCredits(STAGE3_PAYOUT);
 			String desc = "Received +" + payout;
@@ -1525,7 +1525,7 @@ public class nskr_kestevenQuest extends PaginatedOptions {
 			text.addPara("Okay, shes *really* frustrated with you.",g,h,"","");
 			text.setFontSmallInsignia();
 			Global.getSector().getFaction(Factions.PLAYER).adjustRelationship("kesteven",-0.05f);
-			QuestPeople.getAlice().getRelToPlayer().adjustRelationship(-0.10f, RepLevel.VENGEFUL);
+			KestevenPeople.getAlice().getRelToPlayer().adjustRelationship(-0.10f, RepLevel.VENGEFUL);
 			//completion text
 			text.addPara("Relationship with Kesteven reduced by 5",g,r,"5","");
 			text.addPara("Relationship with Alice Lumi reduced by 10",g,r,"10","");
@@ -1556,7 +1556,7 @@ public class nskr_kestevenQuest extends PaginatedOptions {
 			text.addPara("Gained 1 Story point",g,s,"1 Story point","");
 			playerCargo.getCredits().add(STAGE4_PAYOUT);
 			Global.getSector().getFaction(Factions.PLAYER).adjustRelationship("kesteven",0.05f);
-			QuestPeople.getAlice().getRelToPlayer().adjustRelationship(0.10f, RepLevel.COOPERATIVE);
+			KestevenPeople.getAlice().getRelToPlayer().adjustRelationship(0.10f, RepLevel.COOPERATIVE);
 			//completion text
 			HullModSpecAPI modspec = getRewardMod();
 			String mod = modspec.getId();
@@ -1577,7 +1577,7 @@ public class nskr_kestevenQuest extends PaginatedOptions {
 			ContactIntel.addPotentialContact(1f,person, dialog.getInteractionTarget().getMarket(), text);
 			//CONTACT lvl increase
 			text.addPara("Increased contact level with Kesteven contacts",g,gr,"","");
-			QuestPeople.getJack().setImportance(PersonImportance.HIGH);
+			KestevenPeople.getJack().setImportance(PersonImportance.HIGH);
 		}
 		//finish job 4 helped
 		if(stage == 13 && helped) {
@@ -1598,7 +1598,7 @@ public class nskr_kestevenQuest extends PaginatedOptions {
 			playerFleet.getFleetData().addFleetMember("nskr_epoch_empty");
 			playerCargo.getCredits().add(STAGE4_PAYOUT);
 			Global.getSector().getFaction(Factions.PLAYER).adjustRelationship("kesteven",0.05f);
-			QuestPeople.getAlice().getRelToPlayer().adjustRelationship(0.10f, RepLevel.COOPERATIVE);
+			KestevenPeople.getAlice().getRelToPlayer().adjustRelationship(0.10f, RepLevel.COOPERATIVE);
 			//completion text
 			String payout = Misc.getDGSCredits(STAGE4_PAYOUT);
 			String desc = "Received +" + payout;
@@ -1615,7 +1615,7 @@ public class nskr_kestevenQuest extends PaginatedOptions {
 			ContactIntel.addPotentialContact(1f,person, dialog.getInteractionTarget().getMarket(), text);
 			//CONTACT lvl increase
 			text.addPara("Increased contact level with Kesteven contacts",g,gr,"","");
-			QuestPeople.getJack().setImportance(PersonImportance.HIGH);
+			KestevenPeople.getJack().setImportance(PersonImportance.HIGH);
 		}
 		//job 5 alice tip 2 know frost system
 		if(stage == 16 && jackTip && aliceTip && !allDisks) {

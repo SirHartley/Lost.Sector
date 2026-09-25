@@ -12,7 +12,6 @@ import com.fs.starfarer.api.campaign.ai.ModularFleetAIAPI;
 import com.fs.starfarer.api.impl.campaign.ids.Factions;
 import com.fs.starfarer.api.impl.campaign.ids.MemFlags;
 import lostsector.helper.fleet.FleetInfo;
-import lostsector.campaign.kesteven.quest.QuestHelper;
 import lostsector.helper.fleet.SimpleFleet;
 import lostsector.dialogue.rules.nskr_debt;
 import lostsector.dialogue.rules.nskr_loanSharkDialog;
@@ -22,6 +21,7 @@ import lostsector.helper.FleetHelper;
 import lostsector.helper.MathHelper;
 import lostsector.helper.SectorLookup;
 import lostsector.helper.PowerLevel;
+import lostsector.helper.SystemHelper;
 import org.lazywizard.lazylib.MathUtils;
 import org.lwjgl.util.vector.Vector2f;
 
@@ -130,8 +130,8 @@ public class LoanShark extends BaseCampaignEventListener implements EveryFrameSc
                         fleet.getMemoryWithoutUpdate().clear();
                         fleet.getMemoryWithoutUpdate().set(MemFlags.FLEET_IGNORES_OTHER_FLEETS, true);
 
-                        if (QuestHelper.getRandomFactionMarket(new Random(), "kesteven").getMarket() != null) {
-                            SectorEntityToken loc = QuestHelper.getRandomFactionMarket(new Random(), "kesteven");
+                        if (SystemHelper.getRandomFactionMarket(new Random(), "kesteven").getMarket() != null) {
+                            SectorEntityToken loc = SystemHelper.getRandomFactionMarket(new Random(), "kesteven");
                             if (loc != null && loc.getMarket() != null) {
                                 fleet.addAssignment(FleetAssignment.GO_TO_LOCATION_AND_DESPAWN, loc, Float.MAX_VALUE, "returning to " + loc.getName());
                                 log("loanShark " + fleet.getName() + " RETURNING ");

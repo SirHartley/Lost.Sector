@@ -8,6 +8,7 @@ import com.fs.starfarer.api.impl.campaign.rulecmd.BaseCommandPlugin;
 import com.fs.starfarer.api.util.Misc;
 import lostsector.campaign.kesteven.quest.DelveMeetingBarEvent;
 import lostsector.campaign.kesteven.quest.QuestHelper;
+import lostsector.helper.SectorLookup;
 
 import java.util.List;
 import java.util.Map;
@@ -24,7 +25,7 @@ public class nskr_barEventFixer extends BaseCommandPlugin {
         MarketAPI market = dialog.getInteractionTarget().getMarket();
 
         //job5 bar intial
-        if (stage==15 && market== QuestHelper.asteriaOrOutpost()) {
+        if (stage==15 && market== SectorLookup.asteriaOrOutpost()) {
             DelveMeetingBarEvent event = new DelveMeetingBarEvent();
             event.addPromptAndOption(dialog, memoryMap);
             log("fixer added job5bar");

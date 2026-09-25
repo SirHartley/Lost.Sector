@@ -11,7 +11,6 @@ import com.fs.starfarer.api.util.Pair;
 import com.fs.starfarer.api.util.WeightedRandomPicker;
 import lostsector.campaign.events.blacksite.BlacksiteInfo;
 import lostsector.campaign.events.blacksite.BlacksiteManager;
-import lostsector.campaign.kesteven.quest.QuestHelper;
 import lostsector.helper.fleet.SystemPicker;
 import lostsector.helper.Ids;
 import lostsector.helper.SystemHelper;
@@ -71,7 +70,7 @@ public class BlacksiteSpawner {
 
                 SectorEntityToken base = addDerelict(system, spawnData.one, placeToSpawn.orbit, placeToSpawn.type);
                 //makes sure we are not in a star
-                QuestHelper.spawnAwayFromStarFixer(base);
+                SystemHelper.spawnAwayFromStarFixer(base);
                 base.setId(Ids.BLACKSITE_ENTITY_ID+numberOfSpawns);
 
                 List<BlacksiteInfo> sites = BlacksiteManager.getSites(BlacksiteManager.SITE_ARRAY_KEY);

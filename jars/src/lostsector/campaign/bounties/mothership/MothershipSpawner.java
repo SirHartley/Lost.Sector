@@ -26,6 +26,7 @@ import lostsector.persistence.Saved;
 import lostsector.helper.FleetHelper;
 import lostsector.helper.MathHelper;
 import lostsector.world.systems.frost.Frost;
+import lostsector.helper.SystemHelper;
 import org.lazywizard.lazylib.MathUtils;
 import org.lwjgl.util.vector.Vector2f;
 
@@ -273,7 +274,7 @@ public class MothershipSpawner  extends BaseCampaignEventListener implements Eve
         fleet.getMemoryWithoutUpdate().set(MemFlags.FLEET_INTERACTION_DIALOG_CONFIG_OVERRIDE_GEN, new MothershipInteractionConfig());
 
         //makes sure we are not in a star
-        QuestHelper.spawnAwayFromStarFixer(fleet, 2.0f);
+        SystemHelper.spawnAwayFromStarFixer(fleet, 2.0f);
 
         fleet.setFaction(FACTION, true);
 

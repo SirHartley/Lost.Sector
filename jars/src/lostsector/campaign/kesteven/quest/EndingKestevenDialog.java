@@ -14,6 +14,7 @@ import lostsector.campaign.kesteven.quest.QuestHelper;
 import lostsector.dialogue.rules.nskr_kestevenQuest;
 import lostsector.dialogue.rules.nskr_shipSwap;
 import lostsector.helper.MathHelper;
+import lostsector.helper.SectorLookup;
 
 import java.awt.*;
 import java.util.Map;
@@ -86,8 +87,8 @@ public class EndingKestevenDialog implements InteractionDialogPlugin {
         Color r = Misc.getNegativeHighlightColor();
         Color tc = Misc.getTextColor();
 
-        PersonAPI jack = QuestPeople.getJack();
-        PersonAPI alice = QuestPeople.getAlice();
+        PersonAPI jack = KestevenPeople.getJack();
+        PersonAPI alice = KestevenPeople.getAlice();
 
         text.addPara(optionText, b, h, "", "");
 
@@ -159,8 +160,8 @@ public class EndingKestevenDialog implements InteractionDialogPlugin {
             text.addPara("Acquired "+Misc.getWithDGS(REWARD_POINTS)+" exchange points",g,h,Misc.getWithDGS(REWARD_POINTS)+" exchange points","");
             //CONTACT lvl increase
             text.addPara("Increased contact level with Kesteven contacts",g,gr,"","");
-            QuestPeople.getJack().setImportance(PersonImportance.VERY_HIGH);
-            QuestPeople.getAlice().setImportance(PersonImportance.VERY_HIGH);
+            KestevenPeople.getJack().setImportance(PersonImportance.VERY_HIGH);
+            KestevenPeople.getAlice().setImportance(PersonImportance.VERY_HIGH);
 
             text.addPara("Relationship with Kesteven improved by 25",g,gr,"25","");
             text.addPara("Relationship with Jack Lapua improved by 20",g,gr,"20","");
@@ -176,11 +177,11 @@ public class EndingKestevenDialog implements InteractionDialogPlugin {
                 text.addPara("Kesteven and Tri-Tachyon enter hostilities",g,r,"enter hostilities","");
             }
 
-            if(QuestPeople.getEliza()!=null) {
-                QuestPeople.getEliza().getRelToPlayer().adjustRelationship(-0.75f, RepLevel.VENGEFUL);
+            if(KestevenPeople.getEliza()!=null) {
+                KestevenPeople.getEliza().getRelToPlayer().adjustRelationship(-0.75f, RepLevel.VENGEFUL);
             }
             //remove important
-            QuestHelper.asteriaOrOutpost().getMemory().unset(MemFlags.MEMORY_KEY_MISSION_IMPORTANT);
+            SectorLookup.asteriaOrOutpost().getMemory().unset(MemFlags.MEMORY_KEY_MISSION_IMPORTANT);
             if (QuestHelper.getElizaLoc()!=null) QuestHelper.getElizaLoc().getMemory().unset(MemFlags.MEMORY_KEY_MISSION_IMPORTANT);
 
             //CONDITION

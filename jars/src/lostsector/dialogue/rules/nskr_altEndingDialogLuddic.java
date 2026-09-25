@@ -15,8 +15,9 @@ import com.fs.starfarer.api.util.Misc;
 import lostsector.campaign.kesteven.quest.QuestStageManager;
 import lostsector.campaign.kesteven.quest.QuestHelper;
 import lostsector.helper.MathHelper;
-import lostsector.campaign.kesteven.quest.QuestPeople;
+import lostsector.campaign.kesteven.quest.KestevenPeople;
 import lostsector.helper.UiSounds;
+import lostsector.helper.SectorLookup;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -222,28 +223,28 @@ public class nskr_altEndingDialogLuddic extends PaginatedOptions {
     protected static void makeMad(TextPanelAPI text, Color g , Color r){
 
         //remove important
-        if (QuestHelper.asteriaOrOutpost()!=null) {
-            QuestHelper.asteriaOrOutpost().getMemory().unset(MemFlags.MEMORY_KEY_MISSION_IMPORTANT);
+        if (SectorLookup.asteriaOrOutpost()!=null) {
+            SectorLookup.asteriaOrOutpost().getMemory().unset(MemFlags.MEMORY_KEY_MISSION_IMPORTANT);
         }
         if (QuestHelper.getElizaLoc()!=null){
             QuestHelper.getElizaLoc().getMemory().unset(MemFlags.MEMORY_KEY_MISSION_IMPORTANT);
         }
         //remove contact
-        if(QuestPeople.getAlice()!=null) {
-            QuestPeople.getAlice().getRelToPlayer().adjustRelationship(-0.50f, RepLevel.HOSTILE);
-            if(ContactIntel.getContactIntel(QuestPeople.getAlice())!=null) {
-                ContactIntel.getContactIntel(QuestPeople.getAlice()).setState(ContactIntel.ContactState.SUSPENDED);
+        if(KestevenPeople.getAlice()!=null) {
+            KestevenPeople.getAlice().getRelToPlayer().adjustRelationship(-0.50f, RepLevel.HOSTILE);
+            if(ContactIntel.getContactIntel(KestevenPeople.getAlice())!=null) {
+                ContactIntel.getContactIntel(KestevenPeople.getAlice()).setState(ContactIntel.ContactState.SUSPENDED);
             }
         }
-        if(QuestPeople.getJack()!=null) {
-            QuestPeople.getJack().getRelToPlayer().adjustRelationship(-0.50f, RepLevel.HOSTILE);
-            if(ContactIntel.getContactIntel(QuestPeople.getJack())!=null) {
-                ContactIntel.getContactIntel(QuestPeople.getJack()).setState(ContactIntel.ContactState.SUSPENDED);
+        if(KestevenPeople.getJack()!=null) {
+            KestevenPeople.getJack().getRelToPlayer().adjustRelationship(-0.50f, RepLevel.HOSTILE);
+            if(ContactIntel.getContactIntel(KestevenPeople.getJack())!=null) {
+                ContactIntel.getContactIntel(KestevenPeople.getJack()).setState(ContactIntel.ContactState.SUSPENDED);
             }
         }
         //-rep
-        if(QuestPeople.getEliza()!=null) {
-            QuestPeople.getEliza().getRelToPlayer().adjustRelationship(-0.50f, RepLevel.HOSTILE);
+        if(KestevenPeople.getEliza()!=null) {
+            KestevenPeople.getEliza().getRelToPlayer().adjustRelationship(-0.50f, RepLevel.HOSTILE);
         }
         //kesteven rep
         float repKesteven = MathHelper.getSeededRandomNumberInRange(-0.65f, -0.55f, getRandom());
