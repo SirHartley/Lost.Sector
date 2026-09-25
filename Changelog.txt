@@ -67,8 +67,8 @@ Adjusted - Escape now goes back on every screen of the artifact exchange and the
 Fixed - Enigma ambush fleets in hyperspace no longer follow you into a star system you enter just after they appear
 Adjusted - The Kesteven loan menu lists every loan and repayment amount on one page
 Adjusted - Taking or repaying a Kesteven loan shows the standard credits gained or lost receipt
-
 Adjusted - Questions you have already asked Jack and Alice no longer return to their question lists
+
 1.0.b
 Adjusted - Severely nerfed spawn rates for Borealis, Rhea and Kingslayer
 Fixed - Crash when starting a new game with nexerelin
