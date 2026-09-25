@@ -10,15 +10,20 @@ import com.fs.starfarer.api.campaign.econ.MarketAPI;
 import com.fs.starfarer.api.campaign.comm.IntelInfoPlugin.IntelSortTier;
 import com.fs.starfarer.api.impl.campaign.ids.Tags;
 import com.fs.starfarer.api.impl.campaign.intel.BaseIntelPlugin;
+import lostsector.campaign.enigma.DormantSpawner;
 import lostsector.helper.Ids;
 import lostsector.helper.SectorLookup;
+import lostsector.helper.SystemHelper;
+import lostsector.helper.fleet.SystemPicker;
 import lostsector.quest.Declarations;
 import lostsector.quest.FleetOrders;
 import lostsector.quest.FleetRole;
 import lostsector.quest.QuestContext;
 import lostsector.quest.QuestModule;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 // Job 1, "Enemy Unknown": the sensor task and the Enigma fight before it, the intel entry, the tip system's dormant
 // fleet and the move to JOB1_DONE once both deliveries are recorded. Briefings and hand-ins are the hub's
@@ -27,8 +32,9 @@ final class KestevenJob1Module extends QuestModule<KestevenStage, KestevenState>
 
     static final String INTEL = "job1";
     static final String UPDATE_SENSOR_DATA = "sensorData";
-    // Placed by QuestHelper.getJob1Tip; persistent because the old dormant fleet outlived the job.
+    // Placed by pickTip; persistent because the old dormant fleet outlived the job.
     static final String ROLE_TIP_DORMANT = "job1Dormant";
+    private static final String ENIGMA_BASE_TYPE = "nskr_enigmabase";
 
     KestevenJob1Module() {
         super(KestevenStage.NOT_STARTED, KestevenStage.JOB1_ACTIVE, KestevenStage.JOB1_DONE, KestevenStage.JOB3_OFFERED);
@@ -61,7 +67,7 @@ final class KestevenJob1Module extends QuestModule<KestevenStage, KestevenState>
     protected void onStage(QuestContext<KestevenStage, KestevenState> ctx, KestevenStage from) {
         if (ctx.isJump() && !isActiveIn(ctx.jumpTarget())) return;
         if (ctx.stage() == KestevenStage.JOB1_ACTIVE) {
-            QuestHelper.getJob1Tip();
+            pickTip(ctx);
             ctx.intel().show(INTEL);
             progress(ctx);
         } else if (ctx.stage() == KestevenStage.JOB3_OFFERED && ctx.intel().isShown(INTEL)) {
@@ -133,6 +139,40 @@ final class KestevenJob1Module extends QuestModule<KestevenStage, KestevenState>
     }
 
     private static boolean tipHasBase(KestevenState state) {
-        return state.job1TipSystem != null && QuestHelper.hasEnigmaBase(state.job1TipSystem);
+        return state.job1TipSystem != null && hasEnigmaBase(state.job1TipSystem);
+    }
+
+    // A system with an Enigma base, picked on first use (Jack's tip or the job's start) and kept; the first pick also
+    // adds a dormant Enigma fleet there. Both draw from the questline's shared random. Null when no system qualifies.
+    static StarSystemAPI pickTip(QuestContext<KestevenStage, KestevenState> ctx) {
+        KestevenState s = ctx.state();
+        if (s.job1TipSystem != null) return s.job1TipSystem;
+        StarSystemAPI system = pickSystemWithEnigmaBase(ctx, ctx.random(KestevenState.RANDOM_QUEST));
+        if (system == null) return null;
+        s.job1TipSystem = system;
+        SectorEntityToken dormant = DormantSpawner.addDormant(
+                SystemHelper.getRandomLocationInSystem(system, true, false, ctx.random(KestevenState.RANDOM_QUEST)), "enigma", 20f);
+        if (dormant instanceof CampaignFleetAPI) ctx.fleets().adopt(ROLE_TIP_DORMANT, (CampaignFleetAPI) dormant);
+        return system;
+    }
+
+    private static StarSystemAPI pickSystemWithEnigmaBase(QuestContext<KestevenStage, KestevenState> ctx, Random random) {
+        SystemPicker picker = new SystemPicker(random, 1);
+        picker.pickEntities = new ArrayList<>(List.of(ENIGMA_BASE_TYPE));
+        picker.pickOnlyInProcgen = true;
+        if (!picker.get().isEmpty()) {
+            StarSystemAPI pick = picker.pick();
+            ctx.log("job 1 tip system " + pick.getName());
+            return pick;
+        }
+        ctx.log("no system with an Enigma base for the job 1 tip");
+        return null;
+    }
+
+    private static boolean hasEnigmaBase(StarSystemAPI system) {
+        for (SectorEntityToken entity : system.getAllEntities()) {
+            if (ENIGMA_BASE_TYPE.equals(entity.getCustomEntityType())) return true;
+        }
+        return false;
     }
 }

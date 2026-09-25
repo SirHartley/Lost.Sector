@@ -17,11 +17,14 @@ import lostsector.helper.Ids;
 import lostsector.helper.MathHelper;
 import lostsector.helper.PowerLevel;
 import lostsector.helper.SectorLookup;
+import lostsector.helper.fleet.SystemPicker;
 import lostsector.quest.Declarations;
 import lostsector.quest.QuestContext;
 import lostsector.quest.QuestManager;
 import lostsector.quest.QuestModule;
 import lostsector.settings.Setting;
+import org.lazywizard.lazylib.MathUtils;
+import org.lwjgl.util.vector.Vector2f;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,6 +53,8 @@ final class KestevenHubModule extends QuestModule<KestevenStage, KestevenState> 
     private static final float DOUBT_MARGIN = 0.15f;
 
     private static final float EXCHANGE_POINTS_BONUS = 50000f;
+    private static final float FROST_TIP_MIN_DISTANCE = 7000f;
+    private static final float FROST_TIP_MAX_DISTANCE = 12000f;
     private static final String EPOCH_VARIANT = "nskr_epoch_empty";
     // CargoAPI.addHullmods adds a special item with this id and the hullmod id as its data.
     private static final String MODSPEC_ITEM = "modspec";
@@ -89,7 +94,7 @@ final class KestevenHubModule extends QuestModule<KestevenStage, KestevenState> 
         d.check("job1TipKnown", ctx -> ctx.state().job1TipSystem != null);
         d.check("job4TargetKnown", ctx -> ctx.state().job4EnemyTarget != null);
         d.check("nicholasTipGiven", ctx -> ctx.state().nicholasDialogStage >= 1);
-        d.check("outpostExists", ctx -> QuestHelper.outpostExists());
+        d.check("outpostExists", ctx -> SectorLookup.outpostExists());
         d.check("noSatellite", ctx -> ctx.state().satellitesRecovered == 0);
         d.check("oneSatellite", ctx -> ctx.state().satellitesRecovered == 1);
         d.check("twoSatellites", ctx -> ctx.state().satellitesRecovered >= 2);
@@ -98,11 +103,11 @@ final class KestevenHubModule extends QuestModule<KestevenStage, KestevenState> 
         d.check("frostVisited", ctx -> SectorLookup.getFrost().isEnteredByPlayer());
 
         // Targets are picked on first use, where the old dialog first read them, before the rows that show them.
-        d.action("pickJob1Tip", ctx -> QuestHelper.getJob1Tip());
-        d.action("pickJob3Start", ctx -> QuestHelper.getJob3Start());
-        d.action("pickJob3Target", ctx -> QuestHelper.getJob3Target());
-        d.action("pickJob4FriendlyTarget", ctx -> QuestHelper.getJob4FriendlyTarget());
-        d.action("pickJob5FrostTip", ctx -> QuestHelper.getJob5FrostTip());
+        d.action("pickJob1Tip", KestevenJob1Module::pickTip);
+        d.action("pickJob3Start", KestevenJob3Module::start);
+        d.action("pickJob3Target", KestevenJob3Module::target);
+        d.action("pickJob4FriendlyTarget", KestevenJob4Module::friendlyTarget);
+        d.action("pickJob5FrostTip", KestevenHubModule::pickFrostTip);
         d.action("recordNicholasTip", ctx -> ctx.state().nicholasDialogStage = 1);
         d.action("markJob3Satellite", ctx -> markSatellite(ctx, ctx.state().job3Target));
         d.action("markJob4Satellite", ctx -> markSatellite(ctx, ctx.state().job4EnemyTarget));
@@ -197,7 +202,7 @@ final class KestevenHubModule extends QuestModule<KestevenStage, KestevenState> 
     private static String frostTipConstellation(QuestContext<KestevenStage, KestevenState> ctx) {
         StarSystemAPI tip = ctx.state().job5FrostTipSystem;
         if (tip == null || tip.getConstellation() == null) return "";
-        return QuestHelper.parseConstellation(tip.getConstellation().getNameWithType());
+        return KestevenQuest.constellationName(tip.getConstellation().getNameWithType());
     }
 
     // The old dialog printed the float with string concatenation after rounding to two decimals.
@@ -216,8 +221,35 @@ final class KestevenHubModule extends QuestModule<KestevenStage, KestevenState> 
 
     private static void markSatellite(QuestContext<KestevenStage, KestevenState> ctx, SectorEntityToken location) {
         if (location == null || location.getStarSystem() == null) return;
-        SectorEntityToken satellite = QuestHelper.getArtifact(location.getStarSystem());
+        SectorEntityToken satellite = KestevenSatelliteModule.find(location.getStarSystem());
         if (satellite != null) ctx.mark(satellite, JOB5_ON);
+    }
+
+    // A system 7,000 to 12,000 units from Frost for Alice's distance hint, picked on first use and kept.
+    private static void pickFrostTip(QuestContext<KestevenStage, KestevenState> ctx) {
+        KestevenState s = ctx.state();
+        if (s.job5FrostTipSystem != null) return;
+        StarSystemAPI frost = SectorLookup.getFrost();
+        s.job5FrostTipSystem = pickSystemNearLocation(ctx, frost.getStar().getLocationInHyperspace(), FROST_TIP_MIN_DISTANCE,
+                FROST_TIP_MAX_DISTANCE, frost, ctx.random(KestevenState.RANDOM_QUEST));
+    }
+
+    // Widens the outer distance by half until a system qualifies.
+    private static StarSystemAPI pickSystemNearLocation(QuestContext<KestevenStage, KestevenState> ctx, Vector2f loc,
+                                                        float minDistance, float maxDistance, StarSystemAPI ignore, Random random) {
+        SystemPicker picker = new SystemPicker(random, 1);
+        picker.blacklistSystems = new ArrayList<>(List.of(ignore));
+        picker.pickOnlyInProcgen = true;
+        List<StarSystemAPI> valid = new ArrayList<>();
+        for (StarSystemAPI system : picker.get()) {
+            float dist = MathUtils.getDistance(loc, system.getStar().getLocationInHyperspace());
+            if (dist <= maxDistance && dist > minDistance) valid.add(system);
+        }
+        if (valid.isEmpty()) {
+            ctx.log("no system for the Frost tip within " + maxDistance + ", widening");
+            return pickSystemNearLocation(ctx, loc, minDistance, maxDistance * 1.5f, ignore, random);
+        }
+        return valid.get(MathHelper.getSeededRandomNumberInRange(0, valid.size() - 1, random));
     }
 
     // A modspec the player does not know yet when there is one.
@@ -242,9 +274,9 @@ final class KestevenHubModule extends QuestModule<KestevenStage, KestevenState> 
 
     // The derelicts, satellite #3 and the dormant guard that job 3 would have left, for job 5.
     private static void placeJob3Leftovers(QuestContext<KestevenStage, KestevenState> ctx) {
-        SectorEntityToken target = QuestHelper.getJob3Target();
-        QuestHelper.spawnEnvironmentalStorytelling();
-        QuestHelper.spawnArtifact(target, 3);
+        SectorEntityToken target = KestevenJob3Module.target(ctx);
+        KestevenJob3Module.placeWreckage(ctx);
+        KestevenSatelliteModule.spawn(ctx, target, 3);
         DormantSpawner.addDormant(target, "enigma", 45f, 50f, 0f, 1f, 1f, 1f, 1, 1);
     }
 

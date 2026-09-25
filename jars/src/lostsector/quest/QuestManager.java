@@ -50,7 +50,7 @@ public final class QuestManager extends BaseCampaignEventListener
     private static final int MAX_QUEUED_CHANGES = 20;
     // Clock timestamps are milliseconds with 86,400,000 per game day: CampaignClock.getElapsedDaysSince divides by 8.64E7.
     static final long TIMESTAMP_PER_DAY = 86_400_000L;
-    // FleetHelper's AI methods are written for this pace, as QuestStageManager calls them.
+    // FleetHelper's AI methods are written for this pace.
     private static final float ORDERS_INTERVAL_DAYS = 0.1f;
 
     private static final Hook DAY = new Hook() {
@@ -637,7 +637,7 @@ public final class QuestManager extends BaseCampaignEventListener
 
     // Called at the end of ModPlugin.onGameLoad, after the world exists (onGameLoad follows every onNewGame* hook, and
     // ModPlugin generates the mod's world there when it is added to a save), so states exist before any script or
-    // dialog of the load runs, including QuestStageManager, which runs while paused.
+    // dialog of the load runs, including scripts that run while paused.
     public void startQuests() {
         for (Run<?, ?> run : runs.values()) {
             run.available = run.quest.isAvailable();

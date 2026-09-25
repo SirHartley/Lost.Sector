@@ -3,6 +3,7 @@ package lostsector.campaign.kesteven.quest;
 import lostsector.helper.fleet.SimpleCaptain;
 import lostsector.helper.fleet.SimpleFleet;
 import lostsector.helper.fleet.SimpleFleetMember;
+import lostsector.helper.fleet.SystemPicker;
 
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.CampaignFleetAPI;
@@ -11,6 +12,7 @@ import com.fs.starfarer.api.campaign.SectorEntityToken;
 import com.fs.starfarer.api.campaign.StarSystemAPI;
 import com.fs.starfarer.api.characters.PersonAPI;
 import com.fs.starfarer.api.impl.campaign.ids.*;
+import com.fs.starfarer.api.impl.campaign.procgen.Constellation;
 import lostsector.settings.Difficulty;
 import lostsector.helper.MathHelper;
 import lostsector.helper.ShipHelper;
@@ -175,13 +177,14 @@ public class KestevenFleets {
     }
 
     // The job 4 builders return the fleets unbuilt; KestevenJob4Module spawns them in the old order and moves each one out
-    // of its star afterwards. Their random is the questline's shared sequence, drawn in the old order.
+    // of its star afterwards. Their random is the questline's shared sequence, drawn in the old order, and the friendly
+    // target is KestevenJob4Module.friendlyTarget, picked before the first builder draws.
 
     // An Enigma "Splinter" patrol in another system of the Special Operations fleet's constellation.
-    static SimpleFleet job4Splinter(Random random) {
-        StarSystemAPI target = QuestHelper.getJob4FriendlyTarget().getStarSystem();
+    static SimpleFleet job4Splinter(SectorEntityToken friendlyTarget, Random random) {
+        StarSystemAPI target = friendlyTarget.getStarSystem();
         //don't spawn in the same system as the friendly fleet
-        StarSystemAPI origin = QuestHelper.getRandomSystemWithinConstellation(QuestHelper.getJob4FriendlyTarget().getConstellation(), target, 1, random);
+        StarSystemAPI origin = pickSystemWithinConstellation(friendlyTarget.getConstellation(), target, 1, random);
         SectorEntityToken loc = SystemHelper.getRandomLocationInSystem(origin, true, true, random);
 
         float combatPoints = MathHelper.getSeededRandomNumberInRange(8f, 25f, random);
@@ -203,10 +206,10 @@ public class KestevenFleets {
 
     // The Enigma "Strike Group" in another system of the Special Operations fleet's constellation; its location is the
     // job 4 enemy target.
-    static SimpleFleet job4StrikeGroup(Random random) {
-        StarSystemAPI target = QuestHelper.getJob4FriendlyTarget().getStarSystem();
+    static SimpleFleet job4StrikeGroup(SectorEntityToken friendlyTarget, Random random) {
+        StarSystemAPI target = friendlyTarget.getStarSystem();
         //don't spawn in the same system as the friendly fleet
-        StarSystemAPI origin = QuestHelper.getRandomSystemWithinConstellation(target.getConstellation(), target, 2, random);
+        StarSystemAPI origin = pickSystemWithinConstellation(target.getConstellation(), target, 2, random);
         SectorEntityToken loc = SystemHelper.getRandomLocationInSystem(origin, false,false, random);
 
         float combatPoints = MathHelper.getSeededRandomNumberInRange(40f, 45f, random);
@@ -262,8 +265,8 @@ public class KestevenFleets {
     }
 
     // The Kesteven "Special Operations" fleet at the job 4 friendly target, transponder off.
-    static SimpleFleet job4SpecialOps(Random random) {
-        SectorEntityToken loc = QuestHelper.getJob4FriendlyTarget();
+    static SimpleFleet job4SpecialOps(SectorEntityToken friendlyTarget, Random random) {
+        SectorEntityToken loc = friendlyTarget;
 
         float combatPoints = MathHelper.getSeededRandomNumberInRange(45f, 55f, random);
 
@@ -317,5 +320,22 @@ public class KestevenFleets {
         simpleFleet.assignment = FleetAssignment.ORBIT_PASSIVE;
         simpleFleet.assignmentText = "preparing";
         return simpleFleet;
+    }
+
+    // A system of the constellation with at least minPlanets planets, other than ignore; without one, any system of the
+    // constellation. Null when the constellation has none.
+    private static StarSystemAPI pickSystemWithinConstellation(Constellation constellation, StarSystemAPI ignore, int minPlanets, Random random) {
+        SystemPicker picker = new SystemPicker(random, minPlanets);
+        if (ignore != null) picker.blacklistSystems = new ArrayList<>(List.of(ignore));
+        picker.allowNeutron = true;
+        picker.pickOnlyInProcgen = true;
+        List<StarSystemAPI> valid = new ArrayList<>();
+        for (StarSystemAPI system : picker.get()) {
+            if (system.getConstellation() == constellation) valid.add(system);
+        }
+        if (valid.isEmpty() && ignore != null) return pickSystemWithinConstellation(constellation, null, 1, random);
+        if (!valid.isEmpty()) return valid.get(MathHelper.getSeededRandomNumberInRange(0, valid.size() - 1, random));
+        log("ERROR no systems in constellation");
+        return null;
     }
 }

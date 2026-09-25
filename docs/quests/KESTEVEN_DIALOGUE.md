@@ -62,7 +62,7 @@ Option ids:
 | check | `job1TipKnown`, `job4TargetKnown` | `job1TipSystem`, `job4EnemyTarget` set |
 | check | `nicholasTipGiven`, `outpostExists`, `frostVisited` | `nicholasDialogStage` at least 1; the Outpost market exists and is Kesteven's; the player has entered Frost |
 | check | `noSatellite`, `oneSatellite`, `twoSatellites`, `disksOverTwo`, `allDisks` | Satellites salvaged 0, 1, at least 2; disks above 2, at least 5 |
-| action | `pickJob1Tip`, `pickJob3Start`, `pickJob3Target`, `pickJob4FriendlyTarget`, `pickJob5FrostTip` | The `QuestHelper` getter of that target, which picks it on first use; `pickJob1Tip` also places a dormant Enigma fleet |
+| action | `pickJob1Tip`, `pickJob3Start`, `pickJob3Target`, `pickJob4FriendlyTarget`, `pickJob5FrostTip` | The picker of that target, which picks it on first use: `KestevenJob1Module.pickTip`, `KestevenJob3Module.start` and `target`, `KestevenJob4Module.friendlyTarget`, the hub's Frost tip; `pickJob1Tip` also places a dormant Enigma fleet |
 | action | `recordNicholasTip` | `nicholasDialogStage` = 1 |
 | action | `markJob3Satellite`, `markJob4Satellite` | `ctx.mark` on satellite #3 or satellite #4, from `JOB5_DISKS` on |
 | action | `grantModspec` | A random Kesteven modspec the player does not know yet, if any (purpose `kestevenQuestRandom`), through `ctx.rewards().item` |
@@ -71,7 +71,7 @@ Option ids:
 | action | `storySkip` | Jumps to `CACHE_KNOWN` with `QuestManager.jump`, then clears `nskr_starfarerFromStart` and sets `STORY_SKIPPED` ([questline](KESTEVEN_QUESTLINE.md#story-skip)) |
 | token | `playerFullName`, `job1Payout`, `job3Payout`, `job4Payout` | Player's full name; the stage payouts with `Misc.getDGSCredits`. The job 1 briefing also uses `KestevenJob1Module`'s token `job1ArtifactCount` (`JOB1_ARTIFACTS`) |
 | token | `job1TipSystem`, `job3Start`, `job3Market`, `job3TargetSystem`, `job4Constellation`, `job4TargetSystem`, `outpostName` | Names from the saved targets: tip system; job 3 start entity and its market; job 3 target system; friendly target constellation; strike group system; Outpost |
-| token | `frostName`, `frostTipConstellation`, `frostTipDistance` | Frost's name; the hint system's constellation (`QuestHelper.parseConstellation`); the distance from it to Frost times 1.5 in light-years, rounded to two decimals and printed as a Java float |
+| token | `frostName`, `frostTipConstellation`, `frostTipDistance` | Frost's name; the hint system's constellation (`KestevenQuest.constellationName`); the distance from it to Frost times 1.5 in light-years, rounded to two decimals and printed as a Java float |
 
 Targets are picked where the old dialog first read them: the job 1 tip when Jack's menu opens at `JOB1_ACTIVE` with neither task done and no tip given (`nskr_kq_jackChatJob1Tip`) and when his questions open at `NOT_STARTED` (`nskr_kq_jackAskJob1`); the job 3 start market by the job 3 briefing; the friendly target by the job 4 briefing; the job 3 target by Alice's leads; the hint system by Alice's Frost tip. An action runs first in the row's Script and the text follows with `AddText`, so the tokens read the picked value. Checks and tokens never pick.
 
@@ -282,7 +282,7 @@ The `# KESTEVEN QUESTLINE: CACHE` block of `data/campaign/rules.csv` holds the C
 | Command core, entry | `FireBest` pick on `nskr_kqCacheCore` | `nskr_kq_coreFirst` (the first visit: `CORE_SEEN`, "Approach the command core"), `…coreQuest` (`check cacheQuestTarget`, not salvaged), `…coreSalvaged`, `…coreWreckage` (fallback) |
 | Core screens | Shared inserts and a plain chain | `nskr_kqCoreSalvage` (the salvage offer and Leave) and `nskr_kqCoreWreckage` (one line and Leave), fired by the entry rows and by `…coreApproachSel` or `…coreApproachWreckageSel`; `…coreSalvageSel`, then `…coreChipSel`: the chip line, `AddRemoveCommodity alpha_core 1`, `do salvageCacheCore` (Artifact Electronics with the vanilla receipt, `CHIP_SALVAGED`, stage 19, the markers) and `ui_rep_raise`. The screens after the first run `ShowDefaultVisual`, the core's image |
 
-`KestevenCacheModule` declarations used by the rows: the triggers `nskr_kqCacheCore` and `nskr_kqCacheDoubt`; the checks `cacheQuestTarget` (legacy stage 16 or later while the questline runs) and `cacheIntelDeletable` (the intel's delete button); the actions `endCacheDoubt` and `salvageCacheCore`; the people `cacheChief` and `cacheSensors`.
+`KestevenCacheModule` declarations used by the rows: the triggers `nskr_kqCacheCore` and `nskr_kqCacheDoubt`; the checks `cacheQuestTarget` (from `JOB5_DISKS` on while the questline runs) and `cacheIntelDeletable` (the intel's delete button); the actions `endCacheDoubt` and `salvageCacheCore`; the people `cacheChief` and `cacheSensors`.
 
 ## Fleet conversations
 
@@ -314,7 +314,7 @@ The `# KESTEVEN QUESTLINE: JOB 4` block holds the job's conversations and intel 
 | action | `recordJob4FleetTalk` | Sets `JOB4_FRIENDLY_TALKED` and `JOB4_FRIENDLY_FOUND`, and `JOB4_TARGET_HINT` unless the strike group was seen or beaten |
 | action | `sendJob4FleetHome` | Moves the Special Operations fleet to role `job4SpecialOpsLeaving`, bound for `asteriaOrOutpost` |
 | action | `readHintWreck` | Sets `JOB4_HINT_WRECK_READ` and releases the wreck's claim |
-| token | `job4FriendlySystem`, `job4FriendlyEntity`, `job4TargetEntity`, `job4OutpostSystem`, `job4SearchArea`, `job4Supplies`, `job4Fuel` | Names from the job 4 targets and the Outpost; the constellation with its type (`QuestHelper.parseConstellation`); the player's supplies and fuel in whole units |
+| token | `job4FriendlySystem`, `job4FriendlyEntity`, `job4TargetEntity`, `job4OutpostSystem`, `job4SearchArea`, `job4Supplies`, `job4Fuel` | Names from the job 4 targets and the Outpost; the constellation with its type (`KestevenQuest.constellationName`); the player's supplies and fuel in whole units |
 
 The hand-over uses `AddRemoveCommodity`, `AdjustRep kesteven 5` and `AdjustRepActivePerson COOPERATIVE 10`, whose vanilla receipts replace the old custom receipt lines. The rows also use the hub's `outpostExists`, `nicholasTipGiven` and `job4TargetKnown`, the job 1 module's `kestevenHostile` and `homeName`, and the hub token `job4TargetSystem`.
 
@@ -355,7 +355,7 @@ The vanilla receipts of `AddStoryPoints`, `AdjustRep`, `AdjustRepActivePerson`, 
 | check | `altEndingLuddicMarket`, `altEndingTtMarket` | The dialog target's market belongs to the Luddic Path or Luddic Church, or to Tri-Tachyon |
 | action | `altEndingRaisePrice` | `ttPayout` = 2,500,000 |
 | action | `altEndingPay` | Raises `ttPayout` to at least 2,000,000 and pays it through `QuestRewards.credits` |
-| action | `altEndingFallout` | Unmarks `asteriaOrOutpost` and Eliza's market, Alice and Jack -50 (at worst hostile) with their contacts suspended, Eliza -50, Kesteven set to a random -0.55 to -0.65 when that is lower (purpose `endingAltDialogKeyRandom`, receipt through `QuestRewards.relationship`), `ALT_ENDING_DONE`, stage `COMPLETED`, `QuestHelper.saveEnding()` |
+| action | `altEndingFallout` | Unmarks `asteriaOrOutpost` and Eliza's market, Alice and Jack -50 (at worst hostile) with their contacts suspended, Eliza -50, Kesteven set to a random -0.55 to -0.65 when that is lower (purpose `endingAltDialogKeyRandom`, receipt through `QuestRewards.relationship`), `ALT_ENDING_DONE`, stage `COMPLETED`, `KestevenEndingsModule.unlockSettings()` |
 | action | `altEndingPlaceChip` | `nskr_upChip` on Culann while Hybrasil exists and Tri-Tachyon holds Culann, otherwise on the dialog target's market |
 | token | `altEndingTtOffer`, `altEndingTtRaised` | 2,000,000 and 2,500,000 with `Misc.getDGSCredits` |
 

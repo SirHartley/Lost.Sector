@@ -18,8 +18,8 @@ import java.util.Set;
 
 // The Tri-Tachyon collector: a one-shot "Black Ops" fleet that hunts a player carrying Artifact Electronics while the
 // questline runs and demands all of them. Its fleet and its demand are the shared modules InterceptEncounter and
-// PayOffEncounter, both active in every stage, so a collector met after stage 15 can still be paid; the conversation
-// is the # KESTEVEN QUESTLINE: COLLECTOR block of rules.csv.
+// PayOffEncounter, both active in every stage, so a collector met after JOB5_MEETING can still be paid; the
+// conversation is the # KESTEVEN QUESTLINE: COLLECTOR block of rules.csv.
 final class KestevenCollector {
 
     // Record, role, random purposes and the prefix of the checks, action and token.
@@ -32,7 +32,6 @@ final class KestevenCollector {
     private static final float MIN_ELECTRONICS = 50f;
     // Both roles despawn out of the player's sight after this age.
     private static final float MAX_AGE_DAYS = 60f;
-    // Legacy stages 2 to 15.
     private static final Set<KestevenStage> SPAWN_STAGES = EnumSet.range(KestevenStage.JOB1_DONE, KestevenStage.JOB5_MEETING);
 
     private KestevenCollector() {

@@ -18,8 +18,8 @@ import lostsector.quest.QuestModule;
 
 import java.util.List;
 
-// The two alternative endings at stage 19: an admin official at a Luddic Church or Luddic Path market destroys the
-// Unlimited Production Chip, one at a Tri-Tachyon market buys it. The conversations are the # KESTEVEN QUESTLINE:
+// The two alternative endings at CHIP_RECOVERED: an admin official at a Luddic Church or Luddic Path market destroys
+// the Unlimited Production Chip, one at a Tri-Tachyon market buys it. The conversations are the # KESTEVEN QUESTLINE:
 // ALTERNATIVE ENDINGS rows; the official who reaches the second conversation is locked to it through the speaker flag
 // $nskr_kq_altEndingLocked. Active at COMPLETED too, because the Tri-Tachyon row places the Chip after the fallout
 // action has moved the stage there.
@@ -86,7 +86,7 @@ final class KestevenAltEndingsModule extends QuestModule<KestevenStage, Kesteven
 
         ctx.set(KestevenFlag.ALT_ENDING_DONE);
         if (ctx.stage() != KestevenStage.COMPLETED) ctx.advance(KestevenStage.COMPLETED);
-        QuestHelper.saveEnding();
+        KestevenEndingsModule.unlockSettings();
     }
 
     private static void turnAway(PersonAPI person, boolean suspendContact) {

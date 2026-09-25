@@ -68,9 +68,8 @@ final class KestevenJob5Module extends QuestModule<KestevenStage, KestevenState>
         d.token("delveElizaSystem", ctx -> systemName(ctx.state().elizaMarket));
     }
 
-    // QuestStageManager added the old intel on the first unpaused frame at stage 16 or 17 (17 after the story skip). A
-    // jump acts only in its target stage, so the posting message describes that stage, as the story skip's did, and a
-    // passed meeting gets no guard.
+    // The entry shows when JOB5_DISKS starts, or CACHE_KNOWN after the story skip. A jump acts only in its target
+    // stage, so the posting message describes that stage, as the story skip's did, and a passed meeting gets no guard.
     @Override
     protected void onStage(QuestContext<KestevenStage, KestevenState> ctx, KestevenStage from) {
         if (ctx.isJump() && ctx.stage() != ctx.jumpTarget()) return;
@@ -81,7 +80,7 @@ final class KestevenJob5Module extends QuestModule<KestevenStage, KestevenState>
                     guard.setPortraitSprite(Global.getSettings().getSpriteName("characters", "nskr_guard"));
                 });
                 break;
-            // The old entry had no map location at stage 20.
+            // The old entry had no map location at COMPLETED.
             case COMPLETED:
                 if (!ctx.intel().isShown(INTEL)) break;
                 ctx.intel().setMapLocation(INTEL, null);
@@ -150,7 +149,7 @@ final class KestevenJob5Module extends QuestModule<KestevenStage, KestevenState>
     private static String constellation(SectorEntityToken location) {
         StarSystemAPI system = location == null ? null : location.getStarSystem();
         if (system == null || system.getConstellation() == null) return "";
-        return QuestHelper.parseConstellation(system.getConstellation().getNameWithType());
+        return KestevenQuest.constellationName(system.getConstellation().getNameWithType());
     }
 
     private static String marketName(SectorEntityToken entity) {

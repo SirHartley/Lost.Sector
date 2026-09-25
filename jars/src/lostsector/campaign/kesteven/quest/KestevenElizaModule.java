@@ -21,8 +21,7 @@ import java.util.List;
 
 // Eliza's port: the meeting in the `# KESTEVEN QUESTLINE: ELIZA` rows, which take over her market's dialog until it
 // has finished once, the raid for her disks after a refusal, and her move when that market is decivilized. Active in
-// every stage, as the old CorePlugin route, raid listener and QuestStageManager check were: they tested only flags,
-// the market and the legacy stage.
+// every stage: the checks test only flags, the market and the stage.
 final class KestevenElizaModule extends QuestModule<KestevenStage, KestevenState> {
 
     static final String UPDATE_ELIZA_MOVED = "elizaMoved";
@@ -81,16 +80,16 @@ final class KestevenElizaModule extends QuestModule<KestevenStage, KestevenState
         if (raid != null) objectives.add(raid);
     }
 
-    // DecivTracker.decivilize sets the market condition-only before it reports the decivilization. The old check ran
-    // every frame from stage 16 on, failure included, and posted a campaign message; the Delve entry carries it now.
+    // DecivTracker.decivilize sets the market condition-only before it reports the decivilization. Eliza moves from
+    // JOB5_DISKS on, failure included; the Delve entry reports it.
     @Override
     protected void onDecivilized(QuestContext<KestevenStage, KestevenState> ctx, MarketAPI decivilized, boolean fullyDestroyed) {
         KestevenState s = ctx.state();
         SectorEntityToken market = s.elizaMarket;
         if (market == null || market.getMarket() == null || !market.getMarket().isPlanetConditionMarketOnly()) return;
-        if (ctx.stage().toLegacy() < 16 || !ctx.has(KestevenFlag.ELIZA_FOUND) || ctx.has(KestevenFlag.ELIZA_KILLED)) return;
+        if (!ctx.stage().atLeast(KestevenStage.JOB5_DISKS) || !ctx.has(KestevenFlag.ELIZA_FOUND) || ctx.has(KestevenFlag.ELIZA_KILLED)) return;
         s.elizaFormerName = market.getMarket().getPrimaryEntity().getName();
-        s.elizaMarket = QuestHelper.pickElizaMarket(ctx.random(KestevenState.RANDOM_QUEST), false);
+        s.elizaMarket = KestevenElizaSearchModule.pickMarket(ctx, ctx.random(KestevenState.RANDOM_QUEST), false);
         ctx.log("Eliza moved from " + s.elizaFormerName + " to " + s.elizaMarket.getName());
         PersonAPI eliza = KestevenPeople.getEliza();
         if (eliza != null) {

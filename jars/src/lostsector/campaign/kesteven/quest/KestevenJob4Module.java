@@ -25,6 +25,7 @@ import lostsector.helper.SectorLookup;
 import lostsector.helper.SystemHelper;
 import lostsector.helper.fleet.FleetInfo;
 import lostsector.helper.fleet.SimpleFleet;
+import lostsector.helper.fleet.SystemPicker;
 import lostsector.quest.Declarations;
 import lostsector.quest.FleetOrders;
 import lostsector.quest.FleetRole;
@@ -55,6 +56,9 @@ final class KestevenJob4Module extends QuestModule<KestevenStage, KestevenState>
     static final String ROLE_SPLINTER = "job4Splinter";
     static final String TRIGGER_HINT_WRECK = "nskr_kqHintWreck";
 
+    // Units from the sector's centre.
+    private static final float FRIENDLY_TARGET_MIN_DISTANCE = 32500f;
+
     static final float WAIT_DAYS = 30f;
     static final int SPLINTER_COUNT = 10;
     // The rows take these amounts with the same literals.
@@ -65,8 +69,8 @@ final class KestevenJob4Module extends QuestModule<KestevenStage, KestevenState>
     static final String UPDATE_DONE = "done";
     static final String UPDATE_FAILED = "failed";
 
-    // The old code despawned the job's fleets from "stage 17 on" (FAILED included) or "stage 14 on with satellite #4
-    // salvaged", in legacy stage numbers.
+    // The job's fleets withdraw from CACHE_KNOWN on, failure included, or from JOB5_OFFERED on once satellite #4 is
+    // salvaged.
     private static final Set<KestevenStage> FROM_CACHE_KNOWN = EnumSet.of(
             KestevenStage.CACHE_KNOWN, KestevenStage.CACHE_CLEARED, KestevenStage.CHIP_RECOVERED,
             KestevenStage.COMPLETED, KestevenStage.FAILED);
@@ -116,7 +120,7 @@ final class KestevenJob4Module extends QuestModule<KestevenStage, KestevenState>
         });
         d.token("job4SearchArea", ctx -> {
             Constellation constellation = constellation(ctx);
-            return constellation == null ? "" : QuestHelper.parseConstellation(constellation.getNameWithType());
+            return constellation == null ? "" : KestevenQuest.constellationName(constellation.getNameWithType());
         });
         // Whole units, cut down, as the old dialog printed them.
         d.token("job4Supplies", ctx -> String.valueOf((int) Global.getSector().getPlayerFleet().getCargo().getSupplies()));
@@ -249,14 +253,13 @@ final class KestevenJob4Module extends QuestModule<KestevenStage, KestevenState>
                 + ", splinters: " + ctx.fleets().get(ROLE_SPLINTER).size());
     }
 
-    // Placement, in the order QuestStageManager used on the first unpaused frame at JOB4_ACTIVE, which keeps the
-    // questline's shared random sequence. The intel comes first, so its posting message has no strike group yet.
+    // Placement in a fixed order, which keeps the questline's shared random sequence. The intel comes first, so its posting message has no strike group yet.
     private static void start(QuestContext<KestevenStage, KestevenState> ctx) {
         ctx.intel().show(INTEL);
         spawnStrikeGroup(ctx);
         spawnSpecialOps(ctx);
         for (int i = 0; i < SPLINTER_COUNT; i++) {
-            CampaignFleetAPI splinter = ctx.fleets().spawn(ROLE_SPLINTER, KestevenFleets.job4Splinter(ctx.random(KestevenState.RANDOM_QUEST)));
+            CampaignFleetAPI splinter = ctx.fleets().spawn(ROLE_SPLINTER, KestevenFleets.job4Splinter(friendlyTarget(ctx), ctx.random(KestevenState.RANDOM_QUEST)));
             if (splinter != null) SystemHelper.spawnAwayFromStarFixer(splinter);
         }
         placeWrecks(ctx);
@@ -272,15 +275,41 @@ final class KestevenJob4Module extends QuestModule<KestevenStage, KestevenState>
 
     // The strike group and satellite #4 at the enemy target.
     private static void spawnStrikeGroup(QuestContext<KestevenStage, KestevenState> ctx) {
-        SimpleFleet spec = KestevenFleets.job4StrikeGroup(ctx.random(KestevenState.RANDOM_QUEST));
+        SimpleFleet spec = KestevenFleets.job4StrikeGroup(friendlyTarget(ctx), ctx.random(KestevenState.RANDOM_QUEST));
         ctx.state().job4EnemyTarget = spec.loc;
         CampaignFleetAPI fleet = ctx.fleets().spawn(ROLE_STRIKE_GROUP, spec);
         if (fleet != null) SystemHelper.spawnAwayFromStarFixer(fleet, 2.0f);
-        QuestHelper.spawnArtifact(spec.loc, 4);
+        KestevenSatelliteModule.spawn(ctx, spec.loc, 4);
+    }
+
+    // A location in a system far from the core, in a constellation of at least two stars, picked on first use (Alice's
+    // briefing or the first fleet) and kept.
+    static SectorEntityToken friendlyTarget(QuestContext<KestevenStage, KestevenState> ctx) {
+        KestevenState s = ctx.state();
+        if (s.job4FriendlyTarget == null) {
+            Random random = ctx.random(KestevenState.RANDOM_QUEST);
+            s.job4FriendlyTarget = SystemHelper.getRandomLocationInSystem(pickSystemFarCore(ctx, random), false, false, random);
+        }
+        return s.job4FriendlyTarget;
+    }
+
+    private static StarSystemAPI pickSystemFarCore(QuestContext<KestevenStage, KestevenState> ctx, Random random) {
+        SystemPicker picker = new SystemPicker(random, 2);
+        picker.minDistance = FRIENDLY_TARGET_MIN_DISTANCE;
+        picker.blacklistTags = new ArrayList<>(List.of(Tags.THEME_REMNANT_MAIN, Tags.THEME_REMNANT_RESURGENT, Tags.THEME_UNSAFE));
+        picker.pickOnlyInProcgen = true;
+        picker.minStarsInConstellation = 2;
+        if (!picker.get().isEmpty()) {
+            StarSystemAPI pick = picker.pick();
+            ctx.log("job 4 friendly target system " + pick.getName());
+            return pick;
+        }
+        ctx.log("no valid job 4 friendly target system");
+        return SystemHelper.getRandomNonCoreSystem(random);
     }
 
     private static void spawnSpecialOps(QuestContext<KestevenStage, KestevenState> ctx) {
-        CampaignFleetAPI fleet = ctx.fleets().spawn(ROLE_SPECIAL_OPS, KestevenFleets.job4SpecialOps(ctx.random(KestevenState.RANDOM_QUEST)));
+        CampaignFleetAPI fleet = ctx.fleets().spawn(ROLE_SPECIAL_OPS, KestevenFleets.job4SpecialOps(friendlyTarget(ctx), ctx.random(KestevenState.RANDOM_QUEST)));
         if (fleet != null) SystemHelper.spawnAwayFromStarFixer(fleet, 1.5f);
     }
 

@@ -13,7 +13,6 @@ import java.util.List;
 import java.util.Map;
 
 // Saved by XStream in the quest store; renaming or removing a field breaks saves once 1.0.c ships.
-// Until T35 the old questline classes read and write these fields through QuestHelper and QuestStageManager.
 public final class KestevenState extends QuestState<KestevenStage> implements InterceptEncounter.Host, PayOffEncounter.Host {
 
     // Purposes for KestevenQuest.random, one per getRandom() accessor; the two alternative endings share one.
@@ -69,11 +68,12 @@ public final class KestevenState extends QuestState<KestevenStage> implements In
     float commissionRepKesteven;
     float commissionRepHegemony;
 
-    // Frame seconds, as QuestStageManager counts them: 10 seconds are one campaign day.
-    float fleetCounter;
+    // Frame seconds in the Unknown Site before the guardian (KestevenCacheModule).
     float cacheSeconds;
 
-    // One-time actions of QuestStageManager.
+    // One-time actions: the Cache module's intel, guardian spot, hint and guardian; Eliza's intercept and revenge
+    // fleets (KestevenElizaFleetsModule); Jack's revenge (KestevenAftermathModule); the commission restore
+    // (KestevenEndingsModule).
     boolean cacheIntelAdded;
     boolean cacheGuardianSpotPicked;
     boolean cacheDoubtShown;

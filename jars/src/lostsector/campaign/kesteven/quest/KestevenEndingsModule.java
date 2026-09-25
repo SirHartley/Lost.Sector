@@ -25,16 +25,19 @@ import lostsector.helper.SectorLookup;
 import lostsector.quest.Declarations;
 import lostsector.quest.QuestContext;
 import lostsector.quest.QuestModule;
+import lostsector.settings.Setting;
+import lostsector.settings.SettingsManager;
 import lostsector.world.systems.asteria.Asteria;
 
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
-// The Kesteven and Eliza endings at stage 19 (# KESTEVEN QUESTLINE: ENDINGS rows, which take over the dialog of the
-// home market and of Eliza's market on OpenInteractionDialog while an ending is available): the checks of those rows,
+// The Kesteven and Eliza endings at CHIP_RECOVERED (# KESTEVEN QUESTLINE: ENDINGS rows, which take over the dialog of
+// the home market and of Eliza's market on OpenInteractionDialog while an ending is available): the checks of those rows,
 // the rewards and relationship changes no vanilla command makes, and after the Eliza ending the commission restore and
-// the relationship caps. Active in every stage: the old restore and caps in QuestStageManager tested only flags.
+// the relationship caps. Active in every stage: the restore and caps test only flags.
 final class KestevenEndingsModule extends QuestModule<KestevenStage, KestevenState> {
 
     // The rows pay these with AddCredits, AddStoryPoints and AddRemoveAnyItem and the same literal amounts.
@@ -86,8 +89,8 @@ final class KestevenEndingsModule extends QuestModule<KestevenStage, KestevenSta
         });
     }
 
-    // A jump past stage 19 takes the ending the story is set for: Eliza's after the hand-over, Kesteven's otherwise. Only
-    // the finished flag is set; the rewards, relationships and unlocked settings are the endings' own.
+    // A jump past CHIP_RECOVERED takes the ending the story is set for: Eliza's after the hand-over, Kesteven's
+    // otherwise. Only the finished flag is set; the rewards, relationships and unlocked settings are the endings' own.
     @Override
     protected void onSkip(QuestContext<KestevenStage, KestevenState> ctx) {
         if (ctx.stage() != KestevenStage.CHIP_RECOVERED) return;
@@ -95,8 +98,7 @@ final class KestevenEndingsModule extends QuestModule<KestevenStage, KestevenSta
         else ctx.set(KestevenFlag.KESTEVEN_ENDING_DONE);
     }
 
-    // The old QuestStageManager applied the restore 30 unpaused frames after the ending, a wait for the commission to
-    // end. Vanilla ends it on its next unpaused advance once the relationship drops below its minimum, and reports that
+    // The restore waits for the commission to end. Vanilla ends it on its next unpaused advance once the relationship drops below its minimum, and reports that
     // through CommissionEndedListener (FactionCommissionIntel.endMission); Nexerelin's Nex_FactionCommissionIntel
     // overrides endMission without that report. Both unset the commission faction ($fcm_faction), which this watches
     // while the restore is pending.
@@ -111,7 +113,7 @@ final class KestevenEndingsModule extends QuestModule<KestevenStage, KestevenSta
         restoreCommissionRelationships(ctx);
     }
 
-    // The caps of the old QuestStageManager.reportPlayerReputationChange, lowered by Nexerelin's cap on the relationship.
+    // The relationship caps after the Eliza ending, lowered by Nexerelin's cap on the relationship.
     @Override
     protected void onReputationChange(QuestContext<KestevenStage, KestevenState> ctx, String factionId, float delta) {
         if (!ctx.has(KestevenFlag.ELIZA_ENDING_DONE)) return;
@@ -157,11 +159,22 @@ final class KestevenEndingsModule extends QuestModule<KestevenStage, KestevenSta
         return targets;
     }
 
+    // Every ending unlocks the Throne's Gift start, the story skip and, for a campaign played on TRUE STARFARER from its
+    // start, the Hellspawn start. The settings are per installation, not per campaign.
+    static void unlockSettings() {
+        SettingsManager.set(Setting.THRONES_GIFT_UNLOCKED, true);
+        SettingsManager.set(Setting.STORY_SKIP_UNLOCKED, true);
+        Map<String, Object> data = Global.getSector().getPersistentData();
+        if (Boolean.TRUE.equals(data.get(ModPlugin.STARFARER_MODE_FROM_START_KEY))) {
+            SettingsManager.set(Setting.HELLSPAWN_UNLOCKED, true);
+        }
+    }
+
     // Kesteven ending
 
     // Everything of the old ending that no vanilla command does; the rows print the receipts.
     private static void kestevenEnding(QuestContext<KestevenStage, KestevenState> ctx) {
-        QuestHelper.saveEnding();
+        unlockSettings();
         nskr_shipSwap.addPoints(EXCHANGE_POINTS);
         ctx.state().kestevenEndingTriTachyonRep = MathHelper.getSeededRandomNumberInRange(-0.70f, -0.65f, ctx.random(KestevenState.RANDOM_KESTEVEN_ENDING));
         PersonAPI jack = KestevenPeople.getJack();
@@ -183,7 +196,7 @@ final class KestevenEndingsModule extends QuestModule<KestevenStage, KestevenSta
     // three values stay in the state for the commission restore.
     private static void elizaEnding(QuestContext<KestevenStage, KestevenState> ctx) {
         KestevenState s = ctx.state();
-        QuestHelper.saveEnding();
+        unlockSettings();
         String commission = Misc.getCommissionFactionId();
         if (commission != null) {
             if (commission.equals(Ids.KESTEVEN_FACTION_ID) || commission.equals(Factions.HEGEMONY)) ctx.set(KestevenFlag.COMMISSION_RESTORE_PENDING);

@@ -144,7 +144,7 @@ No other registration exists. A quest never registers scripts, listeners or plug
 2. `Saved.loadPersistentData()` loads the store.
 3. At the end of `ModPlugin.onGameLoad`, `QuestManager.startQuests()` calls `isAvailable()` on each quest. For an available quest without state it creates the state, puts it in the start stage and calls `onStart` on the start stage's modules (not `onStage`). States are never deleted; an unavailable quest keeps its state but receives no events.
 
-   The world is complete at that point: vanilla calls `onGameLoad(true)` after every mod's `onNewGame*` hooks (`sources-obf/campaign.save.java` 606-609), and `ModPlugin.onGameLoad` generates the mod's world itself, before this call, when the mod is added to an existing save. States therefore exist before the first frame, so scripts that run while paused (`QuestStageManager`) and dialogs opened before the game is unpaused find them. `onStart` hooks run during the load: a dialog they open with `ctx.open` waits in the pending list while the UI is busy. The manager itself does not run while paused: `runWhilePaused()` is false, as for vanilla's wait script.
+   The world is complete at that point: vanilla calls `onGameLoad(true)` after every mod's `onNewGame*` hooks (`sources-obf/campaign.save.java` 606-609), and `ModPlugin.onGameLoad` generates the mod's world itself, before this call, when the mod is added to an existing save. States therefore exist before the first frame, so scripts that run while paused and dialogs opened before the game is unpaused find them. `onStart` hooks run during the load: a dialog they open with `ctx.open` waits in the pending list while the UI is busy. The manager itself does not run while paused: `runWhilePaused()` is false, as for vanilla's wait script.
 
 ### A stage change
 
@@ -1176,32 +1176,34 @@ Do not add a framework feature that only one quest could ever use; keep that in 
 
 ## What the framework replaces
 
-| Duplicate today | Replaced by |
+Every row is done: the old code no longer exists.
+
+| Old code | Replaced by |
 |---|---|
 | `QuestHelper.getFailed`/`setFailed` and `getCompleted`/`setCompleted`, identical bodies | Flags on the state |
-| Two hand-written seeded `Random` accessors (`CacheDoubtDialog`, `CacheCoreDialog`) | `ctx.random(purpose)` |
-| `nskr_ttCollectorDialog`, the second copy of the loan collector's encounter | `PayOffEncounter` and rows (done in T32: `KestevenCollector` in quest `kq`) |
+| Hand-written seeded `Random` accessors in the questline's dialog classes and rules commands | `ctx.random(purpose)` |
+| `nskr_ttCollectorDialog`, the second copy of the loan collector's encounter | `PayOffEncounter` and rows (`KestevenCollector` in quest `kq`) |
 | Intel classes that register themselves and poll in `advanceImpl` | `QuestIntel` and intel rows |
 | The spawn-and-register tail repeated across `KestevenFleets` spawners | `ctx.fleets().spawn` |
 | `QuestStageManager.runFleetLogic`, per-fleet AI | `FleetOrders` on `FleetHelper` |
 | `Color` locals repeated in dialog classes | Text in rows with vanilla highlight commands |
 | `QuestStageManager` polling every frame, paused or not | Module hooks |
-| Nine separate fleet lists for quest-like content | One `QuestFleets` list |
+| Separate fleet lists for quest-like content | One `QuestFleets` list; the world spawners (`HyperspaceEnigmaSpawner`, `StalkerSpawner`, `KestevenScavenger`, `GuardSpawner`, `BlackOpsManager`) keep their own |
 | Quest branches in `CorePlugin` | One claim route |
 | `nskr_barEventFixer` and Java bar events | `AddBarEvents` rows |
 
-Migration map for the Kesteven questline and the other systems. The owning task removes the old code in its commit; `T35` removes what is left of the questline.
+Migration map for the Kesteven questline and the other systems. Each owning task removed the old code in its commit; `T35` removed the rest of the questline.
 
 | Old | New |
 |---|---|
-| `QuestStageManager` stage ints, `Saved` flags and timers | `KestevenStage`, `KestevenFlag`, fields on `KestevenState` |
-| `QuestHelper` questline getters and setters | `KestevenState` fields and `KestevenQuest` queries |
-| `campaign/kesteven/quest/KestevenFleets` builders | Builders in the Kesteven quest package returning `SimpleFleet` |
-| `campaign/kesteven/quest/KestevenPeople` | Fixed people stay in world generation; generated people move to `ctx.people()` |
-| Java dialog classes (`CacheCoreDialog`, endings and the other questline commands) | Rows, checks, actions and claims (`nskr_kestevenQuest` done in T16 and T17: `KestevenHubModule` and the `# KESTEVEN QUESTLINE` rows; `GlacierCommsDialog` and its `CorePlugin` route in T26: `KestevenGlacierModule`, a claim and the `# KESTEVEN QUESTLINE: GLACIER` rows; `DataSatelliteDialog` and its route in T25: `KestevenSatelliteModule`, a claim on every satellite and the `# KESTEVEN QUESTLINE: SATELLITES` rows); `HintWreckDialog` and `nskr_job4FleetDialog` in T22 and T23: a claim and role rows of `KestevenJob4Module`; `ElizaDialog` and its `CorePlugin` route in T28: `KestevenElizaModule` and the `# KESTEVEN QUESTLINE: ELIZA` rows on `OpenInteractionDialog`; `ElizaRaid` and its listener `ElizaRaidObjectiveCreator` in T28: raid objective `elizaDisks` of `KestevenElizaModule`; `nskr_elizaInterceptDialog` in T31: `KestevenElizaFleetsModule`, fleet roles and the `# KESTEVEN QUESTLINE: ELIZA FLEETS` rows; `EndingKestevenDialog`, `EndingElizaDialog` and their `CorePlugin` routes also in T31: `KestevenEndingsModule` and the `# KESTEVEN QUESTLINE: ENDINGS` rows on `OpenInteractionDialog`; `CacheDoubtDialog`, `CacheCoreDialog` and its `CorePlugin` route in T29 and T30: `KestevenCacheModule`, a claim with `continueDialog` and the `# KESTEVEN QUESTLINE: CACHE` rows) |
+| `QuestStageManager` stage ints, `Saved` flags and timers | `KestevenStage`, `KestevenFlag`, fields on `KestevenState` (done in T35: `QuestStageManager` and the stage ints removed; the order comparisons that remain use `KestevenStage.atLeast`) |
+| `QuestHelper` questline getters, setters and placement helpers | `KestevenState` fields through `ctx`, `KestevenQuest` queries, and helpers in the owning modules (done in T35: the target pickers in the job 1, 3 and 4 modules and the hub, satellite placement in `KestevenSatelliteModule`, the job 3 wreckage in `KestevenJob3Module`, Eliza's market picker in `KestevenElizaSearchModule`, the ending unlocks in `KestevenEndingsModule`, outpost lookups in `SectorLookup`) |
+| `campaign/kesteven/quest/KestevenFleets` builders | Builders in the Kesteven quest package returning `SimpleFleet` (done) |
+| `campaign/kesteven/quest/KestevenPeople` | Fixed people stay in world generation; generated people move to `ctx.people()` (done) |
+| Java dialog classes and questline rules commands | Rows, checks, actions and claims, done (`nskr_kestevenQuest` done in T16 and T17: `KestevenHubModule` and the `# KESTEVEN QUESTLINE` rows; `GlacierCommsDialog` and its `CorePlugin` route in T26: `KestevenGlacierModule`, a claim and the `# KESTEVEN QUESTLINE: GLACIER` rows; `DataSatelliteDialog` and its route in T25: `KestevenSatelliteModule`, a claim on every satellite and the `# KESTEVEN QUESTLINE: SATELLITES` rows); `HintWreckDialog` and `nskr_job4FleetDialog` in T22 and T23: a claim and role rows of `KestevenJob4Module`; `ElizaDialog` and its `CorePlugin` route in T28: `KestevenElizaModule` and the `# KESTEVEN QUESTLINE: ELIZA` rows on `OpenInteractionDialog`; `ElizaRaid` and its listener `ElizaRaidObjectiveCreator` in T28: raid objective `elizaDisks` of `KestevenElizaModule`; `nskr_elizaInterceptDialog` in T31: `KestevenElizaFleetsModule`, fleet roles and the `# KESTEVEN QUESTLINE: ELIZA FLEETS` rows; `EndingKestevenDialog`, `EndingElizaDialog` and their `CorePlugin` routes also in T31: `KestevenEndingsModule` and the `# KESTEVEN QUESTLINE: ENDINGS` rows on `OpenInteractionDialog`; `CacheDoubtDialog`, `CacheCoreDialog` and its `CorePlugin` route in T29 and T30: `KestevenCacheModule`, a claim with `continueDialog` and the `# KESTEVEN QUESTLINE: CACHE` rows) |
 | `HostileTakeoverBarEvent`, `ElizaSearch*BarEvent`, `DelveMeetingBarEvent` | `AddBarEvents` rows and quest people (`HostileTakeoverBarEvent` done in T20 and T21: `KestevenPartyModule` and the `# KESTEVEN QUESTLINE: JOB 3 PARTY` rows; `ElizaSearch*BarEvent` done in T27: `KestevenElizaSearchModule`; `DelveMeetingBarEvent` and `nskr_barEventFixer` done in T24: `KestevenJob5Module` and the `# KESTEVEN QUESTLINE: JOB 5` rows) |
 | `EnemyUnknownIntel`, `HostileTakeoverIntel`, `OperationLifesaverIntel`, `TheDelveIntel`, `CacheIntel` | `QuestIntel` with intel rows (`EnemyUnknownIntel` done in T18: key `job1` of `KestevenJob1Module`; `HostileTakeoverIntel` in T19: key `job3` of `KestevenJob3Module`; `TheDelveIntel` in T24: key `job5` of `KestevenJob5Module`); `OperationLifesaverIntel` in T22: key `job4` of `KestevenJob4Module`; `CacheIntel` in T29: key `cache` of `KestevenCacheModule`) |
-| `nskr_isKStage` and other stage predicates | `nskr_quest kq is` and `reached` (done in T35: the artifact exchange and S-mod removal rows list the stages from legacy 7 and 14 on with `is`, `FAILED` included, as the old comparison did) |
+| `nskr_isKStage` and other stage predicates | `nskr_quest kq is` and `reached` (done in T35: the artifact exchange and S-mod removal rows list the stages from `JOB3_BRIEFING` and `JOB5_OFFERED` on with `is`, `FAILED` included, as the old comparison did) |
 | `events/InterceptManager`, its `Saved` spawn flags, frame counters and per-fleet AI | Quest `ic` in `campaign/events/intercepts`: `InterceptEncounter` records, `onDay` rolls, roles with `FleetOrders` withdrawal and `reassign` (done in T41) |
 | `kesteven/loans/LoanShark` and `dialogue/rules/nskr_loanSharkDialog`, their persistent-data keys, `$debtCollector` and the `# DEBT collector dialog` rows | Records `collector` of quest `ic`: an `InterceptEncounter` with `switchOnAction`, `switchWhen` and `onSwitch`, a `PayOffEncounter`, and rows in `# INTERCEPTS` (done in T37) |
 | `BlacksiteManager`, `BlacksiteDialog`, `BlacksiteInfo` and the sector-memory site list | Record quest `bs` in `campaign/events/blacksite`; `BlacksiteSpawner` stays world generation ([BLACKSITES.md](../../../../docs/quests/BLACKSITES.md)) |

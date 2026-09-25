@@ -8,20 +8,31 @@ import com.fs.starfarer.api.campaign.FleetEncounterContextPlugin;
 import com.fs.starfarer.api.campaign.SectorEntityToken;
 import com.fs.starfarer.api.campaign.comm.IntelInfoPlugin.IntelSortTier;
 import com.fs.starfarer.api.campaign.econ.MarketAPI;
+import com.fs.starfarer.api.campaign.StarSystemAPI;
+import com.fs.starfarer.api.impl.campaign.ids.Factions;
 import com.fs.starfarer.api.impl.campaign.ids.MemFlags;
 import com.fs.starfarer.api.impl.campaign.ids.Tags;
 import com.fs.starfarer.api.impl.campaign.intel.BaseIntelPlugin;
+import com.fs.starfarer.api.impl.campaign.procgen.StarSystemGenerator;
+import com.fs.starfarer.api.impl.campaign.rulecmd.salvage.special.ShipRecoverySpecial;
+import com.fs.starfarer.api.impl.campaign.terrain.DebrisFieldTerrainPlugin;
+import com.fs.starfarer.api.util.Misc;
 import lostsector.campaign.enigma.DormantSpawner;
 import lostsector.helper.Ids;
 import lostsector.helper.SectorLookup;
+import lostsector.helper.SystemHelper;
+import lostsector.helper.fleet.SystemPicker;
 import lostsector.quest.Declarations;
 import lostsector.quest.FleetOrders;
 import lostsector.quest.FleetRole;
 import lostsector.quest.QuestContext;
 import lostsector.quest.QuestFleet;
 import lostsector.quest.QuestModule;
+import lostsector.world.systems.frost.Frost;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 // Job 3, "Hostile Takeover": the Tri-Tachyon expedition, its countdown, the job's success or failure, the intel entry
 // and the objects placed when the job is accepted. Briefing, acceptance, refusal and turn-in are the hub's.
@@ -31,6 +42,11 @@ final class KestevenJob3Module extends QuestModule<KestevenStage, KestevenState>
     static final String ROLE_EXPEDITION = "job3Expedition";
     // Persistent: the old expedition despawned only once out of the player's sight, whatever the stage.
     static final String ROLE_WITHDRAWING = "job3ExpeditionOver";
+
+    // Tri-Tachyon markets the expedition never starts from.
+    private static final List<String> START_MARKET_BLACKLIST = List.of("eochu_bres", "culann");
+    // Units from the sector's centre.
+    private static final float TARGET_MAX_DISTANCE = 27500f;
 
     static final float TIME_LIMIT = 90f;
     static final float PREPARE_DAYS = 10f;
@@ -63,17 +79,16 @@ final class KestevenJob3Module extends QuestModule<KestevenStage, KestevenState>
         d.token("job3HomeSystem", ctx -> systemName(ctx.state().job3Start));
     }
 
-    // The objects and the expedition are placed in the order QuestStageManager placed them on the first unpaused frame
-    // at JOB3_ACTIVE; the start and target are read in the order the old intel's first display picked them. That keeps
-    // the questline's shared random sequence.
+    // The start, the target, the objects and the expedition come in a fixed order, which keeps the questline's shared
+    // random sequence.
     @Override
     protected void onStart(QuestContext<KestevenStage, KestevenState> ctx) {
         if (ctx.isJump() && !isActiveIn(ctx.jumpTarget())) {
-            placeLeftovers();
+            placeLeftovers(ctx);
             return;
         }
-        SectorEntityToken start = QuestHelper.getJob3Start();
-        SectorEntityToken target = QuestHelper.getJob3Target();
+        SectorEntityToken start = start(ctx);
+        SectorEntityToken target = target(ctx);
         ctx.intel().show(INTEL);
         ctx.intel().setMapLocation(INTEL, start);
         DormantSpawner.addDormant(target, "enigma", 45f, 50f, 0f, 1f, 1f, 1f, 1, 1);
@@ -82,7 +97,7 @@ final class KestevenJob3Module extends QuestModule<KestevenStage, KestevenState>
         if (ctx.fleets().spawn(ROLE_EXPEDITION, KestevenFleets.job3Expedition(start, ctx.random(KestevenState.RANDOM_QUEST))) != null) {
             ctx.fleets().first(ROLE_EXPEDITION).info().target = target;
         }
-        QuestHelper.spawnArtifact(target, 3);
+        KestevenSatelliteModule.spawn(ctx, target, 3);
         ctx.startTimer(KestevenState.TIMER_JOB3);
     }
 
@@ -138,7 +153,7 @@ final class KestevenJob3Module extends QuestModule<KestevenStage, KestevenState>
     @Override
     protected void onDay(QuestContext<KestevenStage, KestevenState> ctx) {
         if (running(ctx) && ctx.hasTimer(KestevenState.TIMER_JOB3) && ctx.days(KestevenState.TIMER_JOB3) > TIME_LIMIT) {
-            QuestHelper.spawnEnvironmentalStorytelling();
+            placeWreckage(ctx);
             fail(ctx, UPDATE_TIMEOUT);
         }
     }
@@ -155,10 +170,67 @@ final class KestevenJob3Module extends QuestModule<KestevenStage, KestevenState>
 
     // A jump past the whole job leaves what job 5 finds at the target, satellite #3 and the dormant fleet, in the order
     // and with the draws of the old story skip; no intel, expedition or countdown.
-    private static void placeLeftovers() {
-        SectorEntityToken target = QuestHelper.getJob3Target();
-        QuestHelper.spawnArtifact(target, 3);
+    private static void placeLeftovers(QuestContext<KestevenStage, KestevenState> ctx) {
+        SectorEntityToken target = target(ctx);
+        KestevenSatelliteModule.spawn(ctx, target, 3);
         DormantSpawner.addDormant(target, "enigma", 45f, 50f, 0f, 1f, 1f, 1f, 1, 1);
+    }
+
+    // The Tri-Tachyon market the expedition starts from, picked on first use (Alice's briefing or the job's start) and
+    // kept.
+    static SectorEntityToken start(QuestContext<KestevenStage, KestevenState> ctx) {
+        KestevenState s = ctx.state();
+        if (s.job3Start == null) {
+            s.job3Start = SystemHelper.getRandomFactionMarket(ctx.random(KestevenState.RANDOM_QUEST), Factions.TRITACHYON, START_MARKET_BLACKLIST);
+        }
+        return s.job3Start;
+    }
+
+    // A location in a system near the core, picked on first use and kept.
+    static SectorEntityToken target(QuestContext<KestevenStage, KestevenState> ctx) {
+        KestevenState s = ctx.state();
+        if (s.job3Target == null) {
+            Random random = ctx.random(KestevenState.RANDOM_QUEST);
+            s.job3Target = SystemHelper.getRandomLocationInSystem(pickSystemNearCore(ctx, random), false, false, random);
+        }
+        return s.job3Target;
+    }
+
+    private static StarSystemAPI pickSystemNearCore(QuestContext<KestevenStage, KestevenState> ctx, Random random) {
+        SystemPicker picker = new SystemPicker(random, 2);
+        picker.maxDistance = TARGET_MAX_DISTANCE;
+        picker.blacklistTags = new ArrayList<>(List.of(Tags.THEME_REMNANT_MAIN, Tags.THEME_REMNANT_RESURGENT, Tags.THEME_UNSAFE));
+        picker.pickOnlyInProcgen = true;
+        if (!picker.get().isEmpty()) {
+            StarSystemAPI pick = picker.pick();
+            ctx.log("job 3 target system " + pick.getName());
+            return pick;
+        }
+        ctx.log("no valid job 3 target system");
+        return SystemHelper.getRandomNonCoreSystem(random);
+    }
+
+    // The derelicts and debris of the expedition's fight at the target, placed when the job ends without the player:
+    // after the time limit, or when Alice's job 3 is refused (hub action placeJob3Leftovers). The recovery rolls keep
+    // Math.random and the field its StarSystemGenerator.random, as before.
+    static void placeWreckage(QuestContext<KestevenStage, KestevenState> ctx) {
+        SectorEntityToken loc = target(ctx);
+        Frost.addDerelict(loc.getStarSystem(), "doom_Strike", SystemHelper.createRandomNearOrbit(loc), ShipRecoverySpecial.ShipCondition.BATTERED, Math.random() < 0.50f, null);
+        Frost.addDerelict(loc.getStarSystem(), "atlas_Standard", SystemHelper.createRandomNearOrbit(loc), ShipRecoverySpecial.ShipCondition.BATTERED, Math.random() < 0.50f, null);
+        Frost.addDerelict(loc.getStarSystem(), "shrike_Attack", SystemHelper.createRandomNearOrbit(loc), ShipRecoverySpecial.ShipCondition.BATTERED, Math.random() < 0.50f, null);
+
+        DebrisFieldTerrainPlugin.DebrisFieldParams params = new DebrisFieldTerrainPlugin.DebrisFieldParams(
+                350f, // field radius - should not go above 1000 for performance reasons
+                1.2f, // density, visual - affects number of debris pieces
+                10000000f, // duration in days
+                0f); // days the field will keep generating glowing pieces
+        params.source = DebrisFieldTerrainPlugin.DebrisFieldSource.MIXED;
+        params.baseSalvageXP = 500; // base XP for scavenging in field
+        SectorEntityToken field = Misc.addDebrisField(loc.getStarSystem(), params, StarSystemGenerator.random);
+        field.setSensorProfile(1000f);
+        field.setDiscoverable(true);
+        field.setOrbit(SystemHelper.createRandomNearOrbit(loc));
+        field.setId("nskr_loc_main_debrisBelt");
     }
 
     private static void succeed(QuestContext<KestevenStage, KestevenState> ctx, QuestFleet fleet) {

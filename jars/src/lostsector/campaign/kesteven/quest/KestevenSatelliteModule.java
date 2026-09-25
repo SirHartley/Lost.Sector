@@ -8,9 +8,14 @@ import com.fs.starfarer.api.campaign.SectorEntityToken;
 import com.fs.starfarer.api.campaign.StarSystemAPI;
 import com.fs.starfarer.api.campaign.rules.MemoryAPI;
 import com.fs.starfarer.api.impl.campaign.ids.Abilities;
+import com.fs.starfarer.api.impl.campaign.ids.Factions;
 import com.fs.starfarer.api.impl.campaign.ids.MemFlags;
+import com.fs.starfarer.api.impl.campaign.procgen.themes.BaseThemeGenerator;
+import com.fs.starfarer.api.impl.campaign.procgen.themes.DerelictThemeGenerator;
 import lostsector.campaign.enigma.DormantSpawner;
+import lostsector.helper.MathHelper;
 import lostsector.helper.SectorLookup;
+import lostsector.helper.SystemHelper;
 import lostsector.quest.Declarations;
 import lostsector.quest.FleetOrders;
 import lostsector.quest.FleetRole;
@@ -18,8 +23,10 @@ import lostsector.quest.QuestContext;
 import lostsector.quest.QuestFleet;
 import lostsector.quest.QuestModule;
 import lostsector.world.systems.frost.Frost;
+import org.lazywizard.lazylib.MathUtils;
 
 import java.util.List;
+import java.util.Random;
 
 // The data-disk satellites: #3 at the job 3 target, #4 at the job 4 enemy target and the two empty ones in Unknown Site.
 // Their dialog is the # KESTEVEN QUESTLINE: SATELLITES block of rules.csv, on a claim that lasts in every stage; the
@@ -36,6 +43,7 @@ final class KestevenSatelliteModule extends QuestModule<KestevenStage, KestevenS
     static final String ARTIFACT_KEY = "$kQuestArtifact";
     static final String EMPTY_KEY = "$nskr_artifactKeyEmpty";
     static final int ALL_DISKS = 5;
+    private static final String SATELLITE_TYPE = "nskr_artifact";
 
     KestevenSatelliteModule() {
         super();
@@ -63,7 +71,7 @@ final class KestevenSatelliteModule extends QuestModule<KestevenStage, KestevenS
     }
 
     // World generation placed the Unknown Site satellites before the state existed; a reset claims the placed #3 and #4
-    // again. Satellites placed later are claimed by QuestHelper.spawnArtifact.
+    // again. Satellites placed later are claimed by spawn.
     @Override
     protected void onStart(QuestContext<KestevenStage, KestevenState> ctx) {
         for (StarSystemAPI system : Global.getSector().getStarSystems()) {
@@ -114,6 +122,31 @@ final class KestevenSatelliteModule extends QuestModule<KestevenStage, KestevenS
 
     static void claim(QuestContext<KestevenStage, KestevenState> ctx, SectorEntityToken satellite) {
         ctx.claimDialog(satellite, TRIGGER, KestevenStage.values());
+    }
+
+    // Satellite #<number> in orbit around the location, claimed; it draws from the questline's shared random.
+    static SectorEntityToken spawn(QuestContext<KestevenStage, KestevenState> ctx, SectorEntityToken loc, int number) {
+        Random random = ctx.random(KestevenState.RANDOM_QUEST);
+        LocationAPI containing = loc.getContainingLocation();
+        BaseThemeGenerator.EntityLocation createLoc = DerelictThemeGenerator.createLocationAtRandomGap(random, loc, 0f);
+        SectorEntityToken satellite = DerelictThemeGenerator.addNonSalvageEntity(containing, createLoc, SATELLITE_TYPE, Factions.NEUTRAL).entity;
+        satellite.setDiscoverable(true);
+        satellite.setSensorProfile(100f);
+        satellite.setCircularOrbitPointingDown(loc, random.nextFloat() * 360f, MathUtils.getDistance(satellite.getLocation(), loc.getLocation()),
+                MathHelper.getSeededRandomNumberInRange(30f, 60f, random));
+        satellite.getMemory().set(ARTIFACT_KEY + number, true);
+        claim(ctx, satellite);
+        SystemHelper.spawnAwayFromStarFixer(satellite, 2.0f);
+        ctx.log("satellite #" + number + " placed at " + loc.getName() + ", orbiting " + satellite.getOrbitFocus().getName());
+        return satellite;
+    }
+
+    // The first satellite in the system, whatever its number.
+    static SectorEntityToken find(StarSystemAPI system) {
+        for (SectorEntityToken entity : system.getAllEntities()) {
+            if (SATELLITE_TYPE.equals(entity.getCustomEntityType())) return entity;
+        }
+        return null;
     }
 
     // Every change of the disk count ends here. The old frame check set the flag only at JOB5_DISKS.

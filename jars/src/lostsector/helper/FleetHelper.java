@@ -25,7 +25,6 @@ import com.fs.starfarer.api.impl.campaign.ids.Tags;
 import com.fs.starfarer.api.loading.VariantSource;
 import com.fs.starfarer.api.util.Misc;
 import lostsector.helper.fleet.FleetInfo;
-import lostsector.campaign.kesteven.quest.QuestStageManager;
 import lostsector.helper.fleet.SimpleFleetMember;
 import lostsector.quest.QuestFleets;
 import org.lazywizard.lazylib.MathUtils;
@@ -687,7 +686,6 @@ public class FleetHelper {
 
     public static final ArrayList<String> FLEET_ARRAY_KEYS = new ArrayList<>();
     static {
-        FLEET_ARRAY_KEYS.add(QuestStageManager.FLEET_ARRAY_KEY);
         FLEET_ARRAY_KEYS.add(HyperspaceEnigmaSpawner.FLEET_ARRAY_KEY);
         FLEET_ARRAY_KEYS.add(StalkerSpawner.FLEET_ARRAY_KEY);
         FLEET_ARRAY_KEYS.add(KestevenScavenger.FLEET_ARRAY_KEY);

@@ -3,18 +3,23 @@ package lostsector.campaign.kesteven.quest;
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.CampaignFleetAPI;
 import com.fs.starfarer.api.campaign.SectorEntityToken;
+import com.fs.starfarer.api.campaign.StarSystemAPI;
 import com.fs.starfarer.api.campaign.econ.MarketAPI;
 import com.fs.starfarer.api.impl.campaign.ids.Factions;
 import com.fs.starfarer.api.impl.campaign.ids.MemFlags;
 import com.fs.starfarer.api.impl.campaign.ids.Ranks;
+import com.fs.starfarer.api.impl.campaign.ids.Tags;
 import com.fs.starfarer.api.impl.campaign.intel.BaseIntelPlugin;
+import com.fs.starfarer.api.util.Misc;
 import lostsector.helper.MathHelper;
+import lostsector.helper.SystemHelper;
 import lostsector.quest.Declarations;
 import lostsector.quest.QuestContext;
 import lostsector.quest.QuestModule;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 // The search for Eliza at pirate bars during JOB5_DISKS: three bar conversations in the # KESTEVEN QUESTLINE: ELIZA
 // SEARCH block of rules.csv, one per step of elizaSearchStage, each at most once per market. Paying the first spacer
@@ -28,6 +33,11 @@ final class KestevenElizaSearchModule extends QuestModule<KestevenStage, Kesteve
     // The Delve entry of the job 5 module receives the message when the contact moves.
     static final String DELVE_INTEL = KestevenJob5Module.INTEL;
     static final String UPDATE_CONTACT_MOVED = "contactMoved";
+
+    // Systems Eliza and her contact may be in, by lowercase name without type: the vanilla pirate systems except Kanta's
+    // and Umbra's.
+    private static final List<String> ELIZA_SYSTEMS = List.of(
+            "yma", "corvus", "isirah", "thule", "hybrasil", "galatia", "mayasura", "kumari kandam");
 
     KestevenElizaSearchModule() {
         super(KestevenStage.JOB5_DISKS);
@@ -61,7 +71,7 @@ final class KestevenElizaSearchModule extends QuestModule<KestevenStage, Kesteve
             ctx.state().elizaSearchStage = 2;
         });
         d.action("elizaContactMeet", KestevenElizaSearchModule::useMarket);
-        d.action("elizaPickMarket", ctx -> QuestHelper.setElizaLoc());
+        d.action("elizaPickMarket", KestevenElizaSearchModule::pickElizaMarket);
         d.action("elizaContactLeave", KestevenElizaSearchModule::leaveContact);
 
         d.token("elizaContactMarket", ctx -> {
@@ -88,7 +98,7 @@ final class KestevenElizaSearchModule extends QuestModule<KestevenStage, Kesteve
     protected void onSkip(QuestContext<KestevenStage, KestevenState> ctx) {
         ctx.set(KestevenFlag.ELIZA_FOUND);
         ctx.state().elizaSearchStage = 3;
-        if (ctx.state().elizaMarket == null) QuestHelper.setElizaLoc();
+        if (ctx.state().elizaMarket == null) pickElizaMarket(ctx);
     }
 
     @Override
@@ -105,7 +115,7 @@ final class KestevenElizaSearchModule extends QuestModule<KestevenStage, Kesteve
         if (!ctx.has(KestevenFlag.ELIZA_SPACER_PAID) || ctx.has(KestevenFlag.ELIZA_FOUND) || s.elizaSearchStage != 2) return;
         ctx.unmark(contact);
         s.elizaContactFormerName = contact.getMarket().getPrimaryEntity().getName();
-        s.elizaContactMarket = QuestHelper.pickElizaMarket(ctx.random(KestevenState.RANDOM_QUEST), false);
+        s.elizaContactMarket = pickMarket(ctx, ctx.random(KestevenState.RANDOM_QUEST), false);
         ctx.mark(s.elizaContactMarket, KestevenStage.JOB5_DISKS);
         ctx.log("Eliza contact moved from " + s.elizaContactFormerName + " to " + s.elizaContactMarket.getName());
         // The old campaign message played the minor message sound (MessageIntel.getCommMessageSound).
@@ -132,10 +142,6 @@ final class KestevenElizaSearchModule extends QuestModule<KestevenStage, Kesteve
         return state == null ? null : state.elizaContactMarket;
     }
 
-    static List<String> usedMarkets() {
-        KestevenState state = KestevenQuest.state();
-        return state == null ? new ArrayList<>() : state.elizaSearchUsedMarkets;
-    }
 
     // A pirate market whose bar has not held a conversation of the search yet.
     private static boolean searchBar(QuestContext<KestevenStage, KestevenState> ctx) {
@@ -154,7 +160,39 @@ final class KestevenElizaSearchModule extends QuestModule<KestevenStage, Kesteve
 
     private static void pickContact(QuestContext<KestevenStage, KestevenState> ctx) {
         useMarket(ctx);
-        ctx.state().elizaContactMarket = QuestHelper.pickElizaMarket(ctx.random(KestevenState.RANDOM_QUEST), false);
+        ctx.state().elizaContactMarket = pickMarket(ctx, ctx.random(KestevenState.RANDOM_QUEST), false);
+    }
+
+    // Eliza's market, from the contact's answer or a jump past the search.
+    private static void pickElizaMarket(QuestContext<KestevenStage, KestevenState> ctx) {
+        ctx.state().elizaMarket = pickMarket(ctx, ctx.random(KestevenState.RANDOM_QUEST), false);
+    }
+
+    // A pirate market in one of the ELIZA_SYSTEMS whose bar the search has not used; with none left, any such market, then
+    // any pirate market not used. Also Eliza's new market after a decivilization (KestevenElizaModule).
+    static SectorEntityToken pickMarket(QuestContext<KestevenStage, KestevenState> ctx, Random random, boolean ignoreUsedMarket) {
+        List<String> used = ctx.state().elizaSearchUsedMarkets;
+        List<MarketAPI> valid = new ArrayList<>();
+        for (MarketAPI market : Misc.getFactionMarkets(Factions.PIRATES)) {
+            StarSystemAPI system = market.getStarSystem();
+            if (!ELIZA_SYSTEMS.contains(system.getNameWithNoType().toLowerCase())) continue;
+            if (system.hasTag(Tags.THEME_HIDDEN) || system.hasTag(Tags.SYSTEM_CUT_OFF_FROM_HYPER)
+                    || system.getStar() == null || system.getPlanets().size() < 1) continue;
+            if (market.isHidden() || market.isPlanetConditionMarketOnly()) continue;
+            if (!ignoreUsedMarket && used.contains(market.getId())) continue;
+            // Kanta's Den would make no sense.
+            if (market.getId().equals("kantas_den")) continue;
+            valid.add(market);
+        }
+        if (valid.isEmpty()) {
+            if (ignoreUsedMarket) {
+                ctx.log("no Eliza market in her systems, picking a random pirate market");
+                return SystemHelper.getRandomFactionMarket(random, Factions.PIRATES, used);
+            }
+            ctx.log("no unused Eliza market, trying the used ones");
+            return pickMarket(ctx, random, true);
+        }
+        return valid.get(MathHelper.getSeededRandomNumberInRange(0, valid.size() - 1, random)).getPrimaryEntity();
     }
 
     private static void paySpacer(QuestContext<KestevenStage, KestevenState> ctx) {

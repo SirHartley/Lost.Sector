@@ -17,8 +17,7 @@ import java.util.Random;
 // KestevenSatelliteModule the data-disk satellites, KestevenElizaModule Eliza's port, KestevenCollector's shared
 // modules the Tri-Tachyon collector, KestevenElizaFleetsModule Eliza's fleets, KestevenEndingsModule the Kesteven and
 // Eliza endings, KestevenAltEndingsModule the Luddic and Tri-Tachyon endings, KestevenAftermathModule Jack's revenge
-// and the failure for losing both mission markets, and KestevenCacheModule the Cache; QuestStageManager and the old
-// dialog classes still run the rest of the questline on this state (T19 to T35).
+// and the failure for losing both mission markets, and KestevenCacheModule the Cache.
 // isAvailable() keeps the default: the old code runs the questline in every campaign and treats a missing
 // Kesteven home as failure (stage 99), so the state must always exist.
 public final class KestevenQuest extends Quest<KestevenStage, KestevenState> {
@@ -53,7 +52,7 @@ public final class KestevenQuest extends Quest<KestevenStage, KestevenState> {
     static QuestContext<KestevenStage, KestevenState> context() {
         QuestManager manager = QuestManager.get();
         if (manager == null) return null;
-        return (QuestContext<KestevenStage, KestevenState>) manager.context(ID, "legacy", null, null, List.of());
+        return (QuestContext<KestevenStage, KestevenState>) manager.context(ID, "outside", null, null, List.of());
     }
 
     // Throws before the state exists: an unsaved Random would reroll after a reload.
@@ -63,8 +62,14 @@ public final class KestevenQuest extends Quest<KestevenStage, KestevenState> {
         return ctx.random(purpose);
     }
 
+    // A constellation's name with type as the questline's text shows it: "Constellation" is added when the type lacks it.
+    static String constellationName(String nameWithType) {
+        return nameWithType.contains("Constellation") ? nameWithType : nameWithType + " Constellation";
+    }
+
     // Queries for features outside the questline. Before the state exists, flags read as unset and the stage as NOT_STARTED.
-    // Stage comparisons use the legacy ints the old callers used, so "at least 16" also holds at FAILED (99).
+    // Stage comparisons follow story order with FAILED last (KestevenStage.atLeast), so "from JOB5_DISKS on" also holds
+    // after failure.
 
     public static KestevenStage stage() {
         KestevenState state = state();
@@ -97,8 +102,8 @@ public final class KestevenQuest extends Quest<KestevenStage, KestevenState> {
     }
 
     public static boolean inMessengerWindow() {
-        int stage = stage().toLegacy();
-        return stage >= 10 && stage <= 14;
+        KestevenStage stage = stage();
+        return stage.atLeast(KestevenStage.JOB3_DONE) && !stage.atLeast(KestevenStage.JOB5_MEETING);
     }
 
     // Places of the questline, for the rows that take over their dialogs.
@@ -124,7 +129,9 @@ public final class KestevenQuest extends Quest<KestevenStage, KestevenState> {
     }
 
     public static void reportCacheGuardianDefeated() {
-        if (!isFailed() && stage().toLegacy() >= 16) QuestHelper.setStage(KestevenStage.CACHE_CLEARED.toLegacy());
+        if (isFailed() || !stage().atLeast(KestevenStage.JOB5_DISKS)) return;
+        QuestContext<KestevenStage, KestevenState> ctx = context();
+        if (ctx != null && ctx.stage() != KestevenStage.CACHE_CLEARED) ctx.advance(KestevenStage.CACHE_CLEARED);
     }
 
     // Cache.CacheGuardInteractionConfig.notifyLeave, once the guardian has no prototypes left: the command core's rules

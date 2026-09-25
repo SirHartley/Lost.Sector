@@ -30,7 +30,7 @@ final class KestevenGlacierModule extends QuestModule<KestevenStage, KestevenSta
     private static final float DAMAGE_FRACTION = 0.5f;
     private static final float MIN_REPAIRED = 0.25f;
 
-    // The old route opened the dialog at legacy stage 16 or later, which includes failure (99).
+    // From JOB5_DISKS on, failure included.
     private static final KestevenStage[] STAGES = {
             KestevenStage.JOB5_DISKS, KestevenStage.CACHE_KNOWN, KestevenStage.CACHE_CLEARED,
             KestevenStage.CHIP_RECOVERED, KestevenStage.COMPLETED, KestevenStage.FAILED};

@@ -43,7 +43,7 @@ final class KestevenCacheModule extends QuestModule<KestevenStage, KestevenState
     static final String PERSON_CHIEF = "cacheChief";
     static final String PERSON_SENSORS = "cacheSensors";
 
-    // Frame seconds in the Unknown Site, counted twice as fast during fast advance, as QuestStageManager counted them.
+    // Frame seconds in the Unknown Site, counted twice as fast during fast advance.
     private static final float DOUBT_SECONDS = 35f;
     private static final float SLOW_PINGS_SECONDS = 45f;
     private static final float FAST_PINGS_SECONDS = 75f;
@@ -69,7 +69,7 @@ final class KestevenCacheModule extends QuestModule<KestevenStage, KestevenState
     // a failure it stays, as that flag did.
     private static final KestevenStage[] RETURN_STAGES = {KestevenStage.CHIP_RECOVERED, KestevenStage.FAILED};
 
-    // Seconds since the last ping. Not saved, so it restarts at 0 on every load, as QuestStageManager's field did.
+    // Seconds since the last ping. Not saved, so it restarts at 0 on every load.
     private float pingSeconds;
 
     KestevenCacheModule() {
@@ -93,9 +93,9 @@ final class KestevenCacheModule extends QuestModule<KestevenStage, KestevenState
         d.person(PERSON_CHIEF);
         d.person(PERSON_SENSORS);
 
-        // Legacy stage 19 or later, or failure: the old entry's delete button.
-        d.check("cacheIntelDeletable", ctx -> ctx.stage().toLegacy() >= 19 || ctx.has(KestevenFlag.ENDED));
-        // Legacy stage 16 or later while the questline runs: the core offers the salvage.
+        // From CHIP_RECOVERED on, or after failure: the entry's delete button.
+        d.check("cacheIntelDeletable", ctx -> ctx.stage().atLeast(KestevenStage.CHIP_RECOVERED) || ctx.has(KestevenFlag.ENDED));
+        // From JOB5_DISKS on while the questline runs: the core offers the salvage.
         d.check("cacheQuestTarget", KestevenCacheModule::questTarget);
 
         d.action("endCacheDoubt", ctx -> {
@@ -105,8 +105,9 @@ final class KestevenCacheModule extends QuestModule<KestevenStage, KestevenState
         d.action("salvageCacheCore", KestevenCacheModule::salvage);
     }
 
-    // Also covers an Unknown Site entered before stage 15 or 16, or before the questline failed. A jump checks only in
-    // its target stage, after onSkip past JOB5_DISKS set CACHE_FOUND, so the entry shows once the jump arrives.
+    // Also covers an Unknown Site entered before JOB5_MEETING or JOB5_DISKS, or before the questline failed. A jump
+    // checks only in its target stage, after onSkip past JOB5_DISKS set CACHE_FOUND, so the entry shows once the jump
+    // arrives.
     @Override
     protected void onStage(QuestContext<KestevenStage, KestevenState> ctx, KestevenStage from) {
         if (ctx.isJump() && ctx.stage() != ctx.jumpTarget()) return;
@@ -177,11 +178,11 @@ final class KestevenCacheModule extends QuestModule<KestevenStage, KestevenState
     // serves every later visit.
     static void revealCore(QuestContext<KestevenStage, KestevenState> ctx, SectorEntityToken core) {
         ctx.claimDialog(core, TRIGGER_CORE, ALL_STAGES);
-        if (ctx.stage().toLegacy() >= 16) ctx.mark(core, ALL_STAGES);
+        if (ctx.stage().atLeast(KestevenStage.JOB5_DISKS)) ctx.mark(core, ALL_STAGES);
         ctx.continueDialog(core, TRIGGER_CORE);
     }
 
-    // Stage 15 and 16 and a failed questline record the find; stage 16 then moves on to the Cache.
+    // JOB5_MEETING, JOB5_DISKS and a failed questline record the find; JOB5_DISKS then moves on to CACHE_KNOWN.
     private static void checkFound(QuestContext<KestevenStage, KestevenState> ctx, boolean entered) {
         KestevenStage stage = ctx.stage();
         boolean ended = ctx.has(KestevenFlag.ENDED) || stage == KestevenStage.FAILED;
@@ -201,7 +202,7 @@ final class KestevenCacheModule extends QuestModule<KestevenStage, KestevenState
     }
 
     private static boolean questTarget(QuestContext<KestevenStage, KestevenState> ctx) {
-        return ctx.stage().toLegacy() >= 16 && !ctx.has(KestevenFlag.ENDED);
+        return ctx.stage().atLeast(KestevenStage.JOB5_DISKS) && !ctx.has(KestevenFlag.ENDED);
     }
 
     private static SectorEntityToken pickGuardianSpot(QuestContext<KestevenStage, KestevenState> ctx) {
@@ -252,7 +253,7 @@ final class KestevenCacheModule extends QuestModule<KestevenStage, KestevenState
         ctx.set(KestevenFlag.CHIP_SALVAGED);
         if (ctx.stage() != KestevenStage.CHIP_RECOVERED) ctx.advance(KestevenStage.CHIP_RECOVERED);
         if (ctx.has(KestevenFlag.ELIZA_AGREED_SINCERELY)) {
-            ctx.mark(QuestHelper.getElizaLoc(), RETURN_STAGES);
+            ctx.mark(ctx.state().elizaMarket, RETURN_STAGES);
         } else {
             MarketAPI home = SectorLookup.asteriaOrOutpost();
             ctx.mark(home, RETURN_STAGES);

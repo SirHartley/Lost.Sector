@@ -57,7 +57,6 @@ import indevo.industries.artillery.utils.ArtilleryStationPlacer;
 import lostsector.campaign.bounties.HeliosSite;
 import lostsector.campaign.enigma.EnigmaFleetLoot;
 import lostsector.campaign.kesteven.contracts.ContractManager;
-import lostsector.campaign.kesteven.quest.QuestStageManager;
 import lostsector.persistence.CampaignTimer;
 import lostsector.helper.FleetHelper;
 import lostsector.helper.Ids;
@@ -178,7 +177,6 @@ public class ModPlugin extends BaseModPlugin {
         EFS_LIST.add(new KestevenScavenger());
         EFS_LIST.add(new KestevenExportManager());
         EFS_LIST.add(new GuardSpawner());
-        EFS_LIST.add(new QuestStageManager());
         EFS_LIST.add(new ExileManager());
         EFS_LIST.add(new BlackOpsManager());
         EFS_LIST.add(new ContractManager());
