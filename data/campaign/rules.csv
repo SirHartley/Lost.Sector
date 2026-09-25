@@ -1146,14 +1146,14 @@ nskr_thronesGift_pickCancelled,nskr_thronesGiftPickCancelled,,SetShortcut nskr_t
 nskr_thronesGift_leave:Go back",
 ,,,,,,
 nskr_thronesGift_picked,nskr_thronesGiftPicked,,"AddTextSmall ""This will cost $nskr_thronesGift_cost automation points."" standardTextColor
+SetTextHighlightColors highlight
 SetTextHighlights ""$nskr_thronesGift_cost""
-SetTextHighlightColors highlight
 AddTextSmall ""You have $nskr_thronesGift_points automation points available."" standardTextColor
+SetTextHighlightColors highlight
 SetTextHighlights ""$nskr_thronesGift_points""
-SetTextHighlightColors highlight
 AddTextSmall ""Selected $nskr_thronesGift_shipName $nskr_thronesGift_hullName-Class"" gray
-SetTextHighlights ""$nskr_thronesGift_hullName""
 SetTextHighlightColors highlight
+SetTextHighlights ""$nskr_thronesGift_hullName""
 FireBest nskr_thronesGiftPickedOptions",,,
 nskr_thronesGift_pickedAfford,nskr_thronesGiftPickedOptions,nskr_thronesGift canAfford,"SetOptionColor nskr_thronesGift_automate highlight
 SetTooltip nskr_thronesGift_automate ""This will cost $nskr_thronesGift_cost automation points.""
@@ -1161,19 +1161,19 @@ nskr_quest confirm nskr_thronesGift_automate ""Are you sure? This cannot be reve
 SetShortcut nskr_thronesGift_leave ESCAPE",,"nskr_thronesGift_automate:Automate $nskr_thronesGift_hullName-Class
 nskr_thronesGift_another:Automate another ship
 nskr_thronesGift_leave:Go back",
-nskr_thronesGift_pickedPoor,nskr_thronesGiftPickedOptions,!nskr_thronesGift canAfford,"SetTextHighlights ""can not afford""
-SetTextHighlightColors bad
+nskr_thronesGift_pickedPoor,nskr_thronesGiftPickedOptions,!nskr_thronesGift canAfford,"SetTextHighlightColors bad
+SetTextHighlights ""can not afford""
 SetShortcut nskr_thronesGift_leave ESCAPE",You can not afford to automate this ship.,"nskr_thronesGift_another:Automate another ship
 nskr_thronesGift_leave:Go back",
 ,,,,,,
 nskr_thronesGift_automateSel,DialogOptionSelected,"$option == nskr_thronesGift_automate
 nskr_thronesGift hasPicked","nskr_thronesGift automate
 AddTextSmall ""Automated $nskr_thronesGift_shipName $nskr_thronesGift_hullName-Class"" gray
-SetTextHighlights ""$nskr_thronesGift_hullName""
 SetTextHighlightColors highlight
+SetTextHighlights ""$nskr_thronesGift_hullName""
 AddTextSmall ""Lost $nskr_thronesGift_cost automation points."" gray
-SetTextHighlights ""$nskr_thronesGift_cost""
 SetTextHighlightColors bad
+SetTextHighlights ""$nskr_thronesGift_cost""
 AddTextSmall ""You now have $nskr_thronesGift_points automation points."" gray
 PlaySound ui_noise_static
 SetShortcut nskr_thronesGift_leave ESCAPE",,"nskr_thronesGift_leave:Continue

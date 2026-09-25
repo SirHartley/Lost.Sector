@@ -177,6 +177,7 @@ public final class RulesCheck {
         }
         if (!readRows(file)) return;
         checkLoading();
+        checkHighlightOrder();
         checkQuestCalls();
         checkTokens();
         checkOptionTokens();
@@ -329,6 +330,28 @@ public final class RulesCheck {
             }
             return false;
         });
+    }
+
+    // SetTextHighlightColors calls highlightInLastPara(color, "") before setting the colors, which replaces the
+    // paragraph's highlight phrases (0.98a-RC8 SetTextHighlightColors.execute), so phrases set earlier for the same
+    // paragraph are lost. Any other command may add a paragraph, so only highlight commands keep the pending phrases.
+    private void checkHighlightOrder() {
+        for (ParsedRow row : rows) {
+            boolean phrasesSet = false;
+            for (RuleExpression e : row.script()) {
+                if (e.command == null) continue;
+                if (e.isCommand("SetTextHighlights") || e.isCommand("Highlight")) {
+                    phrasesSet = true;
+                } else if (e.isCommand("SetTextHighlightColors")) {
+                    if (phrasesSet) {
+                        add(Severity.ERROR, "highlight-order", row, "SetTextHighlightColors after SetTextHighlights for the same paragraph drops its phrases; set the colors first");
+                    }
+                    phrasesSet = false;
+                } else {
+                    phrasesSet = false;
+                }
+            }
+        }
     }
 
     // nskr_quest calls
