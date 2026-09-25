@@ -6,6 +6,7 @@ package lostsector.dialogue.rules;
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.CargoAPI;
 import com.fs.starfarer.api.campaign.InteractionDialogAPI;
+import com.fs.starfarer.api.campaign.OptionPanelAPI;
 import com.fs.starfarer.api.campaign.SectorEntityToken;
 import com.fs.starfarer.api.campaign.TextPanelAPI;
 import com.fs.starfarer.api.campaign.econ.MarketAPI;
@@ -18,29 +19,32 @@ import com.fs.starfarer.api.util.Misc.Token;
 import lostsector.campaign.kesteven.quest.KestevenQuest;
 import lostsector.helper.MathHelper;
 import org.lazywizard.lazylib.MathUtils;
+import org.lwjgl.input.Keyboard;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
+// TODO: replace this menu with a custom UI panel (docs/UI.md).
 public class nskr_debt extends BaseCommandPlugin {
 
-	// Each id names one option of the nskr_debtLoans menu in rules.csv; positive credits take a loan, negative repay.
-	// The key is the display String the option's text reads; it is written out in full so a search finds its writer.
+	// Positive credits take a loan, negative repay. The id is the suffix of the option id in the loan list.
 	public enum Amount {
-		LOAN_SMALL("loanSmall", "$nskr_debt_loanSmallStr"),
-		LOAN_LARGE("loanLarge", "$nskr_debt_loanLargeStr"),
-		LOAN_ALL("loanAll", "$nskr_debt_loanAllStr"),
-		REPAY_SMALL("repaySmall", "$nskr_debt_repaySmallStr"),
-		REPAY_LARGE("repayLarge", "$nskr_debt_repayLargeStr"),
-		REPAY_ALL("repayAll", "$nskr_debt_repayAllStr");
+		LOAN_SMALL("loanSmall"),
+		LOAN_LARGE("loanLarge"),
+		LOAN_ALL("loanAll"),
+		REPAY_SMALL("repaySmall"),
+		REPAY_LARGE("repayLarge"),
+		REPAY_ALL("repayAll");
 
 		public final String id;
-		public final String key;
 
-		Amount(String id, String key) {
+		Amount(String id) {
 			this.id = id;
-			this.key = key;
+		}
+
+		public boolean isRepayment() {
+			return this == REPAY_SMALL || this == REPAY_LARGE || this == REPAY_ALL;
 		}
 
 		public int getCredits() {
@@ -65,6 +69,10 @@ public class nskr_debt extends BaseCommandPlugin {
 	public static final String DEBT_KEY = "$nskr_debtPoints";
 	public static final String INTEREST_KEY = "$nskr_debtInterest";
 	public static final String PERSISTENT_RANDOM_KEY = "nskr_debtRandom";
+	public static final String DIALOG_OPTION_PREFIX = "nskr_debt_pick_";
+	// The amount picked in the loan list, read when the transaction is confirmed.
+	public static final String PICK_KEY = "$nskr_debt_pick";
+	public static final String RETURN_OPTION = "nskr_debtMenuReturn";
 	public static final int BASE_DEBT = 8000;
 	public static final int SMALL_AMOUNT = 10000;
 	public static final int LARGE_AMOUNT = 100000;
@@ -72,6 +80,7 @@ public class nskr_debt extends BaseCommandPlugin {
 	public static final float MAX_INTEREST = 6f;
 	public static final float MAX_CHANGE = 0.25f;
 
+	protected InteractionDialogAPI dialog;
 	protected SectorEntityToken entity;
 	protected TextPanelAPI text;
 	protected CargoAPI playerCargo;
@@ -81,6 +90,7 @@ public class nskr_debt extends BaseCommandPlugin {
 	public boolean execute(String ruleId, InteractionDialogAPI dialog, List<Token> params, Map<String, MemoryAPI> memoryMap)
 	{
 		String arg = params.get(0).getString(memoryMap);
+		this.dialog = dialog;
 		entity = dialog.getInteractionTarget();
 		text = dialog.getTextPanel();
 		playerCargo = Global.getSector().getPlayerFleet().getCargo();
@@ -96,22 +106,25 @@ public class nskr_debt extends BaseCommandPlugin {
 				return true;
 			case "hasOption":
 				return validMarket(entity.getMarket());
-			case "available":
-				return isAvailable(getAmount(params, memoryMap));
-			case "isLoan":
-				Amount loan = getAmount(params, memoryMap);
-				return loan != null && loan.getCredits() > 0;
-			case "preview":
-				return updatePreviewTokens(getAmount(params, memoryMap));
-			case "take":
-				return take(getAmount(params, memoryMap));
+			case "getLoans":
+				updateTokens();
+				showLoans();
+				return true;
+			case "loan":
+				updateTokens();
+				return showLoanPreview(getPickedOption(memoryMap));
+			case "confirmLoan":
+				boolean taken = take(Amount.fromId(local.getString(PICK_KEY)));
+				updateTokens();
+				return taken;
 		}
 		return false;
 	}
 
-	protected static Amount getAmount(List<Token> params, Map<String, MemoryAPI> memoryMap) {
-		if (params.size() < 2) return null;
-		return Amount.fromId(params.get(1).getString(memoryMap));
+	protected static Amount getPickedOption(Map<String, MemoryAPI> memoryMap) {
+		String option = memoryMap.get(MemKeys.LOCAL).getString("$option");
+		if (option == null || !option.startsWith(DIALOG_OPTION_PREFIX)) return null;
+		return Amount.fromId(option.substring(DIALOG_OPTION_PREFIX.length()));
 	}
 
 	protected void updateTokens()
@@ -127,14 +140,25 @@ public class nskr_debt extends BaseCommandPlugin {
 		local.set("$nskr_debt_MaxpointsStr", Misc.getDGSCredits(getMaxDebt())+"", 0);
 		local.set("$nskr_debtInterest", interest, 0);
 		local.set("$nskr_debtInterestStr", rounded + "%", 0);
+	}
+
+	// Called from a handler row that has no options of its own, so the list replaces the old menu here.
+	protected void showLoans()
+	{
+		OptionPanelAPI options = dialog.getOptionPanel();
+		options.clearOptions();
 		for (Amount amount : Amount.values()) {
-			local.set(amount.key, Misc.getDGSCredits(Math.abs(amount.getCredits())), 0);
+			String optionId = DIALOG_OPTION_PREFIX + amount.id;
+			String label = (amount.isRepayment() ? "Repay " : "Loan ") + Misc.getDGSCredits(Math.abs(amount.getCredits()));
+			options.addOption(label, optionId);
+			if (!isAvailable(amount)) options.setEnabled(optionId, false);
 		}
+		options.addOption("Back", RETURN_OPTION);
+		options.setShortcut(RETURN_OPTION, Keyboard.KEY_ESCAPE, false, false, false, false);
 	}
 
 	protected boolean isAvailable(Amount amount)
 	{
-		if (amount == null) return false;
 		int credits = amount.getCredits();
 		int currDebt = getDebt();
 		if (credits == 0) return false;
@@ -142,13 +166,16 @@ public class nskr_debt extends BaseCommandPlugin {
 		return currDebt != 0 && -credits <= (int)playerCargo.getCredits().get() && currDebt + credits >= 0;
 	}
 
-	protected boolean updatePreviewTokens(Amount amount)
+	protected boolean showLoanPreview(Amount amount)
 	{
 		if (amount == null) return false;
+		local.set(PICK_KEY, amount.id, 0);
 		int credits = amount.getCredits();
+		if (credits <= 0) return true;
 		float cost = Math.round(credits * (getInterest() / 100f));
-		local.set("$nskr_debt_amountStr", Misc.getDGSCredits(credits), 0);
-		local.set("$nskr_debt_costStr", Misc.getDGSCredits(cost), 0);
+		String costStr = Misc.getDGSCredits(cost);
+		text.addParagraph("A loan of " + Misc.getDGSCredits(credits) + " would cost you " + costStr + " monthly, at the current interest rate.");
+		text.highlightInLastPara(costStr);
 		return true;
 	}
 
@@ -164,6 +191,7 @@ public class nskr_debt extends BaseCommandPlugin {
 			playerCargo.getCredits().subtract(-credits);
 			AddRemoveCommodity.addCreditsLossText(-credits, text);
 		}
+		Global.getSoundPlayer().playUISound("ui_rep_raise", 1f, 1f);
 		return true;
 	}
 

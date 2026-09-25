@@ -2,6 +2,7 @@ package lostsector.campaign.kesteven.contracts;
 
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.InteractionDialogAPI;
+import com.fs.starfarer.api.campaign.TextPanelAPI;
 import com.fs.starfarer.api.campaign.econ.MarketAPI;
 import com.fs.starfarer.api.campaign.rules.MemoryAPI;
 import com.fs.starfarer.api.characters.PersonAPI;
@@ -11,10 +12,12 @@ import com.fs.starfarer.api.util.Misc.Token;
 import lostsector.campaign.kesteven.contracts.ContractIntel;
 import lostsector.campaign.kesteven.contracts.ContractInfo;
 import lostsector.campaign.kesteven.contracts.ContractManager;
+import org.lwjgl.input.Keyboard;
 
 import java.util.List;
 import java.util.Map;
 
+// TODO: replace the contract offer text with a custom UI panel (docs/UI.md).
 public class ContractsMission extends BaseHubMission {
     //
     //Lightly based on code by Histidine
@@ -29,14 +32,6 @@ public class ContractsMission extends BaseHubMission {
     public static final String CONTRACT_KEY_RECOVERY = "nskr_contractsRecovery";
     public static final String PERSISTENT_RANDOM_KEY_ELIMINATE = "nskr_contractsEliminateRandomKey";
     public static final String PERSISTENT_RANDOM_KEY_RECOVERY = "nskr_contractsRecoveryRandomKey";
-
-    // Offer text tokens and row conditions for the nskr_contracts rules rows
-    private static final String TYPE_KEY = "$nskr_contracts_type";
-    private static final String FACTION_BOUNTY_KEY = "$nskr_contracts_factionBounty";
-    private static final String COUNT_KEY = "$nskr_contracts_count";
-    private static final String TARGETS_KEY = "$nskr_contracts_targets";
-    private static final String REWARD_PER_KEY = "$nskr_contracts_rewardPer";
-    private static final String REWARD_TOTAL_KEY = "$nskr_contracts_rewardTotal";
 
     private PersonAPI person;
     private MarketAPI market;
@@ -91,20 +86,6 @@ public class ContractsMission extends BaseHubMission {
         // $sShip_ref. So: we use $Contracts_ref2 in the ContactPostAccept rule
         // and $Contracts_ref2 has an expiration of 0, so it'll get unset on its own later.
         set("$nskr_contracts_ref2", this);
-
-        set(TYPE_KEY, contract.type);
-        set(FACTION_BOUNTY_KEY, contract.isFactionBounty);
-        set(COUNT_KEY, String.valueOf(contract.count));
-        set(TARGETS_KEY, getTargetsText());
-        set(REWARD_PER_KEY, Misc.getDGSCredits(contract.rewardPer));
-        set(REWARD_TOTAL_KEY, Misc.getDGSCredits(contract.totalReward));
-    }
-
-    private String getTargetsText() {
-        String targets = ContractManager.getTypeString(contract);
-        if (contract.type == ContractInfo.ContractType.ELIMINATE) return targets;
-        // getUnitsString starts with the space before the unit words; the row writes that space itself.
-        return ContractManager.getUnitsString(contract).substring(1) + targets;
     }
 
     @Override
@@ -112,12 +93,60 @@ public class ContractsMission extends BaseHubMission {
                                  Map<String, MemoryAPI> memoryMap) {
 
         switch (action) {
+            case "showBlurb":
+                showBlurb(dialog);
+                return true;
+            case "showContract":
+                showContract(dialog);
+                return true;
             case "showPerson":
                 dialog.getVisualPanel().showPersonInfo(getPerson(), true);
                 return true;
         }
 
         return super.callAction(action, ruleId, dialog, params, memoryMap);
+    }
+
+    private void showContract(InteractionDialogAPI dialog) {
+        TextPanelAPI text = dialog.getTextPanel();
+        String count = String.valueOf(contract.count);
+        String rewardPer = Misc.getDGSCredits(contract.rewardPer);
+        String rewardTotal = Misc.getDGSCredits(contract.totalReward);
+
+        if (contract.type == ContractInfo.ContractType.ELIMINATE) {
+            String hostile = contract.isFactionBounty ? " " : " hostile ";
+
+            text.addParagraph("\"The powers that be have authorized mercenary contracts for the destruction of enemy assets.\"");
+            text.addParagraph("\"And as it happens we have a new elimination contract available, it would require the destruction of "
+                    + count + hostile + ContractManager.getTypeString(contract) + ".\"");
+            text.highlightInLastPara(count);
+            text.addParagraph("\"The payout per target vessel is " + rewardPer + " for a total of " + rewardTotal + ". "
+                    + "You will be paid upon the full completion of the contract.\"");
+            text.highlightInLastPara(rewardPer, rewardTotal);
+            text.addParagraph("\"Are you interested captain?\"");
+        } else {
+            text.addParagraph("\"Our department has great interest in salvage records and materials breakdowns, we are willing to pay for data on certain recovered resources. "
+                    + "From destroyed vessels - to be specific.\"");
+            text.addParagraph("\"And as it happens we have a new data recovery contract available, it would require the recovery of "
+                    + count + ContractManager.getUnitsString(contract) + ContractManager.getTypeString(contract) + ".\"");
+            text.highlightInLastPara(count);
+            text.addParagraph("\"The payout per unit recovered is " + rewardPer + " for a total of " + rewardTotal + ". "
+                    + "You will be paid upon the full completion of the contract.\"");
+            text.highlightInLastPara(rewardPer, rewardTotal);
+            text.addParagraph("\"Of course we are interested in the data only, you get to keep whatever materials you recover.\"");
+            text.addParagraph("\"Are you willing to do this?\"");
+        }
+
+        dialog.getOptionPanel().setShortcut("contact_decline", Keyboard.KEY_ESCAPE, false, false, false, false);
+    }
+
+    private void showBlurb(InteractionDialogAPI dialog) {
+        TextPanelAPI text = dialog.getTextPanel();
+        if (contract.type == ContractInfo.ContractType.ELIMINATE) {
+            text.addParagraph("\"The board has authorized an elimination contract on certain enemy vessels. Looks like they want to thin out the competition.\"");
+        } else {
+            text.addParagraph("\"We are looking for someone to fulfill our new data recovery contract. The trends deduced from our existing data have already proven invaluable for our efforts.\"");
+        }
     }
 
     @Override

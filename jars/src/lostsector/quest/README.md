@@ -1195,15 +1195,14 @@ The old quest code is gone. This table maps each removed owner to its current on
 | Bounty spawners (`AbyssSpawner`, `EternitySpawner`, `MothershipSpawner`, `RorqualSpawner`), `AbyssIntel`, `UmbraIntel`, `MothershipIntel`, `RorqualIntel`, `MothershipInteractionBlocker`, `BountyLoot` | Quest `bounty` in `campaign/bounties` (`BountyEncounter`); `HeliosSite` stays world generation |
 | `HintManager`, `HintIntel`, `KestevenTipBarEventCreator`, `KestevenTipBarEvent`, `KestevenTipIntel`, `FrostIntel` | Record quest `hint` in `campaign/events/hints` |
 | `HellSpawnJudgementDialog`, `HellSpawnJudgementWarning` | Quest `hs` and the `# HELLSPAWN` rows |
-| `AutomateDialog` | `nskr_thronesGift` and the `# THRONES GIFT` rows |
 | Separate fleet lists for quest content | One `QuestFleets` list. The world spawners (`HyperspaceEnigmaSpawner`, `StalkerSpawner`, `KestevenScavenger`, `GuardSpawner`, `BlackOpsManager`) keep their own lists, because their fleets are not quest content |
 
 ## Outside the framework
 
 | Content | Owner | Relation to the framework |
 |---|---|---|
-| Kesteven contracts | Vanilla `BaseHubMission` in `campaign/kesteven/contracts` | Reads quest queries only. Its stages are a mission enum; its offer text is keyed by `$missionId` ([Hub missions](../../../../docs/RULES_AUTHORING.md#reuse-a-mission-object-through-call)). |
-| Debt menu, ship swap, S-mod removal, artifact exchange, Throne's Gift automation | Their own commands in `dialogue/rules` and their managers | Services, not quests. Their text and fixed options are rows; the commands keep the pickers, the game actions and their receipts ([project routing](../../../../docs/RULES.md#project-routing)). |
+| Kesteven contracts | Vanilla `BaseHubMission` in `campaign/kesteven/contracts` | Reads quest queries only. Its stages are a mission enum; its blurb and offer text are printed by `ContractsMission` through `Call $nskr_contracts_ref` ([Hub missions](../../../../docs/RULES_AUTHORING.md#reuse-a-mission-object-through-call)). |
+| Debt menu, artifact exchange, S-mod removal, Throne's Gift automation | Their own commands in `dialogue/rules` and their managers; Throne's Gift automation is the Java dialog `starts/thronesgift/AutomateDialog`, opened from `ThronesGiftIntel` | Services, not quests. Their text is Java: the commands print option lists, previews, picker results, confirmations and receipts, and the rows keep the entry options, the service menus and the handlers that call the commands ([project routing](../../../../docs/RULES.md#project-routing)). |
 | Hellspawn judgement battle | `HellSpawnJudgementInteraction`, a fleet encounter plugin in `starts/hellspawn` | Hellspawn's state, stages and text use the framework; the encounter keeps its Java and takes its lines from rows with `FireBest`. The Gate Conduit ability's encounter (`HellSpawnAbilityInteraction`) is not quest content. |
 | Enigma greetings and patrol rows | Faction dialogue in `rules.csv` | Not quest content. |
 

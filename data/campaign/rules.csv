@@ -2331,32 +2331,11 @@ nskr_shipSwapSell:Trade in artifacts
 nskr_shipSwapExit:Go back",
 nskr_shipSwapSellOption,DialogOptionSelected,"$option == nskr_shipSwapSell","nskr_shipSwap sell",,,
 nskr_shipSwap_SellResponse,nskr_shipSold,,"FireAll nskr_shipSwapMenu","""Thank you for your business.""",,
-nskr_shipSwap_ListBuyableShips,DialogOptionSelected,"$option == nskr_shipSwapBuyShips","nskr_shipSwap prepareStock
-FireBest nskr_shipSwapHullStock",,,
-nskr_shipSwap_hullStock,nskr_shipSwapHullStock,"nskr_shipSwap hasStock SHIP","nskr_shipSwap getShipForSale
-ShowPersonVisual",,,
-nskr_shipSwap_hullStockNone,nskr_shipSwapHullStock,,"SetShortcut nskr_shipSwapMenuReturn ESCAPE","""Looks like we don't have any ships in stock at the moment.""","nskr_shipSwapMenuReturn:Back",
-nskr_shipSwap_ListBuyableGuns,DialogOptionSelected,"$option == nskr_shipSwapBuyGuns","nskr_shipSwap prepareStock
-FireBest nskr_shipSwapWeaponStock",,,
-nskr_shipSwap_weaponStock,nskr_shipSwapWeaponStock,"nskr_shipSwap hasStock WEAPON","nskr_shipSwap getGunForSale",,,
-nskr_shipSwap_weaponStockNone,nskr_shipSwapWeaponStock,,"SetShortcut nskr_shipSwapMenuReturn ESCAPE","""Looks like we don't have any weapons in stock at the moment.""","nskr_shipSwapMenuReturn:Back",
-nskr_shipSwap_pickCancelled,nskr_shipSwapPickCancelled,,"SetShortcut nskr_shipSwapMenuReturn ESCAPE","""Don't want anything? Shame.""","nskr_shipSwapMenuReturn:Go back","Fired by nskr_shipSwap when a stock picker is cancelled or nothing is picked."
-nskr_shipSwap_picked,nskr_shipSwapPicked,,"nskr_shipSwap listPicked
-AddTextSmall ""This will cost $nskr_shipSwap_costStr points.""
-SetTextHighlights $nskr_shipSwap_costStr
-AddTextSmall ""You have $nskr_shipSwap_pointsStr points.""
-SetTextHighlights $nskr_shipSwap_pointsStr
-FireBest nskr_shipSwapPickedOffer",,,"Fired by nskr_shipSwap after a stock pick."
-nskr_shipSwap_pickedHull,nskr_shipSwapPickedHull,,"AddTextSmall ""$nskr_shipSwap_itemName-Class"" textGrayColor",,,"Fired by nskr_shipSwap listPicked once per picked hull."
-nskr_shipSwap_pickedWeapon,nskr_shipSwapPickedWeapon,,"AddTextSmall ""$nskr_shipSwap_itemName"" textGrayColor",,,"Fired by nskr_shipSwap listPicked once per picked weapon."
-nskr_shipSwap_offer,nskr_shipSwapPickedOffer,"nskr_shipSwap canAfford","SetShortcut nskr_shipSwapMenuReturn ESCAPE",,"nskr_shipSwapConfirmPurchase:Make the purchase
-nskr_shipSwapMenuReturn:""Never mind.""",
-nskr_shipSwap_offerTooExpensive,nskr_shipSwapPickedOffer,,"SetShortcut nskr_shipSwapMenuReturn ESCAPE","You can not afford this transaction.","nskr_shipSwapMenuReturn:Go back",
+nskr_shipSwap_ListBuyableShips,DialogOptionSelected,"$option == nskr_shipSwapBuyShips","nskr_shipSwap getShipForSale",,,
+nskr_shipSwap_ListBuyableGuns,DialogOptionSelected,"$option == nskr_shipSwapBuyGuns","nskr_shipSwap getGunForSale",,,
 nskr_shipSwapBuyConfirm,DialogOptionSelected,"$option == nskr_shipSwapConfirmPurchase","nskr_shipSwap confirmPurchase
-ShowPersonVisual
 AddTextSmall ""You have $nskr_shipSwap_pointsStr points.""
-SetTextHighlights $nskr_shipSwap_pointsStr
-SetShortcut nskr_shipSwapMenuReturn ESCAPE","""Thank you for your business.""","nskr_shipSwapMenuReturn:Go back",
+SetTextHighlights $nskr_shipSwap_pointsStr","""Thank you for your business.""",,
 nskr_shipSwapExit,DialogOptionSelected,"$option == nskr_shipSwapExit","FireAll PopulateOptions",,,
 "#END ARTIFACT swap options",,,,,,
 ,,,,,,
@@ -2369,35 +2348,10 @@ SetShortcut nskr_modRemovalExit ""ESCAPE""",,"nskr_modRemovalManage:Select one o
 nskr_modRemovalExit:Go back",
 nskr_modRemovalMenuSel,DialogOptionSelected,"$option == nskr_modRemovalMenu","FireAll nskr_modRemovalMenu",,,
 nskr_modRemovalExit,DialogOptionSelected,"$option == nskr_modRemovalExit","FireAll PopulateOptions",,,
-nskr_modRemovalManage,DialogOptionSelected,"$option == nskr_modRemovalManage
-nskr_modRemoval hasShips","nskr_modRemoval getHulls",,,
-nskr_modRemovalManageNone,DialogOptionSelected,"$option == nskr_modRemovalManage
-!nskr_modRemoval hasShips","SetShortcut nskr_modRemovalExit ESCAPE","""Looks like you don't have any ships with Special Modifications. Quit wasting my time now, will you."" She groans.","nskr_modRemovalExit:Leave",
-nskr_modRemoval_pickCancelled,nskr_modRemovalPickCancelled,,"SetShortcut nskr_modRemovalReturn ESCAPE","""Come on captain, just make up your mind already. I don't have all day."" She mutters.","nskr_modRemovalReturn:Go back","Fired by nskr_modRemoval when the ship picker is cancelled or nothing is picked."
-nskr_modRemoval_shipPicked,nskr_modRemovalShipPicked,,"AddTextSmall ""Selected $nskr_modRemoval_shipName $nskr_modRemoval_hullName-Class"" textGrayColor
-SetTextHighlights $nskr_modRemoval_hullName
-FireAll nskr_modRemovalShipOptions",,,"Fired by nskr_modRemoval after a ship is picked."
-nskr_modRemoval_shipOptPickOne,nskr_modRemovalShipOptions,"$nskr_modRemoval_sMods == 1",,,"nskr_modRemoval_pick_ship:Select $nskr_modRemoval_hullName-Class has $nskr_modRemoval_sMods S-Mod",
-nskr_modRemoval_shipOptPickMany,nskr_modRemovalShipOptions,"$nskr_modRemoval_sMods != 1",,,"nskr_modRemoval_pick_ship:Select $nskr_modRemoval_hullName-Class has $nskr_modRemoval_sMods S-Mods",
-nskr_modRemoval_shipOptBack,nskr_modRemovalShipOptions,,"SetShortcut nskr_modRemovalReturn ESCAPE",,"nskr_modRemovalReturn:Go back",
+nskr_modRemovalManage,DialogOptionSelected,"$option == nskr_modRemovalManage","nskr_modRemoval getHulls",,,
 nskr_modRemovalReturnSel,DialogOptionSelected,"$option == nskr_modRemovalReturn","FireAll nskr_modRemovalMenu",,,
-nskr_modRemovalPickOption,DialogOptionSelected,"$option == nskr_modRemoval_pick_ship","nskr_modRemoval prepareRemove
-AddText ""Removing all the Special Modifications from the $nskr_modRemoval_hullName without causing permanent damage would require significant work.""
-SetStoryOption nskr_modRemoval_confirm 1 nskr_modRemoval ui_char_spent_story_point ""Removed S-Mods from a ship""
-SetShortcut nskr_modRemovalReturn ESCAPE",,"nskr_modRemoval_confirm:I'm sure you're capable enough.
-nskr_modRemovalReturn:Go back",
-nskr_modRemoval_sModLine,nskr_modRemovalSModLine,,"AddTextSmall ""S-Modded $nskr_modRemoval_sModName"" textGrayColor
-SetTextHighlightColors story
-SetTextHighlights $nskr_modRemoval_sModName",,,"Fired by nskr_modRemoval prepareRemove once per S-mod."
-nskr_modRemovalPickOptionConfirm,DialogOptionSelected,"$option == nskr_modRemoval_confirm","nskr_modRemoval remove
-AddText ""After some waiting around Alice finally gets back in contact with you.""
-AddText ""\""It wasn't easy but we pulled it off captain.\"" She says with a smug expression.""
-FireBest nskr_modRemovalRemovedText
-SetShortcut nskr_modRemovalExit ESCAPE","The hull is offloaded at a dry-dock so the crew can begin work on it.","nskr_modRemovalExit:Leave",
-nskr_modRemoval_removedOne,nskr_modRemovalRemovedText,"$nskr_modRemoval_removed == 1","AddTextSmall ""$nskr_modRemoval_shipName $nskr_modRemoval_hullName-Class removed $nskr_modRemoval_removed S-Mod"" textGrayColor
-SetTextHighlights $nskr_modRemoval_removed",,,
-nskr_modRemoval_removedMany,nskr_modRemovalRemovedText,,"AddTextSmall ""$nskr_modRemoval_shipName $nskr_modRemoval_hullName-Class removed $nskr_modRemoval_removed S-Mods"" textGrayColor
-SetTextHighlights $nskr_modRemoval_removed",,,
+nskr_modRemovalPickOption,DialogOptionSelected,"$option == nskr_modRemoval_pick_ship","nskr_modRemoval prepareRemove",,,
+nskr_modRemovalPickOptionConfirm,DialogOptionSelected,"$option == nskr_modRemoval_confirm","nskr_modRemoval remove",,,
 "#END MOD REMOVAL",,,,,,
 ,,,,,,
 # DEBT options,,,,,,
@@ -2416,42 +2370,14 @@ nskr_debtStatus,nskr_debtStatus,,"AddTextSmall ""You have loaned $nskr_debt_poin
 SetTextHighlights $nskr_debt_pointsStr
 AddTextSmall ""Your maximum loan is $nskr_debt_MaxpointsStr""
 SetTextHighlights $nskr_debt_MaxpointsStr",,,Shared status lines; tokens written by nskr_debt init
-nskr_debt_ListBuyable,DialogOptionSelected,"$option == nskr_debtBuy","nskr_debt init
-FireAll nskr_debtLoans",,,
-nskr_debt_loanSmall,nskr_debtLoans,,,,"nskr_debt_loanSmall:Loan $nskr_debt_loanSmallStr",
-nskr_debt_loanSmallOff,nskr_debtLoans,"!nskr_debt available loanSmall","SetEnabled nskr_debt_loanSmall false",,,
-nskr_debt_loanLarge,nskr_debtLoans,,,,"nskr_debt_loanLarge:Loan $nskr_debt_loanLargeStr",
-nskr_debt_loanLargeOff,nskr_debtLoans,"!nskr_debt available loanLarge","SetEnabled nskr_debt_loanLarge false",,,
-nskr_debt_loanAll,nskr_debtLoans,,,,"nskr_debt_loanAll:Loan $nskr_debt_loanAllStr",
-nskr_debt_loanAllOff,nskr_debtLoans,"!nskr_debt available loanAll","SetEnabled nskr_debt_loanAll false",,,
-nskr_debt_repaySmall,nskr_debtLoans,,,,"nskr_debt_repaySmall:Repay $nskr_debt_repaySmallStr",
-nskr_debt_repaySmallOff,nskr_debtLoans,"!nskr_debt available repaySmall","SetEnabled nskr_debt_repaySmall false",,,
-nskr_debt_repayLarge,nskr_debtLoans,,,,"nskr_debt_repayLarge:Repay $nskr_debt_repayLargeStr",
-nskr_debt_repayLargeOff,nskr_debtLoans,"!nskr_debt available repayLarge","SetEnabled nskr_debt_repayLarge false",,,
-nskr_debt_repayAll,nskr_debtLoans,,,,"nskr_debt_repayAll:Repay $nskr_debt_repayAllStr",
-nskr_debt_repayAllOff,nskr_debtLoans,"!nskr_debt available repayAll","SetEnabled nskr_debt_repayAll false",,,
-nskr_debt_loansBack,nskr_debtLoans,,"SetShortcut nskr_debtMenuReturn ""ESCAPE"" false",,"nskr_debtMenuReturn:Back",
-nskr_debt_loanSmallSel,DialogOptionSelected,"$option == nskr_debt_loanSmall","$nskr_debt_pick = loanSmall 0
-FireAll nskr_debtPreview",,,
-nskr_debt_loanLargeSel,DialogOptionSelected,"$option == nskr_debt_loanLarge","$nskr_debt_pick = loanLarge 0
-FireAll nskr_debtPreview",,,
-nskr_debt_loanAllSel,DialogOptionSelected,"$option == nskr_debt_loanAll","$nskr_debt_pick = loanAll 0
-FireAll nskr_debtPreview",,,
-nskr_debt_repaySmallSel,DialogOptionSelected,"$option == nskr_debt_repaySmall","$nskr_debt_pick = repaySmall 0
-FireAll nskr_debtPreview",,,
-nskr_debt_repayLargeSel,DialogOptionSelected,"$option == nskr_debt_repayLarge","$nskr_debt_pick = repayLarge 0
-FireAll nskr_debtPreview",,,
-nskr_debt_repayAllSel,DialogOptionSelected,"$option == nskr_debt_repayAll","$nskr_debt_pick = repayAll 0
-FireAll nskr_debtPreview",,,
-nskr_debtPreview,nskr_debtPreview,,"nskr_debt preview $nskr_debt_pick
+nskr_debt_ListBuyable,DialogOptionSelected,"$option == nskr_debtBuy","nskr_debt getLoans",,,
+nskr_debtBuyOption,DialogOptionSelected,"nskr_optionStartsWith ""nskr_debt_pick_""","nskr_debt loan
+AddText ""\""Will this be suitable?\""""
+FireBest nskr_debtStatus
 SetShortcut nskr_debtBuy ""ESCAPE""",,"nskr_debtConfirmLoan:Confirm transaction
 nskr_debtBuy:Go back",
-nskr_debtPreviewCost,nskr_debtPreview,"nskr_debt isLoan $nskr_debt_pick","SetTextHighlights $nskr_debt_costStr","A loan of $nskr_debt_amountStr would cost you $nskr_debt_costStr monthly, at the current interest rate.",,
-nskr_debtPreviewAsk,nskr_debtPreview,,"FireBest nskr_debtStatus","""Will this be suitable?""",,
-nskr_debtBuyConfirm,DialogOptionSelected,"$option == nskr_debtConfirmLoan","nskr_debt take $nskr_debt_pick
-PlaySound ui_rep_raise
-nskr_debt init
-FireAll nskr_debtLoans
+nskr_debtBuyConfirm,DialogOptionSelected,"$option == nskr_debtConfirmLoan","nskr_debt confirmLoan
+nskr_debt getLoans
 FireBest nskr_debtStatus","""Thank you for your business.""",,
 nskr_debtExit,DialogOptionSelected,"$option == nskr_debtExit","FireAll PopulateOptions",,,
 "#END DEBT options",,,,,,
@@ -2924,73 +2850,12 @@ FireAll PopulateOptions","Trying to establish a comm link with the core is not a
 "#END MISC EVENTS",,,,,,
 ,,,,,,
 # CONTRACTS,,,,,,
-nskr_contracts_blurbElimination,nskr_contracts_blurb,"$nskr_contracts_type == ELIMINATE",,"""The board has authorized an elimination contract on certain enemy vessels. Looks like they want to thin out the competition.""",,
-nskr_contracts_blurbRecovery,nskr_contracts_blurb,"$nskr_contracts_type == SCAVENGE",,"""We are looking for someone to fulfill our new data recovery contract. The trends deduced from our existing data have already proven invaluable for our efforts.""",,
+nskr_contracts_blurb,nskr_contracts_blurb,,"Call $nskr_contracts_ref showBlurb",,,
 nskr_contracts_option,nskr_contracts_option,,,,"nskr_contracts_start:Ask about the contract",
 nskr_contracts_start,DialogOptionSelected,"$option == nskr_contracts_start","$missionId = nskr_contracts
-FireAll nskr_contractsOfferText
-SetShortcut contact_decline ESCAPE false",,"contact_accept:Accept the contract
+Call $nskr_contracts_ref showContract",,"contact_accept:Accept the contract
 contact_decline:Decline",
-,,,,,,
-nskr_contracts_elimination1,nskr_contractsOfferText,"$nskr_contracts_type == ELIMINATE",,"""The powers that be have authorized mercenary contracts for the destruction of enemy assets.""",,
-nskr_contracts_elimination2Hostile,nskr_contractsOfferText,"$nskr_contracts_type == ELIMINATE
-!$nskr_contracts_factionBounty","SetTextHighlights $nskr_contracts_count","""And as it happens we have a new elimination contract available, it would require the destruction of $nskr_contracts_count hostile $nskr_contracts_targets.""",,
-nskr_contracts_elimination2Faction,nskr_contractsOfferText,"$nskr_contracts_type == ELIMINATE
-$nskr_contracts_factionBounty","SetTextHighlights $nskr_contracts_count","""And as it happens we have a new elimination contract available, it would require the destruction of $nskr_contracts_count $nskr_contracts_targets.""",,
-nskr_contracts_elimination3,nskr_contractsOfferText,"$nskr_contracts_type == ELIMINATE","SetTextHighlights $nskr_contracts_rewardPer $nskr_contracts_rewardTotal","""The payout per target vessel is $nskr_contracts_rewardPer for a total of $nskr_contracts_rewardTotal. You will be paid upon the full completion of the contract.""",,
-nskr_contracts_elimination4,nskr_contractsOfferText,"$nskr_contracts_type == ELIMINATE",,"""Are you interested captain?""",,
-nskr_contracts_recovery1,nskr_contractsOfferText,"$nskr_contracts_type == SCAVENGE",,"""Our department has great interest in salvage records and materials breakdowns, we are willing to pay for data on certain recovered resources. From destroyed vessels - to be specific.""",,
-nskr_contracts_recovery2,nskr_contractsOfferText,"$nskr_contracts_type == SCAVENGE","SetTextHighlights $nskr_contracts_count","""And as it happens we have a new data recovery contract available, it would require the recovery of $nskr_contracts_count $nskr_contracts_targets.""",,
-nskr_contracts_recovery3,nskr_contractsOfferText,"$nskr_contracts_type == SCAVENGE","SetTextHighlights $nskr_contracts_rewardPer $nskr_contracts_rewardTotal","""The payout per unit recovered is $nskr_contracts_rewardPer for a total of $nskr_contracts_rewardTotal. You will be paid upon the full completion of the contract.""",,
-nskr_contracts_recovery4,nskr_contractsOfferText,"$nskr_contracts_type == SCAVENGE",,"""Of course we are interested in the data only, you get to keep whatever materials you recover.""",,
-nskr_contracts_recovery5,nskr_contractsOfferText,"$nskr_contracts_type == SCAVENGE",,"""Are you willing to do this?""",,
 "#END CONTRACTS",,,,,,
-,,,,,,
-# THRONES GIFT,,,,,,
-nskr_thronesGift_pickShip,nskr_thronesGiftPick,nskr_thronesGift hasShips,"nskr_thronesGift pick ""Pick from your fleet"" Confirm Cancel",,,Opened by ThronesGiftIntel; the picker result fires nskr_thronesGiftPicked or nskr_thronesGiftPickCancelled
-nskr_thronesGift_pickNoShips,nskr_thronesGiftPick,!nskr_thronesGift hasShips,SetShortcut nskr_thronesGift_leave ESCAPE,You can not automate your only ship.,nskr_thronesGift_leave:Go back,
-,,,,,,
-nskr_thronesGift_pickCancelled,nskr_thronesGiftPickCancelled,,SetShortcut nskr_thronesGift_leave ESCAPE,You selected nothing.,"nskr_thronesGift_another:Automate another ship
-nskr_thronesGift_leave:Go back",
-,,,,,,
-nskr_thronesGift_picked,nskr_thronesGiftPicked,,"AddTextSmall ""This will cost $nskr_thronesGift_cost automation points."" standardTextColor
-SetTextHighlightColors highlight
-SetTextHighlights ""$nskr_thronesGift_cost""
-AddTextSmall ""You have $nskr_thronesGift_points automation points available."" standardTextColor
-SetTextHighlightColors highlight
-SetTextHighlights ""$nskr_thronesGift_points""
-AddTextSmall ""Selected $nskr_thronesGift_shipName $nskr_thronesGift_hullName-Class"" gray
-SetTextHighlightColors highlight
-SetTextHighlights ""$nskr_thronesGift_hullName""
-FireBest nskr_thronesGiftPickedOptions",,,
-nskr_thronesGift_pickedAfford,nskr_thronesGiftPickedOptions,nskr_thronesGift canAfford,"SetOptionColor nskr_thronesGift_automate highlight
-SetTooltip nskr_thronesGift_automate ""This will cost $nskr_thronesGift_cost automation points.""
-nskr_quest confirm nskr_thronesGift_automate ""Are you sure? This cannot be reversed. It will cost $nskr_thronesGift_cost automation points."" ""Confirm"" ""Cancel""
-SetShortcut nskr_thronesGift_leave ESCAPE",,"nskr_thronesGift_automate:Automate $nskr_thronesGift_hullName-Class
-nskr_thronesGift_another:Automate another ship
-nskr_thronesGift_leave:Go back",
-nskr_thronesGift_pickedPoor,nskr_thronesGiftPickedOptions,!nskr_thronesGift canAfford,"SetTextHighlightColors bad
-SetTextHighlights ""can not afford""
-SetShortcut nskr_thronesGift_leave ESCAPE",You can not afford to automate this ship.,"nskr_thronesGift_another:Automate another ship
-nskr_thronesGift_leave:Go back",
-,,,,,,
-nskr_thronesGift_automateSel,DialogOptionSelected,"$option == nskr_thronesGift_automate
-nskr_thronesGift hasPicked","nskr_thronesGift automate
-AddTextSmall ""Automated $nskr_thronesGift_shipName $nskr_thronesGift_hullName-Class"" gray
-SetTextHighlightColors highlight
-SetTextHighlights ""$nskr_thronesGift_hullName""
-AddTextSmall ""Lost $nskr_thronesGift_cost automation points."" gray
-SetTextHighlightColors bad
-SetTextHighlights ""$nskr_thronesGift_cost""
-AddTextSmall ""You now have $nskr_thronesGift_points automation points."" gray
-PlaySound ui_noise_static
-SetShortcut nskr_thronesGift_leave ESCAPE",,"nskr_thronesGift_leave:Continue
-nskr_thronesGift_another:Automate another ship",
-nskr_thronesGift_automateGone,DialogOptionSelected,"$option == nskr_thronesGift_automate
-!nskr_thronesGift hasPicked",DismissDialog,,,The picked ship is no longer in the fleet
-nskr_thronesGift_anotherSel,DialogOptionSelected,$option == nskr_thronesGift_another,FireBest nskr_thronesGiftPick,,,
-nskr_thronesGift_leaveSel,DialogOptionSelected,$option == nskr_thronesGift_leave,"DismissDialog
-nskr_thronesGift refreshIntel",,,
 ,,,,,,
 # QUEST DEV,,,,,,
 nskr_questDev_marketOption,PopulateOptions,"$hasMarket

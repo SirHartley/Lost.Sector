@@ -7,25 +7,15 @@ The repeatable Kesteven contracts, the four named bounty fleets of quest `bounty
 | Owner | Role |
 |---|---|
 | `data/campaign/person_missions.csv` | Offers mission `nskr_contracts` (plugin `lostsector.campaign.kesteven.contracts.ContractsMission`) to people tagged `Contracts` (Jack and Alice, set in `world/SectorGen`). The mission id is the prefix of the rules triggers `nskr_contracts_blurb` and `nskr_contracts_option` and the `$missionId` that vanilla's `contact_accept` row passes to the mission hub. |
-| `kesteven/contracts/ContractsMission` | `BaseHubMission`: holds the pending offer, writes its text tokens and ends as a success when the offer is accepted |
+| `kesteven/contracts/ContractsMission` | `BaseHubMission`: holds the pending offer, prints its blurb and offer text and ends as a success when the offer is accepted |
 | `kesteven/contracts/ContractInfo` | One contract: type, subtype, count, reward, progress, failed flag |
 | `kesteven/contracts/ContractManager` | `EFS_LIST` script and listener: progress, failure and offer reset |
 | `kesteven/contracts/ContractIntel` | The accepted contract; pays on completion |
-| `rules.csv` `# CONTRACTS` block | The offer: blurb rows on `nskr_contracts_blurb`, the option row on `nskr_contracts_option`, the `nskr_contracts_start` handler and the offer paragraphs on `nskr_contractsOfferText` |
+| `rules.csv` `# CONTRACTS` block | The offer: the blurb row on `nskr_contracts_blurb`, the option row on `nskr_contracts_option` and the `nskr_contracts_start` handler |
 
 **Offers.** One pending offer per type is saved as a `ContractInfo` in persistent data: `nskr_contractsEliminate` and `nskr_contractsRecovery`. The `ContractsMission` constructor creates missing offers. Jack offers elimination; anyone else (Alice) offers data recovery. `create()` refuses when the player already has an accepted contract of that type (one of each).
 
-**Offer text.** The mission hub calls `updateInteractionData` right after it creates each offered mission, every time the contact's mission list is prepared. `ContractsMission.updateInteractionDataImpl` then writes these keys to the contact's memory with expiry 0:
-
-| Key | Value |
-|---|---|
-| `$nskr_contracts_type` | `ELIMINATE` or `SCAVENGE`; selects the rows |
-| `$nskr_contracts_factionBounty` | True for a faction subtype; the elimination text then omits "hostile" |
-| `$nskr_contracts_count` | Target count |
-| `$nskr_contracts_targets` | `ContractManager.getTypeString`; for data recovery prefixed with the unit words of `getUnitsString` ("units of metals", "beta cores") |
-| `$nskr_contracts_rewardPer`, `$nskr_contracts_rewardTotal` | Payout per target vessel or recovered unit and the total, formatted with `Misc.getDGSCredits` |
-
-The blurb rows `nskr_contracts_blurbElimination` and `nskr_contracts_blurbRecovery` match on the type. The start row sets `$missionId = nskr_contracts`, fires `FireAll nskr_contractsOfferText` for the offer paragraphs (`nskr_contracts_elimination1` to `4`, `nskr_contracts_recovery1` to `5`, one paragraph per row with its highlights), binds Escape to Decline with `SetShortcut contact_decline ESCAPE false`, and offers vanilla's `contact_accept` and `contact_decline`. The accepted contract's intel text is still written in `ContractIntel`.
+**Offer text.** `create()` stores the mission in the contact's memory as `$nskr_contracts_ref` (`setPersonMissionRef`), and the rows call it through `Call`. The blurb row `nskr_contracts_blurb` runs `showBlurb`, which prints one paragraph for the offer's type. The start row sets `$missionId = nskr_contracts`, offers vanilla's `contact_accept` and `contact_decline` and runs `showContract`, which prints the offer paragraphs with the target count and the payouts highlighted and binds Escape to Decline. The elimination text leaves out "hostile" for a faction subtype; the data recovery text puts the unit words of `ContractManager.getUnitsString` ("unit of" or "units of", nothing for AI cores and Tahlan cores) before `getTypeString`. The accepted contract's intel text is written in `ContractIntel`.
 
 **Types.** `ContractInfo.randomSubType()` picks from the base weight lists and adds the optional-mod lists only while `ModPlugin.IS_TAHLAN` or `IS_INDEVO` is set.
 
