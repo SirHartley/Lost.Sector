@@ -703,10 +703,25 @@ FireAll PopulateOptions","Trying to establish a comm link with the core is not a
 "#END MISC EVENTS",,,,,,
 ,,,,,,
 # CONTRACTS,,,,,,
-nskr_contracts_blurb,nskr_contracts_blurb,,"Call $nskr_contracts_ref showBlurb",,,
+nskr_contracts_blurbElimination,nskr_contracts_blurb,"$nskr_contracts_type == ELIMINATE",,"""The board has authorized an elimination contract on certain enemy vessels. Looks like they want to thin out the competition.""",,
+nskr_contracts_blurbRecovery,nskr_contracts_blurb,"$nskr_contracts_type == SCAVENGE",,"""We are looking for someone to fulfill our new data recovery contract. The trends deduced from our existing data have already proven invaluable for our efforts.""",,
 nskr_contracts_option,nskr_contracts_option,,,,"nskr_contracts_start:Ask about the contract",
 nskr_contracts_start,DialogOptionSelected,"$option == nskr_contracts_start","$missionId = nskr_contracts
-Call $nskr_contracts_ref showContract",,"contact_accept:Accept the contract
+FireAll nskr_contractsOfferText
+SetShortcut contact_decline ESCAPE false",,"contact_accept:Accept the contract
 contact_decline:Decline",
+,,,,,,
+nskr_contracts_elimination1,nskr_contractsOfferText,"$nskr_contracts_type == ELIMINATE",,"""The powers that be have authorized mercenary contracts for the destruction of enemy assets.""",,
+nskr_contracts_elimination2Hostile,nskr_contractsOfferText,"$nskr_contracts_type == ELIMINATE
+!$nskr_contracts_factionBounty","SetTextHighlights $nskr_contracts_count","""And as it happens we have a new elimination contract available, it would require the destruction of $nskr_contracts_count hostile $nskr_contracts_targets.""",,
+nskr_contracts_elimination2Faction,nskr_contractsOfferText,"$nskr_contracts_type == ELIMINATE
+$nskr_contracts_factionBounty","SetTextHighlights $nskr_contracts_count","""And as it happens we have a new elimination contract available, it would require the destruction of $nskr_contracts_count $nskr_contracts_targets.""",,
+nskr_contracts_elimination3,nskr_contractsOfferText,"$nskr_contracts_type == ELIMINATE","SetTextHighlights $nskr_contracts_rewardPer $nskr_contracts_rewardTotal","""The payout per target vessel is $nskr_contracts_rewardPer for a total of $nskr_contracts_rewardTotal. You will be paid upon the full completion of the contract.""",,
+nskr_contracts_elimination4,nskr_contractsOfferText,"$nskr_contracts_type == ELIMINATE",,"""Are you interested captain?""",,
+nskr_contracts_recovery1,nskr_contractsOfferText,"$nskr_contracts_type == SCAVENGE",,"""Our department has great interest in salvage records and materials breakdowns, we are willing to pay for data on certain recovered resources. From destroyed vessels - to be specific.""",,
+nskr_contracts_recovery2,nskr_contractsOfferText,"$nskr_contracts_type == SCAVENGE","SetTextHighlights $nskr_contracts_count","""And as it happens we have a new data recovery contract available, it would require the recovery of $nskr_contracts_count $nskr_contracts_targets.""",,
+nskr_contracts_recovery3,nskr_contractsOfferText,"$nskr_contracts_type == SCAVENGE","SetTextHighlights $nskr_contracts_rewardPer $nskr_contracts_rewardTotal","""The payout per unit recovered is $nskr_contracts_rewardPer for a total of $nskr_contracts_rewardTotal. You will be paid upon the full completion of the contract.""",,
+nskr_contracts_recovery4,nskr_contractsOfferText,"$nskr_contracts_type == SCAVENGE",,"""Of course we are interested in the data only, you get to keep whatever materials you recover.""",,
+nskr_contracts_recovery5,nskr_contractsOfferText,"$nskr_contracts_type == SCAVENGE",,"""Are you willing to do this?""",,
 "#END CONTRACTS",,,,,,
 

@@ -275,7 +275,7 @@ Versions of a line separated by a line containing only `OR` are picked at random
 
 ### Highlights and small text
 
-`SetTextHighlights` and `SetTextHighlightColors` color phrases in the last paragraph shown, in the order they appear. Put them in the Script of the row whose Text they decorate, before any `AddText` in that Script. Repeat a phrase for each occurrence. See [Shared text presentation](DIALOGUE.md#shared-text-presentation).
+`SetTextHighlights` and `SetTextHighlightColors` color phrases in the last paragraph shown, in the order they appear. Arguments get token replacement, so `SetTextHighlights $nskr_x_amount` highlights the displayed value. Put them in the Script of the row whose Text they decorate, before any `AddText` in that Script. Repeat a phrase for each occurrence. See [Shared text presentation](DIALOGUE.md#shared-text-presentation).
 
 After the prose, small gray text can state a mechanical consequence the prose does not. SotF writes it as an indented list: `AddTextSmall "    - Progress made\n    - Its scorn grows" textGrayColor` (`sotfHauntedPenult4`). Real grants use the vanilla receipt commands, which print their own receipts; see [Receipts](#receipts).
 

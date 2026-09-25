@@ -7,13 +7,25 @@ The repeatable Kesteven contracts and the four named bounty fleets. The bounties
 | Owner | Role |
 |---|---|
 | `data/campaign/person_missions.csv` | Offers mission `nskr_contracts` (plugin `lostsector.campaign.kesteven.contracts.ContractsMission`) to people tagged `Contracts` (Jack and Alice, set in `world/SectorGen`). The mission id is the prefix of the rules triggers `nskr_contracts_blurb` and `nskr_contracts_option` and the `$missionId` that vanilla's `contact_accept` row passes to the mission hub. |
-| `kesteven/contracts/ContractsMission` | `BaseHubMission`: holds the pending offer and shows it |
+| `kesteven/contracts/ContractsMission` | `BaseHubMission`: holds the pending offer, writes its text tokens and ends as a success when the offer is accepted |
 | `kesteven/contracts/ContractInfo` | One contract: type, subtype, count, reward, progress, failed flag |
 | `kesteven/contracts/ContractManager` | `EFS_LIST` script and listener: progress, failure and offer reset |
 | `kesteven/contracts/ContractIntel` | The accepted contract; pays on completion |
-| `rules.csv` `nskr_contracts_blurb`, `nskr_contracts_option`, `nskr_contracts_start` | Hub mission routing through `Call $nskr_contracts_ref` |
+| `rules.csv` `# CONTRACTS` block | The offer: blurb rows on `nskr_contracts_blurb`, the option row on `nskr_contracts_option`, the `nskr_contracts_start` handler and the offer paragraphs on `nskr_contractsOfferText` |
 
 **Offers.** One pending offer per type is saved as a `ContractInfo` in persistent data: `nskr_contractsEliminate` and `nskr_contractsRecovery`. The `ContractsMission` constructor creates missing offers. Jack offers elimination; anyone else (Alice) offers data recovery. `create()` refuses when the player already has an accepted contract of that type (one of each).
+
+**Offer text.** The mission hub calls `updateInteractionData` right after it creates each offered mission, every time the contact's mission list is prepared. `ContractsMission.updateInteractionDataImpl` then writes these keys to the contact's memory with expiry 0:
+
+| Key | Value |
+|---|---|
+| `$nskr_contracts_type` | `ELIMINATE` or `SCAVENGE`; selects the rows |
+| `$nskr_contracts_factionBounty` | True for a faction subtype; the elimination text then omits "hostile" |
+| `$nskr_contracts_count` | Target count |
+| `$nskr_contracts_targets` | `ContractManager.getTypeString`; for data recovery prefixed with the unit words of `getUnitsString` ("units of metals", "beta cores") |
+| `$nskr_contracts_rewardPer`, `$nskr_contracts_rewardTotal` | Payout per target vessel or recovered unit and the total, formatted with `Misc.getDGSCredits` |
+
+The blurb rows `nskr_contracts_blurbElimination` and `nskr_contracts_blurbRecovery` match on the type. The start row sets `$missionId = nskr_contracts`, fires `FireAll nskr_contractsOfferText` for the offer paragraphs (`nskr_contracts_elimination1` to `4`, `nskr_contracts_recovery1` to `5`, one paragraph per row with its highlights), binds Escape to Decline with `SetShortcut contact_decline ESCAPE false`, and offers vanilla's `contact_accept` and `contact_decline`. The accepted contract's intel text is still written in `ContractIntel`.
 
 **Types.** `ContractInfo.randomSubType()` picks from the base weight lists and adds the optional-mod lists only while `ModPlugin.IS_TAHLAN` or `IS_INDEVO` is set.
 
@@ -22,11 +34,16 @@ The repeatable Kesteven contracts and the four named bounty fleets. The bounties
 | Elimination | Hull size or role (standard, frigate, destroyer, cruiser, capital, phase, logistics, carrier), or a faction: Luddic Path, pirates, Remnants, Enigma, and Legio Infernalis when Tahlan is active | `ContractManager.reportPlayerEngagement` counts matching destroyed enemy ships |
 | Data recovery | Commodities: metals, supplies, fuel, heavy machinery, Artifact Electronics (`nskr_electronics`), AI cores; IndEvo parts and Tahlan cores when those mods are active | `ContractManager.reportEncounterLootGenerated` adds loot stacks whose commodity id equals the subtype, from non-Kesteven losers |
 
-**Accepting.** `accept()` adds `ContractIntel`, stores the contract in sector memory (`$contractManagerContracts`), clears the offer, and aborts the hub mission as a success. From then on the contract lives in `ContractInfo` and `ContractIntel`.
+**Accepting.** `accept()` adds `ContractIntel`, stores the contract in sector memory (`$contractManagerContracts`) and clears the offer. It does not call `BaseHubMission.accept()`, so the hub mission never becomes intel. It then moves the mission to its only stage, `ContractsMission.Stage.COMPLETED`, which `create()` registers with `setSuccessStage`. `setCurrentStage` ends it through vanilla's `endSuccess`, which calls `abort()`. `create()` also calls `setNoRepChanges()`, so this success changes no reputation; the null dialog passed to `setCurrentStage` keeps `endSuccess` from printing an end-of-mission update. From then on the contract lives in `ContractInfo` and `ContractIntel`.
 
 **Completion.** When progress reaches the count, `ContractIntel` pays the total reward and raises Kesteven by 2 plus reward/100,000, and the offering person by half that.
 
 **Failure and reset.** Every second (0.1 day), `ContractManager` fails all contracts if the questline has ended or the player's Kesteven relationship is -0.50 or lower. When its reset counter reaches 600 seconds (about 60 days), pending offers are discarded and new ones are created on the next offer.
+
+### Defects
+
+- `ContractsMission` writes `$nskr_contracts_ref2`, which no row reads.
+- `ContractsMission.notifyEnded` is never called, and its `showPerson` action has no caller.
 
 ## Named bounties
 

@@ -2,7 +2,6 @@ package lostsector.campaign.kesteven.contracts;
 
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.InteractionDialogAPI;
-import com.fs.starfarer.api.campaign.TextPanelAPI;
 import com.fs.starfarer.api.campaign.econ.MarketAPI;
 import com.fs.starfarer.api.campaign.rules.MemoryAPI;
 import com.fs.starfarer.api.characters.PersonAPI;
@@ -12,9 +11,7 @@ import com.fs.starfarer.api.util.Misc.Token;
 import lostsector.campaign.kesteven.contracts.ContractIntel;
 import lostsector.campaign.kesteven.contracts.ContractInfo;
 import lostsector.campaign.kesteven.contracts.ContractManager;
-import org.lwjgl.input.Keyboard;
 
-import java.awt.*;
 import java.util.List;
 import java.util.Map;
 
@@ -23,10 +20,23 @@ public class ContractsMission extends BaseHubMission {
     //Lightly based on code by Histidine
     //
 
+    // The hub mission ends when the offer is accepted; ContractIntel tracks the contract from then on.
+    public enum Stage {
+        COMPLETED
+    }
+
     public static final String CONTRACT_KEY_ELIMINATE = "nskr_contractsEliminate";
     public static final String CONTRACT_KEY_RECOVERY = "nskr_contractsRecovery";
     public static final String PERSISTENT_RANDOM_KEY_ELIMINATE = "nskr_contractsEliminateRandomKey";
     public static final String PERSISTENT_RANDOM_KEY_RECOVERY = "nskr_contractsRecoveryRandomKey";
+
+    // Offer text tokens and row conditions for the nskr_contracts rules rows
+    private static final String TYPE_KEY = "$nskr_contracts_type";
+    private static final String FACTION_BOUNTY_KEY = "$nskr_contracts_factionBounty";
+    private static final String COUNT_KEY = "$nskr_contracts_count";
+    private static final String TARGETS_KEY = "$nskr_contracts_targets";
+    private static final String REWARD_PER_KEY = "$nskr_contracts_rewardPer";
+    private static final String REWARD_TOTAL_KEY = "$nskr_contracts_rewardTotal";
 
     private PersonAPI person;
     private MarketAPI market;
@@ -62,6 +72,9 @@ public class ContractsMission extends BaseHubMission {
             return false;
         }
         setPostingLocation(market.getPrimaryEntity());
+        setSuccessStage(Stage.COMPLETED);
+        // ContractIntel grants the reputation when the contract is fulfilled; the hub's success must not add its own.
+        setNoRepChanges();
 
         if (person.getId().equals("nskr_opguy")){
             contract = getContract(CONTRACT_KEY_ELIMINATE);
@@ -78,6 +91,20 @@ public class ContractsMission extends BaseHubMission {
         // $sShip_ref. So: we use $Contracts_ref2 in the ContactPostAccept rule
         // and $Contracts_ref2 has an expiration of 0, so it'll get unset on its own later.
         set("$nskr_contracts_ref2", this);
+
+        set(TYPE_KEY, contract.type);
+        set(FACTION_BOUNTY_KEY, contract.isFactionBounty);
+        set(COUNT_KEY, String.valueOf(contract.count));
+        set(TARGETS_KEY, getTargetsText());
+        set(REWARD_PER_KEY, Misc.getDGSCredits(contract.rewardPer));
+        set(REWARD_TOTAL_KEY, Misc.getDGSCredits(contract.totalReward));
+    }
+
+    private String getTargetsText() {
+        String targets = ContractManager.getTypeString(contract);
+        if (contract.type == ContractInfo.ContractType.ELIMINATE) return targets;
+        // getUnitsString starts with the space before the unit words; the row writes that space itself.
+        return ContractManager.getUnitsString(contract).substring(1) + targets;
     }
 
     @Override
@@ -85,69 +112,12 @@ public class ContractsMission extends BaseHubMission {
                                  Map<String, MemoryAPI> memoryMap) {
 
         switch (action) {
-            case "showBlurb":
-                showBlurb(dialog);
-                return true;
-            case "showContract":
-                showContract(dialog);
-                return true;
             case "showPerson":
                 dialog.getVisualPanel().showPersonInfo(getPerson(), true);
                 return true;
         }
 
         return super.callAction(action, ruleId, dialog, params, memoryMap);
-    }
-
-    private void showContract(InteractionDialogAPI dialog) {
-        Color h = Misc.getHighlightColor();
-        Color g = Misc.getGrayColor();
-        Color tc = Misc.getTextColor();
-
-        TextPanelAPI text = dialog.getTextPanel();
-
-        if (contract.type== ContractInfo.ContractType.ELIMINATE){
-            String hostileStr = " ";
-            if (!contract.isFactionBounty) hostileStr = " hostile ";
-
-            text.addPara("\"The powers that be have authorized mercenary contracts for the destruction of enemy assets.\"");
-            text.addPara("\"And as it happens we have a new elimination contract available, it would require the destruction of " +
-                    contract.count + hostileStr + ContractManager.getTypeString(contract)+".\"", tc, h, contract.count+"", "");
-            text.addPara("\"The payout per target vessel is "+Misc.getDGSCredits(contract.rewardPer)+" for a total of "+Misc.getDGSCredits(contract.totalReward)+". " +
-                    "You will be paid upon the full completion of the contract.\"", tc, h, Misc.getDGSCredits(contract.rewardPer), Misc.getDGSCredits(contract.totalReward));
-            text.addPara("\"Are you interested captain?\"");
-
-        } else {
-            String units = ContractManager.getUnitsString(contract);
-
-            text.addPara("\"Our department has great interest in salvage records and materials breakdowns, we are willing to pay for data on certain recovered resources. " +
-                    "From destroyed vessels - to be specific.\"");
-            text.addPara("\"And as it happens we have a new data recovery contract available, it would require the recovery of " +
-                    contract.count+ units + ContractManager.getTypeString(contract)+".\"", tc, h, contract.count+"", "");
-            text.addPara("\"The payout per unit recovered is "+Misc.getDGSCredits(contract.rewardPer)+" for a total of "+Misc.getDGSCredits(contract.totalReward)+". " +
-                    "You will be paid upon the full completion of the contract.\"", tc, h, Misc.getDGSCredits(contract.rewardPer), Misc.getDGSCredits(contract.totalReward));
-            text.addPara("\"Of course we are interested in the data only, you get to keep whatever materials you recover.\"");
-            text.addPara("\"Are you willing to do this?\"");
-
-        }
-
-        dialog.getOptionPanel().setShortcut("contact_decline", Keyboard.KEY_ESCAPE, false, false, false, false);
-    }
-
-    private void showBlurb(InteractionDialogAPI dialog) {
-        Color h = Misc.getHighlightColor();
-        Color g = Misc.getGrayColor();
-        Color tc = Misc.getTextColor();
-
-        TextPanelAPI text = dialog.getTextPanel();
-
-        if (contract.type== ContractInfo.ContractType.ELIMINATE){
-            text.addPara("\"The board has authorized an elimination contract on certain enemy vessels. Looks like they want to thin out the competition.\"");
-
-        } else {
-            text.addPara("\"We are looking for someone to fulfill our new data recovery contract. The trends deduced from our existing data have already proven invaluable for our efforts.\"");
-
-        }
     }
 
     @Override
@@ -170,8 +140,9 @@ public class ContractsMission extends BaseHubMission {
             setContract(CONTRACT_KEY_RECOVERY, null);
         }
 
-        currentStage = new Object(); // so that the abort() assumes the mission was successful
-        abort();
+        // super.accept() is not called: it would add this mission as intel. The null dialog keeps endSuccess from
+        // printing the mission's end update into the text panel.
+        setCurrentStage(Stage.COMPLETED, null, null);
     }
 
     @Override

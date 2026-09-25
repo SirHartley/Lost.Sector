@@ -76,7 +76,7 @@ Other registrations: `kesteven/tips/KestevenTipBarEventCreator` bar event creato
 | `data/config/LunaSettings.csv` | Every setting's label, type, default, range, options and tab in LunaLib's menu; read by `settings/SettingsManager` |
 | `data/config/LunaSettingsConfig.json` | LunaLib menu icon |
 | `data/campaign/rules.csv` | Dialogue; see [project routing](RULES.md#project-routing) |
-| `data/campaign/person_missions.csv` | Mission `nskr_contracts` -> `ContractsMission`; the id is the prefix of its rules triggers `nskr_contracts_blurb` and `nskr_contracts_option` |
+| `data/campaign/person_missions.csv` | Mission `nskr_contracts` -> `ContractsMission`; the id is the prefix of its rules triggers `nskr_contracts_blurb` and `nskr_contracts_option` and of the offer tokens `$nskr_contracts_*` |
 | `data/campaign/abilities.csv` | `nskr_hellSpawnAbility` -> `campaign/starts/hellspawn/HellSpawnAbility`, whose `ID` constant Java uses to grant it |
 | `data/characters/skills/skill_data.csv` | `nskr_hellSpawnSkill` -> `campaign/starts/hellspawn/HellSpawnSkill`, `nskr_hellSpawnPeacefulSkill` -> `HellSpawnPeacefulSkill`; Java reads each class's `ID` constant. Each `.skill` file is named after its id, as in vanilla. |
 | `data/campaign/market_conditions.csv` | `nskr_enigmaPop` -> `EnigmaPopCondition`, `nskr_upChip` -> `UnlimitedProductionChipCondition`, `nskr_hellSpawnCondition` -> `HellSpawnCondition` |
