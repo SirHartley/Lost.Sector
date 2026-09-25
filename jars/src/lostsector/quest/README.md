@@ -42,7 +42,7 @@ The framework is built on branch `quest-overhaul`; the task ids refer to the tra
 |---|---|---|---|
 | Core: definitions, state, store, manager, transitions, marks, claims | `Quest`, `QuestStage`, `QuestState`, `QuestModule`, `Declarations`, `QuestContext`, `QuestManager`, `QuestStore`, `QuestCatalog`, `Quests`, `QuestDialogs`, `NoFlags` | implemented | T05 |
 | Events: listeners, daily tick, frame hook | `QuestManager` | implemented | T06 |
-| Fleets | `QuestFleets`, `QuestFleet`, `FleetRole`, `FleetOrders` | planned | T07 |
+| Fleets | `QuestFleets`, `QuestFleet`, `FleetRole`, `FleetOrders` | implemented | T07 |
 | Rules command, tokens, people, rewards | `nskr_quest`, `QuestTokens`, `QuestPeople`, `QuestRewards` | planned | T08 |
 | Presentation spec (vanilla commands per effect) | [DIALOGUE.md](../../../../docs/DIALOGUE.md#presentation-in-rules) | implemented | T09 |
 | Gap verbs: `confirm`, `engage` | `nskr_quest` | planned | T10 |
@@ -527,7 +527,7 @@ The manager implements the vanilla callbacks below and routes each to the hooks 
 | `reportCurrentLocationChanged(prev, curr)` | `CurrentLocationChangedListener` | `onLocationChanged` | All active modules |
 | `reportFleetDespawned(fleet, reason, param)` | `CampaignEventListener` | `onFleetGone` | Active modules of the fleet's owning quest |
 | `reportBattleOccurred(primaryWinner, battle)` | `CampaignEventListener` | `onBattle` | Owning quests of every quest fleet in the battle |
-| `reportEncounterLootGenerated(plugin, loot)` | `CampaignEventListener` | `onLoot` | Owning quests of the quest fleets in the encounter |
+| `reportEncounterLootGenerated(plugin, loot)` | `CampaignEventListener` | `onLoot` | Owning quests of the quest fleets on the side the player fought |
 | `reportColonyDecivilized(market, fullyDestroyed)` | `ColonyDecivListener` | `onDecivilized` | All active modules |
 
 Delivery order is quest order in `QuestCatalog`, then module order. A stage change during delivery takes effect at once: each module's activity is checked when its turn comes, so a module that became inactive does not receive the rest of that event and one that became active does. Unavailable quests and quests without state receive nothing, which includes every event before the first unpaused frame after a load. `EconomyTickListener` is not a daily tick (it fires about every three days) and is not used.
@@ -538,7 +538,7 @@ Delivery order is quest order in `QuestCatalog`, then module order. A stage chan
 - **Registration.** Implementing a listener interface on `QuestManager` is enough. The `EFS_LIST` loop calls `getListenerManager().addListener(script, true)`; vanilla's `ListenerManager` files the object under every class and interface it implements (`FastIterationClassifier.classify`), and `ListenerUtil` fetches listeners by interface. `beforeGameSave` removes the object and `afterGameSave` adds it again.
 - **Decivilization.** Only `reportColonyDecivilized` is routed. `DecivTracker.decivilize` fires `reportColonyAboutToBeDecivilized` earlier in the same call, before the market leaves the economy; the manager ignores it.
 
-To add a callback, follow [Extending the framework](#extending-the-framework): implement it on `QuestManager`, add a hook with an empty default, route it through the manager's `deliver` helper (all quests, or a set of quest ids such as the owners of the fleets in a battle), and add a row here.
+To add a callback, follow [Extending the framework](#extending-the-framework): implement it on `QuestManager`, add a hook with an empty default, route it through the manager's `deliver` helper (all quests) or `deliverToOwners` (each quest fleet's event to its owning quest), and add a row here.
 
 ### Fleets
 
@@ -582,11 +582,16 @@ public final class QuestFleet {
 }
 ```
 
-`spawn` calls `spec.create()`, builds the `FleetInfo` with `getFlagshipInfo()` and `getSecondaryMembers()`, writes `OWNER_KEY`, `ROLE_KEY`, `RECORD_KEY` and the role flag `$nskr_<q>_<role>` = `true` to fleet memory, applies the role's config and defeat trigger, and adds the `FleetInfo` to the `KEY` list. The builder only configures the `SimpleFleet`; it never registers, logs or stores the fleet.
+`spawn` calls `spec.create()`, builds the `FleetInfo` with `getFlagshipInfo()` and `getSecondaryMembers()` (home `spec.loc`, no target), writes `OWNER_KEY`, `ROLE_KEY`, `RECORD_KEY` and the role flag `$nskr_<q>_<role>` = `true` to fleet memory, applies the role's config (`MemFlags.FLEET_INTERACTION_DIALOG_CONFIG_OVERRIDE_GEN`) and defeat trigger (`Misc.addDefeatTrigger`), and adds the `FleetInfo` to the `KEY` list through `FleetHelper.getFleets` and `setFleets`. `adopt` does the same for a fleet built elsewhere, with no flagship data and no home; adopting a fleet that is already a quest fleet logs an error. `spawn` and `adopt` for an undeclared role log an error and return null without building. The builder only configures the `SimpleFleet`; it never registers, logs or stores the fleet.
 
-- **Orders.** While any quest fleet exists, the manager applies each fleet's `FleetOrders` every 0.1 days by calling `FleetHelper.gotoAndInterceptPlayerAI` or `FleetHelper.guardTargetAI`, the cadence the old questline used. A behavior these two methods do not provide is added to `FleetHelper`, then to `FleetOrders`; never to a quest.
-- **Despawn routing.** `reportFleetDespawned` removes the fleet from the list and calls `onFleetGone` on its quest. Destroyed and despawned fleets use the same path.
-- **Cleanup.** Fleets of a role are despawned when the module declaring the role stops, unless the role is `persistent()`.
+The `KEY` list in sector memory is the only saved fleet data. Owner, role and record live in fleet memory; `FleetRole` and `FleetOrders` are definitions, and each fleet's orders are looked up from its quest's role declaration by those keys. `QuestFleet` is a view built when needed.
+
+- **Load checks.** `FleetRole.config` throws unless the generator is a named top-level or static nested class, because fleet memory saves it; a lambda, anonymous, local or inner class would drag its enclosing objects into the save. A role's defeat trigger must also be declared with `d.trigger`, or the definition throws at load.
+
+- **Orders.** Every 0.1 days of campaign time (`Misc.getDays(amount)`, unpaused frames), the manager reads the list and applies each live fleet's `FleetOrders` by calling `FleetHelper.gotoAndInterceptPlayerAI` or `FleetHelper.guardTargetAI`, the cadence the old questline and `InterceptManager` use and the one those methods are written for. The list is read once per interval, not every frame, because `FleetHelper.getFleets` goes through the sector's `getMemory()`, which runs every campaign plugin's `updateGlobalFacts`. Orders do not depend on the quest being available. A fleet whose quest or role is unknown gets no orders and is logged once. The manager also advances `FleetInfo.age` in days. A behavior these two methods do not provide is added to `FleetHelper`, then to `FleetOrders`; never to a quest.
+- **Despawn routing.** `reportFleetDespawned` removes a registered fleet from the list and calls `onFleetGone` on its quest's active modules. Every despawn the game makes uses this path: destroyed in battle, `NO_MEMBERS`, reaching a destination, or despawned by other code.
+- **Cleanup.** Fleets of a role are despawned when the module declaring the role stops, unless the role is `persistent()`, and a reset removes all of the quest's fleets. The same happens for `ctx.fleets().despawn(role)`. The framework removes these fleets from the list first and then calls `despawn(FleetDespawnReason.OTHER, null)`, so its own removals do not reach `onFleetGone`: the quest asked for them, and the stopping module is no longer active anyway. Vanilla `despawn` fades the fleet out where it is.
+- **Battles and loot.** `onBattle` goes once per quest fleet in `battle.getSnapshotBothSides()`, the list the engine walks for its own fleet listeners. Vanilla reports the battle before it despawns emptied fleets (`FleetEncounterContext` for player battles, `Battle.doAutoresolveRound` before `removeEmptyFleets`), so `onBattle` comes before `onFleetGone`. `onLoot` goes once per quest fleet in `plugin.getBattle().getNonPlayerSideSnapshot()`, the side the loot comes from; `FleetInteractionDialogPluginImpl` reports the loot before `applyAfterBattleEffectsIfThereWasABattle` despawns the defeated fleets. Fleet events go to the owning quests in `QuestCatalog` order, then in the order of the fleets.
 - **Fleet conversations.** Rows on `OpenCommLink` or `BeginFleetEncounter` test the role flag, as in `$nskr_kq_collector`. See [Entry points](../../../../docs/RULES_WRITING.md#entry-points).
 - **After a player victory.** Use `FleetRole.defeatTrigger` for rows that must run after the player defeats the fleet through the fleet dialog; `FleetInteractionDialogPluginImpl` fires them with `FireBest`. It does not run when another fleet destroys the quest fleet; `onFleetGone` covers every case.
 - **Scaling.** Builders multiply point budgets by `Difficulty.scriptedFleetMult()`; encounters that scale with the player also use `PowerLevel.get(...)`.

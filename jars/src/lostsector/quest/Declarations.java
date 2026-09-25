@@ -25,6 +25,8 @@ public final class Declarations<S extends Enum<S> & QuestStage, T extends QuestS
     private final Map<String, Consumer<QuestContext<S, T>>> actions = new LinkedHashMap<>();
     private final Map<String, QuestModule<S, T>> actionModules = new HashMap<>();
     private final Map<String, Function<QuestContext<S, T>, String>> tokens = new LinkedHashMap<>();
+    private final Map<String, FleetRole> roles = new LinkedHashMap<>();
+    private final Map<String, QuestModule<S, T>> roleModules = new HashMap<>();
     private final Set<String> triggers = new LinkedHashSet<>();
 
     private QuestModule<S, T> declaring;
@@ -41,6 +43,12 @@ public final class Declarations<S extends Enum<S> & QuestStage, T extends QuestS
         }
         declaring = null;
         sealed = true;
+        for (Map.Entry<String, FleetRole> role : roles.entrySet()) {
+            String trigger = role.getValue().defeatTriggerName();
+            if (trigger != null && !triggers.contains(trigger)) {
+                throw new IllegalStateException("[" + questId + "] defeat trigger " + trigger + " of role " + role.getKey() + " is not declared");
+            }
+        }
     }
 
     public void check(String name, Predicate<QuestContext<S, T>> check) {
@@ -54,6 +62,12 @@ public final class Declarations<S extends Enum<S> & QuestStage, T extends QuestS
 
     public void token(String name, Function<QuestContext<S, T>, String> token) {
         put(tokens, "token", name, token);
+    }
+
+    // Fleets of the role are despawned when the declaring module stops, unless the role is persistent().
+    public void role(String name, FleetRole role) {
+        put(roles, "role", name, role);
+        roleModules.put(name, declaring);
     }
 
     public void trigger(String trigger) {
@@ -81,6 +95,14 @@ public final class Declarations<S extends Enum<S> & QuestStage, T extends QuestS
 
     public Map<String, Function<QuestContext<S, T>, String>> tokens() {
         return Collections.unmodifiableMap(tokens);
+    }
+
+    public Map<String, FleetRole> roles() {
+        return Collections.unmodifiableMap(roles);
+    }
+
+    public QuestModule<S, T> roleModule(String name) {
+        return roleModules.get(name);
     }
 
     public Set<String> triggers() {

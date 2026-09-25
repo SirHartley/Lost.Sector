@@ -64,6 +64,7 @@ Fixed - Reality Splitter's exit blast no longer hits the ship that uses it
 Fixed - The Temporal Paradox system description is no longer cut off
 Fixed - Typos in Kesteven questline dialogue, Hellspawn event text, a tip and the Gate Conduit description
 Adjusted - Escape now goes back on every screen of the artifact exchange and the S-mod removal, and removing S-mods uses the standard story point prompt
+Fixed - Enigma ambush fleets in hyperspace no longer follow you into a star system you enter just after they appear
 
 1.0.b
 Adjusted - Severely nerfed spawn rates for Borealis, Rhea and Kingslayer

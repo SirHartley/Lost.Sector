@@ -177,6 +177,10 @@ public final class QuestContext<S extends Enum<S> & QuestStage, T extends QuestS
         return scope;
     }
 
+    public QuestFleets fleets() {
+        return run.fleets;
+    }
+
     public InteractionDialogAPI dialog() {
         return dialog;
     }

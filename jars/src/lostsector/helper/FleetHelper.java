@@ -31,6 +31,7 @@ import lostsector.campaign.kesteven.loans.LoanShark;
 import lostsector.helper.fleet.FleetInfo;
 import lostsector.campaign.kesteven.quest.QuestStageManager;
 import lostsector.helper.fleet.SimpleFleetMember;
+import lostsector.quest.QuestFleets;
 import org.lazywizard.lazylib.MathUtils;
 import org.lwjgl.util.vector.Vector2f;
 
@@ -287,7 +288,7 @@ public class FleetHelper {
         //
         //set
         if (info.target==null) {
-            createGuardTarget(info, pf);
+            createGuardTarget(info);
         }
         //close enough check
         //MOVE AI
@@ -333,11 +334,12 @@ public class FleetHelper {
             }
         }
     }
-    private static void createGuardTarget(FleetInfo info, CampaignFleetAPI pf) {
+    // The guard point is where the fleet is now, in its own location, which need not be the player's.
+    private static void createGuardTarget(FleetInfo info) {
         //clean up
         if (info.target!=null) info.target.setExpired(true);
 
-        info.target = pf.getContainingLocation().createToken(info.fleet.getLocation());
+        info.target = info.fleet.getContainingLocation().createToken(info.fleet.getLocation());
     }
     public enum GuardMovementBehaviour {
         HOLD,
@@ -465,6 +467,7 @@ public class FleetHelper {
         FLEET_ARRAY_KEYS.add(BlackOpsManager.FLEET_ARRAY_KEY);
         FLEET_ARRAY_KEYS.add(LoanShark.FLEET_ARRAY_KEY);
         FLEET_ARRAY_KEYS.add(MothershipSpawner.FLEET_ARRAY_KEY);
+        FLEET_ARRAY_KEYS.add(QuestFleets.KEY);
     }
     public static void hackBrokenVariants(){
         for (String key : FLEET_ARRAY_KEYS) {

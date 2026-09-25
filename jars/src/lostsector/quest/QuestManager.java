@@ -3,6 +3,11 @@ package lostsector.quest;
 import com.fs.starfarer.api.EveryFrameScript;
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.BaseCampaignEventListener;
+import com.fs.starfarer.api.campaign.BattleAPI;
+import com.fs.starfarer.api.campaign.CampaignEventListener.FleetDespawnReason;
+import com.fs.starfarer.api.campaign.CampaignFleetAPI;
+import com.fs.starfarer.api.campaign.CargoAPI;
+import com.fs.starfarer.api.campaign.FleetEncounterContextPlugin;
 import com.fs.starfarer.api.campaign.InteractionDialogAPI;
 import com.fs.starfarer.api.campaign.LocationAPI;
 import com.fs.starfarer.api.campaign.SectorEntityToken;
@@ -13,9 +18,11 @@ import com.fs.starfarer.api.campaign.rules.MemoryAPI;
 import com.fs.starfarer.api.characters.PersonAPI;
 import com.fs.starfarer.api.util.Misc;
 import lostsector.ModPlugin;
+import lostsector.helper.fleet.FleetInfo;
 import lostsector.persistence.Saved;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.IdentityHashMap;
 import java.util.LinkedHashMap;
@@ -32,6 +39,8 @@ public final class QuestManager extends BaseCampaignEventListener
     private static final int MAX_QUEUED_CHANGES = 20;
     // Clock timestamps are milliseconds with 86,400,000 per game day: CampaignClock.getElapsedDaysSince divides by 8.64E7.
     private static final long TIMESTAMP_PER_DAY = 86_400_000L;
+    // FleetHelper's AI methods are written for this pace, as QuestStageManager and InterceptManager call them.
+    private static final float ORDERS_INTERVAL_DAYS = 0.1f;
 
     private static final Hook DAY = new Hook() {
         @Override
@@ -47,6 +56,8 @@ public final class QuestManager extends BaseCampaignEventListener
     private final Map<Class<?>, Run<?, ?>> runsByStages = new HashMap<>();
     private final Map<Class<?>, Run<?, ?>> runsByFlags = new HashMap<>();
     private boolean initialized;
+    private float daysSinceOrders;
+    private final Set<CampaignFleetAPI> reportedUnknownFleets = Collections.newSetFromMap(new IdentityHashMap<>());
 
     private static final class Change<S> {
 
@@ -68,6 +79,12 @@ public final class QuestManager extends BaseCampaignEventListener
         <S extends Enum<S> & QuestStage, T extends QuestState<S>> void call(QuestModule<S, T> module, QuestContext<S, T> ctx);
     }
 
+    // Builds the hook for one quest fleet of an event.
+    private interface FleetHook {
+
+        Hook forFleet(QuestFleet fleet);
+    }
+
     // Runtime of one quest: its definition and the transient bookkeeping of stage changes.
     final class Run<S extends Enum<S> & QuestStage, T extends QuestState<S>> {
 
@@ -77,6 +94,7 @@ public final class QuestManager extends BaseCampaignEventListener
         boolean jumping;
         private final List<Change<S>> queue = new ArrayList<>();
         private final Map<QuestModule<S, T>, QuestContext<S, T>> contexts = new IdentityHashMap<>();
+        final QuestFleets fleets = new QuestFleets(this);
 
         Run(Quest<S, T> quest) {
             this.quest = quest;
@@ -182,6 +200,7 @@ public final class QuestManager extends BaseCampaignEventListener
                     if (module.isActiveIn(from) && !module.isActiveIn(to)) module.onStop(context(module));
                 }
                 clearScoped(state, to);
+                despawnStoppedRoles(from, to);
                 enter(state, to);
                 logInfo(id(), from + " -> " + to + " (" + source + ")");
                 for (QuestModule<S, T> module : modules) {
@@ -272,6 +291,7 @@ public final class QuestManager extends BaseCampaignEventListener
                 if (module.isActiveIn(state.stage)) module.onStop(context(module));
             }
             clearScoped(state, null);
+            fleets.despawnWhere(role -> true);
             logInfo(id(), "reset from " + state.stage);
             start();
         }
@@ -290,6 +310,17 @@ public final class QuestManager extends BaseCampaignEventListener
             for (QuestState.Claim claim : new ArrayList<>(state.claims)) {
                 if (stage == null || !claim.scope.contains(stage.name())) QuestDialogs.release(state, claim);
             }
+        }
+
+        // Fleets of roles declared by modules that stop, unless the role is persistent().
+        private void despawnStoppedRoles(S from, S to) {
+            Declarations<S, T> declarations = quest.declarations();
+            if (declarations.roles().isEmpty()) return;
+            fleets.despawnWhere(role -> {
+                FleetRole declared = declarations.roles().get(role);
+                QuestModule<S, T> module = declarations.roleModule(role);
+                return declared != null && !declared.isPersistent() && module.isActiveIn(from) && !module.isActiveIn(to);
+            });
         }
 
         void mark(SectorEntityToken entity, PersonAPI person, Set<String> scope) {
@@ -380,7 +411,88 @@ public final class QuestManager extends BaseCampaignEventListener
         for (int i = 0; i < order.size(); i++) {
             order.get(i).frame(amount);
         }
+        runFleetOrders(amount);
         openPendingDialogs();
+    }
+
+    // README "Fleets": orders come from the role declaration, found through the fleet's owner and role memory keys.
+    // The list is read only once per interval: FleetHelper.getFleets uses the sector's getMemory(), which runs every
+    // campaign plugin's updateGlobalFacts.
+    private void runFleetOrders(float amount) {
+        daysSinceOrders += Misc.getDays(amount);
+        if (daysSinceOrders < ORDERS_INTERVAL_DAYS) return;
+        float elapsed = daysSinceOrders;
+        daysSinceOrders = 0f;
+        List<FleetInfo> fleets = QuestFleets.list();
+        if (fleets.isEmpty() || Global.getSector().getPlayerFleet() == null) return;
+        for (FleetInfo info : new ArrayList<>(fleets)) {
+            if (info.fleet == null || !info.fleet.isAlive()) continue;
+            info.age += elapsed;
+            FleetRole role = declaredRole(new QuestFleet(info));
+            if (role != null) role.orders().apply(info);
+        }
+    }
+
+    // The declared role of a registered fleet; logs once per fleet when its quest or role is unknown.
+    private FleetRole declaredRole(QuestFleet fleet) {
+        Run<?, ?> run = runs.get(fleet.owner());
+        FleetRole role = run == null ? null : run.quest.declarations().roles().get(fleet.role());
+        if (role == null && reportedUnknownFleets.add(fleet.fleet())) {
+            logError(fleet.owner(), "fleet " + fleet.fleet().getName() + " has unknown quest or role " + fleet.role() + "; it gets no orders");
+        }
+        return role;
+    }
+
+    // Fleets the framework despawns are removed from the list first, so only game despawns reach onFleetGone.
+    @Override
+    public void reportFleetDespawned(CampaignFleetAPI fleet, FleetDespawnReason reason, Object param) {
+        FleetInfo info = QuestFleets.find(fleet);
+        if (info == null) return;
+        QuestFleets.remove(info);
+        reportedUnknownFleets.remove(fleet);
+        QuestFleet gone = new QuestFleet(info);
+        logInfo(gone.owner(), "fleet gone " + gone.role() + ": " + fleet.getName() + " (" + reason + ")");
+        deliverToOwners(List.of(gone), questFleet -> new Hook() {
+            @Override
+            public <S extends Enum<S> & QuestStage, T extends QuestState<S>> void call(QuestModule<S, T> module, QuestContext<S, T> ctx) {
+                module.onFleetGone(ctx, questFleet, reason, param);
+            }
+        });
+    }
+
+    // The engine walks the same snapshot for its own fleet listeners (CampaignEngine.reportBattleOccurred).
+    @Override
+    public void reportBattleOccurred(CampaignFleetAPI primaryWinner, BattleAPI battle) {
+        if (battle == null || !battle.hasSnapshots()) return;
+        deliverToOwners(questFleetsIn(battle.getSnapshotBothSides()), questFleet -> new Hook() {
+            @Override
+            public <S extends Enum<S> & QuestStage, T extends QuestState<S>> void call(QuestModule<S, T> module, QuestContext<S, T> ctx) {
+                module.onBattle(ctx, questFleet, battle, primaryWinner);
+            }
+        });
+    }
+
+    // Loot comes from the side the player fought; vanilla reports it before the after-battle despawns.
+    @Override
+    public void reportEncounterLootGenerated(FleetEncounterContextPlugin plugin, CargoAPI loot) {
+        BattleAPI battle = plugin == null ? null : plugin.getBattle();
+        if (battle == null || !battle.hasSnapshots()) return;
+        deliverToOwners(questFleetsIn(battle.getNonPlayerSideSnapshot()), questFleet -> new Hook() {
+            @Override
+            public <S extends Enum<S> & QuestStage, T extends QuestState<S>> void call(QuestModule<S, T> module, QuestContext<S, T> ctx) {
+                module.onLoot(ctx, questFleet, plugin, loot);
+            }
+        });
+    }
+
+    private static List<QuestFleet> questFleetsIn(List<CampaignFleetAPI> fleets) {
+        List<QuestFleet> found = new ArrayList<>();
+        if (fleets == null) return found;
+        for (CampaignFleetAPI fleet : fleets) {
+            FleetInfo info = QuestFleets.find(fleet);
+            if (info != null) found.add(new QuestFleet(info));
+        }
+        return found;
     }
 
     // At most one day per frame; days missed during a long fast-forward are delivered on the following frames.
@@ -422,11 +534,13 @@ public final class QuestManager extends BaseCampaignEventListener
         }
     }
 
-    // Delivers to the listed quests only, in QuestCatalog order; for events owned by some quests, such as a quest fleet's.
-    private void deliver(Set<String> questIds, Hook hook) {
+    // Each fleet's event goes to its owning quest only, in QuestCatalog order, then in the order of the fleets.
+    private void deliverToOwners(List<QuestFleet> fleets, FleetHook hooks) {
         for (int i = 0; i < order.size(); i++) {
             Run<?, ?> run = order.get(i);
-            if (questIds.contains(run.id())) run.deliver(hook);
+            for (QuestFleet fleet : fleets) {
+                if (run.id().equals(fleet.owner())) run.deliver(hooks.forFleet(fleet));
+            }
         }
     }
 

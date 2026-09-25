@@ -141,7 +141,7 @@ Packages group code by feature. Use `rg --files jars/src/lostsector/<package>` f
 | `lostsector` | `ModPlugin` |
 | `settings` | LunaLib-backed settings: `Setting`, `SettingsManager`, `Difficulty` |
 | `persistence` | `Saved`, `CampaignTimer` |
-| `quest` | Quest framework: definitions, saved quest state, `QuestManager` (stage changes, daily tick, frame hook and event routing to modules), dialog claims; specification and status in [`quest/README.md`](../jars/src/lostsector/quest/README.md) |
+| `quest` | Quest framework: definitions, saved quest state, `QuestManager` (stage changes, daily tick, frame hook, event routing to modules and quest fleet orders), quest fleets (`QuestFleets`, one `FleetHelper` list), dialog claims; specification and status in [`quest/README.md`](../jars/src/lostsector/quest/README.md) |
 | `helper`, `helper/fleet` | Shared helpers; fleet, captain and system builders |
 | `rendering` | Render helpers and blast sprites |
 | `dialogue/rules` | Rule commands (`nskr_*`) |
@@ -261,7 +261,7 @@ Prototype weapons (`prot_wp` tag, Unknown Prototype manufacturer) have one `*Eff
 | `ShipHelper` | Prototype/Enigma identity (`isProtTech`, `protOrEnigma`), logistics and D-mod checks, officer skills, hull-size multiplier (`getLinearMod`) |
 | `CombatHelper` | Range queries pinned to LazyLib 2.4b behavior; area damage including station modules |
 | `MathHelper` | Easing, noise, seeded random ranges (modified from LazyLib); sector seed (`getSeedParsed`) |
-| `FleetHelper` | Fleet generation and assignment AI helpers; `getOriginalFlagship()` for fleets built by `helper/fleet/SimpleFleet` (vanilla `getFlagship()` returns another member once the flagship is lost); `hackBrokenVariants()` on load, which repairs only that original flagship |
+| `FleetHelper` | Fleet generation and assignment AI helpers; `FleetInfo` lists in sector memory (`getFleets`/`setFleets`), one per key in `FLEET_ARRAY_KEYS`, including `quest/QuestFleets.KEY` for every quest fleet; `getOriginalFlagship()` for fleets built by `helper/fleet/SimpleFleet` (vanilla `getFlagship()` returns another member once the flagship is lost); `hackBrokenVariants()` on load, which repairs that original flagship and the secondary members `SimpleFleet` recorded; `guardTargetAI` creates its guard point at the fleet's position in the fleet's own location |
 | `PowerLevel` | Player fleet strength for encounter scaling |
 | `rendering/BlastSprite`, `rendering/CampaignBlastSprite` | Timed blast sprites in combat and campaign (`HellSpawnAbility`) |
 | `rendering/ColorHelper` | Colour utilities and the tooltip colours `TT_ORANGE`, `BON_GREEN`, `NICE_YELLOW` |
