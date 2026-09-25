@@ -4,7 +4,11 @@ import com.fs.starfarer.api.EveryFrameScript;
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.BaseCampaignEventListener;
 import com.fs.starfarer.api.campaign.InteractionDialogAPI;
+import com.fs.starfarer.api.campaign.LocationAPI;
 import com.fs.starfarer.api.campaign.SectorEntityToken;
+import com.fs.starfarer.api.campaign.econ.MarketAPI;
+import com.fs.starfarer.api.campaign.listeners.ColonyDecivListener;
+import com.fs.starfarer.api.campaign.listeners.CurrentLocationChangedListener;
 import com.fs.starfarer.api.campaign.rules.MemoryAPI;
 import com.fs.starfarer.api.characters.PersonAPI;
 import com.fs.starfarer.api.util.Misc;
@@ -13,6 +17,7 @@ import lostsector.persistence.Saved;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.IdentityHashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,14 +25,25 @@ import java.util.Set;
 
 // Transient: ModPlugin.createManagers() builds it on every load and the EFS_LIST loop registers it.
 // It is the only writer of quest stages (README "Lifecycle").
-public final class QuestManager extends BaseCampaignEventListener implements EveryFrameScript {
+public final class QuestManager extends BaseCampaignEventListener
+        implements EveryFrameScript, CurrentLocationChangedListener, ColonyDecivListener {
 
     static final String STORE_KEY = "quests";
     private static final int MAX_QUEUED_CHANGES = 20;
+    // Clock timestamps are milliseconds with 86,400,000 per game day: CampaignClock.getElapsedDaysSince divides by 8.64E7.
+    private static final long TIMESTAMP_PER_DAY = 86_400_000L;
+
+    private static final Hook DAY = new Hook() {
+        @Override
+        public <S extends Enum<S> & QuestStage, T extends QuestState<S>> void call(QuestModule<S, T> module, QuestContext<S, T> ctx) {
+            module.onDay(ctx);
+        }
+    };
 
     // Saved.loadPersistentData() replaces store.val after construction; always read it through the field.
     private final Saved<QuestStore> store;
     private final Map<String, Run<?, ?>> runs = new LinkedHashMap<>();
+    private final List<Run<?, ?>> order = new ArrayList<>();
     private final Map<Class<?>, Run<?, ?>> runsByStages = new HashMap<>();
     private final Map<Class<?>, Run<?, ?>> runsByFlags = new HashMap<>();
     private boolean initialized;
@@ -45,6 +61,13 @@ public final class QuestManager extends BaseCampaignEventListener implements Eve
         }
     }
 
+    // One module hook call. The method is generic so one instance serves every quest; anonymous classes
+    // implement it because a lambda cannot implement a generic method.
+    private interface Hook {
+
+        <S extends Enum<S> & QuestStage, T extends QuestState<S>> void call(QuestModule<S, T> module, QuestContext<S, T> ctx);
+    }
+
     // Runtime of one quest: its definition and the transient bookkeeping of stage changes.
     final class Run<S extends Enum<S> & QuestStage, T extends QuestState<S>> {
 
@@ -53,9 +76,13 @@ public final class QuestManager extends BaseCampaignEventListener implements Eve
         boolean changing;
         boolean jumping;
         private final List<Change<S>> queue = new ArrayList<>();
+        private final Map<QuestModule<S, T>, QuestContext<S, T>> contexts = new IdentityHashMap<>();
 
         Run(Quest<S, T> quest) {
             this.quest = quest;
+            for (QuestModule<S, T> module : quest.modules()) {
+                contexts.put(module, new QuestContext<>(this, module.getClass().getSimpleName(), null, null, null, null));
+            }
         }
 
         String id() {
@@ -67,9 +94,32 @@ public final class QuestManager extends BaseCampaignEventListener implements Eve
             return (T) store.val.states.get(quest.id());
         }
 
-        // Changes a hook requests are logged with the module as their source.
+        // One context per module, reused for every hook call; changes it requests are logged with the module as their source.
         QuestContext<S, T> context(QuestModule<S, T> module) {
-            return new QuestContext<>(this, module.getClass().getSimpleName(), null, null, null, null);
+            return contexts.get(module);
+        }
+
+        // README "Events": module order; each module's activity is checked when its turn comes, so a stage
+        // change made by an earlier module takes effect at once.
+        void deliver(Hook hook) {
+            if (!available || state() == null) return;
+            List<QuestModule<S, T>> modules = quest.modules();
+            for (int i = 0; i < modules.size(); i++) {
+                QuestModule<S, T> module = modules.get(i);
+                if (module.isActiveIn(state().stage)) hook.call(module, context(module));
+            }
+        }
+
+        // Kept apart from deliver so a frame allocates nothing.
+        void frame(float amount) {
+            if (!available || state() == null) return;
+            List<QuestModule<S, T>> modules = quest.modules();
+            for (int i = 0; i < modules.size(); i++) {
+                QuestModule<S, T> module = modules.get(i);
+                if (!module.isActiveIn(state().stage)) continue;
+                QuestContext<S, T> ctx = context(module);
+                if (module.wantsFrames(ctx)) module.onFrame(ctx, amount);
+            }
         }
 
         // Creates a fresh state in the start stage and starts the start stage's modules.
@@ -286,7 +336,7 @@ public final class QuestManager extends BaseCampaignEventListener implements Eve
 
     public QuestManager() {
         super(false);
-        store = new Saved<>(STORE_KEY, new QuestStore());
+        store = new Saved<>(STORE_KEY, new QuestStore(Global.getSector().getClock().getTimestamp()));
         for (Quest<?, ?> quest : QuestCatalog.create()) {
             register(quest);
         }
@@ -295,6 +345,7 @@ public final class QuestManager extends BaseCampaignEventListener implements Eve
     private <S extends Enum<S> & QuestStage, T extends QuestState<S>> void register(Quest<S, T> quest) {
         Run<S, T> run = new Run<>(quest);
         runs.put(quest.id(), run);
+        order.add(run);
         runsByStages.put(quest.stages(), run);
         if (quest.flags() != NoFlags.class) runsByFlags.put(quest.flags(), run);
     }
@@ -325,7 +376,58 @@ public final class QuestManager extends BaseCampaignEventListener implements Eve
             initialized = true;
             startAvailableQuests();
         }
+        deliverDay();
+        for (int i = 0; i < order.size(); i++) {
+            order.get(i).frame(amount);
+        }
         openPendingDialogs();
+    }
+
+    // At most one day per frame; days missed during a long fast-forward are delivered on the following frames.
+    private void deliverDay() {
+        QuestStore quests = store.val;
+        if (Global.getSector().getClock().getElapsedDaysSince(quests.lastDay) < 1f) return;
+        quests.lastDay += TIMESTAMP_PER_DAY;
+        deliver(DAY);
+    }
+
+    @Override
+    public void reportCurrentLocationChanged(LocationAPI prev, LocationAPI curr) {
+        deliver(new Hook() {
+            @Override
+            public <S extends Enum<S> & QuestStage, T extends QuestState<S>> void call(QuestModule<S, T> module, QuestContext<S, T> ctx) {
+                module.onLocationChanged(ctx, prev, curr);
+            }
+        });
+    }
+
+    // Only the completed decivilization is routed (README "Events").
+    @Override
+    public void reportColonyAboutToBeDecivilized(MarketAPI market, boolean fullyDestroyed) {
+    }
+
+    @Override
+    public void reportColonyDecivilized(MarketAPI market, boolean fullyDestroyed) {
+        deliver(new Hook() {
+            @Override
+            public <S extends Enum<S> & QuestStage, T extends QuestState<S>> void call(QuestModule<S, T> module, QuestContext<S, T> ctx) {
+                module.onDecivilized(ctx, market, fullyDestroyed);
+            }
+        });
+    }
+
+    private void deliver(Hook hook) {
+        for (int i = 0; i < order.size(); i++) {
+            order.get(i).deliver(hook);
+        }
+    }
+
+    // Delivers to the listed quests only, in QuestCatalog order; for events owned by some quests, such as a quest fleet's.
+    private void deliver(Set<String> questIds, Hook hook) {
+        for (int i = 0; i < order.size(); i++) {
+            Run<?, ?> run = order.get(i);
+            if (questIds.contains(run.id())) run.deliver(hook);
+        }
     }
 
     private void startAvailableQuests() {

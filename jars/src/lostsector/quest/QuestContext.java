@@ -14,7 +14,7 @@ import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 
-// Built by QuestManager for each hook call or rules call; never saved.
+// QuestManager keeps one per module for hooks and builds one per rules call; never saved.
 public final class QuestContext<S extends Enum<S> & QuestStage, T extends QuestState<S>> {
 
     // The multiplier vanilla's BarEventManager.getSeed uses to derive seeds from hash codes.

@@ -41,7 +41,7 @@ The framework is built on branch `quest-overhaul`; the task ids refer to the tra
 | Component | Classes | Status | Task |
 |---|---|---|---|
 | Core: definitions, state, store, manager, transitions, marks, claims | `Quest`, `QuestStage`, `QuestState`, `QuestModule`, `Declarations`, `QuestContext`, `QuestManager`, `QuestStore`, `QuestCatalog`, `Quests`, `QuestDialogs`, `NoFlags` | implemented | T05 |
-| Events: listeners, daily tick, frame hook | `QuestManager` | planned | T06 |
+| Events: listeners, daily tick, frame hook | `QuestManager` | implemented | T06 |
 | Fleets | `QuestFleets`, `QuestFleet`, `FleetRole`, `FleetOrders` | planned | T07 |
 | Rules command, tokens, people, rewards | `nskr_quest`, `QuestTokens`, `QuestPeople`, `QuestRewards` | planned | T08 |
 | Presentation verbs, if T09 finds gaps vanilla commands leave | `nskr_quest` | planned | T09, T10 |
@@ -498,7 +498,7 @@ public void jump(Quest<S, T> quest, S target);                              // s
 public QuestContext<?, ?> context(String questId, String ruleId, InteractionDialogAPI dialog, Map<String, MemoryAPI> memoryMap, List<String> args);
 ```
 
-`context` builds the context the rules command passes to checks, actions and tokens; it returns null for an unknown or unavailable quest. `QuestDialogs.claimedTrigger(entity)` and `QuestDialogs.plugin(trigger)` serve the `CorePlugin` route. Quest code uses the context, not these.
+`context` builds the context the rules command passes to checks, actions and tokens; it returns null for an unknown quest or one without state; it does not check availability. `QuestDialogs.claimedTrigger(entity)` and `QuestDialogs.plugin(trigger)` serve the `CorePlugin` route. Quest code uses the context, not these.
 
 ### Queries from other features
 
@@ -521,7 +521,7 @@ The manager implements the vanilla callbacks below and routes each to the hooks 
 
 | Vanilla callback | Source type | Module hook | Routed to |
 |---|---|---|---|
-| `advance`, one campaign day via `IntervalUtil(1f, 1f)` on `Misc.getDays(amount)` | `EveryFrameScript` | `onDay` | All active modules |
+| `advance`, once per campaign day since the saved `lastDay` (see Days below) | `EveryFrameScript` | `onDay` | All active modules |
 | `advance`, every unpaused frame | `EveryFrameScript` | `onFrame` | Active modules whose `wantsFrames` is true |
 | `reportCurrentLocationChanged(prev, curr)` | `CurrentLocationChangedListener` | `onLocationChanged` | All active modules |
 | `reportFleetDespawned(fleet, reason, param)` | `CampaignEventListener` | `onFleetGone` | Active modules of the fleet's owning quest |
@@ -529,9 +529,15 @@ The manager implements the vanilla callbacks below and routes each to the hooks 
 | `reportEncounterLootGenerated(plugin, loot)` | `CampaignEventListener` | `onLoot` | Owning quests of the quest fleets in the encounter |
 | `reportColonyDecivilized(market, fullyDestroyed)` | `ColonyDecivListener` | `onDecivilized` | All active modules |
 
-Delivery order is quest order in `QuestCatalog`, then module order. A stage change during delivery takes effect at once; modules that became inactive do not receive the rest of that event. `EconomyTickListener` is not a daily tick (it fires about every three days) and is not used.
+Delivery order is quest order in `QuestCatalog`, then module order. A stage change during delivery takes effect at once: each module's activity is checked when its turn comes, so a module that became inactive does not receive the rest of that event and one that became active does. Unavailable quests and quests without state receive nothing, which includes every event before the first unpaused frame after a load. `EconomyTickListener` is not a daily tick (it fires about every three days) and is not used.
 
-To add a callback, follow [Extending the framework](#extending-the-framework): implement it on `QuestManager`, add a hook with an empty default, route it, and add a row here.
+- **Frame order.** Each unpaused frame runs, in order: the start of available quests (first frame only), the daily tick, then `onFrame`, then the retry of [pending dialogs](#dialog-entry-points).
+- **Days.** The store saves the clock timestamp of the last delivered day (`lastDay`), set when the store is first created. Each unpaused frame, when `getElapsedDaysSince(lastDay)` reaches 1, the manager advances `lastDay` by one day (86,400,000 timestamp units; `CampaignClock.getElapsedDaysSince` divides by `8.64E7`) and delivers `onDay`. Reloads keep the count. At most one `onDay` is delivered per frame, so days missed during a long fast-forward arrive one per frame until caught up; there is no cap. Days count from the store's creation, not from calendar midnight.
+- **Contexts.** The manager keeps one context per module and passes it to every hook call of that module; an idle frame, where no module wants frames, allocates nothing.
+- **Registration.** Implementing a listener interface on `QuestManager` is enough. The `EFS_LIST` loop calls `getListenerManager().addListener(script, true)`; vanilla's `ListenerManager` files the object under every class and interface it implements (`FastIterationClassifier.classify`), and `ListenerUtil` fetches listeners by interface. `beforeGameSave` removes the object and `afterGameSave` adds it again.
+- **Decivilization.** Only `reportColonyDecivilized` is routed. `DecivTracker.decivilize` fires `reportColonyAboutToBeDecivilized` earlier in the same call, before the market leaves the economy; the manager ignores it.
+
+To add a callback, follow [Extending the framework](#extending-the-framework): implement it on `QuestManager`, add a hook with an empty default, route it through the manager's `deliver` helper (all quests, or a set of quest ids such as the owners of the fleets in a battle), and add a row here.
 
 ### Fleets
 
