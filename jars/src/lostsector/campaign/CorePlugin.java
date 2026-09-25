@@ -1,7 +1,6 @@
 package lostsector.campaign;
 
 import lostsector.campaign.kesteven.quest.CacheCoreDialog;
-import lostsector.campaign.kesteven.quest.ElizaDialog;
 import lostsector.campaign.kesteven.quest.EndingElizaDialog;
 import lostsector.campaign.kesteven.quest.EndingKestevenDialog;
 
@@ -40,10 +39,6 @@ public class CorePlugin extends BaseCampaignPlugin {
         //cache recovery dialog
         if (interactionTarget.getId().equals("nskr_cache_core")) {
             return new PluginPick<InteractionDialogPlugin>(new CacheCoreDialog(), PickPriority.MOD_GENERAL);
-        }
-        //job5 eliza dialog
-        if (!KestevenQuest.elizaMeetingDone() && KestevenQuest.atElizaMarket(interactionTarget)) {
-            return new PluginPick<InteractionDialogPlugin>(new ElizaDialog(), PickPriority.MOD_GENERAL);
         }
         //job5 end
         //kesteven

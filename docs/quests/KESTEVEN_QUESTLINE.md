@@ -20,6 +20,7 @@ Java paths are relative to `jars/src/lostsector/campaign/`; `dialogue/rules/` an
 | `kesteven/quest/KestevenSatelliteModule`, `# KESTEVEN QUESTLINE: SATELLITES` rows | The data-disk satellites' dialog, salvage and woken guards, `ALL_DISKS_RECOVERED`, and `FROST_FOUND` on entering Frost ([The five data disks](#the-five-data-disks)) |
 | `kesteven/quest/QuestHelper` | Wrappers over `KestevenState` for the old callers: the stage as a legacy int, flags, fields and lazily picked target locations; `saveEnding()` |
 | `kesteven/quest/KestevenFleets` | Builders for every quest fleet |
+| `kesteven/quest/KestevenElizaModule`, `# KESTEVEN QUESTLINE: ELIZA` rows | The meeting at Eliza's port ([Eliza's port](#elizas-port)) |
 | `CorePlugin` | Opens the Java quest dialogs when the player interacts with a quest entity, deciding through `KestevenQuest` queries |
 | `kesteven/quest/*Dialog`, `kesteven/quest/*BarEvent` | Java dialogs and bar events |
 | `dialogue/rules/nskr_ttCollectorDialog`, `nskr_elizaInterceptDialog`, `nskr_altEndingDialogLuddic`, `nskr_altEndingDialogTT`, `nskr_isKStage`, `nskr_isAtLeastKStage` | Rules commands for the fleet conversations, endings and stage predicates |
@@ -265,13 +266,17 @@ Reaching 0 is late. A late shutdown takes the barrage at the console; a late run
 
 Every conversation ends with `BarCMD returnFromEvent true`, the Continue option the old Java bar events showed. If the contact market decivilizes at step 2 before Eliza is found, `onDecivilized` picks a new contact market, moves the mark and sends the Delve intel the update `contactMoved` ("With the conditions deteriorating on …, the contact has moved their operations to …." with "the contact" in the pirate faction color and the minor message sound).
 
-Eliza's market is a pirate market in Yma, Corvus, Isirah, Thule, Hybrasil, Galatia, Mayasura or Kumari Kandam, excluding Kanta's Den and used markets. If that market decivilizes, `QuestStageManager` picks another and moves Eliza.
+Eliza's market is a pirate market in Yma, Corvus, Isirah, Thule, Hybrasil, Galatia, Mayasura or Kumari Kandam, excluding Kanta's Den and used markets. If that market decivilizes from stage 16 on (failure included) after `ELIZA_FOUND` and before `ELIZA_KILLED`, `KestevenElizaModule.onDecivilized` picks another with the same picker and random, adds Eliza to its comm directory and people when she exists, restores a contact lost to the decivilization to priority, and sends the Delve intel the update `elizaMoved` ("With the conditions deteriorating on <old entity>, Eliza has moved her operations to <new market>.", "Eliza" in the pirate colour, minor message sound) while that entry is shown. The old campaign message came at any stage from 16 on.
 
-At her market, `CorePlugin` opens `ElizaDialog` until it has finished once. Eliza generates on first contact (`SectorGen.genEliza()`).
+### Eliza's port
 
-- **Agree, sincerely:** disks #1 and #2, `ELIZA_HELPED`, and `ELIZA_AGREED_SINCERELY`.
+Until the meeting has finished once (`ELIZA_DIALOG_FINISHED`), the rules row `nskr_kq_elizaPort` takes over the dialog of Eliza's market: it matches `OpenInteractionDialog` with the check `elizaPort` (the flag unset and `KestevenQuest.atElizaMarket(target)`) at `score:10000`, above every vanilla market opening, so the market menu does not show. `KestevenElizaModule` is active in every stage, as the old `CorePlugin` route tested only the flag and the market. Agreeing to meet runs the action `elizaMeet`, which makes Eliza (`SectorGen.genEliza()`, id `nskr_anarchist`) unless she exists; her card shows from the office on (`ShowPersonVisual false nskr_anarchist`). The rows are in the `# KESTEVEN QUESTLINE: ELIZA` block; "Leave" on the first screen and after the hand-over is `defaultLeave`.
+
+- **Agree, sincerely:** disks #1 and #2 (action `elizaHandOver`, which also clears the market's `$missionImportant`), `ELIZA_HELPED`, and `ELIZA_AGREED_SINCERELY`.
 - **Agree while lying:** disks #1 and #2 and `ELIZA_HELPED` only.
-- **Refuse:** `ELIZA_RAID_ENABLED`. `ElizaRaidObjectiveCreator` then adds an extreme "Data Disks" raid objective at her market. The raid grants disks #1 and #2 and 30,000 to 40,000 credits, removes Eliza from the market, and spawns her "Merc Armada", which hunts the player. Destroying her flagship sets `ELIZA_KILLED` and removes her from important people.
+- **Refuse:** `ELIZA_RAID_ENABLED`. The action `elizaEnableRaid` registers `ElizaRaidObjectiveCreator` with the listener manager (saved), which then adds an extreme "Data Disks" raid objective at her market. The raid grants disks #1 and #2 and 30,000 to 40,000 credits, removes Eliza from the market, and spawns her "Merc Armada", which hunts the player. Destroying her flagship sets `ELIZA_KILLED` and removes her from important people.
+
+Either way the meeting ends by adding Eliza to the market's comm directory and people (action `elizaToPort`), so she can be contacted there afterwards.
 
 ### Reaching the Cache
 

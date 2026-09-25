@@ -9,8 +9,8 @@ Java paths are relative to `jars/src/lostsector/campaign/`; `dialogue/rules/` an
 | Style | Used by | How it runs |
 |---|---|---|
 | Rules rows with a multi-verb command | The collector (`nskr_ttCollectorDialog`); Eliza's intercept (`nskr_elizaInterceptDialog`); both alternative endings | Rows select the conversation and call a verb. The verb writes most text and options from Java strings. Several commands extend `PaginatedOptions` and take over the dialog plugin (`setupDelegateDialog`). Every non-paging option then returns to rules through `FireBest DialogOptionSelected`. |
-| Rules rows only | Every conversation with Jack, Alice and Nicholas (gates, values and game actions from `KestevenHubModule`); the job 3 party, a rules bar event (guests, drink count and bill from `KestevenPartyModule`); the Glacier facility (`KestevenGlacierModule`); the Eliza search at pirate bars (`KestevenElizaSearchModule`); the data-disk satellites (`KestevenSatelliteModule`); the Delve meeting at the bar (`KestevenJob5Module`); job 4: the Special Operations fleet, the Enigma strike group and the hint wreck (checks, actions and tokens from `KestevenJob4Module`, [below](#job-4-rows)); fleet greetings and threats: Eliza's raided and revenge fleets, Jack's revenge fleet, the Cache guardian, the "LZ" messenger, generic Enigma comms | Text, options and scripts live in `data/campaign/rules.csv`. |
-| Java `InteractionDialogPlugin` or `BaseBarEvent` | Cache hint, Cache core, Eliza's port, both final ending dialogs | `CorePlugin.pickInteractionDialogPlugin` or `PortsideBarData` opens the class. All text, options and state changes are in the Java class, using a nested `OptionId` enum. |
+| Rules rows only | Every conversation with Jack, Alice and Nicholas (gates, values and game actions from `KestevenHubModule`); the job 3 party, a rules bar event (guests, drink count and bill from `KestevenPartyModule`); the Glacier facility (`KestevenGlacierModule`); the Eliza search at pirate bars (`KestevenElizaSearchModule`); the data-disk satellites (`KestevenSatelliteModule`); the Delve meeting at the bar (`KestevenJob5Module`); the meeting at Eliza's port (`KestevenElizaModule`); job 4: the Special Operations fleet, the Enigma strike group and the hint wreck (checks, actions and tokens from `KestevenJob4Module`, [below](#job-4-rows)); fleet greetings and threats: Eliza's raided and revenge fleets, Jack's revenge fleet, the Cache guardian, the "LZ" messenger, generic Enigma comms | Text, options and scripts live in `data/campaign/rules.csv`. |
+| Java `InteractionDialogPlugin` or `BaseBarEvent` | Cache hint, Cache core, both final ending dialogs | `CorePlugin.pickInteractionDialogPlugin` or `PortsideBarData` opens the class. All text, options and state changes are in the Java class, using a nested `OptionId` enum. |
 
 ## Jack, Alice and Nicholas
 
@@ -337,18 +337,31 @@ The party at the job 3 start market is in the `# KESTEVEN QUESTLINE: JOB 3 PARTY
 | The hangover | Shared inserts and a plain chain | `nskr_kq_partyWasted1` to `3` fire `nskr_kqPartyBlackout` (`HideVisual`); `nskr_kq_partySlur1` to `4` fire `nskr_kqPartyHangover`; `…Wake` (`ShowDefaultVisual`), `…Recall`, `…Damages` (`do partyHangover`). |
 | Exits | `BarCMD returnFromEvent true` | `nskr_kq_partyDecline` sets `JOB3_PARTY_DECLINED`; `nskr_kq_partyExit` and `nskr_kq_partyHome` fire `nskr_kqPartyCoordinates` (stage 9, `JOB3_TARGET_DISCOVERED`, receipt). |
 
+## Eliza's port
+
+The meeting at Eliza's market is in the `# KESTEVEN QUESTLINE: ELIZA` block. Flow and outcomes are in [Eliza's port](KESTEVEN_QUESTLINE.md#elizas-port).
+
+| Screen | Structure | Trigger and rows |
+|---|---|---|
+| Arrival | `OpenInteractionDialog` row | `nskr_kq_elizaPort` (`check elizaPort score:10000`): the market dialog is replaced; `nskr_kq_elizaMeet` or `defaultLeave`. |
+| Meeting to the first question | Plain chain | `nskr_kq_elizaMeet` (`do elizaMeet`), `…Escort`, `…Office` (`ShowPersonVisual false nskr_anarchist`); `…Sit` and `…Stand` (sets `$nskr_kq_elizaStood`, expiry 0) fire `nskr_kqElizaCache`. |
+| Who should wield the power | Handlers with a shared insert | `nskr_kq_elizaChip`, `…NotReally`, `…NotTelling` fire `nskr_kqElizaPower`. |
+| Neutral, dislike and her plans | Plain chains with shared inserts | `nskr_kq_elizaUnsure`; `…NoPolitics` and `…SayNothing` fire `nskr_kqElizaKillingMachine`; `…Kesteven` and `…NotYou` fire `nskr_kqElizaPropaganda`; `…WhatPower`, `…HowGood`, `…Violence`; `…NoDifferent` and `…NoTerrorists` fire `nskr_kqElizaComsec`. Each handler's own Options column holds its option set; one option id serves every label the old dialog gave the same outcome. |
+| Refusal | Handlers with a shared insert | `nskr_kq_elizaRefuse` and `…Silent` fire `nskr_kqElizaFarGone`; `nskr_kq_elizaDismissed` fires `nskr_kqElizaStoodLine`, sets `ELIZA_DIALOG_FINISHED` and `ELIZA_RAID_ENABLED`, runs `elizaEnableRaid` and `elizaToPort`; `…ThrownOut` (`HideVisual`) ends with `defaultLeave`. |
+| Agreement | Handlers with shared inserts | `nskr_kq_elizaJoin` and `…BackHer` fire `nskr_kqElizaRight`; `…ReallyRight` and `…Together` fire `nskr_kqElizaOffer`; `…Agree` and `…AgreeLie` fire `nskr_kqElizaMonitoring` and `nskr_kqElizaDisks` (flags, `elizaHandOver`, receipts, `elizaToPort`, `defaultLeave`). |
+| Her move | Delve update | `nskr_kq_elizaMovedBullet` on `nskr_kqIntelBullets` for update `elizaMoved`; the other job 5 bullets exclude that update. |
+
 ## Java dialogs and bar events
 
 | Class | Opened by | Content | State written |
 |---|---|---|---|
-| `kesteven/quest/ElizaDialog` | `CorePlugin`, Eliza's market until finished | Meeting Eliza | Disks, help or raid flags |
 | `kesteven/quest/CacheDoubtDialog` | `QuestStageManager`, once in Unknown Site | Inner-voice hint | None |
 | `kesteven/quest/CacheCoreDialog` | `CorePlugin` or the guardian's fleet-interaction config | Cache core salvage | Stage 19, rewards |
 | `kesteven/quest/EndingKestevenDialog` | `CorePlugin` at stage 19 | Kesteven ending | Stage 20, rewards, relations |
 | `kesteven/quest/EndingElizaDialog` | `CorePlugin` at stage 19 after the handover | Eliza ending | Stage 20, rewards, relations |
 | `kesteven/quest/ElizaRaid` | Raid menu at Eliza's market | Raid objective | Disks, Eliza's fleet |
 
-`CacheCoreDialog`, the endings and `ElizaDialog` show the options they need; their text blocks are sequential `addPara` calls keyed by `OptionId`.
+`CacheCoreDialog` and the endings show the options they need; their text blocks are sequential `addPara` calls keyed by `OptionId`.
 
 ## Notes for moving dialogue into rules
 

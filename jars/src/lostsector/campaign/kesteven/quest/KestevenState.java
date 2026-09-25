@@ -51,8 +51,9 @@ public final class KestevenState extends QuestState<KestevenStage> {
     List<String> elizaSearchUsedMarkets = new ArrayList<>();
     // Rolled each time the first spacer's conversation opens.
     int elizaSpacerPrice;
-    // The contact's entity before it moved away from a decivilized market, for the move message.
+    // The contact's and Eliza's entities before they moved away from a decivilized market, for the move messages.
     String elizaContactFormerName;
+    String elizaFormerName;
 
     // The ship whose barrage line KestevenGlacierModule is printing; null outside its damageFleet action, never saved.
     transient FleetMemberAPI glacierHit;

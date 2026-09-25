@@ -2307,33 +2307,40 @@ nskr_kq_delveDepartureAsteria,nskr_kqDelveDeparture,nskr_quest kq check asteriaG
 nskr_kq_job5IntelTitle,nskr_kqIntelTitle,$nskr_intel_key == job5,,The Delve,,
 nskr_kq_job5IntelHostile,nskr_kqIntelBullets,"$nskr_intel_key == job5
 $nskr_intel_update != contactMoved
+$nskr_intel_update != elizaMoved
 nskr_quest kq is JOB5_DISKS CACHE_KNOWN CACHE_CLEARED CHIP_RECOVERED
 nskr_quest kq check kestevenHostile","SetTextHighlights ""non-hostile relations""","You need to get back to non-hostile relations with Kesteven, if you want to finish this job.",,
 nskr_kq_job5IntelAliceLeads,nskr_kqIntelBullets,"$nskr_intel_key == job5
 $nskr_intel_update != contactMoved
+$nskr_intel_update != elizaMoved
 nskr_quest kq is JOB5_DISKS
 !nskr_quest kq flag JOB5_ALICE_TIP",,Talk to Alice about leads.,,
 nskr_kq_job5IntelJackLeads,nskr_kqIntelBullets,"$nskr_intel_key == job5
 $nskr_intel_update != contactMoved
+$nskr_intel_update != elizaMoved
 nskr_quest kq is JOB5_DISKS
 !nskr_quest kq flag JOB5_JACK_TIP",,Talk to Jack about leads.,,
 nskr_kq_job5IntelSatellites,nskr_kqIntelBullets,"$nskr_intel_key == job5
 $nskr_intel_update != contactMoved
+$nskr_intel_update != elizaMoved
 nskr_quest kq is JOB5_DISKS
 !nskr_quest kq flag JOB5_ALICE_TIP
 !nskr_quest kq check twoSatellites",,Recover disks from the comms satellites.,,
 nskr_kq_job5IntelSatellite3,nskr_kqIntelBullets,"$nskr_intel_key == job5
 $nskr_intel_update != contactMoved
+$nskr_intel_update != elizaMoved
 nskr_quest kq is JOB5_DISKS
 nskr_quest kq flag JOB5_ALICE_TIP
 !nskr_quest kq flag SATELLITE3_RECOVERED",,Head to the $nskr_kq_job3TargetSystem in the $nskr_kq_delveJob3Constellation and search for the satellite.,,
 nskr_kq_job5IntelSatellite4,nskr_kqIntelBullets,"$nskr_intel_key == job5
 $nskr_intel_update != contactMoved
+$nskr_intel_update != elizaMoved
 nskr_quest kq is JOB5_DISKS
 nskr_quest kq flag JOB5_ALICE_TIP
 !nskr_quest kq flag SATELLITE4_RECOVERED",,Head to the $nskr_kq_job4TargetSystem in the $nskr_kq_delveJob4Constellation and recover the disk from the satellite.,,
 nskr_kq_job5IntelNewLeads,nskr_kqIntelBullets,"$nskr_intel_key == job5
 $nskr_intel_update != contactMoved
+$nskr_intel_update != elizaMoved
 nskr_quest kq is JOB5_DISKS
 nskr_quest kq flag JOB5_ALICE_TIP
 nskr_quest kq flag JOB5_JACK_TIP
@@ -2341,38 +2348,45 @@ nskr_quest kq check twoSatellites
 !nskr_quest kq flag JOB5_ALICE_TIP2",,Talk to Alice about new leads.,,
 nskr_kq_job5IntelFrost,nskr_kqIntelBullets,"$nskr_intel_key == job5
 $nskr_intel_update != contactMoved
+$nskr_intel_update != elizaMoved
 nskr_quest kq is JOB5_DISKS
 nskr_quest kq flag JOB5_ALICE_TIP2
 !nskr_quest kq flag FROST_FOUND","SetTextHighlights ""$nskr_kq_frostTipDistance light-years"" ""$nskr_kq_frostTipConstellation""",Find the red dwarf system that is within $nskr_kq_frostTipDistance light-years of the $nskr_kq_frostTipConstellation.,,
 nskr_kq_job5IntelGlacier,nskr_kqIntelBullets,"$nskr_intel_key == job5
 $nskr_intel_update != contactMoved
+$nskr_intel_update != elizaMoved
 nskr_quest kq is JOB5_DISKS
 nskr_quest kq flag JOB5_ALICE_TIP2
 nskr_quest kq flag FROST_FOUND
 !nskr_quest kq flag GLACIER_DISK_RECOVERED",,Find the comms facility on the tundra planet in the $nskr_kq_frostName.,,
 nskr_kq_job5IntelFindEliza,nskr_kqIntelBullets,"$nskr_intel_key == job5
 $nskr_intel_update != contactMoved
+$nskr_intel_update != elizaMoved
 nskr_quest kq is JOB5_DISKS
 !nskr_quest kq flag ELIZA_FOUND",,Figure out where Eliza is hiding.,,
 nskr_kq_job5IntelAskPirates,nskr_kqIntelBullets,"$nskr_intel_key == job5
 $nskr_intel_update != contactMoved
+$nskr_intel_update != elizaMoved
 nskr_quest kq is JOB5_DISKS
 nskr_quest kq flag JOB5_JACK_TIP
 !nskr_quest kq flag ELIZA_FOUND",,Ask some pirates if they know anything about Eliza.,,
 nskr_kq_job5IntelContact,nskr_kqIntelBullets,"$nskr_intel_key == job5
 $nskr_intel_update != contactMoved
+$nskr_intel_update != elizaMoved
 nskr_quest kq is JOB5_DISKS
 !nskr_quest kq flag ELIZA_FOUND
 nskr_quest kq flag ELIZA_SPACER_PAID
 nskr_quest kq check delveContactKnown",,Go to $nskr_kq_delveContactMarket in $nskr_kq_delveContactSystem and speak with the contact.,,
 nskr_kq_job5IntelMeetEliza,nskr_kqIntelBullets,"$nskr_intel_key == job5
 $nskr_intel_update != contactMoved
+$nskr_intel_update != elizaMoved
 nskr_quest kq is JOB5_DISKS
 nskr_quest kq check delveElizaLocated
 nskr_quest kq flag ELIZA_FOUND
 !nskr_quest kq flag ELIZA_DIALOG_FINISHED",,Head to $nskr_kq_delveElizaMarket in $nskr_kq_delveElizaSystem and meet with Eliza.,,
 nskr_kq_job5IntelRaidEliza,nskr_kqIntelBullets,"$nskr_intel_key == job5
 $nskr_intel_update != contactMoved
+$nskr_intel_update != elizaMoved
 nskr_quest kq is JOB5_DISKS
 nskr_quest kq check delveElizaLocated
 !nskr_quest kq flag ELIZA_HELPED
@@ -2381,6 +2395,7 @@ nskr_quest kq flag ELIZA_RAID_ENABLED
 !nskr_quest kq flag ELIZA_KILLED",,"Get the disks from Eliza, by force if necessary.",,
 nskr_kq_job5IntelLastTwo,nskr_kqIntelBullets,"$nskr_intel_key == job5
 $nskr_intel_update != contactMoved
+$nskr_intel_update != elizaMoved
 nskr_quest kq is JOB5_DISKS
 nskr_quest kq flag JOB5_JACK_TIP
 nskr_quest kq flag JOB5_ALICE_TIP
@@ -2388,6 +2403,7 @@ nskr_quest kq flag JOB5_ALICE_TIP
 !nskr_quest kq flag ELIZA_DIALOG_FINISHED",,Learn something about the last 2 disks.,,
 nskr_kq_job5IntelLastOne,nskr_kqIntelBullets,"$nskr_intel_key == job5
 $nskr_intel_update != contactMoved
+$nskr_intel_update != elizaMoved
 nskr_quest kq is JOB5_DISKS
 nskr_quest kq flag JOB5_JACK_TIP
 nskr_quest kq flag JOB5_ALICE_TIP
@@ -2395,49 +2411,60 @@ nskr_quest kq flag JOB5_ALICE_TIP
 nskr_quest kq flag JOB5_ALICE_TIP2",,Learn something about the last disk.,,
 nskr_kq_job5IntelLastOneEliza,nskr_kqIntelBullets,"$nskr_intel_key == job5
 $nskr_intel_update != contactMoved
+$nskr_intel_update != elizaMoved
 nskr_quest kq is JOB5_DISKS
 nskr_quest kq flag ELIZA_DIALOG_FINISHED
 !nskr_quest kq flag JOB5_ALICE_TIP2",,Learn something about the last disk.,,
 nskr_kq_job5IntelReturn,nskr_kqIntelBullets,"$nskr_intel_key == job5
 $nskr_intel_update != contactMoved
+$nskr_intel_update != elizaMoved
 nskr_quest kq is JOB5_DISKS
 nskr_quest kq flag ALL_DISKS_RECOVERED",,Head back to $nskr_kq_homeName,,
 nskr_kq_job5IntelAllDisks,nskr_kqIntelBullets,"$nskr_intel_key == job5
 $nskr_intel_update != contactMoved
+$nskr_intel_update != elizaMoved
 nskr_quest kq is JOB5_DISKS
 !nskr_quest kq flag ALL_DISKS_RECOVERED",,Acquire all five disks.,,
 nskr_kq_job5IntelDisks,nskr_kqIntelBullets,"$nskr_intel_key == job5
 $nskr_intel_update != contactMoved
+$nskr_intel_update != elizaMoved
 nskr_quest kq is JOB5_DISKS","SetTextHighlights ""5""",Acquired $nskr_kq_delveDisks / 5 disks,,The old line highlighted the first 5 only; the count is a token and is highlighted too
 nskr_kq_job5IntelTravel,nskr_kqIntelBullets,"$nskr_intel_key == job5
 $nskr_intel_update != contactMoved
+$nskr_intel_update != elizaMoved
 nskr_quest kq is CACHE_KNOWN
 !nskr_quest kq flag CACHE_FOUND",,Travel to the Cache site.,,
 nskr_kq_job5IntelDiscover,nskr_kqIntelBullets,"$nskr_intel_key == job5
 $nskr_intel_update != contactMoved
+$nskr_intel_update != elizaMoved
 nskr_quest kq is CACHE_KNOWN
 nskr_quest kq flag CACHE_FOUND",,Discover what's hidden in the Cache site.,,
 nskr_kq_job5IntelChip,nskr_kqIntelBullets,"$nskr_intel_key == job5
 $nskr_intel_update != contactMoved
+$nskr_intel_update != elizaMoved
 nskr_quest kq is CACHE_CLEARED",,Recover the Unlimited Production Chip.,,
 nskr_kq_job5IntelTurnIn,nskr_kqIntelBullets,"$nskr_intel_key == job5
 $nskr_intel_update != contactMoved
+$nskr_intel_update != elizaMoved
 nskr_quest kq is CHIP_RECOVERED
 !nskr_quest kq flag ELIZA_AGREED_SINCERELY
 !nskr_quest kq flag CHIP_HANDED_TO_ELIZA",,Turn over the Unlimited Production Chip to $nskr_kq_homeName.,,
 nskr_kq_job5IntelTurnInEliza,nskr_kqIntelBullets,"$nskr_intel_key == job5
 $nskr_intel_update != contactMoved
+$nskr_intel_update != elizaMoved
 nskr_quest kq is CHIP_RECOVERED
 nskr_quest kq check delveElizaLocated
 nskr_quest kq flag ELIZA_AGREED_SINCERELY
 !nskr_quest kq flag CHIP_HANDED_TO_ELIZA",,Turn over the Unlimited Production Chip to $nskr_kq_delveElizaEntity in $nskr_kq_delveElizaSystem.,,
 nskr_kq_job5IntelElizaReturn,nskr_kqIntelBullets,"$nskr_intel_key == job5
 $nskr_intel_update != contactMoved
+$nskr_intel_update != elizaMoved
 nskr_quest kq is CHIP_RECOVERED
 nskr_quest kq check delveElizaLocated
 nskr_quest kq flag CHIP_HANDED_TO_ELIZA",,Talk to Eliza at $nskr_kq_delveElizaEntity in $nskr_kq_delveElizaSystem once she has returned.,,
 nskr_kq_job5IntelCompleted,nskr_kqIntelBullets,"$nskr_intel_key == job5
 $nskr_intel_update != contactMoved
+$nskr_intel_update != elizaMoved
 nskr_quest kq is COMPLETED",,You managed to complete the mission.,,KestevenJob5Module completes the entry at COMPLETED
 nskr_kq_job5IntelDescDisks,nskr_kqIntelDesc,"$nskr_intel_key == job5
 nskr_quest kq is JOB5_DISKS",,Keep searching.,,
@@ -2715,3 +2742,119 @@ nskr_quest kq do wakeSatelliteGuard
 SetShortcut nskr_kq_satelliteLeave ESCAPE",,nskr_kq_satelliteLeave:Leave,"salvageSatellite counts the satellite and the disk, empties the satellite and removes its marker; wakeSatelliteGuard sends the guard after the player"
 nskr_kq_satelliteLeaveSel,DialogOptionSelected,$option == nskr_kq_satelliteLeave,"PlaySound ui_sensor_burst_on
 DismissDialog",,,
+,,,,,,
+# KESTEVEN QUESTLINE: ELIZA,,,,,,
+nskr_kq_elizaPort,OpenInteractionDialog,nskr_quest kq check elizaPort score:10000,"ShowDefaultVisual
+AddText ""Seems like there's no clear way around this \""meeting\"".""","The port authority denies your docking access. You receive a message from Eliza, a request join her in a meeting. On the condition that you come alone, no guards or other crew of your own.","nskr_kq_elizaMeet:Agree to meet her
+defaultLeave:Leave",Replaces the whole market dialog until the meeting has finished once; score:10000 wins over every vanilla market opening.
+nskr_kq_elizaMeet,DialogOptionSelected,$option == nskr_kq_elizaMeet,"nskr_quest kq do elizaMeet
+AddText ""\""There's going to be a delay of course, and it's going to get ugly - fast.\"" The captain says. There is a sour expression, they are not happy about this. \""Hopefully it won't come down to this.\""""","The marine captain, with the help of the black ops team hatch a contingency plan in case things go wrong with Eliza.",nskr_kq_elizaEscort:Continue,
+nskr_kq_elizaEscort,DialogOptionSelected,$option == nskr_kq_elizaEscort,"AddText ""You are then escorted by group of rough looking bodyguards, who of course collect your sidearm for safekeeping. One of them has a fearsome scar on their left arm, wrapping all the way from the elbow to the shoulder. It's accentuated by many tattoos surrounding it, in an intricate pattern of abstract symbols and shapes - you wonder what causes such damage without killing them outright. The guards take you through a beaten down section of the port, presumably to the meeting.""
+AddText ""After a short walk you arrive in a section that seems to have been recently refurbished. It's unusually modern looking, but still maintains a makeshift look.""
+AddText ""The old and new clash in a patchwork of exposed pipe-works, rusted out surfaces, freshly renovated walls and brand new light fixtures.""","You agree to the offer, and shortly after the port authority gives the green light to land at a specific dock.",nskr_kq_elizaOffice:Continue,
+nskr_kq_elizaOffice,DialogOptionSelected,$option == nskr_kq_elizaOffice,"ShowPersonVisual false nskr_anarchist
+AddText ""\""Welcome to my humble port captain.\"" Eliza greets you from behind a fancy looking desk. \""Feel free to take a seat, we have a lot to discuss.\""""","The guards point you towards what looks like a small office. And immediately you spot Eliza in the room. She's wearing a flashy and ornate looking uniform - dark leather belts loop around and hang off of the blood red uniform, underlined by shiny gold pins and decorations - a fit for a warlord.","nskr_kq_elizaSit:Take a seat
+nskr_kq_elizaStand:Keep standing",
+nskr_kq_elizaSit,DialogOptionSelected,$option == nskr_kq_elizaSit,FireBest nskr_kqElizaCache,,,
+nskr_kq_elizaStand,DialogOptionSelected,$option == nskr_kq_elizaStand,"$nskr_kq_elizaStood = true 0
+FireBest nskr_kqElizaCache",,,
+nskr_kq_elizaCache,nskr_kqElizaCache,,"AddText ""She sets down a handcrafted notebook down on the desk as she speaks.""
+AddText ""Her tone turns inquisitive. \""I see you're also working on the same subject. Did they even tell you what you were *really* looking for in there?\""""","""As you may know I have personally gotten quite invested in this cache mystery. I managed to get my hands on two disks so far, the data recovered from them is fascinating. The plans they had...""","nskr_kq_elizaChip:""Some chip I think.""
+nskr_kq_elizaNotReally:""Not really.""
+nskr_kq_elizaNotTelling:""I'm not telling you.""",
+,,,,,,
+nskr_kq_elizaChip,DialogOptionSelected,$option == nskr_kq_elizaChip,FireBest nskr_kqElizaPower,"""It's not just some chip! It's the key to the old Domain's greatest technologies.""",,
+nskr_kq_elizaNotReally,DialogOptionSelected,$option == nskr_kq_elizaNotReally,FireBest nskr_kqElizaPower,,,
+nskr_kq_elizaNotTelling,DialogOptionSelected,$option == nskr_kq_elizaNotTelling,FireBest nskr_kqElizaPower,"""Would you stop being so hostile captain, I'm showing such hospitality to you. Try to just focus on the business at hand, anyways...""",,
+nskr_kq_elizaPower,nskr_kqElizaPower,,"AddText ""\""What do you live for captain? To wake up at exact same minute every morning? To wear the exact same uniform every day? To only call people by Sir and Ma'am? To do exactly as your told? Even when your being slowly pushed to your death?\"" She looks more intent. \""When I saw so many of my peers slowly lose every part their selves to the bureaucracy machine - I swore I would never become one of them.\"" She sighs. \""It's a broken system captain - the Domain that is, are we really doomed to repeat the same cycle over and over again?\"" She stops for a moment.""
+AddText ""\""The collapse gave such a beautiful opportunity for humanity to be born a new. The Hegemony is fatally gripped by the longing for an old world - Everything will be exactly the same it was no exceptions, leading to the same failures all over again. There's still a chance for us to learn from the past, all it takes is a second collapse.\"" She lets out a devilish little smile. \""That's where the Unlimited Production Chip comes in.\""""
+AddText ""\""Now $nskr_kq_playerFullName, who do you think deserves to wield such power?\""""
+AddText ""She leans back on her chair while waiting for your response, the chair made from exquisite dark leather towers over her.""","At the moment of the collapse the Cache was hosting the Unlimited Production Chip. It's the keys to construct the greatest ships ever known to mankind."" Eliza is starting to get quite worked up.","nskr_kq_elizaKesteven:""I'm sure the Kesteven Corporation are a responsible organization.""
+nskr_kq_elizaNotYou:""Well, not you that's for sure.""
+nskr_kq_elizaUnsure:""I'm not sure.""
+nskr_kq_elizaBackHer:""You""
+nskr_kq_elizaWhatPower:""And what would you do with this power?""
+nskr_kq_elizaJoin:""Me""",
+,,,,,,
+nskr_kq_elizaUnsure,DialogOptionSelected,$option == nskr_kq_elizaUnsure,"AddText ""She's not letting you get away with the neutral option."" gray","""Such indecisiveness is not characteristic for a great captain. Come on spit it out, just say what you *really* think."" She leans forward and gives you an intense look.","nskr_kq_elizaKesteven:""The Kesteven Corporation will bring a new era of prosperity.""
+nskr_kq_elizaNotYou:""Well, not a terrorist like you that's for sure.""
+nskr_kq_elizaBackHer:""You, the great anarchist leader.""
+nskr_kq_elizaWhatPower:""So, what would you do with this power?""
+nskr_kq_elizaJoin:""Me, the greatest captain the sector's ever seen.""
+nskr_kq_elizaNoPolitics:""I don't get involved in politics.""",
+nskr_kq_elizaNoPolitics,DialogOptionSelected,$option == nskr_kq_elizaNoPolitics,"FireBest nskr_kqElizaKillingMachine
+AddText ""This conversation is going nowhere, maybe you should feign interest."" gray",,"nskr_kq_elizaNotYou:""No, it's not like that at all.""
+nskr_kq_elizaSilent:Remain silent
+nskr_kq_elizaRefuse:""I'm not getting into an argument with some terrorist.""",
+nskr_kq_elizaSayNothing,DialogOptionSelected,$option == nskr_kq_elizaSayNothing,FireBest nskr_kqElizaKillingMachine,,"nskr_kq_elizaSilent:Remain silent
+nskr_kq_elizaRefuse:""I'm not getting into an argument with some terrorist.""",
+nskr_kq_elizaKillingMachine,nskr_kqElizaKillingMachine,,,"""Damn, they really did brainwash you into the perfect killing machine huh. No strong emotions on any subject whatsoever. I'm sure you don't even flinch when you glass a colony with the flick of a switch."" She seems to be perplexed by you.",,
+,,,,,,
+nskr_kq_elizaKesteven,DialogOptionSelected,$option == nskr_kq_elizaKesteven,FireBest nskr_kqElizaPropaganda,,"nskr_kq_elizaRefuse:""I'm not listening to a political rant from a wanted terrorist.""
+nskr_kq_elizaSayNothing:Say nothing
+nskr_kq_elizaJoin:""Hmm, maybe you're right.""",
+nskr_kq_elizaNotYou,DialogOptionSelected,$option == nskr_kq_elizaNotYou,FireBest nskr_kqElizaPropaganda,,"nskr_kq_elizaRefuse:""I'm not listening to a political rant from a wanted terrorist.""
+nskr_kq_elizaJoin:""Hmm, maybe you're right.""",
+nskr_kq_elizaPropaganda,nskr_kqElizaPropaganda,,"AddText ""\""Ready to toil away and not see a fraction of the profits you create for your Kesteven higher-ups. Did you really think you were going to wield even 1% of the power this chip would create?\"" She pauses for a moment, probably to cook up another political rant.""","""Another victim of corporate propaganda I see. Ready to die for the ""greater good"" I'm sure.""",,
+,,,,,,
+nskr_kq_elizaRefuse,DialogOptionSelected,$option == nskr_kq_elizaRefuse,"AddText ""\""Laws must exist to keep the people subservient, and those who show signs of disobedience will be punished.\""""
+FireBest nskr_kqElizaFarGone","""Is that what they call it now. ""When tyranny becomes law, resistance becomes duty."" You ever hear of that captain?""",,
+nskr_kq_elizaSilent,DialogOptionSelected,$option == nskr_kq_elizaSilent,FireBest nskr_kqElizaFarGone,,,
+nskr_kq_elizaFarGone,nskr_kqElizaFarGone,,"AddText ""You're too far gone? No, she's clearly out of her mind. You're making the right call."" gray","""You really are too far gone. This can't work."" She turns on the chair to face perpendicular to you, as she tries to calm down.",nskr_kq_elizaDismissed:Continue,
+,,,,,,
+nskr_kq_elizaWhatPower,DialogOptionSelected,$option == nskr_kq_elizaWhatPower,"AddText ""\""It's time for the self fulfilling prophecy of this faux-Domain to come true.\""""","""It will grant us the power to free this sector of the old world blues captain."" Her eyes are lit up.","nskr_kq_elizaHowGood:""And how is this supposed to be a good thing?""
+nskr_kq_elizaJoin:""I think I understand.""",
+nskr_kq_elizaHowGood,DialogOptionSelected,$option == nskr_kq_elizaHowGood,,"""Because I'm the one willing to take action, the bureaucracy machine has overtaken every human action - Everything is cold and calculated to perfection. The people need to be freed from the inevitable total control of the Hegemony, by force if necessary."" She's at the edge of her chair.","nskr_kq_elizaViolence:""Even more violence solves nothing now.""
+nskr_kq_elizaJoin:""I think I understand.""",
+nskr_kq_elizaViolence,DialogOptionSelected,$option == nskr_kq_elizaViolence,,"Her face quickly turns red. ""Sacrifices have to be made in the face of progress! Life isn't black and white, sometimes you have to get your hands dirty captain to make a change. For there are not many other options left!""","nskr_kq_elizaNoDifferent:""You really are no different.""
+nskr_kq_elizaNoTerrorists:""I don't work with terrorists.""",
+nskr_kq_elizaNoDifferent,DialogOptionSelected,$option == nskr_kq_elizaNoDifferent,FireBest nskr_kqElizaComsec,,,
+nskr_kq_elizaNoTerrorists,DialogOptionSelected,$option == nskr_kq_elizaNoTerrorists,FireBest nskr_kqElizaComsec,,,
+nskr_kq_elizaComsec,nskr_kqElizaComsec,,"AddText ""She's clearly out of her mind. You're making the right call."" gray","""No captain, this isn't how this works. You don't just barge in, and start accusing me like some hound from COMSEC!"" She turns on the chair to face slightly away from you, as she tries to calm down.",nskr_kq_elizaDismissed:Continue,
+,,,,,,
+nskr_kq_elizaDismissed,DialogOptionSelected,$option == nskr_kq_elizaDismissed,"FireBest nskr_kqElizaStoodLine
+AddText ""\""Now get the hell out of here captain. I'm not just gonna stab you in the back on your way out like it would be customary for you corporate bastards.\""""
+AddText ""\""But I'll be getting those disks from you soon enough, one way or another.\"" Thankfully she finishes.""
+AddText ""She points towards the door, grabs the notebook on the desk and turns to face away from you. \""Now get out, while you still can!\"" The large chair blocks your view of her.""
+nskr_quest kq set ELIZA_DIALOG_FINISHED
+nskr_quest kq set ELIZA_RAID_ENABLED
+nskr_quest kq do elizaEnableRaid
+nskr_quest kq do elizaToPort
+SetShortcut nskr_kq_elizaThrownOut ESCAPE",,nskr_kq_elizaThrownOut:Leave,
+nskr_kq_elizaStoodLine,nskr_kqElizaStoodLine,$nskr_kq_elizaStood,"AddText ""For the love of ludd she just keeps going. Your legs are starting to hurt a little, you really should have taken that seat."" gray",,,
+nskr_kq_elizaThrownOut,DialogOptionSelected,$option == nskr_kq_elizaThrownOut,"AddText ""It's best to listen to her and leave."" gray
+AddText ""The guard with the scar shoves your sidearm back to your arms and rushes you back to port.""
+HideVisual",,defaultLeave:Continue,
+,,,,,,
+nskr_kq_elizaJoin,DialogOptionSelected,$option == nskr_kq_elizaJoin,FireBest nskr_kqElizaRight,,,
+nskr_kq_elizaBackHer,DialogOptionSelected,$option == nskr_kq_elizaBackHer,FireBest nskr_kqElizaRight,,,
+nskr_kq_elizaRight,nskr_kqElizaRight,,"AddText ""\""We will make things right, with this chip it will not only be achieved, it will be inevitable.\"" She's warming up to you as you play along.""","""Yes, you get it captain. This sector has suffered for far too long under corporate greed and the self appointed Hegemony. The grip of authority grows stronger every passing moment.""","nskr_kq_elizaRefuse:""I'm not working with a terrorist.""
+nskr_kq_elizaTogether:""Yes we will make things right, together."" (lie)
+nskr_kq_elizaReallyRight:""You really are right.""",
+nskr_kq_elizaReallyRight,DialogOptionSelected,$option == nskr_kq_elizaReallyRight,"FireBest nskr_kqElizaOffer
+AddText ""Be careful of what you're getting yourself into, now."" gray",,,
+nskr_kq_elizaTogether,DialogOptionSelected,$option == nskr_kq_elizaTogether,"FireBest nskr_kqElizaOffer
+AddText ""Just tell her what she wants to hear."" gray",,,
+nskr_kq_elizaOffer,nskr_kqElizaOffer,,"AddText ""\""With this power the sector will be free. No masters - no rules, right captain?\"" She waits for your response, even though she already knows the answer.""","""I will hand over the disks to you. You will find the Cache with the help of those Kesteven goons. And then you will bring back the Unlimited Production Chip to us.""","nskr_kq_elizaAgreeLie:Agree (lie)
+nskr_kq_elizaAgree:Agree",
+nskr_kq_elizaAgree,DialogOptionSelected,$option == nskr_kq_elizaAgree,"nskr_quest kq set ELIZA_AGREED_SINCERELY
+AddText ""Wait, you really agree with her? Oh dear."" gray
+FireBest nskr_kqElizaMonitoring
+FireBest nskr_kqElizaDisks",,,
+nskr_kq_elizaAgreeLie,DialogOptionSelected,$option == nskr_kq_elizaAgreeLie,"FireBest nskr_kqElizaMonitoring
+AddText ""Yes, make her do all the work for you."" gray
+FireBest nskr_kqElizaDisks",,,
+nskr_kq_elizaMonitoring,nskr_kqElizaMonitoring,,,"""I'll be monitoring your progress from here captain. Good luck."" She finishes with a sly smile.",,
+nskr_kq_elizaDisks,nskr_kqElizaDisks,,"nskr_quest kq set ELIZA_DIALOG_FINISHED
+nskr_quest kq set ELIZA_HELPED
+nskr_quest kq do elizaHandOver
+AddTextSmall ""Acquired Data Disk #2"" gray
+SetTextHighlights ""Data Disk #2""
+AddTextSmall ""Acquired Data Disk #1"" gray
+SetTextHighlights ""Data Disk #1""
+PlaySound ui_rep_raise
+nskr_quest kq do elizaToPort","As you leave, Eliza's crew helps load the two disks into your cargo shuttle.",defaultLeave:Leave,
+,,,,,,
+nskr_kq_elizaMovedBullet,nskr_kqIntelBullets,"$nskr_intel_key == job5
+$nskr_intel_update == elizaMoved","SetTextHighlightColors 255,0,0,255
+SetTextHighlights Eliza","With the conditions deteriorating on $nskr_kq_elizaFormer, Eliza has moved her operations to $nskr_kq_delveElizaMarket.",,The Delve update KestevenElizaModule sends when her market is decivilized; the color is the pirate faction's color

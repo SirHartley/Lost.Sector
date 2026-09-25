@@ -14,7 +14,6 @@ import com.fs.starfarer.api.impl.MusicPlayerPluginImpl;
 import com.fs.starfarer.api.impl.campaign.ids.Factions;
 import com.fs.starfarer.api.impl.campaign.ids.MemFlags;
 import com.fs.starfarer.api.impl.campaign.ids.Pings;
-import com.fs.starfarer.api.impl.campaign.intel.contacts.ContactIntel;
 import com.fs.starfarer.api.impl.campaign.world.MoteParticleScript;
 import exerelin.campaign.DiplomacyManager;
 import lostsector.campaign.kesteven.ExileManager;
@@ -108,30 +107,6 @@ public class QuestStageManager extends BaseCampaignEventListener implements Ever
             //cache found check
             if (!QuestHelper.getCompleted(KestevenFlag.CACHE_FOUND) && Global.getSector().getStarSystem("Unknown Site").isEnteredByPlayer()) {
                 QuestHelper.setCompleted(true, KestevenFlag.CACHE_FOUND);
-            }
-        }
-        //eliza loc changer
-        if (stage>=16 && QuestHelper.getCompleted(KestevenFlag.ELIZA_FOUND) && !QuestHelper.getCompleted(KestevenFlag.ELIZA_KILLED)) {
-            if(QuestHelper.getElizaLoc().getMarket().isPlanetConditionMarketOnly()){
-                log("Qmanager eliza loc deciv, changing");
-                PersonAPI eliza = KestevenPeople.getEliza();
-                String oldLoc = QuestHelper.getElizaLoc().getMarket().getPrimaryEntity().getName();
-                //new loc
-                QuestHelper.setElizaLoc();
-                //update
-                QuestHelper.getElizaLoc().getMarket().getCommDirectory().addPerson(eliza,1);
-                QuestHelper.getElizaLoc().getMarket().addPerson(eliza);
-                //fix contact
-                if(ContactIntel.getContactIntel(eliza)!=null && ContactIntel.getContactIntel(eliza).getState()==ContactIntel.ContactState.LOST_CONTACT_DECIV){
-                    ContactIntel.getContactIntel(eliza).setState(ContactIntel.ContactState.PRIORITY);
-                }
-                //text
-                Global.getSector().getCampaignUI().addMessage("With the conditions deteriorating on "+oldLoc+", Eliza has moved her operations to "+ QuestHelper.getElizaLoc().getMarket().getName()+".",
-                        Global.getSettings().getColor("standardTextColor"),
-                        "Eliza",
-                        "",
-                        Global.getSector().getFaction(Factions.PIRATES).getColor(),
-                        Global.getSettings().getColor("yellowTextColor"));
             }
         }
         if (stage==16) {
@@ -650,9 +625,9 @@ public class QuestStageManager extends BaseCampaignEventListener implements Ever
         //spawn fleet and add to list
         CampaignFleetAPI fleet;
         if (!intercept){
-            fleet = KestevenFleets.spawnElizaFleet(loc, eliza, ElizaDialog.getRandom(), true, false);
+            fleet = KestevenFleets.spawnElizaFleet(loc, eliza, KestevenQuest.random(KestevenState.RANDOM_ELIZA), true, false);
         } else {
-            fleet = KestevenFleets.spawnElizaFleet(loc, eliza, ElizaDialog.getRandom(), false, true);
+            fleet = KestevenFleets.spawnElizaFleet(loc, eliza, KestevenQuest.random(KestevenState.RANDOM_ELIZA), false, true);
         }
         //remove from market
         loc.getMarket().getCommDirectory().removePerson(eliza);

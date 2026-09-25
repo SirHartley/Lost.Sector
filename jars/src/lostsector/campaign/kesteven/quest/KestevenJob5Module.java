@@ -100,8 +100,8 @@ final class KestevenJob5Module extends QuestModule<KestevenStage, KestevenState>
     }
 
     // The old entry computed its map location on every display. The marker follows the questline's home, which
-    // ExileManager moves in its own daily check, and Eliza's market, which QuestStageManager moves when it decivilizes;
-    // neither reports the change, so the marker is refreshed once a day.
+    // ExileManager moves in its own daily check, and Eliza's market, which KestevenElizaModule moves when it
+    // decivilizes; neither reports the change, so the marker is refreshed once a day.
     @Override
     protected void onDay(QuestContext<KestevenStage, KestevenState> ctx) {
         if (ctx.intel().isShown(INTEL)) ctx.intel().setMapLocation(INTEL, mapLocation(ctx));

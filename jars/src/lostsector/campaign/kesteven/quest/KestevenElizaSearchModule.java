@@ -153,8 +153,8 @@ final class KestevenElizaSearchModule extends QuestModule<KestevenStage, Kesteve
         ctx.rewards().takeCredits(ctx.state().elizaSpacerPrice);
     }
 
-    // Eliza's market keeps the plain important flag: ElizaDialog, ElizaRaid, CacheCoreDialog and the endings set and
-    // unset that flag directly until they move to the quest (T28 and later).
+    // Eliza's market keeps the plain important flag: KestevenElizaModule's hand-over, ElizaRaid, CacheCoreDialog and
+    // the endings set and unset that flag directly.
     private static void leaveContact(QuestContext<KestevenStage, KestevenState> ctx) {
         ctx.set(KestevenFlag.ELIZA_FOUND);
         ctx.state().elizaSearchStage = 3;

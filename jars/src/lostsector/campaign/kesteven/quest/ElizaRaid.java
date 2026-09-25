@@ -12,7 +12,6 @@ import com.fs.starfarer.api.impl.campaign.ids.MemFlags;
 import com.fs.starfarer.api.impl.campaign.rulecmd.salvage.MarketCMD.RaidDangerLevel;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import com.fs.starfarer.api.util.Misc;
-import lostsector.campaign.kesteven.quest.ElizaDialog;
 import lostsector.campaign.kesteven.quest.KestevenFleets;
 import lostsector.campaign.kesteven.quest.QuestHelper;
 import lostsector.helper.MathHelper;
@@ -58,7 +57,7 @@ public class ElizaRaid extends AbstractGoalGroundRaidObjectivePluginImpl {
         //get disks
         QuestHelper.setDisksRecovered(QuestHelper.getDisksRecovered()+2);
 
-        float creds = MathHelper.getSeededRandomNumberInRange(30000f,40000f, ElizaDialog.getRandom());
+        float creds = MathHelper.getSeededRandomNumberInRange(30000f,40000f, KestevenQuest.random(KestevenState.RANDOM_ELIZA));
         Global.getSector().getPlayerFleet().getCargo().getCredits().add(creds);
         text.setFontSmallInsignia();
         //acquire text
@@ -78,7 +77,7 @@ public class ElizaRaid extends AbstractGoalGroundRaidObjectivePluginImpl {
 
         QuestHelper.setCompleted(true, KestevenFlag.ELIZA_RAIDED);
         //spawn fleet
-        CampaignFleetAPI fleet = KestevenFleets.spawnElizaFleet(market.getPrimaryEntity(), eliza, ElizaDialog.getRandom(), false, false);
+        CampaignFleetAPI fleet = KestevenFleets.spawnElizaFleet(market.getPrimaryEntity(), eliza, KestevenQuest.random(KestevenState.RANDOM_ELIZA), false, false);
 
         //xp
         return (int) (1 * getProjectedCreditsValue() * XP_GAIN_VALUE_MULT);

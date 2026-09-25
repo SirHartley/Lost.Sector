@@ -17,7 +17,7 @@ Current lore takes precedence over older mod prose. User-supplied lines remain v
 This reference records what the mod's existing text establishes. It was compiled from `data/campaign/rules.csv`, Java dialogue strings, `data/strings/descriptions.csv`, the hullmod, item and condition CSVs, faction files, `tips.json`, `strings.json` and the Nexerelin background CSV. Every quoted excerpt names its source:
 
 - a rules row id, such as rules `cacheDialogInitial`;
-- a Java class, such as `ElizaDialog`;
+- a Java class, such as `CacheCoreDialog`;
 - a data row, such as descriptions `kesteven`.
 
 Nothing here is new canon. Where existing text is silent or contradicts itself, [Open questions](#open-questions) lists the gap. Writers must ask the author instead of filling it. Section order: setting foundations, knowledge limits, premise, writing style, characters, faction voices, terminology.
@@ -86,7 +86,7 @@ The Enigma is the autonomous force now fielding Project Enigma's ships. Its ship
 
 ### The Unlimited Production Chip
 
-- **What it is.** The UPC is the Cache's prize. Alice calls it "the keys to the old Domain's great secrets, so many technologies in one neat package" (rules `nskr_kq_delveFound`); Eliza, "the keys to construct the greatest ships ever known to mankind" (`ElizaDialog`). The prototype blueprint packages are "blueprints ripped off the UPC".
+- **What it is.** The UPC is the Cache's prize. Alice calls it "the keys to the old Domain's great secrets, so many technologies in one neat package" (rules `nskr_kq_delveFound`); Eliza, "the keys to construct the greatest ships ever known to mankind" (rules `nskr_kq_elizaPower`). The prototype blueprint packages are "blueprints ripped off the UPC".
 - **Who wants it.** Kesteven wants it for its own advancement, and Jack frames that as Asteria's progress. Eliza wants it to start a "second collapse". Tri-Tachyon offers two million credits. The Luddic Church and Path call it "a vile creation of mammon" that must be destroyed.
 - **The choice.** The player decides; the mod does not call any recipient correct.
 
@@ -199,14 +199,14 @@ Eliza is a revolutionary, and Kesteven calls her a terrorist (`nskr_anarchist`, 
 **Established facts.**
 
 - **Identity.** "Eliza, last name unknown, first name definitely not her real name either." Kesteven files her as "a wanted terrorist and a vicious criminal" and "a political extremist", quiet "since her last attack a few years back" (Jack and Alice, rules `nskr_kq_delveAgree` and `nskr_kq_delveTerrorist`).
-- **Her port.** Recently refurbished and makeshift, guarded by rough bodyguards, one scarred and tattooed. She wears "a flashy and ornate looking uniform - dark leather belts loop around and hang off of the blood red uniform, underlined by shiny gold pins and decorations - a fit for a warlord", sits behind a fancy desk in an "exquisite dark leather" chair, and keeps a handcrafted notebook (`ElizaDialog`).
+- **Her port.** Recently refurbished and makeshift, guarded by rough bodyguards, one scarred and tattooed. She wears "a flashy and ornate looking uniform - dark leather belts loop around and hang off of the blood red uniform, underlined by shiny gold pins and decorations - a fit for a warlord", sits behind a fancy desk in an "exquisite dark leather" chair, and keeps a handcrafted notebook (rules `nskr_kq_elizaOffice`).
 - **Her fleet.** "Eliza's Merc Armada", flagship "Regicide", which she commands herself.
 - **Her conduct.** She keeps her word. She hands over the disks and later the promised equipment. When the player refuses her, she lets them leave unharmed: "I'm not just gonna stab you in the back on your way out like it would be customary for you corporate bastards." She punishes betrayal with death.
 - **"LZ".** The mod links "LZ" to Eliza. At the meeting the player can answer her introduction with "Ah yes, that 'LZ' character." No line states it outright.
 
 **Her views.** They are a deliberate character choice and must stay as written: coherent, radical, persuasive to some, and violent. Their core is a rejection of the Domain's order and everything she sees continuing it: the Hegemony, the corporations and bureaucratic obedience. She sees the Collapse as a lost opportunity and wants a second one.
 
-- On obedience (`ElizaDialog`): "What do you live for captain? To wake up at exact same minute every morning? To wear the exact same uniform every day? To only call people by Sir and Ma'am? To do exactly as your told? Even when your being slowly pushed to your death?" ... "When I saw so many of my peers slowly lose every part their selves to the bureaucracy machine - I swore I would never become one of them."
+- On obedience (rules `nskr_kq_elizaPower`): "What do you live for captain? To wake up at exact same minute every morning? To wear the exact same uniform every day? To only call people by Sir and Ma'am? To do exactly as your told? Even when your being slowly pushed to your death?" ... "When I saw so many of my peers slowly lose every part their selves to the bureaucracy machine - I swore I would never become one of them."
 - On the Collapse: "The collapse gave such a beautiful opportunity for humanity to be born a new. The Hegemony is fatally gripped by the longing for an old world - Everything will be exactly the same it was no exceptions, leading to the same failures all over again. There's still a chance for us to learn from the past, all it takes is a second collapse." (narration: "She lets out a devilish little smile.")
 - On law: "When tyranny becomes law, resistance becomes duty." ... "Laws must exist to keep the people subservient, and those who show signs of disobedience will be punished."
 - On violence: "Sacrifices have to be made in the face of progress! Life isn't black and white, sometimes you have to get your hands dirty captain to make a change. For there are not many other options left!"
