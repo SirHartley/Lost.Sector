@@ -84,6 +84,7 @@ Fixed - The comms facility on Glacier now offers Leave on its first screen
 Fixed - Attacking the Special Operations fleet after Operation Lifesaver is over no longer sets the questline back
 Fixed - After the Kesteven story skip, the data-disk satellites' empty dialog has a Leave option
 Fixed - Eliza's revenge fleet now opens its own conversation when you meet it
+Fixed - After you hand Eliza the Unlimited Production Chip, her fleet no longer hails you and asks for it again on its way home
 
 1.0.b
 Adjusted - Severely nerfed spawn rates for Borealis, Rhea and Kingslayer

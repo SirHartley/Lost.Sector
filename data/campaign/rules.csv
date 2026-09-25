@@ -1932,18 +1932,10 @@ nskr_kq_elizaInterceptInit,BeginFleetEncounter,"$faction.id == mercenary score:1
 !$ignorePlayerCommRequests
 $nskr_kq_elizaIntercept","HailPlayer
 nskr_quest kq do elizaAggro",,,
-nskr_kq_elizaInterceptInitReturning,BeginFleetEncounter,"$faction.id == mercenary score:1000
-!$ignorePlayerCommRequests
-$nskr_kq_elizaReturning","HailPlayer
-nskr_quest kq do elizaAggro",,,"After the hand-over, as the old rows did once $ignorePlayerCommRequests expired"
 nskr_kq_elizaInterceptGreeting,OpenCommLink,"$faction.id == mercenary score:100
 !$ignorePlayerCommRequests
 $entity.nskr_kq_elizaIntercept",,"""Good day to you captain, what a coincidence that we meet out here."" She says sarcastically.
 ""Enough small-talk, you know why I'm here don't you captain.""",nskr_kq_elizaInterceptTalk:Continue,
-nskr_kq_elizaInterceptGreetingReturning,OpenCommLink,"$faction.id == mercenary score:100
-!$ignorePlayerCommRequests
-$entity.nskr_kq_elizaReturning",,"""Good day to you captain, what a coincidence that we meet out here."" She says sarcastically.
-""Enough small-talk, you know why I'm here don't you captain.""",nskr_kq_elizaInterceptTalk:Continue,"After the hand-over, as the old rows did once $ignorePlayerCommRequests expired"
 nskr_kq_elizaInterceptTalk,DialogOptionSelected,$option == nskr_kq_elizaInterceptTalk,"nskr_quest kq do elizaTalked
 AddText ""\""Now can you hand the Chip over, like we agreed.\""""
 AddText ""\""You haven't had a change of heart by chance?\"" She stares deeply into your eyes while waiting for a response.""

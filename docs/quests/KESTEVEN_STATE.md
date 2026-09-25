@@ -205,7 +205,7 @@ The Kesteven bar tip is not questline content; it is quest `hint` ([Exploration 
 | `$nskr_kq_job3Expedition`, `$nskr_kq_job3ExpeditionOver` | The job 3 expedition: role flags of quest `kq` | `QuestFleets` | Nothing reads them |
 | `$nskr_kq_job4StrikeGroup`, `$nskr_kq_job4SpecialOps`, `$nskr_kq_job4SpecialOpsLeaving`, `$nskr_kq_job4Splinter` | Job 4 fleets: role flags of quest `kq` | `QuestFleets` | Rules `# KESTEVEN QUESTLINE: JOB 4` (strike group and Special Operations rows); `KestevenSatelliteModule` action `wakeSatelliteGuard` finds the strike group by its role |
 | `$nskr_kq_ttCollector`, `$nskr_kq_ttCollectorLeaving` | Tri-Tachyon collector: role flags of quest `kq` | `QuestFleets` | Rules `# KESTEVEN QUESTLINE: COLLECTOR` (`ttCollector` only) |
-| `$nskr_kq_elizaRaided`, `$nskr_kq_elizaIntercept`, `$nskr_kq_elizaReturning`, `$nskr_kq_elizaRevenge` | Eliza's fleets: role flags of quest `kq` | `QuestFleets` | Rules `# KESTEVEN QUESTLINE: ELIZA FLEETS` |
+| `$nskr_kq_elizaRaided`, `$nskr_kq_elizaIntercept`, `$nskr_kq_elizaReturning`, `$nskr_kq_elizaRevenge` | Eliza's fleets: role flags of quest `kq` | `QuestFleets` | Rules `# KESTEVEN QUESTLINE: ELIZA FLEETS` (not `$nskr_kq_elizaReturning`, which nothing reads) |
 | `$nskr_kq_elizaFleetDone` | An Eliza fleet that lost Eliza or gave up the chase | `KestevenElizaFleetsModule` | The `withdrawWhen` condition of its role's orders |
 | `$nskr_kq_elizaStood` | Local memory of the market entity during the port meeting; expiry `0` | Row `nskr_kq_elizaStand` | Row `nskr_kq_elizaStoodLine` |
 | `$nskr_kq_jackRevenge` | Jack's revenge fleet: role flag of quest `kq` | `QuestFleets` | Rules `# KESTEVEN QUESTLINE: AFTERMATH` |
