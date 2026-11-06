@@ -9,6 +9,7 @@ import lunalib.lunaSettings.LunaSettings;
 import lunalib.lunaSettings.LunaSettingsListener;
 import org.apache.log4j.Logger;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.lazywizard.lazylib.JSONUtils;
 
@@ -148,7 +149,7 @@ public final class SettingsManager {
             // Not getMergedSpreadsheetDataForMod: that merges every enabled mod's LunaSettings.csv into ours.
             // LunaLib builds this mod's menu from this mod's own copy, loaded the same way.
             rows = Global.getSettings().loadCSV(CSV_PATH, Ids.LOST_SECTOR_MOD_ID);
-        } catch (IOException | RuntimeException e) {
+        } catch (IOException | JSONException | RuntimeException e) {
             throw new RuntimeException("Lost.Sector: could not read " + CSV_PATH, e);
         }
 
@@ -159,7 +160,12 @@ public final class SettingsManager {
 
         Map<Setting, Definition> loaded = new EnumMap<>(Setting.class);
         for (int i = 0; i < rows.length(); i++) {
-            JSONObject row = rows.getJSONObject(i);
+            JSONObject row;
+            try {
+                row = rows.getJSONObject(i);
+            } catch (JSONException e) {
+                throw new RuntimeException("Lost.Sector: could not read row " + i + " of " + CSV_PATH, e);
+            }
             String fieldId = row.optString("fieldID").trim();
             if (fieldId.isEmpty()) continue;
             Setting setting = byFieldId.get(fieldId);
@@ -218,7 +224,7 @@ public final class SettingsManager {
             stored.put(setting.fieldId, definition.toLunaValue(cached));
             stored.save();
             LunaSettingsLoader.getSettings().put(Ids.LOST_SECTOR_MOD_ID, stored);
-        } catch (IOException | RuntimeException e) {
+        } catch (IOException | JSONException | RuntimeException e) {
             log.error("Lost.Sector: could not store setting " + setting.fieldId + " in " + LUNA_FILE, e);
         }
         values.put(setting, cached);
