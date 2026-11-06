@@ -257,16 +257,14 @@ nskr_quest kq do job1Progress
 SetShortcut nskr_kq_exit ESCAPE false","""We've been waiting to see some concrete data on this subject. Nice work captain."" He makes a vaguely congratulatory gesture.",nskr_kq_exit:Back,
 nskr_kq_jackJob1Tip,DialogOptionSelected,"$option == nskr_kq_brief
 nskr_quest kq is JOB1_ACTIVE
-!nskr_quest kq flag JOB1_DATA_DELIVERED
-!nskr_quest kq flag JOB1_ELECTRONICS_DELIVERED
+!nskr_quest kq flag JOB1_SENSOR_DATA
+!nskr_quest kq check job1Cargo
 !nskr_quest kq flag JOB1_TIP_GIVEN
-nskr_quest kq check job1TipKnown
-!nskr_quest kq check job1CargoReady
-!nskr_quest kq check job1SensorReady","FireBest nskr_kqJackTipLine
+nskr_quest kq check job1TipKnown","FireBest nskr_kqJackTipLine
 AddText ""\""That should give you something to work on captain.\"" He nods and shortly cuts the comm link.""
 nskr_quest kq set JOB1_TIP_GIVEN
 nskr_quest kq do job1Progress
-SetShortcut nskr_kq_exit ESCAPE false",,nskr_kq_exit:Back,
+SetShortcut nskr_kq_exit ESCAPE false",,nskr_kq_exit:Back,The conditions of nskr_kq_jackOptJob1Tip.
 nskr_kq_jackTipLine,nskr_kqJackTipLine,,"SetTextHighlights ""$nskr_kq_job1TipSystem""","""Our best lead is the $nskr_kq_job1TipSystem. You should start from there.""",,Shared by the job 1 briefing and the question.
 ,,,,,,
 nskr_kq_jackJob1Done,DialogOptionSelected,"$option == nskr_kq_brief
