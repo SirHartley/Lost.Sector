@@ -264,12 +264,12 @@ Required compile dependencies:
 - `MagicLib.jar` from `lib/MagicLib.zip`;
 - `LunaLib.jar` from `lib/Lazylib_lunalib.zip`;
 - `lib/ExerelinCore.jar` and `lib/IndEvo.jar`, used only by code behind the optional-integration flags;
-- `lwjgl-2.9.3.jar`;
-- `lwjgl_util-2.9.3.jar`;
-- `json-20140107.jar`;
-- `log4j-1.2.17.jar`.
+- `lwjgl.jar`;
+- `lwjgl_util.jar`;
+- `json.jar`;
+- `log4j-1.2.9.jar`.
 
-The last four ship with the game in `starsector-core`; the same versions from Maven Central compile identically when no game install is available. These dependencies provide `org.lwjgl.util.vector`, `org.lwjgl.opengl`, `org.json`, and `Global.getLogger()`. LazyLib, LunaLib, MagicLib and GraphicsLib are the declared runtime dependencies in `mod_info.json`. Nexerelin and Industrial.Evolution are compile-time requirements for their integration classes; [ARCHITECTURE.md](docs/ARCHITECTURE.md) records how each is gated at runtime.
+The last four ship with the game in `starsector-core`. Without a game install, use `lwjgl-2.9.3.jar`, `lwjgl_util-2.9.3.jar`, `log4j-1.2.17.jar` and `json-20090211.jar` from Maven Central. The game's `org.json.JSONException` is a checked exception, as in `json-20090211`; newer org.json releases such as `json-20140107` make it unchecked, so a missing catch compiles there and fails against the game's `json.jar`. These dependencies provide `org.lwjgl.util.vector`, `org.lwjgl.opengl`, `org.json`, and `Global.getLogger()`. LazyLib, LunaLib, MagicLib and GraphicsLib are the declared runtime dependencies in `mod_info.json`. Nexerelin and Industrial.Evolution are compile-time requirements for their integration classes; [ARCHITECTURE.md](docs/ARCHITECTURE.md) records how each is gated at runtime.
 
 Reference command:
 
