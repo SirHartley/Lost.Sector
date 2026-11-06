@@ -85,6 +85,7 @@ Fixed - Attacking the Special Operations fleet after Operation Lifesaver is over
 Fixed - After the Kesteven story skip, the data-disk satellites' empty dialog has a Leave option
 Fixed - Eliza's revenge fleet now opens its own conversation when you meet it
 Fixed - After you hand Eliza the Unlimited Production Chip, her fleet no longer hails you and asks for it again on its way home
+Fixed - Jack now gives the job 1 tip after you hand over the electronics
 
 1.0.b
 Adjusted - Severely nerfed spawn rates for Borealis, Rhea and Kingslayer

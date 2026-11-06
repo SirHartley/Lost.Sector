@@ -73,7 +73,7 @@ Option ids:
 | token | `job1TipSystem`, `job3Start`, `job3Market`, `job3TargetSystem`, `job4Constellation`, `job4TargetSystem`, `outpostName` | Names from the saved targets: tip system; job 3 start entity and its market; job 3 target system; friendly target constellation; strike group system; Outpost |
 | token | `frostName`, `frostTipConstellation`, `frostTipDistance` | Frost's name; the hint system's constellation (`KestevenQuest.constellationName`); the distance from it to Frost times 1.5 in light-years, rounded to two decimals and printed as a Java float |
 
-Targets are picked at these points: the job 1 tip when Jack's menu opens at `JOB1_ACTIVE` with neither task done and no tip given (`nskr_kq_jackChatJob1Tip`) and when his questions open at `NOT_STARTED` (`nskr_kq_jackAskJob1`); the job 3 start market by the job 3 briefing; the friendly target by the job 4 briefing; the job 3 target by Alice's leads; the hint system by Alice's Frost tip. An action runs first in the row's Script and the text follows with `AddText`, so the tokens read the picked value. Checks and tokens never pick.
+Targets are picked at these points: the job 1 tip when Jack's menu opens at `JOB1_ACTIVE` with no sensor data, no electronics in cargo and no tip given (`nskr_kq_jackChatJob1Tip`) and when his questions open at `NOT_STARTED` (`nskr_kq_jackAskJob1`); the job 3 start market by the job 3 briefing; the friendly target by the job 4 briefing; the job 3 target by Alice's leads; the hint system by Alice's Frost tip. An action runs first in the row's Script and the text follows with `AddText`, so the tokens read the picked value. Checks and tokens never pick.
 
 `job1Progress` (declared by `KestevenJob1Module`) moves `JOB1_ACTIVE` to `JOB1_DONE` once both deliveries are recorded and refreshes the job 1 map marker; the hand-in rows and the tip row run it after setting their flags.
 
@@ -166,7 +166,7 @@ Every question list ends with Back (`nskr_kq_brief`, Escape), which shows the br
 | `JOB1_ACTIVE`, both hand-ins ready | `…jackJob1HandInBoth` (4) | Takes 70 electronics, "Lost sensor package", both delivered flags, `do job1Progress` | Back |
 | `JOB1_ACTIVE`, electronics ready | `…jackJob1HandInCargo` (3) | Takes 70 electronics, `JOB1_ELECTRONICS_DELIVERED`, `do job1Progress` | Back |
 | `JOB1_ACTIVE`, sensor data ready | `…jackJob1HandInPackage` (3) | "Lost sensor package", `JOB1_DATA_DELIVERED`, `do job1Progress` | Back |
-| `JOB1_ACTIVE`, nothing delivered, no tip, tip known, nothing ready | `…jackJob1Tip` (8) | Tip line, `JOB1_TIP_GIVEN`, `do job1Progress` | Back |
+| `JOB1_ACTIVE`, no sensor data, no cargo, no tip, tip known (the menu option's conditions) | `…jackJob1Tip` (6) | Tip line, `JOB1_TIP_GIVEN`, `do job1Progress` | Back |
 | `JOB1_DONE` | `…jackJob1Done` (2) | | Continue, "I have some questions." |
 | `JOB3_OFFERED` | `…jackJob3Brief` (2) | | Continue |
 | `JOB3_BRIEFING` | `…aliceJob3Brief` (2) | `pickJob3Start`; doubt line when `fleetStretched` | Accept, "I have some questions.", Back |

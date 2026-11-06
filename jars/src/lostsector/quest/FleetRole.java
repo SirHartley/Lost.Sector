@@ -2,10 +2,11 @@ package lostsector.quest;
 
 import com.fs.starfarer.api.impl.campaign.FleetInteractionDialogPluginImpl.FIDConfigGen;
 
-import java.lang.reflect.Modifier;
-
 // A definition, never saved; fleets find their role again through QuestFleets.ROLE_KEY in fleet memory.
 public final class FleetRole {
+
+    // java.lang.reflect.Modifier.STATIC; the script classloader refuses java.lang.reflect
+    private static final int STATIC = 0x0008;
 
     private final FleetOrders orders;
     private boolean persistent;
@@ -32,7 +33,7 @@ public final class FleetRole {
     public FleetRole config(FIDConfigGen gen) {
         Class<?> type = gen == null ? null : gen.getClass();
         if (type == null || type.isAnonymousClass() || type.isLocalClass() || type.isSynthetic() || type.isHidden()
-                || (type.isMemberClass() && !Modifier.isStatic(type.getModifiers()))) {
+                || (type.isMemberClass() && (type.getModifiers() & STATIC) == 0)) {
             throw new IllegalArgumentException("FIDConfigGen must be a named top-level or static nested class: " + type);
         }
         config = gen;

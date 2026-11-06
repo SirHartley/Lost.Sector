@@ -322,7 +322,7 @@ Rules-engine and menu routing constraints: [RULES.md](RULES.md#project-routing).
 
 Java custom-panel behavior, sprite state and drawing gotchas are in [UI.md](UI.md). Shared player-facing text guidelines are in [DIALOGUE.md](DIALOGUE.md#shared-text-presentation). Campaign VFX and non-UI engine constraints remain here.
 
-- The Starsector script classloader rejects direct references to `java.lang.reflect.Field` and `Method`. Use `MethodHandle` for reflection.
+- The Starsector script classloader loads every mod jar and refuses any `java.lang.reflect` class except `AnnotatedElement`, `GenericDeclaration`, `InvocationTargetException` and `Type`, so `Field`, `Method` and `Modifier` throw `SecurityException` the first time the referencing class runs (0.98a-RC8 `com.fs.starfarer.loading.scripts.B.loadClass`). Use `MethodHandle` for reflection; `FleetRole` tests `Class.getModifiers()` against the bit value instead of `Modifier.isStatic`. A full Java build does not catch a reference; `jdeps` on the build output does.
 - Sound IDs are unchecked strings until playback. Validate them against merged sound data. Starsector JSON supports `#` comments and trailing commas, and sound entries may be arrays or objects.
 - `SoundPlayerAPI.getCurrentMusicId()` returns the playing file with its path, not the music set id passed to `playCustomMusic`. Compare through `helper/Music`, which resolves a set's files from the merged `sounds.json`.
 - `playUISound` expects stereo; positional `playSound` requires mono; loops should be mono.
