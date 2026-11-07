@@ -65,6 +65,5 @@ Clicking the judgement fleet on the map uses the `CorePlugin` route on `HellSpaw
 ## Behavior and defects found in the source
 
 - The judgement fleet is not despawned when the player leaves the encounter. `otherFleet` in `HellSpawnJudgementInteraction` is the battle's combined fleet, a copy that `BattleAPI.genCombined` builds, so `otherFleet.despawn()` does not remove the real fleet; a fleet that survives keeps hunting the player. The quest keeps this: the `judge` role's module stays active in `JUDGED`.
-- The fleet's faction `ai_all` lists no hull with the vanilla `shard_spawner` hullmod (`facet`, `shard_left`, `shard_right`). When a battle ends while a split piece of such a member is still deployed, as after a player retreat, `CombatEngine.doEndOfCombatProcessing` (0.98a-RC8) moves the original back to deployed at zero hull; it then spawns as a hulk in every later fight, which ends after the engine's 30-second rule with nothing to shoot. A natural victory leaves no piece deployed. Vanilla Tesseracts do the same.
 - `HellSpawnJudgementInteraction`'s battle-disengage line says "effected" for "affected".
 - The warning appears on the first daily tick at level 15 or more, and the judgement on the first daily tick after 40 days.
