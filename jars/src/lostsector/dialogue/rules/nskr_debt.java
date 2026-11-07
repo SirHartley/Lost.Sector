@@ -21,9 +21,11 @@ import lostsector.helper.MathHelper;
 import org.lazywizard.lazylib.MathUtils;
 import org.lwjgl.input.Keyboard;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.Set;
 
 // TODO: replace this menu with a custom UI panel (docs/UI.md).
 public class nskr_debt extends BaseCommandPlugin {
@@ -147,9 +149,12 @@ public class nskr_debt extends BaseCommandPlugin {
 	{
 		OptionPanelAPI options = dialog.getOptionPanel();
 		options.clearOptions();
+		Set<String> labels = new HashSet<>();
 		for (Amount amount : Amount.values()) {
 			String optionId = DIALOG_OPTION_PREFIX + amount.id;
 			String label = (amount.isRepayment() ? "Repay " : "Loan ") + Misc.getDGSCredits(Math.abs(amount.getCredits()));
+			// the all amount can equal a fixed amount, same transaction
+			if (!labels.add(label)) continue;
 			options.addOption(label, optionId);
 			if (!isAvailable(amount)) options.setEnabled(optionId, false);
 		}
