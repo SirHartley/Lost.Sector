@@ -125,7 +125,7 @@ The expedition's role runs `FleetOrders.expedition(10, 70)`: it prepares at home
 
 - the expedition falls below 20% of its spawn strength after a battle it took part in (`onBattle`), or is destroyed (`onFleetGone`): success, and the fleet is no longer marked important;
 - the timer passes 90 days, checked once a day (`onDay`): `JOB3_FAILED`, and derelicts are left at the target (`KestevenJob3Module.placeWreckage`);
-- the player contributes to a fight the expedition loses while it has seen the player's transponder on, checked at the loot (`onLoot`), which comes before the battle report: `JOB3_FAILED` ("failed to neutralize the fleet stealthily").
+- the player contributes to a fight in which the expedition, on the losing side, loses a ship (`QuestFleet.lostShips`) while it has seen the player's transponder on, checked at the loot (`onLoot`), which comes before the battle report: `JOB3_FAILED` ("failed to neutralize the fleet stealthily").
 
 At stage 10, or when the module stops earlier (failure or a jump), the expedition moves to the persistent role `job3ExpeditionOver` (`FleetOrders.withdraw()`): it keeps its last assignment and despawns once out of the player's hyperspace sensor range.
 
@@ -182,7 +182,7 @@ Seeing the friendly fleet or talking to it sets `JOB4_FRIENDLY_FOUND`; seeing th
 
 If anything other than the player destroys the Special Operations fleet before it is found, the module spawns a new one at the friendly target. It checks once a day at stage 12 and waits until the player is out of hyperspace sensor range of the friendly target's system.
 
-If the player wins a fight in which the Special Operations fleet (either role) is the losing fleet and loses a ship, with any player contribution (`onLoot`), the module sets `JOB4_FAILED`, moves the stage to 14 and then, unless `ENDED` is already set, to 99 with `ENDED`, which ends the questline. The check runs while the module is active, up to stage 16.
+If the player wins a fight in which the Special Operations fleet (either role) is on the losing side and loses a ship (`QuestFleet.lostShips`), with any player contribution (`onLoot`), the module sets `JOB4_FAILED`, moves the stage to 14 and then, unless `ENDED` is already set, to 99 with `ENDED`, which ends the questline. The check runs while the module is active, up to stage 16.
 
 ### Intel
 
