@@ -228,13 +228,7 @@ final class KestevenJob4Module extends QuestModule<KestevenStage, KestevenState>
     @Override
     protected void onLoot(QuestContext<KestevenStage, KestevenState> ctx, QuestFleet fleet, FleetEncounterContextPlugin plugin, CargoAPI loot) {
         if (fleet.isRole(ROLE_STRIKE_GROUP) && beaten(fleet.info())) strikeGroupDestroyed(ctx, fleet);
-        if (!isSpecialOps(fleet) || plugin.getLoser() != fleet.fleet()) return;
-        for (FleetEncounterContextPlugin.FleetMemberData member : plugin.getLoserData().getOwnCasualties()) {
-            if (member.getStatus() != FleetEncounterContextPlugin.Status.NORMAL && plugin.computePlayerContribFraction() > 0f) {
-                attackedSpecialOps(ctx);
-                return;
-            }
-        }
+        if (isSpecialOps(fleet) && fleet.lostShips(plugin) && plugin.computePlayerContribFraction() > 0f) attackedSpecialOps(ctx);
     }
 
     @Override

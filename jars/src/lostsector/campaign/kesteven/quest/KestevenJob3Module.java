@@ -129,14 +129,8 @@ final class KestevenJob3Module extends QuestModule<KestevenStage, KestevenState>
     @Override
     protected void onLoot(QuestContext<KestevenStage, KestevenState> ctx, QuestFleet fleet, FleetEncounterContextPlugin plugin, CargoAPI loot) {
         if (!fleet.isRole(ROLE_EXPEDITION) || !running(ctx)) return;
-        CampaignFleetAPI expedition = fleet.fleet();
-        if (plugin.getLoser() != expedition || !expedition.getMemoryWithoutUpdate().contains(MemFlags.MEMORY_KEY_SAW_PLAYER_WITH_TRANSPONDER_ON)) return;
-        for (FleetEncounterContextPlugin.FleetMemberData member : plugin.getLoserData().getOwnCasualties()) {
-            if (member.getStatus() != FleetEncounterContextPlugin.Status.NORMAL && plugin.computePlayerContribFraction() > 0f) {
-                fail(ctx, UPDATE_STEALTH);
-                return;
-            }
-        }
+        if (!fleet.fleet().getMemoryWithoutUpdate().contains(MemFlags.MEMORY_KEY_SAW_PLAYER_WITH_TRANSPONDER_ON)) return;
+        if (fleet.lostShips(plugin) && plugin.computePlayerContribFraction() > 0f) fail(ctx, UPDATE_STEALTH);
     }
 
     @Override
