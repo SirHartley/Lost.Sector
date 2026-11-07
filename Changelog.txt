@@ -87,6 +87,7 @@ Fixed - Eliza's revenge fleet now opens its own conversation when you meet it
 Fixed - After you hand Eliza the Unlimited Production Chip, her fleet no longer hails you and asks for it again on its way home
 Fixed - Jack now gives the job 1 tip after you hand over the electronics
 Fixed - Eliza and her contact now move when their station is decivilized
+Removed - Facet and Shard ships from the Final Judgement fleet (after a retreat they came back as fights with nothing to shoot)
 
 1.0.b
 Adjusted - Severely nerfed spawn rates for Borealis, Rhea and Kingslayer
