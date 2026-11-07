@@ -111,10 +111,10 @@ final class KestevenElizaSearchModule extends QuestModule<KestevenStage, Kesteve
     protected void onDecivilized(QuestContext<KestevenStage, KestevenState> ctx, MarketAPI market, boolean fullyDestroyed) {
         KestevenState s = ctx.state();
         SectorEntityToken contact = s.elizaContactMarket;
-        if (contact == null || contact.getMarket() == null || !contact.getMarket().isPlanetConditionMarketOnly()) return;
+        if (contact == null || market.getPrimaryEntity() != contact) return;
         if (!ctx.has(KestevenFlag.ELIZA_SPACER_PAID) || ctx.has(KestevenFlag.ELIZA_FOUND) || s.elizaSearchStage != 2) return;
         ctx.unmark(contact);
-        s.elizaContactFormerName = contact.getMarket().getPrimaryEntity().getName();
+        s.elizaContactFormerName = contact.getName();
         s.elizaContactMarket = pickMarket(ctx, ctx.random(KestevenState.RANDOM_QUEST), false);
         ctx.mark(s.elizaContactMarket, KestevenStage.JOB5_DISKS);
         ctx.log("Eliza contact moved from " + s.elizaContactFormerName + " to " + s.elizaContactMarket.getName());

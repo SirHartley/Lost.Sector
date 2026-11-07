@@ -80,15 +80,14 @@ final class KestevenElizaModule extends QuestModule<KestevenStage, KestevenState
         if (raid != null) objectives.add(raid);
     }
 
-    // DecivTracker.decivilize sets the market condition-only before it reports the decivilization. Eliza moves from
-    // JOB5_DISKS on, failure included; the Delve entry reports it.
+    // Eliza moves from JOB5_DISKS on, failure included; the Delve entry reports it.
     @Override
     protected void onDecivilized(QuestContext<KestevenStage, KestevenState> ctx, MarketAPI decivilized, boolean fullyDestroyed) {
         KestevenState s = ctx.state();
         SectorEntityToken market = s.elizaMarket;
-        if (market == null || market.getMarket() == null || !market.getMarket().isPlanetConditionMarketOnly()) return;
+        if (market == null || decivilized.getPrimaryEntity() != market) return;
         if (!ctx.stage().atLeast(KestevenStage.JOB5_DISKS) || !ctx.has(KestevenFlag.ELIZA_FOUND) || ctx.has(KestevenFlag.ELIZA_KILLED)) return;
-        s.elizaFormerName = market.getMarket().getPrimaryEntity().getName();
+        s.elizaFormerName = market.getName();
         s.elizaMarket = KestevenElizaSearchModule.pickMarket(ctx, ctx.random(KestevenState.RANDOM_QUEST), false);
         ctx.log("Eliza moved from " + s.elizaFormerName + " to " + s.elizaMarket.getName());
         PersonAPI eliza = KestevenPeople.getEliza();
